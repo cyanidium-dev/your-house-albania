@@ -2,20 +2,39 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
-const Hero: React.FC<{ locale: string }> = async ({ locale }) => {
+type HeroData = {
+  shortLine?: string;
+  title?: string;
+  subtitle?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+} | null;
+
+const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale, heroData }) => {
   const t = await getTranslations('Home.hero')
+  const shortLine = heroData?.shortLine ?? t('location')
+  const title = heroData?.title ?? t('title')
+  const subtitle = heroData?.subtitle
+  const ctaLabel = heroData?.ctaLabel ?? t('getInTouch')
+  const ctaHref = heroData?.ctaHref != null
+    ? (heroData.ctaHref.startsWith('/') ? heroData.ctaHref : `/${locale}${heroData.ctaHref}`)
+    : `/${locale}/contactus`
+
   return (
     <section className='!py-0'>
       <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 overflow-hidden relative'>
         <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-68'>
           <div className='relative text-white dark:text-dark text-center md:text-start z-10'>
-            <p className='text-inherit text-xm font-medium'>{t('location')}</p>
-            <h1 className='text-inherit text-6xl sm:text-9xl font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
-              {t('title')}
+            <p className='text-inherit text-xm font-medium'>{shortLine}</p>
+            <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
+              {title}
             </h1>
+            {subtitle ? (
+              <p className='text-inherit text-lg mb-6'>{subtitle}</p>
+            ) : null}
             <div className='flex flex-col xs:flex-row justify-center md:justify-start gap-4'>
-              <Link href={`/${locale}/contactus`} className='px-8 py-4 border border-white dark:border-dark bg-white dark:bg-dark text-dark dark:text-white duration-300 dark:hover:text-dark hover:bg-transparent hover:text-white text-base font-semibold rounded-full hover:cursor-pointer'>
-                {t('getInTouch')}
+              <Link href={ctaHref} className='px-8 py-4 border border-white dark:border-dark bg-white dark:bg-dark text-dark dark:text-white duration-300 dark:hover:text-dark hover:bg-transparent hover:text-white text-base font-semibold rounded-full hover:cursor-pointer'>
+                {ctaLabel}
               </Link>
               <button className='px-8 py-4 border border-white dark:border-dark bg-transparent text-white dark:text-dark hover:bg-white dark:hover:bg-dark dark:hover:text-white hover:text-dark duration-300 text-base font-semibold rounded-full hover:cursor-pointer'>
                 {t('viewDetails')}

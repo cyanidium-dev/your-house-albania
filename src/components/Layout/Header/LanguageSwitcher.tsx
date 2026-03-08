@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { usePathname, useRouter } from '@/i18n/navigation';
-import { useLocale } from 'next-intl';
-import { useRef, useState } from 'react';
-import { Icon } from '@iconify/react';
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
+import { useRef, useState } from "react";
+import { Icon } from "@iconify/react";
 
 const LOCALE_LABELS: Record<string, string> = {
-  en: 'EN',
-  uk: 'UK',
-  ru: 'RU',
-  al: 'SQ',
-  it: 'IT',
+  en: "EN",
+  uk: "UK",
+  ru: "RU",
+  al: "SQ",
+  it: "IT",
 };
 
 export default function LanguageSwitcher() {
@@ -20,7 +20,7 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const locales = ['en', 'uk', 'ru', 'al', 'it'];
+  const locales = ["en", "uk", "ru", "al", "it"];
 
   const handleSelect = (newLocale: string) => {
     if (newLocale === locale) {
@@ -32,11 +32,11 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative flex items-center">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10 text-sm font-medium"
+        className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300"
         aria-label="Select language"
         aria-expanded={open}
       >
@@ -45,7 +45,7 @@ export default function LanguageSwitcher() {
           icon="ph:caret-down"
           width={16}
           height={16}
-          className={`transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
@@ -67,7 +67,7 @@ export default function LanguageSwitcher() {
                 aria-selected={loc === locale}
                 onClick={() => handleSelect(loc)}
                 className={`block w-full text-left px-4 py-2 text-sm hover:bg-primary/10 hover:text-primary ${
-                  loc === locale ? 'text-primary font-semibold' : ''
+                  loc === locale ? "text-primary font-semibold" : ""
                 }`}
               >
                 {LOCALE_LABELS[loc]}

@@ -2,9 +2,22 @@ import { Icon } from '@iconify/react'
 import PropertyCard from './Card/Card'
 import { getProperties } from '@/data/properties'
 import { getTranslations } from 'next-intl/server'
+import type { PropertyHomes } from '@/types/properyHomes'
 
-const Properties: React.FC<{ locale: string }> = async ({ locale }) => {
+type PropertiesData = { badge?: string; title?: string; description?: string } | null;
+
+const Properties: React.FC<{
+  locale: string;
+  propertiesData?: PropertiesData;
+  propertyItems?: PropertyHomes[] | null;
+}> = async ({ locale, propertiesData, propertyItems }) => {
   const t = await getTranslations('Home.properties')
+  const badge = propertiesData?.badge ?? t('badge')
+  const title = propertiesData?.title ?? t('title')
+  const description = propertiesData?.description ?? t('description')
+  const items = Array.isArray(propertyItems) && propertyItems.length > 0
+    ? propertyItems.slice(0, 6)
+    : getProperties().slice(0, 6)
   return (
     <section>
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
@@ -19,18 +32,18 @@ const Properties: React.FC<{ locale: string }> = async ({ locale }) => {
               />
             </span>
             <p className='text-base font-semibold text-dark/75 dark:text-white/75'>
-              {t('badge')}
+              {badge}
             </p>
           </div>
           <h2 className='text-40 lg:text-52 font-medium text-black dark:text-white text-center tracking-tight leading-11 mb-2'>
-            {t('title')}
+            {title}
           </h2>
           <p className='text-xm font-normal text-black/50 dark:text-white/50 text-center'>
-            {t('description')}
+            {description}
           </p>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
-          {getProperties().slice(0, 6).map((item, index) => (
+          {items.map((item, index) => (
             <div key={index} className=''>
               <PropertyCard item={item} locale={locale} />
             </div>
