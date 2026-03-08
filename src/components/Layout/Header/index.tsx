@@ -1,11 +1,13 @@
 'use client'
-import { navLinks } from '@/app/api/navlink'
+import { getNavLinks } from '@/data/navigation'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import NavLink from './Navigation/NavLink'
+import LanguageSwitcher from './LanguageSwitcher'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 
 const Header: React.FC = () => {
@@ -13,6 +15,8 @@ const Header: React.FC = () => {
   const [navbarOpen, setNavbarOpen] = useState(false)
   const { theme, setTheme } = useTheme()
   const pathname = usePathname()
+  const locale = useLocale()
+  const t = useTranslations('Header')
 
   const sideMenuRef = useRef<HTMLDivElement>(null)
 
@@ -36,14 +40,14 @@ const Header: React.FC = () => {
     }
   }, [handleScroll])
 
-  const isHomepage = pathname === '/'
+  const isHomepage = pathname === "/" || /^\/(en|uk|ru|al|it)\/?$/.test(pathname)
 
   return (
     <header className={`fixed h-24 py-1 z-50 w-full bg-transparent transition-all duration-300 lg:px-0 px-4 ${sticky ? "top-3" : "top-0"}`}>
       <nav className={`container mx-auto max-w-8xl flex items-center justify-between py-4 duration-300 ${sticky ? "shadow-lg bg-white dark:bg-dark rounded-full top-5 px-4 " : "shadow-none top-0"}`}>
         <div className='flex justify-between items-center gap-2 w-full'>
           <div>
-            <Link href='/'>
+            <Link href={`/${locale}`}>
               <Image
                 src={'/images/header/dark-logo.svg'}
                 alt='logo'
@@ -63,6 +67,7 @@ const Header: React.FC = () => {
             </Link>
           </div>
           <div className='flex items-center gap-2 sm:gap-6'>
+            <LanguageSwitcher />
             <button
               className='hover:cursor-pointer'
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -110,7 +115,7 @@ const Header: React.FC = () => {
                 <span>
                   <Icon icon={'ph:list'} width={24} height={24} />
                 </span>
-                <span className='hidden sm:block'>Menu</span>
+                <span className='hidden sm:block'>{t('menu')}</span>
               </button>
             </div>
           </div>
@@ -152,15 +157,15 @@ const Header: React.FC = () => {
             </div>
             <nav className='flex flex-col items-start gap-4'>
               <ul className='w-full'>
-                {navLinks.map((item, index) => (
-                  <NavLink key={index} item={item} onClick={() => setNavbarOpen(false)} />
+                {getNavLinks().map((item, index) => (
+                  <NavLink key={index} item={{ label: t(`nav.${item.key}`), href: item.href }} onClick={() => setNavbarOpen(false)} />
                 ))}
                 <li className='flex items-center gap-4'>
-                  <Link href="/signin" className='py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full border border-primary font-semibold mt-3 hover:bg-transparent hover:text-primary duration-300'>
-                    Sign In
+                  <Link href={`/${locale}/contactus`} className='py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full border border-primary font-semibold mt-3 hover:bg-transparent hover:text-primary duration-300'>
+                    {t('signIn')}
                   </Link>
-                  <Link href="/" className='py-4 px-8 bg-transparent border border-primary text-base leading-4 block w-fit text-primary rounded-full font-semibold mt-3 hover:bg-primary hover:text-white duration-300'>
-                    Sign up
+                  <Link href={`/${locale}`} className='py-4 px-8 bg-transparent border border-primary text-base leading-4 block w-fit text-primary rounded-full font-semibold mt-3 hover:bg-primary hover:text-white duration-300'>
+                    {t('signUp')}
                   </Link>
                 </li>
               </ul>
@@ -169,7 +174,7 @@ const Header: React.FC = () => {
 
           <div className='flex flex-col gap-1 my-16 text-white'>
             <p className='text-base sm:text-xm font-normal text-white/40'>
-              Contact
+              {t('contact')}
             </p>
             <Link href="#" className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
               hello@homely.com

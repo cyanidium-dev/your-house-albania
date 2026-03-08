@@ -1,6 +1,6 @@
 import React from 'react';
 import BlogCard from '@/components/shared/Blog/blogCard';
-import { getAllPosts } from '@/components/utils/markdown';
+import { getBlogPosts } from '@/data/blog';
 
 interface Blog {
     title: string;
@@ -12,9 +12,9 @@ interface Blog {
     tag: string;
 }
 
-const BlogList: React.FC = () => {
+const BlogList: React.FC<{ locale: string }> = ({ locale }) => {
     // Get all posts and map over them to ensure each field is a string
-    const posts: Blog[] = getAllPosts(["title", "date", "excerpt", "coverImage", "slug", "detail", "tag"])
+    const posts: Blog[] = getBlogPosts(["title", "date", "excerpt", "coverImage", "slug", "detail", "tag"])
         .map(item => ({
             title: typeof item.title === 'string' ? item.title : String(item.title),
             date: typeof item.date === 'string' ? item.date : String(item.date),
@@ -31,7 +31,7 @@ const BlogList: React.FC = () => {
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-12">
                     {posts.map((blog, i) => (
                         <div key={i} className="w-full">
-                            <BlogCard blog={blog} />
+                            <BlogCard blog={blog} locale={locale} />
                         </div>
                     ))}
                 </div>

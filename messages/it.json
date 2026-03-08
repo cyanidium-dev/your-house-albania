@@ -1,0 +1,147 @@
+{
+  "Header": {
+    "menu": "Menu",
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "contact": "Contatto",
+    "nav": {
+      "home": "Home",
+      "properties": "Immobili",
+      "blog": "Blog",
+      "contact": "Contatto",
+      "docs": "Documentazione"
+    }
+  },
+  "Footer": {
+    "newsletter": "Resta aggiornato con news, promozioni e offerte esclusive.",
+    "emailPlaceholder": "Inserisci la tua email",
+    "subscribe": "Iscriviti",
+    "disclaimer": "Iscrivendoti accetti di ricevere email promozionali. Puoi annullare l'iscrizione in qualsiasi momento.",
+    "cta": "Inizia il tuo percorso verso il successo, contattaci oggi.",
+    "getInTouch": "Contattaci",
+    "copyright": "©2025 Homely - Design & Developed by",
+    "termsOfService": "Termini di servizio",
+    "privacyPolicy": "Informativa sulla privacy",
+    "links": {
+      "luxuryVillas": "Ville di lusso",
+      "residentialHomes": "Abitazioni",
+      "apartments": "Appartamenti",
+      "contactUs": "Contattaci",
+      "blog": "Blog",
+      "notFound": "Pagina 404",
+      "documentation": "Documentazione"
+    }
+  },
+  "Home": {
+    "hero": {
+      "location": "Palm springs, CA",
+      "title": "Rifugio futuristico",
+      "getInTouch": "Contattaci",
+      "viewDetails": "Dettagli",
+      "bedrooms": "4 Camere",
+      "restroom": "4 Bagni",
+      "parkingSpace": "Posto auto",
+      "price": "$4.750.000",
+      "forSellingPrice": "Prezzo di vendita"
+    },
+    "services": {
+      "categories": "Categorie",
+      "title": "Esplora le migliori proprietà con servizi esperti.",
+      "description": "Scopri una vasta gamma di proprietà di lusso, da appartamenti eleganti a ville spaziose, su misura per te",
+      "viewProperties": "Vedi proprietà",
+      "residentialHomes": "Abitazioni",
+      "luxuryVillas": "Ville di lusso",
+      "appartment": "Appartamenti",
+      "officeSpaces": "Spazi ufficio",
+      "categoryDescription": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+    },
+    "properties": {
+      "badge": "Immobili",
+      "title": "Scopri case dal design ispiratore.",
+      "description": "Case curate dove eleganza, stile e comfort si uniscono."
+    },
+    "featured": {
+      "badge": "Proprietà in evidenza",
+      "title": "Villa lusso moderna",
+      "address": "20 S Aurora Ave, Miami",
+      "description": "Vivi il lusso nella villa moderna in 20 S Aurora Ave, Miami. $1.650.500, 560 m², 4 camere, 3 bagni, ampi spazi. Efficienza energetica, luce naturale, sicurezza, esterni, 2 aree bar — ideale per 8+ ospiti. Costruita nel 2025.",
+      "bedrooms": "4 Camere",
+      "bathrooms": "3 Bagni",
+      "parkingSpace": "Posto auto",
+      "barAreas": "2 Aree bar",
+      "getInTouch": "Contattaci",
+      "discountedPrice": "Prezzo scontato"
+    },
+    "faq": {
+      "badge": "FAQ",
+      "title": "Tutto sulle case Homely",
+      "description": "Acquistare, vendere o investire può essere stressante. Ecco alcune domande frequenti per guidarti.",
+      "q1": "1. Posso personalizzare la mia casa Homely?",
+      "q2": "2. Dove trovo le case Homely?",
+      "q3": "3. Quali passi per acquistare?",
+      "answer": "Scopri una vasta gamma di proprietà di lusso, da appartamenti eleganti a ville spaziose."
+    },
+    "contact": {
+      "title": "Un regno dove design raffinato e lusso senza tempo si incontrano.",
+      "getInTouch": "Contattaci",
+      "marquee1": "VALUTAZIONE GRATUITA DELLA TUA CASA — VENDI CON SICUREZZA!",
+      "marquee2": "SFOGLIA MIGLIAIA DI ANNUNCI IN ZONE PRESTIGIOSE A PREZZI OTTIMI!"
+    },
+    "blog": {
+      "badge": "Blog",
+      "title": "Approfondimenti sul mercato immobiliare",
+      "description": "Resta al passo con consigli e aggiornamenti dagli esperti",
+      "readAllArticles": "Leggi tutti gli articoli"
+    },
+    "testimonial": {
+      "badge": "Testimonianze",
+      "title": "Cosa dicono i nostri clienti",
+      "goToSlide": "Vai alla slide {num}"
+    }
+  },
+  "Shared": {
+    "propertyCard": {
+      "bedrooms": "Camere",
+      "bathrooms": "Bagni",
+      "areaUnit": "m²",
+      "pricePrefix": "$"
+    },
+    "blogCard": {
+      "imageAlt": "Immagine articolo blog",
+      "ariaLabel": "Visualizza articolo blog"
+    },
+    "goBack": "Indietro"
+  },
+  "Listing": {
+    "properties": {
+      "badge": "Immobili",
+      "title": "Scopri case dal design ispiratore.",
+      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+    },
+    "residentialHomes": {
+      "badge": "Immobili",
+      "title": "Abitazioni.",
+      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+    },
+    "luxuryVilla": {
+      "badge": "Immobili",
+      "title": "Ville di lusso.",
+      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+    },
+    "appartment": {
+      "badge": "Immobili",
+      "title": "Appartamenti.",
+      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+    },
+    "officeSpaces": {
+      "badge": "Immobili",
+      "title": "Spazi ufficio.",
+      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+    },
+    "blogs": {
+      "badge": "Blog",
+      "title": "Approfondimenti sul mercato immobiliare.",
+      "description": "Resta al passo con consigli e aggiornamenti dagli esperti."
+    }
+  }
+}

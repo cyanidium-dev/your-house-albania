@@ -1,0 +1,147 @@
+{
+  "Header": {
+    "menu": "Menu",
+    "signIn": "Sign In",
+    "signUp": "Sign up",
+    "contact": "Contact",
+    "nav": {
+      "home": "Home",
+      "properties": "Properties",
+      "blog": "Blog",
+      "contact": "Contact",
+      "docs": "Docs"
+    }
+  },
+  "Footer": {
+    "newsletter": "Stay updated with the latest news, promotions, and exclusive offers.",
+    "emailPlaceholder": "Enter Your Email",
+    "subscribe": "Subscribe",
+    "disclaimer": "By subscribing, you agree to receive our promotional emails. You can unsubscribe at any time.",
+    "cta": "Begin your path to success contact us today.",
+    "getInTouch": "Get In Touch",
+    "copyright": "©2025 Homely - Design & Developed by",
+    "termsOfService": "Terms of service",
+    "privacyPolicy": "Privacy policy",
+    "links": {
+      "luxuryVillas": "Luxury Villas",
+      "residentialHomes": "Residential Homes",
+      "apartments": "Apartments",
+      "contactUs": "Contact Us",
+      "blog": "Blog",
+      "notFound": "404 Page",
+      "documentation": "Documentation"
+    }
+  },
+  "Home": {
+    "hero": {
+      "location": "Palm springs, CA",
+      "title": "Futuristic Haven",
+      "getInTouch": "Get in touch",
+      "viewDetails": "View Details",
+      "bedrooms": "4 Bedrooms",
+      "restroom": "4 Restroom",
+      "parkingSpace": "Parking space",
+      "price": "$4,750,000",
+      "forSellingPrice": "For selling price"
+    },
+    "services": {
+      "categories": "Categories",
+      "title": "Explore best properties with expert services.",
+      "description": "Discover a diverse range of premium properties, from luxurious apartments to spacious villas, tailored to your needs",
+      "viewProperties": "View properties",
+      "residentialHomes": "Residential Homes",
+      "luxuryVillas": "Luxury villas",
+      "appartment": "Appartment",
+      "officeSpaces": "Office Spaces",
+      "categoryDescription": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+    },
+    "properties": {
+      "badge": "Properties",
+      "title": "Discover inspiring designed homes.",
+      "description": "Curated homes where elegance, style, and comfort unite."
+    },
+    "featured": {
+      "badge": "Featured property",
+      "title": "Modern luxe villa",
+      "address": "20 S Aurora Ave, Miami",
+      "description": "Experience luxury living at modern luxe villa, located at 20 S Aurora Ave, Miami. Priced at $1,650,500, this 560 ft² smart home offers 4 bedrooms, 3 bathrooms, and spacious living areas. Enjoy energy efficiency, natural light, security systems, outdoor spaces, and 2 bar areas—perfect for 8+ guests. Built in 2025.",
+      "bedrooms": "4 Bedrooms",
+      "bathrooms": "3 Bathrooms",
+      "parkingSpace": "Parking Space",
+      "barAreas": "2 Bar areas",
+      "getInTouch": "Get in touch",
+      "discountedPrice": "Discounted price"
+    },
+    "faq": {
+      "badge": "FAQs",
+      "title": "Everything about Homely homes",
+      "description": "We know that buying, selling, or investing in real estate can be overwhelming. Here are some frequently asked questions to help guide you through the process",
+      "q1": "1. Can I personalize my homely home?",
+      "q2": "2. Where can I find homely homes?",
+      "q3": "3. What steps to buy a homely?",
+      "answer": "Discover a diverse range of premium properties, from luxurious apartments to spacious villas, tailored to your needs."
+    },
+    "contact": {
+      "title": "Enter a realm where exquisite design and timeless luxury come together.",
+      "getInTouch": "Get In Touch",
+      "marquee1": "GET A FREE PROPERTY VALUATION—SELL YOUR HOME WITH CONFIDENCE!",
+      "marquee2": "BROWSE THOUSANDS OF LISTINGS IN PRIME LOCATIONS AT GREAT PRICES!"
+    },
+    "blog": {
+      "badge": "Blog",
+      "title": "Real estate insights",
+      "description": "Stay ahead in the property market with expert advice and updates",
+      "readAllArticles": "Read all articles"
+    },
+    "testimonial": {
+      "badge": "Testimonials",
+      "title": "What our clients say",
+      "goToSlide": "Go to slide {num}"
+    }
+  },
+  "Shared": {
+    "propertyCard": {
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "areaUnit": "m²",
+      "pricePrefix": "$"
+    },
+    "blogCard": {
+      "imageAlt": "Blog post image",
+      "ariaLabel": "View blog post"
+    },
+    "goBack": "Go Back"
+  },
+  "Listing": {
+    "properties": {
+      "badge": "Properties",
+      "title": "Discover inspiring designed homes.",
+      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+    },
+    "residentialHomes": {
+      "badge": "Properties",
+      "title": "Residential Homes.",
+      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+    },
+    "luxuryVilla": {
+      "badge": "Properties",
+      "title": "Luxury Villas.",
+      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+    },
+    "appartment": {
+      "badge": "Properties",
+      "title": "Apartments.",
+      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+    },
+    "officeSpaces": {
+      "badge": "Properties",
+      "title": "Office Spaces.",
+      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+    },
+    "blogs": {
+      "badge": "Blog",
+      "title": "Real estate insights.",
+      "description": "Stay ahead in the property market with expert advice and updates."
+    }
+  }
+}

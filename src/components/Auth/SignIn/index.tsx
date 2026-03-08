@@ -1,14 +1,18 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import SocialSignIn from "../SocialSignIn";
 import toast, { Toaster } from 'react-hot-toast';
 import AuthDialogContext from "@/app/context/AuthDialogContext";
 import Logo from "@/components/Layout/Header/BrandLogo/Logo";
 
+const LOCALES = ["en", "uk", "ru", "al"];
+
 const Signin = ({ signInOpen }: { signInOpen?: any }) => {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1]?.match(new RegExp(`^(${LOCALES.join("|")})$`)) ? pathname.split("/")[1] : "en";
   const { data: session } = useSession();
   const [username, setUsername] = useState("admin");
   const [password, setPassword] = useState("admin123");
@@ -93,7 +97,7 @@ const Signin = ({ signInOpen }: { signInOpen?: any }) => {
 
       <div className="text-center">
         <Link
-          href="/"
+          href={`/${locale}`}
           className="mb-2 text-base text-dark hover:text-primary dark:text-white dark:hover:text-primary"
         >
           Forget Password?
@@ -101,7 +105,7 @@ const Signin = ({ signInOpen }: { signInOpen?: any }) => {
       </div>
       <p className="text-body-secondary text-base text-center">
         Not a member yet?{" "}
-        <Link href="/" className="text-primary hover:underline">
+        <Link href={`/${locale}`} className="text-primary hover:underline">
           Sign Up
         </Link>
       </p>

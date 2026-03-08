@@ -8,9 +8,11 @@ import {
     CarouselItem,
     type CarouselApi,
 } from "@/components/ui/carousel";
-import { testimonials } from "@/app/api/testimonial";
+import { getTestimonials } from "@/data/testimonials";
+import { useTranslations } from "next-intl";
 
 const Testimonial = () => {
+    const t = useTranslations('Home.testimonial');
     const [api, setApi] = React.useState<CarouselApi | undefined>(undefined);
     const [current, setCurrent] = React.useState(0);
     const [count, setCount] = React.useState(0);
@@ -47,10 +49,10 @@ const Testimonial = () => {
                 <div>
                     <p className="text-white text-base font-semibold flex gap-2">
                         <Icon icon="ph:house-simple-fill" className="text-2xl text-primary" />
-                        Testimonials
+                        {t('badge')}
                     </p>
                     <h2 className="lg:text-52 text-40 font-medium text-white">
-                        What our clients say
+                        {t('title')}
                     </h2>
                 </div>
                 <Carousel
@@ -60,7 +62,7 @@ const Testimonial = () => {
                     }}
                 >
                     <CarouselContent>
-                        {testimonials.map((item, index) => (
+                        {getTestimonials().map((item, index) => (
                             <CarouselItem key={index} className="mt-9">
                                 <div className="lg:flex items-center gap-11">
                                     <div className="flex items-start gap-11 lg:pr-20">
@@ -107,7 +109,7 @@ const Testimonial = () => {
                             onClick={() => handleDotClick(index)}
                             className={`w-2.5 h-2.5 rounded-full ${current === index + 1 ? "bg-white" : "bg-white/50"
                                 }`}
-                            aria-label={`Go to slide ${index + 1}`}
+                            aria-label={t('goToSlide', { num: index + 1 })}
                         />
                     ))}
                 </div>

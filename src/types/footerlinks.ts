@@ -1,5 +1,5 @@
 export type footerlinks = {
-    label: string
+    key: string
     href: string
   }
   

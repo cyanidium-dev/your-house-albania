@@ -2,17 +2,18 @@ import { PropertyHomes } from '@/types/properyHomes'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
-const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
+async function PropertyCard({ item, locale }: { item: PropertyHomes; locale: string }) {
   const { name, location, rate, beds, baths, area, slug, images } = item
-
+  const t = await getTranslations('Shared.propertyCard')
   const mainImage = images[0]?.src;
 
   return (
     <div>
       <div className='relative rounded-2xl border border-dark/10 dark:border-white/10 group hover:shadow-3xl duration-300 dark:hover:shadow-white/20'>
         <div className='overflow-hidden rounded-t-2xl'>
-          <Link href={`/properties/${slug}`}>
+          <Link href={`/${locale}/properties/${slug}`}>
             {mainImage && (
               <Image
                 src={mainImage}
@@ -36,7 +37,7 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
         <div className='p-6'>
           <div className='flex flex-col mobile:flex-row gap-5 mobile:gap-0 justify-between mb-6'>
             <div>
-              <Link href={`/properties/${slug}`}>
+              <Link href={`/${locale}/properties/${slug}`}>
                 <h3 className='text-xl font-medium text-black dark:text-white duration-300 group-hover:text-primary'>
                   {name}
                 </h3>
@@ -55,13 +56,13 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
             <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8'>
               <Icon icon={'solar:bed-linear'} width={20} height={20} />
               <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                {beds} Bedrooms
+                {beds} {t('bedrooms')}
               </p>
             </div>
             <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 px-2 xs:px-4 mobile:px-8'>
               <Icon icon={'solar:bath-linear'} width={20} height={20} />
               <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                {baths} Bathrooms
+                {baths} {t('bathrooms')}
               </p>
             </div>
             <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
@@ -71,7 +72,7 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
                 height={20}
               />
               <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                {area}m<sup>2</sup>
+                {area}{t('areaUnit')}
               </p>
             </div>
           </div>

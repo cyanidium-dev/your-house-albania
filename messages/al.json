@@ -1,0 +1,147 @@
+{
+  "Header": {
+    "menu": "Menyja",
+    "signIn": "Hyr",
+    "signUp": "Regjistrohu",
+    "contact": "Kontakt",
+    "nav": {
+      "home": "Kryefaqja",
+      "properties": "Prona",
+      "blog": "Blog",
+      "contact": "Kontakt",
+      "docs": "Dokumentacioni"
+    }
+  },
+  "Footer": {
+    "newsletter": "Qëndroni të përditësuar me lajmet, ofertat dhe propozimet ekskluzive.",
+    "emailPlaceholder": "Vendosni email",
+    "subscribe": "Abonohu",
+    "disclaimer": "Duke u abonuar, pranoni të merrni email-e reklamuese. Mund të çabonohuni në çdo kohë.",
+    "cta": "Filloni rrugën drejt suksesit — na kontaktoni sot.",
+    "getInTouch": "Na kontaktoni",
+    "copyright": "©2025 Homely - Design & Developed by",
+    "termsOfService": "Kushtet e shërbimit",
+    "privacyPolicy": "Politika e privatësisë",
+    "links": {
+      "luxuryVillas": "Vila luksoze",
+      "residentialHomes": "Shtëpi banimi",
+      "apartments": "Apartamente",
+      "contactUs": "Na kontaktoni",
+      "blog": "Blog",
+      "notFound": "Faqja 404",
+      "documentation": "Dokumentacioni"
+    }
+  },
+  "Home": {
+    "hero": {
+      "location": "Palm springs, CA",
+      "title": "Streha futuristike",
+      "getInTouch": "Na kontaktoni",
+      "viewDetails": "Detaje",
+      "bedrooms": "4 dhoma gjumi",
+      "restroom": "4 banjo",
+      "parkingSpace": "Parkim",
+      "price": "$4,750,000",
+      "forSellingPrice": "Çmimi i shitjes"
+    },
+    "services": {
+      "categories": "Kategoritë",
+      "title": "Eksploroni pronat më të mira me shërbime ekspertësh.",
+      "description": "Zgjedhje e gjerë objektesh premium: nga apartamentet luksoze deri te vilat të mëdha, të përshtatura me nevojat tuaja.",
+      "viewProperties": "Shiko pronat",
+      "residentialHomes": "Shtëpi banimi",
+      "luxuryVillas": "Vila luksoze",
+      "appartment": "Apartamente",
+      "officeSpaces": "Hapësira zyrash",
+      "categoryDescription": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+    },
+    "properties": {
+      "badge": "Prona",
+      "title": "Zbuloni shtëpi me dizajn frymëzues.",
+      "description": "Shtëpi të përzgjedhura ku bashkohen eleganca, stili dhe rehatia."
+    },
+    "featured": {
+      "badge": "Pronë e zgjedhur",
+      "title": "Villë moderne luksoze",
+      "address": "20 S Aurora Ave, Miami",
+      "description": "Jetë luksoze në villë moderne, 20 S Aurora Ave, Miami. $1,650,500, 560 sq ft, 4 dhoma gjumi, 3 banjo, hapësira të mëdha. Efikasitet energjetik, dritë natyrore, siguri, hapësira të jashtme, 2 zona bar — ideal për 8+ mysafirë. E ndërtuar 2025.",
+      "bedrooms": "4 dhoma gjumi",
+      "bathrooms": "3 banjo",
+      "parkingSpace": "Parkim",
+      "barAreas": "2 zona bar",
+      "getInTouch": "Na kontaktoni",
+      "discountedPrice": "Çmim me zbritje"
+    },
+    "faq": {
+      "badge": "Pyetje",
+      "title": "Gjithçka rreth shtëpive Homely",
+      "description": "Blerja, shitja ose investimi në pasuri të paluajtshme mund të jetë stresues. Këtu janë përgjigjet e pyetjeve të shpeshta.",
+      "q1": "1. A mund të personalizoj shtëpinë time Homely?",
+      "q2": "2. Ku mund të gjej shtëpi Homely?",
+      "q3": "3. Cilat janë hapat për blerje?",
+      "answer": "Zgjedhje e gjerë objektesh premium: nga apartamentet luksoze deri te vilat të mëdha."
+    },
+    "contact": {
+      "title": "Hyni në një mbretëri ku dizajni ekzotik dhe luksi i përjetshëm takohen.",
+      "getInTouch": "Na kontaktoni",
+      "marquee1": "VLERËSIM FALAS TË PRONËS — SHITNI ME BESIM!",
+      "marquee2": "MILIONA OBJEKTE NË VENDRIME PREMIUM ME ÇMIME TË MËDHA!"
+    },
+    "blog": {
+      "badge": "Blog",
+      "title": "Pamje të tregut të pasurive të paluajtshme",
+      "description": "Këshilla dhe përditësime nga ekspertët.",
+      "readAllArticles": "Lexo të gjitha artikujt"
+    },
+    "testimonial": {
+      "badge": "Dëshmi",
+      "title": "Çfarë thonë klientët tanë",
+      "goToSlide": "Shko te rrëshqitja {num}"
+    }
+  },
+  "Shared": {
+    "propertyCard": {
+      "bedrooms": "Dhoma gjumi",
+      "bathrooms": "Banjo",
+      "areaUnit": "m²",
+      "pricePrefix": "$"
+    },
+    "blogCard": {
+      "imageAlt": "Imazhi i artikullit të blogut",
+      "ariaLabel": "Shiko artikullin e blogut"
+    },
+    "goBack": "Kthehu"
+  },
+  "Listing": {
+    "properties": {
+      "badge": "Prona",
+      "title": "Zbuloni shtëpi me dizajn frymëzues.",
+      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+    },
+    "residentialHomes": {
+      "badge": "Prona",
+      "title": "Shtëpi banimi.",
+      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+    },
+    "luxuryVilla": {
+      "badge": "Prona",
+      "title": "Vila luksoze.",
+      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+    },
+    "appartment": {
+      "badge": "Prona",
+      "title": "Apartamente.",
+      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+    },
+    "officeSpaces": {
+      "badge": "Prona",
+      "title": "Hapësira zyrash.",
+      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+    },
+    "blogs": {
+      "badge": "Blog",
+      "title": "Pamje të tregut të pasurive të paluajtshme.",
+      "description": "Këshilla dhe përditësime nga ekspertët."
+    }
+  }
+}

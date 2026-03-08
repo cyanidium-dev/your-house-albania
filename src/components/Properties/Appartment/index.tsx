@@ -1,14 +1,15 @@
 import PropertyCard from '@/components/Home/Properties/Card/Card'
-import { propertyHomes } from '@/app/api/propertyhomes'
+import { getProperties } from '@/data/properties'
 
-const Appartment: React.FC = () => {
+const Appartment: React.FC<{ locale: string }> = ({ locale }) => {
+  const properties = getProperties()
     return (
         <section className='pt-0!'>
             <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
                 <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
-                    {propertyHomes.slice(6, 9).map((item, index) => (
+                    {properties.slice(6, 9).map((item, index) => (
                         <div key={index} className=''>
-                            <PropertyCard item={item} />
+                            <PropertyCard item={item} locale={locale} />
                         </div>
                     ))}
                 </div>

@@ -1,11 +1,11 @@
 import { footerlinks } from "@/types/footerlinks"
 
 export const FooterLinks: footerlinks[] = [
-    { label: 'Luxury Villas', href: '/luxury-villa' },
-    { label: 'Residential Homes', href: '/residential-homes' },
-    { label: 'Apartments', href: '/appartment' },
-    { label: 'Contact Us', href: '/contactus' },
-    { label: 'Blog', href: '/blogs' },
-    { label: '404 Page', href: '/not-found' },
-    { label: 'Documentation', href: '/documentation' },
+    { key: 'luxuryVillas', href: '/luxury-villa' },
+    { key: 'residentialHomes', href: '/residential-homes' },
+    { key: 'apartments', href: '/appartment' },
+    { key: 'contactUs', href: '/contactus' },
+    { key: 'blog', href: '/blogs' },
+    { key: 'notFound', href: '/not-found' },
+    { key: 'documentation', href: '/documentation' },
 ]

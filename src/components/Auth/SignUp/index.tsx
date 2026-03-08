@@ -1,13 +1,17 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import SocialSignUp from "../SocialSignUp";
 import Logo from "@/components/Layout/Header/BrandLogo/Logo";
 import { useContext, useState } from "react";
 import AuthDialogContext from "@/app/context/AuthDialogContext";
+const LOCALES = ["en", "uk", "ru", "al"];
+
 const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1]?.match(new RegExp(`^(${LOCALES.join("|")})$`)) ? pathname.split("/")[1] : "en";
   const [loading, setLoading] = useState(false);
   const authDialog = useContext(AuthDialogContext);
 
@@ -30,7 +34,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
       .then((data) => {
         toast.success("Successfully registered");
         setLoading(false);
-        router.push("/");
+        router.push(`/${locale}`);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -101,11 +105,11 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
 
       <p className="text-center mb-4 text-base">
         By creating an account you are agree with our{" "}
-        <Link href="/" className="text-primary hover:underline">
+        <Link href={`/${locale}`} className="text-primary hover:underline">
           Privacy
         </Link>{" "}
         and{" "}
-        <Link href="/" className="text-primary hover:underline">
+        <Link href={`/${locale}`} className="text-primary hover:underline">
           Policy
         </Link>
       </p>
@@ -113,7 +117,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
       <p className="text-center text-base">
         Already have an account?
         <Link
-          href="/"
+          href={`/${locale}`}
           className="pl-2 text-primary hover:bg-darkprimary hover:underline"
         >
           Sign In

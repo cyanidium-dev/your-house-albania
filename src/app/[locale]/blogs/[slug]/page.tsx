@@ -1,9 +1,11 @@
-import { getAllPosts, getPostBySlug } from "@/components/utils/markdown";
+import { getBlogPostBySlug } from "@/data/blog";
 import markdownToHtml from "@/components/utils/markdownToHtml";
+import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from '@iconify/react'
+import { getTranslations } from "next-intl/server";
 
 type Props = {
     params: { slug: string };
@@ -11,8 +13,7 @@ type Props = {
 
 export async function generateMetadata({ params }: any) {
     const data = await params;
-    const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
-    const post = getPostBySlug(data.slug, [
+    const post = getBlogPostBySlug(data.slug, [
         "title",
         "author",
         "content",
@@ -62,10 +63,9 @@ export async function generateMetadata({ params }: any) {
     }
 }
 
-export default async function Post({ params }: any) {
+export default async function Post({ params }: { params: Promise<{ locale: string; slug: string }> }) {
     const data = await params;
-    const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
-    const post = getPostBySlug(data.slug, [
+    const post = getBlogPostBySlug(data.slug, [
         "title",
         "author",
         "authorImage",
@@ -76,7 +76,10 @@ export default async function Post({ params }: any) {
         "detail",
     ]);
 
-    const content = await markdownToHtml(post.content || "");
+    if (!post) notFound();
+
+    const content = await markdownToHtml((post.content as string) || "");
+    const t = await getTranslations('Shared');
 
     return (
         <>
@@ -84,14 +87,14 @@ export default async function Post({ params }: any) {
                 <div className="container max-w-8xl mx-auto md:px-0 px-4">
                     <div>
                         <div>
-                            <Link href="/blogs" className="flex items-center gap-3 text-white bg-primary py-3 px-4 rounded-full w-fit hover:bg-dark duration-300">
+                            <Link href={`/${data.locale}/blogs`} className="flex items-center gap-3 text-white bg-primary py-3 px-4 rounded-full w-fit hover:bg-dark duration-300">
                                 <Icon
                                     icon={'ph:arrow-left'}
                                     width={20}
                                     height={20}
                                     className=''
                                 />
-                                <span>Go Back</span>
+                                <span>{t('goBack')}</span>
                             </Link>
                             <h2 className="text-dark dark:text-white md:text-52 text-40 leading-[1.2] font-semibold pt-7">
                                 {post.title}
@@ -103,7 +106,7 @@ export default async function Post({ params }: any) {
                         <div className="flex items-center justify-between gap-6 mt-12">
                             <div className="flex items-center gap-4">
                                 <Image
-                                    src={post.authorImage}
+                                    src={post.authorImage ?? ''}
                                     alt="image"
                                     className="bg-no-repeat bg-contain inline-block rounded-full !w-12 !h-12"
                                     width={48}
@@ -126,7 +129,7 @@ export default async function Post({ params }: any) {
                                         className=''
                                     />
                                     <span className="text-base text-dark font-medium dark:text-white">
-                                        {format(new Date(post.date), "MMM dd, yyyy")}
+                                        {format(new Date(post.date ?? ''), "MMM dd, yyyy")}
                                     </span>
                                 </div>
                                 <div className="py-2.5 px-5 bg-dark/5 rounded-full dark:bg-white/15">
@@ -137,7 +140,7 @@ export default async function Post({ params }: any) {
                     </div>
                     <div className="z-20 mt-12 overflow-hidden rounded">
                         <Image
-                            src={post.coverImage}
+                            src={post.coverImage ?? ''}
                             alt="image"
                             width={1170}
                             height={766}

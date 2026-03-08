@@ -7,15 +7,21 @@ import BlogSmall from '@/components/shared/Blog'
 import GetInTouch from '@/components/Home/GetInTouch'
 import FAQ from '@/components/Home/FAQs'
 
-export default function Home() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+
   return (
     <main>
-      <Hero />
-      <Services />
-      <Properties />
-      <FeaturedProperty />
+      <Hero locale={locale} />
+      <Services locale={locale} />
+      <Properties locale={locale} />
+      <FeaturedProperty locale={locale} />
       <Testimonial />
-      <BlogSmall />
+      <BlogSmall locale={locale} />
       <GetInTouch />
       <FAQ />
     </main>

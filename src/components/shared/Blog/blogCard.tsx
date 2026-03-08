@@ -1,17 +1,19 @@
-import React, { FC } from "react";
+import React from "react";
 import Image from "next/image";
 import { Blog } from "@/types/blog";
 import { format } from "date-fns";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-const BlogCard: FC<{ blog: Blog }> = ({ blog }) => {
+async function BlogCard({ blog, locale }: { blog: Blog; locale: string }) {
     const { title, coverImage, date, slug, tag } = blog;
+    const t = await getTranslations('Shared.blogCard');
     return (
-        <Link href={`/blogs/${slug}`} aria-label="blog cover 5xl:h-full 5xl:inline-block" className="gap-4 group">
+        <Link href={`/${locale}/blogs/${slug}`} aria-label={t('ariaLabel')} className="gap-4 group">
             <div className="overflow-hidden rounded-2xl flex-shrink-0">
                 <Image
                     src={coverImage!}
-                    alt="image"
+                    alt={t('imageAlt')}
                     className="transition group-hover:scale-110"
                     width={190}
                     height={163}

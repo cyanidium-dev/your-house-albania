@@ -1,16 +1,16 @@
 "use client"
 import React from 'react';
-import { propertyHomes } from '@/app/api/propertyhomes';
+import { getPropertyBySlug } from '@/data/properties';
 import { useParams } from "next/navigation";
 import { Icon } from '@iconify/react';
-import { testimonials } from '@/app/api/testimonial';
+import { getTestimonials } from '@/data/testimonials';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Details() {
     const { slug } = useParams();
 
-    const item = propertyHomes.find((item) => item.slug === slug);
+    const item = getPropertyBySlug(slug as string);
     return (
         <section className="!pt-44 pb-20 relative" >
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
@@ -193,7 +193,7 @@ export default function Details() {
                                 <Image src="/images/properties/vector.svg" width={400} height={500} alt="vector" unoptimized={true} />
                             </div>
                         </div>
-                        {testimonials.slice(0, 1).map((item, index) => (
+                        {getTestimonials().slice(0, 1).map((item, index) => (
                             <div key={index} className="border p-10 rounded-2xl border-dark/10 dark:border-white/20 mt-10 flex flex-col gap-6">
                                 <Icon icon="ph:house-simple" width={44} height={44} className="text-primary" />
                                 <p className='text-xm text-dark dark:text-white'>{item.review}</p>

@@ -2,21 +2,25 @@ import HeroSub from "@/components/shared/HeroSub";
 import OfficeSpace from "@/components/Properties/OfficeSpaces";
 import React from "react";
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+
 export const metadata: Metadata = {
     title: "Property List | Homely",
 };
 
-const page = () => {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function page({ params }: Props) {
+    const { locale } = await params;
+    const t = await getTranslations('Listing.officeSpaces');
     return (
         <>
             <HeroSub
-                title="Office Spaces."
-                description="Experience elegance and comfort with our exclusive luxury  villas, designed for sophisticated living."
-                badge="Properties"
+                title={t('title')}
+                description={t('description')}
+                badge={t('badge')}
             />
-            <OfficeSpace />
+            <OfficeSpace locale={locale} />
         </>
     );
-};
-
-export default page;
+}
