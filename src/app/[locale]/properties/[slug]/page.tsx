@@ -1,25 +1,69 @@
-"use client"
 import React from 'react';
 import { getPropertyBySlug } from '@/data/properties';
-import { useParams } from "next/navigation";
+import { fetchPropertyBySlug } from '@/lib/sanity/client';
+import { mapSanityPropertyToDetailsFields } from '@/lib/sanity/propertyAdapter';
 import { Icon } from '@iconify/react';
 import { getTestimonials } from '@/data/testimonials';
 import Link from 'next/link';
 import Image from 'next/image';
+import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 
-export default function Details() {
-    const { slug } = useParams();
+const FALLBACK_DESCRIPTION_PARAS = [
+  'Nestled in the heart of miami, the modern luxe villa at 20 s aurora ave offers a perfect blend of contemporary elegance and smart-home innovation. priced at $570000, this 560 ft² residence features 4 spacious bedrooms, 3 luxurious bathrooms, and expansive living areas designed for comfort and style. built in 2025, the home boasts energy-efficient systems, abundant natural light, and state-of-the-art security features. outdoor spaces include two stylish bar areas, perfect for entertaining 8+ guests. enjoy the ultimate in modern living with premium amenities and a prime location.',
+  'Step inside to discover an open-concept layout that seamlessly connects the kitchen, dining, and living spaces. the gourmet kitchen is equipped with top-of-the-line appliances, sleek cabinetry, and a large island perfect for casual dining or meal prep. the sunlit living room offers floor-to-ceiling windows, creating a bright and airy atmosphere while providing stunning views of the outdoor space.',
+  'The primary suite serves as a private retreat with a spa-like ensuite bathroom and a spacious walk-in closet. each additional bedroom is thoughtfully designed with comfort and style in mind, offering ample space and modern finishes. the home\'s three bathrooms feature high-end fixtures, custom vanities, and elegant tiling.',
+  'Outdoor living is equally impressive, with a beautifully landscaped backyard, multiple lounge areas, and two fully equipped bar spaces.',
+];
 
-    const item = getPropertyBySlug(slug as string);
+type Props = {
+  params: Promise<{ locale: string; slug: string }>;
+};
+
+export default async function PropertyDetailsPage({ params }: Props) {
+  const { slug, locale } = await params;
+
+  const sanityProperty = await fetchPropertyBySlug(slug);
+  const mockItem = getPropertyBySlug(slug);
+  const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
+
+  const title = sanityFields.title || mockItem?.name || '';
+  const location = sanityFields.location || mockItem?.location || '';
+  const rate = sanityFields.rate || mockItem?.rate || '';
+  const beds = sanityFields.beds ?? mockItem?.beds ?? 0;
+  const baths = sanityFields.baths ?? mockItem?.baths ?? 0;
+  const area = sanityFields.area ?? mockItem?.area ?? 0;
+  const descriptionParas =
+    sanityFields.description
+      ? sanityFields.description.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
+      : FALLBACK_DESCRIPTION_PARAS;
+
+  const dealTypeLabel = sanityFields.dealTypeLabel;
+
+  type GalleryItem = { asset?: { url?: string }; alt?: string };
+  const sanityGalleryItems = Array.isArray((sanityProperty as { gallery?: GalleryItem[] })?.gallery)
+    ? ((sanityProperty as { gallery: GalleryItem[] }).gallery.filter((g) => g?.asset?.url) as GalleryItem[])
+    : [];
+  const mockImages = mockItem?.images?.map((i) => i.src) ?? [];
+  const galleryImages =
+    sanityGalleryItems.length > 0
+      ? sanityGalleryItems.map((g) => ({ url: (g as { asset: { url: string } }).asset.url, alt: (g as { alt?: string }).alt }))
+      : mockImages.map((url) => ({ url, alt: undefined as string | undefined }));
+
+  const hasCoordinates =
+    (sanityProperty as { coordinates?: { lat?: number; lng?: number } | null })?.coordinates != null &&
+    typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lat === 'number' &&
+    typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lng === 'number';
+
+  const item = mockItem;
     return (
         <section className="!pt-44 pb-20 relative" >
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
                 <div className="grid grid-cols-12 items-end gap-6">
                     <div className="lg:col-span-8 col-span-12">
-                        <h1 className='lg:text-52 text-40 font-semibold text-dark dark:text-white'>{item?.name}</h1>
+                        <h1 className='lg:text-52 text-40 font-semibold text-dark dark:text-white'>{title}</h1>
                         <div className="flex gap-2.5">
                             <Icon icon="ph:map-pin" width={24} height={24} className="text-dark/50 dark:text-white/50" />
-                            <p className='text-dark/50 dark:text-white/50 text-xm'>{item?.location}</p>
+                            <p className='text-dark/50 dark:text-white/50 text-xm'>{location}</p>
                         </div>
                     </div>
                     <div className="lg:col-span-4 col-span-12">
@@ -27,13 +71,13 @@ export default function Details() {
                             <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8'>
                                 <Icon icon={'solar:bed-linear'} width={20} height={20} />
                                 <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {item?.beds} Bedrooms
+                                    {beds} Bedrooms
                                 </p>
                             </div>
                             <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 px-2 xs:px-4 mobile:px-8'>
                                 <Icon icon={'solar:bath-linear'} width={20} height={20} />
                                 <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {item?.baths} Bathrooms
+                                    {baths} Bathrooms
                                 </p>
                             </div>
                             <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
@@ -43,43 +87,13 @@ export default function Details() {
                                     height={20}
                                 />
                                 <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {item?.area}m<sup>2</sup>
+                                    {area}m<sup>2</sup>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-12 mt-8 gap-8">
-                    <div className="lg:col-span-8 col-span-12 row-span-2">
-                        {item?.images && item?.images[0] && (
-                            <div className="">
-                                <Image
-                                    src={item.images[0]?.src}
-                                    alt="Main Property Image"
-                                    width={400}
-                                    height={500}
-                                    className="rounded-2xl w-full h-540"
-                                    unoptimized={true}
-                                />
-                            </div>
-                        )}
-                    </div>
-                    <div className="lg:col-span-4 lg:block hidden">
-                        {item?.images && item?.images[1] && (
-                            <Image src={item.images[1]?.src} alt="Property Image 2" width={400} height={500} className="rounded-2xl w-full h-full" unoptimized={true} />
-                        )}
-                    </div>
-                    <div className="lg:col-span-2 col-span-6">
-                        {item?.images && item?.images[2] && (
-                            <Image src={item.images[2]?.src} alt="Property Image 3" width={400} height={500} className="rounded-2xl w-full h-full" unoptimized={true} />
-                        )}
-                    </div>
-                    <div className="lg:col-span-2 col-span-6">
-                        {item?.images && item?.images[3] && (
-                            <Image src={item.images[3]?.src} alt="Property Image 4" width={400} height={500} className="rounded-2xl w-full h-full" unoptimized={true} />
-                        )}
-                    </div>
-                </div>
+                <PropertyGallery images={galleryImages} />
                 <div className="grid grid-cols-12 gap-8 mt-10">
                     <div className="lg:col-span-8 col-span-12">
                         <h3 className='text-xl font-medium'>Property details</h3>
@@ -122,29 +136,11 @@ export default function Details() {
                             </div>
                         </div>
                         <div className="flex flex-col gap-5">
-                            <p className='text-dark dark:text-white text-xm '>
-                                Nestled in the heart of miami, the modern luxe villa at 20 s aurora ave offers a perfect blend of contemporary
-                                elegance and smart-home innovation. priced at $570000, this 560 ft² residence features 4 spacious bedrooms,
-                                3 luxurious bathrooms, and expansive living areas designed for comfort and style. built in 2025, the home
-                                boasts energy-efficient systems, abundant natural light, and state-of-the-art security features. outdoor
-                                spaces include two stylish bar areas, perfect for entertaining 8+ guests. enjoy the ultimate in modern living
-                                with premium amenities and a prime location.
-                            </p>
-                            <p className='text-dark dark:text-white text-xm '>
-                                Step inside to discover an open-concept layout that seamlessly connects the kitchen, dining, and living spaces.
-                                the gourmet kitchen is equipped with top-of-the-line appliances, sleek cabinetry, and a large island perfect
-                                for casual dining or meal prep. the sunlit living room offers floor-to-ceiling windows, creating a bright and
-                                airy atmosphere while providing stunning views of the outdoor space.
-                            </p>
-                            <p className='text-dark dark:text-white text-xm '>
-                                The primary suite serves as a private retreat with a spa-like ensuite bathroom and a spacious walk-in closet.
-                                each additional bedroom is thoughtfully designed with comfort and style in mind, offering ample space and modern
-                                finishes. the home’s three bathrooms feature high-end fixtures, custom vanities, and elegant tiling.
-                            </p>
-                            <p className='text-dark dark:text-white text-xm '>
-                                Outdoor living is equally impressive, with a beautifully landscaped backyard, multiple lounge areas,
-                                and two fully equipped bar spaces.
-                            </p>
+                            {descriptionParas.map((para, i) => (
+                              <p key={i} className='text-dark dark:text-white text-xm '>
+                                {para}
+                              </p>
+                            ))}
                         </div>
                         <div className="py-8 mt-8 border-t border-dark/5 dark:border-white/15">
                             <h3 className='text-xl font-medium'>What this property offers</h3>
@@ -175,17 +171,20 @@ export default function Details() {
                                 </div>
                             </div>
                         </div>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d938779.7831767448!2d71.05098621661072!3d23.20271516446136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e82dd003ff749%3A0x359e803f537cea25!2sGANESH%20GLORY%2C%20Gota%2C%20Ahmedabad%2C%20Gujarat%20382481!5e0!3m2!1sen!2sin!4v1715676641521!5m2!1sen!2sin"
-                            width="1114" height="400" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="rounded-2xl w-full">
-                        </iframe>
+                        {hasCoordinates && (() => {
+                          const coords = (sanityProperty as { coordinates: { lat: number; lng: number } }).coordinates;
+                          const embedSrc = `https://www.google.com/maps?q=${coords.lat},${coords.lng}&z=15&output=embed`;
+                          return (
+                            <iframe src={embedSrc} width="1114" height="400" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="rounded-2xl w-full" />
+                          );
+                        })()}
                     </div>
                     <div className="lg:col-span-4 col-span-12">
                         <div className="bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <h4 className='text-dark text-3xl font-medium dark:text-white'>
-                                {item?.rate}
+                                {rate}
                             </h4>
-                            <p className='text-sm text-dark/50 dark:text-white'>Discounted Price</p>
+                            <p className='text-sm text-dark/50 dark:text-white'>{dealTypeLabel}</p>
                             <Link href="#" className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'>
                                 Get in touch
                             </Link>

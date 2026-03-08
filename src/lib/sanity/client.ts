@@ -208,6 +208,64 @@ export async function fetchFeaturedProperties(limit = 6): Promise<unknown[] | nu
   }
 }
 
+/** Fetch single property by slug. Returns null if not found or client not configured. */
+export async function fetchPropertyBySlug(slug: string): Promise<unknown | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "property" && slug.current == $slug][0] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    price,
+    currency,
+    area,
+    bedrooms,
+    bathrooms,
+    status,
+    featured,
+    investment,
+    "city": city-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "district": district-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "citySlug": city->slug.current
+    },
+    "type": type-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    gallery[] {
+      asset-> { _id, url, metadata },
+      crop,
+      hotspot,
+      alt
+    },
+    coordinates,
+    description,
+    content
+  }`;
+  try {
+    const result = await client.fetch(query, { slug });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Sanity] fetchPropertyBySlug:', slug, result ? 'found' : 'not found');
+      if (result) {
+        console.log('[Sanity Property] shape:', JSON.stringify(result, null, 2).slice(0, 800) + '...');
+      }
+    }
+    return result;
+  } catch (err) {
+    console.warn('[Sanity] fetchPropertyBySlug failed:', err);
+    return null;
+  }
+}
+
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
 export async function fetchActivePropertyTypes(limit = 8): Promise<unknown[] | null> {
   const client = getClient();

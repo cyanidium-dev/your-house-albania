@@ -36,7 +36,7 @@ export default function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300"
+        className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300 cursor-pointer"
         aria-label="Select language"
         aria-expanded={open}
       >
@@ -66,7 +66,7 @@ export default function LanguageSwitcher() {
                 role="option"
                 aria-selected={loc === locale}
                 onClick={() => handleSelect(loc)}
-                className={`block w-full text-left px-4 py-2 text-sm hover:bg-primary/10 hover:text-primary ${
+                className={`block w-full text-left px-4 py-2 text-sm hover:bg-primary/10 hover:text-primary cursor-pointer ${
                   loc === locale ? "text-primary font-semibold" : ""
                 }`}
               >

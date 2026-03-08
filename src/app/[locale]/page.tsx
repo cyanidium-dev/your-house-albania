@@ -382,9 +382,7 @@ export default async function Home({ params }: Props) {
           if (q || a) return { question: q || "", answer: a || "" };
           return null;
         })
-        .filter(
-          (x): x is { question: string; answer: string } => x !== null,
-        );
+        .filter((x): x is { question: string; answer: string } => x !== null);
       if (itemsResolved.length > 0) {
         faqData = {
           title: resolveLocalizedString(fq.title as never, locale) || undefined,
@@ -460,13 +458,14 @@ export default async function Home({ params }: Props) {
       <About locale={locale} aboutData={aboutData} />
       <AgentsPromo agentsPromoData={agentsPromoData} />
       <SeoText seoTextData={seoTextData} />
+      {(!faqData || faqData.items.length > 0) && <FAQ faqData={faqData} />}
+
       {/* template files */}
-      <Services locale={locale} />
-      <FeaturedProperty locale={locale} />
+      {/* <Services locale={locale} />
+      <FeaturedProperty locale={locale} /> */}
       <Testimonial />
       <BlogSmall locale={locale} />
-      <GetInTouch />
-      {(!faqData || faqData.items.length > 0) && <FAQ faqData={faqData} />}
+      {/* <GetInTouch /> */}
     </main>
   );
 }

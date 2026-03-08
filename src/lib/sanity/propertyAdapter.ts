@@ -1,6 +1,68 @@
 import type { PropertyHomes } from '@/types/properyHomes';
 import { resolveLocalizedString } from './localized';
 
+/** Fields for property details page top section (title, location, specs, price, description). */
+export type PropertyDetailsFields = {
+  title: string;
+  location: string;
+  rate: string;
+  beds: number;
+  baths: number;
+  area: number;
+  description: string;
+};
+
+type SanityPropertyForDetails = {
+  title?: unknown;
+  price?: number;
+  currency?: string;
+  area?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  city?: { title?: unknown };
+  district?: { title?: unknown };
+  description?: unknown;
+  status?: string;
+};
+
+/** Maps Sanity status to deal type label. Fallback: "Price". */
+export function mapStatusToDealTypeLabel(status: string | null | undefined): string {
+  if (!status || typeof status !== 'string') return 'Price';
+  const s = status.toLowerCase();
+  if (s === 'sale') return 'Sale';
+  if (s === 'rent') return 'Rent';
+  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent';
+  if (s === 'long-term' || s === 'longterm') return 'Long-term rent';
+  return status; // fallback: show raw value
+}
+
+/** Maps Sanity property to fields for property details page. Uses empty strings/0 for missing. */
+export function mapSanityPropertyToDetailsFields(
+  p: SanityPropertyForDetails | null | undefined,
+  locale: string
+): PropertyDetailsFields {
+  if (!p) {
+    return { title: '', location: '', rate: '', beds: 0, baths: 0, area: 0, description: '', dealTypeLabel: 'Price' };
+  }
+  const cityTitle = resolveLocalizedString(p.city?.title as never, locale);
+  const districtTitle = resolveLocalizedString(p.district?.title as never, locale);
+  const location = [districtTitle, cityTitle].filter(Boolean).join(', ') || '';
+  const desc = resolveLocalizedString(p.description as never, locale);
+  const price = p.price ?? 0;
+  const currency = p.currency ?? 'EUR';
+  const rate = price > 0 ? `${price.toLocaleString()} ${currency}` : '';
+  return {
+    title: resolveLocalizedString(p.title as never, locale) || '',
+    location,
+    rate,
+    beds: p.bedrooms ?? 0,
+    baths: p.bathrooms ?? 0,
+    area: p.area ?? 0,
+    description: desc || '',
+    dealTypeLabel: mapStatusToDealTypeLabel(p.status),
+  };
+}
+
 type SanityProperty = {
   _id?: string;
   title?: unknown;
