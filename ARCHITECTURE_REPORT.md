@@ -1,6 +1,6 @@
 # FRONTEND TEMPLATE ARCHITECTURE REPORT
 
-**Project:** Homely / Your House Albania (Real Estate Template)  
+**Project:** Domlivo / Your House Albania (Real Estate Template)  
 **Date:** March 2025  
 **Scope:** Full technical audit for evaluation before multilingual and CMS integration
 
@@ -8,22 +8,22 @@
 
 ## 1. Core Technologies
 
-| Category | Technology |
-|----------|------------|
-| **Framework** | Next.js 15.2.2 (React 19) |
-| **Routing** | App Router |
-| **Language** | TypeScript 5 |
-| **Styling** | Tailwind CSS 4 + tailwindcss-animate |
-| **State Management** | React useState/useContext (AuthDialogContext, donationContext) |
-| **Data Fetching** | Static imports from `src/app/api/*` (mock data), file system (markdown) |
-| **Image Handling** | next/image with `unoptimized={true}` on most images |
-| **Build System** | Next.js (SWC minify, Turbopack for dev) |
-| **UI Libraries** | Radix UI (Accordion, Slot), shadcn/ui (button, accordion, carousel) |
-| **Icons** | @iconify/react, lucide-react |
-| **Animation** | Embla Carousel, tailwindcss-animate, custom CSS keyframes |
-| **SEO** | Static Metadata in layout and pages, generateMetadata in blog slug |
-| **i18n (declared but unused)** | next-i18next, react-i18next, i18next in package.json; next.config i18n |
-| **Other** | next-themes (dark mode), nextjs-toploader, next-auth (installed, minimal use), react-hot-toast, gray-matter, remark, date-fns |
+| Category                       | Technology                                                                                                                    |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| **Framework**                  | Next.js 15.2.2 (React 19)                                                                                                     |
+| **Routing**                    | App Router                                                                                                                    |
+| **Language**                   | TypeScript 5                                                                                                                  |
+| **Styling**                    | Tailwind CSS 4 + tailwindcss-animate                                                                                          |
+| **State Management**           | React useState/useContext (AuthDialogContext, donationContext)                                                                |
+| **Data Fetching**              | Static imports from `src/app/api/*` (mock data), file system (markdown)                                                       |
+| **Image Handling**             | next/image with `unoptimized={true}` on most images                                                                           |
+| **Build System**               | Next.js (SWC minify, Turbopack for dev)                                                                                       |
+| **UI Libraries**               | Radix UI (Accordion, Slot), shadcn/ui (button, accordion, carousel)                                                           |
+| **Icons**                      | @iconify/react, lucide-react                                                                                                  |
+| **Animation**                  | Embla Carousel, tailwindcss-animate, custom CSS keyframes                                                                     |
+| **SEO**                        | Static Metadata in layout and pages, generateMetadata in blog slug                                                            |
+| **i18n (declared but unused)** | next-i18next, react-i18next, i18next in package.json; next.config i18n                                                        |
+| **Other**                      | next-themes (dark mode), nextjs-toploader, next-auth (installed, minimal use), react-hot-toast, gray-matter, remark, date-fns |
 
 **Critical:** The project uses `next-i18next` and `i18n` in `next.config.ts`, but **App Router does not support the built-in next.config i18n**. The i18n packages are **never imported or used** in any component.
 
@@ -74,6 +74,7 @@ your-house-albania/
 ```
 
 **Folder responsibilities:**
+
 - **app/api/** — Static data exports (no HTTP API). Used as a data source.
 - **app/[locale]/** — All secondary pages. Uses dynamic `[locale]` but no middleware or layout.
 - **app/context/** — Global context providers.
@@ -89,58 +90,68 @@ your-house-albania/
 ## 3. Routing Architecture
 
 ### Homepage
+
 - **Path:** `/`
 - **File:** `src/app/page.tsx`
 - **Type:** Static Server Component
 
 ### Property Routes
-| Route | File | Type |
-|-------|------|------|
-| Property list | `/[locale]/properties` | Static |
+
+| Route           | File                          | Type           |
+| --------------- | ----------------------------- | -------------- |
+| Property list   | `/[locale]/properties`        | Static         |
 | Property detail | `/[locale]/properties/[slug]` | Dynamic (slug) |
 
 ### Category Pages (filtered property lists)
-| Route | File | Component |
-|-------|------|-----------|
-| Residential Homes | `/[locale]/residential-homes` | ResidentialList |
-| Luxury Villa | `/[locale]/luxury-villa` | LuxuryVillaList |
-| Apartments | `/[locale]/appartment` | AppartmentList |
-| Office Spaces | `/[locale]/office-spaces` | OfficeSpacesList |
+
+| Route             | File                          | Component        |
+| ----------------- | ----------------------------- | ---------------- |
+| Residential Homes | `/[locale]/residential-homes` | ResidentialList  |
+| Luxury Villa      | `/[locale]/luxury-villa`      | LuxuryVillaList  |
+| Apartments        | `/[locale]/appartment`        | AppartmentList   |
+| Office Spaces     | `/[locale]/office-spaces`     | OfficeSpacesList |
 
 ### Blog Routes
-| Route | File | Type |
-|-------|------|------|
-| Blog list | `/[locale]/blogs` | Static (reads markdown) |
-| Blog post | `/[locale]/blogs/[slug]` | Dynamic (slug) |
+
+| Route     | File                     | Type                    |
+| --------- | ------------------------ | ----------------------- |
+| Blog list | `/[locale]/blogs`        | Static (reads markdown) |
+| Blog post | `/[locale]/blogs/[slug]` | Dynamic (slug)          |
 
 ### Other Routes
+
 - `/[locale]/contactus` — Contact page
 - `/[locale]/documentation` — Docs page
 - `/not-found` — Custom 404
 
 ### City/District Pages
+
 - **None.** Only category-based property lists; no city or district filtering.
 
 ### Critical Routing Problem
 
 All internal links use paths **without locale prefix:**
+
 - Nav: `/`, `/properties`, `/blogs`, `/contactus`, `/documentation`
 - Footer: `/luxury-villa`, `/residential-homes`, `/appartment`, `/contactus`, `/blogs`
 - Hero, Services, FeaturedProperty: `/contactus`, `/properties`, `/residential-homes`, etc.
 
 Actual routes live under `app/[locale]/`:
+
 - Real URLs: `/en/properties`, `/ru/blogs`, etc.
 - There is no `app/properties/page.tsx` or `app/contactus/page.tsx`.
 
 Result: `/properties`, `/blogs`, `/contactus` return **404**, because they do not match any route. Only `/` and `/{locale}/...` work.
 
 Additional issues:
+
 - No `app/[locale]/layout.tsx` — locale is not used for layout or i18n.
 - No middleware for locale detection or redirects.
 - No `app/[locale]/page.tsx` — `/en`, `/ru`, etc. return 404.
 - `/signin` is linked in the header but no route exists.
 
 ### Data Fetching per Route
+
 - **Homepage:** RSC, no async.
 - **Properties:** Client and server components import static arrays from `app/api/propertyhomes.tsx`.
 - **Blog:** Server components call `getAllPosts()`, `getPostBySlug()` (file system).
@@ -151,27 +162,33 @@ Additional issues:
 ## 4. Component Architecture
 
 ### Layout Components
+
 - **Root layout:** `app/layout.tsx` — ThemeProvider, NextTopLoader, Header, Footer, children.
 - **Header:** Fixed, sticky, dark mode toggle, nav, mobile sidebar.
 - **Footer:** Newsletter, CTA, footer links.
 
 ### Page Components
+
 - `app/page.tsx` — Composes Hero, Services, Properties, FeaturedProperty, Testimonial, BlogSmall, GetInTouch, FAQ.
 - Category pages — HeroSub + listing component.
 - Property detail — Inline layout in page.
 
 ### Feature Components
+
 - **Hero, Services, Properties, FeaturedProperty, Testimonial, FAQs, GetInTouch** — Homepage blocks.
 - **PropertyCard, BlogCard** — Cards with links.
 - **HeroSub** — Reusable sub-page hero (badge, title, description).
 
 ### UI Components
+
 - `Button`, `Accordion`, `Carousel` (shadcn + Radix).
 
 ### Domain Components
+
 - PropertyCard, PropertiesListing, ResidentialList, etc. — Domain-specific but mostly presentation.
 
 ### Architecture Notes
+
 - Components are reasonably modular and reusable.
 - Some duplication (e.g., ResidentialList vs PropertyList differ mainly by data slice).
 - Property detail page is large (~215 lines) with inline JSX and hardcoded text.
@@ -183,29 +200,36 @@ Additional issues:
 ## 5. Real Estate Domain Implementation
 
 ### Properties
+
 - **Data:** `propertyHomes` in `app/api/propertyhomes.tsx` (9 properties).
 - **Shape:** name, slug, location, rate, beds, baths, area, images[].
 - **Cards:** PropertyCard with image, title, location, price, beds/baths/area.
 - **Detail page:** Full layout: hero, images, amenities, map iframe, CTA, testimonials.
 
 ### Property Cards
+
 - Shared between homepage, properties list, and category pages.
 - Links: `/properties/${slug}` (without locale).
 
 ### Filters
+
 - **None.** No search, price range, or category filters.
 
 ### Galleries
+
 - Property detail: 4 images in a grid.
 - FeaturedProperty, Testimonial: Embla Carousel.
 
 ### Maps
+
 - Single hardcoded Google Maps embed in property detail page.
 
 ### Agents
+
 - **None.** No agent model or UI.
 
 ### Blog
+
 - MDX in `markdown/blogs/` (9 posts).
 - gray-matter + remark for parsing and HTML.
 - BlogCard links to `/blogs/${slug}` (no locale).
@@ -216,25 +240,29 @@ Additional issues:
 ## 6. Data Layer
 
 ### Source Types
+
 - **Static JSON:** Exports from `src/app/api/*.tsx` (navlink, propertyhomes, footerlinks, featuredproperty, testimonial).
 - **File system:** `markdown/blogs/*.mdx` via `getAllPosts()`, `getPostBySlug()`.
 
 ### No External APIs
+
 - No REST or GraphQL calls.
 - No environment-based API URLs.
 
 ### Data Locations
-| Data | File | Format |
-|------|------|--------|
-| Nav links | `app/api/navlink.tsx` | TypeScript export |
-| Properties | `app/api/propertyhomes.tsx` | TypeScript export |
-| Footer links | `app/api/footerlinks.tsx` | TypeScript export |
-| Featured images | `app/api/featuredproperty.tsx` | TypeScript export |
-| Testimonials | `app/api/testimonial.tsx` | TypeScript export |
-| Blog posts | `markdown/blogs/*.mdx` | MDX + gray-matter |
-| Locale strings | `public/locales/{en,ru,al,uk}/common.json` | JSON (unused) |
+
+| Data            | File                                       | Format            |
+| --------------- | ------------------------------------------ | ----------------- |
+| Nav links       | `app/api/navlink.tsx`                      | TypeScript export |
+| Properties      | `app/api/propertyhomes.tsx`                | TypeScript export |
+| Footer links    | `app/api/footerlinks.tsx`                  | TypeScript export |
+| Featured images | `app/api/featuredproperty.tsx`             | TypeScript export |
+| Testimonials    | `app/api/testimonial.tsx`                  | TypeScript export |
+| Blog posts      | `markdown/blogs/*.mdx`                     | MDX + gray-matter |
+| Locale strings  | `public/locales/{en,ru,al,uk}/common.json` | JSON (unused)     |
 
 ### Types
+
 - `properyHomes.ts`, `navlink.ts`, `footerlinks.ts`, `featuredProperty.ts`, `testimonial.ts`, `blog.ts`, `breadcrumb.ts` — Typed, with one typo in filename (`properyHomes`).
 
 ---
@@ -242,6 +270,7 @@ Additional issues:
 ## 7. SEO Architecture
 
 ### Implementation
+
 - **Root layout:** Static `metadata` (title, description).
 - **Pages:** Page-specific `metadata` or `generateMetadata` (e.g. blog post).
 - **Blog post metadata:** title, author, robots, googleBot.
@@ -250,6 +279,7 @@ Additional issues:
 - **No sitemap or robots.txt** in src.
 
 ### Assessment
+
 - **Basic:** Titles and descriptions present.
 - **Incomplete:** No OGP, no canonical, no sitemap/robots.
 - **Risk:** Default description "Generated by create next app" remains in root layout.
@@ -259,16 +289,19 @@ Additional issues:
 ## 8. Multilingual Readiness
 
 ### Current State
+
 - **i18n packages:** next-i18next, react-i18next, i18next installed but **unused**.
 - **Config:** `next.config.ts` uses `i18n` from `next-i18next.config.js` (locales: en, uk, ru, al). **App Router ignores this config.**
 - **Translation files:** `public/locales/{en,ru,al,uk}/common.json` exist but are not loaded.
 - **Routing:** `[locale]` segment present, but no middleware, no layout usage, no link helpers.
 
 ### Text Handling
+
 - **Almost all text is hardcoded** in components (Hero, Services, Properties, FAQs, Header, Footer, property detail, etc.).
 - No `useTranslation` or similar; no translation keys.
 
 ### Required Changes for i18n
+
 1. Add middleware for locale detection and redirects.
 2. Fix routing: either move all pages under `[locale]` (including homepage) or remove `[locale]`.
 3. Introduce a translation library compatible with App Router (e.g. next-intl).
@@ -277,6 +310,7 @@ Additional issues:
 6. Add `app/[locale]/layout.tsx` and wire locale context.
 
 ### Difficulty
+
 - **High:** Many components, heavy hardcoding, routing mismatch, and unused i18n setup.
 
 ---
@@ -284,15 +318,18 @@ Additional issues:
 ## 9. CMS Integration Readiness
 
 ### Target Sanity Entities (per spec)
+
 - city, district, property, propertyType, amenity, locationTag, agent, blogPost, blogCategory, homePage, siteSettings
 
 ### Easy to Connect
+
 - **Property cards and lists** — Already consume array data; can be switched to Sanity queries.
 - **HeroSub** — Title/description from props; can come from CMS.
 - **Footer/nav links** — Already driven by data; can be replaced by Sanity.
 - **Homepage sections** — Structure exists; content can be moved to Sanity.
 
 ### Needs Refactoring
+
 - **Property detail page** — Long hardcoded copy; should use property data from CMS.
 - **Blog** — Currently file-based; needs migration to Sanity blogPost schema.
 - **Featured property, testimonials** — Replace static arrays with Sanity queries.
@@ -300,6 +337,7 @@ Additional issues:
 - **Filters** — Must be added for city, district, propertyType, amenities.
 
 ### Structural Gaps
+
 - No city/district entities or pages.
 - No agent pages or components.
 - Property schema is minimal (no type, amenities, tags).
@@ -310,6 +348,7 @@ Additional issues:
 ## 10. Code Quality Evaluation
 
 ### Strengths
+
 - TypeScript used; types for data models.
 - Consistent Tailwind usage.
 - shadcn/Radix for accessible UI.
@@ -317,6 +356,7 @@ Additional issues:
 - `cn()` utility for class merging.
 
 ### Weaknesses
+
 - Typo: `properyHomes` in type and file names; `featuredProprty` in export.
 - `noImplicitAny: false` in tsconfig.
 - `any` in params/metadata (blog post page).
@@ -326,6 +366,7 @@ Additional issues:
 - `unoptimized={true}` on many images — performance risk.
 
 ### Technical Debt
+
 - Unused i18n packages and config.
 - Unused `public/locales` JSON files.
 - next-auth installed with no visible auth flow.
@@ -347,17 +388,20 @@ Additional issues:
 ## 12. Design System Analysis
 
 ### Approach
+
 - Tailwind 4 with custom theme in `globals.css` (`@theme`): primary, skyblue, shadows, spacing, breakpoints.
 - Custom utilities: `no-scrollbar`, `blog-details` (typography).
 - Dark mode via `next-themes` and `dark:` variants.
 - shadcn/ui with CVA for buttons; Radix for accordion and carousel.
 
 ### Responsiveness
+
 - Breakpoints: `xs`, `mobile`, `md`, `lg`, `xl`, `2xl` (Tailwind + custom).
 - Layout: `grid`, `flex`, responsive columns (e.g. `md:grid-cols-2`).
 - Mobile: Header hamburger, collapsible nav.
 
 ### Consistency
+
 - Shared colors and spacing.
 - Repeated patterns (e.g. icon + label blocks) without a single abstraction.
 - Some inconsistency in padding/margins across sections.
@@ -407,4 +451,4 @@ Additional issues:
 
 ---
 
-*Report generated for AI-assisted evaluation. No code was modified.*
+_Report generated for AI-assisted evaluation. No code was modified._

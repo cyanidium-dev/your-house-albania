@@ -9,8 +9,13 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
+import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
 
-const Header: React.FC = () => {
+type HeaderProps = {
+  siteSettings?: ResolvedSiteSettings;
+};
+
+const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
   const [sticky, setSticky] = useState(false)
   const [navbarOpen, setNavbarOpen] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -44,32 +49,55 @@ const Header: React.FC = () => {
 
   return (
     <header className={`fixed h-24 py-1 z-50 w-full bg-transparent transition-all duration-300 lg:px-0 px-4 ${sticky ? "top-3" : "top-0"}`}>
-      <nav className={`container mx-auto max-w-8xl flex items-center justify-between py-4 duration-300 ${sticky ? "shadow-lg bg-white dark:bg-dark rounded-full top-5 px-4 " : "shadow-none top-0"}`}>
+      <nav className={`container mx-auto max-w-8xl flex items-center justify-between py-4 rounded-full transition-[background-color,box-shadow] duration-300 ease-out ${sticky ? "shadow-lg bg-white dark:bg-dark top-5 px-4" : "shadow-none bg-transparent top-0"}`}>
         <div className='flex justify-between items-center gap-2 w-full'>
-          <div>
+          <div className="ml-[14px]">
             <Link href={`/${locale}`}>
-              <Image
-                src={'/images/header/dark-logo.svg'}
-                alt='logo'
-                width={150}
-                height={68}
-                unoptimized={true}
-                className={`${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
-              />
-              <Image
-                src={'/images/header/logo.svg'}
-                alt='logo'
-                width={150}
-                height={68}
-                unoptimized={true}
-                className={`${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
-              />
+              {siteSettings?.logoUrl ? (
+                <>
+                  <Image
+                    src={siteSettings.logoUrl}
+                    alt={siteSettings?.siteName || 'logo'}
+                    width={150}
+                    height={68}
+                    unoptimized={siteSettings.logoUrl.startsWith('http')}
+                    className={`object-contain object-left ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                  />
+                  <Image
+                    src={siteSettings.logoUrl}
+                    alt={siteSettings?.siteName || 'logo'}
+                    width={150}
+                    height={68}
+                    unoptimized={siteSettings.logoUrl.startsWith('http')}
+                    className={`object-contain object-left dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                  />
+                </>
+              ) : (
+                <>
+                  <Image
+                    src={'/images/header/dark-logo.svg'}
+                    alt='logo'
+                    width={150}
+                    height={68}
+                    unoptimized={true}
+                    className={`${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                  />
+                  <Image
+                    src={'/images/header/logo.svg'}
+                    alt='logo'
+                    width={150}
+                    height={68}
+                    unoptimized={true}
+                    className={`${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                  />
+                </>
+              )}
             </Link>
           </div>
           <div className='flex items-center gap-2 sm:gap-6'>
             <LanguageSwitcher />
             <button
-              className='hover:cursor-pointer'
+              className='hover:cursor-pointer transition-colors duration-300 ease-out'
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
               <Icon
@@ -91,7 +119,7 @@ const Header: React.FC = () => {
               />
             </button>
             <div className={`hidden md:block`}>
-              <Link href='#' className={`text-base text-inherit flex items-center gap-2 border-r pr-6 ${isHomepage
+              <Link href={siteSettings?.phone ? `tel:${siteSettings.phone.replace(/\s/g, '')}` : '#'} className={`text-base text-inherit flex items-center gap-2 border-r pr-6 transition-colors duration-300 ease-out ${isHomepage
                 ? sticky
                   ? 'text-dark dark:text-white hover:text-primary border-dark dark:border-white'
                   : 'text-white hover:text-primary'
@@ -99,13 +127,13 @@ const Header: React.FC = () => {
                 }`}
               >
                 <Icon icon={'ph:phone-bold'} width={24} height={24} />
-                +1-212-456-789
+                {siteSettings?.phone || '+1-212-456-789'}
               </Link>
             </div>
             <div>
               <button
                 onClick={() => setNavbarOpen(!navbarOpen)}
-                className={`flex items-center gap-3 p-2 sm:px-5 sm:py-3 rounded-full font-semibold hover:cursor-pointer border ${isHomepage
+                className={`flex items-center gap-3 p-2 sm:px-5 sm:py-3 rounded-full font-semibold hover:cursor-pointer border transition-colors duration-300 ease-out ${isHomepage
                   ? sticky
                     ? 'text-white bg-dark dark:bg-white dark:text-dark dark:hover:text-white dark:hover:bg-dark hover:text-dark hover:bg-white border-dark dark:border-white'
                     : 'text-dark bg-white dark:text-dark hover:bg-transparent hover:text-white border-white'
@@ -176,11 +204,11 @@ const Header: React.FC = () => {
             <p className='text-base sm:text-xm font-normal text-white/40'>
               {t('contact')}
             </p>
-            <Link href="#" className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-              hello@homely.com
+            <Link href={siteSettings?.email ? `mailto:${siteSettings.email}` : '#'} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
+              {siteSettings?.email || 'hello@homely.com'}
             </Link>
-            <Link href="#" className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-              +1-212-456-7890{' '}
+            <Link href={siteSettings?.phone ? `tel:${siteSettings.phone.replace(/\s/g, '')}` : '#'} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
+              {siteSettings?.phone || '+1-212-456-7890'}
             </Link>
           </div>
         </div>

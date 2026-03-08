@@ -36,7 +36,7 @@ export default function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300 cursor-pointer"
+        className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300 ease-out cursor-pointer transition-colors"
         aria-label="Select language"
         aria-expanded={open}
       >
@@ -56,7 +56,7 @@ export default function LanguageSwitcher() {
             onClick={() => setOpen(false)}
           />
           <div
-            className="absolute right-0 top-full mt-1 py-1 bg-white dark:bg-dark border border-dark/10 dark:border-white/10 rounded-lg shadow-lg z-50 min-w-[4rem]"
+            className="absolute right-0 top-full mt-1 py-1 bg-white dark:bg-dark border border-dark/10 dark:border-white/10 rounded-lg shadow-lg z-50 min-w-[4rem] transition-colors duration-300 ease-out"
             role="listbox"
           >
             {locales.map((loc) => (

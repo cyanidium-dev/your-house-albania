@@ -266,6 +266,57 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
   }
 }
 
+/** Fetch siteSettings singleton. Returns null if not found or client not configured. */
+export async function fetchSiteSettings(): Promise<unknown | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "siteSettings" && _id == "siteSettings"][0] {
+    _id,
+    _type,
+    logo { asset-> { _id, url } },
+    siteName,
+    siteTagline,
+    contactPhone,
+    contactEmail,
+    companyAddress,
+    copyrightText,
+    footerQuickLinks[] {
+      _key,
+      href,
+      label
+    },
+    socialLinks[] {
+      _key,
+      platform,
+      url
+    },
+    defaultSeo {
+      metaTitle,
+      metaDescription,
+      noIndex
+    }
+  }`;
+  try {
+    const result = await client.fetch(query);
+    if (process.env.NODE_ENV === 'development' && result) {
+      const s = result as Record<string, unknown>;
+      const ql = Array.isArray(s?.footerQuickLinks) ? (s.footerQuickLinks as unknown[]).length : 0;
+      const sl = Array.isArray(s?.socialLinks) ? (s.socialLinks as unknown[]).length : 0;
+      console.log('[Sanity] fetchSiteSettings OK:', {
+        hasFooterQuickLinks: ql > 0,
+        hasSocialLinks: sl > 0,
+        hasContactEmail: !!s?.contactEmail,
+        hasCopyright: !!s?.copyrightText,
+        hasPhone: !!s?.contactPhone,
+      });
+    }
+    return result;
+  } catch (err) {
+    console.warn('[Sanity] fetchSiteSettings failed:', err);
+    return null;
+  }
+}
+
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
 export async function fetchActivePropertyTypes(limit = 8): Promise<unknown[] | null> {
   const client = getClient();

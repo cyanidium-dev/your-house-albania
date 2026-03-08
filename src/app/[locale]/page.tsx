@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturedProperty from "@/components/Home/FeaturedProperty";
 import Hero from "@/components/Home/Hero";
 import Properties from "@/components/Home/Properties";
@@ -16,15 +17,45 @@ import {
   fetchHomePage,
   fetchFeaturedProperties,
   fetchActivePropertyTypes,
+  fetchSiteSettings,
 } from "@/lib/sanity/client";
 import { mapSanityPropertyToCard } from "@/lib/sanity/propertyAdapter";
 import { normalizeCitiesOrder } from "@/lib/sanity/cityAdapter";
 import { mapSanityPropertyTypeToCard } from "@/lib/sanity/propertyTypeAdapter";
+import { buildHomeMetadata } from "@/lib/sanity/homeSeoAdapter";
 import type { PropertyHomes } from "@/types/properyHomes";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const [homePage, siteSettings] = await Promise.all([
+    fetchHomePage(),
+    fetchSiteSettings(),
+  ]);
+
+  const homeSeo = (homePage as { seo?: unknown })?.seo ?? null;
+  const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
+  const metadata = buildHomeMetadata(homeSeo as never, siteDefaultSeo as never, locale);
+
+  if (process.env.NODE_ENV === "development") {
+    const seo = homeSeo as { ogImage?: { asset?: { url?: string } }; noIndex?: boolean } | null;
+    const og = metadata.openGraph as { title?: string; description?: string; images?: unknown[] } | undefined;
+    console.log("[Homepage SEO]", {
+      seoFound: !!homeSeo,
+      hasMetaTitle: !!metadata.title,
+      hasMetaDescription: !!metadata.description,
+      hasOgTitle: !!og?.title,
+      hasOgDescription: !!og?.description,
+      hasOgImage: !!(og?.images && Array.isArray(og.images) && og.images.length > 0),
+      noIndex: seo?.noIndex ?? false,
+    });
+  }
+
+  return metadata;
+}
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
