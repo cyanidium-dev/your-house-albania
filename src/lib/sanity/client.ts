@@ -199,3 +199,26 @@ export async function fetchFeaturedProperties(limit = 6): Promise<unknown[] | nu
     return null;
   }
 }
+
+/** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
+export async function fetchActivePropertyTypes(limit = 8): Promise<unknown[] | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "propertyType" && active == true] | order(order asc)[0...${limit}] {
+    _id,
+    title,
+    "slug": slug.current,
+    shortDescription,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt,
+    active,
+    order
+  }`;
+  try {
+    const result = await client.fetch<unknown[]>(query);
+    return Array.isArray(result) ? result : null;
+  } catch (err) {
+    console.warn('[Sanity] fetchActivePropertyTypes failed:', err);
+    return null;
+  }
+}

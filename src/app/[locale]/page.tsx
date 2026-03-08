@@ -2,14 +2,16 @@ import FeaturedProperty from "@/components/Home/FeaturedProperty";
 import Hero from "@/components/Home/Hero";
 import Properties from "@/components/Home/Properties";
 import Cities from "@/components/Home/Cities";
+import PropertyTypes from "@/components/Home/PropertyTypes";
 import Services from "@/components/Home/Services";
 import Testimonial from "@/components/Home/Testimonial";
 import BlogSmall from "@/components/shared/Blog";
 import GetInTouch from "@/components/Home/GetInTouch";
 import FAQ from "@/components/Home/FAQs";
-import { fetchHomePage, fetchFeaturedProperties } from "@/lib/sanity/client";
+import { fetchHomePage, fetchFeaturedProperties, fetchActivePropertyTypes } from "@/lib/sanity/client";
 import { mapSanityPropertyToCard } from "@/lib/sanity/propertyAdapter";
 import { normalizeCitiesOrder } from "@/lib/sanity/cityAdapter";
+import { mapSanityPropertyTypeToCard } from "@/lib/sanity/propertyTypeAdapter";
 import type { PropertyHomes } from "@/types/properyHomes";
 
 type Props = {
@@ -40,6 +42,13 @@ export default async function Home({ params }: Props) {
     ctaHref?: string;
     cities: import("@/lib/sanity/cityAdapter").CityCard[];
   } | null = null;
+  let propertyTypesData: {
+    title?: string;
+    subtitle?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    propertyTypes: import("@/lib/sanity/propertyTypeAdapter").PropertyTypeCard[];
+  } | null = null;
 
   if (homePage !== null) {
     const doc = homePage as {
@@ -56,6 +65,7 @@ export default async function Home({ params }: Props) {
       cta?: { href?: string; label?: unknown };
       properties?: unknown[];
       cities?: unknown[];
+      propertyTypes?: unknown[];
     }[];
     const heroSection = Array.isArray(sections)
       ? sections.find((s) => s?._type === "homeHeroSection")
@@ -147,6 +157,32 @@ export default async function Home({ params }: Props) {
         };
       }
     }
+    const propertyTypesSection = Array.isArray(sections)
+      ? sections.find((s) => s?._type === "homePropertyTypesSection")
+      : undefined;
+    if (propertyTypesSection) {
+      const pt = propertyTypesSection as {
+        title?: unknown;
+        subtitle?: unknown;
+        cta?: { href?: string; label?: unknown };
+        propertyTypes?: unknown[];
+      };
+      let rawTypes = Array.isArray(pt.propertyTypes) ? pt.propertyTypes : [];
+      if (rawTypes.length === 0) {
+        const enriched = await fetchActivePropertyTypes(8);
+        rawTypes = Array.isArray(enriched) ? enriched : [];
+      }
+      if (rawTypes.length > 0) {
+        const types = (rawTypes as never[]).map((p) => mapSanityPropertyTypeToCard(p, locale));
+        propertyTypesData = {
+          title: resolveLocalizedString(pt.title as never, locale) || undefined,
+          subtitle: resolveLocalizedString(pt.subtitle as never, locale) || undefined,
+          ctaLabel: resolveLocalizedString(pt.cta?.label as never, locale) || undefined,
+          ctaHref: pt.cta?.href,
+          propertyTypes: types,
+        };
+      }
+    }
     if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
       console.log("[Sanity] Skipped: NEXT_PUBLIC_SANITY_PROJECT_ID not set");
     } else {
@@ -176,7 +212,10 @@ export default async function Home({ params }: Props) {
         propertyItems={propertyItems}
       />
       {citiesData && <Cities locale={locale} citiesData={citiesData} />}
-      {/* <Services locale={locale} /> */}
+      {propertyTypesData && (
+        <PropertyTypes locale={locale} propertyTypesData={propertyTypesData} />
+      )}
+      <Services locale={locale} />
       <FeaturedProperty locale={locale} />
       <Testimonial />
       <BlogSmall locale={locale} />
