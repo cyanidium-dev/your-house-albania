@@ -167,7 +167,15 @@ export async function fetchHomePage(): Promise<unknown | null> {
   }
 }`;
   try {
-    return await client.fetch(query);
+    const result = await client.fetch(query);
+    if (process.env.NODE_ENV === 'development') {
+      const doc = result as { homepageSections?: { _type: string }[] } | null;
+      const seoSection = Array.isArray(doc?.homepageSections)
+        ? doc.homepageSections.find((s) => s._type === 'homeSeoTextSection')
+        : undefined;
+      console.log('[Sanity] fetchHomePage OK, hasSeoSection:', !!seoSection);
+    }
+    return result;
   } catch (err) {
     console.warn('[Sanity] fetch homePage failed:', err);
     return null;

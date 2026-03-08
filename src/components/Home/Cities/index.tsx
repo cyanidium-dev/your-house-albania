@@ -22,7 +22,9 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
   const description = citiesData?.subtitle ?? t("description");
   const ctaLabel = citiesData?.ctaLabel ?? t("viewProperties");
   const ctaHref = citiesData?.ctaHref ?? "/properties";
-  const href = ctaHref.startsWith("/") ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`;
+  const href = ctaHref.startsWith("/")
+    ? `/${locale}${ctaHref}`
+    : `/${locale}/${ctaHref}`;
 
   const cities = Array.isArray(citiesData?.cities) ? citiesData.cities : [];
   const [big1, big2, small1, small2] = cities;
@@ -30,20 +32,31 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
   const renderCard = (
     city: CityCard,
     size: "big" | "small",
-    linkPath: string
+    linkPath: string,
   ) => (
     <div
       key={city._id ?? city.slug}
-      className={size === "big" ? "lg:col-span-6 col-span-12" : "lg:col-span-3 col-span-6"}
+      className={
+        size === "big"
+          ? "lg:col-span-6 col-span-12"
+          : "lg:col-span-3 col-span-6"
+      }
     >
       <div className="relative rounded-2xl overflow-hidden group">
-        <Link href={linkPath} className={`block relative w-full ${size === "big" ? "aspect-[680/386]" : "aspect-[320/386]"}`}>
+        <Link
+          href={linkPath}
+          className={`block relative w-full ${size === "big" ? "aspect-[680/386]" : "aspect-[320/386]"}`}
+        >
           <Image
             src={city.heroImageUrl || "/images/categories/villas.jpg"}
             alt={city.title}
             fill
             className="object-cover object-center"
-            sizes={size === "big" ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
+            sizes={
+              size === "big"
+                ? "(max-width: 1024px) 100vw, 50vw"
+                : "(max-width: 1024px) 50vw, 25vw"
+            }
             unoptimized={!!city.heroImageUrl?.startsWith("http")}
           />
         </Link>
@@ -95,7 +108,10 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
         <div className="grid grid-cols-12 items-center gap-10">
           <div className="lg:col-span-6 col-span-12">
             <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2.5">
-              <Icon icon="ph:house-simple-fill" className="text-2xl text-primary " />
+              <Icon
+                icon="ph:house-simple-fill"
+                className="text-2xl text-primary "
+              />
               {badge}
             </p>
             <h2 className="lg:text-52 text-40 mt-4 mb-2 lg:max-w-full font-medium leading-[1.2] text-dark dark:text-white">
@@ -111,12 +127,22 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
               {ctaLabel}
             </Link>
           </div>
-          {big1 && renderCard(big1, "big", `/${locale}/properties?city=${big1.slug}`)}
-          {big2 && renderCard(big2, "big", `/${locale}/properties?city=${big2.slug}`)}
+          {big1 &&
+            renderCard(big1, "big", `/${locale}/properties?city=${big1.slug}`)}
+          {big2 &&
+            renderCard(big2, "big", `/${locale}/properties?city=${big2.slug}`)}
           {small1 &&
-            renderCard(small1, "small", `/${locale}/properties?city=${small1.slug}`)}
+            renderCard(
+              small1,
+              "small",
+              `/${locale}/properties?city=${small1.slug}`,
+            )}
           {small2 &&
-            renderCard(small2, "small", `/${locale}/properties?city=${small2.slug}`)}
+            renderCard(
+              small2,
+              "small",
+              `/${locale}/properties?city=${small2.slug}`,
+            )}
         </div>
       </div>
     </section>
