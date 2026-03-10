@@ -8,12 +8,13 @@ async function PropertyCard({ item, locale }: { item: PropertyHomes; locale: str
   const { name, location, rate, beds, baths, area, slug, images } = item
   const t = await getTranslations('Shared.propertyCard')
   const mainImage = images[0]?.src;
+  const href = `/${locale}/properties/${slug}`
 
   return (
     <div>
       <div className='relative rounded-2xl border border-dark/10 dark:border-white/10 group hover:shadow-3xl duration-300 dark:hover:shadow-white/20'>
         <div className='overflow-hidden rounded-t-2xl'>
-          <Link href={`/${locale}/properties/${slug}`}>
+          <Link href={href}>
             {mainImage && (
               <Image
                 src={mainImage}
@@ -25,19 +26,23 @@ async function PropertyCard({ item, locale }: { item: PropertyHomes; locale: str
               />
             )}
           </Link>
-          <div className='absolute top-6 right-6 p-4 bg-white rounded-full hidden group-hover:block'>
+          <Link
+            href={href}
+            aria-label={`Open ${name}`}
+            className='absolute top-6 right-6 p-4 bg-white dark:bg-dark rounded-full hidden group-hover:block z-10 cursor-pointer transition-colors duration-300 ease-out hover:bg-primary/10 dark:hover:bg-white/10'
+          >
             <Icon
               icon={'solar:arrow-right-linear'}
               width={24}
               height={24}
-              className='text-black'
+              className='text-black dark:text-white transition-transform duration-200 ease-out rotate-0 group-hover:-rotate-45 pointer-events-none'
             />
-          </div>
+          </Link>
         </div>
         <div className='p-6'>
           <div className='flex flex-col mobile:flex-row gap-5 mobile:gap-0 justify-between mb-6'>
             <div>
-              <Link href={`/${locale}/properties/${slug}`}>
+              <Link href={href}>
                 <h3 className='text-xl font-medium text-black dark:text-white duration-300 group-hover:text-primary'>
                   {name}
                 </h3>
