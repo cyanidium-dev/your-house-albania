@@ -8,10 +8,13 @@ export const metadata: Metadata = {
   title: "Property List | Domlivo",
 };
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-export default async function page({ params }: Props) {
-  const { locale } = await params;
+export default async function page({ params, searchParams }: Props) {
+  const [{ locale }, search] = await Promise.all([params, searchParams]);
   const t = await getTranslations("Listing.properties");
   return (
     <>
@@ -20,7 +23,8 @@ export default async function page({ params }: Props) {
         description={t("description")}
         badge={t("badge")}
       />
-      <PropertiesListing locale={locale} />
+      <PropertiesListing locale={locale} searchParams={search} />
     </>
   );
 }
+
