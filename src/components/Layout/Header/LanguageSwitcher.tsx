@@ -9,7 +9,7 @@ const LOCALE_LABELS: Record<string, string> = {
   en: "EN",
   uk: "UK",
   ru: "RU",
-  al: "SQ",
+  sq: "SQ",
   it: "IT",
 };
 
@@ -20,7 +20,7 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const locales = ["en", "uk", "ru", "al", "it"];
+  const locales = ["en", "uk", "ru", "sq", "it"];
 
   const handleSelect = (newLocale: string) => {
     if (newLocale === locale) {

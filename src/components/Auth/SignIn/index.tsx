@@ -8,7 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import AuthDialogContext from "@/app/context/AuthDialogContext";
 import Logo from "@/components/Layout/Header/BrandLogo/Logo";
 
-const LOCALES = ["en", "uk", "ru", "al"];
+const LOCALES = ["en", "uk", "ru", "sq"];
 
 const Signin = ({ signInOpen }: { signInOpen?: any }) => {
   const pathname = usePathname();

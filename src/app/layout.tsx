@@ -3,6 +3,7 @@ import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
+import { routing } from "@/i18n/routing";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"] });
 
@@ -15,9 +16,13 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale?: string };
 }>) {
+  const locale = typeof params?.locale === "string" && routing.locales.includes(params.locale)
+    ? params.locale
+    : routing.defaultLocale;
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${font.className} bg-white dark:bg-black antialiased transition-colors duration-300 ease-out`}
       >

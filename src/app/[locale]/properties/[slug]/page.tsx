@@ -1,19 +1,12 @@
 import React from 'react';
-import { getPropertyBySlug } from '@/data/properties';
+import { notFound } from 'next/navigation';
 import { fetchPropertyBySlug } from '@/lib/sanity/client';
-import { mapSanityPropertyToDetailsFields } from '@/lib/sanity/propertyAdapter';
+import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery } from '@/lib/sanity/propertyAdapter';
 import { Icon } from '@iconify/react';
 import { getTestimonials } from '@/data/testimonials';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
-
-const FALLBACK_DESCRIPTION_PARAS = [
-  'Nestled in the heart of miami, the modern luxe villa at 20 s aurora ave offers a perfect blend of contemporary elegance and smart-home innovation. priced at $570000, this 560 ft² residence features 4 spacious bedrooms, 3 luxurious bathrooms, and expansive living areas designed for comfort and style. built in 2025, the home boasts energy-efficient systems, abundant natural light, and state-of-the-art security features. outdoor spaces include two stylish bar areas, perfect for entertaining 8+ guests. enjoy the ultimate in modern living with premium amenities and a prime location.',
-  'Step inside to discover an open-concept layout that seamlessly connects the kitchen, dining, and living spaces. the gourmet kitchen is equipped with top-of-the-line appliances, sleek cabinetry, and a large island perfect for casual dining or meal prep. the sunlit living room offers floor-to-ceiling windows, creating a bright and airy atmosphere while providing stunning views of the outdoor space.',
-  'The primary suite serves as a private retreat with a spa-like ensuite bathroom and a spacious walk-in closet. each additional bedroom is thoughtfully designed with comfort and style in mind, offering ample space and modern finishes. the home\'s three bathrooms feature high-end fixtures, custom vanities, and elegant tiling.',
-  'Outdoor living is equally impressive, with a beautifully landscaped backyard, multiple lounge areas, and two fully equipped bar spaces.',
-];
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -23,38 +16,29 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
   const sanityProperty = await fetchPropertyBySlug(slug);
-  const mockItem = getPropertyBySlug(slug);
+  if (sanityProperty == null) {
+    notFound();
+  }
+
   const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
+  const galleryImages = mapSanityPropertyGallery(sanityProperty as never);
 
-  const title = sanityFields.title || mockItem?.name || '';
-  const location = sanityFields.location || mockItem?.location || '';
-  const rate = sanityFields.rate || mockItem?.rate || '';
-  const beds = sanityFields.beds ?? mockItem?.beds ?? 0;
-  const baths = sanityFields.baths ?? mockItem?.baths ?? 0;
-  const area = sanityFields.area ?? mockItem?.area ?? 0;
-  const descriptionParas =
-    sanityFields.description
-      ? sanityFields.description.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
-      : FALLBACK_DESCRIPTION_PARAS;
-
+  const title = sanityFields.title;
+  const location = sanityFields.location;
+  const rate = sanityFields.rate;
+  const beds = sanityFields.beds;
+  const baths = sanityFields.baths;
+  const area = sanityFields.area;
   const dealTypeLabel = sanityFields.dealTypeLabel;
 
-  type GalleryItem = { asset?: { url?: string }; alt?: string };
-  const sanityGalleryItems = Array.isArray((sanityProperty as { gallery?: GalleryItem[] })?.gallery)
-    ? ((sanityProperty as { gallery: GalleryItem[] }).gallery.filter((g) => g?.asset?.url) as GalleryItem[])
+  const descriptionParas = sanityFields.description
+    ? sanityFields.description.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
     : [];
-  const mockImages = mockItem?.images?.map((i) => i.src) ?? [];
-  const galleryImages =
-    sanityGalleryItems.length > 0
-      ? sanityGalleryItems.map((g) => ({ url: (g as { asset: { url: string } }).asset.url, alt: (g as { alt?: string }).alt }))
-      : mockImages.map((url) => ({ url, alt: undefined as string | undefined }));
 
   const hasCoordinates =
     (sanityProperty as { coordinates?: { lat?: number; lng?: number } | null })?.coordinates != null &&
     typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lat === 'number' &&
     typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lng === 'number';
-
-  const item = mockItem;
     return (
         <section className="!pt-44 pb-20 relative" >
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">

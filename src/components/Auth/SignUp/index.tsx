@@ -6,7 +6,7 @@ import SocialSignUp from "../SocialSignUp";
 import Logo from "@/components/Layout/Header/BrandLogo/Logo";
 import { useContext, useState } from "react";
 import AuthDialogContext from "@/app/context/AuthDialogContext";
-const LOCALES = ["en", "uk", "ru", "al"];
+const LOCALES = ["en", "uk", "ru", "sq"];
 
 const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
   const router = useRouter();

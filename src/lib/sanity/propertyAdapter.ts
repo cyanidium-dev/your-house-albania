@@ -10,6 +10,7 @@ export type PropertyDetailsFields = {
   baths: number;
   area: number;
   description: string;
+  dealTypeLabel: string;
 };
 
 type SanityPropertyForDetails = {
@@ -24,6 +25,18 @@ type SanityPropertyForDetails = {
   description?: unknown;
   status?: string;
 };
+
+type SanityGalleryItem = { asset?: { url?: string }; alt?: string };
+
+/** Extracts gallery images from Sanity property. Returns empty array if none. */
+export function mapSanityPropertyGallery(
+  p: { gallery?: SanityGalleryItem[] } | null | undefined
+): { url: string; alt?: string }[] {
+  const items = Array.isArray(p?.gallery) ? p.gallery : [];
+  return items
+    .filter((g) => g?.asset?.url)
+    .map((g) => ({ url: (g as { asset: { url: string } }).asset.url, alt: (g as { alt?: string }).alt }));
+}
 
 /** Maps Sanity status to deal type label. Fallback: "Price". */
 export function mapStatusToDealTypeLabel(status: string | null | undefined): string {
