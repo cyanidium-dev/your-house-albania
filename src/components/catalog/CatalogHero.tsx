@@ -1,6 +1,7 @@
 "use client";
 
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
 import { Icon } from "@iconify/react";
 import type { ReactNode } from "react";
 
@@ -42,7 +43,7 @@ export function CatalogHero({
   const hasIntro = Array.isArray(intro) && intro.length > 0;
   const subtitle = hasIntro ? (
     <div className="mt-3 max-w-2xl mx-auto">
-      <PortableText value={intro} components={introComponents} />
+      <PortableText value={intro as PortableTextBlock[]} components={introComponents} />
     </div>
   ) : (
     <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-3 w-full mx-auto">

@@ -1,11 +1,11 @@
 import createMiddleware from "next-intl/middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
-import { NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(request: Request) {
-  const url = new URL(request.url);
+export default function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
   // Legacy redirect: /al/... -> /sq/...
   if (url.pathname.startsWith("/al/")) {
     url.pathname = url.pathname.replace(/^\/al\//, "/sq/");

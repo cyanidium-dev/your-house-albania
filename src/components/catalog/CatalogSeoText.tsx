@@ -1,6 +1,7 @@
 "use client";
 
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
 
 const components: PortableTextComponents = {
   block: {
@@ -49,7 +50,7 @@ export function CatalogSeoText({ content }: Props) {
 
   return (
     <div className="py-6">
-      <PortableText value={content} components={components} />
+      <PortableText value={content as PortableTextBlock[]} components={components} />
     </div>
   );
 }

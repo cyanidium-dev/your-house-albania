@@ -1,6 +1,7 @@
 'use client';
 
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
+import type { PortableTextBlock } from '@portabletext/types';
 
 export type SeoTextData =
   | { content: unknown[] | string; isPlainText: boolean }
@@ -82,7 +83,7 @@ const SeoText: React.FC<{ seoTextData?: SeoTextData }> = ({ seoTextData }) => {
               </div>
             ) : (
               <PortableText
-                value={(content as unknown[]) ?? []}
+                value={((content as unknown[]) ?? []) as PortableTextBlock[]}
                 components={components}
               />
             )}

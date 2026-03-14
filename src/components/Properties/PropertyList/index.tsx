@@ -114,7 +114,7 @@ async function PropertiesListing({
         sort: sort as CatalogSort,
         page: currentPage,
         pageSize,
-      })) ?? { items: [], totalCount }
+      })) ?? { items: [], totalCount: 0 }
   }
 
   const pageItems: PropertyHomes[] = Array.isArray(catalogResult.items)
