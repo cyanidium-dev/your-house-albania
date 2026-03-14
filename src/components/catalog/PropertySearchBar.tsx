@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { catalogPath } from "@/lib/routes/catalog";
 import * as Slider from "@radix-ui/react-slider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -124,14 +125,11 @@ export function PropertySearchBar({
   }, [city, district, districtOptionsFiltered]);
 
   const router = useRouter();
-  const pathname = usePathname();
+  const locale = useLocale();
   const searchParams = useSearchParams();
 
   const applyFilters = React.useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
-
-    if (city) params.set("city", city);
-    else params.delete("city");
 
     if (type) params.set("type", type);
     else params.delete("type");
@@ -148,9 +146,6 @@ export function PropertySearchBar({
     if (beds && beds !== "any") params.set("beds", beds);
     else params.delete("beds");
 
-    if (district && district !== "any") params.set("district", district);
-    else params.delete("district");
-
     if (sort && sort !== "newest") params.set("sort", sort);
     else params.delete("sort");
 
@@ -160,25 +155,27 @@ export function PropertySearchBar({
     if (pageSize) params.set("pageSize", pageSize);
     else params.delete("pageSize");
 
-    // reset page on new search
     params.delete("page");
+    params.delete("city");
+    params.delete("district");
 
     const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
+    const path = catalogPath(locale, city || undefined, district && district !== "any" ? district : undefined);
+    router.push(qs ? `${path}?${qs}` : path);
   }, [
     amenities,
     beds,
     city,
     deal,
+    district,
+    locale,
     maxPrice,
     minPrice,
     pageSize,
-    pathname,
     router,
     searchParams,
     sort,
     type,
-    district,
   ]);
 
   const handleSubmit = (e: React.FormEvent) => {

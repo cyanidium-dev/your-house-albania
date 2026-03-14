@@ -18,16 +18,16 @@ import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import React from "react";
 import { getTranslations } from "next-intl/server";
-import { fetchSiteSettings } from "@/lib/sanity/client";
+import { fetchPropertyBySlug, fetchSiteSettings } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 
 type Props = {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; city: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale, city } = await params;
   const siteSettings = await fetchSiteSettings();
   const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
     | {
@@ -37,54 +37,55 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     | undefined;
 
   const t = await getTranslations("Listing.properties");
-
+  const listTitle = t("title");
+  const listDescription = t("description");
+  const cityTitle = city ? decodeURIComponent(city).replace(/-/g, " ") : "";
   const localizedTitleFromSeo =
     defaultSeo?.metaTitle &&
     resolveLocalizedString(defaultSeo.metaTitle as never, locale);
-  const localizedDescriptionFromSeo =
-    defaultSeo?.metaDescription &&
-    resolveLocalizedString(defaultSeo.metaDescription as never, locale);
 
-  const listTitle = t("title");
-  const listDescription = t("description");
+  const title = cityTitle
+    ? `${listTitle} — ${cityTitle}`
+    : localizedTitleFromSeo
+      ? `${listTitle} | ${localizedTitleFromSeo}`
+      : listTitle;
 
-  const title = localizedTitleFromSeo
-    ? `${listTitle} | ${localizedTitleFromSeo}`
-    : listTitle;
+  const description = defaultSeo?.metaDescription
+    ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription
+    : listDescription;
 
-  const description = localizedDescriptionFromSeo || listDescription;
-
-  return {
-    title,
-    description,
-  };
+  return { title, description };
 }
 
-export default async function page({ params, searchParams }: Props) {
-  const [{ locale }, search] = await Promise.all([params, searchParams]);
-
-  const cityQ = typeof search.city === "string" ? search.city.trim().toLowerCase() : "";
+export default async function CatalogCityPage({ params, searchParams }: Props) {
+  const [{ locale, city }, search] = await Promise.all([params, searchParams]);
+  const citySlug = decodeURIComponent(city).toLowerCase();
   const districtQ = typeof search.district === "string" ? search.district.trim() : "";
-  if (cityQ && districtQ) {
-    redirect(`/${locale}/properties/${encodeURIComponent(cityQ)}/${encodeURIComponent(districtQ)}${buildQueryString(search, ["city", "district"])}`);
+  if (districtQ) {
+    redirect(`/${locale}/properties/${encodeURIComponent(citySlug)}/${encodeURIComponent(districtQ)}${buildQueryString(search, ["district"])}`);
   }
-  if (cityQ) {
-    redirect(`/${locale}/properties/${encodeURIComponent(cityQ)}${buildQueryString(search, ["city", "district"])}`);
+
+  const property = await fetchPropertyBySlug(citySlug);
+  if (property != null) {
+    redirect(`/${locale}/property/${citySlug}`);
   }
 
   const t = await getTranslations("Listing.properties");
   return (
     <>
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-8 pb-2">
-        <CatalogBreadcrumb locale={locale} />
+        <CatalogBreadcrumb locale={locale} city={citySlug} />
       </div>
       <HeroSub
         title={t("title")}
         description={t("description")}
         badge={t("badge")}
       />
-      <PropertiesListing locale={locale} searchParams={search} />
+      <PropertiesListing
+        locale={locale}
+        pathCity={citySlug}
+        searchParams={search}
+      />
     </>
   );
 }
-

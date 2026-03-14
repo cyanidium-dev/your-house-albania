@@ -144,7 +144,22 @@
       "description": "Këshilla dhe përditësime nga ekspertët."
     }
   },
+  "Cities": {
+    "title": "Qytetet",
+    "description": "Eksploroni pronat sipas qyteteve.",
+    "cityDescription": "Prona dhe pasuri të paluajtshme në {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Kryefaqja",
+    "properties": "Prona",
+    "cities": "Qytetet"
+  },
   "Catalog": {
+    "empty": {
+      "title": "Nuk u gjetën pronat",
+      "description": "Provoni të rregulloni ose të rivendosni filtrat.",
+      "reset": "Rivendos filtrat"
+    },
     "filters": {
       "location": "Vendndodhja",
       "propertyType": "Lloji i pronës",

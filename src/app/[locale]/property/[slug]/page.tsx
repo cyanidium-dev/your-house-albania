@@ -8,6 +8,7 @@ import { getTestimonials } from '@/data/testimonials';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
+import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -92,9 +93,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
     (sanityProperty as { coordinates?: { lat?: number; lng?: number } | null })?.coordinates != null &&
     typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lat === 'number' &&
     typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lng === 'number';
-    return (
+  const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
+  const districtSlug = (sanityProperty as { district?: { slug?: string } })?.district?.slug;
+
+  return (
         <section className="!pt-44 pb-20 relative" >
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+                <PropertyDetailBreadcrumb
+                  locale={locale}
+                  propertyTitle={title}
+                  propertySlug={slug}
+                  citySlug={citySlug}
+                  districtSlug={districtSlug}
+                />
                 <div className="grid grid-cols-12 items-end gap-6">
                     <div className="lg:col-span-8 col-span-12">
                         <h1 className='lg:text-52 text-40 font-semibold text-dark dark:text-white'>{title}</h1>
@@ -233,7 +244,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             <div key={index} className="border p-10 rounded-2xl border-dark/10 dark:border-white/20 mt-10 flex flex-col gap-6">
                                 <Icon icon="ph:house-simple" width={44} height={44} className="text-primary" />
                                 <p className='text-xm text-dark dark:text-white'>{item.review}</p>
-                                <div className="flex items-center gap-6">
+                                <div className="flex gap-6">
                                     <Image src={item.image} alt={item.name} width={400} height={500} className='w-20 h-20 rounded-2xl' unoptimized={true} />
                                     <div className="">
                                         <h3 className='text-xm text-dark dark:text-white'>{item.name}</h3>

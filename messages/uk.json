@@ -144,7 +144,22 @@
       "description": "Актуальні поради та оновлення від експертів."
     }
   },
+  "Cities": {
+    "title": "Міста",
+    "description": "Об'єкти по містах.",
+    "cityDescription": "Об'єкти нерухомості в {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Головна",
+    "properties": "Об'єкти",
+    "cities": "Міста"
+  },
   "Catalog": {
+    "empty": {
+      "title": "Об'єкти не знайдено",
+      "description": "Спробуйте змінити або скинути фільтри.",
+      "reset": "Скинути фільтри"
+    },
     "filters": {
       "location": "Локація",
       "propertyType": "Тип об'єкта",

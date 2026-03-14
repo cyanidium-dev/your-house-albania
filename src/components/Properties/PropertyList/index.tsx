@@ -1,6 +1,7 @@
 import PropertyCard from '@/components/Home/Properties/Card/Card'
 import { PropertySearchBar } from '@/components/catalog/PropertySearchBar'
 import { PropertyPagination } from '@/components/catalog/PropertyPagination'
+import { CatalogEmptyState } from '@/components/catalog/CatalogEmptyState'
 import type { PropertyHomes } from '@/types/properyHomes'
 import {
   fetchCatalogProperties,
@@ -25,9 +26,13 @@ const DEFAULT_PRICE_RANGES: Record<string, { min: number; max: number }> = {
 
 async function PropertiesListing({
   locale,
+  pathCity = '',
+  pathDistrict = '',
   searchParams,
 }: {
   locale: string
+  pathCity?: string
+  pathDistrict?: string
   searchParams: SearchParams
 }) {
   const {
@@ -37,8 +42,10 @@ async function PropertiesListing({
     districts: districtOptions,
   } = await fetchCatalogFilterOptions(locale)
 
-  const cityFilter =
-    typeof searchParams.city === 'string' ? searchParams.city.toLowerCase() : ''
+  const cityFilter = (pathCity || (typeof searchParams.city === 'string' ? searchParams.city : '')).toLowerCase()
+  const districtFilter =
+    pathDistrict ||
+    (typeof searchParams.district === 'string' ? searchParams.district : '')
   const typeFilter =
     typeof searchParams.type === 'string' ? searchParams.type.toLowerCase() : ''
   const dealFilter =
@@ -67,10 +74,7 @@ async function PropertiesListing({
   let catalogResult =
     (await fetchCatalogProperties({
       city: cityFilter || undefined,
-      district:
-        typeof searchParams.district === 'string'
-          ? searchParams.district
-          : undefined,
+      district: districtFilter || undefined,
       type: typeFilter || undefined,
       deal: dealFilter || undefined,
       minPrice: minPriceFilter || undefined,
@@ -91,10 +95,7 @@ async function PropertiesListing({
     catalogResult =
       (await fetchCatalogProperties({
         city: cityFilter || undefined,
-        district:
-          typeof searchParams.district === 'string'
-            ? searchParams.district
-            : undefined,
+        district: districtFilter || undefined,
         type: typeFilter || undefined,
         deal: dealFilter || undefined,
         minPrice: minPriceFilter || undefined,
@@ -120,7 +121,7 @@ async function PropertiesListing({
           dealTypeValues={DEAL_TYPE_VALUES}
           districtOptions={districtOptions}
           priceRangesByDeal={DEFAULT_PRICE_RANGES}
-          initialCity={cityFilter}
+          initialCity={cityFilter || ''}
           initialType={typeFilter}
           initialDealType={dealFilter}
           initialMinPrice={
@@ -130,23 +131,27 @@ async function PropertiesListing({
             typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : ''
           }
           initialBeds={typeof searchParams.beds === 'string' ? searchParams.beds : ''}
-          initialDistrict={
-            typeof searchParams.district === 'string' ? searchParams.district : ''
-          }
+          initialDistrict={districtFilter}
           initialSort={sort}
           amenityOptions={amenityOptions}
           initialAmenities={amenitiesFilter}
           initialPageSize={String(pageSize)}
         />
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
-          {pageItems.map((item, index) => (
-            <div key={index} className=''>
-              <PropertyCard item={item} locale={locale} />
+        {pageItems.length === 0 ? (
+          <CatalogEmptyState locale={locale} />
+        ) : (
+          <>
+            <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
+              {pageItems.map((item, index) => (
+                <div key={index} className=''>
+                  <PropertyCard item={item} locale={locale} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        {totalPages > 1 && (
-          <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
+            {totalPages > 1 && (
+              <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
+            )}
+          </>
         )}
       </div>
     </section>

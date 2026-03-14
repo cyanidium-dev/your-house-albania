@@ -144,7 +144,22 @@
       "description": "Stay ahead in the property market with expert advice and updates."
     }
   },
+  "Cities": {
+    "title": "Cities",
+    "description": "Explore properties by city.",
+    "cityDescription": "Properties and real estate in {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Home",
+    "properties": "Properties",
+    "cities": "Cities"
+  },
   "Catalog": {
+    "empty": {
+      "title": "No properties found",
+      "description": "Try adjusting or resetting the filters.",
+      "reset": "Reset filters"
+    },
     "filters": {
       "location": "Location",
       "propertyType": "Property type",

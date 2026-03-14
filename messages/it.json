@@ -144,7 +144,22 @@
       "description": "Resta al passo con consigli e aggiornamenti dagli esperti."
     }
   },
+  "Cities": {
+    "title": "Città",
+    "description": "Esplora proprietà per città.",
+    "cityDescription": "Proprietà e immobili a {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Home",
+    "properties": "Immobili",
+    "cities": "Città"
+  },
   "Catalog": {
+    "empty": {
+      "title": "Nessuna proprietà trovata",
+      "description": "Prova a modificare o reimpostare i filtri.",
+      "reset": "Reimposta filtri"
+    },
     "filters": {
       "location": "Località",
       "propertyType": "Tipo di proprietà",

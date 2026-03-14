@@ -8,7 +8,7 @@ async function PropertyCard({ item, locale }: { item: PropertyHomes; locale: str
   const { name, location, rate, beds, baths, area, slug, images } = item
   const t = await getTranslations('Shared.propertyCard')
   const mainImage = images[0]?.src;
-  const href = `/${locale}/properties/${slug}`
+  const href = `/${locale}/property/${slug}`
 
   return (
     <div>
