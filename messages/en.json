@@ -7,6 +7,7 @@
     "nav": {
       "home": "Home",
       "properties": "Properties",
+      "favorites": "Favorites",
       "blog": "Blog",
       "contact": "Contact",
       "docs": "Docs"
@@ -152,9 +153,11 @@
   "Breadcrumbs": {
     "home": "Home",
     "properties": "Properties",
+    "favorites": "Favorites",
     "cities": "Cities"
   },
   "Catalog": {
+    "heroIntroFallback": "Browse our selection of properties.",
     "empty": {
       "title": "No properties found",
       "description": "Try adjusting or resetting the filters.",
@@ -170,6 +173,7 @@
       "priceRange": "Price range",
       "advancedFilters": "Advanced filters",
       "filtersShort": "Filters",
+      "resetFilters": "Reset filters",
       "search": "Search",
       "anyLocation": "Any location",
       "anyType": "Any type",
@@ -187,5 +191,19 @@
       "sortAreaDesc": "Area (largest first)",
       "resultsPerPage": "Results per page"
     }
+  },
+  "Favorites": {
+    "title": "Favorites",
+    "description": "Properties you've added to your favorites.",
+    "clearFavorites": "Clear favorites",
+    "clearModalTitle": "Clear all favorites?",
+    "clearModalDescription": "This will remove all properties from your favorites. You can add them again anytime.",
+    "clearModalConfirm": "Clear all",
+    "clearModalCancel": "Cancel",
+    "emptyTitle": "No favorites yet",
+    "emptyDescription": "Browse properties and tap the heart to add them here.",
+    "browseProperties": "Browse properties",
+    "noDataTitle": "No property data found",
+    "noDataDescription": "Some favorites may no longer exist."
   }
 }

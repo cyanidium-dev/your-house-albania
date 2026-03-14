@@ -9,6 +9,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
+import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
+import { FavoriteButton } from '@/components/shared/FavoriteButton';
+import { getBaseUrl } from '@/lib/seo/baseUrl';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -96,8 +99,31 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
   const districtSlug = (sanityProperty as { district?: { slug?: string } })?.district?.slug;
 
+  const rawProperty = sanityProperty as {
+    price?: number;
+    currency?: string;
+    status?: string;
+  };
+  const baseUrl = await getBaseUrl();
+  const imageUrls = galleryImages.map((img) => img.url);
+
   return (
         <section className="!pt-44 pb-20 relative" >
+            <PropertyJsonLd
+              name={title}
+              slug={slug}
+              description={sanityFields.description || null}
+              location={location || null}
+              price={rawProperty.price ?? null}
+              currency={rawProperty.currency ?? null}
+              status={rawProperty.status ?? null}
+              beds={beds}
+              baths={baths}
+              area={area}
+              imageUrls={imageUrls}
+              baseUrl={baseUrl}
+              locale={locale}
+            />
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
                 <PropertyDetailBreadcrumb
                   locale={locale}
@@ -229,9 +255,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     </div>
                     <div className="lg:col-span-4 col-span-12">
                         <div className="bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
-                            <h4 className='text-dark text-3xl font-medium dark:text-white'>
-                                {rate}
-                            </h4>
+                            <div className="flex items-center justify-between gap-4 mb-2">
+                              <h4 className='text-dark text-3xl font-medium dark:text-white'>
+                                  {rate}
+                              </h4>
+                              <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
+                            </div>
                             <p className='text-sm text-dark/50 dark:text-white'>{dealTypeLabel}</p>
                             <Link href="#" className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'>
                                 Get in touch

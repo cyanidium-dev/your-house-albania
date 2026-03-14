@@ -7,6 +7,7 @@
     "nav": {
       "home": "Головна",
       "properties": "Нерухомість",
+      "favorites": "Обране",
       "blog": "Блог",
       "contact": "Контакт",
       "docs": "Документація"
@@ -152,9 +153,11 @@
   "Breadcrumbs": {
     "home": "Головна",
     "properties": "Об'єкти",
+    "favorites": "Обране",
     "cities": "Міста"
   },
   "Catalog": {
+    "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "empty": {
       "title": "Об'єкти не знайдено",
       "description": "Спробуйте змінити або скинути фільтри.",
@@ -170,6 +173,7 @@
       "priceRange": "Діапазон ціни",
       "advancedFilters": "Додаткові фільтри",
       "filtersShort": "Фільтри",
+      "resetFilters": "Скинути фільтри",
       "search": "Пошук",
       "anyLocation": "Будь-яка локація",
       "anyType": "Будь-який тип",
@@ -187,5 +191,19 @@
       "sortAreaDesc": "Площа (від більшої)",
       "resultsPerPage": "Результатів на сторінку"
     }
+  },
+  "Favorites": {
+    "title": "Обране",
+    "description": "Об'єкти, які ви додали до обраного.",
+    "clearFavorites": "Очистити обране",
+    "clearModalTitle": "Очистити все обране?",
+    "clearModalDescription": "Це видалить усі об'єкти з обраного. Ви зможете додати їх знову будь-коли.",
+    "clearModalConfirm": "Очистити все",
+    "clearModalCancel": "Скасувати",
+    "emptyTitle": "Поки немає обраного",
+    "emptyDescription": "Перегляньте об'єкти та натисніть серце, щоб додати їх сюди.",
+    "browseProperties": "Переглянути об'єкти",
+    "noDataTitle": "Дані про об'єкти не знайдено",
+    "noDataDescription": "Деякі обрані об'єкти можливо більше не існують."
   }
 }

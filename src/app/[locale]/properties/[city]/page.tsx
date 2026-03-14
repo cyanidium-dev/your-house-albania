@@ -13,12 +13,12 @@ function buildQueryString(
   const qs = params.toString();
   return qs ? `?${qs}` : "";
 }
-import HeroSub from "@/components/shared/HeroSub";
+import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import React from "react";
 import { getTranslations } from "next-intl/server";
-import { fetchPropertyBySlug, fetchSiteSettings } from "@/lib/sanity/client";
+import { fetchPropertyBySlug, fetchSiteSettings, fetchCatalogSeoPageByCity, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 
 type Props = {
@@ -28,7 +28,12 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, city } = await params;
-  const siteSettings = await fetchSiteSettings();
+  const citySlug = decodeURIComponent(city).toLowerCase();
+  const [siteSettings, rawSeo] = await Promise.all([
+    fetchSiteSettings(),
+    fetchCatalogSeoPageByCity(citySlug),
+  ]);
+  const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
     | {
         metaTitle?: Record<string, string>;
@@ -44,15 +49,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     defaultSeo?.metaTitle &&
     resolveLocalizedString(defaultSeo.metaTitle as never, locale);
 
-  const title = cityTitle
-    ? `${listTitle} — ${cityTitle}`
-    : localizedTitleFromSeo
-      ? `${listTitle} | ${localizedTitleFromSeo}`
-      : listTitle;
+  const title = catalogSeo?.metaTitle
+    ? catalogSeo.metaTitle
+    : cityTitle
+      ? `${listTitle} — ${cityTitle}`
+      : localizedTitleFromSeo
+        ? `${listTitle} | ${localizedTitleFromSeo}`
+        : listTitle;
 
-  const description = defaultSeo?.metaDescription
-    ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription
-    : listDescription;
+  const description =
+    catalogSeo?.metaDescription ||
+    (defaultSeo?.metaDescription
+      ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription
+      : listDescription);
 
   return { title, description };
 }
@@ -71,20 +80,24 @@ export default async function CatalogCityPage({ params, searchParams }: Props) {
   }
 
   const t = await getTranslations("Listing.properties");
+  const tCatalog = await getTranslations("Catalog");
+  const rawSeo = await fetchCatalogSeoPageByCity(citySlug);
+  const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+
   return (
     <>
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-8 pb-2">
-        <CatalogBreadcrumb locale={locale} city={citySlug} />
-      </div>
-      <HeroSub
-        title={t("title")}
-        description={t("description")}
+      <CatalogHero
+        title={catalogSeo?.title || t("title")}
         badge={t("badge")}
+        intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
+        introFallback={tCatalog("heroIntroFallback")}
+        breadcrumb={<CatalogBreadcrumb locale={locale} city={citySlug} />}
       />
       <PropertiesListing
         locale={locale}
         pathCity={citySlug}
         searchParams={search}
+        catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />
     </>
   );

@@ -7,6 +7,7 @@
     "nav": {
       "home": "Главная",
       "properties": "Объекты",
+      "favorites": "Избранное",
       "blog": "Блог",
       "contact": "Контакты",
       "docs": "Документация"
@@ -152,9 +153,11 @@
   "Breadcrumbs": {
     "home": "Главная",
     "properties": "Объекты",
+    "favorites": "Избранное",
     "cities": "Города"
   },
   "Catalog": {
+    "heroIntroFallback": "Просмотрите нашу подборку объектов.",
     "empty": {
       "title": "Объекты не найдены",
       "description": "Попробуйте изменить или сбросить фильтры.",
@@ -170,6 +173,7 @@
       "priceRange": "Диапазон цены",
       "advancedFilters": "Дополнительные фильтры",
       "filtersShort": "Фильтры",
+      "resetFilters": "Сбросить фильтры",
       "search": "Поиск",
       "anyLocation": "Любая локация",
       "anyType": "Любой тип",
@@ -187,5 +191,19 @@
       "sortAreaDesc": "Площадь (от большей)",
       "resultsPerPage": "Результатов на странице"
     }
+  },
+  "Favorites": {
+    "title": "Избранное",
+    "description": "Объекты, которые вы добавили в избранное.",
+    "clearFavorites": "Очистить избранное",
+    "clearModalTitle": "Очистить всё избранное?",
+    "clearModalDescription": "Это удалит все объекты из избранного. Вы сможете добавить их снова в любой момент.",
+    "clearModalConfirm": "Очистить всё",
+    "clearModalCancel": "Отмена",
+    "emptyTitle": "Пока нет избранного",
+    "emptyDescription": "Просмотрите объекты и нажмите на сердце, чтобы добавить их сюда.",
+    "browseProperties": "Смотреть объекты",
+    "noDataTitle": "Данные об объектах не найдены",
+    "noDataDescription": "Некоторые избранные объекты могут больше не существовать."
   }
 }

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import NavLink from './Navigation/NavLink'
 import LanguageSwitcher from './LanguageSwitcher'
+import { useFavorites } from '@/hooks/useFavorites'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
@@ -22,6 +23,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
   const pathname = usePathname()
   const locale = useLocale()
   const t = useTranslations('Header')
+  const { favorites } = useFavorites()
 
   const sideMenuRef = useRef<HTMLDivElement>(null)
 
@@ -118,6 +120,24 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                 className='dark:block hidden text-white'
               />
             </button>
+            <Link
+              href={`/${locale}/favorites`}
+              aria-label={`Favorites (${favorites.length})`}
+              data-favorites-target="true"
+              className={`relative flex items-center justify-center transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary ${isHomepage
+                ? sticky
+                  ? 'text-dark dark:text-white'
+                  : 'text-white'
+                : 'text-dark dark:text-white'
+                }`}
+            >
+              <Icon icon={'ph:heart'} width={24} height={24} />
+              {favorites.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-primary text-white text-[11px] font-semibold">
+                  {favorites.length > 99 ? '99+' : favorites.length}
+                </span>
+              )}
+            </Link>
             <div className={`hidden md:block`}>
               <Link href={siteSettings?.phone ? `tel:${siteSettings.phone.replace(/\s/g, '')}` : '#'} className={`text-base text-inherit flex items-center gap-2 border-r pr-6 transition-colors duration-300 ease-out ${isHomepage
                 ? sticky

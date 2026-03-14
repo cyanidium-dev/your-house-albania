@@ -58,7 +58,7 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
           type="button"
           disabled={safeCurrentPage === 1}
           onClick={() => setPage(safeCurrentPage - 1)}
-          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white cursor-pointer hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 dark:disabled:hover:border-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
           aria-label="Previous page"
         >
           <Icon icon="ph:caret-left" width={20} height={20} />
@@ -79,7 +79,7 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
               type="button"
               onClick={() => setPage(it)}
               className={[
-                "min-w-8 h-8 rounded-full border text-sm px-3 transition-colors duration-200 ease-out",
+                "min-w-8 h-8 rounded-full border text-sm px-3 transition-colors duration-200 ease-out cursor-pointer",
                 "focus:outline-none focus:ring-2 focus:ring-primary/40",
                 it === safeCurrentPage
                   ? "bg-primary text-white border-primary"
@@ -96,7 +96,7 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
           type="button"
           disabled={safeCurrentPage === safeTotalPages}
           onClick={() => setPage(safeCurrentPage + 1)}
-          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white cursor-pointer hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 dark:disabled:hover:border-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
           aria-label="Next page"
         >
           <Icon icon="ph:caret-right" width={20} height={20} />

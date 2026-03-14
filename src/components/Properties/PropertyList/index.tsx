@@ -2,6 +2,9 @@ import PropertyCard from '@/components/Home/Properties/Card/Card'
 import { PropertySearchBar } from '@/components/catalog/PropertySearchBar'
 import { PropertyPagination } from '@/components/catalog/PropertyPagination'
 import { CatalogEmptyState } from '@/components/catalog/CatalogEmptyState'
+import { CatalogSeoText } from '@/components/catalog/CatalogSeoText'
+import { ItemListJsonLd } from '@/components/shared/ItemListJsonLd'
+import { getBaseUrl } from '@/lib/seo/baseUrl'
 import type { PropertyHomes } from '@/types/properyHomes'
 import {
   fetchCatalogProperties,
@@ -24,16 +27,22 @@ const DEFAULT_PRICE_RANGES: Record<string, { min: number; max: number }> = {
   'short-term': { min: 50, max: 2_000 },
 }
 
+type CatalogSeoContent = {
+  bottomText?: unknown[]
+} | null
+
 async function PropertiesListing({
   locale,
   pathCity = '',
   pathDistrict = '',
   searchParams,
+  catalogSeo,
 }: {
   locale: string
   pathCity?: string
   pathDistrict?: string
   searchParams: SearchParams
+  catalogSeo?: CatalogSeoContent
 }) {
   const {
     locations: locationOptions,
@@ -112,8 +121,18 @@ async function PropertiesListing({
     ? catalogResult.items.map((item) => mapCatalogPropertyToCard(item, locale))
     : []
 
+  const baseUrl = await getBaseUrl()
+  const itemListEntries = pageItems.map((item) => ({
+    name: item.name,
+    slug: item.slug,
+    image: item.images?.[0]?.src ?? null,
+  }))
+
   return (
     <section className='pt-0!'>
+      {pageItems.length > 0 && (
+        <ItemListJsonLd items={itemListEntries} baseUrl={baseUrl} locale={locale} />
+      )}
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
         <PropertySearchBar
           locations={locationOptions}
@@ -152,6 +171,9 @@ async function PropertiesListing({
               <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
             )}
           </>
+        )}
+        {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (
+          <CatalogSeoText content={catalogSeo.bottomText} />
         )}
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { createClient } from '@sanity/client';
-import { resolveLocalizedString } from './localized';
+import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
@@ -264,6 +264,55 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
   } catch (err) {
     console.warn('[Sanity] fetchPropertyBySlug failed:', err);
     return null;
+  }
+}
+
+/** Fetch properties by slugs. Returns array of CatalogProperty. */
+export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogProperty[]> {
+  const client = getClient();
+  if (!client || !Array.isArray(slugs) || slugs.length === 0) return [];
+
+  const safeSlugs = slugs.filter((s) => typeof s === "string" && s.trim());
+  if (safeSlugs.length === 0) return [];
+
+  const query = `*[_type == "property" && slug.current in $slugs] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    price,
+    currency,
+    area,
+    bedrooms,
+    bathrooms,
+    status,
+    featured,
+    investment,
+    "city": city-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "district": district-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "citySlug": city->slug.current
+    },
+    "type": type-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "mainImageUrl": gallery[0].asset->url
+  }`;
+
+  try {
+    const items = await client.fetch<CatalogProperty[]>(query, { slugs: safeSlugs });
+    return Array.isArray(items) ? items : [];
+  } catch (err) {
+    console.warn("[Sanity] fetchPropertiesBySlugs failed:", err);
+    return [];
   }
 }
 
@@ -679,4 +728,105 @@ export async function fetchCatalogFilterOptions(locale: string): Promise<Catalog
     console.warn('[Sanity] fetchCatalogFilterOptions failed:', err);
     return { locations: [], propertyTypes: [], amenities: [], districts: [] };
   }
+}
+
+export type CatalogSeoPageResolved = {
+  title: string;
+  intro: unknown[];
+  bottomText: unknown[];
+  metaTitle: string;
+  metaDescription: string;
+};
+
+const catalogSeoPageProjection = `{
+  _id,
+  title,
+  intro,
+  bottomText,
+  seo {
+    metaTitle,
+    metaDescription
+  }
+}`;
+
+/** Fetch catalog SEO page for properties root. Returns null if none or inactive. */
+export async function fetchCatalogSeoPageRoot(): Promise<{
+  title?: unknown;
+  intro?: unknown;
+  bottomText?: unknown;
+  seo?: { metaTitle?: unknown; metaDescription?: unknown };
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "catalogSeoPage" && active == true && pageScope == "propertiesRoot"][0] ${catalogSeoPageProjection}`;
+  try {
+    return await client.fetch(query);
+  } catch (err) {
+    console.warn('[Sanity] fetchCatalogSeoPageRoot failed:', err);
+    return null;
+  }
+}
+
+/** Fetch catalog SEO page for a city. Returns null if none or inactive. */
+export async function fetchCatalogSeoPageByCity(citySlug: string): Promise<{
+  title?: unknown;
+  intro?: unknown;
+  bottomText?: unknown;
+  seo?: { metaTitle?: unknown; metaDescription?: unknown };
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "catalogSeoPage" && active == true && pageScope == "city" && city->slug.current == $citySlug][0] ${catalogSeoPageProjection}`;
+  try {
+    return await client.fetch(query, { citySlug });
+  } catch (err) {
+    console.warn('[Sanity] fetchCatalogSeoPageByCity failed:', err);
+    return null;
+  }
+}
+
+/** Fetch catalog SEO page for a district. Returns null if none or inactive. */
+export async function fetchCatalogSeoPageByDistrict(
+  citySlug: string,
+  districtSlug: string
+): Promise<{
+  title?: unknown;
+  intro?: unknown;
+  bottomText?: unknown;
+  seo?: { metaTitle?: unknown; metaDescription?: unknown };
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "catalogSeoPage" && active == true && pageScope == "district" && city->slug.current == $citySlug && district->slug.current == $districtSlug][0] ${catalogSeoPageProjection}`;
+  try {
+    return await client.fetch(query, { citySlug, districtSlug });
+  } catch (err) {
+    console.warn('[Sanity] fetchCatalogSeoPageByDistrict failed:', err);
+    return null;
+  }
+}
+
+/** Resolve catalog SEO page raw result to localized strings/arrays. */
+export function resolveCatalogSeoPage(
+  raw: { title?: unknown; intro?: unknown; bottomText?: unknown; seo?: { metaTitle?: unknown; metaDescription?: unknown } } | null,
+  locale: string
+): CatalogSeoPageResolved | null {
+  if (!raw) return null;
+  const title = resolveLocalizedString(raw.title as never, locale);
+  const intro = resolveLocalizedContent(raw.intro as never, locale);
+  const bottomText = resolveLocalizedContent(raw.bottomText as never, locale);
+  const seo = raw.seo;
+  const metaTitle = seo?.metaTitle
+    ? resolveLocalizedString(seo.metaTitle as never, locale)
+    : '';
+  const metaDescription = seo?.metaDescription
+    ? resolveLocalizedString(seo.metaDescription as never, locale)
+    : '';
+  return {
+    title,
+    intro: Array.isArray(intro) ? intro : [],
+    bottomText: Array.isArray(bottomText) ? bottomText : [],
+    metaTitle,
+    metaDescription,
+  };
 }

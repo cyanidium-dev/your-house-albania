@@ -49,7 +49,10 @@ export function PropertyGallery({ images }: Props) {
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX == null) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) dx > 0 ? goPrev() : goNext();
+    if (Math.abs(dx) > 50) {
+      if (dx > 0) goPrev();
+      else goNext();
+    }
     setTouchStartX(null);
   };
 

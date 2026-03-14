@@ -13,12 +13,12 @@ function buildQueryString(
   const qs = params.toString();
   return qs ? `?${qs}` : "";
 }
-import HeroSub from "@/components/shared/HeroSub";
+import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import React from "react";
 import { getTranslations } from "next-intl/server";
-import { fetchSiteSettings } from "@/lib/sanity/client";
+import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 
 type Props = {
@@ -28,7 +28,11 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const siteSettings = await fetchSiteSettings();
+  const [siteSettings, rawSeo] = await Promise.all([
+    fetchSiteSettings(),
+    fetchCatalogSeoPageRoot(),
+  ]);
+  const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
     | {
         metaTitle?: Record<string, string>;
@@ -48,11 +52,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const listTitle = t("title");
   const listDescription = t("description");
 
-  const title = localizedTitleFromSeo
-    ? `${listTitle} | ${localizedTitleFromSeo}`
-    : listTitle;
+  const title = catalogSeo?.metaTitle
+    ? catalogSeo.metaTitle
+    : localizedTitleFromSeo
+      ? `${listTitle} | ${localizedTitleFromSeo}`
+      : listTitle;
 
-  const description = localizedDescriptionFromSeo || listDescription;
+  const description =
+    catalogSeo?.metaDescription ||
+    localizedDescriptionFromSeo ||
+    listDescription;
 
   return {
     title,
@@ -73,17 +82,24 @@ export default async function page({ params, searchParams }: Props) {
   }
 
   const t = await getTranslations("Listing.properties");
+  const tCatalog = await getTranslations("Catalog");
+  const rawSeo = await fetchCatalogSeoPageRoot();
+  const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+
   return (
     <>
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-8 pb-2">
-        <CatalogBreadcrumb locale={locale} />
-      </div>
-      <HeroSub
-        title={t("title")}
-        description={t("description")}
+      <CatalogHero
+        title={catalogSeo?.title || t("title")}
         badge={t("badge")}
+        intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
+        introFallback={tCatalog("heroIntroFallback")}
+        breadcrumb={<CatalogBreadcrumb locale={locale} />}
       />
-      <PropertiesListing locale={locale} searchParams={search} />
+      <PropertiesListing
+        locale={locale}
+        searchParams={search}
+        catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
+      />
     </>
   );
 }

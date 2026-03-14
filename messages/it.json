@@ -7,6 +7,7 @@
     "nav": {
       "home": "Home",
       "properties": "Immobili",
+      "favorites": "Preferiti",
       "blog": "Blog",
       "contact": "Contatto",
       "docs": "Documentazione"
@@ -152,9 +153,11 @@
   "Breadcrumbs": {
     "home": "Home",
     "properties": "Immobili",
+    "favorites": "Preferiti",
     "cities": "Città"
   },
   "Catalog": {
+    "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "empty": {
       "title": "Nessuna proprietà trovata",
       "description": "Prova a modificare o reimpostare i filtri.",
@@ -170,6 +173,7 @@
       "priceRange": "Fascia di prezzo",
       "advancedFilters": "Filtri avanzati",
       "filtersShort": "Filtri",
+      "resetFilters": "Reimposta filtri",
       "search": "Cerca",
       "anyLocation": "Qualsiasi località",
       "anyType": "Qualsiasi tipo",
@@ -187,5 +191,19 @@
       "sortAreaDesc": "Superficie (dalla più grande)",
       "resultsPerPage": "Risultati per pagina"
     }
+  },
+  "Favorites": {
+    "title": "Preferiti",
+    "description": "Proprietà che hai aggiunto ai preferiti.",
+    "clearFavorites": "Cancella preferiti",
+    "clearModalTitle": "Cancellare tutti i preferiti?",
+    "clearModalDescription": "Questo rimuoverà tutte le proprietà dai preferiti. Potrai aggiungerle di nuovo in qualsiasi momento.",
+    "clearModalConfirm": "Cancella tutto",
+    "clearModalCancel": "Annulla",
+    "emptyTitle": "Nessun preferito",
+    "emptyDescription": "Sfoglia le proprietà e clicca sul cuore per aggiungerle qui.",
+    "browseProperties": "Sfoglia proprietà",
+    "noDataTitle": "Nessun dato trovato",
+    "noDataDescription": "Alcuni preferiti potrebbero non esistere più."
   }
 }

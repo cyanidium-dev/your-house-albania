@@ -270,12 +270,20 @@ export function PropertySearchBar({
           </Slider.Root>
         </div>
 
-        {/* Search + Advanced */}
+        {/* Reset + Advanced + Search */}
         <div className="flex items-end gap-2 justify-end">
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer"
+            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30"
+            onClick={() => router.push(catalogPath(locale))}
+          >
+            {t("resetFilters")}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30"
             onClick={() => setShowAdvanced((v) => !v)}
           >
             <span className="hidden sm:inline">{t("advancedFilters")}</span>

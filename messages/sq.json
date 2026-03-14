@@ -7,6 +7,7 @@
     "nav": {
       "home": "Kryefaqja",
       "properties": "Prona",
+      "favorites": "Të preferuarat",
       "blog": "Blog",
       "contact": "Kontakt",
       "docs": "Dokumentacioni"
@@ -152,9 +153,11 @@
   "Breadcrumbs": {
     "home": "Kryefaqja",
     "properties": "Prona",
+    "favorites": "Të preferuarat",
     "cities": "Qytetet"
   },
   "Catalog": {
+    "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
     "empty": {
       "title": "Nuk u gjetën pronat",
       "description": "Provoni të rregulloni ose të rivendosni filtrat.",
@@ -170,6 +173,7 @@
       "priceRange": "Gama e çmimit",
       "advancedFilters": "Filtrat e avancuar",
       "filtersShort": "Filtrat",
+      "resetFilters": "Rivendos filtrat",
       "search": "Kërko",
       "anyLocation": "Çdo vendndodhje",
       "anyType": "Çdo lloj",
@@ -187,5 +191,19 @@
       "sortAreaDesc": "Sipërfaqja (nga më e madhja)",
       "resultsPerPage": "Rezultate për faqe"
     }
+  },
+  "Favorites": {
+    "title": "Të preferuarat",
+    "description": "Pronat që keni shtuar te të preferuarat.",
+    "clearFavorites": "Pastro të preferuarat",
+    "clearModalTitle": "Pastro të gjitha të preferuarat?",
+    "clearModalDescription": "Kjo do të heqë të gjitha pronat nga të preferuarat. Mund t'i shtoni përsëri çdo kohë.",
+    "clearModalConfirm": "Pastro të gjitha",
+    "clearModalCancel": "Anulo",
+    "emptyTitle": "Ende nuk keni të preferuara",
+    "emptyDescription": "Shfletoni pronat dhe shtypni zemrën për t'i shtuar këtu.",
+    "browseProperties": "Shfletoni pronat",
+    "noDataTitle": "Nuk u gjetën të dhëna për pronat",
+    "noDataDescription": "Disa nga të preferuarat ndoshta nuk ekzistojnë më."
   }
 }

@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import { FavoriteButton } from '@/components/shared/FavoriteButton'
 
 async function PropertyCard({ item, locale }: { item: PropertyHomes; locale: string }) {
   const { name, location, rate, beds, baths, area, slug, images } = item
@@ -14,6 +15,9 @@ async function PropertyCard({ item, locale }: { item: PropertyHomes; locale: str
     <div>
       <div className='relative rounded-2xl border border-dark/10 dark:border-white/10 group hover:shadow-3xl duration-300 dark:hover:shadow-white/20'>
         <div className='overflow-hidden rounded-t-2xl'>
+          <div className="absolute top-6 left-6 z-10">
+            <FavoriteButton slug={slug} name={name} variant="overlay" imageUrl={mainImage ?? null} />
+          </div>
           <Link href={href}>
             {mainImage && (
               <Image
