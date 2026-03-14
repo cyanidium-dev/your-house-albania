@@ -1,51 +1,20 @@
 import PropertyCard from '@/components/Home/Properties/Card/Card'
-import { getProperties } from '@/data/properties'
 import { PropertySearchBar } from '@/components/catalog/PropertySearchBar'
 import { PropertyPagination } from '@/components/catalog/PropertyPagination'
 import type { PropertyHomes } from '@/types/properyHomes'
+import {
+  fetchCatalogProperties,
+  fetchCatalogFilterOptions,
+  type CatalogSort,
+} from '@/lib/sanity/client'
+import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
 const DEFAULT_PAGE_SIZE = 24
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
-function getCitySlug(location: string): string {
-  const parts = location.split(',')
-  const city = parts[parts.length - 1]?.trim() ?? ''
-  return city.toLowerCase()
-}
-
-function getCityLabel(location: string): string {
-  const parts = location.split(',')
-  const city = parts[parts.length - 1]?.trim() ?? ''
-  if (!city) return ''
-  return city.charAt(0).toUpperCase() + city.slice(1)
-}
-
-function getTypeSlug(name: string): string {
-  const lower = name.toLowerCase()
-  if (lower.includes('apartment')) return 'apartment'
-  if (lower.includes('villa')) return 'villa'
-  if (lower.includes('office')) return 'office'
-  return 'other'
-}
-
-const DEAL_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: 'sale', label: 'Sale' },
-  { value: 'rent', label: 'Rent' },
-  { value: 'short-term', label: 'Short-term rent' },
-]
-
-const AMENITY_OPTIONS: { value: string; label: string }[] = [
-  { value: 'parking', label: 'Parking' },
-  { value: 'pool', label: 'Pool' },
-  { value: 'sea-view', label: 'Sea view' },
-  { value: 'garden', label: 'Garden' },
-  { value: 'balcony', label: 'Balcony' },
-  { value: 'terrace', label: 'Terrace' },
-  { value: 'air-conditioning', label: 'Air conditioning' },
-  { value: 'elevator', label: 'Elevator' },
-]
+const DEAL_TYPE_VALUES = ['sale', 'rent', 'short-term'] as const
 
 const DEFAULT_PRICE_RANGES: Record<string, { min: number; max: number }> = {
   any: { min: 50_000, max: 1_000_000 },
@@ -54,34 +23,19 @@ const DEFAULT_PRICE_RANGES: Record<string, { min: number; max: number }> = {
   'short-term': { min: 50, max: 2_000 },
 }
 
-const PropertiesListing: React.FC<{ locale: string; searchParams: SearchParams }> = ({
+async function PropertiesListing({
   locale,
   searchParams,
-}) => {
-  const allProperties = getProperties()
-
-  // derive options for selects from current dataset (fallback until Sanity wiring)
-  const cityMap = new Map<string, string>()
-  const typeMap = new Map<string, string>()
-  allProperties.forEach((p) => {
-    const citySlug = getCitySlug(p.location)
-    const cityLabel = getCityLabel(p.location)
-    if (citySlug && cityLabel && !cityMap.has(citySlug)) {
-      cityMap.set(citySlug, cityLabel)
-    }
-    const typeSlug = getTypeSlug(p.name)
-    if (typeSlug === 'apartment') typeMap.set('apartment', 'Apartment')
-    if (typeSlug === 'villa') typeMap.set('villa', 'Villa')
-    if (typeSlug === 'office') typeMap.set('office', 'Office')
-  })
-  const locationOptions = Array.from(cityMap.entries()).map(([value, label]) => ({
-    value,
-    label,
-  }))
-  const typeOptions = Array.from(typeMap.entries()).map(([value, label]) => ({
-    value,
-    label,
-  }))
+}: {
+  locale: string
+  searchParams: SearchParams
+}) {
+  const {
+    locations: locationOptions,
+    propertyTypes: typeOptions,
+    amenities: amenityOptions,
+    districts: districtOptions,
+  } = await fetchCatalogFilterOptions(locale)
 
   const cityFilter =
     typeof searchParams.city === 'string' ? searchParams.city.toLowerCase() : ''
@@ -108,42 +62,54 @@ const PropertiesListing: React.FC<{ locale: string; searchParams: SearchParams }
   const bedsFilter =
     typeof searchParams.beds === 'string' ? Number(searchParams.beds) || 0 : 0
 
-  const filtered: PropertyHomes[] = allProperties.filter((p) => {
-    if (cityFilter) {
-      if (getCitySlug(p.location) !== cityFilter) return false
-    }
-    if (typeFilter) {
-      if (getTypeSlug(p.name) !== typeFilter) return false
-    }
-    // dealFilter пока не влияет на сами объекты, т.к. mock-данные не содержат status
-    if (minPriceFilter || maxPriceFilter) {
-      const numericRate = Number(String(p.rate).replace(/,/g, '')) || 0
-      if (minPriceFilter && numericRate < minPriceFilter) return false
-      if (maxPriceFilter && numericRate > maxPriceFilter) return false
-    }
-    if (bedsFilter && p.beds < bedsFilter) return false
-    return true
-  })
-
-  const totalItems = filtered.length
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
   const rawPage =
     typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
+  let catalogResult =
+    (await fetchCatalogProperties({
+      city: cityFilter || undefined,
+      district:
+        typeof searchParams.district === 'string'
+          ? searchParams.district
+          : undefined,
+      type: typeFilter || undefined,
+      deal: dealFilter || undefined,
+      minPrice: minPriceFilter || undefined,
+      maxPrice: maxPriceFilter || undefined,
+      beds: bedsFilter || undefined,
+      amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
+      sort: sort as CatalogSort,
+      page: rawPage,
+      pageSize,
+    })) ?? { items: [], totalCount: 0 }
+
+  const totalItems = catalogResult.totalCount ?? 0
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
   const currentPage = Math.min(Math.max(rawPage, 1), totalPages)
-  // apply sort
-  const sorted = [...filtered]
-  if (sort === 'priceAsc' || sort === 'priceDesc') {
-    sorted.sort((a, b) => {
-      const aPrice = Number(String(a.rate).replace(/,/g, '')) || 0
-      const bPrice = Number(String(b.rate).replace(/,/g, '')) || 0
-      return sort === 'priceAsc' ? aPrice - bPrice : bPrice - aPrice
-    })
-  } else if (sort === 'areaDesc') {
-    sorted.sort((a, b) => (b.area || 0) - (a.area || 0))
+
+  // If requested page is out of range but there are items, refetch for the last valid page.
+  if (totalItems > 0 && currentPage !== rawPage) {
+    catalogResult =
+      (await fetchCatalogProperties({
+        city: cityFilter || undefined,
+        district:
+          typeof searchParams.district === 'string'
+            ? searchParams.district
+            : undefined,
+        type: typeFilter || undefined,
+        deal: dealFilter || undefined,
+        minPrice: minPriceFilter || undefined,
+        maxPrice: maxPriceFilter || undefined,
+        beds: bedsFilter || undefined,
+        amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
+        sort: sort as CatalogSort,
+        page: currentPage,
+        pageSize,
+      })) ?? { items: [], totalCount }
   }
 
-  const start = (currentPage - 1) * pageSize
-  const pageItems = sorted.slice(start, start + pageSize)
+  const pageItems: PropertyHomes[] = Array.isArray(catalogResult.items)
+    ? catalogResult.items.map((item) => mapCatalogPropertyToCard(item, locale))
+    : []
 
   return (
     <section className='pt-0!'>
@@ -151,7 +117,8 @@ const PropertiesListing: React.FC<{ locale: string; searchParams: SearchParams }
         <PropertySearchBar
           locations={locationOptions}
           propertyTypes={typeOptions}
-          dealTypes={DEAL_TYPE_OPTIONS}
+          dealTypeValues={DEAL_TYPE_VALUES}
+          districtOptions={districtOptions}
           priceRangesByDeal={DEFAULT_PRICE_RANGES}
           initialCity={cityFilter}
           initialType={typeFilter}
@@ -167,7 +134,7 @@ const PropertiesListing: React.FC<{ locale: string; searchParams: SearchParams }
             typeof searchParams.district === 'string' ? searchParams.district : ''
           }
           initialSort={sort}
-          amenityOptions={AMENITY_OPTIONS}
+          amenityOptions={amenityOptions}
           initialAmenities={amenitiesFilter}
           initialPageSize={String(pageSize)}
         />
@@ -178,7 +145,9 @@ const PropertiesListing: React.FC<{ locale: string; searchParams: SearchParams }
             </div>
           ))}
         </div>
-        <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
+        {totalPages > 1 && (
+          <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
+        )}
       </div>
     </section>
   )

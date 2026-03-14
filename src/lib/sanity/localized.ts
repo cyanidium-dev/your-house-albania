@@ -6,6 +6,7 @@ const LOCALE_MAP: Record<string, string> = {
   en: 'en',
   uk: 'uk',
   ru: 'ru',
+  sq: 'sq',
   al: 'sq',
   it: 'it',
 };

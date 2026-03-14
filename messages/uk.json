@@ -143,5 +143,34 @@
       "title": "Огляди ринку нерухомості.",
       "description": "Актуальні поради та оновлення від експертів."
     }
+  },
+  "Catalog": {
+    "filters": {
+      "location": "Локація",
+      "propertyType": "Тип об'єкта",
+      "dealType": "Тип угоди",
+      "dealSale": "Продаж",
+      "dealRent": "Оренда",
+      "dealShortTerm": "Короткострокова оренда",
+      "priceRange": "Діапазон ціни",
+      "advancedFilters": "Додаткові фільтри",
+      "filtersShort": "Фільтри",
+      "search": "Пошук",
+      "anyLocation": "Будь-яка локація",
+      "anyType": "Будь-який тип",
+      "any": "Будь-який",
+      "bedrooms": "Спальні",
+      "bedsAtLeast": "{count}+",
+      "district": "Район",
+      "anyDistrict": "Будь-який район",
+      "amenities": "Зручності",
+      "amenitiesSelected": "{count} обрано",
+      "sortBy": "Сортувати",
+      "sortNewest": "Найновіші",
+      "sortPriceAsc": "Ціна (від низької)",
+      "sortPriceDesc": "Ціна (від високої)",
+      "sortAreaDesc": "Площа (від більшої)",
+      "resultsPerPage": "Результатів на сторінку"
+    }
   }
 }

@@ -14,13 +14,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
   params: { locale?: string };
 }>) {
-  const locale = typeof params?.locale === "string" && routing.locales.includes(params.locale)
-    ? params.locale
-    : routing.defaultLocale;
+  const locale =
+    typeof params?.locale === "string" &&
+    routing.locales.includes(params.locale)
+      ? params.locale
+      : routing.defaultLocale;
   return (
     <html lang={locale}>
       <body

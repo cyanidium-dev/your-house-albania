@@ -143,5 +143,34 @@
       "title": "Pamje të tregut të pasurive të paluajtshme.",
       "description": "Këshilla dhe përditësime nga ekspertët."
     }
+  },
+  "Catalog": {
+    "filters": {
+      "location": "Vendndodhja",
+      "propertyType": "Lloji i pronës",
+      "dealType": "Lloji i ofertës",
+      "dealSale": "Shitje",
+      "dealRent": "Qira",
+      "dealShortTerm": "Qira afatshkurter",
+      "priceRange": "Gama e çmimit",
+      "advancedFilters": "Filtrat e avancuar",
+      "filtersShort": "Filtrat",
+      "search": "Kërko",
+      "anyLocation": "Çdo vendndodhje",
+      "anyType": "Çdo lloj",
+      "any": "Çfarëdo",
+      "bedrooms": "Dhoma gjumi",
+      "bedsAtLeast": "{count}+",
+      "district": "Rrethi",
+      "anyDistrict": "Çdo rreth",
+      "amenities": "Lehtësitë",
+      "amenitiesSelected": "{count} të zgjedhura",
+      "sortBy": "Rendit sipas",
+      "sortNewest": "Më të rejat",
+      "sortPriceAsc": "Çmimi (nga më i ulëti)",
+      "sortPriceDesc": "Çmimi (nga më i larti)",
+      "sortAreaDesc": "Sipërfaqja (nga më e madhja)",
+      "resultsPerPage": "Rezultate për faqe"
+    }
   }
 }

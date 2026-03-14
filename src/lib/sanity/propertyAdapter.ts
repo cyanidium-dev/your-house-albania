@@ -1,4 +1,5 @@
 import type { PropertyHomes } from '@/types/properyHomes';
+import type { CatalogProperty } from './client';
 import { resolveLocalizedString } from './localized';
 
 /** Fields for property details page top section (title, location, specs, price, description). */
@@ -111,4 +112,26 @@ export function mapSanityPropertyToCard(
     area: p.area ?? 0,
     images: imageUrl ? [{ src: imageUrl }] : [],
   };
+}
+
+/** Maps catalog query result item to PropertyHomes for listing/card UI. */
+export function mapCatalogPropertyToCard(
+  p: CatalogProperty,
+  locale: string
+): PropertyHomes {
+  const base: SanityProperty = {
+    _id: p._id,
+    title: p.title,
+    slug: p.slug,
+    price: p.price,
+    currency: p.currency,
+    area: p.area,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    city: p.city as { title?: unknown },
+    district: p.district as { title?: unknown },
+    mainImageUrl: p.mainImageUrl,
+  };
+
+  return mapSanityPropertyToCard(base, locale);
 }

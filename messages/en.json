@@ -143,5 +143,34 @@
       "title": "Real estate insights.",
       "description": "Stay ahead in the property market with expert advice and updates."
     }
+  },
+  "Catalog": {
+    "filters": {
+      "location": "Location",
+      "propertyType": "Property type",
+      "dealType": "Deal type",
+      "dealSale": "Sale",
+      "dealRent": "Rent",
+      "dealShortTerm": "Short-term rent",
+      "priceRange": "Price range",
+      "advancedFilters": "Advanced filters",
+      "filtersShort": "Filters",
+      "search": "Search",
+      "anyLocation": "Any location",
+      "anyType": "Any type",
+      "any": "Any",
+      "bedrooms": "Bedrooms",
+      "bedsAtLeast": "{count}+",
+      "district": "District",
+      "anyDistrict": "Any district",
+      "amenities": "Amenities",
+      "amenitiesSelected": "{count} selected",
+      "sortBy": "Sort by",
+      "sortNewest": "Newest",
+      "sortPriceAsc": "Price (low to high)",
+      "sortPriceDesc": "Price (high to low)",
+      "sortAreaDesc": "Area (largest first)",
+      "resultsPerPage": "Results per page"
+    }
   }
 }

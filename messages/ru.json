@@ -143,5 +143,34 @@
       "title": "Обзоры рынка недвижимости.",
       "description": "Актуальные советы и обновления от экспертов."
     }
+  },
+  "Catalog": {
+    "filters": {
+      "location": "Локация",
+      "propertyType": "Тип объекта",
+      "dealType": "Тип сделки",
+      "dealSale": "Продажа",
+      "dealRent": "Аренда",
+      "dealShortTerm": "Краткосрочная аренда",
+      "priceRange": "Диапазон цены",
+      "advancedFilters": "Дополнительные фильтры",
+      "filtersShort": "Фильтры",
+      "search": "Поиск",
+      "anyLocation": "Любая локация",
+      "anyType": "Любой тип",
+      "any": "Любой",
+      "bedrooms": "Спальни",
+      "bedsAtLeast": "{count}+",
+      "district": "Район",
+      "anyDistrict": "Любой район",
+      "amenities": "Удобства",
+      "amenitiesSelected": "{count} выбрано",
+      "sortBy": "Сортировать",
+      "sortNewest": "Сначала новые",
+      "sortPriceAsc": "Цена (по возрастанию)",
+      "sortPriceDesc": "Цена (по убыванию)",
+      "sortAreaDesc": "Площадь (от большей)",
+      "resultsPerPage": "Результатов на странице"
+    }
   }
 }

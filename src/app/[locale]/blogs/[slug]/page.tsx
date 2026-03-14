@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getBlogPostBySlug } from "@/data/blog";
 import markdownToHtml from "@/components/utils/markdownToHtml";
 import { notFound } from "next/navigation";
@@ -11,7 +12,7 @@ type Props = {
     params: { slug: string };
 };
 
-export async function generateMetadata({ params }: any) {
+export async function generateMetadata({ params }: any): Promise<Metadata> {
     const data = await params;
     const post = getBlogPostBySlug(data.slug, [
         "title",
@@ -24,9 +25,19 @@ export async function generateMetadata({ params }: any) {
     const authorName = process.env.AUTHOR_NAME || "Your Author Name";
 
     if (post) {
-        const metadata = {
+        const meta = (post as { metadata?: any }).metadata ?? {};
+        const ogImage: string | null =
+          typeof meta.ogImage === "string"
+            ? meta.ogImage
+            : typeof meta.coverImage === "string"
+              ? meta.coverImage
+              : typeof (post as any).coverImage === "string"
+                ? (post as any).coverImage
+                : null;
+
+        const metadata: Metadata = {
             title: `${post.title || "Single Post Page"} | ${siteName}`,
-            author: authorName,
+            authors: [{ name: authorName }],
             robots: {
                 index: true,
                 follow: true,
@@ -39,14 +50,25 @@ export async function generateMetadata({ params }: any) {
                     "max-snippet": -1,
                 },
             },
+            ...(ogImage && {
+                openGraph: {
+                    images: [
+                        {
+                            url: ogImage,
+                            width: 1200,
+                            height: 630,
+                        },
+                    ],
+                },
+            }),
         };
 
         return metadata;
     } else {
-        return {
+        const metadata: Metadata = {
             title: "Not Found",
             description: "No blog article has been found",
-            author: authorName,
+            authors: [{ name: authorName }],
             robots: {
                 index: false,
                 follow: false,
@@ -60,6 +82,7 @@ export async function generateMetadata({ params }: any) {
                 },
             },
         };
+        return metadata;
     }
 }
 

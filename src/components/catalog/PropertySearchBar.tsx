@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import * as Slider from "@radix-ui/react-slider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,11 +16,13 @@ import {
 } from "@/components/catalog/FilterMultiSelect";
 
 type Option = { value: string; label: string };
+type DistrictOption = Option & { citySlug?: string };
 
 type Props = {
   locations: Option[];
   propertyTypes: Option[];
-  dealTypes: Option[];
+  dealTypeValues: readonly string[];
+  districtOptions: DistrictOption[];
   priceRangesByDeal: Record<string, { min: number; max: number }>;
   amenityOptions: Option[];
   initialCity?: string;
@@ -37,7 +40,8 @@ type Props = {
 export function PropertySearchBar({
   locations,
   propertyTypes,
-  dealTypes,
+  dealTypeValues,
+  districtOptions: allDistricts,
   priceRangesByDeal,
   amenityOptions,
   initialCity = "",
@@ -51,6 +55,7 @@ export function PropertySearchBar({
   initialAmenities = [],
   initialPageSize = "24",
 }: Props) {
+  const t = useTranslations("Catalog.filters");
   const [city, setCity] = React.useState(initialCity);
   const [type, setType] = React.useState(initialType);
   const [deal, setDeal] = React.useState(initialDealType || "any");
@@ -86,7 +91,6 @@ export function PropertySearchBar({
   });
 
   React.useEffect(() => {
-    // при смене типа сделки сбрасываем слайдер на диапазон для этого типа
     const range =
       priceRangesByDeal[deal || "any"] || priceRangesByDeal.any || currentRange;
     setPriceValues([range.min, range.max]);
@@ -94,6 +98,30 @@ export function PropertySearchBar({
     setMaxPrice(range.max.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deal]);
+
+  const getDealLabel = (value: string) => {
+    if (value === "sale") return t("dealSale");
+    if (value === "rent") return t("dealRent");
+    if (value === "short-term") return t("dealShortTerm");
+    return value;
+  };
+
+  const districtOptionsFiltered = React.useMemo(() => {
+    if (!city) return allDistricts;
+    return allDistricts.filter(
+      (d) => !d.citySlug || d.citySlug === city
+    );
+  }, [allDistricts, city]);
+
+  React.useEffect(() => {
+    const currentDistrict = district === "any" ? "" : district;
+    if (currentDistrict && districtOptionsFiltered.length > 0) {
+      const belongsToCity = districtOptionsFiltered.some(
+        (d) => d.value === currentDistrict
+      );
+      if (!belongsToCity) setDistrict("any");
+    }
+  }, [city, district, districtOptionsFiltered]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -162,13 +190,12 @@ export function PropertySearchBar({
     value: o.value,
     label: o.label,
   }));
-  const propertyTypeOptions: FilterOption[] = propertyTypes.map((o) => ({
-    value: o.value,
-    label: o.label,
-  }));
-  const dealTypeOptions: FilterOption[] = dealTypes.map((o) => ({
-    value: o.value,
-    label: o.label,
+  const propertyTypeOptions: FilterOption[] = propertyTypes
+    .filter((o) => o.value && o.value !== "any")
+    .map((o) => ({ value: o.value, label: o.label }));
+  const dealTypeOptions: FilterOption[] = dealTypeValues.map((v) => ({
+    value: v,
+    label: getDealLabel(v),
   }));
   const amenityMultiOptions: FilterMultiOption[] = amenityOptions.map((o) => ({
     value: o.value,
@@ -189,35 +216,37 @@ export function PropertySearchBar({
       >
         {/* Location */}
         <FilterSelect
-          label="Location"
+          label={t("location")}
           value={city || "any"}
-          onValueChange={(v) => setCity(v === "any" ? "" : v)}
+          onValueChange={(v) => {
+            setCity(v === "any" ? "" : v);
+          }}
           options={locationOptions}
-          anyLabel="Any location"
+          anyLabel={t("anyLocation")}
         />
 
         {/* Property type */}
         <FilterSelect
-          label="Property type"
+          label={t("propertyType")}
           value={type || "any"}
           onValueChange={(v) => setType(v === "any" ? "" : v)}
           options={propertyTypeOptions}
-          anyLabel="Any type"
+          anyLabel={t("anyType")}
         />
 
         {/* Deal type */}
         <FilterSelect
-          label="Deal type"
+          label={t("dealType")}
           value={deal || "any"}
           onValueChange={setDeal}
           options={dealTypeOptions}
-          anyLabel="Any"
+          anyLabel={t("any")}
         />
 
         {/* Price range (label + slider + values) */}
         <div>
           <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1">
-            <span>Price range</span>
+            <span>{t("priceRange")}</span>
             <span className="font-medium text-dark dark:text-white text-[11px]">
               {priceValues[0].toLocaleString()} –{" "}
               {priceValues[1].toLocaleString()}
@@ -252,14 +281,14 @@ export function PropertySearchBar({
             className="h-10 px-4 rounded-full cursor-pointer"
             onClick={() => setShowAdvanced((v) => !v)}
           >
-            <span className="hidden sm:inline">Advanced filters</span>
-            <span className="sm:hidden">Filters</span>
+            <span className="hidden sm:inline">{t("advancedFilters")}</span>
+            <span className="sm:hidden">{t("filtersShort")}</span>
           </Button>
           <Button
             type="submit"
             className="h-10 px-6 rounded-full cursor-pointer"
           >
-            Search
+            {t("search")}
           </Button>
         </div>
       </div>
@@ -284,55 +313,60 @@ export function PropertySearchBar({
           <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
             {/* Bedrooms */}
             <FilterSelect
-              label="Bedrooms"
+              label={t("bedrooms")}
               value={beds || "any"}
               onValueChange={setBeds}
               options={[
-                { value: "1", label: "1+" },
-                { value: "2", label: "2+" },
-                { value: "3", label: "3+" },
-                { value: "4", label: "4+" },
-                { value: "5", label: "5+" },
+                { value: "1", label: t("bedsAtLeast", { count: 1 }) },
+                { value: "2", label: t("bedsAtLeast", { count: 2 }) },
+                { value: "3", label: t("bedsAtLeast", { count: 3 }) },
+                { value: "4", label: t("bedsAtLeast", { count: 4 }) },
+                { value: "5", label: t("bedsAtLeast", { count: 5 }) },
               ]}
-              anyLabel="Any"
+              anyLabel={t("any")}
             />
 
             {/* District */}
             <FilterSelect
-              label="District"
+              label={t("district")}
               value={district || "any"}
-              onValueChange={setDistrict}
-              options={[]}
-              anyLabel="Any district"
+              onValueChange={(v) => setDistrict(v === "any" ? "" : v)}
+              options={districtOptionsFiltered.map((o) => ({
+                value: o.value,
+                label: o.label,
+              }))}
+              anyLabel={t("anyDistrict")}
             />
 
             <FilterMultiSelect
-              label="Amenities"
+              label={t("amenities")}
               value={amenities}
               onValueChange={setAmenities}
               options={amenityMultiOptions}
               summaryLabel={(count) =>
-                count === 0 ? "Amenities" : `${count} selected`
+                count === 0
+                  ? t("amenities")
+                  : t("amenitiesSelected", { count })
               }
             />
 
             {/* Sort */}
             <FilterSelect
-              label="Sort by"
+              label={t("sortBy")}
               value={sort || "newest"}
               onValueChange={setSort}
-              anyLabel="Newest"
+              anyLabel={t("sortNewest")}
               anyValue="newest"
               options={[
-                { value: "priceAsc", label: "Price (low to high)" },
-                { value: "priceDesc", label: "Price (high to low)" },
-                { value: "areaDesc", label: "Area (largest first)" },
+                { value: "priceAsc", label: t("sortPriceAsc") },
+                { value: "priceDesc", label: t("sortPriceDesc") },
+                { value: "areaDesc", label: t("sortAreaDesc") },
               ]}
             />
 
             {/* Results per page */}
             <FilterSelect
-              label="Results per page"
+              label={t("resultsPerPage")}
               value={pageSize || "24"}
               onValueChange={setPageSize}
               anyLabel="24"

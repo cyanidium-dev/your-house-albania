@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Icon } from "@iconify/react";
 
 type Props = {
   currentPage: number;
@@ -54,16 +54,15 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
   return (
     <div className="mt-10 flex justify-center">
       <nav className="inline-flex items-center gap-2" aria-label="Pagination">
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
           disabled={safeCurrentPage === 1}
-          className="rounded-full"
           onClick={() => setPage(safeCurrentPage - 1)}
+          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          aria-label="Previous page"
         >
-          Prev
-        </Button>
+          <Icon icon="ph:caret-left" width={20} height={20} />
+        </button>
 
         {items.map((it, idx) =>
           it === "ellipsis" ? (
@@ -93,16 +92,15 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
           )
         )}
 
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
           disabled={safeCurrentPage === safeTotalPages}
-          className="rounded-full"
           onClick={() => setPage(safeCurrentPage + 1)}
+          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          aria-label="Next page"
         >
-          Next
-        </Button>
+          <Icon icon="ph:caret-right" width={20} height={20} />
+        </button>
       </nav>
     </div>
   );

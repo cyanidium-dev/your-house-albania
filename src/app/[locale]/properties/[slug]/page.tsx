@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { fetchPropertyBySlug } from '@/lib/sanity/client';
+import { fetchPropertyBySlug, fetchSiteSettings } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery } from '@/lib/sanity/propertyAdapter';
 import { Icon } from '@iconify/react';
 import { getTestimonials } from '@/data/testimonials';
@@ -11,6 +12,58 @@ import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug, locale } = await params;
+
+  const [sanityProperty, siteSettings] = await Promise.all([
+    fetchPropertyBySlug(slug),
+    fetchSiteSettings(),
+  ]);
+
+  if (!sanityProperty) {
+    return {};
+  }
+
+  const fields = mapSanityPropertyToDetailsFields(
+    sanityProperty as never,
+    locale,
+  );
+
+  const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
+    | {
+        metaTitle?: Record<string, string>;
+        metaDescription?: Record<string, string>;
+      }
+    | undefined;
+
+  const resolveLocalizedString = (await import('@/lib/sanity/localized'))
+    .resolveLocalizedString;
+
+  const siteTitle =
+    defaultSeo?.metaTitle &&
+    resolveLocalizedString(defaultSeo.metaTitle as never, locale);
+  const siteDescription =
+    defaultSeo?.metaDescription &&
+    resolveLocalizedString(defaultSeo.metaDescription as never, locale);
+
+  const title = fields.title || slug;
+  const description =
+    fields.description ||
+    siteDescription ||
+    `Details for property ${title}`;
+
+  const fullTitle = siteTitle ? `${title} | ${siteTitle}` : title;
+
+  return {
+    title: fullTitle,
+    description,
+    openGraph: {
+      title: fullTitle,
+      description,
+    },
+  };
+}
 
 export default async function PropertyDetailsPage({ params }: Props) {
   const { slug, locale } = await params;

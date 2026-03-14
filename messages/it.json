@@ -143,5 +143,34 @@
       "title": "Approfondimenti sul mercato immobiliare.",
       "description": "Resta al passo con consigli e aggiornamenti dagli esperti."
     }
+  },
+  "Catalog": {
+    "filters": {
+      "location": "Località",
+      "propertyType": "Tipo di proprietà",
+      "dealType": "Tipo di offerta",
+      "dealSale": "Vendita",
+      "dealRent": "Affitto",
+      "dealShortTerm": "Affitto a breve termine",
+      "priceRange": "Fascia di prezzo",
+      "advancedFilters": "Filtri avanzati",
+      "filtersShort": "Filtri",
+      "search": "Cerca",
+      "anyLocation": "Qualsiasi località",
+      "anyType": "Qualsiasi tipo",
+      "any": "Qualsiasi",
+      "bedrooms": "Camere da letto",
+      "bedsAtLeast": "{count}+",
+      "district": "Quartiere",
+      "anyDistrict": "Qualsiasi quartiere",
+      "amenities": "Servizi",
+      "amenitiesSelected": "{count} selezionati",
+      "sortBy": "Ordina per",
+      "sortNewest": "Più recenti",
+      "sortPriceAsc": "Prezzo (dal più basso)",
+      "sortPriceDesc": "Prezzo (dal più alto)",
+      "sortAreaDesc": "Superficie (dalla più grande)",
+      "resultsPerPage": "Risultati per pagina"
+    }
   }
 }
