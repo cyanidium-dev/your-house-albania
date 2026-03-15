@@ -304,7 +304,8 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
       title,
       "slug": slug.current
     },
-    "mainImageUrl": gallery[0].asset->url
+    "mainImageUrl": gallery[0].asset->url,
+    "galleryUrls": gallery[].asset->url
   }`;
 
   try {
@@ -441,6 +442,8 @@ export type CatalogProperty = {
     slug?: string;
   };
   mainImageUrl?: string;
+  /** All gallery image URLs for card carousel. */
+  galleryUrls?: string[];
 };
 
 export type CatalogResult = {
@@ -546,7 +549,8 @@ export async function fetchCatalogProperties(
       title,
       "slug": slug.current
     },
-    "mainImageUrl": gallery[0].asset->url
+    "mainImageUrl": gallery[0].asset->url,
+    "galleryUrls": gallery[].asset->url
   }`;
 
   const params: Record<string, unknown> = {

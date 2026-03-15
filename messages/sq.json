@@ -105,7 +105,9 @@
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",
       "areaUnit": "m²",
-      "pricePrefix": "$"
+      "pricePrefix": "$",
+      "previousImage": "Imazhi i mëparshëm",
+      "nextImage": "Imazhi tjetër"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
@@ -189,7 +191,11 @@
       "sortPriceAsc": "Çmimi (nga më i ulëti)",
       "sortPriceDesc": "Çmimi (nga më i larti)",
       "sortAreaDesc": "Sipërfaqja (nga më e madhja)",
-      "resultsPerPage": "Rezultate për faqe"
+      "resultsPerPage": "Rezultate për faqe",
+      "viewLabel": "Shfaqja",
+      "viewLarge": "Karta të mëdha",
+      "viewSmall": "Karta kompakte",
+      "viewList": "Listë"
     }
   },
   "Favorites": {

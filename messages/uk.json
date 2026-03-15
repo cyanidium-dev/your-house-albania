@@ -105,7 +105,9 @@
       "bedrooms": "Спальні",
       "bathrooms": "Ванні",
       "areaUnit": "м²",
-      "pricePrefix": "$"
+      "pricePrefix": "$",
+      "previousImage": "Попереднє фото",
+      "nextImage": "Наступне фото"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",
@@ -189,7 +191,11 @@
       "sortPriceAsc": "Ціна (від низької)",
       "sortPriceDesc": "Ціна (від високої)",
       "sortAreaDesc": "Площа (від більшої)",
-      "resultsPerPage": "Результатів на сторінку"
+      "resultsPerPage": "Результатів на сторінку",
+      "viewLabel": "Вид",
+      "viewLarge": "Великі картки",
+      "viewSmall": "Компактні картки",
+      "viewList": "Список"
     }
   },
   "Favorites": {

@@ -68,9 +68,13 @@ export function FilterMultiSelect({
 
   const updatePosition = React.useCallback(() => {
     const el = triggerRef.current;
-    if (!el) return;
+    if (!el || typeof window === "undefined") return;
     const rect = el.getBoundingClientRect();
-    setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width });
+    const padding = 16;
+    const maxW = window.innerWidth - padding * 2;
+    const w = Math.min(rect.width, maxW);
+    const left = Math.max(padding, Math.min(rect.left, window.innerWidth - w - padding));
+    setPos({ top: rect.bottom + 8, left, width: w });
   }, []);
 
   const close = React.useCallback(() => {
@@ -116,7 +120,7 @@ export function FilterMultiSelect({
           : `${count} selected`;
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0">
       <label className="block text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
         {label}
       </label>

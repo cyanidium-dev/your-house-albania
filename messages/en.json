@@ -105,7 +105,9 @@
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "areaUnit": "m²",
-      "pricePrefix": "$"
+      "pricePrefix": "$",
+      "previousImage": "Previous image",
+      "nextImage": "Next image"
     },
     "blogCard": {
       "imageAlt": "Blog post image",
@@ -189,7 +191,11 @@
       "sortPriceAsc": "Price (low to high)",
       "sortPriceDesc": "Price (high to low)",
       "sortAreaDesc": "Area (largest first)",
-      "resultsPerPage": "Results per page"
+      "resultsPerPage": "Results per page",
+      "viewLabel": "Display",
+      "viewLarge": "Large cards",
+      "viewSmall": "Small cards",
+      "viewList": "List view"
     }
   },
   "Favorites": {

@@ -3,8 +3,82 @@
 import * as React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { Icon } from "@iconify/react";
 import { catalogPath } from "@/lib/routes/catalog";
+import {
+  type ViewMode,
+  DEFAULT_VIEW_MODE,
+  parseViewMode,
+} from "@/lib/catalog/viewMode";
+import { useCatalogViewOptional } from "@/contexts/CatalogViewContext";
 import * as Slider from "@radix-ui/react-slider";
+
+function ViewModeSwitcherUI({
+  fallbackViewMode,
+  fallbackSetViewMode,
+}: {
+  fallbackViewMode: ViewMode;
+  fallbackSetViewMode: (view: ViewMode) => void;
+}) {
+  const ctx = useCatalogViewOptional();
+  const viewMode = ctx?.viewMode ?? fallbackViewMode;
+  const setViewMode = ctx?.setViewMode ?? fallbackSetViewMode;
+  const t = useTranslations("Catalog.filters");
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end pt-3 border-t border-dark/5 dark:border-white/10 mt-3 pb-0">
+      <p className="text-sm font-medium text-dark/80 dark:text-white/80">
+        {t("viewLabel")}
+      </p>
+      <div className="flex gap-1 rounded-full p-1 bg-dark/5 dark:bg-white/10 w-fit">
+        <button
+          type="button"
+          onClick={() => setViewMode("large")}
+          title={t("viewLarge")}
+          className={cn(
+            "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+            viewMode === "large"
+              ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm"
+              : "text-dark/70 dark:text-white/70 hover:text-dark dark:hover:text-white"
+          )}
+          aria-pressed={viewMode === "large"}
+        >
+          <Icon icon="ph:square" width={18} height={18} aria-hidden />
+          <span className="hidden sm:inline">{t("viewLarge")}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode("small")}
+          title={t("viewSmall")}
+          className={cn(
+            "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+            viewMode === "small"
+              ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm"
+              : "text-dark/70 dark:text-white/70 hover:text-dark dark:hover:text-white"
+          )}
+          aria-pressed={viewMode === "small"}
+        >
+          <Icon icon="ph:squares-four" width={18} height={18} aria-hidden />
+          <span className="hidden sm:inline">{t("viewSmall")}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode("list")}
+          title={t("viewList")}
+          className={cn(
+            "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+            viewMode === "list"
+              ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm"
+              : "text-dark/70 dark:text-white/70 hover:text-dark dark:hover:text-white"
+          )}
+          aria-pressed={viewMode === "list"}
+        >
+          <Icon icon="ph:list" width={18} height={18} aria-hidden />
+          <span className="hidden sm:inline">{t("viewList")}</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -36,9 +110,12 @@ type Props = {
   initialSort?: string;
   initialAmenities?: string[];
   initialPageSize?: string;
+  initialView?: ViewMode;
+  /** When inside CatalogViewProvider: use this instead of initialView for applyFilters; avoids rerender on view change */
+  getCurrentView?: () => ViewMode;
 };
 
-export function PropertySearchBar({
+function PropertySearchBarInner({
   locations,
   propertyTypes,
   dealTypeValues,
@@ -55,7 +132,10 @@ export function PropertySearchBar({
   initialSort = "",
   initialAmenities = [],
   initialPageSize = "24",
+  initialView = DEFAULT_VIEW_MODE,
+  getCurrentView,
 }: Props) {
+  const viewModeFromProps = parseViewMode(initialView as string);
   const t = useTranslations("Catalog.filters");
   const [city, setCity] = React.useState(initialCity);
   const [type, setType] = React.useState(initialType);
@@ -155,6 +235,8 @@ export function PropertySearchBar({
     if (pageSize) params.set("pageSize", pageSize);
     else params.delete("pageSize");
 
+    // View mode is UI preference (localStorage), not part of search/filter query
+    params.delete("view");
     params.delete("page");
     params.delete("city");
     params.delete("district");
@@ -202,14 +284,15 @@ export function PropertySearchBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-8 rounded-2xl border border-dark/10 dark:border-white/10 bg-white/80 dark:bg-dark/80 shadow-sm px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-4"
+      className="mb-6 rounded-2xl border border-dark/10 dark:border-white/10 bg-white/80 dark:bg-dark/80 shadow-sm px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-4 min-w-0"
     >
       {/* BASIC FILTERS */}
       <div
-        className="
-          grid gap-4 items-end
-          md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_auto_auto]
-        "
+        className={cn(
+          "grid grid-cols-1 gap-4 items-end min-w-0",
+          "md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_auto_auto]",
+          "[&>*]:min-w-0"
+        )}
       >
         {/* Location */}
         <FilterSelect
@@ -309,13 +392,13 @@ export function PropertySearchBar({
         <div
           ref={advancedInnerRef}
           className={cn(
-            "pt-4 pb-2 border-t border-dark/5 dark:border-white/10",
+            "pt-4 pb-1 border-t border-dark/5 dark:border-white/10",
             "transition-[opacity,transform] duration-300 ease-out",
             showAdvanced ? "delay-75" : "delay-0",
             showAdvanced ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1 pointer-events-none"
           )}
         >
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 min-w-0 [&>*]:min-w-0">
             {/* Bedrooms */}
             <FilterSelect
               label={t("bedrooms")}
@@ -383,8 +466,16 @@ export function PropertySearchBar({
               ]}
             />
           </div>
+
+          {/* View mode switcher: only this block subscribes to view context so filters panel doesn't rerender on view change */}
+          <ViewModeSwitcherUI
+            fallbackViewMode={viewModeFromProps}
+            fallbackSetViewMode={() => {}}
+          />
         </div>
       </div>
     </form>
   );
 }
+
+export const PropertySearchBar = React.memo(PropertySearchBarInner);

@@ -61,7 +61,7 @@ export function FilterSelect({
   radius,
 }: Props & VariantProps<typeof triggerVariants>) {
   return (
-    <div>
+    <div className="min-w-0">
       <label className="block text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
         {label}
       </label>
@@ -82,10 +82,11 @@ export function FilterSelect({
             side="bottom"
             align="start"
             sideOffset={8}
+            collisionPadding={16}
             className={cn(
               "z-[100] overflow-visible rounded-2xl border border-dark/10 dark:border-white/10 shadow-3xl",
               "bg-white dark:bg-dark",
-              "w-[--radix-select-trigger-width]",
+              "w-[var(--radix-select-trigger-width)] max-w-[calc(100vw-2rem)]",
               "data-[state=open]:animate-in data-[state=closed]:animate-out",
               "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
               "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",

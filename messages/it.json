@@ -105,7 +105,9 @@
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
       "areaUnit": "m²",
-      "pricePrefix": "$"
+      "pricePrefix": "$",
+      "previousImage": "Immagine precedente",
+      "nextImage": "Immagine successiva"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
@@ -189,7 +191,11 @@
       "sortPriceAsc": "Prezzo (dal più basso)",
       "sortPriceDesc": "Prezzo (dal più alto)",
       "sortAreaDesc": "Superficie (dalla più grande)",
-      "resultsPerPage": "Risultati per pagina"
+      "resultsPerPage": "Risultati per pagina",
+      "viewLabel": "Visualizzazione",
+      "viewLarge": "Schede grandi",
+      "viewSmall": "Schede compatte",
+      "viewList": "Elenco"
     }
   },
   "Favorites": {

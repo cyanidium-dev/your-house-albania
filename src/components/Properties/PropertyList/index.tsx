@@ -1,11 +1,10 @@
-import PropertyCard from '@/components/Home/Properties/Card/Card'
-import { PropertySearchBar } from '@/components/catalog/PropertySearchBar'
-import { PropertyPagination } from '@/components/catalog/PropertyPagination'
-import { CatalogEmptyState } from '@/components/catalog/CatalogEmptyState'
+import { CatalogBodyClient } from '@/components/catalog/CatalogBodyClient'
 import { CatalogSeoText } from '@/components/catalog/CatalogSeoText'
+import { CatalogViewProvider } from '@/contexts/CatalogViewContext'
 import { ItemListJsonLd } from '@/components/shared/ItemListJsonLd'
 import { getBaseUrl } from '@/lib/seo/baseUrl'
 import type { PropertyHomes } from '@/types/properyHomes'
+import { parseViewMode } from '@/lib/catalog/viewMode'
 import {
   fetchCatalogProperties,
   fetchCatalogFilterOptions,
@@ -77,6 +76,7 @@ async function PropertiesListing({
     typeof searchParams.maxPrice === 'string' ? Number(searchParams.maxPrice) || 0 : 0
   const bedsFilter =
     typeof searchParams.beds === 'string' ? Number(searchParams.beds) || 0 : 0
+  const viewMode = parseViewMode(searchParams.view)
 
   const rawPage =
     typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
@@ -128,50 +128,41 @@ async function PropertiesListing({
     image: item.images?.[0]?.src ?? null,
   }))
 
+  const filterProps = {
+    locations: locationOptions,
+    propertyTypes: typeOptions,
+    dealTypeValues: DEAL_TYPE_VALUES,
+    districtOptions,
+    priceRangesByDeal: DEFAULT_PRICE_RANGES,
+    amenityOptions,
+    initialCity: cityFilter || '',
+    initialType: typeFilter,
+    initialDealType: dealFilter,
+    initialMinPrice: typeof searchParams.minPrice === 'string' ? searchParams.minPrice : '',
+    initialMaxPrice: typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : '',
+    initialBeds: typeof searchParams.beds === 'string' ? searchParams.beds : '',
+    initialDistrict: districtFilter,
+    initialSort: sort,
+    initialAmenities: amenitiesFilter,
+    initialPageSize: String(pageSize),
+    initialView: viewMode,
+  }
+
   return (
     <section className='pt-0!'>
       {pageItems.length > 0 && (
         <ItemListJsonLd items={itemListEntries} baseUrl={baseUrl} locale={locale} />
       )}
-      <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
-        <PropertySearchBar
-          locations={locationOptions}
-          propertyTypes={typeOptions}
-          dealTypeValues={DEAL_TYPE_VALUES}
-          districtOptions={districtOptions}
-          priceRangesByDeal={DEFAULT_PRICE_RANGES}
-          initialCity={cityFilter || ''}
-          initialType={typeFilter}
-          initialDealType={dealFilter}
-          initialMinPrice={
-            typeof searchParams.minPrice === 'string' ? searchParams.minPrice : ''
-          }
-          initialMaxPrice={
-            typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : ''
-          }
-          initialBeds={typeof searchParams.beds === 'string' ? searchParams.beds : ''}
-          initialDistrict={districtFilter}
-          initialSort={sort}
-          amenityOptions={amenityOptions}
-          initialAmenities={amenitiesFilter}
-          initialPageSize={String(pageSize)}
-        />
-        {pageItems.length === 0 ? (
-          <CatalogEmptyState locale={locale} />
-        ) : (
-          <>
-            <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
-              {pageItems.map((item, index) => (
-                <div key={index} className=''>
-                  <PropertyCard item={item} locale={locale} />
-                </div>
-              ))}
-            </div>
-            {totalPages > 1 && (
-              <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
-            )}
-          </>
-        )}
+      <div className='container max-w-8xl mx-auto px-5 2xl:px-0 overflow-x-clip'>
+        <CatalogViewProvider initialView={viewMode}>
+          <CatalogBodyClient
+            filterProps={filterProps}
+            pageItems={pageItems}
+            locale={locale}
+            totalPages={totalPages}
+            currentPage={currentPage}
+          />
+        </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (
           <CatalogSeoText content={catalogSeo.bottomText} />
         )}

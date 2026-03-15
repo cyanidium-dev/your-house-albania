@@ -105,7 +105,9 @@
       "bedrooms": "Спальни",
       "bathrooms": "Санузлы",
       "areaUnit": "м²",
-      "pricePrefix": "$"
+      "pricePrefix": "$",
+      "previousImage": "Предыдущее фото",
+      "nextImage": "Следующее фото"
     },
     "blogCard": {
       "imageAlt": "Изображение статьи блога",
@@ -189,7 +191,11 @@
       "sortPriceAsc": "Цена (по возрастанию)",
       "sortPriceDesc": "Цена (по убыванию)",
       "sortAreaDesc": "Площадь (от большей)",
-      "resultsPerPage": "Результатов на странице"
+      "resultsPerPage": "Результатов на странице",
+      "viewLabel": "Вид",
+      "viewLarge": "Крупные карточки",
+      "viewSmall": "Компактные карточки",
+      "viewList": "Список"
     }
   },
   "Favorites": {

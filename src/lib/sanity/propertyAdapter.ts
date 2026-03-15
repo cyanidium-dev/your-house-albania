@@ -114,24 +114,35 @@ export function mapSanityPropertyToCard(
   };
 }
 
+/** Build images array for PropertyHomes from catalog item (gallery or single main). */
+function catalogImages(p: CatalogProperty): { src: string }[] {
+  const urls = Array.isArray(p.galleryUrls) && p.galleryUrls.length > 0
+    ? p.galleryUrls
+    : (p.mainImageUrl ? [p.mainImageUrl] : []);
+  return urls.filter((url): url is string => typeof url === 'string' && url.length > 0).map((src) => ({ src }));
+}
+
 /** Maps catalog query result item to PropertyHomes for listing/card UI. */
 export function mapCatalogPropertyToCard(
   p: CatalogProperty,
   locale: string
 ): PropertyHomes {
-  const base: SanityProperty = {
-    _id: p._id,
-    title: p.title,
-    slug: p.slug,
-    price: p.price,
-    currency: p.currency,
-    area: p.area,
-    bedrooms: p.bedrooms,
-    bathrooms: p.bathrooms,
-    city: p.city as { title?: unknown },
-    district: p.district as { title?: unknown },
-    mainImageUrl: p.mainImageUrl,
-  };
-
-  return mapSanityPropertyToCard(base, locale);
+  const base = mapSanityPropertyToCard(
+    {
+      _id: p._id,
+      title: p.title,
+      slug: p.slug,
+      price: p.price,
+      currency: p.currency,
+      area: p.area,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      city: p.city as { title?: unknown },
+      district: p.district as { title?: unknown },
+      mainImageUrl: p.mainImageUrl,
+    },
+    locale
+  );
+  base.images = catalogImages(p);
+  return base;
 }
