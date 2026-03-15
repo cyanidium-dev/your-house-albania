@@ -32,20 +32,20 @@ const Footer = ({ siteSettings }: FooterProps) => {
   const col2Links = quickLinks.slice(Math.ceil(quickLinks.length / 2));
 
   return (
-    <footer className="relative z-10 w-full min-w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
-      <div className="container mx-auto w-full max-w-8xl pt-14 px-4 sm:px-6 lg:px-0">
+    <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
+      <div className="container mx-auto max-w-8xl min-w-0 pt-14 px-4 sm:px-6 lg:px-0">
         <div className="flex lg:items-center justify-between items-end lg:gap-11 pb-14 border-b border-white/10 lg:flex-nowrap flex-wrap gap-6">
-          <p className="text-white text-sm lg:max-w-1/5">
+          <p className="text-white text-sm lg:max-w-1/5 min-w-0">
             {t('newsletter')}
           </p>
-          <div className="flex lg:flex-row flex-col items-center lg:gap-10 gap-3">
-            <div className="flex gap-2 lg:order-1 order-2">
-              <input type="email" placeholder={t('emailPlaceholder')} className="rounded-full py-4 px-6 bg-white/10 placeholder:text-white text-white focus-visible:outline-0" />
-              <button className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer">
+          <div className="flex lg:flex-row flex-col items-stretch lg:items-center lg:gap-10 gap-3 min-w-0 w-full max-w-full">
+            <div className="flex flex-wrap sm:flex-nowrap gap-2 lg:order-1 order-2 min-w-0 w-full max-w-full">
+              <input type="email" placeholder={t('emailPlaceholder')} className="rounded-full py-4 px-6 bg-white/10 placeholder:text-white text-white focus-visible:outline-0 min-w-0 flex-1 w-full sm:w-auto sm:min-w-[10rem]" />
+              <button className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer shrink-0">
                 {t('subscribe')}
               </button>
             </div>
-            <p className="text-white/40 text-sm lg:max-w-[45%] order-1 lg:order-2">
+            <p className="text-white/40 text-sm lg:max-w-[45%] order-1 lg:order-2 min-w-0">
               {t('disclaimer')}
             </p>
           </div>
