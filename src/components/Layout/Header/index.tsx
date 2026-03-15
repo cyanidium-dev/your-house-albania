@@ -50,12 +50,12 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
   const isHomepage = pathname === "/" || /^\/(en|uk|ru|al|it)\/?$/.test(pathname)
 
   return (
-    <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 min-h-14 md:h-24 md:py-1 top-0 ${sticky ? "md:top-3" : ""}`}>
-      <div className="h-full w-full px-4 lg:px-0 pt-[max(0.5rem,env(safe-area-inset-top))] md:pt-0">
-        <nav className={`container mx-auto max-w-8xl h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2.5 px-3 md:py-4 ${sticky ? "shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
-        <div className='flex justify-between items-center gap-2 w-full'>
-          <div className="ml-1 md:ml-[14px]">
-            <Link href={`/${locale}`} className="block h-8 md:h-auto flex items-center">
+    <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 md:h-24 md:py-1`}>
+      <div className="h-full min-w-0 px-4 lg:px-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-0">
+        <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
+        <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
+          <div className="ml-0.5 md:ml-[14px] min-w-0 max-w-[45%] md:max-w-none shrink">
+            <Link href={`/${locale}`} className="block h-8 md:h-auto flex items-center max-w-full min-w-0">
               {siteSettings?.logoUrl ? (
                 <>
                   <Image
@@ -97,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
               )}
             </Link>
           </div>
-          <div className='flex items-center gap-1.5 sm:gap-6'>
+          <div className='flex items-center gap-1 sm:gap-6 min-w-0 shrink-0'>
             <LanguageSwitcher />
             <button
               className='hover:cursor-pointer transition-colors duration-300 ease-out p-1 md:p-0'
@@ -175,7 +175,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
 
       {
         navbarOpen && (
-          <div className='fixed top-0 left-0 w-full h-full bg-black/50 z-40' />
+          <div className='fixed inset-0 bg-black/50 z-40' aria-hidden />
         )
       }
 
