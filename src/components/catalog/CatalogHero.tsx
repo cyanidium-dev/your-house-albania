@@ -8,17 +8,17 @@ import type { ReactNode } from "react";
 const introComponents: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-3 first:mt-0">
+      <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 first:mt-0 md:mt-3 md:first:mt-0">
         {children}
       </p>
     ),
     h1: ({ children }) => (
-      <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-3 first:mt-0">
+      <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 first:mt-0 md:mt-3 md:first:mt-0">
         {children}
       </p>
     ),
     h2: ({ children }) => (
-      <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-3 first:mt-0">
+      <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 first:mt-0 md:mt-3 md:first:mt-0">
         {children}
       </p>
     ),
@@ -42,20 +42,23 @@ export function CatalogHero({
 }: Props) {
   const hasIntro = Array.isArray(intro) && intro.length > 0;
   const subtitle = hasIntro ? (
-    <div className="mt-3 max-w-2xl mx-auto">
-      <PortableText value={intro as PortableTextBlock[]} components={introComponents} />
+    <div className="mt-2 max-w-2xl mx-auto md:mt-3">
+      <PortableText
+        value={intro as PortableTextBlock[]}
+        components={introComponents}
+      />
     </div>
   ) : (
-    <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-3 w-full mx-auto">
+    <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 w-full mx-auto md:mt-3">
       {introFallback}
     </p>
   );
 
   return (
-    <section className="text-center bg-cover !pt-40 pb-20 relative overflow-x-hidden">
+    <section className="text-center bg-cover pt-16 pb-10 md:pt-32 md:pb-16 relative overflow-x-hidden">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="text-left">{breadcrumb}</div>
-        <div className="flex gap-2.5 items-center justify-center mt-6">
+        <div className="flex gap-2.5 items-center justify-center mt-3 md:mt-6">
           <span>
             <Icon
               icon="ph:house-simple-fill"
@@ -68,7 +71,7 @@ export function CatalogHero({
             {badge}
           </p>
         </div>
-        <h1 className="text-dark text-52 relative font-bold dark:text-white mt-2">
+        <h1 className="text-dark text-3xl sm:text-4xl md:text-5xl lg:text-6xl relative font-bold dark:text-white mt-1.5 md:mt-2">
           {title}
         </h1>
         {subtitle}

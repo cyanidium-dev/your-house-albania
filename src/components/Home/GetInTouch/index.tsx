@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 const GetInTouch: React.FC = async () => {
   const t = await getTranslations('Home.contact');
     return (
-        <section>
+        <section className="py-16 md:py-24">
             <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
                 <div className="relative rounded-t-2xl overflow-hidden">
                     <video

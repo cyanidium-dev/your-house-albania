@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 const Categories: React.FC<{ locale: string }> = async ({ locale }) => {
   const t = await getTranslations('Home.services');
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden py-16 md:py-24">
       <div className="absolute left-0 top-0">
         <Image
           src="/images/categories/Vector.svg"

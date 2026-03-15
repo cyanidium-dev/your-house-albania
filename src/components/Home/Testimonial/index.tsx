@@ -35,7 +35,7 @@ const Testimonial = () => {
     };
 
     return (
-        <section className="bg-dark relative overflow-hidden" id="testimonial">
+        <section className="bg-dark relative overflow-hidden py-16 md:py-24" id="testimonial">
             <div className="absolute right-0">
                 <Image
                     src="/images/testimonial/Vector.png"

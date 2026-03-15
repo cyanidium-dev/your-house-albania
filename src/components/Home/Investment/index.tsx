@@ -32,7 +32,7 @@ const Investment: React.FC<{ locale: string; investmentData?: InvestmentData }> 
   const secondaryAlt = investmentData?.secondaryImageAlt || "";
 
   return (
-    <section>
+    <section className="py-16 md:py-24">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="grid lg:grid-cols-2 gap-10">
           <div className="grid grid-cols-2 gap-4">

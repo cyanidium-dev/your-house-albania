@@ -19,7 +19,7 @@ const Properties: React.FC<{
     ? propertyItems.slice(0, 6)
     : getProperties().slice(0, 6)
   return (
-    <section>
+    <section className="py-16 md:py-24">
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
         <div className='mb-16 flex flex-col gap-3 '>
           <div className='flex gap-2.5 items-center justify-center'>

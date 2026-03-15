@@ -85,7 +85,7 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
   }
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden py-16 md:py-24">
       <div className="absolute left-0 top-0">
         <Image
           src="/images/categories/Vector.svg"
@@ -104,20 +104,20 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
           unoptimized={true}
         />
       </div>
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0 relative z-10">
-        <div className="grid grid-cols-12 items-center gap-10">
-          <div className="lg:col-span-6 col-span-12">
-            <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2.5">
+      <div className="container max-w-8xl mx-auto min-w-0 px-5 2xl:px-0 relative z-10">
+        <div className="grid grid-cols-12 items-center gap-10 min-w-0">
+          <div className="lg:col-span-6 col-span-12 min-w-0">
+            <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2.5 min-w-0">
               <Icon
                 icon="ph:house-simple-fill"
-                className="text-2xl text-primary "
+                className="text-2xl text-primary shrink-0"
               />
               {badge}
             </p>
-            <h2 className="lg:text-52 text-40 mt-4 mb-2 lg:max-w-full font-medium leading-[1.2] text-dark dark:text-white">
+            <h2 className="text-2xl sm:text-3xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0">
               {title}
             </h2>
-            <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4">
+            <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0">
               {description}
             </p>
             <Link

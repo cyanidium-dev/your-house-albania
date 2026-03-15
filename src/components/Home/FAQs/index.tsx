@@ -30,7 +30,7 @@ const FAQ: React.FC<Props> = async ({ faqData }) => {
         ];
 
   return (
-        <section id='faqs'>
+        <section id='faqs' className="py-16 md:py-24">
             <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
                 <div className="grid lg:grid-cols-2 gap-10 ">
                     <div className='lg:mx-0 mx-auto'>

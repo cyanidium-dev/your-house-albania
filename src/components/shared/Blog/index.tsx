@@ -31,7 +31,7 @@ const BlogSmall: React.FC<{ locale: string }> = async ({ locale }) => {
         .slice(0, 3);
 
     return (
-        <section>
+        <section className="py-16 md:py-24">
             <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
                 <div className='flex justify-between md:items-end items-start mb-10 md:flex-row flex-col'>
                     <div>

@@ -58,7 +58,7 @@ const SeoText: React.FC<{ seoTextData?: SeoTextData }> = ({ seoTextData }) => {
       : Array.isArray(content) && content.length > 0);
 
   return (
-    <section>
+    <section className="py-16 md:py-24">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="flex justify-center">
           <div className="max-w-3xl w-full py-12 md:py-16">

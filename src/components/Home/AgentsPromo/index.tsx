@@ -32,7 +32,7 @@ const AgentsPromo: React.FC<{ agentsPromoData?: AgentsPromoData }> = async ({
         : `/${ctaHref}`;
 
   return (
-    <section>
+    <section className="py-16 md:py-24">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="relative rounded-t-2xl overflow-hidden">
           <video
