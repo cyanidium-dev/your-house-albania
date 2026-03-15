@@ -50,11 +50,12 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
   const isHomepage = pathname === "/" || /^\/(en|uk|ru|al|it)\/?$/.test(pathname)
 
   return (
-    <header className={`fixed h-24 py-1 z-50 w-full bg-transparent transition-all duration-300 lg:px-0 px-4 ${sticky ? "top-3" : "top-0"}`}>
-      <nav className={`container mx-auto max-w-8xl flex items-center justify-between py-4 rounded-full transition-[background-color,box-shadow] duration-300 ease-out ${sticky ? "shadow-lg bg-white dark:bg-dark top-5 px-4" : "shadow-none bg-transparent top-0"}`}>
+    <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 min-h-14 md:h-24 md:py-1 top-0 ${sticky ? "md:top-3" : ""}`}>
+      <div className="h-full w-full px-4 lg:px-0 pt-[max(0.5rem,env(safe-area-inset-top))] md:pt-0">
+        <nav className={`container mx-auto max-w-8xl h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2.5 px-3 md:py-4 ${sticky ? "shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
         <div className='flex justify-between items-center gap-2 w-full'>
-          <div className="ml-[14px]">
-            <Link href={`/${locale}`}>
+          <div className="ml-1 md:ml-[14px]">
+            <Link href={`/${locale}`} className="block h-8 md:h-auto flex items-center">
               {siteSettings?.logoUrl ? (
                 <>
                   <Image
@@ -63,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={siteSettings.logoUrl.startsWith('http')}
-                    className={`object-contain object-left ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                   />
                   <Image
                     src={siteSettings.logoUrl}
@@ -71,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={siteSettings.logoUrl.startsWith('http')}
-                    className={`object-contain object-left dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                   />
                 </>
               ) : (
@@ -82,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={true}
-                    className={`${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                   />
                   <Image
                     src={'/images/header/logo.svg'}
@@ -90,23 +91,24 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={true}
-                    className={`${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                   />
                 </>
               )}
             </Link>
           </div>
-          <div className='flex items-center gap-2 sm:gap-6'>
+          <div className='flex items-center gap-1.5 sm:gap-6'>
             <LanguageSwitcher />
             <button
-              className='hover:cursor-pointer transition-colors duration-300 ease-out'
+              className='hover:cursor-pointer transition-colors duration-300 ease-out p-1 md:p-0'
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               <Icon
                 icon={'solar:sun-bold'}
-                width={32}
-                height={32}
-                className={`dark:hidden block ${isHomepage
+                width={24}
+                height={24}
+                className={`dark:hidden block w-6 h-6 md:w-8 md:h-8 ${isHomepage
                   ? sticky
                     ? 'text-dark'
                     : 'text-white'
@@ -115,25 +117,25 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
               />
               <Icon
                 icon={'solar:moon-bold'}
-                width={32}
-                height={32}
-                className='dark:block hidden text-white'
+                width={24}
+                height={24}
+                className='dark:block hidden text-white w-6 h-6 md:w-8 md:h-8'
               />
             </button>
             <Link
               href={`/${locale}/favorites`}
               aria-label={`Favorites (${favorites.length})`}
               data-favorites-target="true"
-              className={`relative flex items-center justify-center transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary ${isHomepage
+              className={`relative flex items-center justify-center transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary p-0.5 md:p-0 ${isHomepage
                 ? sticky
                   ? 'text-dark dark:text-white'
                   : 'text-white'
                 : 'text-dark dark:text-white'
                 }`}
             >
-              <Icon icon={'ph:heart'} width={24} height={24} />
+              <Icon icon={'ph:heart'} width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
               {favorites.length > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-primary text-white text-[11px] font-semibold">
+                <span className="absolute -top-0.5 -right-0.5 md:-top-1.5 md:-right-1.5 min-w-[16px] h-[16px] md:min-w-[18px] md:h-[18px] px-0.5 md:px-1 flex items-center justify-center rounded-full bg-primary text-white text-[10px] md:text-[11px] font-semibold">
                   {favorites.length > 99 ? '99+' : favorites.length}
                 </span>
               )}
@@ -153,7 +155,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
             <div>
               <button
                 onClick={() => setNavbarOpen(!navbarOpen)}
-                className={`flex items-center gap-3 p-2 sm:px-5 sm:py-3 rounded-full font-semibold hover:cursor-pointer border transition-colors duration-300 ease-out ${isHomepage
+                className={`flex items-center gap-2 md:gap-3 p-1.5 sm:px-5 sm:py-3 rounded-full font-semibold hover:cursor-pointer border transition-colors duration-300 ease-out text-sm md:text-base ${isHomepage
                   ? sticky
                     ? 'text-white bg-dark dark:bg-white dark:text-dark dark:hover:text-white dark:hover:bg-dark hover:text-dark hover:bg-white border-dark dark:border-white'
                     : 'text-dark bg-white dark:text-dark hover:bg-transparent hover:text-white border-white'
@@ -161,7 +163,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                   }`}
                 aria-label='Toggle mobile menu'>
                 <span>
-                  <Icon icon={'ph:list'} width={24} height={24} />
+                  <Icon icon={'ph:list'} width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
                 </span>
                 <span className='hidden sm:block'>{t('menu')}</span>
               </button>
@@ -169,6 +171,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
           </div>
         </div>
       </nav>
+      </div>
 
       {
         navbarOpen && (
