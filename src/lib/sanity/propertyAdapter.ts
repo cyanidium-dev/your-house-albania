@@ -86,8 +86,22 @@ type SanityProperty = {
   area?: number;
   bedrooms?: number;
   bathrooms?: number;
-  city?: { title?: unknown };
-  district?: { title?: unknown };
+  status?: string;
+  featured?: boolean;
+  investment?: string | boolean;
+  city?: {
+    title?: unknown;
+    slug?: string;
+  };
+  district?: {
+    title?: unknown;
+    slug?: string;
+    citySlug?: string;
+  };
+  type?: {
+    title?: unknown;
+    slug?: string;
+  };
   mainImageUrl?: string;
   mainImage?: { asset?: { url?: string } };
 };
@@ -111,6 +125,21 @@ export function mapSanityPropertyToCard(
     baths: p.bathrooms ?? 0,
     area: p.area ?? 0,
     images: imageUrl ? [{ src: imageUrl }] : [],
+
+    // extended semantic fields
+    price: p.price,
+    currency: p.currency,
+    status: p.status,
+    featured: typeof p.featured === 'boolean' ? p.featured : undefined,
+    investment: p.investment,
+    propertyType: p.type?.title
+      ? (resolveLocalizedString(p.type.title as never, locale) || String(p.type.title))
+      : undefined,
+    propertyTypeSlug: p.type?.slug,
+    city: cityTitle || undefined,
+    citySlug: p.city?.slug,
+    district: districtTitle || undefined,
+    districtSlug: p.district?.slug,
   };
 }
 
@@ -137,8 +166,12 @@ export function mapCatalogPropertyToCard(
       area: p.area,
       bedrooms: p.bedrooms,
       bathrooms: p.bathrooms,
-      city: p.city as { title?: unknown },
-      district: p.district as { title?: unknown },
+      status: p.status,
+      featured: p.featured,
+      investment: p.investment,
+      city: p.city as { title?: unknown; slug?: string },
+      district: p.district as { title?: unknown; slug?: string; citySlug?: string },
+      type: p.type as { title?: unknown; slug?: string },
       mainImageUrl: p.mainImageUrl,
     },
     locale

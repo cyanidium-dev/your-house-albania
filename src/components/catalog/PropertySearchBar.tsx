@@ -25,56 +25,55 @@ function ViewModeSwitcherUI({
   const setViewMode = ctx?.setViewMode ?? fallbackSetViewMode;
   const t = useTranslations("Catalog.filters");
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end pt-3 border-t border-dark/5 dark:border-white/10 mt-3 pb-0">
-      <p className="text-sm font-medium text-dark/80 dark:text-white/80">
+    <div className="min-w-0">
+      <p className="mb-1 text-xs font-medium text-dark/70 dark:text-white/80">
         {t("viewLabel")}
       </p>
-      <div className="flex gap-1 rounded-full p-1 bg-dark/5 dark:bg-white/10 w-fit">
+      <div className="flex items-center justify-end md:justify-start">
+        <div className="inline-flex gap-0.5 rounded-full p-0.5 bg-dark/5 dark:bg-white/10">
         <button
           type="button"
           onClick={() => setViewMode("large")}
           title={t("viewLarge")}
           className={cn(
-            "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+            "flex h-8 w-8 items-center justify-center rounded-full text-dark/70 dark:text-white/70 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
             viewMode === "large"
               ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm"
-              : "text-dark/70 dark:text-white/70 hover:text-dark dark:hover:text-white"
+              : "hover:bg-dark/10 dark:hover:bg-white/10 hover:text-dark dark:hover:text-white"
           )}
           aria-pressed={viewMode === "large"}
         >
           <Icon icon="ph:square" width={18} height={18} aria-hidden />
-          <span className="hidden sm:inline">{t("viewLarge")}</span>
         </button>
         <button
           type="button"
           onClick={() => setViewMode("small")}
           title={t("viewSmall")}
           className={cn(
-            "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+            "flex h-8 w-8 items-center justify-center rounded-full text-dark/70 dark:text-white/70 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
             viewMode === "small"
               ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm"
-              : "text-dark/70 dark:text-white/70 hover:text-dark dark:hover:text-white"
+              : "hover:bg-dark/10 dark:hover:bg-white/10 hover:text-dark dark:hover:text-white"
           )}
           aria-pressed={viewMode === "small"}
         >
           <Icon icon="ph:squares-four" width={18} height={18} aria-hidden />
-          <span className="hidden sm:inline">{t("viewSmall")}</span>
         </button>
         <button
           type="button"
           onClick={() => setViewMode("list")}
           title={t("viewList")}
           className={cn(
-            "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+            "flex h-8 w-8 items-center justify-center rounded-full text-dark/70 dark:text-white/70 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
             viewMode === "list"
               ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm"
-              : "text-dark/70 dark:text-white/70 hover:text-dark dark:hover:text-white"
+              : "hover:bg-dark/10 dark:hover:bg-white/10 hover:text-dark dark:hover:text-white"
           )}
           aria-pressed={viewMode === "list"}
         >
           <Icon icon="ph:list" width={18} height={18} aria-hidden />
-          <span className="hidden sm:inline">{t("viewList")}</span>
         </button>
+        </div>
       </div>
     </div>
   );
@@ -398,7 +397,7 @@ function PropertySearchBarInner({
             showAdvanced ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1 pointer-events-none"
           )}
         >
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 min-w-0 [&>*]:min-w-0">
+          <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-w-0 [&>*]:min-w-0">
             {/* Bedrooms */}
             <FilterSelect
               label={t("bedrooms")}
@@ -465,13 +464,12 @@ function PropertySearchBarInner({
                 { value: "48", label: "48" },
               ]}
             />
+            {/* View mode switcher: presentation control for results row */}
+            <ViewModeSwitcherUI
+              fallbackViewMode={viewModeFromProps}
+              fallbackSetViewMode={() => {}}
+            />
           </div>
-
-          {/* View mode switcher: only this block subscribes to view context so filters panel doesn't rerender on view change */}
-          <ViewModeSwitcherUI
-            fallbackViewMode={viewModeFromProps}
-            fallbackSetViewMode={() => {}}
-          />
         </div>
       </div>
     </form>

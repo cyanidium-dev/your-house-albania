@@ -184,11 +184,12 @@ export async function fetchHomePage(): Promise<unknown | null> {
 }
 
 /** Fetch featured/popular properties for homePropertyCarouselSection mode=auto. */
-export async function fetchFeaturedProperties(limit = 6): Promise<unknown[] | null> {
+export async function fetchFeaturedProperties(limit = 6): Promise<CatalogProperty[] | null> {
   const client = getClient();
   if (!client) return null;
   const query = `*[_type == "property" && (featured == true || defined(investment))][0...${limit}] {
     _id,
+    _type,
     title,
     "slug": slug.current,
     price,
@@ -196,12 +197,30 @@ export async function fetchFeaturedProperties(limit = 6): Promise<unknown[] | nu
     area,
     bedrooms,
     bathrooms,
-    "city": city-> { title },
-    "district": district-> { title },
-    "mainImageUrl": gallery[0].asset->url
+    status,
+    featured,
+    investment,
+    "city": city-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "district": district-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "citySlug": city->slug.current
+    },
+    "type": type-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "mainImageUrl": gallery[0].asset->url,
+    "galleryUrls": gallery[].asset->url
   }`;
   try {
-    const result = await client.fetch<unknown[]>(query);
+    const result = await client.fetch<CatalogProperty[]>(query);
     return Array.isArray(result) ? result : null;
   } catch (err) {
     console.warn('[Sanity] fetchFeaturedProperties failed:', err);

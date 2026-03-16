@@ -18,8 +18,9 @@ import {
   fetchFeaturedProperties,
   fetchActivePropertyTypes,
   fetchSiteSettings,
+  type CatalogProperty,
 } from "@/lib/sanity/client";
-import { mapSanityPropertyToCard } from "@/lib/sanity/propertyAdapter";
+import { mapSanityPropertyToCard, mapCatalogPropertyToCard } from "@/lib/sanity/propertyAdapter";
 import { normalizeCitiesOrder } from "@/lib/sanity/cityAdapter";
 import { mapSanityPropertyTypeToCard } from "@/lib/sanity/propertyTypeAdapter";
 import { buildHomeMetadata } from "@/lib/sanity/homeSeoAdapter";
@@ -197,14 +198,16 @@ export default async function Home({ params }: Props) {
           Array.isArray(s.properties) &&
           s.properties.length > 0
         ) {
+          // Inline selected properties from the home document: treat them as full Sanity property docs.
           propertyItems = s.properties.map((prop) =>
             mapSanityPropertyToCard(prop as never, locale),
           );
         } else if (mode === "auto") {
+          // Auto mode: fetch featured properties via the same CatalogProperty shape used by catalog/favorites.
           const featured = await fetchFeaturedProperties(6);
           if (Array.isArray(featured) && featured.length > 0) {
             propertyItems = featured.map((prop) =>
-              mapSanityPropertyToCard(prop as never, locale),
+              mapCatalogPropertyToCard(prop as CatalogProperty, locale),
             );
           }
         }

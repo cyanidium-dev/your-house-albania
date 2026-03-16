@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { PropertyHomes } from '@/types/properyHomes'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
@@ -16,6 +16,28 @@ const imageSizes = {
   list: { width: 200, height: 140 },
 } as const
 
+function displayStatusLabel(status?: string | null): string | null {
+  if (!status) return null
+  const s = status.toLowerCase().trim()
+  if (s === 'sale') return 'For sale'
+  if (s === 'rent') return 'For rent'
+  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent'
+  if (s === 'long-term' || s === 'longterm') return 'Long-term rent'
+  return status
+}
+
+function formatPrice(rate: string, price?: number | null, currency?: string | null): string {
+  if (rate && rate.trim().length > 0) return rate
+  if (typeof price === 'number' && !Number.isNaN(price)) {
+    const cur = (currency && currency.trim()) || 'EUR'
+    if (cur.toUpperCase() === 'EUR') {
+      return `${price.toLocaleString()} €`
+    }
+    return `${price.toLocaleString()} ${cur}`
+  }
+  return ''
+}
+
 function PropertyCard({
   item,
   locale,
@@ -25,10 +47,13 @@ function PropertyCard({
   locale: string
   view?: ViewMode
 }) {
-  const { name, location, rate, beds, baths, area, slug, images } = item
+  const { name, location, rate, beds, baths, area, slug, images, price, currency, status, propertyType, city } = item
   const t = useTranslations('Shared.propertyCard')
   const imageList = images?.length ? images : (images?.[0]?.src ? [images[0]] : [])
   const [imageIndex, setImageIndex] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
+  const touchActive = useRef(false)
   const currentImage = imageList[imageIndex % (imageList.length || 1)]?.src
   const hasMultipleImages = imageList.length > 1
   const href = `/${locale}/property/${slug}`
@@ -42,6 +67,14 @@ function PropertyCard({
   const goNext = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    setImageIndex((i) => (i + 1) % imageList.length)
+  }, [imageList.length])
+
+  const goPrevFromGesture = useCallback(() => {
+    setImageIndex((i) => (i - 1 + imageList.length) % imageList.length)
+  }, [imageList.length])
+
+  const goNextFromGesture = useCallback(() => {
     setImageIndex((i) => (i + 1) % imageList.length)
   }, [imageList.length])
 
@@ -101,24 +134,123 @@ function PropertyCard({
 
   const iconSize = isList ? 16 : isSmall ? 14 : 20
 
+  const formattedPrice =
+    typeof price === 'number'
+      ? `€${price.toLocaleString()}`
+      : (rate && rate.trim().length > 0 ? rate : '')
+
+  const typeLine = propertyType || ''
+  const displayLocation = location
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleImages) return
+    const touch = e.touches[0]
+    touchStartX.current = touch.clientX
+    touchStartY.current = touch.clientY
+    touchActive.current = true
+  }
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) return
+    const touch = e.touches[0]
+    const dx = touch.clientX - touchStartX.current
+    const dy = touch.clientY - touchStartY.current
+    // Если вертикальное движение сильнее — отдаём приоритет скроллу страницы
+    if (Math.abs(dy) > Math.abs(dx)) {
+      touchActive.current = false
+      return
+    }
+    // При выраженном горизонтальном жесте блокируем скролл/клик
+    if (Math.abs(dx) > 40) {
+      e.preventDefault()
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) {
+      touchStartX.current = null
+      touchStartY.current = null
+      touchActive.current = false
+      return
+    }
+    const touch = e.changedTouches[0]
+    const dx = touch.clientX - touchStartX.current
+    const dy = touch.clientY - touchStartY.current
+    touchStartX.current = null
+    touchStartY.current = null
+    touchActive.current = false
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return
+    if (dx < 0) {
+      goNextFromGesture()
+    } else {
+      goPrevFromGesture()
+    }
+    e.preventDefault()
+  }
+
   const topBlock = (
     <div
       className={cn(
-        'flex flex-col mobile:flex-row justify-between',
-        isList && 'flex-row gap-2 mobile:gap-0 mb-2',
+        'flex flex-col justify-between',
+        isList && 'gap-1 mb-2',
         isSmall && !isList && 'gap-1 mb-2',
-        !isSmall && !isList && 'gap-5 mobile:gap-0 mb-6'
+        !isSmall && !isList && 'gap-2 mb-4'
       )}
     >
-      <div className="min-w-0">
+      {/* price + deal type row */}
+      <div className="flex flex-row items-center justify-between gap-3">
+        <div className="min-w-0">
+          {formattedPrice && (
+            <span
+              className={cn(
+                priceClass,
+                'inline-block font-semibold',
+                isSmall ? 'text-xs px-2 py-1' : 'text-base px-4 py-1.5'
+              )}
+            >
+              {formattedPrice}
+            </span>
+          )}
+        </div>
+        {status && (
+          <span className="inline-flex items-center rounded-full bg-primary text-white text-[11px] px-2 py-0.5 shadow-sm shrink-0">
+            {displayStatusLabel(status)}
+          </span>
+        )}
+      </div>
+
+      {/* property type */}
+      {typeLine && (
+        <p
+          className={cn(
+            'font-medium text-black/80 dark:text-white/80 truncate',
+            isSmall ? 'text-xs' : 'text-sm'
+          )}
+        >
+          {typeLine}
+        </p>
+      )}
+
+      {/* location */}
+      {displayLocation && (
+        <p
+          className={cn(
+            'font-normal text-black/50 dark:text-white/50 truncate',
+            isSmall ? 'text-xs' : 'text-sm'
+          )}
+        >
+          {displayLocation}
+        </p>
+      )}
+
+      {/* property name (no name in small mode) */}
+      {!isSmall && name && (
         <Link href={href}>
-          <h3 className={cn(titleClass, 'line-clamp-2')}>{name}</h3>
+          <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
+            {name}
+          </h3>
         </Link>
-        <p className={cn(locationClass, 'truncate')}>{location}</p>
-      </div>
-      <div className={cn(isList && 'shrink-0')}>
-        <span className={cn(priceClass, 'inline-block')}>${rate}</span>
-      </div>
+      )}
     </div>
   )
 
@@ -148,40 +280,55 @@ function PropertyCard({
   return (
     <div className="min-w-0 w-full">
       <div className={cardWrapper}>
-        <div className={cn(imageWrapper, 'relative')}>
+        <div
+          className={cn(imageWrapper, 'relative')}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="property-card-overlay absolute inset-0 z-20 pointer-events-none [&>*]:pointer-events-auto">
-            <div className={cn('absolute z-10', isList ? 'top-2 left-2' : 'top-6 left-6', isSmall && !isList && 'top-1.5 left-1.5')}>
+            <div className={cn('absolute z-10', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
               <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
             </div>
             {hasMultipleImages && (
               <>
+                {/* Левая tappable-зона */}
                 <button
                   type="button"
                   aria-label={t('previousImage')}
                   onClick={goPrev}
-                  className={cn(
-                    'absolute top-1/2 z-20 -translate-y-1/2 rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary/40',
-                    'bg-black/20 dark:bg-white/20 text-white hover:bg-black/30 dark:hover:bg-white/30 backdrop-blur-[2px]',
-                    view === 'large' && 'left-6 p-2',
-                    (view === 'small' || view === 'list') && 'left-1.5 p-1.5',
-                    isList && 'left-2'
-                  )}
+                  className="absolute inset-y-0 left-0 w-1/3 z-20 flex items-center justify-start px-1 sm:px-2 bg-transparent"
                 >
-                  <Icon icon="solar:alt-arrow-left-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                  <span
+                    className={cn(
+                      'inline-flex items-center justify-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary/40',
+                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/30 dark:hover:bg-white/30 backdrop-blur-[2px]',
+                      view === 'large' && 'ml-5 p-2',
+                      (view === 'small' || view === 'list') && 'ml-1.5 p-1.5',
+                      isList && 'ml-2'
+                    )}
+                  >
+                    <Icon icon="solar:alt-arrow-left-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                  </span>
                 </button>
+                {/* Правая tappable-зона */}
                 <button
                   type="button"
                   aria-label={t('nextImage')}
                   onClick={goNext}
-                  className={cn(
-                    'absolute top-1/2 z-20 -translate-y-1/2 rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary/40',
-                    'bg-black/20 dark:bg-white/20 text-white hover:bg-black/30 dark:hover:bg-white/30 backdrop-blur-[2px]',
-                    view === 'large' && 'right-6 p-2',
-                    (view === 'small' || view === 'list') && 'right-1.5 p-1.5',
-                    isList && 'right-2'
-                  )}
+                  className="absolute inset-y-0 right-0 w-1/3 z-20 flex items-center justify-end px-1 sm:px-2 bg-transparent"
                 >
-                  <Icon icon="solar:alt-arrow-right-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                  <span
+                    className={cn(
+                      'inline-flex items-center justify-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary/40',
+                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/30 dark:hover:bg-white/30 backdrop-blur-[2px]',
+                      view === 'large' && 'mr-5 p-2',
+                      (view === 'small' || view === 'list') && 'mr-1.5 p-1.5',
+                      isList && 'mr-2'
+                    )}
+                  >
+                    <Icon icon="solar:alt-arrow-right-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                  </span>
                 </button>
               </>
             )}
