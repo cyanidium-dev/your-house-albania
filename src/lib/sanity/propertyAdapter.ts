@@ -81,6 +81,7 @@ type SanityProperty = {
   _id?: string;
   title?: unknown;
   slug?: string;
+  description?: unknown;
   price?: number;
   currency?: string;
   area?: number;
@@ -115,6 +116,12 @@ export function mapSanityPropertyToCard(
   const districtTitle = resolveLocalizedString(p.district?.title as never, locale);
   const location = [districtTitle, cityTitle].filter(Boolean).join(', ') || '—';
   const imageUrl = p.mainImageUrl ?? (p.mainImage as { asset?: { url?: string } })?.asset?.url ?? '';
+  const rawDescription = p.description as
+    | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
+    | string
+    | null
+    | undefined;
+  const localizedDescription = resolveLocalizedString(rawDescription as never, locale);
   const rate = String(p.price ?? 0);
   return {
     name: resolveLocalizedString(p.title as never, locale) || (p.title as string) || '—',
@@ -140,6 +147,7 @@ export function mapSanityPropertyToCard(
     citySlug: p.city?.slug,
     district: districtTitle || undefined,
     districtSlug: p.district?.slug,
+    teaser: localizedDescription || undefined,
   };
 }
 
@@ -161,6 +169,7 @@ export function mapCatalogPropertyToCard(
       _id: p._id,
       title: p.title,
       slug: p.slug,
+      description: p.description,
       price: p.price,
       currency: p.currency,
       area: p.area,

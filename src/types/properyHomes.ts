@@ -21,6 +21,8 @@ export type PropertyHomes = {
   citySlug?: string
   district?: string
   districtSlug?: string
+  /** Short teaser/description text for list view. */
+  teaser?: string
 }
 
 interface PropertyImage {

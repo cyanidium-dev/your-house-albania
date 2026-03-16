@@ -13,7 +13,8 @@ import type { ViewMode } from '@/lib/catalog/viewMode'
 const imageSizes = {
   large: { width: 440, height: 300 },
   small: { width: 280, height: 180 },
-  list: { width: 200, height: 140 },
+  // slightly wider, lower image footprint for compact horizontal list rows
+  list: { width: 260, height: 160 },
 } as const
 
 function displayStatusLabel(status?: string | null): string | null {
@@ -47,13 +48,31 @@ function PropertyCard({
   locale: string
   view?: ViewMode
 }) {
-  const { name, location, rate, beds, baths, area, slug, images, price, currency, status, propertyType, city } = item
+  const {
+    name,
+    location,
+    rate,
+    beds,
+    baths,
+    area,
+    slug,
+    images,
+    price,
+    currency,
+    status,
+    propertyType,
+    city,
+    teaser,
+  } = item
   const t = useTranslations('Shared.propertyCard')
   const imageList = images?.length ? images : (images?.[0]?.src ? [images[0]] : [])
   const [imageIndex, setImageIndex] = useState(0)
+  const [slideOffset, setSlideOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
   const touchStartX = useRef<number | null>(null)
   const touchStartY = useRef<number | null>(null)
   const touchActive = useRef(false)
+  const dragStartX = useRef<number | null>(null)
   const currentImage = imageList[imageIndex % (imageList.length || 1)]?.src
   const hasMultipleImages = imageList.length > 1
   const href = `/${locale}/property/${slug}`
@@ -80,26 +99,27 @@ function PropertyCard({
 
   const isList = view === 'list'
   const isSmall = view === 'small'
+  const isLarge = !isSmall && !isList
 
   const cardWrapper = cn(
     'relative rounded-2xl border border-dark/10 dark:border-white/10 duration-300 min-w-0',
     '[&:hover:not(:has(.property-card-overlay:hover))]:shadow-3xl dark:[&:hover:not(:has(.property-card-overlay:hover))]:shadow-white/20',
-    isList && 'flex flex-row overflow-hidden'
+    isList && 'flex flex-row overflow-hidden items-stretch'
   )
 
   const imageWrapper = cn(
     'overflow-hidden relative shrink-0',
-    isList ? 'w-28 sm:w-36 rounded-l-2xl' : 'rounded-t-2xl'
+    isList ? 'w-32 sm:w-40 rounded-l-2xl' : 'rounded-t-2xl'
   )
 
   const imageClass = cn(
-    'w-full transition duration-300 delay-75 group-hover/image:brightness-50 group-hover/image:scale-125',
-    isList ? 'h-full rounded-l-2xl object-cover min-h-[7rem]' : 'rounded-t-2xl object-cover',
+    'h-full w-full object-cover',
+    isList ? 'rounded-l-2xl aspect-[16/10]' : 'rounded-t-2xl',
     isSmall && !isList && 'aspect-[16/10]'
   )
 
   const contentPadding = cn(
-    isList && 'p-3 sm:p-4 flex-1 min-w-0 flex flex-col justify-center',
+    isList && 'px-3 py-2.5 sm:px-4 sm:py-3 flex-1 min-w-0 flex flex-col justify-center',
     isSmall && !isList && 'p-2.5 min-w-0',
     !isList && !isSmall && 'p-6'
   )
@@ -115,21 +135,21 @@ function PropertyCard({
     'font-normal text-black/50 dark:text-white/50',
     isSmall && !isList && 'text-xs',
     isList && 'text-xs sm:text-sm',
-    !isSmall && !isList && 'text-base'
+    isLarge && 'text-base'
   )
 
   const priceClass = cn(
-    'font-normal text-primary rounded-full bg-primary/10',
-    isSmall && !isList && 'text-xs px-2 py-1',
-    isList && 'text-xs sm:text-sm px-2 py-1',
-    !isSmall && !isList && 'text-base px-5 py-2'
+    'inline-flex items-center font-semibold rounded-full',
+    isSmall && !isList && 'text-xs px-2 py-1 text-primary bg-primary/10',
+    isList && 'text-sm px-3 py-1 bg-primary text-white',
+    isLarge && 'text-base px-4 py-1.5 bg-primary text-white'
   )
 
   const metaItemClass = cn(
     'flex flex-col font-normal text-black dark:text-white',
     isList && 'gap-0.5 text-xs',
     isSmall && !isList && 'gap-0.5 text-[11px]',
-    !isSmall && !isList && 'gap-2 text-sm mobile:text-base'
+    !isSmall && !isList && 'gap-1.5 text-sm mobile:text-base'
   )
 
   const iconSize = isList ? 16 : isSmall ? 14 : 20
@@ -148,6 +168,8 @@ function PropertyCard({
     touchStartX.current = touch.clientX
     touchStartY.current = touch.clientY
     touchActive.current = true
+    dragStartX.current = touch.clientX
+    setIsDragging(true)
   }
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -164,6 +186,10 @@ function PropertyCard({
     if (Math.abs(dx) > 40) {
       e.preventDefault()
     }
+    if (dragStartX.current !== null) {
+      const dragDx = touch.clientX - dragStartX.current
+      setSlideOffset(dragDx)
+    }
   }
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -179,12 +205,17 @@ function PropertyCard({
     touchStartX.current = null
     touchStartY.current = null
     touchActive.current = false
-    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return
+    setIsDragging(false)
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) {
+      setSlideOffset(0)
+      return
+    }
     if (dx < 0) {
       goNextFromGesture()
     } else {
       goPrevFromGesture()
     }
+    setSlideOffset(0)
     e.preventDefault()
   }
 
@@ -192,28 +223,33 @@ function PropertyCard({
     <div
       className={cn(
         'flex flex-col justify-between',
-        isList && 'gap-1 mb-2',
+        isList && 'gap-1 mb-1',
         isSmall && !isList && 'gap-1 mb-2',
-        !isSmall && !isList && 'gap-2 mb-4'
+        isLarge && 'gap-2 mb-3'
       )}
     >
       {/* price + deal type row */}
-      <div className="flex flex-row items-center justify-between gap-3">
+      <div
+        className={cn(
+          'flex items-center justify-between gap-2',
+          isList && 'justify-start gap-2 sm:gap-3 flex-wrap'
+        )}
+      >
         <div className="min-w-0">
           {formattedPrice && (
-            <span
-              className={cn(
-                priceClass,
-                'inline-block font-semibold',
-                isSmall ? 'text-xs px-2 py-1' : 'text-base px-4 py-1.5'
-              )}
-            >
+            <span className={priceClass}>
               {formattedPrice}
             </span>
           )}
         </div>
         {status && (
-          <span className="inline-flex items-center rounded-full bg-primary text-white text-[11px] px-2 py-0.5 shadow-sm shrink-0">
+          <span
+            className={cn(
+              'inline-flex items-center rounded-full font-medium',
+              (isLarge || isList) && 'text-xs px-3 py-1 border border-primary/80 text-primary bg-primary/5',
+              isSmall && !isList && 'bg-primary text-white text-[11px] px-2 py-0.5 shadow-sm'
+            )}
+          >
             {displayStatusLabel(status)}
           </span>
         )}
@@ -255,20 +291,46 @@ function PropertyCard({
   )
 
   const metaBlock = (
-    <div className={cn('grid grid-cols-3 w-full min-w-0')}>
-      <div className={cn('flex border-e border-black/10 dark:border-white/20 justify-center items-center', isSmall && !isList ? 'flex-row gap-1 py-0.5' : 'flex-col gap-2 py-1', isList && 'gap-0.5 py-0.5', metaItemClass)}>
+    <div
+      className={cn(
+        'grid grid-cols-3 w-full min-w-0',
+        isList && 'mt-1 pt-1.5 border-t border-black/5 dark:border-white/10'
+      )}
+    >
+      <div
+        className={cn(
+          'flex border-e border-black/10 dark:border-white/20 items-center',
+          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
+          isList && 'gap-0.5 py-0.5 justify-start',
+          metaItemClass
+        )}
+      >
         <Icon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
         <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
           {isSmall && !isList ? beds : `${beds} ${t('bedrooms')}`}
         </span>
       </div>
-      <div className={cn('flex border-e border-black/10 dark:border-white/20 justify-center items-center', isSmall && !isList ? 'flex-row gap-1 py-0.5' : 'flex-col gap-2 py-1', isList && 'gap-0.5 py-0.5', metaItemClass)}>
+      <div
+        className={cn(
+          'flex border-e border-black/10 dark:border-white/20 items-center',
+          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
+          isList && 'gap-0.5 py-0.5 justify-start',
+          metaItemClass
+        )}
+      >
         <Icon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
         <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
           {isSmall && !isList ? baths : `${baths} ${t('bathrooms')}`}
         </span>
       </div>
-      <div className={cn('flex justify-center items-center min-w-0', isSmall && !isList ? 'flex-row gap-1 py-0.5' : 'flex-col gap-2 py-1', isList && 'gap-0.5 py-0.5', metaItemClass)}>
+      <div
+        className={cn(
+          'flex items-center min-w-0',
+          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
+          isList && 'gap-0.5 py-0.5 justify-start',
+          metaItemClass
+        )}
+      >
         <Icon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
         <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
           {area}{t('areaUnit')}
@@ -287,7 +349,7 @@ function PropertyCard({
           onTouchEnd={handleTouchEnd}
         >
           <div className="property-card-overlay absolute inset-0 z-20 pointer-events-none [&>*]:pointer-events-auto">
-            <div className={cn('absolute z-10', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
+            <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
               <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
             </div>
             {hasMultipleImages && (
@@ -297,12 +359,13 @@ function PropertyCard({
                   type="button"
                   aria-label={t('previousImage')}
                   onClick={goPrev}
-                  className="absolute inset-y-0 left-0 w-1/3 z-20 flex items-center justify-start px-1 sm:px-2 bg-transparent"
+                  className="absolute inset-y-0 left-0 w-1/3 z-20 flex items-center justify-start px-1 sm:px-2 bg-transparent cursor-pointer"
                 >
                   <span
                     className={cn(
-                      'inline-flex items-center justify-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary/40',
-                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/30 dark:hover:bg-white/30 backdrop-blur-[2px]',
+                      'inline-flex items-center justify-center rounded-full transition duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary/40',
+                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
+                      'hover:scale-105',
                       view === 'large' && 'ml-5 p-2',
                       (view === 'small' || view === 'list') && 'ml-1.5 p-1.5',
                       isList && 'ml-2'
@@ -316,12 +379,13 @@ function PropertyCard({
                   type="button"
                   aria-label={t('nextImage')}
                   onClick={goNext}
-                  className="absolute inset-y-0 right-0 w-1/3 z-20 flex items-center justify-end px-1 sm:px-2 bg-transparent"
+                  className="absolute inset-y-0 right-0 w-1/3 z-20 flex items-center justify-end px-1 sm:px-2 bg-transparent cursor-pointer"
                 >
                   <span
                     className={cn(
-                      'inline-flex items-center justify-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary/40',
-                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/30 dark:hover:bg-white/30 backdrop-blur-[2px]',
+                      'inline-flex items-center justify-center rounded-full transition duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary/40',
+                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
+                      'hover:scale-105',
                       view === 'large' && 'mr-5 p-2',
                       (view === 'small' || view === 'list') && 'mr-1.5 p-1.5',
                       isList && 'mr-2'
@@ -347,22 +411,54 @@ function PropertyCard({
               </div>
             )}
           </div>
-          <Link href={href} className={cn('block group/image', isList && 'h-full')}>
-            {currentImage && (
-              <Image
-                src={currentImage}
-                alt={name}
-                width={imageSizes[view].width}
-                height={imageSizes[view].height}
-                className={imageClass}
-                unoptimized
-              />
+          <Link href={href} className={cn('block group/image h-full')}>
+            {imageList.length > 0 && (
+              <div className="relative h-full w-full overflow-hidden">
+                <div
+                  className={cn(
+                    'flex h-full w-full',
+                    isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+                  )}
+                  style={{
+                    transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))`,
+                  }}
+                >
+                  {imageList.map((img, idx) => (
+                    <div key={idx} className="relative h-full w-full shrink-0">
+                      <Image
+                        src={img.src}
+                        alt={name}
+                        width={imageSizes[view].width}
+                        height={imageSizes[view].height}
+                        className={imageClass}
+                        unoptimized
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </Link>
         </div>
         <div className={contentPadding}>
-          {topBlock}
-          {metaBlock}
+          {isList ? (
+            <div className="flex-1 min-w-0 flex flex-col gap-2 justify-between h-full">
+              <div className="flex flex-col gap-1.5">
+                {topBlock}
+                {teaser && teaser.trim().length > 0 && (
+                  <p className="hidden md:block text-xs md:text-sm text-black/60 dark:text-white/60 mt-0.5 line-clamp-2">
+                    {teaser}
+                  </p>
+                )}
+              </div>
+              {metaBlock}
+            </div>
+          ) : (
+            <>
+              {topBlock}
+              {metaBlock}
+            </>
+          )}
         </div>
       </div>
     </div>

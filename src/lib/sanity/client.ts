@@ -216,6 +216,7 @@ export async function fetchFeaturedProperties(limit = 6): Promise<CatalogPropert
       title,
       "slug": slug.current
     },
+    description,
     "mainImageUrl": gallery[0].asset->url,
     "galleryUrls": gallery[].asset->url
   }`;
@@ -436,6 +437,8 @@ export type CatalogProperty = {
   _type: 'property';
   title?: unknown;
   slug?: string;
+  /** Short textual teaser/description for list cards. */
+  description?: unknown;
   price?: number;
   currency?: string;
   area?: number;
@@ -568,6 +571,7 @@ export async function fetchCatalogProperties(
       title,
       "slug": slug.current
     },
+    description,
     "mainImageUrl": gallery[0].asset->url,
     "galleryUrls": gallery[].asset->url
   }`;

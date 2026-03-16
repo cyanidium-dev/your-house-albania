@@ -29,7 +29,7 @@ function ViewModeSwitcherUI({
       <p className="mb-1 text-xs font-medium text-dark/70 dark:text-white/80">
         {t("viewLabel")}
       </p>
-      <div className="flex items-center justify-end md:justify-start">
+      <div className="flex items-center justify-start">
         <div className="inline-flex gap-0.5 rounded-full p-0.5 bg-dark/5 dark:bg-white/10">
         <button
           type="button"
@@ -353,23 +353,29 @@ function PropertySearchBarInner({
         </div>
 
         {/* Reset + Advanced + Search */}
-        <div className="flex items-end gap-2 justify-end">
+        <div className="flex items-end gap-2 justify-end min-w-0">
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30"
+            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 max-w-[40vw] sm:max-w-none"
             onClick={() => router.push(catalogPath(locale))}
           >
-            {t("resetFilters")}
+            <span className="inline-block max-w-full truncate">
+              {t("resetFilters")}
+            </span>
           </Button>
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30"
+            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 max-w-[40vw] sm:max-w-none"
             onClick={() => setShowAdvanced((v) => !v)}
           >
-            <span className="hidden sm:inline">{t("advancedFilters")}</span>
-            <span className="sm:hidden">{t("filtersShort")}</span>
+            <span className="hidden sm:inline max-w-full truncate">
+              {t("advancedFilters")}
+            </span>
+            <span className="sm:hidden max-w-full truncate">
+              {t("filtersShort")}
+            </span>
           </Button>
           <Button
             type="submit"
