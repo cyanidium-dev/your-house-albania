@@ -75,6 +75,18 @@
       "title": "Scopri case dal design ispiratore.",
       "description": "Case curate dove eleganza, stile e comfort si uniscono."
     },
+    "topOffers": {
+      "title": "Migliori offerte",
+      "description": "Annunci popolari, nuovi e più richiesti in un unico posto.",
+      "tabs": {
+        "popular": "Popolari",
+        "new": "Nuovi",
+        "highDemand": "Richiesti"
+      },
+      "ctaAll": "Vedi tutti gli immobili",
+      "prev": "Precedenti",
+      "next": "Successivi"
+    },
     "featured": {
       "badge": "Proprietà in evidenza",
       "title": "Villa lusso moderna",

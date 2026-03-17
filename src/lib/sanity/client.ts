@@ -229,6 +229,74 @@ export async function fetchFeaturedProperties(limit = 6): Promise<CatalogPropert
   }
 }
 
+export type HomeTopOffersGroup = 'popular' | 'new' | 'highDemand';
+
+/** Fetch top offers for home slider groups (base: property). */
+export async function fetchHomeTopOffers(
+  group: HomeTopOffersGroup,
+  limit = 24
+): Promise<CatalogProperty[] | null> {
+  const client = getClient();
+  if (!client) return null;
+
+  let where = '_type == "property"';
+  let order = '| order(_createdAt desc)';
+
+  if (group === 'popular') {
+    where = `${where} && featured == true`;
+    order = '| order(_createdAt desc)';
+  } else if (group === 'highDemand') {
+    where = `${where} && defined(investment)`;
+    order = '| order(_createdAt desc)';
+  } else if (group === 'new') {
+    order = '| order(_createdAt desc)';
+  }
+
+  const query = `*[
+    ${where}
+  ] ${order}[0...${limit}] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    price,
+    currency,
+    area,
+    bedrooms,
+    bathrooms,
+    status,
+    featured,
+    investment,
+    "city": city-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "district": district-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "citySlug": city->slug.current
+    },
+    "type": type-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "mainImageUrl": gallery[0].asset->url,
+    "galleryUrls": gallery[].asset->url
+  }`;
+
+  try {
+    const result = await client.fetch<CatalogProperty[]>(query);
+    return Array.isArray(result) ? result : null;
+  } catch (err) {
+    console.warn('[Sanity] fetchHomeTopOffers failed:', err);
+    return null;
+  }
+}
+
 /** Fetch single property by slug. Returns null if not found or client not configured. */
 export async function fetchPropertyBySlug(slug: string): Promise<unknown | null> {
   const client = getClient();

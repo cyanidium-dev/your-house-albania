@@ -16,6 +16,7 @@ import FAQ from "@/components/Home/FAQs";
 import {
   fetchHomePage,
   fetchFeaturedProperties,
+  fetchHomeTopOffers,
   fetchActivePropertyTypes,
   fetchSiteSettings,
   type CatalogProperty,
@@ -75,6 +76,11 @@ export default async function Home({ params }: Props) {
     description?: string;
   } | null = null;
   let propertyItems: PropertyHomes[] | null = null;
+  let topOffersGroups: {
+    popular: PropertyHomes[];
+    new: PropertyHomes[];
+    highDemand: PropertyHomes[];
+  } | null = null;
   let citiesData: {
     title?: string;
     subtitle?: string;
@@ -203,13 +209,19 @@ export default async function Home({ params }: Props) {
             mapSanityPropertyToCard(prop as never, locale),
           );
         } else if (mode === "auto") {
-          // Auto mode: fetch featured properties via the same CatalogProperty shape used by catalog/favorites.
-          const featured = await fetchFeaturedProperties(6);
-          if (Array.isArray(featured) && featured.length > 0) {
-            propertyItems = featured.map((prop) =>
-              mapCatalogPropertyToCard(prop as CatalogProperty, locale),
-            );
-          }
+          const [popular, newest, highDemand] = await Promise.all([
+            fetchHomeTopOffers("popular", 24),
+            fetchHomeTopOffers("new", 24),
+            fetchHomeTopOffers("highDemand", 24),
+          ]);
+          topOffersGroups = {
+            popular: (popular ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)),
+            new: (newest ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)),
+            highDemand: (highDemand ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)),
+          };
+
+          // Backwards-compatible: keep a single list as well (popular)
+          propertyItems = topOffersGroups.popular;
         }
       }
     }
@@ -483,6 +495,7 @@ export default async function Home({ params }: Props) {
         locale={locale}
         propertiesData={propertiesData}
         propertyItems={propertyItems}
+        topOffersGroups={topOffersGroups}
       />
       {citiesData && <Cities locale={locale} citiesData={citiesData} />}
       {propertyTypesData && (

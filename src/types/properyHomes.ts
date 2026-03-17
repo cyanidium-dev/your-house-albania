@@ -23,6 +23,9 @@ export type PropertyHomes = {
   districtSlug?: string
   /** Short teaser/description text for list view. */
   teaser?: string
+
+  /** Optional internal: used to enable full-card link overlay. */
+  _href?: string
 }
 
 interface PropertyImage {

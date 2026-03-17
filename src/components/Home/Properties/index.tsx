@@ -1,8 +1,8 @@
 import { Icon } from '@iconify/react'
-import PropertyCard from './Card/Card'
 import { getProperties } from '@/data/properties'
 import { getTranslations } from 'next-intl/server'
 import type { PropertyHomes } from '@/types/properyHomes'
+import { TopOffersCarouselClient, type TopOffersGroup } from './TopOffersCarouselClient'
 
 type PropertiesData = { badge?: string; title?: string; description?: string } | null;
 
@@ -10,14 +10,25 @@ const Properties: React.FC<{
   locale: string;
   propertiesData?: PropertiesData;
   propertyItems?: PropertyHomes[] | null;
-}> = async ({ locale, propertiesData, propertyItems }) => {
+  topOffersGroups?: Record<TopOffersGroup, PropertyHomes[]> | null;
+}> = async ({ locale, propertiesData, propertyItems, topOffersGroups }) => {
   const t = await getTranslations('Home.properties')
+  const tTop = await getTranslations('Home.topOffers')
   const badge = propertiesData?.badge ?? t('badge')
-  const title = propertiesData?.title ?? t('title')
-  const description = propertiesData?.description ?? t('description')
-  const items = Array.isArray(propertyItems) && propertyItems.length > 0
-    ? propertyItems.slice(0, 6)
-    : getProperties().slice(0, 6)
+  const title = tTop('title')
+  const description = tTop('description')
+
+  const fallbackItems = Array.isArray(propertyItems) && propertyItems.length > 0
+    ? propertyItems.slice(0, 24)
+    : getProperties().slice(0, 24)
+
+  const groups = topOffersGroups && Object.keys(topOffersGroups).length > 0
+    ? topOffersGroups
+    : {
+        popular: fallbackItems.filter((x) => x.featured === true).slice(0, 24),
+        new: fallbackItems.slice(0, 24),
+        highDemand: fallbackItems.filter((x) => Boolean(x.investment)).slice(0, 24),
+      }
   return (
     <section className="py-16 md:py-24">
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
@@ -42,13 +53,10 @@ const Properties: React.FC<{
             {description}
           </p>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10'>
-          {items.map((item, index) => (
-            <div key={index} className=''>
-              <PropertyCard item={item} locale={locale} />
-            </div>
-          ))}
-        </div>
+        <TopOffersCarouselClient
+          locale={locale}
+          groups={groups as Record<TopOffersGroup, PropertyHomes[]>}
+        />
       </div>
     </section>
   )

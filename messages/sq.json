@@ -75,6 +75,18 @@
       "title": "Zbuloni shtëpi me dizajn frymëzues.",
       "description": "Shtëpi të përzgjedhura ku bashkohen eleganca, stili dhe rehatia."
     },
+    "topOffers": {
+      "title": "Ofertat më të mira",
+      "description": "Prona të njohura, të reja dhe me kërkesë të lartë në një vend.",
+      "tabs": {
+        "popular": "Popullore",
+        "new": "Të reja",
+        "highDemand": "Kërkesë"
+      },
+      "ctaAll": "Shiko të gjitha pronat",
+      "prev": "Më parë",
+      "next": "Më pas"
+    },
     "featured": {
       "badge": "Pronë e zgjedhur",
       "title": "Villë moderne luksoze",

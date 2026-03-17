@@ -75,6 +75,18 @@
       "title": "Discover inspiring designed homes.",
       "description": "Curated homes where elegance, style, and comfort unite."
     },
+    "topOffers": {
+      "title": "Top offers",
+      "description": "Popular, new, and high-demand listings in one place.",
+      "tabs": {
+        "popular": "Popular",
+        "new": "New",
+        "highDemand": "High demand"
+      },
+      "ctaAll": "View all properties",
+      "prev": "Previous",
+      "next": "Next"
+    },
     "featured": {
       "badge": "Featured property",
       "title": "Modern luxe villa",

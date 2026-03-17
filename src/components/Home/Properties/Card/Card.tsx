@@ -67,10 +67,12 @@ function PropertyCard({
   item,
   locale,
   view = 'large',
+  fullClickable = false,
 }: {
   item: PropertyHomes
   locale: string
   view?: ViewMode
+  fullClickable?: boolean
 }) {
   const {
     name,
@@ -100,7 +102,7 @@ function PropertyCard({
   const dragStartX = useRef<number | null>(null)
   const currentImage = imageList[imageIndex % (imageList.length || 1)]?.src
   const hasMultipleImages = imageList.length > 1
-  const href = `/${locale}/property/${slug}`
+  const href = item._href ?? `/${locale}/property/${slug}`
 
   const goPrev = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -318,11 +320,17 @@ function PropertyCard({
 
       {/* property name (no name in small mode) */}
       {!isSmall && name && (
-        <Link href={href}>
+        fullClickable ? (
           <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
             {name}
           </h3>
-        </Link>
+        ) : (
+          <Link href={href}>
+            <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
+              {name}
+            </h3>
+          </Link>
+        )
       )}
     </div>
   )
@@ -379,6 +387,13 @@ function PropertyCard({
   return (
     <div className="min-w-0 w-full">
       <div className={cardWrapper}>
+        {fullClickable && (
+          <Link
+            href={href}
+            aria-label={name}
+            className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          />
+        )}
         <div
           className={cn(imageWrapper, 'relative')}
           onTouchStart={handleTouchStart}
@@ -448,7 +463,37 @@ function PropertyCard({
               </div>
             )}
           </div>
-          <Link href={href} className={cn('block group/image h-full')}>
+          {fullClickable ? (
+            <div className={cn('block group/image h-full')}>
+              {imageList.length > 0 && (
+                <div className="relative h-full w-full overflow-hidden">
+                  <div
+                    className={cn(
+                      'flex h-full w-full',
+                      isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+                    )}
+                    style={{
+                      transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))`,
+                    }}
+                  >
+                    {imageList.map((img, idx) => (
+                      <div key={idx} className="relative h-full w-full shrink-0">
+                        <Image
+                          src={img.src}
+                          alt={name}
+                          width={imageSizes[view].width}
+                          height={imageSizes[view].height}
+                          className={imageClass}
+                          unoptimized
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href={href} className={cn('block group/image h-full')}>
             {imageList.length > 0 && (
               <div className="relative h-full w-full overflow-hidden">
                 <div
@@ -475,7 +520,8 @@ function PropertyCard({
                 </div>
               </div>
             )}
-          </Link>
+            </Link>
+          )}
         </div>
         <div className={contentPadding}>
           {isList ? (
@@ -513,11 +559,17 @@ function PropertyCard({
 
                 {/* title */}
                 {name && (
-                  <Link href={href}>
+                  fullClickable ? (
                     <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white truncate hover:text-primary transition-colors">
                       {name}
                     </h3>
-                  </Link>
+                  ) : (
+                    <Link href={href}>
+                      <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white truncate hover:text-primary transition-colors">
+                        {name}
+                      </h3>
+                    </Link>
+                  )
                 )}
 
                 {/* teaser */}
