@@ -50,6 +50,14 @@
       "parkingSpace": "Parking space",
       "price": "$4,750,000",
       "forSellingPrice": "For selling price"
+      ,
+      "search": {
+        "tabs": {
+          "buy": "Buy",
+          "rent": "Rent",
+          "shortTerm": "Short-term"
+        }
+      }
     },
     "services": {
       "categories": "Categories",

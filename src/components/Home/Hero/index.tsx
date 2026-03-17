@@ -1,6 +1,7 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import { fetchCatalogFilterOptions } from '@/lib/sanity/client'
+import { HeroSearchBlock } from './HeroSearchBlock'
 
 type HeroData = {
   shortLine?: string;
@@ -12,36 +13,28 @@ type HeroData = {
 
 const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale, heroData }) => {
   const t = await getTranslations('Home.hero')
+  const tFilters = await getTranslations('Catalog.filters')
   const shortLine = heroData?.shortLine ?? t('location')
   const title = heroData?.title ?? t('title')
   const subtitle = heroData?.subtitle
-  const ctaLabel = heroData?.ctaLabel ?? t('getInTouch')
-  const ctaHref = heroData?.ctaHref != null
-    ? (heroData.ctaHref.startsWith('/') ? heroData.ctaHref : `/${locale}${heroData.ctaHref}`)
-    : `/${locale}/contactus`
+
+  const filterOptions = await fetchCatalogFilterOptions(locale)
+  const locationOptions = filterOptions.locations.map((o) => ({ value: o.value, label: o.label }))
+  const propertyTypeOptions = filterOptions.propertyTypes
+    .filter((o) => o.value && o.value !== 'any')
+    .map((o) => ({ value: o.value, label: o.label }))
 
   return (
     <section className='!py-0'>
-      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 overflow-hidden relative'>
-        <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-68'>
-          <div className='relative text-white dark:text-dark text-center md:text-start z-10'>
-            <p className='text-inherit text-xm font-medium'>{shortLine}</p>
-            <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
-              {title}
-            </h1>
-            {subtitle ? (
-              <p className='text-inherit text-lg mb-6'>{subtitle}</p>
-            ) : null}
-            <div className='flex flex-col xs:flex-row justify-center md:justify-start gap-4'>
-              <Link href={ctaHref} className='px-8 py-4 border border-white dark:border-dark bg-white dark:bg-dark text-dark dark:text-white duration-300 dark:hover:text-dark hover:bg-transparent hover:text-white text-base font-semibold rounded-full hover:cursor-pointer'>
-                {ctaLabel}
-              </Link>
-              <button className='px-8 py-4 border border-white dark:border-dark bg-transparent text-white dark:text-dark hover:bg-white dark:hover:bg-dark dark:hover:text-white hover:text-dark duration-300 text-base font-semibold rounded-full hover:cursor-pointer'>
-                {t('viewDetails')}
-              </button>
-            </div>
-          </div>
-          <div className='hidden md:block absolute -top-2 -right-68'>
+      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 overflow-hidden relative min-h-screen flex'>
+        {/* Full-width bottom gradient overlay (above image) */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-black via-black/50 to-transparent"
+          aria-hidden
+        />
+        <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
+          {/* Image layer */}
+          <div className='hidden md:block absolute bottom-0 -right-68 z-0'>
             <Image
               src={'/images/hero/heroBanner.png'}
               alt='heroImg'
@@ -49,81 +42,24 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale,
               height={1016}
               priority={false}
               unoptimized={true}
+              className="select-none"
             />
           </div>
-        </div>
-        <div className='md:absolute bottom-0 md:-right-68 xl:right-0 bg-white dark:bg-black py-12 px-8 mobile:px-16 md:pl-16 md:pr-[295px] rounded-2xl md:rounded-none md:rounded-tl-2xl mt-24'>
-          <div className='grid grid-cols-2 sm:grid-cols-4 md:flex gap-16 md:gap-24 sm:text-center dark:text-white text-black'>
-            <div className='flex flex-col sm:items-center gap-3'>
-              <Image
-                src={'/images/hero/sofa.svg'}
-                alt='sofa'
-                width={32}
-                height={32}
-                className='block dark:hidden'
-                unoptimized={true}
+
+          {/* Content layer */}
+          <div className='relative text-white dark:text-dark text-center md:text-start z-20'>
+            <p className='text-inherit text-xm font-medium'>{shortLine}</p>
+            <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
+              {title}
+            </h1>
+            {subtitle ? (
+              <p className='text-inherit text-lg mb-6'>{subtitle}</p>
+            ) : null}
+            <div className="mt-12 md:mt-16 flex justify-center">
+              <HeroSearchBlock
+                locationOptions={locationOptions}
+                propertyTypeOptions={propertyTypeOptions}
               />
-              <Image
-                src={'/images/hero/dark-sofa.svg'}
-                alt='sofa'
-                width={32}
-                height={32}
-                className='hidden dark:block'
-                unoptimized={true}
-              />
-              <p className='text-sm sm:text-base font-normal text-inherit'>
-                {t('bedrooms')}
-              </p>
-            </div>
-            <div className='flex flex-col sm:items-center gap-3'>
-              <Image
-                src={'/images/hero/tube.svg'}
-                alt='sofa'
-                width={32}
-                height={32}
-                className='block dark:hidden'
-                unoptimized={true}
-              />
-              <Image
-                src={'/images/hero/dark-tube.svg'}
-                alt='sofa'
-                width={32}
-                height={32}
-                className='hidden dark:block'
-                unoptimized={true}
-              />
-              <p className='text-sm sm:text-base font-normal text-inherit'>
-                {t('restroom')}
-              </p>
-            </div>
-            <div className='flex flex-col sm:items-center gap-3'>
-              <Image
-                src={'/images/hero/parking.svg'}
-                alt='sofa'
-                width={32}
-                height={32}
-                className='block dark:hidden'
-                unoptimized={true}
-              />
-              <Image
-                src={'/images/hero/dark-parking.svg'}
-                alt='sofa'
-                width={32}
-                height={32}
-                className='hidden dark:block'
-                unoptimized={true}
-              />
-              <p className='text-sm sm:text-base font-normal text-inherit'>
-                {t('parkingSpace')}
-              </p>
-            </div>
-            <div className='flex flex-col sm:items-center gap-3'>
-              <p className='text-2xl sm:text-3xl font-medium text-inherit'>
-                {t('price')}
-              </p>
-              <p className='text-sm sm:text-base font-normal text-black/50 dark:text-white/50'>
-                {t('forSellingPrice')}
-              </p>
             </div>
           </div>
         </div>

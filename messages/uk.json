@@ -50,6 +50,14 @@
       "parkingSpace": "Паркування",
       "price": "$4,750,000",
       "forSellingPrice": "Ціна продажу"
+      ,
+      "search": {
+        "tabs": {
+          "buy": "Купити",
+          "rent": "Оренда",
+          "shortTerm": "Короткостроково"
+        }
+      }
     },
     "services": {
       "categories": "Категорії",

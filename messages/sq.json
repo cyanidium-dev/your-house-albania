@@ -50,6 +50,14 @@
       "parkingSpace": "Parkim",
       "price": "$4,750,000",
       "forSellingPrice": "Çmimi i shitjes"
+      ,
+      "search": {
+        "tabs": {
+          "buy": "Bli",
+          "rent": "Qira",
+          "shortTerm": "Afatshkurtër"
+        }
+      }
     },
     "services": {
       "categories": "Kategoritë",

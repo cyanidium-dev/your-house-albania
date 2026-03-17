@@ -50,6 +50,14 @@
       "parkingSpace": "Posto auto",
       "price": "$4.750.000",
       "forSellingPrice": "Prezzo di vendita"
+      ,
+      "search": {
+        "tabs": {
+          "buy": "Acquista",
+          "rent": "Affitto",
+          "shortTerm": "Breve termine"
+        }
+      }
     },
     "services": {
       "categories": "Categorie",
