@@ -5,12 +5,15 @@ import Link from 'next/link'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import NavLink from './Navigation/NavLink'
 import LanguageSwitcher from './LanguageSwitcher'
+import CurrencySwitcher from './CurrencySwitcher'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
+import { catalogPath } from '@/lib/routes/catalog'
+import { cn } from '@/lib/utils'
 
 type HeaderProps = {
   siteSettings?: ResolvedSiteSettings;
@@ -64,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={siteSettings.logoUrl.startsWith('http')}
-                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                    className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                   />
                   <Image
                     src={siteSettings.logoUrl}
@@ -72,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={siteSettings.logoUrl.startsWith('http')}
-                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                    className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                   />
                 </>
               ) : (
@@ -83,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={true}
-                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                    className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                   />
                   <Image
                     src={'/images/header/logo.svg'}
@@ -91,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                     width={150}
                     height={68}
                     unoptimized={true}
-                    className={`object-contain object-left h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                    className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                   />
                 </>
               )}
@@ -99,6 +102,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
           </div>
           <div className='flex items-center gap-1 sm:gap-6 min-w-0 shrink-0'>
             <LanguageSwitcher />
+            <CurrencySwitcher />
             <button
               className='hover:cursor-pointer transition-colors duration-300 ease-out p-1 md:p-0'
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -140,16 +144,19 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                 </span>
               )}
             </Link>
-            <div className={`hidden md:block`}>
-              <Link href={siteSettings?.phone ? `tel:${siteSettings.phone.replace(/\s/g, '')}` : '#'} className={`text-base text-inherit flex items-center gap-2 border-r pr-6 transition-colors duration-300 ease-out ${isHomepage
-                ? sticky
-                  ? 'text-dark dark:text-white hover:text-primary border-dark dark:border-white'
-                  : 'text-white hover:text-primary'
-                : 'text-dark hover:text-primary'
-                }`}
+            <div className="hidden md:block">
+              <Link
+                href={catalogPath(locale)}
+                className={cn(
+                  'inline-flex items-center justify-center h-10 px-5 rounded-full font-semibold whitespace-nowrap',
+                  'bg-white text-dark shadow-sm border border-white/30',
+                  'transition-[background-color,color,box-shadow,border-color] duration-300 ease-out',
+                  'hover:bg-primary hover:text-white hover:border-primary/40 hover:shadow-md',
+                  'dark:bg-white dark:text-dark dark:hover:bg-primary dark:hover:text-white',
+                  'border-r-0'
+                )}
               >
-                <Icon icon={'ph:phone-bold'} width={24} height={24} />
-                {siteSettings?.phone || '+1-212-456-789'}
+                {t('cta.viewProperties')}
               </Link>
             </div>
             <div>
@@ -230,8 +237,8 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
             <Link href={siteSettings?.email ? `mailto:${siteSettings.email}` : '#'} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
               {siteSettings?.email || 'hello@homely.com'}
             </Link>
-            <Link href={siteSettings?.phone ? `tel:${siteSettings.phone.replace(/\s/g, '')}` : '#'} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-              {siteSettings?.phone || '+1-212-456-7890'}
+            <Link href={catalogPath(locale)} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
+              {t('cta.viewProperties')}
             </Link>
           </div>
         </div>

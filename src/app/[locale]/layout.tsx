@@ -7,6 +7,7 @@ import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import { fetchSiteSettings } from "@/lib/sanity/client";
 import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
+import { Providers } from "./Providers";
 
 type Props = {
   children: React.ReactNode;
@@ -39,9 +40,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <Header siteSettings={siteSettings} />
-      {children}
-      <Footer siteSettings={siteSettings} />
+      <Providers>
+        <Header siteSettings={siteSettings} />
+        {children}
+        <Footer siteSettings={siteSettings} />
+      </Providers>
     </NextIntlClientProvider>
   );
 }

@@ -11,7 +11,13 @@
       "blog": "Blog",
       "contact": "Contact",
       "docs": "Docs"
+    },
+    "cta": {
+      "viewProperties": "View properties"
     }
+  },
+  "Currency": {
+    "switchTo": "Switch currency to {currency}"
   },
   "Footer": {
     "newsletter": "Stay updated with the latest news, promotions, and exclusive offers.",

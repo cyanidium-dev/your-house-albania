@@ -12,6 +12,7 @@ import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBrea
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
+import { PriceText } from '@/components/shared/PriceText';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -82,7 +83,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const title = sanityFields.title;
   const location = sanityFields.location;
-  const rate = sanityFields.rate;
   const beds = sanityFields.beds;
   const baths = sanityFields.baths;
   const area = sanityFields.area;
@@ -257,7 +257,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         <div className="bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <div className="flex items-center justify-between gap-4 mb-2">
                               <h4 className='text-dark text-3xl font-medium dark:text-white'>
-                                  {rate}
+                                  <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
                               </h4>
                               <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                             </div>

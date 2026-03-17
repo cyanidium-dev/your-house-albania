@@ -9,12 +9,15 @@ import { useTranslations } from 'next-intl'
 import { FavoriteButton } from '@/components/shared/FavoriteButton'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
+import { useCurrency } from '@/contexts/CurrencyContext'
+import { formatMoney } from '@/lib/currency/format'
+import { convertFromBaseEur } from '@/lib/currency/convert'
 
 const imageSizes = {
   large: { width: 440, height: 300 },
   small: { width: 280, height: 180 },
   // slightly wider, lower image footprint for compact horizontal list rows
-  list: { width: 260, height: 160 },
+  list: { width: 420, height: 236 },
 } as const
 
 function displayStatusLabel(status?: string | null): string | null {
@@ -25,6 +28,27 @@ function displayStatusLabel(status?: string | null): string | null {
   if (s === 'short-term' || s === 'shortterm') return 'Short-term rent'
   if (s === 'long-term' || s === 'longterm') return 'Long-term rent'
   return status
+}
+
+function displayStatusShortLabel(status?: string | null): string | null {
+  const full = displayStatusLabel(status)
+  if (!full) return null
+  const s = full.toLowerCase()
+  if (s.includes('short-term')) return 'Short rent'
+  if (s.includes('long-term')) return 'Long rent'
+  if (s === 'for rent') return 'Rent'
+  return full
+}
+
+function displayDealLabel(status?: string | null, opts?: { compact?: boolean }): string | null {
+  return opts?.compact ? displayStatusShortLabel(status) : displayStatusLabel(status)
+}
+
+function truncateTeaser(text: string, maxChars: number): string {
+  const t = text.replace(/\s+/g, ' ').trim()
+  if (!t) return ''
+  if (t.length <= maxChars) return t
+  return `${t.slice(0, Math.max(0, maxChars - 1)).trimEnd()}…`
 }
 
 function formatPrice(rate: string, price?: number | null, currency?: string | null): string {
@@ -65,6 +89,7 @@ function PropertyCard({
     teaser,
   } = item
   const t = useTranslations('Shared.propertyCard')
+  const { currency: activeCurrency, rates } = useCurrency()
   const imageList = images?.length ? images : (images?.[0]?.src ? [images[0]] : [])
   const [imageIndex, setImageIndex] = useState(0)
   const [slideOffset, setSlideOffset] = useState(0)
@@ -109,12 +134,12 @@ function PropertyCard({
 
   const imageWrapper = cn(
     'overflow-hidden relative shrink-0',
-    isList ? 'w-32 sm:w-40 rounded-l-2xl' : 'rounded-t-2xl'
+    isList ? 'w-36 sm:w-52 md:w-72 rounded-l-2xl' : 'rounded-t-2xl'
   )
 
   const imageClass = cn(
     'h-full w-full object-cover',
-    isList ? 'rounded-l-2xl aspect-[16/10]' : 'rounded-t-2xl',
+    isList ? 'rounded-l-2xl aspect-[16/9]' : 'rounded-t-2xl',
     isSmall && !isList && 'aspect-[16/10]'
   )
 
@@ -139,10 +164,10 @@ function PropertyCard({
   )
 
   const priceClass = cn(
-    'inline-flex items-center font-semibold rounded-full',
+    'inline-flex items-center justify-center font-semibold rounded-full leading-none',
     isSmall && !isList && 'text-xs px-2 py-1 text-primary bg-primary/10',
-    isList && 'text-sm px-3 py-1 bg-primary text-white',
-    isLarge && 'text-base px-4 py-1.5 bg-primary text-white'
+    isList && 'h-7 text-sm px-3 bg-primary text-white',
+    isLarge && 'h-8 text-base px-4 bg-primary text-white'
   )
 
   const metaItemClass = cn(
@@ -154,10 +179,14 @@ function PropertyCard({
 
   const iconSize = isList ? 16 : isSmall ? 14 : 20
 
-  const formattedPrice =
+  const basePriceEur =
     typeof price === 'number'
-      ? `€${price.toLocaleString()}`
-      : (rate && rate.trim().length > 0 ? rate : '')
+      ? price
+      : (typeof rate === 'string' && rate.trim() ? Number(String(rate).replace(/[^\d.-]/g, '')) : NaN)
+  const formattedPrice =
+    Number.isFinite(basePriceEur)
+      ? formatMoney(convertFromBaseEur(basePriceEur as number, activeCurrency, rates), activeCurrency, locale)
+      : ''
 
   const typeLine = propertyType || ''
   const displayLocation = location
@@ -246,11 +275,19 @@ function PropertyCard({
           <span
             className={cn(
               'inline-flex items-center rounded-full font-medium',
-              (isLarge || isList) && 'text-xs px-3 py-1 border border-primary/80 text-primary bg-primary/5',
-              isSmall && !isList && 'bg-primary text-white text-[11px] px-2 py-0.5 shadow-sm'
+              isList && 'h-7 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
+              isLarge && 'h-8 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
+              isSmall && !isList && 'bg-primary text-white text-[11px] px-2 shadow-sm h-5 leading-5 max-w-[7.25rem] min-w-0 overflow-hidden'
             )}
           >
-            {displayStatusLabel(status)}
+            {isSmall && !isList ? (
+              <span className="min-w-0 truncate whitespace-nowrap">
+                <span className="sm:hidden">{displayDealLabel(status, { compact: true })}</span>
+                <span className="hidden sm:inline">{displayDealLabel(status, { compact: false })}</span>
+              </span>
+            ) : (
+              displayDealLabel(status, { compact: false })
+            )}
           </span>
         )}
       </div>
@@ -442,15 +479,56 @@ function PropertyCard({
         </div>
         <div className={contentPadding}>
           {isList ? (
-            <div className="flex-1 min-w-0 flex flex-col gap-2 justify-between h-full">
-              <div className="flex flex-col gap-1.5">
-                {topBlock}
+            <div className="flex-1 min-w-0 flex flex-col gap-1.5 justify-between h-full">
+              {/* Structured list-row content */}
+              <div className="min-w-0">
+                {/* top meta row */}
+                <div className="flex items-center gap-2 flex-nowrap sm:flex-wrap min-w-0 overflow-hidden">
+                  {formattedPrice && (
+                    <span className={priceClass}>{formattedPrice}</span>
+                  )}
+                  {status && (
+                    <span className="inline-flex items-center justify-center rounded-full text-xs px-3 h-7 leading-none border border-primary/80 text-primary bg-primary/5">
+                      <span className="min-w-0 truncate whitespace-nowrap">
+                        <span className="sm:hidden">{displayDealLabel(status, { compact: true })}</span>
+                        <span className="hidden sm:inline">{displayDealLabel(status, { compact: false })}</span>
+                      </span>
+                    </span>
+                  )}
+                  {(!!typeLine || !!displayLocation) && (
+                    <span className="flex items-center gap-2 min-w-0 overflow-hidden">
+                      {!!typeLine && (
+                        <span className="shrink-0 text-xs sm:text-sm text-black/70 dark:text-white/70 truncate max-w-[9rem]">
+                          {typeLine}
+                        </span>
+                      )}
+                      {!!displayLocation && (
+                        <span className="min-w-0 flex-1 text-xs sm:text-sm text-black/50 dark:text-white/50 truncate whitespace-nowrap">
+                          {displayLocation}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
+
+                {/* title */}
+                {name && (
+                  <Link href={href}>
+                    <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white truncate hover:text-primary transition-colors">
+                      {name}
+                    </h3>
+                  </Link>
+                )}
+
+                {/* teaser */}
                 {teaser && teaser.trim().length > 0 && (
-                  <p className="hidden md:block text-xs md:text-sm text-black/60 dark:text-white/60 mt-0.5 line-clamp-2">
-                    {teaser}
+                  <p className="mt-0.5 text-xs sm:text-sm text-black/60 dark:text-white/60 line-clamp-1 sm:line-clamp-2">
+                    {truncateTeaser(teaser, 220)}
                   </p>
                 )}
               </div>
+
+              {/* stats footer */}
               {metaBlock}
             </div>
           ) : (

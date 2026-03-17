@@ -11,7 +11,13 @@
       "blog": "Blog",
       "contact": "Contatto",
       "docs": "Documentazione"
+    },
+    "cta": {
+      "viewProperties": "Vedi immobili"
     }
+  },
+  "Currency": {
+    "switchTo": "Cambia valuta in {currency}"
   },
   "Footer": {
     "newsletter": "Resta aggiornato con news, promozioni e offerte esclusive.",

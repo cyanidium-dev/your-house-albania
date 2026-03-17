@@ -11,7 +11,13 @@
       "blog": "Blog",
       "contact": "Kontakt",
       "docs": "Dokumentacioni"
+    },
+    "cta": {
+      "viewProperties": "Shiko pronat"
     }
+  },
+  "Currency": {
+    "switchTo": "Ndrysho monedhën në {currency}"
   },
   "Footer": {
     "newsletter": "Qëndroni të përditësuar me lajmet, ofertat dhe propozimet ekskluzive.",

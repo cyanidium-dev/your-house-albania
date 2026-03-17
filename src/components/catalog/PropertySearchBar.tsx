@@ -80,6 +80,9 @@ function ViewModeSwitcherUI({
 }
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCurrency } from "@/contexts/CurrencyContext";
+import { convertFromBaseEur } from "@/lib/currency/convert";
+import { formatMoney } from "@/lib/currency/format";
 import {
   FilterSelect,
   type FilterOption,
@@ -136,6 +139,8 @@ function PropertySearchBarInner({
 }: Props) {
   const viewModeFromProps = parseViewMode(initialView as string);
   const t = useTranslations("Catalog.filters");
+  const { currency: activeCurrency, rates } = useCurrency();
+  const locale = useLocale();
   const [city, setCity] = React.useState(initialCity);
   const [type, setType] = React.useState(initialType);
   const [deal, setDeal] = React.useState(initialDealType || "any");
@@ -204,7 +209,6 @@ function PropertySearchBarInner({
   }, [city, district, districtOptionsFiltered]);
 
   const router = useRouter();
-  const locale = useLocale();
   const searchParams = useSearchParams();
 
   const applyFilters = React.useCallback(() => {
@@ -327,8 +331,8 @@ function PropertySearchBarInner({
           <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1">
             <span>{t("priceRange")}</span>
             <span className="font-medium text-dark dark:text-white text-[11px]">
-              {priceValues[0].toLocaleString()} –{" "}
-              {priceValues[1].toLocaleString()}
+              {formatMoney(convertFromBaseEur(priceValues[0], activeCurrency, rates), activeCurrency, locale)} –{" "}
+              {formatMoney(convertFromBaseEur(priceValues[1], activeCurrency, rates), activeCurrency, locale)}
             </span>
           </div>
           <Slider.Root
