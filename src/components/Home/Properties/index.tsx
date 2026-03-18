@@ -26,9 +26,13 @@ const Properties: React.FC<{
   const groups = topOffersGroups && Object.keys(topOffersGroups).length > 0
     ? topOffersGroups
     : {
-        popular: fallbackItems.filter((x) => x.featured === true).slice(0, 24),
+        popular: fallbackItems
+          .filter((x) => (x as Partial<PropertyHomes>).featured === true)
+          .slice(0, 24),
         new: fallbackItems.slice(0, 24),
-        highDemand: fallbackItems.filter((x) => Boolean(x.investment)).slice(0, 24),
+        highDemand: fallbackItems
+          .filter((x) => Boolean((x as Partial<PropertyHomes>).investment))
+          .slice(0, 24),
       }
   if (debug) {
     const safeCounts = (g: Record<TopOffersGroup, PropertyHomes[]>) => ({

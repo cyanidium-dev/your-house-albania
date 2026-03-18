@@ -1,6 +1,8 @@
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
+import { PortableText } from '@portabletext/react';
+import type { PortableTextBlock } from '@portabletext/types';
 import {
     Accordion,
     AccordionContent,
@@ -10,7 +12,7 @@ import {
 
 export type FaqData = {
   title?: string;
-  items: { question: string; answer: string }[];
+  items: { question: string; answer: string | PortableTextBlock[] | null | undefined }[];
 } | null;
 
 type Props = {
@@ -60,7 +62,11 @@ const FAQ: React.FC<Props> = async ({ faqData }) => {
                                   <AccordionItem key={i} value={`item-${i}`}>
                                     <AccordionTrigger>{item.question}</AccordionTrigger>
                                     <AccordionContent>
-                                      {item.answer}
+                                      {typeof item.answer === 'string' ? (
+                                        item.answer
+                                      ) : Array.isArray(item.answer) ? (
+                                        <PortableText value={item.answer} />
+                                      ) : null}
                                     </AccordionContent>
                                   </AccordionItem>
                                 ))}

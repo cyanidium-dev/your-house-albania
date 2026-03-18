@@ -1,5 +1,6 @@
 import type { FaqData } from '@/components/Home/FAQs'
 import type { SeoTextData } from '@/components/Home/SeoText'
+import type { PortableTextBlock } from '@portabletext/types'
 import { resolveLocalizedContent, resolveLocalizedString } from '@/lib/sanity/localized'
 import type { LandingPageDoc, LandingSectionBase } from './types'
 
@@ -50,14 +51,14 @@ export function resolveFaqDataFromSection(
         typeof aRaw === 'object' && aRaw !== null && !Array.isArray(aRaw)
           ? resolveLocalizedString(aRaw as never, locale)
           : ''
-      const aRich = Array.isArray(aRaw) ? resolveLocalizedContent(aRaw as never, locale) : null
-      const answer = aRich && aRich.length ? aRich : aText
-      if (q || (typeof answer === 'string' ? answer : Array.isArray(answer) && answer.length)) {
+      const aRich = Array.isArray(aRaw) ? (resolveLocalizedContent(aRaw as never, locale) as PortableTextBlock[]) : null
+      const answer: string | PortableTextBlock[] = aRich && aRich.length ? aRich : aText
+      if (q || (typeof answer === 'string' ? answer : answer.length)) {
         return { question: q || '', answer }
       }
       return null
     })
-    .filter((x): x is { question: string; answer: string | unknown[] } => x !== null)
+    .filter((x): x is { question: string; answer: string | PortableTextBlock[] } => x !== null)
 
   return itemsResolved.length > 0
     ? {
