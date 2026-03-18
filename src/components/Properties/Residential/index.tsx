@@ -1,4 +1,4 @@
-import PropertyCard from '@/components/Home/Properties/Card/Card'
+import PropertyCard from '@/components/shared/property/PropertyCard'
 import { getProperties } from '@/data/properties'
 
 const ResidentialList: React.FC<{ locale: string }> = ({ locale }) => {

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Icon } from "@iconify/react";
-import PropertyCard from "./Card/Card";
+import PropertyCard from "@/components/shared/property/PropertyCard";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/properyHomes";
 import { useTranslations } from "next-intl";
@@ -19,11 +19,26 @@ export function TopOffersCarouselClient({
   locale: string;
   groups: Record<TopOffersGroup, PropertyHomes[]>;
 }) {
+  const debug = process.env.NODE_ENV === "development";
   const t = useTranslations("Home.topOffers");
   const [active, setActive] = React.useState<TopOffersGroup>("popular");
   const scrollerRef = React.useRef<HTMLDivElement>(null);
 
   const items = groups[active] ?? [];
+  if (debug) {
+    // Client-side log (browser console) to verify final rendered counts.
+    console.log("[Landing][TopOffersCarouselClient] render", {
+      locale,
+      active,
+      counts: {
+        popular: groups.popular?.length ?? null,
+        new: groups.new?.length ?? null,
+        highDemand: groups.highDemand?.length ?? null,
+      },
+      itemsCount: items.length,
+      sampleSlug: items[0]?.slug ?? null,
+    });
+  }
 
   React.useEffect(() => {
     // reset scroll when switching groups

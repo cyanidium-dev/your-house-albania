@@ -4,7 +4,7 @@ import * as React from "react";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
-import PropertyCard from "@/components/Home/Properties/Card/Card";
+import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/properyHomes";

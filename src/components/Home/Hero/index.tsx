@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { fetchCatalogFilterOptions } from '@/lib/sanity/client'
-import { HeroSearchBlock } from './HeroSearchBlock'
+import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'
 
 type HeroData = {
   shortLine?: string;
@@ -56,7 +56,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale,
               <p className='text-inherit text-lg mb-6'>{subtitle}</p>
             ) : null}
             <div className="mt-12 md:mt-16 flex justify-center">
-              <HeroSearchBlock
+              <HeroSearchWidget
                 locationOptions={locationOptions}
                 propertyTypeOptions={propertyTypeOptions}
               />

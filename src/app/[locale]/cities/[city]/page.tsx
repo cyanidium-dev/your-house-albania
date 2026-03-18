@@ -1,36 +1,29 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { CityLandingBreadcrumb } from "@/components/shared/CityLandingBreadcrumb";
+import { notFound } from "next/navigation";
+import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import { fetchCityLandingByCitySlug, fetchSiteSettings } from "@/lib/sanity/client";
+import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 
 type Props = {
   params: Promise<{ locale: string; city: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { city } = await params;
-  const cityTitle = decodeURIComponent(city).replace(/-/g, " ");
-  const t = await getTranslations("Cities");
-  return {
-    title: `${cityTitle} | ${t("title")}`,
-    description: t("cityDescription", { city: cityTitle }),
-  };
+  const { locale, city } = await params;
+  const citySlug = decodeURIComponent(city).toLowerCase();
+  const [landing, siteSettings] = await Promise.all([
+    fetchCityLandingByCitySlug(citySlug),
+    fetchSiteSettings(),
+  ]);
+  const seo = (landing as { seo?: unknown } | null)?.seo ?? null;
+  const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
+  return buildLandingMetadata(seo as never, siteDefaultSeo as never, locale);
 }
 
 export default async function CityLandingPage({ params }: Props) {
   const { locale, city } = await params;
   const citySlug = decodeURIComponent(city).toLowerCase();
-  const cityTitle = decodeURIComponent(city).replace(/-/g, " ");
-  return (
-    <section className="pt-44 pb-20">
-      <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-        <CityLandingBreadcrumb locale={locale} city={citySlug} />
-        <h1 className="text-4xl font-semibold text-dark dark:text-white mt-4">
-          {cityTitle}
-        </h1>
-        <p className="mt-4 text-dark/70 dark:text-white/70">
-          City landing page — Sanity content coming soon.
-        </p>
-      </div>
-    </section>
-  );
+  const landing = await fetchCityLandingByCitySlug(citySlug);
+  if (!landing) return notFound();
+  return <LandingRenderer locale={locale} landing={landing as never} />;
 }

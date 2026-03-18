@@ -862,6 +862,77 @@ export async function fetchCatalogSeoPageRoot(): Promise<{
   }
 }
 
+/**
+ * Fetch landingPage document for a city route `/[locale]/cities/[city]`.
+ * Returns null if not found or client not configured.
+ */
+export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[
+    _type == "landingPage" &&
+    pageType == "city" &&
+    (
+      linkedCity->slug.current == $citySlug ||
+      slug.current == $citySlug
+    )
+  ][0] {
+    _id,
+    _type,
+    pageType,
+    pageSections[],
+    seo
+  }`;
+  try {
+    return await client.fetch(query, { citySlug });
+  } catch (err) {
+    console.warn("[Sanity] fetchCityLandingByCitySlug failed:", err);
+    return null;
+  }
+}
+
+/**
+ * Fetch landingPage document for the homepage route `/[locale]`.
+ * Returns null if not found or client not configured.
+ */
+export async function fetchHomeLanding(): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[
+    _type == "landingPage" &&
+    (
+      _id == "landing-home" ||
+      pageType == "home" ||
+      slug.current == "home" ||
+      slug.current == "landing-home"
+    )
+  ][0] {
+    _id,
+    _type,
+    pageType,
+    pageSections[],
+    seo
+  }`;
+  try {
+    return await client.fetch(query);
+  } catch (err) {
+    console.warn("[Sanity] fetchHomeLanding failed:", err);
+    return null;
+  }
+}
+
 /** Fetch catalog SEO page for a city. Returns null if none or inactive. */
 export async function fetchCatalogSeoPageByCity(citySlug: string): Promise<{
   title?: unknown;

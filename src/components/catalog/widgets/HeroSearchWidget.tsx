@@ -22,7 +22,7 @@ const DEFAULT_RANGES_EUR: Record<DealTab | "any", { min: number; max: number }> 
   "short-term": { min: 50, max: 2_000 },
 };
 
-export function HeroSearchBlock({
+export function HeroSearchWidget({
   locationOptions,
   propertyTypeOptions,
 }: {
