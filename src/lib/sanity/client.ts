@@ -985,14 +985,11 @@ const blogAuthorProjection = `{
   name,
   active,
   role,
-  bio,
   "photo": photo{
     alt,
     asset->{url}
   },
-  email,
-  socialLinks,
-  seo
+  email
 }`;
 
 const blogCategoryListProjection = `{
@@ -1044,6 +1041,61 @@ const blogPropertyEmbedProjection = `{
   }
 }`;
 
+/** Content block projection for detail: dereferences posts and properties in inline blocks. */
+const blogDetailContentBlockProjection = `{
+  ...,
+  "posts": select(_type == "blogRelatedPostsBlock" => posts[]->{
+    _id,
+    "slug": slug.current,
+    title,
+    excerpt,
+    publishedAt,
+    coverImage{alt,caption,asset->{url}},
+    "categories": categories[]->{_id,"slug":slug.current,title},
+    "author": author->{_id,name,"photo":photo{alt,asset->{url}}},
+    authorName,
+    authorRole,
+    authorImage{asset->{url}}
+  }, null),
+  "properties": select(_type == "blogPropertyEmbedBlock" => properties[]->{
+    _id,
+    "slug": slug.current,
+    title,
+    shortDescription,
+    price,
+    currency,
+    area,
+    bedrooms,
+    bathrooms,
+    status,
+    "mainImageUrl": gallery[0].asset->url,
+    "galleryUrls": gallery[].asset->url,
+    "city": city->{_id,title,"slug":slug.current},
+    "district": district->{_id,title,"slug":slug.current,"citySlug":city->slug.current},
+    "type": type->{_id,title,"slug":slug.current},
+    "propertyType": propertyType->{_id,title,"slug":slug.current}
+  }, null),
+  asset->{url}
+}`;
+
+/** Minimal content projection for reading time only. No assets, no heavy refs. */
+const blogContentForReadingTimeProjection = `{
+  _type,
+  children[]{text},
+  text,
+  content[]{
+    _type,
+    children[]{text},
+    text,
+    items[]{answer[]{children[]{text}}, cells},
+    rows[]{cells}
+  },
+  items[]{answer[]{children[]{text}}, cells},
+  rows[]{cells},
+  "posts": select(_type == "blogRelatedPostsBlock" => posts[]->{excerpt, title}, null),
+  "properties": select(_type == "blogPropertyEmbedBlock" => properties[]->{title, shortDescription}, null)
+}`;
+
 const blogListingProjection = `{
   _id,
   _type,
@@ -1065,7 +1117,8 @@ const blogListingProjection = `{
   authorRole,
   authorImage{
     asset->{url}
-  }
+  },
+  "contentForReadingTime": coalesce(content.en, content.uk, content.ru, content.sq, content["it"], [])[]${blogContentForReadingTimeProjection}
 }`;
 
 /** Fetch published blog posts for listing. Uses publishedAt <= now(). */
@@ -1178,33 +1231,6 @@ export async function fetchBlogSettings(): Promise<unknown | null> {
 export async function fetchBlogPostBySlug(slug: string): Promise<unknown | null> {
   const client = getClient();
   if (!client) return null;
-  const relatedPostProjection = `{
-    _id,
-    "slug": slug.current,
-    title,
-    excerpt,
-    publishedAt,
-    coverImage{
-      alt,
-      caption,
-      asset->{url}
-    },
-    "categories": categories[]->${blogCategoryListProjection},
-    "author": author->${blogAuthorProjection},
-    authorName,
-    authorRole,
-    authorImage{
-      asset->{url}
-    }
-  }`;
-  const contentBlockProjection = () => `{
-    ...,
-    "posts": select(_type == "blogRelatedPostsBlock" => posts[]->${relatedPostProjection}, null),
-    "properties": select(_type == "blogPropertyEmbedBlock" => properties[]->${blogPropertyEmbedProjection}, null),
-    asset->{url},
-    alt,
-    caption
-  }`;
   const query = `*[_type == "blogPost" && slug.current == $slug && defined(publishedAt) && publishedAt <= now()][0]{
     _id,
     _type,
@@ -1219,22 +1245,49 @@ export async function fetchBlogPostBySlug(slug: string): Promise<unknown | null>
       caption,
       asset->{url}
     },
-    "categories": categories[]->${blogCategoryDetailProjection},
-    "author": author->${blogAuthorProjection},
+    "categories": categories[]->{_id,"slug":slug.current,title},
+    "author": author->{_id,"slug":slug.current,name,active,role,"photo":photo{alt,asset->{url}},email},
     authorName,
     authorRole,
     authorImage{
       asset->{url}
     },
     seo,
-    "relatedPosts": relatedPosts[]->${relatedPostProjection},
-    "properties": relatedProperties[]->${blogPropertyEmbedProjection},
-    content{
-      en: en[]${contentBlockProjection()},
-      uk: uk[]${contentBlockProjection()},
-      ru: ru[]${contentBlockProjection()},
-      sq: sq[]${contentBlockProjection()},
-      it: it[]${contentBlockProjection()}
+    "relatedPosts": relatedPosts[]->{
+      _id,
+      "slug": slug.current,
+      title,
+      excerpt,
+      publishedAt,
+      coverImage{alt,caption,asset->{url}},
+      "categories": categories[]->{_id,"slug":slug.current,title},
+      "author": author->{_id,name,"photo":photo{alt,asset->{url}}},
+      authorName,
+      authorRole,
+      authorImage{asset->{url}}
+    },
+    "properties": relatedProperties[]->{
+      _id,
+      "slug": slug.current,
+      title,
+      "description": shortDescription,
+      price,
+      currency,
+      area,
+      bedrooms,
+      bathrooms,
+      status,
+      "mainImageUrl": gallery[0].asset->url,
+      "galleryUrls": gallery[].asset->url,
+      "city": city->{_id,title,"slug":slug.current},
+      "district": district->{_id,title,"slug":slug.current,"citySlug":city->slug.current}
+    },
+    "content": {
+      "en": content.en[]${blogDetailContentBlockProjection},
+      "uk": content.uk[]${blogDetailContentBlockProjection},
+      "ru": content.ru[]${blogDetailContentBlockProjection},
+      "sq": content.sq[]${blogDetailContentBlockProjection},
+      "it": content.it[]${blogDetailContentBlockProjection}
     }
   }`;
   try {

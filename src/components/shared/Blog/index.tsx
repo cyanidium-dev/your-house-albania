@@ -4,8 +4,11 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { fetchBlogPostsPaginated } from "@/lib/sanity/client";
-import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
-import type { BlogListItem } from "@/lib/sanity/blogAdapter";
+import {
+  mapSanityBlogPostToList,
+  type BlogListItem,
+  type SanityListingPost,
+} from "@/lib/sanity/blogAdapter";
 
 type CmsCta = { href?: string; label?: string } | undefined;
 
@@ -21,17 +24,29 @@ const BlogSmall: React.FC<{
   const t = await getTranslations("Home.blog");
 
   const hasCmsPostsProp = posts !== undefined;
-  const cmsPosts: BlogListItem[] = hasCmsPostsProp
-    ? (posts ?? [])
-        .map((p) => mapSanityBlogPostToList(p as never, locale))
-        .filter((p) => p.slug)
-    : [];
+  let cmsPosts: BlogListItem[] = [];
+  let fetchedPosts: BlogListItem[] = [];
 
-  const fetchedPosts: BlogListItem[] = hasCmsPostsProp
-    ? []
-    : (await fetchBlogPostsPaginated({ page: 1, pageSize: 3 })).items.map(
-        (p) => mapSanityBlogPostToList(p, locale)
-      );
+  try {
+    cmsPosts = hasCmsPostsProp
+      ? (posts ?? [])
+          .map((p) => {
+            const post = p as SanityListingPost;
+            return mapSanityBlogPostToList(post, locale);
+          })
+          .filter((p) => p.slug)
+      : [];
+
+    fetchedPosts = hasCmsPostsProp
+      ? []
+      : (await fetchBlogPostsPaginated({ page: 1, pageSize: 3 })).items.map(
+          (p) => mapSanityBlogPostToList(p as SanityListingPost, locale)
+        );
+  } catch (err) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[BlogSmall] Blog data fetch failed, using empty list:", err);
+    }
+  }
 
   const finalPosts = (hasCmsPostsProp ? cmsPosts : fetchedPosts).slice(0, 3);
 

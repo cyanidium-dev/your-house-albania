@@ -1,5 +1,6 @@
 import type { PropertyHomes } from '@/types/properyHomes';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
+import { computeReadingTime } from '@/lib/blog/readingTime';
 
 /** Shape for blog listing card (BlogCard). */
 export type BlogListItem = {
@@ -9,6 +10,7 @@ export type BlogListItem = {
   coverImageUrl: string;
   publishedAt: string;
   categoryLabel: string;
+  readingTimeMinutes?: number;
 };
 
 /** Shape for related post card. */
@@ -39,7 +41,8 @@ export type BlogDetailData = {
   properties: PropertyHomes[];
 };
 
-type SanityListingPost = {
+/** Raw Sanity blog post shape for listing. */
+export type SanityListingPost = {
   slug?: string;
   title?: unknown;
   subtitle?: unknown;
@@ -51,6 +54,7 @@ type SanityListingPost = {
   author?: { name?: string; photo?: { asset?: { url?: string } } };
   authorName?: string;
   authorImage?: { asset?: { url?: string } };
+  contentForReadingTime?: unknown[];
 };
 
 type SanityDetailPost = SanityListingPost & {
@@ -71,6 +75,7 @@ type SanityDetailPost = SanityListingPost & {
     city?: { title?: unknown; slug?: string };
     district?: { title?: unknown; slug?: string; citySlug?: string };
     type?: { title?: unknown; slug?: string };
+    propertyType?: { title?: unknown; slug?: string };
   }>;
 };
 
@@ -107,6 +112,8 @@ export function mapSanityBlogPostToList(
   if (!post) {
     return { slug: '', title: '', excerpt: '', coverImageUrl: '', publishedAt: '', categoryLabel: '' };
   }
+  const contentBlocks = Array.isArray(post.contentForReadingTime) ? post.contentForReadingTime : [];
+  const readingTimeMinutes = contentBlocks.length > 0 ? computeReadingTime(contentBlocks) : undefined;
   return {
     slug: post.slug ?? '',
     title: resolveLocalizedString(post.title as never, locale) || (typeof post.title === 'string' ? post.title : '') || '',
@@ -114,6 +121,7 @@ export function mapSanityBlogPostToList(
     coverImageUrl: getCoverImageUrl(post.coverImage),
     publishedAt: post.publishedAt ?? '',
     categoryLabel: getCategoryLabel(post, locale),
+    ...(readingTimeMinutes !== undefined && readingTimeMinutes > 0 && { readingTimeMinutes }),
   };
 }
 
@@ -145,8 +153,8 @@ export function mapBlogPropertyEmbedToCard(
     price: p.price,
     currency: p.currency,
     status: p.status,
-    propertyType: p.type?.title
-      ? (resolveLocalizedString(p.type.title as never, locale) || String(p.type.title))
+    propertyType: (p.propertyType ?? p.type)?.title
+      ? (resolveLocalizedString((p.propertyType ?? p.type)!.title as never, locale) || String((p.propertyType ?? p.type)!.title))
       : undefined,
     city: cityTitle || undefined,
     district: districtTitle || undefined,

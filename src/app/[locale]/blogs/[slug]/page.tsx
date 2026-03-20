@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
@@ -9,10 +8,14 @@ import { fetchBlogPostBySlug, fetchSiteSettings } from "@/lib/sanity/client";
 import { mapSanityBlogPostToDetail } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { BlogArticleContent } from "@/components/Blog/BlogArticleContent";
+import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
 import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
+import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { formatDateLocale } from "@/lib/date/formatLocale";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -53,18 +56,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Post({ params }: Props) {
   const { locale, slug } = await params;
-  const post = await fetchBlogPostBySlug(slug);
+  const [post, siteSettings, baseUrl] = await Promise.all([
+    fetchBlogPostBySlug(slug),
+    fetchSiteSettings(),
+    getBaseUrl(),
+  ]);
   if (!post) notFound();
 
   const detail = mapSanityBlogPostToDetail(post, locale);
   if (!detail) notFound();
 
+  const rawSite = siteSettings as { siteName?: unknown; logo?: { asset?: { url?: string } } } | null;
+  const siteName = rawSite?.siteName
+    ? (resolveLocalizedString(rawSite.siteName as never, locale) || (typeof rawSite.siteName === "string" ? rawSite.siteName : "") || "Site")
+    : "Site";
+  const siteLogoUrl = rawSite?.logo?.asset?.url ?? undefined;
+
   const readingTime = computeReadingTime(detail.contentBlocks);
   const t = await getTranslations("Shared");
+  const tBlogCard = await getTranslations("Shared.blogCard");
   const primaryCategory = detail.categories[0];
 
   return (
     <>
+      <BlogArticleSchema
+        detail={detail}
+        baseUrl={baseUrl}
+        locale={locale}
+        siteName={siteName}
+        siteLogoUrl={siteLogoUrl}
+      />
       <section className="relative !pt-44 pb-0!">
         <div className="container max-w-8xl mx-auto md:px-0 px-4">
           <div className="mb-4">
@@ -114,12 +135,16 @@ export default async function Post({ params }: Props) {
               <div className="flex items-center gap-4">
                 <Icon icon="ph:clock" width={20} height={20} />
                 <span className="text-base text-dark font-medium dark:text-white">
-                  {format(new Date(detail.publishedAt || 0), "MMM dd, yyyy")}
+                  {formatDateLocale(
+                    new Date(detail.publishedAt || 0),
+                    "MMM dd, yyyy",
+                    locale
+                  )}
                 </span>
               </div>
               {readingTime > 0 && (
                 <span className="text-base text-dark/70 dark:text-white/70">
-                  {readingTime} min read
+                  {tBlogCard("minRead", { count: readingTime })}
                 </span>
               )}
               {detail.categoryLabel && (
@@ -146,48 +171,54 @@ export default async function Post({ params }: Props) {
           </div>
         )}
       </section>
-      <section className="pt-12!">
-        <div className="container max-w-8xl mx-auto px-4">
-          <div className="-mx-4 flex flex-wrap justify-center">
-            <div className="xl:pr-10">
+      <section className="pt-12 pb-16">
+        <div className="container max-w-8xl mx-auto px-4 md:px-5 2xl:px-0">
+          <div
+            className={
+              detail.relatedPosts.length > 0 || detail.properties.length > 0
+                ? "grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16"
+                : "max-w-3xl mx-auto"
+            }
+          >
+            <div className="min-w-0">
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
             </div>
+            {(detail.relatedPosts.length > 0 || detail.properties.length > 0) && (
+              <aside className="lg:sticky lg:top-24 lg:self-start space-y-10">
+                {detail.relatedPosts.length > 0 && (
+                  <div>
+                    <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
+                      Related articles
+                    </h3>
+                    <div className="flex flex-col gap-6">
+                      {detail.relatedPosts.map((p) => (
+                        <BlogCardClient key={p.slug} blog={p} locale={locale} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {detail.properties.length > 0 && (
+                  <div>
+                    <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
+                      Related properties
+                    </h3>
+                    <div className="flex flex-col gap-6">
+                      {detail.properties.map((item) => (
+                        <PropertyCard
+                          key={item.slug}
+                          item={item}
+                          locale={locale}
+                          view="large"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </aside>
+            )}
           </div>
         </div>
       </section>
-      {detail.relatedPosts.length > 0 && (
-        <section className="pt-12 pb-16">
-          <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-            <h3 className="text-dark dark:text-white text-xl font-semibold mb-8">
-              Related articles
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {detail.relatedPosts.map((p) => (
-                <BlogCardClient key={p.slug} blog={p} locale={locale} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-      {detail.properties.length > 0 && (
-        <section className="pt-8 pb-16">
-          <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-            <h3 className="text-dark dark:text-white text-xl font-semibold mb-8">
-              Related properties
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {detail.properties.map((item) => (
-                <PropertyCard
-                  key={item.slug}
-                  item={item}
-                  locale={locale}
-                  view="large"
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </>
   );
 }

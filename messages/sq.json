@@ -137,7 +137,12 @@
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
-      "ariaLabel": "Shiko artikullin e blogut"
+      "ariaLabel": "Shiko artikullin e blogut",
+      "readMore": "Lexo më shumë",
+      "minRead": "{count} min lexim"
+    },
+    "blogCta": {
+      "learnMore": "Mëso më shumë"
     },
     "goBack": "Kthehu"
   },

@@ -24,22 +24,36 @@ export function buildBlogMetadata(
   siteDefaultSeo: SiteDefaultSeo | undefined,
   locale: string,
   fallbackTitle?: string,
-  fallbackDescription?: string
+  fallbackDescription?: string,
+  categoryLabel?: string
 ): Metadata {
-  const title =
+  let title =
     resolveLocalizedString(blogSeo?.metaTitle as never, locale) ||
     resolveLocalizedString(siteDefaultSeo?.metaTitle as never, locale) ||
     fallbackTitle ||
     'Blog';
 
-  const description =
+  let description =
     resolveLocalizedString(blogSeo?.metaDescription as never, locale) ||
     resolveLocalizedString(siteDefaultSeo?.metaDescription as never, locale) ||
     fallbackDescription ||
     '';
 
-  const ogTitle = resolveLocalizedString(blogSeo?.ogTitle as never, locale) || title;
-  const ogDescription = resolveLocalizedString(blogSeo?.ogDescription as never, locale) || description;
+  if (categoryLabel && categoryLabel.trim()) {
+    title = `${title} — ${categoryLabel.trim()}`;
+    description = description
+      ? `${description} ${categoryLabel.trim()}`
+      : categoryLabel.trim();
+  }
+
+  const ogTitle =
+    categoryLabel && categoryLabel.trim()
+      ? title
+      : resolveLocalizedString(blogSeo?.ogTitle as never, locale) || title;
+  const ogDescription =
+    categoryLabel && categoryLabel.trim()
+      ? description
+      : resolveLocalizedString(blogSeo?.ogDescription as never, locale) || description;
 
   const ogImageUrl = (blogSeo?.ogImage as { asset?: { url?: string } })?.asset?.url;
   const ogImageAbsolute = ogImageUrl && ogImageUrl.startsWith('http') ? ogImageUrl : undefined;

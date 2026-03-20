@@ -2,12 +2,14 @@
 
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { BlogCardClient } from "./BlogCardClient";
+import { BlogContentImage } from "./BlogContentImage";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { mapBlogPropertyEmbedToCard } from "@/lib/sanity/blogAdapter";
+import { resolveLocalizedString, resolveLocalizedContent } from "@/lib/sanity/localized";
 import {
   Accordion,
   AccordionContent,
@@ -20,7 +22,29 @@ type BlogArticleContentProps = {
   locale: string;
 };
 
-function createBlogComponents(locale: string): PortableTextComponents {
+/**
+ * Resolves CTA href for blogCtaBlock.
+ * Preserves as-is: http(s)://, mailto:, tel:, #anchor.
+ * Prefixes internal paths with locale: /properties -> /{locale}/properties.
+ * Empty/invalid -> "#".
+ */
+function resolveCtaHref(
+  raw: string | null | undefined,
+  locale: string
+): string {
+  const s = typeof raw === "string" ? raw.trim() : "";
+  if (!s) return "#";
+  if (s.startsWith("http://") || s.startsWith("https://")) return s;
+  if (s.startsWith("mailto:")) return s;
+  if (s.startsWith("tel:")) return s;
+  if (s.startsWith("#")) return s;
+  return s.startsWith("/") ? `/${locale}${s}` : `/${locale}/${s}`;
+}
+
+function createBlogComponents(
+  locale: string,
+  learnMoreFallback: string
+): PortableTextComponents {
   const blockComponents: PortableTextComponents["block"] = {
     h1: ({ children }) => (
       <h2 className="text-dark dark:text-white text-2xl font-semibold mt-10 first:mt-0">
@@ -81,35 +105,20 @@ function createBlogComponents(locale: string): PortableTextComponents {
       },
     },
     types: {
-      image: ({ value }) => {
-        const url = (value as { asset?: { url?: string } })?.asset?.url;
-        const alt = (value as { alt?: string })?.alt ?? "";
-        const caption = (value as { caption?: string })?.caption;
-        if (!url || typeof url !== "string") return null;
-        return (
-          <figure className="my-8">
-            <div className="overflow-hidden rounded-2xl">
-              <Image
-                src={url}
-                alt={alt}
-                width={1170}
-                height={600}
-                className="w-full h-auto object-cover"
-                unoptimized={url.startsWith("http")}
-              />
-            </div>
-            {caption && (
-              <figcaption className="mt-2 text-sm text-dark/60 dark:text-white/60 text-center">
-                {caption}
-              </figcaption>
-            )}
-          </figure>
-        );
-      },
+      image: ({ value }) => <BlogContentImage value={value as { asset?: { url?: string }; alt?: string; caption?: string }} />,
       blogCtaBlock: ({ value }) => {
-        const v = value as { href?: string; label?: Record<string, string> };
-        const href = v?.href ?? "#";
-        const label = v?.label?.[locale] ?? v?.label?.en ?? "Learn more";
+        const v = value as {
+          href?: string;
+          label?: Record<string, string>;
+          cta?: { href?: string; label?: Record<string, string> };
+        };
+        const rawHref = v?.href ?? v?.cta?.href;
+        const href = resolveCtaHref(rawHref, locale);
+        const labelObj = v?.label ?? v?.cta?.label;
+        const label =
+          resolveLocalizedString(labelObj as never, locale) ||
+          (typeof labelObj === "string" ? labelObj : "") ||
+          learnMoreFallback;
         const variant = (v as { variant?: string })?.variant ?? "primary";
         const baseClass =
           "inline-flex items-center justify-center rounded-full font-semibold transition-colors py-3 px-6";
@@ -244,8 +253,21 @@ function createBlogComponents(locale: string): PortableTextComponents {
             <Accordion type="single" collapsible className="w-full">
               {items.map((item, i) => {
                 const q = item.question?.[locale] ?? item.question?.en ?? "";
-                const answer = item.answer;
-                const answerBlocks = Array.isArray(answer) ? answer : [];
+                const aRaw = item.answer;
+                const resolvedBlocks = resolveLocalizedContent(
+                  Array.isArray(aRaw) || (typeof aRaw === "object" && aRaw !== null) ? aRaw : null,
+                  locale
+                );
+                const answerBlocks =
+                  Array.isArray(resolvedBlocks) && resolvedBlocks.length > 0
+                    ? (resolvedBlocks as PortableTextBlock[])
+                    : [];
+                const answerString =
+                  typeof aRaw === "string"
+                    ? aRaw
+                    : typeof aRaw === "object" && aRaw !== null && !Array.isArray(aRaw)
+                      ? resolveLocalizedString(aRaw as never, locale)
+                      : "";
                 return (
                   <AccordionItem key={i} value={`faq-${i}`}>
                     <AccordionTrigger className="text-left text-dark dark:text-white">
@@ -254,7 +276,7 @@ function createBlogComponents(locale: string): PortableTextComponents {
                     <AccordionContent>
                       {answerBlocks.length > 0 ? (
                         <PortableText
-                          value={answerBlocks as PortableTextBlock[]}
+                          value={answerBlocks}
                           components={{
                             block: blockComponents,
                             list: { bullet: ({ children }) => <ul className="list-none pl-0">{children}</ul> },
@@ -263,7 +285,7 @@ function createBlogComponents(locale: string): PortableTextComponents {
                         />
                       ) : (
                         <span className="text-dark/75 dark:text-white/75">
-                          {typeof answer === "string" ? answer : ""}
+                          {answerString}
                         </span>
                       )}
                     </AccordionContent>
@@ -314,8 +336,9 @@ function createBlogComponents(locale: string): PortableTextComponents {
 }
 
 export function BlogArticleContent({ content, locale }: BlogArticleContentProps) {
+  const t = useTranslations("Shared.blogCta");
   if (!Array.isArray(content) || content.length === 0) return null;
-  const components = createBlogComponents(locale);
+  const components = createBlogComponents(locale, t("learnMore"));
   return (
     <div className="blog-details">
       <PortableText value={content as PortableTextBlock[]} components={components} />

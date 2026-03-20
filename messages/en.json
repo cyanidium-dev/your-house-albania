@@ -137,7 +137,12 @@
     },
     "blogCard": {
       "imageAlt": "Blog post image",
-      "ariaLabel": "View blog post"
+      "ariaLabel": "View blog post",
+      "readMore": "Read more",
+      "minRead": "{count} min read"
+    },
+    "blogCta": {
+      "learnMore": "Learn more"
     },
     "goBack": "Go Back"
   },

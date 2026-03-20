@@ -9,7 +9,7 @@ import {
   fetchBlogSettings,
   fetchSiteSettings,
 } from "@/lib/sanity/client";
-import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
+import { mapSanityBlogPostToList, type SanityListingPost } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 
@@ -20,21 +20,51 @@ type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  const [blogSettings, siteSettings] = await Promise.all([
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  const [{ locale }, search] = await Promise.all([params, searchParams]);
+  const categoryParam =
+    typeof search.category === "string" ? search.category.trim() : undefined;
+
+  const [blogSettings, siteSettings, categoriesRaw] = await Promise.all([
     fetchBlogSettings(),
     fetchSiteSettings(),
+    fetchBlogCategories(),
   ]);
+
   const blogSeo = (blogSettings as { seo?: unknown })?.seo;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo;
   const t = await getTranslations("Listing.blogs");
+
+  const categories = Array.isArray(categoriesRaw)
+    ? categoriesRaw
+        .filter((c) => c && typeof (c as { slug?: string }).slug === "string")
+        .map((c) => {
+          const cat = c as { slug: string; title?: unknown };
+          return {
+            slug: cat.slug,
+            label: resolveLocalizedString(cat.title as never, locale) || cat.slug,
+          };
+        })
+    : [];
+
+  const validCategory =
+    categoryParam && categories.some((c) => c.slug === categoryParam)
+      ? categoryParam
+      : undefined;
+  const categoryLabel = validCategory
+    ? categories.find((c) => c.slug === validCategory)?.label
+    : undefined;
+
   return buildBlogMetadata(
     blogSeo as never,
     siteDefaultSeo as never,
     locale,
     t("title"),
-    t("description")
+    t("description"),
+    categoryLabel
   );
 }
 
@@ -85,7 +115,7 @@ export default async function Blog({ params, searchParams }: Props) {
     }).then((r) => r.items);
 
   const posts = (safePage === pageNum ? items : finalItems).map((p) =>
-    mapSanityBlogPostToList(p, locale)
+    mapSanityBlogPostToList(p as SanityListingPost, locale)
   );
 
   const t = await getTranslations("Listing.blogs");

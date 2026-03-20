@@ -58,6 +58,8 @@ export default function BlogList({
                 blog={{
                   title: blog.title,
                   slug: blog.slug,
+                  excerpt: blog.excerpt,
+                  readingTimeMinutes: blog.readingTimeMinutes,
                   coverImageUrl: blog.coverImageUrl,
                   publishedAt: blog.publishedAt,
                   categoryLabel: blog.categoryLabel,
@@ -70,6 +72,7 @@ export default function BlogList({
         {totalPages > 1 && (
           <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
         )}
+        <div className="h-16 md:h-20" aria-hidden />
       </div>
     </section>
   );
