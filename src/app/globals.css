@@ -104,7 +104,7 @@ html {
 }
 
 .blog-details ul li {
-  @apply mb-0 relative pl-4 text-base leading-[1.2] before:absolute before:w-1 before:h-1 before:rounded-full before:bg-dark dark:before:bg-white/60 before:top-2 before:left-0;
+  @apply mb-0 pl-4 text-base leading-[1.2];
 }
 
 .blog-details ol {
