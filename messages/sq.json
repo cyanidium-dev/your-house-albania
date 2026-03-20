@@ -182,7 +182,8 @@
     "home": "Kryefaqja",
     "properties": "Prona",
     "favorites": "Të preferuarat",
-    "cities": "Qytetet"
+    "cities": "Qytetet",
+    "blog": "Blog"
   },
   "Catalog": {
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",

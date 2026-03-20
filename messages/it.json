@@ -182,7 +182,8 @@
     "home": "Home",
     "properties": "Immobili",
     "favorites": "Preferiti",
-    "cities": "Città"
+    "cities": "Città",
+    "blog": "Blog"
   },
   "Catalog": {
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",

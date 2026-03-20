@@ -182,7 +182,8 @@
     "home": "Главная",
     "properties": "Объекты",
     "favorites": "Избранное",
-    "cities": "Города"
+    "cities": "Города",
+    "blog": "Блог"
   },
   "Catalog": {
     "heroIntroFallback": "Просмотрите нашу подборку объектов.",

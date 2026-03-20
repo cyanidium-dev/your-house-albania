@@ -1,18 +1,34 @@
 import React from "react";
 import Image from "next/image";
-import { Blog } from "@/types/blog";
 import { format } from "date-fns";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-async function BlogCard({ blog, locale }: { blog: Blog; locale: string }) {
-    const { title, coverImage, date, slug, tag } = blog;
+/** Supports both legacy Blog shape and Sanity BlogListItem. */
+type BlogCardInput = {
+  title?: string;
+  slug?: string;
+  coverImage?: string;
+  coverImageUrl?: string;
+  date?: string;
+  publishedAt?: string;
+  tag?: string;
+  categoryLabel?: string;
+};
+
+async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string }) {
+    const title = blog.title ?? '';
+    const slug = blog.slug ?? '';
+    const coverImage = blog.coverImage ?? blog.coverImageUrl ?? '';
+    const date = blog.date ?? blog.publishedAt ?? '';
+    const tag = blog.tag ?? blog.categoryLabel ?? '';
     const t = await getTranslations('Shared.blogCard');
+    if (!slug) return null;
     return (
         <Link href={`/${locale}/blogs/${slug}`} aria-label={t('ariaLabel')} className="gap-4 group">
             <div className="overflow-hidden rounded-2xl flex-shrink-0">
                 <Image
-                    src={coverImage!}
+                    src={coverImage || '/images/placeholder.jpg'}
                     alt={t('imageAlt')}
                     className="transition group-hover:scale-110"
                     width={190}

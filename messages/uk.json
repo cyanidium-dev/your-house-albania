@@ -182,7 +182,8 @@
     "home": "Головна",
     "properties": "Об'єкти",
     "favorites": "Обране",
-    "cities": "Міста"
+    "cities": "Міста",
+    "blog": "Блог"
   },
   "Catalog": {
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
