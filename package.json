@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "clean:next": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\"",
+    "dev": "npm run clean:next && next dev",
+    "dev:turbopack": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -23,6 +25,7 @@
     "embla-carousel-react": "^8.5.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.479.0",
+    "maplibre-gl": "^5.20.2",
     "next": "15.2.8",
     "next-auth": "^4.24.11",
     "next-intl": "^4.8.3",

@@ -5,14 +5,40 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { fetchBlogPostsPaginated } from "@/lib/sanity/client";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
+import type { BlogListItem } from "@/lib/sanity/blogAdapter";
 
-const BlogSmall: React.FC<{ locale: string }> = async ({ locale }) => {
+type CmsCta = { href?: string; label?: string } | undefined;
+
+const BlogSmall: React.FC<{
+  locale: string;
+  posts?: unknown[] | undefined;
+  title?: string | undefined;
+  subtitle?: string | undefined;
+  cta?: CmsCta;
+  mode?: unknown;
+  manualArticleTitles?: unknown;
+}> = async ({ locale, posts, title, subtitle, cta }) => {
   const t = await getTranslations("Home.blog");
-  const { items } = await fetchBlogPostsPaginated({
-    page: 1,
-    pageSize: 3,
-  });
-  const posts = items.map((p) => mapSanityBlogPostToList(p, locale));
+
+  const hasCmsPostsProp = posts !== undefined;
+  const cmsPosts: BlogListItem[] = hasCmsPostsProp
+    ? (posts ?? [])
+        .map((p) => mapSanityBlogPostToList(p as never, locale))
+        .filter((p) => p.slug)
+    : [];
+
+  const fetchedPosts: BlogListItem[] = hasCmsPostsProp
+    ? []
+    : (await fetchBlogPostsPaginated({ page: 1, pageSize: 3 })).items.map(
+        (p) => mapSanityBlogPostToList(p, locale)
+      );
+
+  const finalPosts = (hasCmsPostsProp ? cmsPosts : fetchedPosts).slice(0, 3);
+
+  const headerTitle = title?.trim() ? title : t("title");
+  const headerDescription = subtitle?.trim() ? subtitle : t("description");
+  const ctaHref = cta?.href || `/${locale}/blogs`;
+  const ctaLabel = cta?.label || t("readAllArticles");
 
   return (
     <section className="py-16 md:py-24">
@@ -28,22 +54,22 @@ const BlogSmall: React.FC<{ locale: string }> = async ({ locale }) => {
               {t("badge")}
             </p>
             <h2 className="lg:text-52 text-40 font-medium dark:text-white">
-              {t("title")}
+              {headerTitle}
             </h2>
             <p className="text-dark/50 dark:text-white/50 text-xm">
-              {t("description")}
+              {headerDescription}
             </p>
           </div>
           <Link
-            href={`/${locale}/blogs`}
+            href={ctaHref}
             className="bg-dark dark:bg-white text-white dark:text-dark py-4 px-8 rounded-full hover:bg-primary duration-300"
             aria-label="Read all blog articles"
           >
-            {t("readAllArticles")}
+            {ctaLabel}
           </Link>
         </div>
         <div className="grid sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-12">
-          {posts.map((blog) => (
+          {finalPosts.map((blog) => (
             <div key={blog.slug || blog.title} className="w-full">
               <BlogCard
                 blog={{

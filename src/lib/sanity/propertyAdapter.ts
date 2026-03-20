@@ -90,6 +90,8 @@ type SanityProperty = {
   status?: string;
   featured?: boolean;
   investment?: string | boolean;
+  coordinatesLat?: number | null;
+  coordinatesLng?: number | null;
   city?: {
     title?: unknown;
     slug?: string;
@@ -123,6 +125,11 @@ export function mapSanityPropertyToCard(
     | undefined;
   const localizedDescription = resolveLocalizedString(rawDescription as never, locale);
   const rate = String(p.price ?? 0);
+  const lat =
+    typeof p.coordinatesLat === 'number' && Number.isFinite(p.coordinatesLat) ? p.coordinatesLat : undefined
+  const lng =
+    typeof p.coordinatesLng === 'number' && Number.isFinite(p.coordinatesLng) ? p.coordinatesLng : undefined
+
   return {
     name: resolveLocalizedString(p.title as never, locale) || (p.title as string) || '—',
     slug: p.slug ?? '',
@@ -148,6 +155,7 @@ export function mapSanityPropertyToCard(
     district: districtTitle || undefined,
     districtSlug: p.district?.slug,
     teaser: localizedDescription || undefined,
+    coordinates: lat !== undefined || lng !== undefined ? { lat, lng } : undefined,
   };
 }
 
@@ -170,6 +178,8 @@ export function mapCatalogPropertyToCard(
       title: p.title,
       slug: p.slug,
       description: p.description,
+      coordinatesLat: p.coordinatesLat ?? null,
+      coordinatesLng: p.coordinatesLng ?? null,
       price: p.price,
       currency: p.currency,
       area: p.area,

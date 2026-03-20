@@ -24,6 +24,9 @@ export type PropertyHomes = {
   /** Short teaser/description text for list view. */
   teaser?: string
 
+  /** Optional map coordinates (Sanity `coordinates.lat/lng`). */
+  coordinates?: { lat?: number; lng?: number } | null
+
   /** Optional internal: used to enable full-card link overlay. */
   _href?: string
 }
