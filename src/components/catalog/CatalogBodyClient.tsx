@@ -318,12 +318,6 @@ export function CatalogBodyClient({
                   if (!item.slug) return
                   cardRefs.current[item.slug] = el
                 }}
-                onPointerDownCapture={() => {
-                  // List click selection should not auto-scroll; keep normal scrolling behavior.
-                  shouldScrollToActiveRef.current = false
-                  setActiveSlug(item.slug)
-                  setPreviewSlug(null)
-                }}
               >
                 <PropertyCard item={item} locale={locale} view={viewMode} />
               </div>

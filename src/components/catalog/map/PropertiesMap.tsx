@@ -318,7 +318,9 @@ export function PropertiesMap({
       style: OSM_DETAILED_STYLE,
       center: [initialCenter.lng, initialCenter.lat],
       zoom: 6.5,
+      attributionControl: false,
     })
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
 
     mapRef.current = map
 
@@ -555,13 +557,6 @@ export function PropertiesMap({
     if (!ready || !mapRef.current) return
     const map = mapRef.current
 
-    const onClick = (e: maplibregl.MapLayerMouseEvent) => {
-      const f = e.features?.[0]
-      const slug = (f?.properties as any)?.slug as string | undefined
-      if (!slug) return
-      onActiveSlugChange(slug)
-    }
-
     // Cluster click: zoom in.
     const onClusterClick = (e: maplibregl.MapLayerMouseEvent) => {
       const f = e.features?.[0]
@@ -600,7 +595,16 @@ export function PropertiesMap({
     <div
       className={cn(
         'w-full relative rounded-2xl overflow-hidden border border-dark/10 dark:border-white/20',
-        'bg-white dark:bg-black'
+        'bg-white dark:bg-black',
+        '[&_.maplibregl-ctrl-bottom-right]:right-1 [&_.maplibregl-ctrl-bottom-right]:bottom-1',
+        '[&_.maplibregl-ctrl.maplibregl-ctrl-attrib]:m-0',
+        '[&_.maplibregl-ctrl-attrib]:rounded-md [&_.maplibregl-ctrl-attrib]:border [&_.maplibregl-ctrl-attrib]:border-black/10 dark:[&_.maplibregl-ctrl-attrib]:border-white/20',
+        '[&_.maplibregl-ctrl-attrib]:bg-white/70 dark:[&_.maplibregl-ctrl-attrib]:bg-black/60',
+        '[&_.maplibregl-ctrl-attrib]:backdrop-blur-[1px]',
+        '[&_.maplibregl-ctrl-attrib]:px-1.5 [&_.maplibregl-ctrl-attrib]:py-0.5',
+        '[&_.maplibregl-ctrl-attrib]:text-[10px] [&_.maplibregl-ctrl-attrib]:leading-tight',
+        '[&_.maplibregl-ctrl-attrib-button]:text-[10px] [&_.maplibregl-ctrl-attrib-button]:leading-none',
+        '[&_.maplibregl-ctrl-attrib.maplibregl-compact-show]:p-0'
       )}
     >
       <div ref={containerRef} className={cn('w-full relative overflow-hidden', mapHeightClassName)} />
