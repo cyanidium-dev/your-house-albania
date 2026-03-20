@@ -507,6 +507,9 @@ export type CatalogProperty = {
   slug?: string;
   /** Short textual teaser/description for list cards. */
   description?: unknown;
+  /** Source coordinates in Studio (flat fields). */
+  coordinatesLat?: number | null;
+  coordinatesLng?: number | null;
   price?: number;
   currency?: string;
   area?: number;
@@ -623,6 +626,8 @@ export async function fetchCatalogProperties(
     status,
     featured,
     investment,
+    coordinatesLat,
+    coordinatesLng,
     "city": city-> {
       _id,
       title,
