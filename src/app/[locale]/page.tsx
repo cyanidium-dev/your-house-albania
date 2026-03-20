@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import HeroSub from "@/components/shared/HeroSub";
+import BlogSmall from "@/components/shared/Blog";
 import {
   fetchHomeLanding,
   fetchSiteSettings,
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -30,6 +32,18 @@ export default async function Home({ params }: Props) {
   }
 
   const landing = await fetchHomeLanding();
-  if (!landing) return notFound();
+  if (!landing) {
+    const t = await getTranslations("Home.blog");
+    return (
+      <main>
+        <HeroSub
+          title={t("title")}
+          description={t("description")}
+          badge={t("badge")}
+        />
+        <BlogSmall locale={locale} />
+      </main>
+    );
+  }
   return <LandingRenderer locale={locale} landing={landing as never} />;
 }

@@ -137,7 +137,16 @@
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",
-      "ariaLabel": "Переглянути статтю блогу"
+      "ariaLabel": "Переглянути статтю блогу",
+      "readMore": "Читати далі",
+      "minRead": "{count} хв читання"
+    },
+    "blogCta": {
+      "learnMore": "Дізнатися більше"
+    },
+    "blog": {
+      "relatedArticles": "Схожі статті",
+      "relatedProperties": "Схожі об'єкти"
     },
     "goBack": "Назад"
   },
@@ -182,7 +191,8 @@
     "home": "Головна",
     "properties": "Об'єкти",
     "favorites": "Обране",
-    "cities": "Міста"
+    "cities": "Міста",
+    "blog": "Блог"
   },
   "Catalog": {
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",

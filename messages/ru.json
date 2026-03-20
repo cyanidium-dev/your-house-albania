@@ -137,7 +137,16 @@
     },
     "blogCard": {
       "imageAlt": "Изображение статьи блога",
-      "ariaLabel": "Просмотреть статью блога"
+      "ariaLabel": "Просмотреть статью блога",
+      "readMore": "Читать далее",
+      "minRead": "{count} мин чтения"
+    },
+    "blogCta": {
+      "learnMore": "Узнать больше"
+    },
+    "blog": {
+      "relatedArticles": "Похожие статьи",
+      "relatedProperties": "Похожие объекты"
     },
     "goBack": "Назад"
   },
@@ -182,7 +191,8 @@
     "home": "Главная",
     "properties": "Объекты",
     "favorites": "Избранное",
-    "cities": "Города"
+    "cities": "Города",
+    "blog": "Блог"
   },
   "Catalog": {
     "heroIntroFallback": "Просмотрите нашу подборку объектов.",

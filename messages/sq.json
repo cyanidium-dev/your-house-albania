@@ -137,7 +137,16 @@
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
-      "ariaLabel": "Shiko artikullin e blogut"
+      "ariaLabel": "Shiko artikullin e blogut",
+      "readMore": "Lexo më shumë",
+      "minRead": "{count} min lexim"
+    },
+    "blogCta": {
+      "learnMore": "Mëso më shumë"
+    },
+    "blog": {
+      "relatedArticles": "Artikuj të ngjashëm",
+      "relatedProperties": "Prona të ngjashme"
     },
     "goBack": "Kthehu"
   },
@@ -182,7 +191,8 @@
     "home": "Kryefaqja",
     "properties": "Prona",
     "favorites": "Të preferuarat",
-    "cities": "Qytetet"
+    "cities": "Qytetet",
+    "blog": "Blog"
   },
   "Catalog": {
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",

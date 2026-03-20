@@ -137,7 +137,16 @@
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
-      "ariaLabel": "Visualizza articolo blog"
+      "ariaLabel": "Visualizza articolo blog",
+      "readMore": "Leggi di più",
+      "minRead": "{count} min di lettura"
+    },
+    "blogCta": {
+      "learnMore": "Scopri di più"
+    },
+    "blog": {
+      "relatedArticles": "Articoli correlati",
+      "relatedProperties": "Immobili correlati"
     },
     "goBack": "Indietro"
   },
@@ -182,7 +191,8 @@
     "home": "Home",
     "properties": "Immobili",
     "favorites": "Preferiti",
-    "cities": "Città"
+    "cities": "Città",
+    "blog": "Blog"
   },
   "Catalog": {
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",

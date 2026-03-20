@@ -137,7 +137,16 @@
     },
     "blogCard": {
       "imageAlt": "Blog post image",
-      "ariaLabel": "View blog post"
+      "ariaLabel": "View blog post",
+      "readMore": "Read more",
+      "minRead": "{count} min read"
+    },
+    "blogCta": {
+      "learnMore": "Learn more"
+    },
+    "blog": {
+      "relatedArticles": "Related articles",
+      "relatedProperties": "Related properties"
     },
     "goBack": "Go Back"
   },
@@ -182,7 +191,8 @@
     "home": "Home",
     "properties": "Properties",
     "favorites": "Favorites",
-    "cities": "Cities"
+    "cities": "Cities",
+    "blog": "Blog"
   },
   "Catalog": {
     "heroIntroFallback": "Browse our selection of properties.",

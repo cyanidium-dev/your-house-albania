@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { cn } from '@/lib/utils'
 
