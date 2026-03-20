@@ -144,6 +144,10 @@
     "blogCta": {
       "learnMore": "Scopri di più"
     },
+    "blog": {
+      "relatedArticles": "Articoli correlati",
+      "relatedProperties": "Immobili correlati"
+    },
     "goBack": "Indietro"
   },
   "Listing": {

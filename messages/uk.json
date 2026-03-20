@@ -144,6 +144,10 @@
     "blogCta": {
       "learnMore": "Дізнатися більше"
     },
+    "blog": {
+      "relatedArticles": "Схожі статті",
+      "relatedProperties": "Схожі об'єкти"
+    },
     "goBack": "Назад"
   },
   "Listing": {

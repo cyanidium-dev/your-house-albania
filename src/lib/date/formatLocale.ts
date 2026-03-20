@@ -35,3 +35,19 @@ export function formatDateLocale(
   const locale = getDateFnsLocale(appLocale);
   return formatDate(date, formatStr, { locale });
 }
+
+/** Locale-appropriate date format for blog: day-first (d MMM yyyy) for EU locales, month-first for en. */
+const BLOG_DATE_FORMAT: Record<string, string> = {
+  en: "MMM d, yyyy",
+  uk: "d MMM yyyy",
+  ru: "d MMM yyyy",
+  sq: "d MMM yyyy",
+  al: "d MMM yyyy",
+  it: "d MMM yyyy",
+};
+
+/** Format a date for blog UI using locale-appropriate format. */
+export function formatBlogDate(date: Date, appLocale: string): string {
+  const formatStr = BLOG_DATE_FORMAT[appLocale] ?? BLOG_DATE_FORMAT.en;
+  return formatDateLocale(date, formatStr, appLocale);
+}

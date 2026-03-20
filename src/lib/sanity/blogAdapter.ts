@@ -10,6 +10,7 @@ export type BlogListItem = {
   coverImageUrl: string;
   publishedAt: string;
   categoryLabel: string;
+  categorySlug: string;
   readingTimeMinutes?: number;
 };
 
@@ -21,6 +22,7 @@ export type BlogRelatedPost = {
   coverImageUrl: string;
   publishedAt: string;
   categoryLabel: string;
+  categorySlug: string;
 };
 
 /** Shape for blog detail page. */
@@ -104,13 +106,18 @@ function getCategoryLabel(post: SanityListingPost, locale: string): string {
   return resolveLocalizedString(title as never, locale) || (typeof title === 'string' ? title : '') || '';
 }
 
+function getCategorySlug(post: SanityListingPost): string {
+  const cat = post.category ?? post.categories?.[0];
+  return typeof cat?.slug === 'string' ? cat.slug : '';
+}
+
 /** Maps Sanity blog post to listing item shape for BlogCard. */
 export function mapSanityBlogPostToList(
   post: SanityListingPost | null | undefined,
   locale: string
 ): BlogListItem {
   if (!post) {
-    return { slug: '', title: '', excerpt: '', coverImageUrl: '', publishedAt: '', categoryLabel: '' };
+    return { slug: '', title: '', excerpt: '', coverImageUrl: '', publishedAt: '', categoryLabel: '', categorySlug: '' };
   }
   const contentBlocks = Array.isArray(post.contentForReadingTime) ? post.contentForReadingTime : [];
   const readingTimeMinutes = contentBlocks.length > 0 ? computeReadingTime(contentBlocks) : undefined;
@@ -121,6 +128,7 @@ export function mapSanityBlogPostToList(
     coverImageUrl: getCoverImageUrl(post.coverImage),
     publishedAt: post.publishedAt ?? '',
     categoryLabel: getCategoryLabel(post, locale),
+    categorySlug: getCategorySlug(post),
     ...(readingTimeMinutes !== undefined && readingTimeMinutes > 0 && { readingTimeMinutes }),
   };
 }
@@ -181,6 +189,7 @@ export function mapSanityBlogPostToDetail(
       coverImageUrl: getCoverImageUrl(p.coverImage),
       publishedAt: p.publishedAt ?? '',
       categoryLabel: getCategoryLabel(p, locale),
+      categorySlug: getCategorySlug(p),
     }));
 
   const properties: PropertyHomes[] = (post.properties ?? [])

@@ -15,7 +15,7 @@ import PropertyCard from "@/components/shared/property/PropertyCard";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
-import { formatDateLocale } from "@/lib/date/formatLocale";
+import { formatBlogDate } from "@/lib/date/formatLocale";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -74,6 +74,7 @@ export default async function Post({ params }: Props) {
 
   const readingTime = computeReadingTime(detail.contentBlocks);
   const t = await getTranslations("Shared");
+  const tBlog = await getTranslations("Shared.blog");
   const tBlogCard = await getTranslations("Shared.blogCard");
   const primaryCategory = detail.categories[0];
 
@@ -86,7 +87,7 @@ export default async function Post({ params }: Props) {
         siteName={siteName}
         siteLogoUrl={siteLogoUrl}
       />
-      <section className="relative !pt-44 pb-0!">
+      <section className="relative !pt-24 md:!pt-28 pb-0!">
         <div className="container max-w-8xl mx-auto md:px-0 px-4">
           <div className="mb-4">
             <BlogBreadcrumb
@@ -114,7 +115,7 @@ export default async function Post({ params }: Props) {
               </h6>
             )}
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-6 mt-12">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 sm:mt-12">
             <div className="flex items-center gap-4">
               <Image
                 src={detail.authorImageUrl || "/images/placeholder.jpg"}
@@ -131,15 +132,11 @@ export default async function Post({ params }: Props) {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-7">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-7">
               <div className="flex items-center gap-4">
                 <Icon icon="ph:clock" width={20} height={20} />
                 <span className="text-base text-dark font-medium dark:text-white">
-                  {formatDateLocale(
-                    new Date(detail.publishedAt || 0),
-                    "MMM dd, yyyy",
-                    locale
-                  )}
+                  {formatBlogDate(new Date(detail.publishedAt || 0), locale)}
                 </span>
               </div>
               {readingTime > 0 && (
@@ -147,12 +144,15 @@ export default async function Post({ params }: Props) {
                   {tBlogCard("minRead", { count: readingTime })}
                 </span>
               )}
-              {detail.categoryLabel && (
-                <div className="py-2.5 px-5 bg-dark/5 rounded-full dark:bg-white/15">
+              {primaryCategory && (
+                <Link
+                  href={`/${locale}/blogs?category=${encodeURIComponent(primaryCategory.slug)}`}
+                  className="py-2.5 px-5 bg-dark/5 rounded-full dark:bg-white/15 hover:bg-primary/10 transition-colors"
+                >
                   <p className="text-sm font-semibold text-dark dark:text-white">
-                    {detail.categoryLabel}
+                    {primaryCategory.title}
                   </p>
-                </div>
+                </Link>
               )}
             </div>
           </div>
@@ -188,7 +188,7 @@ export default async function Post({ params }: Props) {
                 {detail.relatedPosts.length > 0 && (
                   <div>
                     <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
-                      Related articles
+                      {tBlog("relatedArticles")}
                     </h3>
                     <div className="flex flex-col gap-6">
                       {detail.relatedPosts.map((p) => (
@@ -200,7 +200,7 @@ export default async function Post({ params }: Props) {
                 {detail.properties.length > 0 && (
                   <div>
                     <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
-                      Related properties
+                      {tBlog("relatedProperties")}
                     </h3>
                     <div className="flex flex-col gap-6">
                       {detail.properties.map((item) => (

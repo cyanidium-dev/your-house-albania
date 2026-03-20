@@ -144,6 +144,10 @@
     "blogCta": {
       "learnMore": "Learn more"
     },
+    "blog": {
+      "relatedArticles": "Related articles",
+      "relatedProperties": "Related properties"
+    },
     "goBack": "Go Back"
   },
   "Listing": {

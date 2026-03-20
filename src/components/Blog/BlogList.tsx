@@ -51,7 +51,7 @@ export default function BlogList({
             ))}
           </div>
         )}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {posts.map((blog) => (
             <div key={blog.slug || blog.title} className="w-full">
               <BlogCard
@@ -63,6 +63,7 @@ export default function BlogList({
                   coverImageUrl: blog.coverImageUrl,
                   publishedAt: blog.publishedAt,
                   categoryLabel: blog.categoryLabel,
+                  categorySlug: blog.categorySlug,
                 }}
                 locale={locale}
               />

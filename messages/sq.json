@@ -144,6 +144,10 @@
     "blogCta": {
       "learnMore": "Mëso më shumë"
     },
+    "blog": {
+      "relatedArticles": "Artikuj të ngjashëm",
+      "relatedProperties": "Prona të ngjashme"
+    },
     "goBack": "Kthehu"
   },
   "Listing": {
