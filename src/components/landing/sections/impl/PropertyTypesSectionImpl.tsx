@@ -6,6 +6,7 @@ import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
 export type PropertyTypesData = {
   title?: string;
   subtitle?: string;
+  shortLine?: string;
   ctaLabel?: string;
   ctaHref?: string;
   propertyTypes: PropertyTypeCard[];
@@ -17,6 +18,7 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
 }) => {
   const title = propertyTypesData?.title;
   const subtitle = propertyTypesData?.subtitle;
+  const shortLine = propertyTypesData?.shortLine;
   const ctaLabel = propertyTypesData?.ctaLabel;
   const ctaHref = propertyTypesData?.ctaHref;
   if (!title) return null
@@ -37,13 +39,14 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
   };
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="grid lg:grid-cols-2 gap-10">
           <div className="flex flex-col gap-10">
             <div>
-              <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2">
-                <Icon icon="ph:house-simple-fill" className="text-2xl text-primary " />
+              <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2 items-center">
+                <Icon icon="ph:house-simple-fill" className="text-2xl text-primary shrink-0" />
+                {shortLine ? <span>{shortLine}</span> : null}
               </p>
               <h2 className="lg:text-52 text-40 font-medium text-dark dark:text-white mt-4 mb-2">
                 {title}
@@ -60,9 +63,9 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
             ) : null}
           </div>
           <div className="grid grid-cols-2 gap-10">
-            {types.map((type) => (
+            {types.map((type, index) => (
               <div
-                key={type._id ?? type.title}
+                key={type._id ?? type.slug || `property-type-${index}`}
                 className="relative rounded-2xl overflow-hidden group"
               >
                 <Link href={getTypeLink(type)}>

@@ -12,9 +12,11 @@ import { renderLandingSection } from './sectionRenderers/registry'
 export async function LandingRenderer({
   locale,
   landing,
+  citySlug,
 }: {
   locale: string
   landing: LandingPageDoc | null
+  citySlug?: string
 }) {
   const sections = asSections(landing)
   if (process.env.NODE_ENV === 'development') {
@@ -31,7 +33,7 @@ export async function LandingRenderer({
   const nodes: React.ReactNode[] = []
 
   for (const section of sections) {
-    const node = await renderLandingSection({ locale, section })
+    const node = await renderLandingSection({ locale, section, citySlug })
     if (node) nodes.push(node)
   }
 

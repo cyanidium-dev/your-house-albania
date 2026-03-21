@@ -4,13 +4,14 @@ import { PropertyCarouselSection } from '@/components/landing/sections'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import {
   fetchHomeTopOffers,
+  fetchCatalogProperties,
   type CatalogProperty,
   type HomeTopOffersSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard, mapSanityPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import type { SectionHandler } from './types'
 
-export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, section }) => {
+export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, section, citySlug }) => {
   const debug = process.env.NODE_ENV === 'development'
   if (debug) {
     const enabled = (section as { enabled?: unknown } | null)?.enabled
@@ -21,6 +22,7 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
       enabled,
       mode: section?.mode ?? 'auto',
       hasSelectedProps: Array.isArray(section?.properties) ? section.properties.length : 0,
+      citySlug: citySlug ?? null,
     })
   }
 
@@ -76,42 +78,65 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
       })
     }
   } else {
-    if (debug) console.log('[Landing][propertyCarouselSection] auto branch: fetching top offers')
-    const [popular, newest, highDemand] = await Promise.all([
-      fetchHomeTopOffers('popular', requestedLimit, requestedSort),
-      fetchHomeTopOffers('new', requestedLimit, requestedSort),
-      fetchHomeTopOffers('highDemand', requestedLimit, requestedSort),
-    ])
-    if (debug) {
-      console.log('[Landing][propertyCarouselSection] auto fetch results', {
-        popularCount: Array.isArray(popular) ? popular.length : popular === null ? null : 'non-array',
-        newCount: Array.isArray(newest) ? newest.length : newest === null ? null : 'non-array',
-        highDemandCount: Array.isArray(highDemand) ? highDemand.length : highDemand === null ? null : 'non-array',
+    if (citySlug) {
+      if (debug) console.log('[Landing][propertyCarouselSection] auto branch: city-scoped fetch', citySlug)
+      const catalogSort =
+        requestedSort === 'priceAsc' || requestedSort === 'priceDesc' ||
+        requestedSort === 'areaAsc' || requestedSort === 'areaDesc'
+          ? requestedSort
+          : 'newest'
+      const result = await fetchCatalogProperties({
+        city: citySlug,
+        pageSize: requestedLimit,
+        sort: catalogSort,
+        page: 1,
       })
-    }
-    topOffersGroups = {
-      popular: (popular ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
-      new: (newest ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
-      highDemand: (highDemand ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
-    }
-    propertyItems = topOffersGroups.popular
-    if (debug) {
-      console.log('[Landing][propertyCarouselSection] auto mapped groups', {
-        popular: topOffersGroups.popular.length,
-        new: topOffersGroups.new.length,
-        highDemand: topOffersGroups.highDemand.length,
-        propertyItemsCount: propertyItems.length,
-        sample: propertyItems[0]
-          ? {
-              slug: propertyItems[0].slug,
-              name: propertyItems[0].name,
-              price: (propertyItems[0] as any).price,
-              currency: (propertyItems[0] as any).currency,
-              status: (propertyItems[0] as any).status,
-              imagesCount: Array.isArray((propertyItems[0] as any).images) ? (propertyItems[0] as any).images.length : undefined,
-            }
-          : null,
-      })
+      const items = result?.items ?? []
+      propertyItems = items.map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit)
+      if (debug) {
+        console.log('[Landing][propertyCarouselSection] city-scoped results', {
+          count: propertyItems.length,
+          sample: propertyItems[0] ? { slug: propertyItems[0].slug, name: (propertyItems[0] as any).name } : null,
+        })
+      }
+    } else {
+      if (debug) console.log('[Landing][propertyCarouselSection] auto branch: fetching top offers (global)')
+      const [popular, newest, highDemand] = await Promise.all([
+        fetchHomeTopOffers('popular', requestedLimit, requestedSort),
+        fetchHomeTopOffers('new', requestedLimit, requestedSort),
+        fetchHomeTopOffers('highDemand', requestedLimit, requestedSort),
+      ])
+      if (debug) {
+        console.log('[Landing][propertyCarouselSection] auto fetch results', {
+          popularCount: Array.isArray(popular) ? popular.length : popular === null ? null : 'non-array',
+          newCount: Array.isArray(newest) ? newest.length : newest === null ? null : 'non-array',
+          highDemandCount: Array.isArray(highDemand) ? highDemand.length : highDemand === null ? null : 'non-array',
+        })
+      }
+      topOffersGroups = {
+        popular: (popular ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
+        new: (newest ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
+        highDemand: (highDemand ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
+      }
+      propertyItems = topOffersGroups.popular
+      if (debug) {
+        console.log('[Landing][propertyCarouselSection] auto mapped groups', {
+          popular: topOffersGroups.popular.length,
+          new: topOffersGroups.new.length,
+          highDemand: topOffersGroups.highDemand.length,
+          propertyItemsCount: propertyItems.length,
+          sample: propertyItems[0]
+            ? {
+                slug: propertyItems[0].slug,
+                name: propertyItems[0].name,
+                price: (propertyItems[0] as any).price,
+                currency: (propertyItems[0] as any).currency,
+                status: (propertyItems[0] as any).status,
+                imagesCount: Array.isArray((propertyItems[0] as any).images) ? (propertyItems[0] as any).images.length : undefined,
+              }
+            : null,
+        })
+      }
     }
   }
 

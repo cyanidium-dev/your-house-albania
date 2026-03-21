@@ -13,6 +13,7 @@ import {
 export type FaqData = {
   title?: string;
   items: { question: string; answer: string | PortableTextBlock[] | null | undefined }[];
+  imageMode?: 'withImage' | 'withoutImage';
 } | null;
 
 type Props = {

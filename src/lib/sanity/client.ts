@@ -900,13 +900,129 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     _id,
     _type,
     pageType,
-    pageSections[],
+    "pageSections": pageSections[]${landingPageSectionsProjection},
     seo
   }`;
   try {
     return await client.fetch(query, { citySlug });
   } catch (err) {
     console.warn("[Sanity] fetchCityLandingByCitySlug failed:", err);
+    return null;
+  }
+}
+
+/** Projection for landing page sections with asset/ref dereferencing. */
+const landingPageSectionsProjection = `{
+  _key,
+  _type,
+  title,
+  subtitle,
+  shortLine,
+  cta,
+  mode,
+  linkTargetType,
+  search,
+  content,
+  body,
+  items,
+  posts,
+  enabled,
+  sourceMode,
+  limit,
+  sort,
+  properties,
+  districts,
+  "propertyTypes": propertyTypes[]-> {
+    _id,
+    title,
+    "slug": slug.current,
+    shortDescription,
+    image { asset-> { url }, alt }
+  },
+  headings,
+  rows,
+  closingText,
+  description,
+  benefits,
+  primaryImage { asset-> { url }, alt },
+  secondaryImage { asset-> { url }, alt },
+  imageMode,
+  backgroundImage { asset-> { url }, alt },
+  "cities": cities[]-> { _id, title, "slug": slug.current, shortDescription, heroImage { asset-> { url }, alt } },
+  "resolvedManualItems": coalesce(
+    manualItems[]-> {
+      _id,
+      _type,
+      title,
+      "slug": slug.current,
+      shortDescription,
+      heroImage { asset-> { url }, alt },
+      "city": city-> { "slug": slug.current }
+    },
+    manualItems[] {
+      _id,
+      _type,
+      title,
+      "slug": slug.current,
+      shortDescription,
+      heroImage { asset-> { url }, alt },
+      "city": city-> { "slug": slug.current }
+    }
+  ),
+  "landings": select(
+    count(coalesce(landings, resolvedLandings, manualItems, items)) > 0 && defined((coalesce(landings, resolvedLandings, manualItems, items))[0]._ref) => (coalesce(landings, resolvedLandings, manualItems, items))[]-> {
+      _id,
+      pageType,
+      "slug": slug.current,
+      title,
+      cardTitle,
+      cardDescription,
+      cardImage { asset-> { url }, alt },
+      "linkedCity": linkedCity-> { "slug": slug.current }
+    },
+    (coalesce(landings, resolvedLandings, manualItems, items))[] {
+      _id,
+      pageType,
+      "slug": coalesce(slug.current, slug),
+      title,
+      cardTitle,
+      cardDescription,
+      cardImage { asset-> { url }, alt },
+      "linkedCity": linkedCity-> { "slug": slug.current }
+    }
+  )
+}`;
+
+/**
+ * Fetch landingPage document for the cities index route `/[locale]/cities`.
+ * Returns null if not found or client not configured.
+ */
+export async function fetchCitiesIndexLanding(): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[
+    _type == "landingPage" &&
+    (
+      _id == "landing-cities" ||
+      pageType == "cityIndex"
+    )
+  ][0] {
+    _id,
+    _type,
+    pageType,
+    "pageSections": pageSections[]${landingPageSectionsProjection},
+    seo
+  }`;
+  try {
+    return await client.fetch(query);
+  } catch (err) {
+    console.warn("[Sanity] fetchCitiesIndexLanding failed:", err);
     return null;
   }
 }
@@ -936,7 +1052,7 @@ export async function fetchHomeLanding(): Promise<{
     _id,
     _type,
     pageType,
-    pageSections[],
+    "pageSections": pageSections[]${landingPageSectionsProjection},
     seo
   }`;
   try {

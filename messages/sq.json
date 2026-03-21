@@ -128,6 +128,9 @@
     }
   },
   "Shared": {
+    "seoText": {
+      "contentMissing": "Përmbajtja SEO nuk është e disponueshme."
+    },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",

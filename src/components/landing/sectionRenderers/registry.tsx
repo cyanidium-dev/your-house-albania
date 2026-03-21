@@ -36,6 +36,7 @@ const registry: Record<string, SectionHandler> = {
 export async function renderLandingSection(input: {
   locale: string
   section: LandingSectionBase
+  citySlug?: string
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null
