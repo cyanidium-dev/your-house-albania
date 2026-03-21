@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { fetchPropertyBySlug, fetchSiteSettings } from '@/lib/sanity/client';
-import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery } from '@/lib/sanity/propertyAdapter';
+import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
+import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter';
 import { Icon } from '@iconify/react';
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
 import Link from 'next/link';
@@ -13,6 +13,7 @@ import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
 import { PriceText } from '@/components/shared/PriceText';
+import PropertyCard from '@/components/shared/property/PropertyCard';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -70,13 +71,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function getSimilarCount(settings: unknown): number {
+  const raw = (settings as { similarPropertiesCount?: unknown })?.similarPropertiesCount;
+  const n = typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? Math.floor(raw) : 2;
+  return Math.min(n, 24);
+}
+
 export default async function PropertyDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const sanityProperty = await fetchPropertyBySlug(slug);
+  const [sanityProperty, siteSettings] = await Promise.all([
+    fetchPropertyBySlug(slug),
+    fetchSiteSettings(),
+  ]);
   if (sanityProperty == null) {
     notFound();
   }
+
+  const similarCount = getSimilarCount(siteSettings);
+  const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
+  const similarCandidates = await fetchSimilarPropertyCandidates(
+    (sanityProperty as { _id: string })._id,
+    citySlug ?? null,
+    similarCount
+  );
+  const similarItems = similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale));
 
   const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
   const galleryImages = mapSanityPropertyGallery(sanityProperty as never);
@@ -110,7 +129,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
     return null;
   })();
   const hasCoordinates = resolvedCoordinates != null;
-  const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
   const districtSlug = (sanityProperty as { district?: { slug?: string } })?.district?.slug;
 
   const rawProperty = sanityProperty as {
@@ -259,9 +277,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                 </div>
                             </div>
                         </div>
-                        {hasCoordinates && (() => {
-                          const coords = (sanityProperty as { coordinates: { lat: number; lng: number } }).coordinates;
-                          const embedSrc = `https://www.google.com/maps?q=${coords.lat},${coords.lng}&z=15&output=embed`;
+                        {hasCoordinates && resolvedCoordinates && (() => {
+                          const embedSrc = `https://www.google.com/maps?q=${resolvedCoordinates.lat},${resolvedCoordinates.lng}&z=15&output=embed`;
                           return (
                             <iframe src={embedSrc} width="1114" height="400" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="rounded-2xl w-full" />
                           );
@@ -289,6 +306,16 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             mapHeightClassName="h-[420px]"
                           />
                         </div>
+                        {similarItems.length > 0 && (
+                          <section className="mt-10">
+                            <h2 className="text-xl font-medium mb-4">Similar Properties</h2>
+                            <div className="flex flex-col gap-4">
+                              {similarItems.map((item) => (
+                                <PropertyCard key={item.slug} item={item} locale={locale} view="large" />
+                              ))}
+                            </div>
+                          </section>
+                        )}
                     </div>
                 </div>
             </div>
