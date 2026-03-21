@@ -5,12 +5,11 @@ import { useEffect, useState, useRef } from "react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
-import { PropertyCardClient } from "@/components/favorites/PropertyCardClient";
+import PropertyCard from "@/components/shared/property/PropertyCard";
 import { PropertyCardSkeleton } from "@/components/favorites/PropertyCardSkeleton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { Button } from "@/components/ui/button";
 import type { PropertyHomes } from "@/types/properyHomes";
-import { cn } from "@/lib/utils";
 
 const SKELETON_COUNT = 6;
 
@@ -134,7 +133,7 @@ export function FavoritesContent({ locale }: Props) {
             className="animate-in fade-in duration-300"
             style={{ animationDelay: `${Math.min(i * 40, 200)}ms` }}
           >
-            <PropertyCardClient item={item} locale={locale} />
+            <PropertyCard item={item} locale={locale} view="large" />
           </div>
         ))}
       </div>

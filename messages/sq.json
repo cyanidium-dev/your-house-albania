@@ -21,6 +21,10 @@
     "switchTo": "Ndrysho monedhën në {currency}"
   },
   "Footer": {
+    "contactRequest": "Lini numrin tuaj të telefonit për zgjedhje të personalizuar të pasurive.",
+    "phonePlaceholder": "Numri i telefonit",
+    "submitButton": "Kërko një telefonatë",
+    "helperText": "Dëshironi zgjedhje të personalizuar apartamenti? Lini një kërkesë dhe do t'ju kontaktojmë.",
     "newsletter": "Qëndroni të përditësuar me lajmet, ofertat dhe propozimet ekskluzive.",
     "emailPlaceholder": "Vendosni email",
     "subscribe": "Abonohu",
@@ -131,9 +135,22 @@
     "seoText": {
       "contentMissing": "Përmbajtja SEO nuk është e disponueshme."
     },
+    "propertyDetail": {
+      "propertyDetails": "Detajet e pronës",
+      "whatThisPropertyOffers": "Çfarë ofron kjo pronë",
+      "similarProperties": "Prona të ngjashme",
+      "getInTouch": "Na kontaktoni",
+      "dealTypeSale": "Shitje",
+      "dealTypeRent": "Qira",
+      "dealTypeShortTerm": "Qira afatshkurtër",
+      "dealTypeLongTerm": "Qira afatgjatë",
+      "dealTypePrice": "Çmimi"
+    },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",
+      "bedroomsCount": "{count, plural, one {# dhomë gjumi} other {# dhoma gjumi}}",
+      "bathroomsCount": "{count, plural, one {# banjo} other {# banjo}}",
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Imazhi i mëparshëm",

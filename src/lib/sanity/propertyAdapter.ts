@@ -2,6 +2,74 @@ import type { PropertyHomes } from '@/types/properyHomes';
 import type { CatalogProperty } from './client';
 import { resolveLocalizedString } from './localized';
 
+/** Fallback Iconify ID when iconKey is unknown or unresolved. */
+const FALLBACK_ICONIFY_ID = 'ph:info';
+
+/**
+ * Maps Sanity icon keys to Iconify IDs (Phosphor where available, MDI for ph gaps).
+ * Must stay in sync with Sanity canonical PROPERTY_ICON_KEYS.
+ * Sanity stores plain keys; @iconify/react requires prefix:icon-name format.
+ * Note: ph:parking and ph:balcony do not exist; using mdi:parking, mdi:balcony.
+ */
+const SANITY_ICON_KEY_TO_ICONIFY: Record<string, string> = {
+  elevator: 'ph:elevator',
+  balcony: 'mdi:balcony',
+  parking: 'mdi:parking',
+  snowflake: 'ph:snowflake',
+  car: 'ph:car',
+  waves: 'ph:waves',
+  'map-pin': 'ph:map-pin',
+  key: 'ph:key',
+  smartphone: 'ph:device-mobile',
+  layout: 'ph:squares-four',
+  sun: 'ph:sun',
+  shield: 'ph:shield',
+  wifi: 'ph:wifi-high',
+  home: 'ph:house-simple',
+  building: 'ph:buildings',
+  tree: 'ph:tree-evergreen',
+  sofa: 'ph:couch',
+  cloud: 'ph:cloud',
+  zap: 'ph:lightning',
+};
+
+/** Supported Sanity keys (must match canonical PROPERTY_ICON_KEYS): elevator, balcony, parking, snowflake, car, waves, map-pin, key, smartphone, layout, sun, shield, wifi, home, building, tree, sofa, cloud, zap */
+
+/**
+ * Resolves a Sanity icon key to an Iconify ID for property amenities/offers.
+ * Returns fallback when key is unknown so no empty icon spans remain.
+ */
+export function resolvePropertyIconKey(sanityKey: string | null | undefined): string {
+  if (!sanityKey || typeof sanityKey !== 'string') return FALLBACK_ICONIFY_ID;
+  const normalized = sanityKey.trim().toLowerCase();
+  if (!normalized) return FALLBACK_ICONIFY_ID;
+  const resolved = SANITY_ICON_KEY_TO_ICONIFY[normalized];
+  if (resolved) return resolved;
+  const noHyphen = normalized.replace(/-/g, '');
+  if (SANITY_ICON_KEY_TO_ICONIFY[noHyphen]) return SANITY_ICON_KEY_TO_ICONIFY[noHyphen];
+  if (normalized.includes(':')) return normalized;
+  return FALLBACK_ICONIFY_ID;
+}
+
+/** Normalized amenity item for Property details block (icon + title + optional description). */
+export type PropertyAmenityItem = {
+  key: string;
+  title: string;
+  description?: string;
+  iconKey?: string;
+  customIconUrl?: string;
+  customIconAlt?: string;
+};
+
+/** Normalized offer item for What this property offers block (icon + title). */
+export type PropertyOfferItem = {
+  key: string;
+  title: string;
+  iconKey?: string;
+  customIconUrl?: string;
+  customIconAlt?: string;
+};
+
 /** Fields for property details page top section (title, location, specs, price, description). */
 export type PropertyDetailsFields = {
   title: string;
@@ -75,6 +143,119 @@ export function mapSanityPropertyToDetailsFields(
     description: desc || '',
     dealTypeLabel: mapStatusToDealTypeLabel(p.status),
   };
+}
+
+type SanityAmenityItem = {
+  _id?: string;
+  _key?: string;
+  title?: unknown;
+  description?: unknown;
+  iconKey?: string;
+  icon?: string | { asset?: { url?: string }; alt?: string };
+  image?: { asset?: { url?: string }; alt?: string };
+  customIconUrl?: string;
+  customIconAlt?: string;
+};
+
+type SanityPropertyOfferItem = {
+  _id?: string;
+  _key?: string;
+  title?: unknown;
+  iconKey?: string;
+  icon?: string | { asset?: { url?: string }; alt?: string };
+  image?: { asset?: { url?: string }; alt?: string };
+  customIconUrl?: string;
+  customIconAlt?: string;
+};
+
+function pickIconKey(item: { iconKey?: string; icon?: unknown } | null | undefined): string | undefined {
+  if (!item) return undefined;
+  const key = typeof item.iconKey === 'string' && item.iconKey.trim() ? item.iconKey.trim() : undefined;
+  if (key) return key;
+  const icon = item.icon;
+  return typeof icon === 'string' && icon.trim() ? icon.trim() : undefined;
+}
+
+function pickCustomIconUrl(item: {
+  customIconUrl?: string;
+  icon?: unknown;
+  image?: { asset?: { url?: string }; alt?: string };
+} | null | undefined): string | undefined {
+  if (!item) return undefined;
+  const url = typeof item.customIconUrl === 'string' && item.customIconUrl.trim() ? item.customIconUrl.trim() : undefined;
+  if (url) return url;
+  const iconObj = item?.icon;
+  const iconUrl = typeof iconObj === 'object' && iconObj !== null && 'asset' in iconObj
+    ? (iconObj as { asset?: { url?: string } }).asset?.url
+    : undefined;
+  if (typeof iconUrl === 'string' && iconUrl.trim()) return iconUrl.trim();
+  const imageObj = item?.image;
+  const imageUrl = typeof imageObj === 'object' && imageObj !== null && 'asset' in imageObj
+    ? (imageObj as { asset?: { url?: string } }).asset?.url
+    : undefined;
+  return typeof imageUrl === 'string' && imageUrl.trim() ? imageUrl.trim() : undefined;
+}
+
+function pickCustomIconAlt(item: {
+  customIconAlt?: string;
+  icon?: unknown;
+  image?: { alt?: string };
+} | null | undefined): string | undefined {
+  if (!item) return undefined;
+  if (typeof item.customIconAlt === 'string') return item.customIconAlt;
+  const iconObj = item?.icon;
+  if (typeof iconObj === 'object' && iconObj !== null && 'alt' in iconObj && typeof (iconObj as { alt: string }).alt === 'string') return (iconObj as { alt: string }).alt;
+  const imageObj = item?.image;
+  if (typeof imageObj === 'object' && imageObj !== null && 'alt' in imageObj && typeof (imageObj as { alt: string }).alt === 'string') return (imageObj as { alt: string }).alt;
+  return undefined;
+}
+
+/** Maps Sanity amenities to Property details block. Skips items with empty title after localization. */
+export function mapSanityAmenities(
+  p: { amenities?: SanityAmenityItem[] } | null | undefined,
+  locale: string
+): PropertyAmenityItem[] {
+  const items = Array.isArray(p?.amenities) ? p.amenities : [];
+  const result: PropertyAmenityItem[] = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const title = resolveLocalizedString(item?.title as never, locale)?.trim() ?? '';
+    if (!title) continue;
+    const key = (item as { _key?: string })._key ?? (item as { _id?: string })._id ?? `amenity-${i}`;
+    const description = resolveLocalizedString(item?.description as never, locale)?.trim() || undefined;
+    result.push({
+      key: String(key),
+      title,
+      description: description || undefined,
+      iconKey: pickIconKey(item),
+      customIconUrl: pickCustomIconUrl(item),
+      customIconAlt: pickCustomIconAlt(item),
+    });
+  }
+  return result;
+}
+
+/** Maps Sanity propertyOffers to What this property offers block. Skips items with empty title after localization. */
+export function mapSanityPropertyOffers(
+  p: { propertyOffers?: SanityPropertyOfferItem[] } | null | undefined,
+  locale: string
+): PropertyOfferItem[] {
+  const items = Array.isArray(p?.propertyOffers) ? p.propertyOffers : [];
+  const result: PropertyOfferItem[] = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const title = resolveLocalizedString(item?.title as never, locale)?.trim() ?? '';
+    if (!title) continue;
+    const key = (item as { _key?: string })._key ?? (item as { _id?: string })._id ?? `offer-${i}`;
+    result.push({
+      key: String(key),
+      title,
+      iconKey: pickIconKey(item),
+      customIconUrl: pickCustomIconUrl(item),
+      customIconAlt: pickCustomIconAlt(item),
+    });
+  }
+  return result;
 }
 
 type SanityProperty = {

@@ -21,6 +21,10 @@
     "switchTo": "Switch currency to {currency}"
   },
   "Footer": {
+    "contactRequest": "Leave your phone number for a personalized property selection.",
+    "phonePlaceholder": "Phone number",
+    "submitButton": "Request a call",
+    "helperText": "Want a personalized apartment selection? Leave a request and we'll contact you.",
     "newsletter": "Stay updated with the latest news, promotions, and exclusive offers.",
     "emailPlaceholder": "Enter Your Email",
     "subscribe": "Subscribe",
@@ -131,9 +135,22 @@
     "seoText": {
       "contentMissing": "SEO content is not available."
     },
+    "propertyDetail": {
+      "propertyDetails": "Property details",
+      "whatThisPropertyOffers": "What this property offers",
+      "similarProperties": "Similar Properties",
+      "getInTouch": "Get in touch",
+      "dealTypeSale": "Sale",
+      "dealTypeRent": "Rent",
+      "dealTypeShortTerm": "Short-term rent",
+      "dealTypeLongTerm": "Long-term rent",
+      "dealTypePrice": "Price"
+    },
     "propertyCard": {
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
+      "bedroomsCount": "{count, plural, one {# Bedroom} other {# Bedrooms}}",
+      "bathroomsCount": "{count, plural, one {# Bathroom} other {# Bathrooms}}",
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Previous image",

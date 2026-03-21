@@ -21,6 +21,10 @@
     "switchTo": "Змінити валюту на {currency}"
   },
   "Footer": {
+    "contactRequest": "Залиште номер телефону для індивідуального підбору нерухомості.",
+    "phonePlaceholder": "Номер телефону",
+    "submitButton": "Залишити заявку",
+    "helperText": "Бажаєте індивідуальний підбір квартири? Залишіть заявку і ми зв'яжемося.",
     "newsletter": "Отримуйте останні новини, акції та ексклюзивні пропозиції.",
     "emailPlaceholder": "Введіть email",
     "subscribe": "Підписатися",
@@ -131,9 +135,22 @@
     "seoText": {
       "contentMissing": "SEO-текст недоступний."
     },
+    "propertyDetail": {
+      "propertyDetails": "Деталі об'єкта",
+      "whatThisPropertyOffers": "Що пропонує цей об'єкт",
+      "similarProperties": "Схожі об'єкти",
+      "getInTouch": "Зв'язатися",
+      "dealTypeSale": "Продаж",
+      "dealTypeRent": "Оренда",
+      "dealTypeShortTerm": "Краткострокова оренда",
+      "dealTypeLongTerm": "Довгострокова оренда",
+      "dealTypePrice": "Ціна"
+    },
     "propertyCard": {
       "bedrooms": "Спальні",
       "bathrooms": "Ванні",
+      "bedroomsCount": "{count, plural, one {# спальня} few {# спальні} many {# спальень} other {# спальень}}",
+      "bathroomsCount": "{count, plural, one {# ванна} few {# ванні} many {# ванних} other {# ванних}}",
       "areaUnit": "м²",
       "pricePrefix": "$",
       "previousImage": "Попереднє фото",

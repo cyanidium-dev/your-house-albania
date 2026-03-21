@@ -21,6 +21,10 @@
     "switchTo": "Cambia valuta in {currency}"
   },
   "Footer": {
+    "contactRequest": "Lascia il tuo numero per una selezione personalizzata di immobili.",
+    "phonePlaceholder": "Numero di telefono",
+    "submitButton": "Richiedi una chiamata",
+    "helperText": "Vuoi una selezione personalizzata di appartamenti? Lascia una richiesta e ti contatteremo.",
     "newsletter": "Resta aggiornato con news, promozioni e offerte esclusive.",
     "emailPlaceholder": "Inserisci la tua email",
     "subscribe": "Iscriviti",
@@ -131,9 +135,22 @@
     "seoText": {
       "contentMissing": "Il contenuto SEO non è disponibile."
     },
+    "propertyDetail": {
+      "propertyDetails": "Dettagli della proprietà",
+      "whatThisPropertyOffers": "Cosa offre questa proprietà",
+      "similarProperties": "Proprietà simili",
+      "getInTouch": "Contattaci",
+      "dealTypeSale": "Vendita",
+      "dealTypeRent": "Affitto",
+      "dealTypeShortTerm": "Affitto a breve termine",
+      "dealTypeLongTerm": "Affitto a lungo termine",
+      "dealTypePrice": "Prezzo"
+    },
     "propertyCard": {
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
+      "bedroomsCount": "{count, plural, one {# Camera} other {# Camere}}",
+      "bathroomsCount": "{count, plural, one {# Bagno} other {# Bagni}}",
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Immagine precedente",

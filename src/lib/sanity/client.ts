@@ -341,8 +341,25 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       alt
     },
     coordinates,
+    coordinatesLat,
+    coordinatesLng,
     description,
-    content
+    content,
+    "amenities": coalesce(amenities[] {
+      _key,
+      title,
+      description,
+      iconKey,
+      "customIconUrl": customIcon.asset->url,
+      "customIconAlt": customIcon.alt
+    }, []),
+    "propertyOffers": coalesce(propertyOffers[] {
+      _key,
+      title,
+      iconKey,
+      "customIconUrl": customIcon.asset->url,
+      "customIconAlt": customIcon.alt
+    }, [])
   }`;
   try {
     const result = await client.fetch(query, { slug });
@@ -409,6 +426,68 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
   }
 }
 
+/** Fetch candidate properties for similar-properties block. Same-city first, then latest. Excludes current. */
+export async function fetchSimilarPropertyCandidates(
+  excludeId: string,
+  citySlug: string | null | undefined,
+  limit: number
+): Promise<CatalogProperty[]> {
+  const client = getClient();
+  if (!client || limit <= 0) return [];
+
+  const safeLimit = Math.min(limit, 24);
+  const orderClause = citySlug
+    ? `order((city->slug.current == $citySlug) desc, _createdAt desc)`
+    : 'order(_createdAt desc)';
+
+  const query = `*[_type == "property" && _id != $excludeId] | ${orderClause}[0...$limit] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    price,
+    currency,
+    area,
+    bedrooms,
+    bathrooms,
+    status,
+    featured,
+    investment,
+    coordinatesLat,
+    coordinatesLng,
+    "city": city-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    "district": district-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "citySlug": city->slug.current
+    },
+    "type": type-> {
+      _id,
+      title,
+      "slug": slug.current
+    },
+    description,
+    "mainImageUrl": gallery[0].asset->url,
+    "galleryUrls": gallery[].asset->url
+  }`;
+
+  const params: Record<string, unknown> = { excludeId, limit: safeLimit };
+  if (citySlug) params.citySlug = citySlug;
+
+  try {
+    const items = await client.fetch<CatalogProperty[]>(query, params);
+    return Array.isArray(items) ? items : [];
+  } catch (err) {
+    console.warn('[Sanity] fetchSimilarPropertyCandidates failed:', err);
+    return [];
+  }
+}
+
 /** Fetch siteSettings singleton. Returns null if not found or client not configured. */
 export async function fetchSiteSettings(): Promise<unknown | null> {
   const client = getClient();
@@ -416,6 +495,7 @@ export async function fetchSiteSettings(): Promise<unknown | null> {
   const query = `*[_type == "siteSettings" && _id == "siteSettings"][0] {
     _id,
     _type,
+    similarPropertiesCount,
     logo { asset-> { _id, url } },
     siteName,
     siteTagline,

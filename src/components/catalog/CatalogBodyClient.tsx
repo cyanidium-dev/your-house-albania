@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
@@ -53,6 +54,7 @@ export function CatalogBodyClient({
   currentPage,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
+  const tCard = useTranslations("Shared.propertyCard");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
   const cardRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
@@ -77,6 +79,14 @@ export function CatalogBodyClient({
       "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 min-w-0",
     viewMode === "large" &&
       "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 md:gap-10 min-w-0"
+  );
+
+  // Map item: in-flow with cards. Grid modes use stretch + h-full so map matches row height.
+  const mapListItemClassName = cn(
+    "min-w-0",
+    viewMode === "list" && "self-start w-full",
+    viewMode === "small" && "col-span-2",
+    (viewMode === "small" || viewMode === "large") && "min-h-0"
   );
 
   React.useEffect(() => {
@@ -176,17 +186,14 @@ export function CatalogBodyClient({
     [pageItems]
   )
 
+  // List: fixed height. Grid modes: fixed on mobile; md+ use h-full so map matches row height.
   const mapHeightClassName =
-    viewMode === 'list'
-      ? 'h-[250px] md:h-[270px]'
-      : viewMode === 'small'
-        ? 'h-[220px] sm:h-[235px] md:h-[255px] lg:h-[255px] xl:h-[255px]'
-        : 'h-[330px] md:h-[360px] xl:h-[390px]'
+    viewMode === "list"
+      ? "h-[250px] md:h-[270px]"
+      : viewMode === "small"
+        ? "h-[220px] sm:h-[235px] md:h-full md:min-h-[200px]"
+        : "h-[330px] md:h-full md:min-h-[200px]";
 
-  const mapListItemClassName = cn(
-    'min-w-0 self-start',
-    viewMode === 'small' && 'col-span-2'
-  )
   const isSmallMode = viewMode === 'small'
 
   const previewItem = React.useMemo(
@@ -216,6 +223,7 @@ export function CatalogBodyClient({
               activeSlug={activeSlug}
               onActiveSlugChange={handleActiveSlugFromMap}
               mapHeightClassName={mapHeightClassName}
+              className={(viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
               selectedCitySlug={filterProps.initialCity || undefined}
               selectedDistrictSlug={filterProps.initialDistrict || undefined}
               selectedDealType={filterProps.initialDealType || undefined}
@@ -270,7 +278,7 @@ export function CatalogBodyClient({
                           </p>
                         </div>
                         <p className="text-[11px] text-dark/70 dark:text-white/70 mt-2 truncate">
-                          {previewItem.beds} bd • {previewItem.baths} ba • {previewItem.area} m2
+                          {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
                         </p>
                       </div>
                     </div>
@@ -299,7 +307,7 @@ export function CatalogBodyClient({
                         <p className="text-sm text-dark dark:text-white truncate">{previewItem.name}</p>
                         <p className="text-xs text-dark/60 dark:text-white/60 truncate">{previewItem.location}</p>
                         <p className="text-[11px] text-dark/70 dark:text-white/70 mt-1">
-                          {previewItem.beds} bd • {previewItem.baths} ba • {previewItem.area} m2
+                          {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
                         </p>
                       </div>
                     </div>

@@ -21,6 +21,10 @@
     "switchTo": "Сменить валюту на {currency}"
   },
   "Footer": {
+    "contactRequest": "Оставьте номер телефона для индивидуального подбора недвижимости.",
+    "phonePlaceholder": "Номер телефона",
+    "submitButton": "Оставить заявку",
+    "helperText": "Хотите индивидуальный подбор квартиры? Оставьте заявку, и мы свяжемся с вами.",
     "newsletter": "Получайте новости, акции и эксклюзивные предложения.",
     "emailPlaceholder": "Введите email",
     "subscribe": "Подписаться",
@@ -131,9 +135,22 @@
     "seoText": {
       "contentMissing": "SEO-текст недоступен."
     },
+    "propertyDetail": {
+      "propertyDetails": "Детали объекта",
+      "whatThisPropertyOffers": "Что предлагает этот объект",
+      "similarProperties": "Похожие объекты",
+      "getInTouch": "Связаться",
+      "dealTypeSale": "Продажа",
+      "dealTypeRent": "Аренда",
+      "dealTypeShortTerm": "Краткосрочная аренда",
+      "dealTypeLongTerm": "Долгосрочная аренда",
+      "dealTypePrice": "Цена"
+    },
     "propertyCard": {
       "bedrooms": "Спальни",
       "bathrooms": "Санузлы",
+      "bedroomsCount": "{count, plural, one {# спальня} few {# спальни} many {# спален} other {# спален}}",
+      "bathroomsCount": "{count, plural, one {# ванная} few {# ванные} many {# ванных} other {# ванных}}",
       "areaUnit": "м²",
       "pricePrefix": "$",
       "previousImage": "Предыдущее фото",

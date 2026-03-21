@@ -352,7 +352,7 @@ function PropertyCard({
       >
         <Icon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
         <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
-          {isSmall && !isList ? beds : `${beds} ${t('bedrooms')}`}
+          {isSmall && !isList ? beds : t('bedroomsCount', { count: beds })}
         </span>
       </div>
       <div
@@ -365,7 +365,7 @@ function PropertyCard({
       >
         <Icon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
         <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
-          {isSmall && !isList ? baths : `${baths} ${t('bathrooms')}`}
+          {isSmall && !isList ? baths : t('bathroomsCount', { count: baths })}
         </span>
       </div>
       <div

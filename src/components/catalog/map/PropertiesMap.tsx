@@ -74,6 +74,7 @@ export function PropertiesMap({
   activeSlug,
   onActiveSlugChange,
   mapHeightClassName = 'h-[640px]',
+  className,
   selectedCitySlug,
   selectedDistrictSlug,
   selectedDealType,
@@ -82,6 +83,7 @@ export function PropertiesMap({
   activeSlug?: string | null
   onActiveSlugChange: (slug: string) => void
   mapHeightClassName?: string
+  className?: string
   selectedCitySlug?: string
   selectedDistrictSlug?: string
   selectedDealType?: string
@@ -596,6 +598,7 @@ export function PropertiesMap({
     <div
       className={cn(
         'w-full relative rounded-2xl overflow-hidden border border-dark/10 dark:border-white/20',
+        className,
         'bg-white dark:bg-black',
         '[&_.maplibregl-ctrl-bottom-right]:right-1 [&_.maplibregl-ctrl-bottom-right]:bottom-1',
         '[&_.maplibregl-ctrl.maplibregl-ctrl-attrib]:m-0',

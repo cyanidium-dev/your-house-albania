@@ -170,7 +170,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
               <Link
                 href={catalogPath(locale)}
                 className={cn(
-                  'inline-flex items-center justify-center h-10 px-5 rounded-full font-semibold whitespace-nowrap',
+                  'inline-flex items-center justify-center px-5 py-3 rounded-full font-semibold whitespace-nowrap text-sm md:text-base',
                   'bg-white text-dark shadow-sm border border-white/30',
                   'transition-[background-color,color,box-shadow,border-color] duration-300 ease-out',
                   'hover:bg-primary hover:text-white hover:border-primary/40 hover:shadow-md',

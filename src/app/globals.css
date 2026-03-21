@@ -138,3 +138,23 @@ html {
 .blog-details p {
   @apply text-dark dark:text-white text-xm leading-[1.2]
 }
+
+/* Footer CTA phone input – dark theme and spacing */
+.footer-cta-phone.PhoneInput {
+  --PhoneInputCountrySelectArrow-color: rgba(255, 255, 255, 0.8);
+  --PhoneInputCountrySelectArrow-opacity: 0.8;
+  --PhoneInputColor--focus: rgba(255, 255, 255, 0.5);
+  --PhoneInputCountrySelect-marginRight: 0.75em;
+  padding-left: 1.5rem;
+  padding-right: 1rem;
+}
+.footer-cta-phone.PhoneInput .PhoneInputInput {
+  color: white;
+}
+.footer-cta-phone .phone-input-chevron {
+  transform: rotate(0deg);
+  transition: transform 0.2s ease-out;
+}
+.footer-cta-phone:focus-within .phone-input-chevron {
+  transform: rotate(180deg);
+}
