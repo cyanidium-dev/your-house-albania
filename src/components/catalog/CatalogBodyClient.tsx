@@ -79,6 +79,14 @@ export function CatalogBodyClient({
       "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 md:gap-10 min-w-0"
   );
 
+  // Map item: in-flow with cards. Grid modes use stretch + h-full so map matches row height.
+  const mapListItemClassName = cn(
+    "min-w-0",
+    viewMode === "list" && "self-start w-full",
+    viewMode === "small" && "col-span-2",
+    (viewMode === "small" || viewMode === "large") && "min-h-0"
+  );
+
   React.useEffect(() => {
     if (!activeSlug) return
     const activeItem = pageItems.find((p) => p.slug === activeSlug)
@@ -176,17 +184,14 @@ export function CatalogBodyClient({
     [pageItems]
   )
 
+  // List: fixed height. Grid modes: fixed on mobile; md+ use h-full so map matches row height.
   const mapHeightClassName =
-    viewMode === 'list'
-      ? 'h-[250px] md:h-[270px]'
-      : viewMode === 'small'
-        ? 'h-[220px] sm:h-[235px] md:h-[255px] lg:h-[255px] xl:h-[255px]'
-        : 'h-[330px] md:h-[360px] xl:h-[390px]'
+    viewMode === "list"
+      ? "h-[250px] md:h-[270px]"
+      : viewMode === "small"
+        ? "h-[220px] sm:h-[235px] md:h-full md:min-h-[200px]"
+        : "h-[330px] md:h-full md:min-h-[200px]";
 
-  const mapListItemClassName = cn(
-    'min-w-0 self-start',
-    viewMode === 'small' && 'col-span-2'
-  )
   const isSmallMode = viewMode === 'small'
 
   const previewItem = React.useMemo(
@@ -216,6 +221,7 @@ export function CatalogBodyClient({
               activeSlug={activeSlug}
               onActiveSlugChange={handleActiveSlugFromMap}
               mapHeightClassName={mapHeightClassName}
+              className={(viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
               selectedCitySlug={filterProps.initialCity || undefined}
               selectedDistrictSlug={filterProps.initialDistrict || undefined}
               selectedDealType={filterProps.initialDealType || undefined}
