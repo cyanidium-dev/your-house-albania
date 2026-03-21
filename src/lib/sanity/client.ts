@@ -344,7 +344,22 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     coordinatesLat,
     coordinatesLng,
     description,
-    content
+    content,
+    "amenities": coalesce(amenities[] {
+      _key,
+      title,
+      description,
+      iconKey,
+      "customIconUrl": customIcon.asset->url,
+      "customIconAlt": customIcon.alt
+    }, []),
+    "propertyOffers": coalesce(propertyOffers[] {
+      _key,
+      title,
+      iconKey,
+      "customIconUrl": customIcon.asset->url,
+      "customIconAlt": customIcon.alt
+    }, [])
   }`;
   try {
     const result = await client.fetch(query, { slug });

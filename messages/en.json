@@ -131,6 +131,17 @@
     "seoText": {
       "contentMissing": "SEO content is not available."
     },
+    "propertyDetail": {
+      "propertyDetails": "Property details",
+      "whatThisPropertyOffers": "What this property offers",
+      "similarProperties": "Similar Properties",
+      "getInTouch": "Get in touch",
+      "dealTypeSale": "Sale",
+      "dealTypeRent": "Rent",
+      "dealTypeShortTerm": "Short-term rent",
+      "dealTypeLongTerm": "Long-term rent",
+      "dealTypePrice": "Price"
+    },
     "propertyCard": {
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",

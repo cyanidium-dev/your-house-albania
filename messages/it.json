@@ -131,6 +131,17 @@
     "seoText": {
       "contentMissing": "Il contenuto SEO non è disponibile."
     },
+    "propertyDetail": {
+      "propertyDetails": "Dettagli della proprietà",
+      "whatThisPropertyOffers": "Cosa offre questa proprietà",
+      "similarProperties": "Proprietà simili",
+      "getInTouch": "Contattaci",
+      "dealTypeSale": "Vendita",
+      "dealTypeRent": "Affitto",
+      "dealTypeShortTerm": "Affitto a breve termine",
+      "dealTypeLongTerm": "Affitto a lungo termine",
+      "dealTypePrice": "Prezzo"
+    },
     "propertyCard": {
       "bedrooms": "Camere",
       "bathrooms": "Bagni",

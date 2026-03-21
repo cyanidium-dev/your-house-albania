@@ -131,6 +131,17 @@
     "seoText": {
       "contentMissing": "Përmbajtja SEO nuk është e disponueshme."
     },
+    "propertyDetail": {
+      "propertyDetails": "Detajet e pronës",
+      "whatThisPropertyOffers": "Çfarë ofron kjo pronë",
+      "similarProperties": "Prona të ngjashme",
+      "getInTouch": "Na kontaktoni",
+      "dealTypeSale": "Shitje",
+      "dealTypeRent": "Qira",
+      "dealTypeShortTerm": "Qira afatshkurtër",
+      "dealTypeLongTerm": "Qira afatgjatë",
+      "dealTypePrice": "Çmimi"
+    },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",

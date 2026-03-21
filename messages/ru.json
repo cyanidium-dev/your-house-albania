@@ -131,6 +131,17 @@
     "seoText": {
       "contentMissing": "SEO-текст недоступен."
     },
+    "propertyDetail": {
+      "propertyDetails": "Детали объекта",
+      "whatThisPropertyOffers": "Что предлагает этот объект",
+      "similarProperties": "Похожие объекты",
+      "getInTouch": "Связаться",
+      "dealTypeSale": "Продажа",
+      "dealTypeRent": "Аренда",
+      "dealTypeShortTerm": "Краткосрочная аренда",
+      "dealTypeLongTerm": "Долгосрочная аренда",
+      "dealTypePrice": "Цена"
+    },
     "propertyCard": {
       "bedrooms": "Спальни",
       "bathrooms": "Санузлы",

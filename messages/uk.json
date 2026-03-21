@@ -131,6 +131,17 @@
     "seoText": {
       "contentMissing": "SEO-текст недоступний."
     },
+    "propertyDetail": {
+      "propertyDetails": "Деталі об'єкта",
+      "whatThisPropertyOffers": "Що пропонує цей об'єкт",
+      "similarProperties": "Схожі об'єкти",
+      "getInTouch": "Зв'язатися",
+      "dealTypeSale": "Продаж",
+      "dealTypeRent": "Оренда",
+      "dealTypeShortTerm": "Краткострокова оренда",
+      "dealTypeLongTerm": "Довгострокова оренда",
+      "dealTypePrice": "Ціна"
+    },
     "propertyCard": {
       "bedrooms": "Спальні",
       "bathrooms": "Ванні",
