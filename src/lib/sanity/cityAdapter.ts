@@ -52,3 +52,68 @@ export function normalizeCitiesOrder(cities: SanityCity[], locale: string): City
   }
   return result.slice(0, 4);
 }
+
+export type LocationCarouselCard = {
+  _id?: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  heroImageUrl: string;
+  /** Resolved href for this item (city landing or district catalog). */
+  href: string;
+};
+
+type ResolvedItem = {
+  _id?: string;
+  _type?: string;
+  title?: unknown;
+  slug?: string | { current?: string };
+  shortDescription?: unknown;
+  heroImage?: { asset?: { url?: string } };
+  heroImageUrl?: string;
+  city?: { slug?: string | { current?: string } };
+};
+
+function slugOf(x: unknown): string {
+  if (!x) return '';
+  if (typeof x === 'string') return x;
+  return (x as { current?: string } | null | undefined)?.current ?? '';
+}
+
+/** Map resolvedManualItems (city or district) to LocationCarouselCard with correct href. */
+export function mapResolvedManualItemsToCards(
+  items: ResolvedItem[],
+  locale: string,
+  linkTargetType: 'catalog' | 'landing' | undefined
+): LocationCarouselCard[] {
+  const linkLanding = linkTargetType === 'landing';
+  const result: LocationCarouselCard[] = [];
+  for (const item of items) {
+    const slug = slugOf(item.slug);
+    if (!slug) continue;
+    const title = resolveLocalizedString(item.title as never, locale) || '—';
+    const shortDescription = resolveLocalizedString(item.shortDescription as never, locale) || '';
+    const heroUrl =
+      item.heroImageUrl ??
+      (item.heroImage as { asset?: { url?: string } } | undefined)?.asset?.url ??
+      '';
+    const citySlug = slugOf(item.city?.slug);
+    const href =
+      item._type === 'district'
+        ? citySlug
+          ? `/${locale}/properties/${citySlug}/${slug}`
+          : `/${locale}/properties`
+        : linkLanding
+          ? `/${locale}/cities/${slug}`
+          : `/${locale}/properties?city=${slug}`;
+    result.push({
+      _id: item._id,
+      title,
+      slug,
+      shortDescription,
+      heroImageUrl: heroUrl,
+      href,
+    });
+  }
+  return result;
+}

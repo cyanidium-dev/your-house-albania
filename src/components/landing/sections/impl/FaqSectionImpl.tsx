@@ -13,6 +13,7 @@ import {
 export type FaqData = {
   title?: string;
   items: { question: string; answer: string | PortableTextBlock[] | null | undefined }[];
+  imageMode?: 'withImage' | 'withoutImage';
 } | null;
 
 type Props = {
@@ -31,10 +32,13 @@ const FAQ: React.FC<Props> = async ({ faqData }) => {
           { question: t('q3'), answer: t('answer') },
         ];
 
+  const showImage = faqData?.imageMode !== 'withoutImage';
+
   return (
-        <section id='faqs' className="py-16 md:py-24">
+        <section id='faqs' className="py-12 md:py-16">
             <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
-                <div className="grid lg:grid-cols-2 gap-10 ">
+                <div className={`grid gap-10 ${showImage ? 'lg:grid-cols-2' : ''}`}>
+                    {showImage ? (
                     <div className='lg:mx-0 mx-auto'>
                         <Image
                             src="/images/faqs/faq-image.png"
@@ -45,7 +49,8 @@ const FAQ: React.FC<Props> = async ({ faqData }) => {
                             unoptimized={true}
                         />
                     </div>
-                    <div className='lg:px-12'>
+                    ) : null}
+                    <div className={showImage ? 'lg:px-12' : ''}>
                         <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2">
                             <Icon icon="ph:house-simple-fill" className="text-2xl text-primary " />
                             {t('badge')}

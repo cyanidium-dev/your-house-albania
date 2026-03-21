@@ -57,7 +57,7 @@ export function LandingGridSection({
   if (!cards.length) return null
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {(title || subtitle) && (
           <div className="mb-10 flex items-end justify-between gap-6 flex-wrap">

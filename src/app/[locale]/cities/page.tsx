@@ -1,13 +1,28 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { CitiesBreadcrumb } from "@/components/shared/CitiesBreadcrumb";
+import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import {
+  fetchCitiesIndexLanding,
+  fetchSiteSettings,
+} from "@/lib/sanity/client";
+import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  await params;
+  const { locale } = await params;
+  const [landing, siteSettings] = await Promise.all([
+    fetchCitiesIndexLanding(),
+    fetchSiteSettings(),
+  ]);
+  if (landing) {
+    const seo = (landing as { seo?: unknown }).seo ?? null;
+    const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
+    return buildLandingMetadata(seo as never, siteDefaultSeo as never, locale);
+  }
   const t = await getTranslations("Cities");
   return {
     title: t("title"),
@@ -17,6 +32,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CitiesIndexPage({ params }: Props) {
   const { locale } = await params;
+  const landing = await fetchCitiesIndexLanding();
+
+  if (landing) {
+    return (
+      <>
+        <section className="pt-44">
+          <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+            <CitiesBreadcrumb locale={locale} />
+          </div>
+        </section>
+        <LandingRenderer locale={locale} landing={landing as never} />
+      </>
+    );
+  }
+
   const t = await getTranslations("Cities");
   return (
     <section className="pt-44 pb-20">

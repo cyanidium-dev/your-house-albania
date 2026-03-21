@@ -128,6 +128,9 @@
     }
   },
   "Shared": {
+    "seoText": {
+      "contentMissing": "SEO content is not available."
+    },
     "propertyCard": {
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",

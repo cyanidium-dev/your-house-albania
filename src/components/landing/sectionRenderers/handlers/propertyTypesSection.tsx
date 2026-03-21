@@ -16,6 +16,7 @@ export const propertyTypesSectionHandler: SectionHandler = async ({ locale, sect
   const propertyTypesData = {
     title: resolveLocalizedString(section.title as never, locale) || undefined,
     subtitle: resolveLocalizedString(section.subtitle as never, locale) || undefined,
+    shortLine: resolveLocalizedString(section.shortLine as never, locale) || undefined,
     ctaLabel: resolveLocalizedString(section.cta?.label as never, locale) || undefined,
     ctaHref: section.cta?.href,
     propertyTypes: types,

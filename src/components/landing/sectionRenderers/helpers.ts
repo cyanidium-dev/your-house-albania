@@ -28,8 +28,13 @@ export function resolveRichTextDataFromContent(
   let data: SeoTextData = null
   const raw = content
   if (typeof raw === 'object' && raw !== null && !Array.isArray(raw)) {
-    const str = resolveLocalizedString(raw as never, locale)
-    if (typeof str === 'string' && str.trim()) data = { content: str, isPlainText: true }
+    const arr = resolveLocalizedContent(raw as never, locale)
+    if (arr.length > 0) {
+      data = { content: arr, isPlainText: false }
+    } else {
+      const str = resolveLocalizedString(raw as never, locale)
+      if (typeof str === 'string' && str.trim()) data = { content: str, isPlainText: true }
+    }
   } else if (Array.isArray(raw)) {
     const arr = resolveLocalizedContent(raw as never, locale)
     if (arr.length > 0) data = { content: arr, isPlainText: false }
@@ -60,10 +65,15 @@ export function resolveFaqDataFromSection(
     })
     .filter((x): x is { question: string; answer: string | PortableTextBlock[] } => x !== null)
 
+  const imageModeRaw = (section as { imageMode?: string })?.imageMode
+  const imageMode: 'withImage' | 'withoutImage' | undefined =
+    imageModeRaw === 'withImage' || imageModeRaw === 'withoutImage' ? imageModeRaw : undefined
+
   return itemsResolved.length > 0
     ? {
         title: resolveLocalizedString(section.title as never, locale) || undefined,
         items: itemsResolved,
+        imageMode,
       }
     : null
 }

@@ -18,6 +18,9 @@ export type LandingSectionBase = {
   cities?: unknown[]
   districts?: unknown[]
   propertyTypes?: unknown[]
+  resolvedManualItems?: unknown[]
+  headings?: unknown[]
+  rows?: Array<{ cells?: unknown[] }>
   description?: unknown
   benefits?: unknown[]
   primaryImage?: { asset?: { url?: string }; alt?: string }
@@ -36,6 +39,7 @@ export type LandingSectionBase = {
   mediaImage?: { asset?: { url?: string }; alt?: string }
   mediaVideoUrl?: string
   stats?: unknown[]
+  imageMode?: 'withImage' | 'withoutImage'
 }
 
 export type LandingPageDoc = {
