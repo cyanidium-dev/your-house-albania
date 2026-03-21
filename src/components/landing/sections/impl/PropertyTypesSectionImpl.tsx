@@ -65,7 +65,7 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
           <div className="grid grid-cols-2 gap-10">
             {types.map((type, index) => (
               <div
-                key={type._id ?? type.slug || `property-type-${index}`}
+                key={type._id ?? (type.slug || `property-type-${index}`)}
                 className="relative rounded-2xl overflow-hidden group"
               >
                 <Link href={getTypeLink(type)}>
