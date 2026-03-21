@@ -7,5 +7,4 @@ export const FooterLinks: footerlinks[] = [
     { key: 'contactUs', href: '/contactus' },
     { key: 'blog', href: '/blog' },
     { key: 'notFound', href: '/not-found' },
-    { key: 'documentation', href: '/documentation' },
 ]

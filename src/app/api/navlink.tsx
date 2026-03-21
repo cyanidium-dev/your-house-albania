@@ -7,5 +7,4 @@ export const navLinks: NavLinks[] = [
   { key: 'cities', href: '/cities' },
   { key: 'blog', href: '/blog' },
   { key: 'contact', href: '/contactus' },
-  { key: 'docs', href: '/documentation' },
 ]
