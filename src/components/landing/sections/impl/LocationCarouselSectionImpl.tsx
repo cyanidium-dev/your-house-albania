@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
 import type { CityCard } from "@/lib/sanity/cityAdapter";
 
 export type CitiesData = {
@@ -9,6 +8,7 @@ export type CitiesData = {
   subtitle?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  linkTargetType?: "catalog" | "landing";
   cities: CityCard[];
 } | null;
 
@@ -16,18 +16,26 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
   locale,
   citiesData,
 }) => {
-  const t = await getTranslations("Home.services");
   const badge = "Cities";
-  const title = citiesData?.title ?? t("title");
-  const description = citiesData?.subtitle ?? t("description");
-  const ctaLabel = citiesData?.ctaLabel ?? t("viewProperties");
-  const ctaHref = citiesData?.ctaHref ?? "/properties";
-  const href = ctaHref.startsWith("/")
-    ? `/${locale}${ctaHref}`
-    : `/${locale}/${ctaHref}`;
+  const title = citiesData?.title;
+  const description = citiesData?.subtitle;
+  const ctaLabel = citiesData?.ctaLabel;
+  const ctaHref = citiesData?.ctaHref;
+  const href = ctaHref
+    ? ctaHref.startsWith("/")
+      ? `/${locale}${ctaHref}`
+      : `/${locale}/${ctaHref}`
+    : null;
 
   const cities = Array.isArray(citiesData?.cities) ? citiesData.cities : [];
+  const linkTargetType = citiesData?.linkTargetType;
   const [big1, big2, small1, small2] = cities;
+
+  const toCardHref = (citySlug?: string) => {
+    if (!citySlug) return `/${locale}/properties`;
+    if (linkTargetType === "landing") return `/${locale}/cities/${citySlug}`;
+    return `/${locale}/properties?city=${citySlug}`;
+  };
 
   const renderCard = (
     city: CityCard,
@@ -47,18 +55,22 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
           href={linkPath}
           className={`block relative w-full ${size === "big" ? "aspect-[680/386]" : "aspect-[320/386]"}`}
         >
-          <Image
-            src={city.heroImageUrl || "/images/categories/villas.jpg"}
-            alt={city.title}
-            fill
-            className="object-cover object-center"
-            sizes={
-              size === "big"
-                ? "(max-width: 1024px) 100vw, 50vw"
-                : "(max-width: 1024px) 50vw, 25vw"
-            }
-            unoptimized={!!city.heroImageUrl?.startsWith("http")}
-          />
+          {city.heroImageUrl ? (
+            <Image
+              src={city.heroImageUrl}
+              alt={city.title}
+              fill
+              className="object-cover object-center"
+              sizes={
+                size === "big"
+                  ? "(max-width: 1024px) 100vw, 50vw"
+                  : "(max-width: 1024px) 50vw, 25vw"
+              }
+              unoptimized={!!city.heroImageUrl?.startsWith("http")}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-dark/10 dark:bg-white/10" />
+          )}
         </Link>
         <Link
           href={linkPath}
@@ -114,34 +126,40 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
               />
               {badge}
             </p>
-            <h2 className="text-2xl sm:text-3xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0">
-              {title}
-            </h2>
-            <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0">
-              {description}
-            </p>
-            <Link
-              href={href}
-              className="py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full font-semibold mt-8 hover:bg-dark duration-300"
-            >
-              {ctaLabel}
-            </Link>
+            {title ? (
+              <h2 className="text-2xl sm:text-3xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0">
+                {title}
+              </h2>
+            ) : null}
+            {description ? (
+              <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0">
+                {description}
+              </p>
+            ) : null}
+            {ctaLabel && href ? (
+              <Link
+                href={href}
+                className="py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full font-semibold mt-8 hover:bg-dark duration-300"
+              >
+                {ctaLabel}
+              </Link>
+            ) : null}
           </div>
           {big1 &&
-            renderCard(big1, "big", `/${locale}/properties?city=${big1.slug}`)}
+            renderCard(big1, "big", toCardHref(big1.slug))}
           {big2 &&
-            renderCard(big2, "big", `/${locale}/properties?city=${big2.slug}`)}
+            renderCard(big2, "big", toCardHref(big2.slug))}
           {small1 &&
             renderCard(
               small1,
               "small",
-              `/${locale}/properties?city=${small1.slug}`,
+              toCardHref(small1.slug),
             )}
           {small2 &&
             renderCard(
               small2,
               "small",
-              `/${locale}/properties?city=${small2.slug}`,
+              toCardHref(small2.slug),
             )}
         </div>
       </div>

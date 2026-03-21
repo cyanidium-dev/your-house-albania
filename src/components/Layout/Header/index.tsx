@@ -51,6 +51,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
   }, [handleScroll])
 
   const isHomepage = pathname === "/" || /^\/(en|uk|ru|al|it)\/?$/.test(pathname)
+  const primaryNavItems = getNavLinks()
 
   return (
     <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 md:h-24 md:py-1`}>
@@ -58,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
         <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
         <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
           <div className="ml-0.5 md:ml-[14px] min-w-0 max-w-[45%] md:max-w-none shrink">
-            <Link href={`/${locale}`} className="block h-8 md:h-auto flex items-center max-w-full min-w-0">
+            <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
               {siteSettings?.logoUrl ? (
                 <>
                   <Image
@@ -100,7 +101,28 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
               )}
             </Link>
           </div>
-          <div className='flex items-center gap-1 sm:gap-6 min-w-0 shrink-0'>
+          <div className='hidden xl:flex items-center gap-4 min-w-0 flex-1 px-6'>
+            {primaryNavItems.map((item) => {
+              const href = item.href === '/' ? `/${locale}` : `/${locale}${item.href}`
+              const active = pathname === href || pathname.startsWith(`${href}/`)
+              return (
+                <Link
+                  key={item.key}
+                  href={href}
+                  className={cn(
+                    'text-sm font-medium transition-colors',
+                    isHomepage && !sticky
+                      ? 'text-white/90 hover:text-white'
+                      : 'text-dark/80 dark:text-white/80 hover:text-primary dark:hover:text-primary',
+                    active && 'text-primary dark:text-primary'
+                  )}
+                >
+                  {t(`nav.${item.key}`)}
+                </Link>
+              )
+            })}
+          </div>
+          <div className='flex items-center gap-1 sm:gap-4 min-w-0 shrink-0'>
             <LanguageSwitcher />
             <CurrencySwitcher />
             <button
@@ -172,7 +194,7 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                 <span>
                   <Icon icon={'ph:list'} width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
                 </span>
-                <span className='hidden sm:block'>{t('menu')}</span>
+                <span className='hidden lg:block'>{t('menu')}</span>
               </button>
             </div>
           </div>
@@ -218,12 +240,12 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                 {getNavLinks().map((item, index) => (
                   <NavLink key={index} item={{ label: t(`nav.${item.key}`), href: item.href }} onClick={() => setNavbarOpen(false)} />
                 ))}
-                <li className='flex items-center gap-4'>
-                  <Link href={`/${locale}/contactus`} className='py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full border border-primary font-semibold mt-3 hover:bg-transparent hover:text-primary duration-300'>
-                    {t('signIn')}
+                <li className='flex items-center gap-4 flex-wrap'>
+                  <Link href={catalogPath(locale)} className='py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full border border-primary font-semibold mt-3 hover:bg-transparent hover:text-primary duration-300'>
+                    {t('cta.viewProperties')}
                   </Link>
-                  <Link href={`/${locale}`} className='py-4 px-8 bg-transparent border border-primary text-base leading-4 block w-fit text-primary rounded-full font-semibold mt-3 hover:bg-primary hover:text-white duration-300'>
-                    {t('signUp')}
+                  <Link href={`/${locale}/contactus`} className='py-4 px-8 bg-transparent border border-primary text-base leading-4 block w-fit text-primary rounded-full font-semibold mt-3 hover:bg-primary hover:text-white duration-300'>
+                    {t('nav.contact')}
                   </Link>
                 </li>
               </ul>
@@ -234,9 +256,11 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
             <p className='text-base sm:text-xm font-normal text-white/40'>
               {t('contact')}
             </p>
-            <Link href={siteSettings?.email ? `mailto:${siteSettings.email}` : '#'} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-              {siteSettings?.email || 'hello@homely.com'}
-            </Link>
+            {siteSettings?.email ? (
+              <Link href={`mailto:${siteSettings.email}`} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
+                {siteSettings.email}
+              </Link>
+            ) : null}
             <Link href={catalogPath(locale)} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
               {t('cta.viewProperties')}
             </Link>

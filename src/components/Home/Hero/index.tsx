@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { fetchCatalogFilterOptions } from '@/lib/sanity/client'
 import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'
 
@@ -9,14 +9,31 @@ type HeroData = {
   subtitle?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  searchTabs?: Array<{ key?: string; label?: string }>;
+  searchEnabled?: boolean;
+  backgroundImageUrl?: string;
+  backgroundImageAlt?: string;
 } | null;
 
 const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale, heroData }) => {
-  const t = await getTranslations('Home.hero')
-  const tFilters = await getTranslations('Catalog.filters')
-  const shortLine = heroData?.shortLine ?? t('location')
-  const title = heroData?.title ?? t('title')
+  const shortLine = heroData?.shortLine
+  const title = heroData?.title
   const subtitle = heroData?.subtitle
+  const bgImageUrl = heroData?.backgroundImageUrl
+  const bgImageAlt = heroData?.backgroundImageAlt || title || 'Hero background'
+  const searchEnabled = heroData?.searchEnabled === true
+  const cmsTabs = Array.isArray(heroData?.searchTabs)
+    ? heroData.searchTabs
+        .map((t) => {
+          const key = t?.key
+          if (key !== 'sale' && key !== 'rent' && key !== 'short-term') return null
+          return { key, label: t?.label }
+        })
+        .filter(Boolean) as Array<{ key: 'sale' | 'rent' | 'short-term'; label?: string }>
+    : []
+
+  // Strict CMS-driven section: no fallback content.
+  if (!title) return null
 
   const filterOptions = await fetchCatalogFilterOptions(locale)
   const locationOptions = filterOptions.locations.map((o) => ({ value: o.value, label: o.label }))
@@ -26,41 +43,48 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale,
 
   return (
     <section className='!py-0'>
-      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 overflow-hidden relative min-h-screen flex'>
-        {/* Full-width bottom gradient overlay (above image) */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-black via-black/50 to-transparent"
-          aria-hidden
-        />
+      <div className='overflow-hidden relative min-h-screen flex bg-dark/70'>
+        {bgImageUrl ? (
+          <>
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={bgImageUrl}
+                alt={bgImageAlt}
+                fill
+                className="object-cover object-center"
+                priority={false}
+                unoptimized={bgImageUrl.startsWith('http')}
+              />
+            </div>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-black via-black/50 to-transparent" aria-hidden />
+          </>
+        ) : null}
         <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
-          {/* Image layer */}
-          <div className='hidden md:block absolute bottom-0 -right-68 z-0'>
-            <Image
-              src={'/images/hero/heroBanner.png'}
-              alt='heroImg'
-              width={1082}
-              height={1016}
-              priority={false}
-              unoptimized={true}
-              className="select-none"
-            />
-          </div>
-
-          {/* Content layer */}
-          <div className='relative text-white dark:text-dark text-center md:text-start z-20'>
-            <p className='text-inherit text-xm font-medium'>{shortLine}</p>
+          <div className='relative text-white text-center md:text-start z-20'>
+            {shortLine ? <p className='text-inherit text-xm font-medium'>{shortLine}</p> : null}
             <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
               {title}
             </h1>
             {subtitle ? (
               <p className='text-inherit text-lg mb-6'>{subtitle}</p>
             ) : null}
-            <div className="mt-12 md:mt-16 flex justify-center">
-              <HeroSearchWidget
-                locationOptions={locationOptions}
-                propertyTypeOptions={propertyTypeOptions}
-              />
-            </div>
+            {heroData?.ctaLabel && heroData?.ctaHref ? (
+              <Link
+                href={heroData.ctaHref.startsWith('/') ? `/${locale}${heroData.ctaHref}` : heroData.ctaHref}
+                className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
+              >
+                {heroData.ctaLabel}
+              </Link>
+            ) : null}
+            {searchEnabled ? (
+              <div className="mt-12 md:mt-16 flex justify-center">
+                <HeroSearchWidget
+                  locationOptions={locationOptions}
+                  propertyTypeOptions={propertyTypeOptions}
+                  searchTabs={cmsTabs}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

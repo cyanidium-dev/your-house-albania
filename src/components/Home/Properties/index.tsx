@@ -1,6 +1,4 @@
 import { Icon } from '@iconify/react'
-import { getProperties } from '@/data/properties'
-import { getTranslations } from 'next-intl/server'
 import type { PropertyHomes } from '@/types/properyHomes'
 import { TopOffersCarouselClient, type TopOffersGroup } from './TopOffersCarouselClient'
 
@@ -11,29 +9,29 @@ const Properties: React.FC<{
   propertiesData?: PropertiesData;
   propertyItems?: PropertyHomes[] | null;
   topOffersGroups?: Record<TopOffersGroup, PropertyHomes[]> | null;
-}> = async ({ locale, propertiesData, propertyItems, topOffersGroups }) => {
+  initialGroup?: TopOffersGroup;
+}> = async ({ locale, propertiesData, propertyItems, topOffersGroups, initialGroup }) => {
   const debug = process.env.NODE_ENV === 'development'
-  const t = await getTranslations('Home.properties')
-  const tTop = await getTranslations('Home.topOffers')
-  const badge = propertiesData?.badge ?? t('badge')
-  const title = tTop('title')
-  const description = tTop('description')
+  const badge = propertiesData?.badge
+  const title = propertiesData?.title
+  const description = propertiesData?.description
 
-  const fallbackItems = Array.isArray(propertyItems) && propertyItems.length > 0
-    ? propertyItems.slice(0, 24)
-    : getProperties().slice(0, 24)
-
-  const groups = topOffersGroups && Object.keys(topOffersGroups).length > 0
-    ? topOffersGroups
-    : {
-        popular: fallbackItems
-          .filter((x) => (x as Partial<PropertyHomes>).featured === true)
-          .slice(0, 24),
-        new: fallbackItems.slice(0, 24),
-        highDemand: fallbackItems
-          .filter((x) => Boolean((x as Partial<PropertyHomes>).investment))
-          .slice(0, 24),
+  const groups = topOffersGroups && Object.keys(topOffersGroups).length > 0 ? topOffersGroups : null
+  const groupsCounts = groups
+    ? {
+        popular: Array.isArray(groups.popular) ? groups.popular.length : 0,
+        new: Array.isArray(groups.new) ? groups.new.length : 0,
+        highDemand: Array.isArray(groups.highDemand) ? groups.highDemand.length : 0,
       }
+    : { popular: 0, new: 0, highDemand: 0 }
+  const hasAnyItems =
+    groupsCounts.popular > 0 ||
+    groupsCounts.new > 0 ||
+    groupsCounts.highDemand > 0 ||
+    (Array.isArray(propertyItems) && propertyItems.length > 0)
+
+  // Strict CMS-driven section: render nothing when no data.
+  if (!hasAnyItems) return null
   if (debug) {
     const safeCounts = (g: Record<TopOffersGroup, PropertyHomes[]>) => ({
       popular: Array.isArray(g.popular) ? g.popular.length : null,
@@ -44,8 +42,7 @@ const Properties: React.FC<{
       locale,
       hasTopOffersGroupsProp: !!topOffersGroups,
       propertyItemsCount: Array.isArray(propertyItems) ? propertyItems.length : null,
-      fallbackItemsCount: Array.isArray(fallbackItems) ? fallbackItems.length : null,
-      groupsCounts: safeCounts(groups as Record<TopOffersGroup, PropertyHomes[]>),
+      groupsCounts: safeCounts((groups ?? { popular: [], new: [], highDemand: [] }) as Record<TopOffersGroup, PropertyHomes[]>),
       sample: (groups as any)?.popular?.[0]
         ? {
             slug: (groups as any).popular[0].slug,
@@ -68,20 +65,23 @@ const Properties: React.FC<{
                 className='text-primary'
               />
             </span>
-            <p className='text-base font-semibold text-dark/75 dark:text-white/75'>
-              {badge}
-            </p>
+            {badge ? <p className='text-base font-semibold text-dark/75 dark:text-white/75'>{badge}</p> : null}
           </div>
-          <h2 className='text-40 lg:text-52 font-medium text-black dark:text-white text-center tracking-tight leading-11 mb-2'>
-            {title}
-          </h2>
-          <p className='text-xm font-normal text-black/50 dark:text-white/50 text-center'>
-            {description}
-          </p>
+          {title ? (
+            <h2 className='text-40 lg:text-52 font-medium text-black dark:text-white text-center tracking-tight leading-11 mb-2'>
+              {title}
+            </h2>
+          ) : null}
+          {description ? (
+            <p className='text-xm font-normal text-black/50 dark:text-white/50 text-center'>
+              {description}
+            </p>
+          ) : null}
         </div>
         <TopOffersCarouselClient
           locale={locale}
-          groups={groups as Record<TopOffersGroup, PropertyHomes[]>}
+          groups={(groups ?? { popular: [], new: [], highDemand: [] }) as Record<TopOffersGroup, PropertyHomes[]>}
+          initialGroup={initialGroup}
         />
       </div>
     </section>

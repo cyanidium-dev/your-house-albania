@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
 
 export type PropertyTypesData = {
@@ -16,13 +15,15 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
   locale,
   propertyTypesData,
 }) => {
-  const t = await getTranslations("Home.services");
-  const badge = "Property types";
-  const title = propertyTypesData?.title ?? t("title");
-  const subtitle = propertyTypesData?.subtitle ?? t("description");
-  const ctaLabel = propertyTypesData?.ctaLabel ?? t("viewProperties");
-  const ctaHref = propertyTypesData?.ctaHref ?? "/properties";
-  const href = ctaHref.startsWith("/") ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`;
+  const title = propertyTypesData?.title;
+  const subtitle = propertyTypesData?.subtitle;
+  const ctaLabel = propertyTypesData?.ctaLabel;
+  const ctaHref = propertyTypesData?.ctaHref;
+  if (!title) return null
+
+  const href = ctaHref
+    ? ctaHref.startsWith("/") ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`
+    : null;
 
   const types = Array.isArray(propertyTypesData?.propertyTypes) ? propertyTypesData.propertyTypes : [];
 
@@ -43,21 +44,20 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
             <div>
               <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2">
                 <Icon icon="ph:house-simple-fill" className="text-2xl text-primary " />
-                {badge}
               </p>
               <h2 className="lg:text-52 text-40 font-medium text-dark dark:text-white mt-4 mb-2">
                 {title}
               </h2>
-              <p className="text-base text-dark/50 dark:text-white/50">
-                {subtitle}
-              </p>
+              {subtitle ? <p className="text-base text-dark/50 dark:text-white/50">{subtitle}</p> : null}
             </div>
-            <Link
-              href={href}
-              className="py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white w-fit"
-            >
-              {ctaLabel}
-            </Link>
+            {ctaLabel && href ? (
+              <Link
+                href={href}
+                className="py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white w-fit"
+              >
+                {ctaLabel}
+              </Link>
+            ) : null}
           </div>
           <div className="grid grid-cols-2 gap-10">
             {types.map((type) => (
@@ -67,14 +67,18 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
               >
                 <Link href={getTypeLink(type)}>
                   <div className="block relative w-full aspect-[320/386]">
-                    <Image
-                      src={type.imageUrl || "/images/categories/villas.jpg"}
-                      alt={type.imageAlt || type.title}
-                      fill
-                      className="object-cover object-center"
-                      sizes="25vw"
-                      unoptimized={!!type.imageUrl?.startsWith("http")}
-                    />
+                    {type.imageUrl ? (
+                      <Image
+                        src={type.imageUrl}
+                        alt={type.imageAlt || type.title}
+                        fill
+                        className="object-cover object-center"
+                        sizes="25vw"
+                        unoptimized={!!type.imageUrl?.startsWith("http")}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-dark/10 dark:bg-white/10" />
+                    )}
                   </div>
                 </Link>
                 <Link

@@ -5,6 +5,7 @@ import { resolveLocalizedString } from '@/lib/sanity/localized'
 import {
   fetchHomeTopOffers,
   type CatalogProperty,
+  type HomeTopOffersSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard, mapSanityPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import type { SectionHandler } from './types'
@@ -30,12 +31,35 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
   }
 
   const mode = section.mode ?? 'auto'
+  const requestedLimitRaw = Number((section as { limit?: unknown } | null)?.limit)
+  const requestedLimit =
+    Number.isFinite(requestedLimitRaw) && requestedLimitRaw > 0
+      ? Math.min(Math.floor(requestedLimitRaw), 48)
+      : 24
+  const requestedSortRaw = String((section as { sort?: unknown } | null)?.sort ?? 'newest')
+  const sortAsGroup =
+    requestedSortRaw === 'popular' || requestedSortRaw === 'new' || requestedSortRaw === 'highDemand'
+      ? requestedSortRaw
+      : undefined
+  const requestedSort: HomeTopOffersSort =
+    requestedSortRaw === 'priceAsc' ||
+    requestedSortRaw === 'priceDesc' ||
+    requestedSortRaw === 'areaAsc' ||
+    requestedSortRaw === 'areaDesc'
+      ? requestedSortRaw
+      : 'newest'
 
   let propertyItems: PropertyHomes[] | null = null
   let topOffersGroups: { popular: PropertyHomes[]; new: PropertyHomes[]; highDemand: PropertyHomes[] } | null = null
 
   if (mode === 'selected' && Array.isArray(section.properties) && section.properties.length > 0) {
-    propertyItems = section.properties.map((prop) => mapSanityPropertyToCard(prop as never, locale))
+    const mapped = section.properties.map((prop) => mapSanityPropertyToCard(prop as never, locale))
+    const sorted = [...mapped]
+    if (requestedSort === 'priceAsc') sorted.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity))
+    else if (requestedSort === 'priceDesc') sorted.sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity))
+    else if (requestedSort === 'areaAsc') sorted.sort((a, b) => (a.area ?? Infinity) - (b.area ?? Infinity))
+    else if (requestedSort === 'areaDesc') sorted.sort((a, b) => (b.area ?? -Infinity) - (a.area ?? -Infinity))
+    propertyItems = sorted.slice(0, requestedLimit)
     if (debug) {
       console.log('[Landing][propertyCarouselSection] selected branch', {
         mappedCount: propertyItems.length,
@@ -54,9 +78,9 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
   } else {
     if (debug) console.log('[Landing][propertyCarouselSection] auto branch: fetching top offers')
     const [popular, newest, highDemand] = await Promise.all([
-      fetchHomeTopOffers('popular', 24),
-      fetchHomeTopOffers('new', 24),
-      fetchHomeTopOffers('highDemand', 24),
+      fetchHomeTopOffers('popular', requestedLimit, requestedSort),
+      fetchHomeTopOffers('new', requestedLimit, requestedSort),
+      fetchHomeTopOffers('highDemand', requestedLimit, requestedSort),
     ])
     if (debug) {
       console.log('[Landing][propertyCarouselSection] auto fetch results', {
@@ -66,9 +90,9 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
       })
     }
     topOffersGroups = {
-      popular: (popular ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)),
-      new: (newest ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)),
-      highDemand: (highDemand ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)),
+      popular: (popular ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
+      new: (newest ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
+      highDemand: (highDemand ?? []).map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit),
     }
     propertyItems = topOffersGroups.popular
     if (debug) {
@@ -108,6 +132,7 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
       propertiesData={propertiesData}
       propertyItems={propertyItems}
       topOffersGroups={topOffersGroups}
+      initialGroup={sortAsGroup}
     />
   )
 }

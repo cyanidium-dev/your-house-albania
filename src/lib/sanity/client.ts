@@ -230,11 +230,13 @@ export async function fetchFeaturedProperties(limit = 6): Promise<CatalogPropert
 }
 
 export type HomeTopOffersGroup = 'popular' | 'new' | 'highDemand';
+export type HomeTopOffersSort = 'newest' | 'priceAsc' | 'priceDesc' | 'areaAsc' | 'areaDesc';
 
 /** Fetch top offers for home slider groups (base: property). */
 export async function fetchHomeTopOffers(
   group: HomeTopOffersGroup,
-  limit = 24
+  limit = 24,
+  sort: HomeTopOffersSort = 'newest'
 ): Promise<CatalogProperty[] | null> {
   const client = getClient();
   if (!client) return null;
@@ -244,13 +246,15 @@ export async function fetchHomeTopOffers(
 
   if (group === 'popular') {
     where = `${where} && featured == true`;
-    order = '| order(_createdAt desc)';
   } else if (group === 'highDemand') {
     where = `${where} && defined(investment)`;
-    order = '| order(_createdAt desc)';
-  } else if (group === 'new') {
-    order = '| order(_createdAt desc)';
   }
+
+  if (sort === 'priceAsc') order = '| order(price asc)';
+  else if (sort === 'priceDesc') order = '| order(price desc)';
+  else if (sort === 'areaAsc') order = '| order(area asc)';
+  else if (sort === 'areaDesc') order = '| order(area desc)';
+  else order = '| order(_createdAt desc)';
 
   const query = `*[
     ${where}
@@ -428,6 +432,11 @@ export async function fetchSiteSettings(): Promise<unknown | null> {
       _key,
       platform,
       url
+    },
+    policyLinks[] {
+      _key,
+      href,
+      label
     },
     defaultSeo {
       metaTitle,

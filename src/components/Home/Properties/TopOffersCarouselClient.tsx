@@ -15,13 +15,15 @@ const GROUPS: TopOffersGroup[] = ["popular", "new", "highDemand"];
 export function TopOffersCarouselClient({
   locale,
   groups,
+  initialGroup = "popular",
 }: {
   locale: string;
   groups: Record<TopOffersGroup, PropertyHomes[]>;
+  initialGroup?: TopOffersGroup;
 }) {
   const debug = process.env.NODE_ENV === "development";
   const t = useTranslations("Home.topOffers");
-  const [active, setActive] = React.useState<TopOffersGroup>("popular");
+  const [active, setActive] = React.useState<TopOffersGroup>(initialGroup);
   const scrollerRef = React.useRef<HTMLDivElement>(null);
 
   const items = groups[active] ?? [];

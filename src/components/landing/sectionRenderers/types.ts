@@ -29,6 +29,13 @@ export type LandingSectionBase = {
   enabled?: boolean
   sourceMode?: 'manual' | 'auto' | string
   landings?: unknown[]
+  limit?: number
+  sort?: string
+  linkTargetType?: 'catalog' | 'landing' | string
+  mediaType?: 'image' | 'video' | string
+  mediaImage?: { asset?: { url?: string }; alt?: string }
+  mediaVideoUrl?: string
+  stats?: unknown[]
 }
 
 export type LandingPageDoc = {

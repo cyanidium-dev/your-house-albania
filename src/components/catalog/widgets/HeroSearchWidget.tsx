@@ -13,8 +13,6 @@ import { formatMoney } from "@/lib/currency/format";
 
 type DealTab = "sale" | "rent" | "short-term";
 
-const DEAL_TABS: DealTab[] = ["sale", "rent", "short-term"];
-
 const DEFAULT_RANGES_EUR: Record<DealTab | "any", { min: number; max: number }> = {
   any: { min: 50_000, max: 1_000_000 },
   sale: { min: 50_000, max: 1_000_000 },
@@ -25,28 +23,51 @@ const DEFAULT_RANGES_EUR: Record<DealTab | "any", { min: number; max: number }> 
 export function HeroSearchWidget({
   locationOptions,
   propertyTypeOptions,
+  searchTabs,
 }: {
   locationOptions: FilterOption[];
   propertyTypeOptions: FilterOption[];
+  searchTabs: Array<{ key: DealTab; label?: string }>;
 }) {
   const router = useRouter();
   const locale = useLocale();
-  const tHero = useTranslations("Home.hero");
   const tFilters = useTranslations("Catalog.filters");
 
   const { currency, rates } = useCurrency();
 
-  const [deal, setDeal] = React.useState<DealTab>("sale");
+  const tabs = React.useMemo(
+    () =>
+      (Array.isArray(searchTabs) ? searchTabs : [])
+        .filter((tab): tab is { key: DealTab; label?: string } =>
+          tab?.key === "sale" || tab?.key === "rent" || tab?.key === "short-term"
+        ),
+    [searchTabs]
+  );
+
+  const [deal, setDeal] = React.useState<DealTab | null>(() =>
+    tabs.length > 0 ? tabs[0].key : null
+  );
   const [city, setCity] = React.useState<string>("any");
   const [type, setType] = React.useState<string>("any");
 
-  const range = DEFAULT_RANGES_EUR[deal] ?? DEFAULT_RANGES_EUR.any;
+  React.useEffect(() => {
+    if (tabs.length === 0) {
+      setDeal(null);
+      return;
+    }
+    if (!deal || !tabs.some((t) => t.key === deal)) {
+      setDeal(tabs[0].key);
+    }
+  }, [tabs, deal]);
+
+  const range = deal ? DEFAULT_RANGES_EUR[deal] ?? DEFAULT_RANGES_EUR.any : DEFAULT_RANGES_EUR.any;
   const [priceValuesEur, setPriceValuesEur] = React.useState<[number, number]>([
     range.min,
     range.max,
   ]);
 
   React.useEffect(() => {
+    if (!deal) return;
     const next = DEFAULT_RANGES_EUR[deal] ?? DEFAULT_RANGES_EUR.any;
     setPriceValuesEur([next.min, next.max]);
   }, [deal]);
@@ -55,7 +76,7 @@ export function HeroSearchWidget({
     e.preventDefault();
 
     const params = new URLSearchParams();
-    params.set("deal", deal);
+    if (deal) params.set("deal", deal);
 
     if (city && city !== "any") params.set("city", city);
     if (type && type !== "any") params.set("type", type);
@@ -96,20 +117,16 @@ export function HeroSearchWidget({
       )}
     >
       {/* Tabs */}
+      {tabs.length > 0 ? (
       <div className="inline-flex items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10">
-        {DEAL_TABS.map((tab) => {
-          const active = tab === deal;
-          const label =
-            tab === "sale"
-              ? tHero("search.tabs.buy")
-              : tab === "rent"
-                ? tHero("search.tabs.rent")
-                : tHero("search.tabs.shortTerm");
+        {tabs.map((tab) => {
+          const active = tab.key === deal;
+          const label = tab.label?.trim() || tab.key;
           return (
             <button
-              key={tab}
+              key={tab.key}
               type="button"
-              onClick={() => setDeal(tab)}
+              onClick={() => setDeal(tab.key)}
               className={cn(
                 "h-9 px-4 rounded-full font-semibold text-sm min-w-0",
                 "transition-[background-color,color,box-shadow] duration-200 ease-out cursor-pointer",
@@ -124,6 +141,7 @@ export function HeroSearchWidget({
           );
         })}
       </div>
+      ) : null}
 
       {/* Filters row */}
       <form onSubmit={handleSubmit} className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto] gap-3 items-end min-w-0 [&>*]:min-w-0">

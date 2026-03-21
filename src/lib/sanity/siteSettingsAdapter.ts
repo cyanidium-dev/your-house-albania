@@ -10,6 +10,7 @@ export type ResolvedSiteSettings = {
   copyrightText: string;
   footerQuickLinks: { href: string; label: string }[];
   socialLinks: { platform: string; url: string }[];
+  policyLinks: { href: string; label: string }[];
 };
 
 type RawSiteSettings = {
@@ -26,6 +27,11 @@ type RawSiteSettings = {
     label?: Record<string, string>;
   }[];
   socialLinks?: { _key?: string; platform?: string; url?: string }[];
+  policyLinks?: {
+    _key?: string;
+    href?: string;
+    label?: Record<string, string>;
+  }[];
 };
 
 const DEFAULT_PHONE = "+1-212-456-789";
@@ -47,6 +53,7 @@ export function mapSiteSettingsToResolved(
       copyrightText: "",
       footerQuickLinks: [],
       socialLinks: [],
+      policyLinks: [],
     };
   }
 
@@ -64,6 +71,14 @@ export function mapSiteSettingsToResolved(
       url: s.url ?? "#",
     }));
 
+  const policyLinks = (raw.policyLinks ?? [])
+    .filter((p) => p?.href)
+    .map((p) => ({
+      href: p.href ?? "",
+      label: resolveLocalizedString(p.label as never, locale) || "",
+    }))
+    .filter((p) => p.href && p.label);
+
   return {
     logoUrl: (raw.logo as { asset?: { url?: string } })?.asset?.url ?? "",
     siteName: resolveLocalizedString(raw.siteName as never, locale) || "",
@@ -75,5 +90,6 @@ export function mapSiteSettingsToResolved(
       resolveLocalizedString(raw.copyrightText as never, locale) || "",
     footerQuickLinks,
     socialLinks,
+    policyLinks,
   };
 }
