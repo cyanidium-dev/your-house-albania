@@ -14,6 +14,7 @@ import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import PropertyCard from '@/components/shared/property/PropertyCard';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -139,6 +140,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const baseUrl = await getBaseUrl();
   const imageUrls = galleryImages.map((img) => img.url);
 
+  const t = await getTranslations('Shared.propertyCard');
+
   return (
         <section className="!pt-44 pb-20 relative" >
             <PropertyJsonLd
@@ -177,13 +180,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8'>
                                 <Icon icon={'solar:bed-linear'} width={20} height={20} />
                                 <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {beds} Bedrooms
+                                    {t('bedroomsCount', { count: beds })}
                                 </p>
                             </div>
                             <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 px-2 xs:px-4 mobile:px-8'>
                                 <Icon icon={'solar:bath-linear'} width={20} height={20} />
                                 <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {baths} Bathrooms
+                                    {t('bathroomsCount', { count: baths })}
                                 </p>
                             </div>
                             <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
@@ -193,7 +196,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                     height={20}
                                 />
                                 <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {area}m<sup>2</sup>
+                                    {area}{t('areaUnit')}
                                 </p>
                             </div>
                         </div>

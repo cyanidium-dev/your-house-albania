@@ -134,6 +134,8 @@
     "propertyCard": {
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
+      "bedroomsCount": "{count, plural, one {# Bedroom} other {# Bedrooms}}",
+      "bathroomsCount": "{count, plural, one {# Bathroom} other {# Bathrooms}}",
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Previous image",

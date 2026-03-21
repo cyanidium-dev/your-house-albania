@@ -134,6 +134,8 @@
     "propertyCard": {
       "bedrooms": "Спальни",
       "bathrooms": "Санузлы",
+      "bedroomsCount": "{count, plural, one {# спальня} few {# спальни} many {# спален} other {# спален}}",
+      "bathroomsCount": "{count, plural, one {# ванная} few {# ванные} many {# ванных} other {# ванных}}",
       "areaUnit": "м²",
       "pricePrefix": "$",
       "previousImage": "Предыдущее фото",

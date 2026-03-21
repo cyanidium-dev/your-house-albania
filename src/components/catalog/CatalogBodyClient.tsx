@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
@@ -53,6 +54,7 @@ export function CatalogBodyClient({
   currentPage,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
+  const tCard = useTranslations("Shared.propertyCard");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
   const cardRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
@@ -276,7 +278,7 @@ export function CatalogBodyClient({
                           </p>
                         </div>
                         <p className="text-[11px] text-dark/70 dark:text-white/70 mt-2 truncate">
-                          {previewItem.beds} bd • {previewItem.baths} ba • {previewItem.area} m2
+                          {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
                         </p>
                       </div>
                     </div>
@@ -305,7 +307,7 @@ export function CatalogBodyClient({
                         <p className="text-sm text-dark dark:text-white truncate">{previewItem.name}</p>
                         <p className="text-xs text-dark/60 dark:text-white/60 truncate">{previewItem.location}</p>
                         <p className="text-[11px] text-dark/70 dark:text-white/70 mt-1">
-                          {previewItem.beds} bd • {previewItem.baths} ba • {previewItem.area} m2
+                          {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
                         </p>
                       </div>
                     </div>
