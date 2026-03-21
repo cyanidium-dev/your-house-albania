@@ -21,6 +21,10 @@
     "switchTo": "Ndrysho monedhën në {currency}"
   },
   "Footer": {
+    "contactRequest": "Lini numrin tuaj të telefonit për zgjedhje të personalizuar të pasurive.",
+    "phonePlaceholder": "Numri i telefonit",
+    "submitButton": "Kërko një telefonatë",
+    "helperText": "Dëshironi zgjedhje të personalizuar apartamenti? Lini një kërkesë dhe do t'ju kontaktojmë.",
     "newsletter": "Qëndroni të përditësuar me lajmet, ofertat dhe propozimet ekskluzive.",
     "emailPlaceholder": "Vendosni email",
     "subscribe": "Abonohu",

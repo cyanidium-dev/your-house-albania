@@ -1,12 +1,23 @@
 'use client'
 import Link from "next/link";
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Icon } from "@iconify/react"
+import { Icon } from "@iconify/react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import type { ResolvedSiteSettings } from "@/lib/sanity/siteSettingsAdapter";
 
 type FooterProps = {
   siteSettings?: ResolvedSiteSettings;
 };
+
+function PhoneInputChevron() {
+  return (
+    <span className="phone-input-chevron ml-2 inline-flex shrink-0">
+      <Icon icon="ph:caret-down" width={16} height={16} className="text-white" aria-hidden />
+    </span>
+  );
+}
 
 const SOCIAL_ICONS: Record<string, string> = {
   twitter: 'ph:x-logo-bold',
@@ -23,6 +34,7 @@ function getSocialIcon(platform: string): string {
 const Footer = ({ siteSettings }: FooterProps) => {
   const locale = useLocale();
   const t = useTranslations('Footer');
+  const [phoneValue, setPhoneValue] = useState<string | undefined>(undefined);
 
   const quickLinks = siteSettings?.footerQuickLinks ?? [];
   const col1Links = quickLinks.slice(0, Math.ceil(quickLinks.length / 2));
@@ -33,17 +45,30 @@ const Footer = ({ siteSettings }: FooterProps) => {
       <div className="container mx-auto max-w-8xl min-w-0 pt-14 px-4 sm:px-6 lg:px-0">
         <div className="flex lg:items-center justify-between items-end lg:gap-11 pb-14 border-b border-white/10 lg:flex-nowrap flex-wrap gap-6">
           <p className="text-white text-sm lg:max-w-1/5 min-w-0">
-            {t('newsletter')}
+            {t('contactRequest')}
           </p>
           <div className="flex lg:flex-row flex-col items-stretch lg:items-center lg:gap-10 gap-3 min-w-0 w-full max-w-full">
             <div className="flex flex-wrap sm:flex-nowrap gap-2 lg:order-1 order-2 min-w-0 w-full max-w-full">
-              <input type="email" placeholder={t('emailPlaceholder')} className="rounded-full py-4 px-6 bg-white/10 placeholder:text-white text-white focus-visible:outline-0 min-w-0 flex-1 w-full sm:w-auto sm:min-w-[10rem]" />
-              <button className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer shrink-0">
-                {t('subscribe')}
+              <PhoneInput
+                international
+                countryCallingCodeEditable={false}
+                defaultCountry="UA"
+                value={phoneValue}
+                onChange={setPhoneValue}
+                placeholder={t('phonePlaceholder')}
+                autoComplete="tel"
+                countrySelectProps={{ arrowComponent: PhoneInputChevron }}
+                className="footer-cta-phone flex min-w-0 flex-1 rounded-full overflow-hidden bg-white/10 focus-within:ring-0 sm:min-w-[10rem]"
+                numberInputProps={{
+                  className: "rounded-full py-4 px-6 bg-transparent border-0 placeholder:text-white/70 text-white focus-visible:outline-0 focus-visible:ring-0 min-w-0 flex-1",
+                }}
+              />
+              <button type="button" className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer shrink-0">
+                {t('submitButton')}
               </button>
             </div>
             <p className="text-white/40 text-sm lg:max-w-[45%] order-1 lg:order-2 min-w-0">
-              {t('disclaimer')}
+              {t('helperText')}
             </p>
           </div>
           {(siteSettings?.socialLinks?.length ?? 0) > 0 ? (
