@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { fetchPropertyBySlug, fetchSiteSettings } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery } from '@/lib/sanity/propertyAdapter';
 import { Icon } from '@iconify/react';
-import { getTestimonials } from '@/data/testimonials';
+import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
@@ -92,10 +92,24 @@ export default async function PropertyDetailsPage({ params }: Props) {
     ? sanityFields.description.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
     : [];
 
-  const hasCoordinates =
-    (sanityProperty as { coordinates?: { lat?: number; lng?: number } | null })?.coordinates != null &&
-    typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lat === 'number' &&
-    typeof (sanityProperty as { coordinates: { lat?: number; lng?: number } })?.coordinates?.lng === 'number';
+  const sanityWithCoords = sanityProperty as {
+    coordinates?: { lat?: number; lng?: number } | null;
+    coordinatesLat?: number | null;
+    coordinatesLng?: number | null;
+  };
+  const resolvedCoordinates = (() => {
+    const coord = sanityWithCoords?.coordinates;
+    if (coord != null && typeof coord.lat === 'number' && typeof coord.lng === 'number' && Number.isFinite(coord.lat) && Number.isFinite(coord.lng)) {
+      return { lat: coord.lat, lng: coord.lng };
+    }
+    const lat = sanityWithCoords?.coordinatesLat;
+    const lng = sanityWithCoords?.coordinatesLng;
+    if (typeof lat === 'number' && typeof lng === 'number' && Number.isFinite(lat) && Number.isFinite(lng)) {
+      return { lat, lng };
+    }
+    return null;
+  })();
+  const hasCoordinates = resolvedCoordinates != null;
   const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
   const districtSlug = (sanityProperty as { district?: { slug?: string } })?.district?.slug;
 
@@ -269,19 +283,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                 <Image src="/images/properties/vector.svg" width={400} height={500} alt="vector" unoptimized={true} />
                             </div>
                         </div>
-                        {getTestimonials().slice(0, 1).map((item, index) => (
-                            <div key={index} className="border p-10 rounded-2xl border-dark/10 dark:border-white/20 mt-10 flex flex-col gap-6">
-                                <Icon icon="ph:house-simple" width={44} height={44} className="text-primary" />
-                                <p className='text-xm text-dark dark:text-white'>{item.review}</p>
-                                <div className="flex gap-6">
-                                    <Image src={item.image} alt={item.name} width={400} height={500} className='w-20 h-20 rounded-2xl' unoptimized={true} />
-                                    <div className="">
-                                        <h3 className='text-xm text-dark dark:text-white'>{item.name}</h3>
-                                        <h4 className='text-base text-dark/50 dark:text-white/50'>{item.position}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        <div className="mt-10">
+                          <PropertyLocationMap
+                            coordinates={resolvedCoordinates}
+                            mapHeightClassName="h-[420px]"
+                          />
+                        </div>
                     </div>
                 </div>
             </div>
