@@ -27,7 +27,7 @@ export default function BlogList({
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             <Link
-              href={`/${locale}/blogs`}
+              href={`/${locale}/blog`}
               className={`py-2.5 px-5 rounded-full text-sm font-semibold transition-colors ${
                 !currentCategory
                   ? "bg-primary text-white"
@@ -39,7 +39,7 @@ export default function BlogList({
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/${locale}/blogs?category=${encodeURIComponent(cat.slug)}`}
+                href={`/${locale}/blog?category=${encodeURIComponent(cat.slug)}`}
                 className={`py-2.5 px-5 rounded-full text-sm font-semibold transition-colors ${
                   currentCategory === cat.slug
                     ? "bg-primary text-white"

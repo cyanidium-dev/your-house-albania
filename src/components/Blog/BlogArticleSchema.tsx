@@ -17,7 +17,7 @@ export function BlogArticleSchema({
   siteLogoUrl,
 }: Props) {
   const base = baseUrl.replace(/\/$/, "");
-  const articleUrl = base ? `${base}/${locale}/blogs/${detail.slug}` : `/${locale}/blogs/${detail.slug}`;
+  const articleUrl = base ? `${base}/${locale}/blog/${detail.slug}` : `/${locale}/blog/${detail.slug}`;
   const publisherUrl = base || "https://example.com";
 
   const datePublished =
