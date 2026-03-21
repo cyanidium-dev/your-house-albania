@@ -18,6 +18,12 @@ type SiteDefaultSeo = {
   metaDescription?: LocalizedField;
 } | null;
 
+type ArticleMetadataOptions = {
+  coverImageUrl?: string;
+  baseUrl?: string;
+  slug?: string;
+};
+
 /** Builds Next Metadata from blog post SEO or blog settings SEO. */
 export function buildBlogMetadata(
   blogSeo: BlogSeo | undefined,
@@ -25,7 +31,8 @@ export function buildBlogMetadata(
   locale: string,
   fallbackTitle?: string,
   fallbackDescription?: string,
-  categoryLabel?: string
+  categoryLabel?: string,
+  articleOptions?: ArticleMetadataOptions
 ): Metadata {
   let title =
     resolveLocalizedString(blogSeo?.metaTitle as never, locale) ||
@@ -55,8 +62,17 @@ export function buildBlogMetadata(
       ? description
       : resolveLocalizedString(blogSeo?.ogDescription as never, locale) || description;
 
-  const ogImageUrl = (blogSeo?.ogImage as { asset?: { url?: string } })?.asset?.url;
-  const ogImageAbsolute = ogImageUrl && ogImageUrl.startsWith('http') ? ogImageUrl : undefined;
+  const seoOgImageUrl = (blogSeo?.ogImage as { asset?: { url?: string } })?.asset?.url;
+  const coverFallback = articleOptions?.coverImageUrl;
+  const ogImageAbsolute =
+    (seoOgImageUrl && seoOgImageUrl.startsWith('http') ? seoOgImageUrl : undefined) ||
+    (coverFallback && coverFallback.startsWith('http') ? coverFallback : undefined);
+
+  const base = articleOptions?.baseUrl?.replace(/\/$/, '');
+  const canonicalUrl =
+    base && articleOptions?.slug
+      ? `${base}/${locale}/blog/${articleOptions.slug}`
+      : undefined;
 
   const noIndex = blogSeo?.noIndex ?? false;
   const noFollow = blogSeo?.noFollow ?? false;
@@ -64,9 +80,13 @@ export function buildBlogMetadata(
   return {
     title,
     description: description || undefined,
+    ...(canonicalUrl && {
+      alternates: { canonical: canonicalUrl },
+    }),
     openGraph: {
       title: ogTitle,
       description: ogDescription,
+      ...(canonicalUrl && { url: canonicalUrl }),
       ...(ogImageAbsolute && {
         images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle }],
       }),

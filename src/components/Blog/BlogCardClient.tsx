@@ -24,11 +24,11 @@ export function BlogCardClient({
       ? formatBlogDate(new Date(publishedAt), locale)
       : null;
   if (!slug) return null;
-  const articleUrl = `/${locale}/blogs/${slug}`;
+  const articleUrl = `/${locale}/blog/${slug}`;
   const categoryPill = categoryLabel && (
     categorySlug ? (
       <Link
-        href={`/${locale}/blogs?category=${encodeURIComponent(categorySlug)}`}
+        href={`/${locale}/blog?category=${encodeURIComponent(categorySlug)}`}
         className="order-1 sm:order-2 py-2.5 px-5 bg-dark/5 rounded-full dark:bg-white/15 hover:bg-primary/10 active:bg-primary/15 transition-colors shrink-0 w-fit"
       >
         <span className="text-sm font-semibold text-dark dark:text-white">{categoryLabel}</span>

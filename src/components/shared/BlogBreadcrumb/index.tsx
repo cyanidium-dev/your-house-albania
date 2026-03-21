@@ -24,12 +24,12 @@ export async function BlogBreadcrumb({
 
   const items: BreadcrumbItem[] = [
     { label: homeLabel, href: `/${locale}` },
-    { label: blogLabel, href: postTitle ? `/${locale}/blogs` : undefined },
+    { label: blogLabel, href: postTitle ? `/${locale}/blog` : undefined },
   ];
 
   if (categorySlug && categoryLabel) {
     const categoryHref = postTitle
-      ? `/${locale}/blogs?category=${encodeURIComponent(categorySlug)}`
+      ? `/${locale}/blog?category=${encodeURIComponent(categorySlug)}`
       : undefined;
     items.push({ label: categoryLabel, href: categoryHref });
   }
@@ -40,10 +40,10 @@ export async function BlogBreadcrumb({
 
   const baseUrl = await getBaseUrl();
   const currentPath = postSlug
-    ? `/${locale}/blogs/${encodeURIComponent(postSlug)}`
+    ? `/${locale}/blog/${encodeURIComponent(postSlug)}`
     : categorySlug
-      ? `/${locale}/blogs?category=${encodeURIComponent(categorySlug)}`
-      : `/${locale}/blogs`;
+      ? `/${locale}/blog?category=${encodeURIComponent(categorySlug)}`
+      : `/${locale}/blog`;
   const jsonLdItems = items.map((it, i) => ({
     name: it.label,
     url: it.href ?? (i === items.length - 1 ? currentPath : undefined),

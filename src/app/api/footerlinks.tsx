@@ -5,7 +5,7 @@ export const FooterLinks: footerlinks[] = [
     { key: 'residentialHomes', href: '/residential-homes' },
     { key: 'apartments', href: '/appartment' },
     { key: 'contactUs', href: '/contactus' },
-    { key: 'blog', href: '/blogs' },
+    { key: 'blog', href: '/blog' },
     { key: 'notFound', href: '/not-found' },
     { key: 'documentation', href: '/documentation' },
 ]

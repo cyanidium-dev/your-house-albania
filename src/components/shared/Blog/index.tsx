@@ -52,7 +52,7 @@ const BlogSmall: React.FC<{
 
   const headerTitle = title?.trim() ? title : t("title");
   const headerDescription = subtitle?.trim() ? subtitle : t("description");
-  const ctaHref = cta?.href || `/${locale}/blogs`;
+  const ctaHref = cta?.href || `/${locale}/blog`;
   const ctaLabel = cta?.label || t("readAllArticles");
 
   return (
