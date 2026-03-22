@@ -70,7 +70,14 @@ export function FilterSelect({
         onValueChange={onValueChange}
         disabled={disabled}
       >
-        <Select.Trigger className={cn(triggerVariants({ radius }), className)}>
+        <Select.Trigger
+          className={cn(
+            triggerVariants({ radius }),
+            "overflow-hidden",
+            "[&>span:first-of-type]:min-w-0 [&>span:first-of-type]:truncate [&>span:first-of-type]:block",
+            className
+          )}
+        >
           <Select.Value placeholder={placeholder ?? anyLabel} />
           <Select.Icon className="absolute right-3 top-1/2 -translate-y-1/2 text-dark/60 dark:text-white/70 pointer-events-none">
             <Icon icon="ph:caret-down" width={16} height={16} />

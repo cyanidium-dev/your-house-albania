@@ -119,7 +119,7 @@ export function HeroSearchWidget({
     >
       {/* Tabs */}
       {tabs.length > 0 ? (
-      <div className="inline-flex items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10">
+      <div className="flex flex-wrap items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10 min-w-0">
         {tabs.map((tab) => {
           const active = tab.key === deal;
           const fallbackKey = tab.key === "short-term" ? "shortTerm" : tab.key;

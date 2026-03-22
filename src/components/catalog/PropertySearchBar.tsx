@@ -311,7 +311,8 @@ function PropertySearchBarInner({
       <div
         className={cn(
           "grid grid-cols-1 gap-4 items-end min-w-0",
-          "md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_auto_auto]",
+          "md:grid-cols-4",
+          "xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_auto_auto]",
           "[&>*]:min-w-0"
         )}
       >
@@ -345,10 +346,10 @@ function PropertySearchBarInner({
         />
 
         {/* Price range (label + slider + values) */}
-        <div>
-          <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1">
-            <span>{t("priceRange")}</span>
-            <span className="font-medium text-dark dark:text-white text-[11px]">
+        <div className="min-w-0">
+          <div className="flex items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
+            <span className="min-w-0 truncate">{t("priceRange")}</span>
+            <span className="font-medium text-dark dark:text-white text-[11px] min-w-0 truncate text-right">
               {priceIsDefaultNoFilter
                 ? t("any")
                 : `${formatMoney(convertFromBaseEur(priceValues[0], activeCurrency, rates), activeCurrency, locale)} – ${formatMoney(convertFromBaseEur(priceValues[1], activeCurrency, rates), activeCurrency, locale)}`}
@@ -378,11 +379,11 @@ function PropertySearchBarInner({
         </div>
 
         {/* Reset + Advanced + Search */}
-        <div className="flex items-end gap-2 justify-end min-w-0">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-4 xl:col-span-2">
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 max-w-[40vw] sm:max-w-none"
+            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
             onClick={() => router.push(catalogPath(locale))}
           >
             <span className="inline-block max-w-full truncate">
@@ -392,7 +393,7 @@ function PropertySearchBarInner({
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 max-w-[40vw] sm:max-w-none"
+            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
             onClick={() => setShowAdvanced((v) => !v)}
           >
             <span className="hidden sm:inline max-w-full truncate">
@@ -404,7 +405,7 @@ function PropertySearchBarInner({
           </Button>
           <Button
             type="submit"
-            className="h-10 px-6 rounded-full cursor-pointer"
+            className="h-10 px-6 rounded-full cursor-pointer w-full sm:w-auto shrink-0"
           >
             {t("search")}
           </Button>
