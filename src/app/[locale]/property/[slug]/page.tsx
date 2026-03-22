@@ -214,7 +214,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />
-                <div className="grid grid-cols-12 gap-8 mt-10">
+                <div className="grid grid-cols-12 gap-8 mt-10 items-start">
                     <div className="lg:col-span-8 col-span-12">
                         {amenities.length > 0 && (
                         <>
@@ -265,7 +265,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         </div>
                         )}
                     </div>
-                    <div className="lg:col-span-4 col-span-12">
+                    <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
                         <div className="bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <div className="flex items-center justify-between gap-4 mb-2">
                               <h4 className='text-dark text-3xl font-medium dark:text-white'>
@@ -284,7 +284,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         <div className="mt-10">
                           <PropertyLocationMap
                             coordinates={resolvedCoordinates}
-                            mapHeightClassName="h-[420px]"
+                            mapHeightClassName="h-[210px]"
                           />
                         </div>
                         {similarItems.length > 0 && (
