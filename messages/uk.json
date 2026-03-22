@@ -137,8 +137,10 @@
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",
+      "checkAllAmenities": "Всі зручності",
       "whatThisPropertyOffers": "Що пропонує цей об'єкт",
       "similarProperties": "Схожі об'єкти",
+      "checkAllPhotos": "Всі фото",
       "getInTouch": "Зв'язатися",
       "dealTypeSale": "Продаж",
       "dealTypeRent": "Оренда",

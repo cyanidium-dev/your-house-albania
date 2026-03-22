@@ -137,8 +137,10 @@
     },
     "propertyDetail": {
       "propertyDetails": "Property details",
+      "checkAllAmenities": "Check all amenities",
       "whatThisPropertyOffers": "What this property offers",
       "similarProperties": "Similar Properties",
+      "checkAllPhotos": "Check all photos",
       "getInTouch": "Get in touch",
       "dealTypeSale": "Sale",
       "dealTypeRent": "Rent",
