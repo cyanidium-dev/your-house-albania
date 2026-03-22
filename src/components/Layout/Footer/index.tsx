@@ -47,8 +47,8 @@ const Footer = ({ siteSettings }: FooterProps) => {
           <p className="text-white text-sm lg:max-w-1/5 min-w-0">
             {t('contactRequest')}
           </p>
-          <div className="flex lg:flex-row flex-col items-stretch lg:items-center lg:gap-10 gap-3 min-w-0 w-full max-w-full">
-            <div className="flex flex-wrap sm:flex-nowrap gap-2 lg:order-1 order-2 min-w-0 w-full max-w-full">
+          <div className="flex xl:flex-row flex-col items-stretch xl:items-center xl:gap-10 gap-3 min-w-0 w-full max-w-full">
+            <div className="flex flex-col xl:flex-row gap-2 xl:order-1 order-2 min-w-0 w-full max-w-full">
               <PhoneInput
                 international
                 countryCallingCodeEditable={false}
@@ -58,12 +58,12 @@ const Footer = ({ siteSettings }: FooterProps) => {
                 placeholder={t('phonePlaceholder')}
                 autoComplete="tel"
                 countrySelectProps={{ arrowComponent: PhoneInputChevron }}
-                className="footer-cta-phone flex min-w-0 flex-1 rounded-full overflow-hidden bg-white/10 focus-within:ring-0 sm:min-w-[10rem]"
+                className="footer-cta-phone flex min-w-0 flex-1 rounded-full overflow-hidden bg-white/10 focus-within:ring-0"
                 numberInputProps={{
-                  className: "rounded-full py-4 px-6 bg-transparent border-0 placeholder:text-white/70 text-white focus-visible:outline-0 focus-visible:ring-0 min-w-0 flex-1",
+                  className: "footer-cta-phone-input rounded-full py-4 px-6 bg-transparent border-0 placeholder:text-white/70 text-white focus-visible:outline-0 focus-visible:ring-0 min-w-0 flex-1",
                 }}
               />
-              <button type="button" className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer shrink-0">
+              <button type="button" className="text-dark bg-white py-4 px-8 font-semibold rounded-full hover:bg-primary hover:text-white duration-300 hover:cursor-pointer shrink-0 w-full xl:w-auto">
                 {t('submitButton')}
               </button>
             </div>
