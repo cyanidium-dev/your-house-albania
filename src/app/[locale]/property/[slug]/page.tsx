@@ -13,7 +13,8 @@ import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
 import { PriceText } from '@/components/shared/PriceText';
-import PropertyCard from '@/components/shared/property/PropertyCard';
+import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
+import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
@@ -74,7 +75,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function getSimilarCount(settings: unknown): number {
   const raw = (settings as { similarPropertiesCount?: unknown })?.similarPropertiesCount;
-  const n = typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? Math.floor(raw) : 2;
+  const n = typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? Math.floor(raw) : 8;
   return Math.min(n, 24);
 }
 
@@ -217,28 +218,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 <div className="grid grid-cols-12 gap-8 mt-10 items-start">
                     <div className="lg:col-span-8 col-span-12">
                         {amenities.length > 0 && (
-                        <>
-                        <h3 className='text-xl font-medium'>{tPropertyDetail('propertyDetails')}</h3>
-                        <div className="py-8 my-8 border-y border-dark/10 dark:border-white/20 flex flex-col gap-8">
-                            {amenities.map((item) => (
-                              <div key={item.key} className="flex items-center gap-6">
-                                <div className="w-8 h-8 shrink-0 flex items-center justify-center">
-                                  {item.customIconUrl ? (
-                                    <Image src={item.customIconUrl} width={32} height={32} alt={item.customIconAlt ?? ''} className="w-8 h-8 object-contain" unoptimized={true} />
-                                  ) : (
-                                    <Icon icon={resolvePropertyIconKey(item.iconKey)} width={24} height={24} className="text-dark dark:text-white" />
-                                  )}
-                                </div>
-                                <div>
-                                  <h3 className='text-dark dark:text-white text-xm'>{item.title}</h3>
-                                  {item.description && (
-                                    <p className='text-base text-dark/50 dark:text-white/50'>{item.description}</p>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                        </>
+                        <PropertyAmenitiesSection
+                          amenities={amenities}
+                          sectionTitle={tPropertyDetail('propertyDetails')}
+                          checkAllLabel={tPropertyDetail('checkAllAmenities')}
+                        />
                         )}
                         <div className="flex flex-col gap-5">
                             {descriptionParas.map((para, i) => (
@@ -287,18 +271,16 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             mapHeightClassName="h-[210px]"
                           />
                         </div>
-                        {similarItems.length > 0 && (
-                          <section className="mt-10">
-                            <h2 className="text-xl font-medium mb-4">{tPropertyDetail('similarProperties')}</h2>
-                            <div className="flex flex-col gap-4">
-                              {similarItems.map((item) => (
-                                <PropertyCard key={item.slug} item={item} locale={locale} view="large" />
-                              ))}
-                            </div>
-                          </section>
-                        )}
                     </div>
                 </div>
+                {similarItems.length > 0 && (
+                  <section className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20">
+                    <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+                      <h2 className="text-xl font-medium mb-6">{tPropertyDetail('similarProperties')}</h2>
+                      <SimilarPropertiesCarousel items={similarItems} locale={locale} />
+                    </div>
+                  </section>
+                )}
             </div>
             {/* Mobile-only sticky bottom bar: price + CTA */}
             <div

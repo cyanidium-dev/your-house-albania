@@ -68,11 +68,20 @@ function PropertyCard({
   locale,
   view = 'large',
   fullClickable = false,
+  compactShowTitle = false,
+  singleImage = false,
+  fillHeight = false,
 }: {
   item: PropertyHomes
   locale: string
   view?: ViewMode
   fullClickable?: boolean
+  /** When view is small, show title if true (for compact carousel use) */
+  compactShowTitle?: boolean
+  /** Show only first image, no slider/gallery (for carousel on mobile to avoid gesture conflict) */
+  singleImage?: boolean
+  /** Fill parent height for even card alignment in carousel */
+  fillHeight?: boolean
 }) {
   const {
     name,
@@ -101,7 +110,8 @@ function PropertyCard({
   const touchActive = useRef(false)
   const dragStartX = useRef<number | null>(null)
   const currentImage = imageList[imageIndex % (imageList.length || 1)]?.src
-  const hasMultipleImages = imageList.length > 1
+  const hasMultipleImages = imageList.length > 1 && !singleImage
+  const displayImages = singleImage ? imageList.slice(0, 1) : imageList
   const href = item._href ?? `/${locale}/property/${slug}`
 
   const goPrev = useCallback((e: React.MouseEvent) => {
@@ -131,7 +141,8 @@ function PropertyCard({
   const cardWrapper = cn(
     'relative rounded-2xl border border-dark/10 dark:border-white/10 duration-300 min-w-0',
     '[&:hover:not(:has(.property-card-overlay:hover))]:shadow-3xl dark:[&:hover:not(:has(.property-card-overlay:hover))]:shadow-white/20',
-    isList && 'flex flex-row overflow-hidden items-stretch'
+    isList && 'flex flex-row overflow-hidden items-stretch',
+    fillHeight && !isList && 'flex-1 min-h-0 flex flex-col'
   )
 
   const imageWrapper = cn(
@@ -148,7 +159,8 @@ function PropertyCard({
   const contentPadding = cn(
     isList && 'px-3 py-2.5 sm:px-4 sm:py-3 flex-1 min-w-0 flex flex-col justify-center',
     isSmall && !isList && 'p-2.5 min-w-0',
-    !isList && !isSmall && 'p-6'
+    !isList && !isSmall && 'p-6',
+    fillHeight && !isList && 'flex-1 min-h-0 flex flex-col justify-between'
   )
 
   const titleClass = cn(
@@ -318,8 +330,8 @@ function PropertyCard({
         </p>
       )}
 
-      {/* property name (no name in small mode) */}
-      {!isSmall && name && (
+      {/* property name (no name in small mode unless compactShowTitle) */}
+      {((!isSmall || compactShowTitle) && name) && (
         fullClickable ? (
           <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
             {name}
@@ -385,7 +397,7 @@ function PropertyCard({
   )
 
   return (
-    <div className="min-w-0 w-full">
+    <div className={cn('min-w-0 w-full', fillHeight && 'h-full flex flex-col')}>
       <div className={cardWrapper}>
         {fullClickable && (
           <Link
@@ -396,9 +408,9 @@ function PropertyCard({
         )}
         <div
           className={cn(imageWrapper, 'relative')}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchStart={singleImage ? undefined : handleTouchStart}
+          onTouchMove={singleImage ? undefined : handleTouchMove}
+          onTouchEnd={singleImage ? undefined : handleTouchEnd}
         >
           <div className="property-card-overlay absolute inset-0 z-20 pointer-events-none [&>*]:pointer-events-auto">
             <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
@@ -465,18 +477,21 @@ function PropertyCard({
           </div>
           {fullClickable ? (
             <div className={cn('block group/image h-full')}>
-              {imageList.length > 0 && (
+              {displayImages.length > 0 && (
                 <div className="relative h-full w-full overflow-hidden">
                   <div
                     className={cn(
                       'flex h-full w-full',
-                      isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+                      !singleImage && isDragging && 'transition-none',
+                      !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
                     )}
-                    style={{
-                      transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))`,
-                    }}
+                    style={
+                      singleImage
+                        ? undefined
+                        : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
+                    }
                   >
-                    {imageList.map((img, idx) => (
+                    {displayImages.map((img, idx) => (
                       <div key={idx} className="relative h-full w-full shrink-0">
                         <Image
                           src={img.src}
@@ -494,18 +509,21 @@ function PropertyCard({
             </div>
           ) : (
             <Link href={href} className={cn('block group/image h-full')}>
-            {imageList.length > 0 && (
+            {displayImages.length > 0 && (
               <div className="relative h-full w-full overflow-hidden">
                 <div
                   className={cn(
                     'flex h-full w-full',
-                    isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+                    !singleImage && isDragging && 'transition-none',
+                    !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
                   )}
-                  style={{
-                    transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))`,
-                  }}
+                  style={
+                    singleImage
+                      ? undefined
+                      : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
+                  }
                 >
-                  {imageList.map((img, idx) => (
+                  {displayImages.map((img, idx) => (
                     <div key={idx} className="relative h-full w-full shrink-0">
                       <Image
                         src={img.src}
