@@ -81,7 +81,7 @@ async function PropertiesListing({
 
   const rawPage =
     typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
-  let catalogResult =
+  const catalogResult =
     (await fetchCatalogProperties({
       city: cityFilter || undefined,
       district: districtFilter || undefined,

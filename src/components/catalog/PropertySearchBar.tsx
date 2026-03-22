@@ -135,7 +135,6 @@ function PropertySearchBarInner({
   initialAmenities = [],
   initialPageSize = "24",
   initialView = DEFAULT_VIEW_MODE,
-  getCurrentView,
 }: Props) {
   const viewModeFromProps = parseViewMode(initialView as string);
   const t = useTranslations("Catalog.filters");
