@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+const PRIMARY_FALLBACK = "/images/investment/primary-fallback.jpg";
+const SECONDARY_FALLBACK = "/images/investment/secondary-fallback.jpg";
+
 export type InvestmentData = {
   title?: string;
   description?: string;
@@ -24,7 +27,6 @@ const Investment: React.FC<{ locale: string; investmentData?: InvestmentData }> 
   const ctaLabel = investmentData?.ctaLabel;
   const ctaHref = investmentData?.ctaHref;
   const stats = Array.isArray(investmentData?.stats) ? investmentData.stats : [];
-  const hasMedia = Boolean(investmentData?.primaryImageUrl || investmentData?.secondaryImageUrl);
   const hasContent = Boolean(title || description || benefits.length > 0 || (ctaLabel && ctaHref));
 
   if (!hasContent) return null
@@ -33,41 +35,37 @@ const Investment: React.FC<{ locale: string; investmentData?: InvestmentData }> 
     ? ctaHref.startsWith("/") ? `/${locale}${ctaHref}` : ctaHref
     : "#";
 
+  const primarySrc = investmentData?.primaryImageUrl || PRIMARY_FALLBACK;
+  const secondarySrc = investmentData?.secondaryImageUrl || SECONDARY_FALLBACK;
   const primaryAlt = investmentData?.primaryImageAlt || title || "Investment";
-  const secondaryAlt = investmentData?.secondaryImageAlt || "";
+  const secondaryAlt = investmentData?.secondaryImageAlt || "Investment";
 
   return (
     <section className="py-16 md:py-24">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="grid lg:grid-cols-2 gap-10">
-          {hasMedia ? (
           <div className="grid grid-cols-2 gap-4">
-            {investmentData?.primaryImageUrl ? (
-              <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
-                <Image
-                  src={investmentData.primaryImageUrl}
-                  alt={primaryAlt}
-                  fill
-                  className="object-cover object-center"
-                  sizes="25vw"
-                  unoptimized={investmentData.primaryImageUrl.startsWith("http")}
-                />
-              </div>
-            ) : null}
-            {investmentData?.secondaryImageUrl ? (
-              <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
-                <Image
-                  src={investmentData.secondaryImageUrl}
-                  alt={secondaryAlt || "Investment"}
-                  fill
-                  className="object-cover object-center"
-                  sizes="25vw"
-                  unoptimized={investmentData.secondaryImageUrl.startsWith("http")}
-                />
-              </div>
-            ) : null}
+            <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
+              <Image
+                src={primarySrc}
+                alt={primaryAlt}
+                fill
+                className="object-cover object-center"
+                sizes="25vw"
+                unoptimized={primarySrc.startsWith("http")}
+              />
+            </div>
+            <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
+              <Image
+                src={secondarySrc}
+                alt={secondaryAlt}
+                fill
+                className="object-cover object-center"
+                sizes="25vw"
+                unoptimized={secondarySrc.startsWith("http")}
+              />
+            </div>
           </div>
-          ) : null}
           <div className="flex flex-col justify-center gap-8">
             {title ? (
               <h2 className="text-dark dark:text-white lg:text-52 md:text-40 text-3xl font-medium">
