@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { CitiesBreadcrumb } from "@/components/shared/CitiesBreadcrumb";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import {
   fetchCitiesIndexLanding,
   fetchSiteSettings,
@@ -35,6 +36,19 @@ export default async function CitiesIndexPage({ params }: Props) {
   const landing = await fetchCitiesIndexLanding();
 
   if (landing) {
+    const sections = asSections(landing as never);
+    const hasDedicatedHero = sections[0]?._type === "heroSection";
+
+    if (hasDedicatedHero) {
+      return (
+        <LandingRenderer
+          locale={locale}
+          landing={landing as never}
+          breadcrumb={<CitiesBreadcrumb locale={locale} overHero />}
+        />
+      );
+    }
+
     return (
       <>
         <section className="pt-44">

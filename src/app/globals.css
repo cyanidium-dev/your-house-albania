@@ -146,15 +146,26 @@ html {
   --PhoneInputColor--focus: rgba(255, 255, 255, 0.5);
   --PhoneInputCountrySelect-marginRight: 0.75em;
   padding-left: 1.5rem;
-  padding-right: 1rem;
+  padding-right: 0.5rem;
 }
 .footer-cta-phone.PhoneInput .PhoneInputInput {
   color: white;
 }
+/* Chevron rotates only when country dropdown is open (select has focus), not on input focus */
 .footer-cta-phone .phone-input-chevron {
   transform: rotate(0deg);
   transition: transform 0.2s ease-out;
 }
-.footer-cta-phone:focus-within .phone-input-chevron {
+.footer-cta-phone .PhoneInputCountry .PhoneInputCountrySelect:focus ~ .phone-input-chevron {
   transform: rotate(180deg);
+}
+/* Neutralize Chrome autofill styling */
+.footer-cta-phone-input:-webkit-autofill,
+.footer-cta-phone-input:-webkit-autofill:hover,
+.footer-cta-phone-input:-webkit-autofill:focus,
+.footer-cta-phone-input:-webkit-autofill:active,
+.footer-cta-phone-input:autofill {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.1) inset;
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
 }

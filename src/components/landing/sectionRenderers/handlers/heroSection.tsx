@@ -5,7 +5,7 @@ import { urlFor } from '@/lib/sanity/imageUrl'
 import { heroTabsFromSection } from '../helpers'
 import type { SectionHandler } from './types'
 
-export const heroSectionHandler: SectionHandler = ({ locale, section }) => {
+export const heroSectionHandler: SectionHandler = ({ locale, section, breadcrumb }) => {
   const bg = (section as { backgroundImage?: { asset?: { url?: string }; alt?: string } } | null)?.backgroundImage
   const backgroundImageUrl = bg ? urlFor(bg) : undefined
   const heroData = {
@@ -20,6 +20,6 @@ export const heroSectionHandler: SectionHandler = ({ locale, section }) => {
     backgroundImageAlt: bg?.alt,
     enabled: (section as { enabled?: boolean }).enabled,
   }
-  return <HeroSection key={section._key ?? 'hero'} locale={locale} heroData={heroData} />
+  return <HeroSection key={section._key ?? 'hero'} locale={locale} heroData={heroData} breadcrumb={breadcrumb} />
 }
 

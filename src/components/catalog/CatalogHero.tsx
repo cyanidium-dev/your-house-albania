@@ -58,8 +58,8 @@ export function CatalogHero({
     <section className="text-center bg-cover pt-16 pb-10 md:pt-32 md:pb-16 relative overflow-x-hidden">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="text-left">{breadcrumb}</div>
-        <div className="flex gap-2.5 items-center justify-center mt-3 md:mt-6">
-          <span>
+        <div className="flex flex-wrap gap-2.5 items-center justify-center mt-3 md:mt-6 min-w-0">
+          <span className="shrink-0">
             <Icon
               icon="ph:house-simple-fill"
               width={20}
@@ -67,7 +67,7 @@ export function CatalogHero({
               className="text-primary"
             />
           </span>
-          <p className="text-base font-semibold text-dark/75 dark:text-white/75">
+          <p className="text-base font-semibold text-dark/75 dark:text-white/75 min-w-0 truncate max-w-full">
             {badge}
           </p>
         </div>

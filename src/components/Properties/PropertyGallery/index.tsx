@@ -19,13 +19,14 @@ export function PropertyGallery({ images }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mobileSlideIndex, setMobileSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [showThumbs, setShowThumbs] = useState(true);
   const mobileScrollerRef = useRef<HTMLDivElement>(null);
-  const bigImages = [...images, ...images, ...images, ...images, ...images];
+  const galleryImages = images;
   const t = useTranslations('Shared.propertyDetail');
-  const previewImages = bigImages.slice(0, PREVIEW_MAX);
+  const previewImages = galleryImages.slice(0, PREVIEW_MAX);
   const count = previewImages.length;
-  const hasMoreImages = bigImages.length > PREVIEW_MAX;
-  const totalCount = bigImages.length;
+  const hasMoreImages = galleryImages.length > PREVIEW_MAX;
+  const totalCount = galleryImages.length;
 
   const openLightbox = useCallback((index: number) => {
     setCurrentIndex(index);
@@ -35,12 +36,12 @@ export function PropertyGallery({ images }: Props) {
   const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
   const goPrev = useCallback(() => {
-    setCurrentIndex((i) => (i <= 0 ? bigImages.length - 1 : i - 1));
-  }, [bigImages.length]);
+    setCurrentIndex((i) => (i <= 0 ? galleryImages.length - 1 : i - 1));
+  }, [galleryImages.length]);
 
   const goNext = useCallback(() => {
-    setCurrentIndex((i) => (i >= bigImages.length - 1 ? 0 : i + 1));
-  }, [bigImages.length]);
+    setCurrentIndex((i) => (i >= galleryImages.length - 1 ? 0 : i + 1));
+  }, [galleryImages.length]);
 
   useEffect(() => {
     if (!lightboxOpen) return;
@@ -82,9 +83,15 @@ export function PropertyGallery({ images }: Props) {
     return () => el.removeEventListener('scroll', onScroll);
   }, [previewImages.length]);
 
-  if (bigImages.length === 0) return null;
+  useEffect(() => {
+    if (lightboxOpen && typeof window !== 'undefined') {
+      setShowThumbs(window.innerWidth < 1024);
+    }
+  }, [lightboxOpen]);
 
-  const unoptimized = bigImages[0]?.url?.startsWith('http') ?? false;
+  if (galleryImages.length === 0) return null;
+
+  const unoptimized = galleryImages[0]?.url?.startsWith('http') ?? false;
   const imgAlt = (img: GalleryImage, fallback: string) => img.alt ?? fallback;
 
   const imgBtn = (
@@ -321,7 +328,7 @@ export function PropertyGallery({ images }: Props) {
 
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 group"
           role="dialog"
           aria-modal="true"
           aria-label="Image gallery"
@@ -332,16 +339,23 @@ export function PropertyGallery({ images }: Props) {
             className="absolute inset-0 z-0"
             aria-label="Close"
           />
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="Close"
-          >
-            <Icon icon="ph:x" width={28} height={28} />
-          </button>
 
-          {bigImages.length > 1 && (
+          {/* Top control bar: counter left, close right; mobile always visible, desktop hover-reveal */}
+          <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/60 to-transparent opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
+            <span className="px-3 py-1.5 rounded-full bg-black/50 text-white text-sm font-medium">
+              {currentIndex + 1} / {galleryImages.length}
+            </span>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
+              className="p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
+              aria-label="Close"
+            >
+              <Icon icon="ph:x" width={28} height={28} />
+            </button>
+          </div>
+
+          {galleryImages.length > 1 && (
             <>
               <button
                 type="button"
@@ -363,15 +377,15 @@ export function PropertyGallery({ images }: Props) {
           )}
 
           <div
-            className="relative w-full h-full max-w-6xl max-h-[90vh] flex items-center justify-center p-14 z-10"
+            className="absolute inset-0 flex items-center justify-center p-2 sm:p-4 z-10"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onClick={(e) => e.stopPropagation()}
             role="presentation"
           >
             <Image
-              src={bigImages[currentIndex]?.url ?? bigImages[0].url}
-              alt={imgAlt(bigImages[currentIndex] ?? bigImages[0], `Image ${currentIndex + 1}`)}
+              src={galleryImages[currentIndex]?.url ?? galleryImages[0].url}
+              alt={imgAlt(galleryImages[currentIndex] ?? galleryImages[0], `Image ${currentIndex + 1}`)}
               fill
               className="object-contain object-center"
               sizes="100vw"
@@ -379,10 +393,69 @@ export function PropertyGallery({ images }: Props) {
             />
           </div>
 
-          {bigImages.length > 1 && (
-            <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm z-20 pointer-events-none">
-              {currentIndex + 1} / {bigImages.length}
-            </p>
+          {/* Bottom bar + floating toggle */}
+          {galleryImages.length > 1 && (
+            <>
+              {/* Floating toggle: stable bottom-right position */}
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setShowThumbs((s) => !s); }}
+                className="absolute bottom-8 right-8 sm:bottom-10 sm:right-10 z-30 p-2.5 rounded-full bg-black/60 text-white/90 hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-white transition-colors duration-200"
+                aria-label={showThumbs ? 'Hide thumbnails' : 'Show thumbnails'}
+              >
+                <Icon
+                  icon="ph:caret-down"
+                  width={22}
+                  height={22}
+                  className={cn('transition-transform duration-200 ease-out', !showThumbs && 'rotate-180')}
+                />
+              </button>
+
+              {/* Bottom bar: label + thumbnails — folds down when collapsed */}
+              <div
+                className={cn(
+                  'absolute bottom-0 left-0 right-0 z-20 overflow-hidden bg-gradient-to-t from-black/80 to-90 to-transparent transition-all duration-300 ease-out',
+                  showThumbs ? 'max-h-[220px] opacity-100' : 'max-h-0 opacity-0'
+                )}
+              >
+                {/* Label row */}
+                <div className="px-4 pt-3 pb-2">
+                  {(galleryImages[currentIndex]?.alt ?? '') && (
+                    <p className="text-white/90 text-sm lg:text-base truncate">
+                      {galleryImages[currentIndex]?.alt}
+                    </p>
+                  )}
+                </div>
+                {/* Thumbnail rail */}
+                <div className="overflow-x-auto px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="flex items-center gap-3 py-2 px-2 min-w-max">
+                    {galleryImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                        className={cn(
+                          'shrink-0 w-16 h-16 lg:w-24 lg:h-24 rounded-lg overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-white',
+                          currentIndex === idx
+                            ? 'ring-2 ring-white ring-offset-2 ring-offset-black/60'
+                            : 'opacity-70 hover:opacity-100'
+                        )}
+                        aria-label={`Go to image ${idx + 1}`}
+                      >
+                        <Image
+                          src={img.url}
+                          alt={imgAlt(img, `Thumbnail ${idx + 1}`)}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1023px) 64px, 96px"
+                          unoptimized={unoptimized}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
       )}
