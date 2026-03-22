@@ -1,9 +1,10 @@
+import { redirect } from 'next/navigation'
 import { CatalogBodyClient } from '@/components/catalog/CatalogBodyClient'
 import { CatalogSeoText } from '@/components/catalog/CatalogSeoText'
 import { CatalogViewProvider } from '@/contexts/CatalogViewContext'
 import { ItemListJsonLd } from '@/components/shared/ItemListJsonLd'
 import { getBaseUrl } from '@/lib/seo/baseUrl'
-import type { PropertyHomes } from '@/types/properyHomes'
+import type { PropertyHomes } from '@/types/propertyHomes'
 import { parseViewMode } from '@/lib/catalog/viewMode'
 import {
   fetchCatalogProperties,
@@ -99,22 +100,25 @@ async function PropertiesListing({
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
   const currentPage = Math.min(Math.max(rawPage, 1), totalPages)
 
-  // If requested page is out of range but there are items, refetch for the last valid page.
+  // If requested page is out of range but there are items, redirect to valid page (avoids duplicate fetch).
   if (totalItems > 0 && currentPage !== rawPage) {
-    catalogResult =
-      (await fetchCatalogProperties({
-        city: cityFilter || undefined,
-        district: districtFilter || undefined,
-        type: typeFilter || undefined,
-        deal: dealFilter || undefined,
-        minPrice: minPriceFilter || undefined,
-        maxPrice: maxPriceFilter || undefined,
-        beds: bedsFilter || undefined,
-        amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
-        sort: sort as CatalogSort,
-        page: currentPage,
-        pageSize,
-      })) ?? { items: [], totalCount: 0 }
+    const params = new URLSearchParams()
+    for (const [k, v] of Object.entries(searchParams)) {
+      if (v === undefined) continue
+      if (Array.isArray(v)) {
+        for (const item of v) {
+          if (typeof item === 'string') params.append(k, item)
+        }
+      } else if (typeof v === 'string') {
+        params.set(k, v)
+      }
+    }
+    params.set('page', String(currentPage))
+    const qs = params.toString()
+    const path = `/${locale}/properties` +
+      (pathCity ? `/${encodeURIComponent(pathCity)}` : '') +
+      (pathDistrict ? `/${encodeURIComponent(pathDistrict)}` : '')
+    redirect(path + (qs ? `?${qs}` : ''))
   }
 
   const pageItems: PropertyHomes[] = Array.isArray(catalogResult.items)

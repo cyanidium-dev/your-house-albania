@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "Property List | Domlivo",
+  title: "Property List | Your House Albania",
 };
 
 type Props = { params: Promise<{ locale: string }> };

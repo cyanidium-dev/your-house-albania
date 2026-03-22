@@ -1,4 +1,4 @@
-import type { PropertyHomes } from '@/types/properyHomes';
+import type { PropertyHomes } from '@/types/propertyHomes';
 import type { CatalogProperty } from './client';
 import { resolveLocalizedString } from './localized';
 

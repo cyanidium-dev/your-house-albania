@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Icon } from '@iconify/react';
 import PropertyCard from '@/components/shared/property/PropertyCard';
-import type { PropertyHomes } from '@/types/properyHomes';
+import type { PropertyHomes } from '@/types/propertyHomes';
 import { useTranslations } from 'next-intl';
 
 type Props = {

@@ -9,7 +9,7 @@ import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
 import { cn } from "@/lib/utils";
-import type { PropertyHomes } from "@/types/properyHomes";
+import type { PropertyHomes } from "@/types/propertyHomes";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertiesMap } from "@/components/catalog/map/PropertiesMap";
 

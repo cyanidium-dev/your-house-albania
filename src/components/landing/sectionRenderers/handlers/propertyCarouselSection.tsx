@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { PropertyHomes } from '@/types/properyHomes'
+import type { PropertyHomes } from '@/types/propertyHomes'
 import { PropertyCarouselSection } from '@/components/landing/sections'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import {
@@ -101,10 +101,12 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
       }
     } else {
       if (debug) console.log('[Landing][propertyCarouselSection] auto branch: fetching top offers (global)')
+      const initialGroup = sortAsGroup ?? 'popular'
+      const secondaryLimit = Math.min(12, requestedLimit)
       const [popular, newest, highDemand] = await Promise.all([
-        fetchHomeTopOffers('popular', requestedLimit, requestedSort),
-        fetchHomeTopOffers('new', requestedLimit, requestedSort),
-        fetchHomeTopOffers('highDemand', requestedLimit, requestedSort),
+        fetchHomeTopOffers('popular', initialGroup === 'popular' ? requestedLimit : secondaryLimit, requestedSort),
+        fetchHomeTopOffers('new', initialGroup === 'new' ? requestedLimit : secondaryLimit, requestedSort),
+        fetchHomeTopOffers('highDemand', initialGroup === 'highDemand' ? requestedLimit : secondaryLimit, requestedSort),
       ])
       if (debug) {
         console.log('[Landing][propertyCarouselSection] auto fetch results', {

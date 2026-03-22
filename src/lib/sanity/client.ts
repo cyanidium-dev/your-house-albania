@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@sanity/client';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 
@@ -488,61 +489,69 @@ export async function fetchSimilarPropertyCandidates(
   }
 }
 
+const cachedFetchSiteSettings = unstable_cache(
+  async () => {
+    const client = getClient();
+    if (!client) return null;
+    const query = `*[_type == "siteSettings" && _id == "siteSettings"][0] {
+      _id,
+      _type,
+      similarPropertiesCount,
+      logo { asset-> { _id, url } },
+      siteName,
+      siteTagline,
+      contactPhone,
+      contactEmail,
+      companyAddress,
+      copyrightText,
+      footerQuickLinks[] {
+        _key,
+        href,
+        label
+      },
+      socialLinks[] {
+        _key,
+        platform,
+        url
+      },
+      policyLinks[] {
+        _key,
+        href,
+        label
+      },
+      defaultSeo {
+        metaTitle,
+        metaDescription,
+        noIndex
+      }
+    }`;
+    try {
+      const result = await client.fetch(query);
+      if (process.env.NODE_ENV === 'development' && result) {
+        const s = result as Record<string, unknown>;
+        const ql = Array.isArray(s?.footerQuickLinks) ? (s.footerQuickLinks as unknown[]).length : 0;
+        const sl = Array.isArray(s?.socialLinks) ? (s.socialLinks as unknown[]).length : 0;
+        console.log('[Sanity] fetchSiteSettings OK:', {
+          hasFooterQuickLinks: ql > 0,
+          hasSocialLinks: sl > 0,
+          hasContactEmail: !!s?.contactEmail,
+          hasCopyright: !!s?.copyrightText,
+          hasPhone: !!s?.contactPhone,
+        });
+      }
+      return result;
+    } catch (err) {
+      console.warn('[Sanity] fetchSiteSettings failed:', err);
+      return null;
+    }
+  },
+  ['sanity-site-settings'],
+  { revalidate: 60 }
+);
+
 /** Fetch siteSettings singleton. Returns null if not found or client not configured. */
 export async function fetchSiteSettings(): Promise<unknown | null> {
-  const client = getClient();
-  if (!client) return null;
-  const query = `*[_type == "siteSettings" && _id == "siteSettings"][0] {
-    _id,
-    _type,
-    similarPropertiesCount,
-    logo { asset-> { _id, url } },
-    siteName,
-    siteTagline,
-    contactPhone,
-    contactEmail,
-    companyAddress,
-    copyrightText,
-    footerQuickLinks[] {
-      _key,
-      href,
-      label
-    },
-    socialLinks[] {
-      _key,
-      platform,
-      url
-    },
-    policyLinks[] {
-      _key,
-      href,
-      label
-    },
-    defaultSeo {
-      metaTitle,
-      metaDescription,
-      noIndex
-    }
-  }`;
-  try {
-    const result = await client.fetch(query);
-    if (process.env.NODE_ENV === 'development' && result) {
-      const s = result as Record<string, unknown>;
-      const ql = Array.isArray(s?.footerQuickLinks) ? (s.footerQuickLinks as unknown[]).length : 0;
-      const sl = Array.isArray(s?.socialLinks) ? (s.socialLinks as unknown[]).length : 0;
-      console.log('[Sanity] fetchSiteSettings OK:', {
-        hasFooterQuickLinks: ql > 0,
-        hasSocialLinks: sl > 0,
-        hasContactEmail: !!s?.contactEmail,
-        hasCopyright: !!s?.copyrightText,
-        hasPhone: !!s?.contactPhone,
-      });
-    }
-    return result;
-  } catch (err) {
-    console.warn('[Sanity] fetchSiteSettings failed:', err);
-    return null;
-  }
+  return cachedFetchSiteSettings();
 }
 
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
@@ -793,130 +802,116 @@ export type CatalogFilterOptions = {
   districts: CatalogDistrictOption[];
 };
 
+type RawFilterItem = { value?: string; title?: unknown; citySlug?: string };
+
+function mapToLocalizedOption(
+  x: RawFilterItem,
+  locale: string
+): { value: string; label: string } {
+  const rawTitle = x.title as
+    | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
+    | string
+    | null
+    | undefined;
+  const localized =
+    typeof rawTitle === 'object' && rawTitle !== null
+      ? resolveLocalizedString(rawTitle as never, locale)
+      : typeof rawTitle === 'string'
+        ? rawTitle
+        : '';
+  const label = localized || x.value!;
+  return { value: x.value!, label };
+}
+
+const cachedFetchCatalogFilterOptionsByLocale = new Map<
+  string,
+  () => Promise<CatalogFilterOptions>
+>();
+
+function getCachedFetchCatalogFilterOptions(
+  locale: string,
+): () => Promise<CatalogFilterOptions> {
+  let fn = cachedFetchCatalogFilterOptionsByLocale.get(locale);
+  if (!fn) {
+    fn = unstable_cache(
+      async () => {
+        const client = getClient();
+        if (!client) {
+          return { locations: [], propertyTypes: [], amenities: [], districts: [] };
+        }
+
+        const query = `{
+          "locations": *[_type == "city"] | order(title asc) {
+            "value": slug.current,
+            title
+          },
+          "propertyTypes": *[_type == "propertyType" && active == true] | order(order asc) {
+            "value": slug.current,
+            title
+          },
+          "amenities": *[_type == "amenity" && active == true] | order(order asc, title asc) {
+            "value": slug.current,
+            title
+          },
+          "districts": *[_type == "district"] | order(title asc) {
+            "value": slug.current,
+            title,
+            "citySlug": city->slug.current
+          }
+        }`;
+
+        try {
+          const result = await client.fetch<{
+            locations?: { value?: string; title?: unknown }[];
+            propertyTypes?: { value?: string; title?: unknown }[];
+            amenities?: { value?: string; title?: unknown }[];
+            districts?: { value?: string; title?: unknown; citySlug?: string }[];
+          }>(query);
+
+          const locations = Array.isArray(result?.locations)
+            ? result.locations
+                .filter((x): x is RawFilterItem => typeof x?.value === 'string' && !!x.value)
+                .map((x) => mapToLocalizedOption(x, locale))
+            : [];
+
+          const propertyTypes = Array.isArray(result?.propertyTypes)
+            ? result.propertyTypes
+                .filter((x): x is RawFilterItem => typeof x?.value === 'string' && !!x.value)
+                .map((x) => mapToLocalizedOption(x, locale))
+            : [];
+
+          const amenities = Array.isArray(result?.amenities)
+            ? result.amenities
+                .filter((x): x is RawFilterItem => typeof x?.value === 'string' && !!x.value)
+                .map((x) => mapToLocalizedOption(x, locale))
+            : [];
+
+          const districts = Array.isArray(result?.districts)
+            ? result.districts
+                .filter((x): x is RawFilterItem => typeof x?.value === 'string' && !!x.value)
+                .map((x) => ({
+                  ...mapToLocalizedOption(x, locale),
+                  citySlug: typeof x.citySlug === 'string' ? x.citySlug : undefined,
+                }))
+            : [];
+
+          return { locations, propertyTypes, amenities, districts };
+        } catch (err) {
+          console.warn('[Sanity] fetchCatalogFilterOptions failed:', err);
+          return { locations: [], propertyTypes: [], amenities: [], districts: [] };
+        }
+      },
+      ['sanity-catalog-filter-options', locale],
+      { revalidate: 60 }
+    );
+    cachedFetchCatalogFilterOptionsByLocale.set(locale, fn);
+  }
+  return fn;
+}
+
 /** Fetch options for catalog filters (cities, property types, amenities). */
 export async function fetchCatalogFilterOptions(locale: string): Promise<CatalogFilterOptions> {
-  const client = getClient();
-  if (!client) {
-    return { locations: [], propertyTypes: [], amenities: [], districts: [] };
-  }
-
-  const query = `{
-    "locations": *[_type == "city"] | order(title asc) {
-      "value": slug.current,
-      title
-    },
-    "propertyTypes": *[_type == "propertyType" && active == true] | order(order asc) {
-      "value": slug.current,
-      title
-    },
-    "amenities": *[_type == "amenity" && active == true] | order(order asc, title asc) {
-      "value": slug.current,
-      title
-    },
-    "districts": *[_type == "district"] | order(title asc) {
-      "value": slug.current,
-      title,
-      "citySlug": city->slug.current
-    }
-  }`;
-
-  try {
-    const result = await client.fetch<{
-      locations?: { value?: string; title?: unknown }[];
-      propertyTypes?: { value?: string; title?: unknown }[];
-      amenities?: { value?: string; title?: unknown }[];
-      districts?: { value?: string; title?: unknown; citySlug?: string }[];
-    }>(query);
-
-    const locations = Array.isArray(result?.locations)
-      ? result.locations
-          .filter((x) => typeof x?.value === 'string' && !!x.value)
-          .map((x) => {
-            const rawTitle = x.title as
-              | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
-              | string
-              | null
-              | undefined;
-            const localized =
-              typeof rawTitle === 'object' && rawTitle !== null
-                ? resolveLocalizedString(rawTitle as never, locale)
-                : typeof rawTitle === 'string'
-                  ? rawTitle
-                  : '';
-            const label = localized || x.value!;
-            return { value: x.value!, label };
-          })
-      : [];
-
-    const propertyTypes = Array.isArray(result?.propertyTypes)
-      ? result.propertyTypes
-          .filter((x) => typeof x?.value === 'string' && !!x.value)
-          .map((x) => {
-            const rawTitle = x.title as
-              | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
-              | string
-              | null
-              | undefined;
-            const localized =
-              typeof rawTitle === 'object' && rawTitle !== null
-                ? resolveLocalizedString(rawTitle as never, locale)
-                : typeof rawTitle === 'string'
-                  ? rawTitle
-                  : '';
-            const label = localized || x.value!;
-            return { value: x.value!, label };
-          })
-      : [];
-
-    const amenities = Array.isArray(result?.amenities)
-      ? result.amenities
-          .filter((x) => typeof x?.value === 'string' && !!x.value)
-          .map((x) => {
-            const rawTitle = x.title as
-              | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
-              | string
-              | null
-              | undefined;
-            const localized =
-              typeof rawTitle === 'object' && rawTitle !== null
-                ? resolveLocalizedString(rawTitle as never, locale)
-                : typeof rawTitle === 'string'
-                  ? rawTitle
-                  : '';
-            const label = localized || x.value!;
-            return { value: x.value!, label };
-          })
-      : [];
-
-    const districts = Array.isArray(result?.districts)
-      ? result.districts
-          .filter((x) => typeof x?.value === 'string' && !!x.value)
-          .map((x) => {
-            const rawTitle = x.title as
-              | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
-              | string
-              | null
-              | undefined;
-            const localized =
-              typeof rawTitle === 'object' && rawTitle !== null
-                ? resolveLocalizedString(rawTitle as never, locale)
-                : typeof rawTitle === 'string'
-                  ? rawTitle
-                  : '';
-            const label = localized || x.value!;
-            return {
-              value: x.value!,
-              label,
-              citySlug: typeof x.citySlug === 'string' ? x.citySlug : undefined,
-            };
-          })
-      : [];
-
-    return { locations, propertyTypes, amenities, districts };
-  } catch (err) {
-    console.warn('[Sanity] fetchCatalogFilterOptions failed:', err);
-    return { locations: [], propertyTypes: [], amenities: [], districts: [] };
-  }
+  return getCachedFetchCatalogFilterOptions(locale)();
 }
 
 export type CatalogSeoPageResolved = {
@@ -938,6 +933,22 @@ const catalogSeoPageProjection = `{
   }
 }`;
 
+const cachedFetchCatalogSeoPageRoot = unstable_cache(
+  async () => {
+    const client = getClient();
+    if (!client) return null;
+    const query = `*[_type == "catalogSeoPage" && active == true && pageScope == "propertiesRoot"][0] ${catalogSeoPageProjection}`;
+    try {
+      return await client.fetch(query);
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogSeoPageRoot failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-seo-root'],
+  { revalidate: 60 }
+);
+
 /** Fetch catalog SEO page for properties root. Returns null if none or inactive. */
 export async function fetchCatalogSeoPageRoot(): Promise<{
   title?: unknown;
@@ -945,15 +956,7 @@ export async function fetchCatalogSeoPageRoot(): Promise<{
   bottomText?: unknown;
   seo?: { metaTitle?: unknown; metaDescription?: unknown };
 } | null> {
-  const client = getClient();
-  if (!client) return null;
-  const query = `*[_type == "catalogSeoPage" && active == true && pageScope == "propertiesRoot"][0] ${catalogSeoPageProjection}`;
-  try {
-    return await client.fetch(query);
-  } catch (err) {
-    console.warn('[Sanity] fetchCatalogSeoPageRoot failed:', err);
-    return null;
-  }
+  return cachedFetchCatalogSeoPageRoot();
 }
 
 /**

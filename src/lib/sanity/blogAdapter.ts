@@ -1,4 +1,4 @@
-import type { PropertyHomes } from '@/types/properyHomes';
+import type { PropertyHomes } from '@/types/propertyHomes';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 import { computeReadingTime } from '@/lib/blog/readingTime';
 

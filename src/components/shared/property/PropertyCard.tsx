@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from 'react'
-import { PropertyHomes } from '@/types/properyHomes'
+import { PropertyHomes } from '@/types/propertyHomes'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import Link from 'next/link'

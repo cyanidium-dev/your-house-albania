@@ -4,7 +4,7 @@ import * as React from "react";
 import { Icon } from "@iconify/react";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { cn } from "@/lib/utils";
-import type { PropertyHomes } from "@/types/properyHomes";
+import type { PropertyHomes } from "@/types/propertyHomes";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 

@@ -34,8 +34,8 @@ type RawSiteSettings = {
   }[];
 };
 
-const DEFAULT_PHONE = "+1-212-456-789";
-const DEFAULT_EMAIL = "hello@Domlivo.com";
+const DEFAULT_PHONE = "";
+const DEFAULT_EMAIL = "";
 
 /** Maps raw Sanity siteSettings to resolved fields for Header/Footer. Uses fallbacks per field. */
 export function mapSiteSettingsToResolved(
