@@ -154,7 +154,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const dealTypeLabel = tPropertyDetail(dealTypeKey);
 
   return (
-        <section className="!pt-44 pb-20 relative" >
+        <section className="!pt-44 pb-24 lg:pb-20 relative" >
             <PropertyJsonLd
               name={title}
               slug={slug}
@@ -266,7 +266,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         )}
                     </div>
                     <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
-                        <div className="bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
+                        <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <div className="flex items-center justify-between gap-4 mb-2">
                               <h4 className='text-dark text-3xl font-medium dark:text-white'>
                                   <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
@@ -299,6 +299,26 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         )}
                     </div>
                 </div>
+            </div>
+            {/* Mobile-only sticky bottom bar: price + CTA */}
+            <div
+              className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20"
+            >
+              <div className='flex items-center justify-between gap-4 px-5 py-4 bg-primary/50'
+                style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))' }}>
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-dark dark:text-white text-xl font-semibold truncate">
+                    <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
+                  </h4>
+                  <p className="text-sm text-dark/50 dark:text-white/50 truncate">{dealTypeLabel}</p>
+                </div>
+                <Link
+                  href="#"
+                  className="shrink-0 py-3 px-6 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
+                >
+                  {tPropertyDetail('getInTouch')}
+                </Link>
+              </div>
             </div>
         </section>
     );
