@@ -21,8 +21,13 @@ type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+const SLUG_REGEX = /^[a-z0-9-]+$/;
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params;
+  if (!slug || typeof slug !== 'string' || !SLUG_REGEX.test(slug)) {
+    notFound();
+  }
 
   const [sanityProperty, siteSettings] = await Promise.all([
     fetchPropertyBySlug(slug),
@@ -81,6 +86,9 @@ function getSimilarCount(settings: unknown): number {
 
 export default async function PropertyDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
+  if (!slug || typeof slug !== 'string' || !SLUG_REGEX.test(slug)) {
+    notFound();
+  }
 
   const [sanityProperty, siteSettings] = await Promise.all([
     fetchPropertyBySlug(slug),

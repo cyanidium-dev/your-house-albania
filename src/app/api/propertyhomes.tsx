@@ -1,4 +1,4 @@
-import { PropertyHomes } from '@/types/properyHomes'
+import { PropertyHomes } from '@/types/propertyHomes'
 
 export const propertyHomes: PropertyHomes[] = [
   {

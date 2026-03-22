@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react'
-import type { PropertyHomes } from '@/types/properyHomes'
+import type { PropertyHomes } from '@/types/propertyHomes'
 import { TopOffersCarouselClient, type TopOffersGroup } from './TopOffersCarouselClient'
 
 type PropertiesData = { badge?: string; title?: string; description?: string } | null;

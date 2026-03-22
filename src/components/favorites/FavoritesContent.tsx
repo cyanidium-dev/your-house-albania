@@ -9,7 +9,7 @@ import PropertyCard from "@/components/shared/property/PropertyCard";
 import { PropertyCardSkeleton } from "@/components/favorites/PropertyCardSkeleton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { Button } from "@/components/ui/button";
-import type { PropertyHomes } from "@/types/properyHomes";
+import type { PropertyHomes } from "@/types/propertyHomes";
 
 const SKELETON_COUNT = 6;
 
