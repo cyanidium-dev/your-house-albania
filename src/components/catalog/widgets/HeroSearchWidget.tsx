@@ -32,6 +32,7 @@ export function HeroSearchWidget({
   const router = useRouter();
   const locale = useLocale();
   const tFilters = useTranslations("Catalog.filters");
+  const tTabs = useTranslations("Home.hero.search.tabs");
 
   const { currency, rates } = useCurrency();
 
@@ -121,7 +122,8 @@ export function HeroSearchWidget({
       <div className="inline-flex items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10">
         {tabs.map((tab) => {
           const active = tab.key === deal;
-          const label = tab.label?.trim() || tab.key;
+          const fallbackKey = tab.key === "short-term" ? "shortTerm" : tab.key;
+          const label = tab.label?.trim() || tTabs(fallbackKey) || tab.key;
           return (
             <button
               key={tab.key}

@@ -59,6 +59,7 @@
       "search": {
         "tabs": {
           "buy": "Buy",
+          "sale": "Sale",
           "rent": "Rent",
           "shortTerm": "Short-term"
         }
