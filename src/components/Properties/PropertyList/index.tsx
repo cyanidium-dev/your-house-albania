@@ -9,9 +9,11 @@ import { parseViewMode } from '@/lib/catalog/viewMode'
 import {
   fetchCatalogProperties,
   fetchCatalogFilterOptions,
+  fetchSiteSettings,
   type CatalogSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
+import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -19,13 +21,6 @@ const DEFAULT_PAGE_SIZE = 24
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
 const DEAL_TYPE_VALUES = ['sale', 'rent', 'short-term'] as const
-
-const DEFAULT_PRICE_RANGES: Record<string, { min: number; max: number }> = {
-  any: { min: 50_000, max: 1_000_000 },
-  sale: { min: 50_000, max: 1_000_000 },
-  rent: { min: 300, max: 10_000 },
-  'short-term': { min: 50, max: 2_000 },
-}
 
 type CatalogSeoContent = {
   bottomText?: unknown[]
@@ -44,12 +39,19 @@ async function PropertiesListing({
   searchParams: SearchParams
   catalogSeo?: CatalogSeoContent
 }) {
+  const [filterOptions, siteSettings] = await Promise.all([
+    fetchCatalogFilterOptions(locale),
+    fetchSiteSettings(),
+  ])
   const {
     locations: locationOptions,
     propertyTypes: typeOptions,
     amenities: amenityOptions,
     districts: districtOptions,
-  } = await fetchCatalogFilterOptions(locale)
+  } = filterOptions
+  const priceRangesByDeal = toRangesByDeal(
+    resolvePriceRange((siteSettings as Record<string, unknown>)?.priceRange)
+  )
 
   const cityFilter = (pathCity || (typeof searchParams.city === 'string' ? searchParams.city : '')).toLowerCase()
   const districtFilter =
@@ -137,7 +139,7 @@ async function PropertiesListing({
     propertyTypes: typeOptions,
     dealTypeValues: DEAL_TYPE_VALUES,
     districtOptions,
-    priceRangesByDeal: DEFAULT_PRICE_RANGES,
+    priceRangesByDeal,
     amenityOptions,
     initialCity: cityFilter || '',
     initialType: typeFilter,

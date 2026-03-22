@@ -240,6 +240,8 @@
       "anyLocation": "Любая локация",
       "anyType": "Любой тип",
       "any": "Любой",
+      "priceFrom": "От",
+      "priceTo": "До",
       "bedrooms": "Спальни",
       "bedsAtLeast": "{count}+",
       "district": "Район",

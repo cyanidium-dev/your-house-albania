@@ -240,6 +240,8 @@
       "anyLocation": "Будь-яка локація",
       "anyType": "Будь-який тип",
       "any": "Будь-який",
+      "priceFrom": "Від",
+      "priceTo": "До",
       "bedrooms": "Спальні",
       "bedsAtLeast": "{count}+",
       "district": "Район",

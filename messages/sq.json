@@ -240,6 +240,8 @@
       "anyLocation": "Çdo vendndodhje",
       "anyType": "Çdo lloj",
       "any": "Çfarëdo",
+      "priceFrom": "Nga",
+      "priceTo": "Deri",
       "bedrooms": "Dhoma gjumi",
       "bedsAtLeast": "{count}+",
       "district": "Rrethi",
