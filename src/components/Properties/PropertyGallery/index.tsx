@@ -177,7 +177,7 @@ export function PropertyGallery({ images }: Props) {
         </div>
 
         {/* Desktop/tablet: deterministic grid layouts */}
-        <div className={cn('hidden lg:grid grid-cols-12 gap-2 mt-0', count >= 2 && 'grid-rows-2')}>
+        <div className={cn('hidden lg:grid grid-cols-12 gap-2 mt-0 relative', count >= 2 && 'grid-rows-2')}>
           {count === 1 && (
             <div className="col-span-12 rounded-2xl overflow-hidden relative h-[400px] xl:h-[540px] bg-dark/5 dark:bg-white/5">
               {imgBtn(
@@ -308,15 +308,13 @@ export function PropertyGallery({ images }: Props) {
           )}
 
           {hasMoreImages && (
-            <div className="col-span-12 mt-2 flex justify-center">
-              <button
-                type="button"
-                onClick={() => openLightbox(0)}
-                className="py-3 px-6 rounded-full font-semibold bg-dark/10 dark:bg-white/10 hover:bg-dark/20 dark:hover:bg-white/20 text-dark dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
-              >
-                {t('checkAllPhotos')} ({totalCount})
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => openLightbox(0)}
+              className="absolute bottom-2.5 right-2.5 z-10 py-3 px-6 rounded-full font-semibold bg-black/70 dark:bg-white/90 text-white dark:text-dark hover:bg-black/80 dark:hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
+            >
+              {t('checkAllPhotos')} ({totalCount})
+            </button>
           )}
         </div>
       </div>
