@@ -58,7 +58,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 unoptimized={bgImageUrl.startsWith('http')}
               />
             </div>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-black via-black/50 to-transparent" aria-hidden />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-black dark:via-black/50" aria-hidden />
           </>
         ) : (
           <>
@@ -73,7 +73,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 className="select-none"
               />
             </div>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-black via-black/50 to-transparent" aria-hidden />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-black dark:via-black/50" aria-hidden />
           </>
         )}
         <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
