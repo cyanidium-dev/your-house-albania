@@ -37,6 +37,7 @@ export async function renderLandingSection(input: {
   locale: string
   section: LandingSectionBase
   citySlug?: string
+  breadcrumb?: React.ReactNode
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null

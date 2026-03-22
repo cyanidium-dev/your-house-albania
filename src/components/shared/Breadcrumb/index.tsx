@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export type BreadcrumbItem = {
   label: string;
@@ -10,21 +11,28 @@ export type BreadcrumbItem = {
 type Props = {
   items: BreadcrumbItem[];
   separator?: string;
+  /** When true, uses light text for use over dark hero imagery */
+  overHero?: boolean;
 };
 
-export function Breadcrumb({ items, separator = "/" }: Props) {
+export function Breadcrumb({ items, separator = "/", overHero = false }: Props) {
   if (items.length === 0) return null;
 
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-dark/70 dark:text-white/70 mb-4"
+      className={cn(
+        "flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm mb-4",
+        overHero
+          ? "text-white/90 [&_a]:text-white/90 [&_a]:hover:text-primary [&_a]:transition-colors [&_span]:text-white/70 [&_.font-medium]:text-white"
+          : "text-dark/70 dark:text-white/70"
+      )}
     >
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 list-none p-0 m-0">
         {items.map((item, idx) => (
           <li key={idx} className="flex items-center gap-x-1.5">
             {idx > 0 && (
-              <span className="text-dark/40 dark:text-white/40" aria-hidden>
+              <span className={overHero ? "text-white/60" : "text-dark/40 dark:text-white/40"} aria-hidden>
                 {separator}
               </span>
             )}

@@ -17,7 +17,7 @@ type HeroData = {
   enabled?: boolean;
 } | null;
 
-const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale, heroData }) => {
+const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.ReactNode }> = async ({ locale, heroData, breadcrumb }) => {
   if (heroData?.enabled === false) return null
 
   const t = await getTranslations('Home.hero')
@@ -77,6 +77,9 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData }> = async ({ locale,
           </>
         )}
         <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
+          {breadcrumb ? (
+            <div className="relative z-20 text-left mb-4">{breadcrumb}</div>
+          ) : null}
           <div className='relative text-white text-center md:text-start z-20'>
             <p className='text-inherit text-xm font-medium'>{shortLine}</p>
             <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>

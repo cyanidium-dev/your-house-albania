@@ -8,11 +8,14 @@ import type { BreadcrumbItem } from "../Breadcrumb";
 type CityLandingBreadcrumbProps = {
   locale: string;
   city: string;
+  /** When true, uses light text for overlay on dark hero imagery */
+  overHero?: boolean;
 };
 
 export async function CityLandingBreadcrumb({
   locale,
   city,
+  overHero,
 }: CityLandingBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
   const { locations } = await fetchCatalogFilterOptions(locale);
@@ -36,7 +39,7 @@ export async function CityLandingBreadcrumb({
   return (
     <>
       <BreadcrumbJsonLd items={jsonLdItems} baseUrl={baseUrl} />
-      <Breadcrumb items={items} />
+      <Breadcrumb items={items} overHero={overHero} />
     </>
   );
 }

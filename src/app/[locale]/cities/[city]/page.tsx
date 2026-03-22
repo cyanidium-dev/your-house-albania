@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { CityLandingBreadcrumb } from "@/components/shared/CityLandingBreadcrumb";
+import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { fetchCityLandingByCitySlug, fetchSiteSettings } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 
@@ -26,6 +27,21 @@ export default async function CityLandingPage({ params }: Props) {
   const citySlug = decodeURIComponent(city).toLowerCase();
   const landing = await fetchCityLandingByCitySlug(citySlug);
   if (!landing) return notFound();
+
+  const sections = asSections(landing as never);
+  const hasDedicatedHero = sections[0]?._type === "heroSection";
+
+  if (hasDedicatedHero) {
+    return (
+      <LandingRenderer
+        locale={locale}
+        landing={landing as never}
+        citySlug={citySlug}
+        breadcrumb={<CityLandingBreadcrumb locale={locale} city={citySlug} overHero />}
+      />
+    );
+  }
+
   return (
     <>
       <section className="pt-44">

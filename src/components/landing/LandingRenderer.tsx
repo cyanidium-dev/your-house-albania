@@ -13,10 +13,13 @@ export async function LandingRenderer({
   locale,
   landing,
   citySlug,
+  breadcrumb,
 }: {
   locale: string
   landing: LandingPageDoc | null
   citySlug?: string
+  /** Rendered inside the first section when it is heroSection (avoids white gap above hero) */
+  breadcrumb?: React.ReactNode
 }) {
   const sections = asSections(landing)
   if (process.env.NODE_ENV === 'development') {
@@ -32,8 +35,15 @@ export async function LandingRenderer({
 
   const nodes: React.ReactNode[] = []
 
-  for (const section of sections) {
-    const node = await renderLandingSection({ locale, section, citySlug })
+  for (let i = 0; i < sections.length; i++) {
+    const section = sections[i]
+    const isFirstHero = i === 0 && section?._type === 'heroSection'
+    const node = await renderLandingSection({
+      locale,
+      section,
+      citySlug,
+      breadcrumb: isFirstHero ? breadcrumb : undefined,
+    })
     if (node) nodes.push(node)
   }
 
