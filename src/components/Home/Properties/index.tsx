@@ -16,19 +16,30 @@ const Properties: React.FC<{
   const title = propertiesData?.title
   const description = propertiesData?.description
 
-  const groups = topOffersGroups && Object.keys(topOffersGroups).length > 0 ? topOffersGroups : null
-  const groupsCounts = groups
-    ? {
-        popular: Array.isArray(groups.popular) ? groups.popular.length : 0,
-        new: Array.isArray(groups.new) ? groups.new.length : 0,
-        highDemand: Array.isArray(groups.highDemand) ? groups.highDemand.length : 0,
-      }
-    : { popular: 0, new: 0, highDemand: 0 }
+  let groups: Record<TopOffersGroup, PropertyHomes[]>
+  if (topOffersGroups && Object.keys(topOffersGroups).length > 0) {
+    groups = topOffersGroups
+  } else if (Array.isArray(propertyItems) && propertyItems.length > 0) {
+    const fallbackItems = propertyItems.slice(0, 24)
+    groups = {
+      popular: fallbackItems,
+      new: fallbackItems,
+      highDemand: fallbackItems,
+    }
+  } else {
+    groups = {
+      popular: [],
+      new: [],
+      highDemand: [],
+    }
+  }
+  const groupsCounts = {
+    popular: Array.isArray(groups.popular) ? groups.popular.length : 0,
+    new: Array.isArray(groups.new) ? groups.new.length : 0,
+    highDemand: Array.isArray(groups.highDemand) ? groups.highDemand.length : 0,
+  }
   const hasAnyItems =
-    groupsCounts.popular > 0 ||
-    groupsCounts.new > 0 ||
-    groupsCounts.highDemand > 0 ||
-    (Array.isArray(propertyItems) && propertyItems.length > 0)
+    groupsCounts.popular > 0 || groupsCounts.new > 0 || groupsCounts.highDemand > 0
 
   // Strict CMS-driven section: render nothing when no data.
   if (!hasAnyItems) return null
@@ -42,7 +53,7 @@ const Properties: React.FC<{
       locale,
       hasTopOffersGroupsProp: !!topOffersGroups,
       propertyItemsCount: Array.isArray(propertyItems) ? propertyItems.length : null,
-      groupsCounts: safeCounts((groups ?? { popular: [], new: [], highDemand: [] }) as Record<TopOffersGroup, PropertyHomes[]>),
+      groupsCounts: safeCounts(groups),
       sample: (groups as any)?.popular?.[0]
         ? {
             slug: (groups as any).popular[0].slug,
@@ -80,7 +91,7 @@ const Properties: React.FC<{
         </div>
         <TopOffersCarouselClient
           locale={locale}
-          groups={(groups ?? { popular: [], new: [], highDemand: [] }) as Record<TopOffersGroup, PropertyHomes[]>}
+          groups={groups}
           initialGroup={initialGroup}
         />
       </div>
