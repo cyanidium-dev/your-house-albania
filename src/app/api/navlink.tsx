@@ -11,5 +11,4 @@ export const navLinks: NavLinks[] = [
   { key: 'blog', href: '/blogs' },
 >>>>>>> Stashed changes
   { key: 'contact', href: '/contactus' },
-  { key: 'docs', href: '/documentation' },
 ]
