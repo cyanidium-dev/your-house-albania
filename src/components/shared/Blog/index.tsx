@@ -23,12 +23,26 @@ const BlogSmall: React.FC<{
 }> = async ({ locale, posts, title, subtitle, cta }) => {
   const t = await getTranslations("Home.blog");
 
-  const hasCmsPostsProp = posts !== undefined;
+  function hasUsableSlug(p: unknown): boolean {
+    if (!p || typeof p !== "object") return false;
+    const s = (p as { slug?: string | { current?: string } }).slug;
+    if (typeof s === "string" && s.trim().length > 0) return true;
+    if (s && typeof s === "object") {
+      return ((s as { current?: string }).current ?? "").trim().length > 0;
+    }
+    return false;
+  }
+
+  const hasValidCmsPosts =
+    Array.isArray(posts) &&
+    posts.length > 0 &&
+    posts.some((p) => hasUsableSlug(p));
+
   let cmsPosts: BlogListItem[] = [];
   let fetchedPosts: BlogListItem[] = [];
 
   try {
-    cmsPosts = hasCmsPostsProp
+    cmsPosts = hasValidCmsPosts
       ? (posts ?? [])
           .map((p) => {
             const post = p as SanityListingPost;
@@ -37,7 +51,7 @@ const BlogSmall: React.FC<{
           .filter((p) => p.slug)
       : [];
 
-    fetchedPosts = hasCmsPostsProp
+    fetchedPosts = hasValidCmsPosts
       ? []
       : (await fetchBlogPostsPaginated({ page: 1, pageSize: 3 })).items.map(
           (p) => mapSanityBlogPostToList(p as SanityListingPost, locale)
@@ -48,7 +62,7 @@ const BlogSmall: React.FC<{
     }
   }
 
-  const finalPosts = (hasCmsPostsProp ? cmsPosts : fetchedPosts).slice(0, 3);
+  const finalPosts = (hasValidCmsPosts ? cmsPosts : fetchedPosts).slice(0, 3);
 
   const headerTitle = title?.trim() ? title : t("title");
   const headerDescription = subtitle?.trim() ? subtitle : t("description");
