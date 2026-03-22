@@ -42,7 +42,7 @@ const Footer = ({ siteSettings }: FooterProps) => {
 
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
-      <div className="container mx-auto max-w-8xl min-w-0 pt-14 px-4 sm:px-6 lg:px-0">
+      <div className="container mx-auto max-w-8xl min-w-0 pt-14 px-5 2xl:px-0">
         <div className="flex lg:items-center justify-between items-end lg:gap-11 pb-14 border-b border-white/10 lg:flex-nowrap flex-wrap gap-6">
           <p className="text-white text-sm lg:max-w-1/5 min-w-0">
             {t('contactRequest')}
