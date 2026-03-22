@@ -51,7 +51,6 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
   }, [handleScroll])
 
   const isHomepage = pathname === "/" || /^\/(en|uk|ru|al|it)\/?$/.test(pathname)
-  const primaryNavItems = getNavLinks()
 
   return (
     <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 md:h-24 md:py-1`}>
@@ -100,27 +99,6 @@ const Header: React.FC<HeaderProps> = ({ siteSettings }) => {
                 </>
               )}
             </Link>
-          </div>
-          <div className='hidden xl:flex items-center gap-4 min-w-0 flex-1 px-6'>
-            {primaryNavItems.map((item) => {
-              const href = item.href === '/' ? `/${locale}` : `/${locale}${item.href}`
-              const active = pathname === href || pathname.startsWith(`${href}/`)
-              return (
-                <Link
-                  key={item.key}
-                  href={href}
-                  className={cn(
-                    'text-sm font-medium transition-colors',
-                    isHomepage && !sticky
-                      ? 'text-white/90 hover:text-white'
-                      : 'text-dark/80 dark:text-white/80 hover:text-primary dark:hover:text-primary',
-                    active && 'text-primary dark:text-primary'
-                  )}
-                >
-                  {t(`nav.${item.key}`)}
-                </Link>
-              )
-            })}
           </div>
           <div className='flex items-center gap-1 sm:gap-4 min-w-0 shrink-0'>
             <LanguageSwitcher />
