@@ -240,6 +240,8 @@
       "anyLocation": "Any location",
       "anyType": "Any type",
       "any": "Any",
+      "priceFrom": "From",
+      "priceTo": "To",
       "bedrooms": "Bedrooms",
       "bedsAtLeast": "{count}+",
       "district": "District",

@@ -523,6 +523,10 @@ const cachedFetchSiteSettings = unstable_cache(
         metaTitle,
         metaDescription,
         noIndex
+      },
+      priceRange {
+        from,
+        to
       }
     }`;
     try {

@@ -240,6 +240,8 @@
       "anyLocation": "Qualsiasi località",
       "anyType": "Qualsiasi tipo",
       "any": "Qualsiasi",
+      "priceFrom": "Da",
+      "priceTo": "Fino a",
       "bedrooms": "Camere da letto",
       "bedsAtLeast": "{count}+",
       "district": "Quartiere",

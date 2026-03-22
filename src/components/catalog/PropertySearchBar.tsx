@@ -84,6 +84,11 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { convertFromBaseEur } from "@/lib/currency/convert";
 import { formatMoney } from "@/lib/currency/format";
 import {
+  interpretPriceRangeState,
+  formatPriceRangeDisplay,
+  getPriceQueryParams,
+} from "@/lib/catalog/priceRanges";
+import {
   FilterSelect,
   type FilterOption,
 } from "@/components/catalog/FilterSelect";
@@ -143,8 +148,6 @@ function PropertySearchBarInner({
   const [city, setCity] = React.useState(initialCity);
   const [type, setType] = React.useState(initialType);
   const [deal, setDeal] = React.useState(initialDealType || "any");
-  const [minPrice, setMinPrice] = React.useState(initialMinPrice);
-  const [maxPrice, setMaxPrice] = React.useState(initialMaxPrice);
   const [beds, setBeds] = React.useState(initialBeds || "any");
   const [district, setDistrict] = React.useState(initialDistrict || "any");
   const [sort, setSort] = React.useState(initialSort || "newest");
@@ -179,10 +182,20 @@ function PropertySearchBarInner({
   });
   const didInitDealRef = React.useRef(false);
 
-  const priceIsDefaultNoFilter = React.useMemo(() => {
-    const [min, max] = priceValues;
-    return min <= currentRange.min && max >= currentRange.max;
-  }, [priceValues, currentRange.min, currentRange.max]);
+  const priceRangeState = React.useMemo(
+    () =>
+      interpretPriceRangeState(
+        { min: priceValues[0], max: priceValues[1] },
+        currentRange
+      ),
+    [priceValues, currentRange.min, currentRange.max]
+  );
+
+  const priceDisplay = React.useMemo(() => {
+    const formatAmount = (eur: number) =>
+      formatMoney(convertFromBaseEur(eur, activeCurrency, rates), activeCurrency, locale);
+    return formatPriceRangeDisplay(priceRangeState, { formatAmount, t });
+  }, [priceRangeState, activeCurrency, rates, locale, t]);
 
   React.useEffect(() => {
     const range =
@@ -196,8 +209,6 @@ function PropertySearchBarInner({
     }
     // Deal changed explicitly -> reset to no-price-filter state.
     setPriceValues([range.min, range.max]);
-    setMinPrice("");
-    setMaxPrice("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deal]);
 
@@ -237,10 +248,10 @@ function PropertySearchBarInner({
     if (deal && deal !== "any") params.set("deal", deal);
     else params.delete("deal");
 
-    if (minPrice) params.set("minPrice", minPrice);
+    const priceParams = getPriceQueryParams(priceRangeState);
+    if (priceParams.minPrice) params.set("minPrice", priceParams.minPrice);
     else params.delete("minPrice");
-
-    if (maxPrice) params.set("maxPrice", maxPrice);
+    if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
     else params.delete("maxPrice");
 
     if (beds && beds !== "any") params.set("beds", beds);
@@ -271,9 +282,8 @@ function PropertySearchBarInner({
     deal,
     district,
     locale,
-    maxPrice,
-    minPrice,
     pageSize,
+    priceRangeState,
     router,
     searchParams,
     sort,
@@ -349,9 +359,7 @@ function PropertySearchBarInner({
           <div className="flex items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
             <span className="min-w-0 truncate">{t("priceRange")}</span>
             <span className="font-medium text-dark dark:text-white text-[11px] min-w-0 truncate text-right">
-              {priceIsDefaultNoFilter
-                ? t("any")
-                : `${formatMoney(convertFromBaseEur(priceValues[0], activeCurrency, rates), activeCurrency, locale)} – ${formatMoney(convertFromBaseEur(priceValues[1], activeCurrency, rates), activeCurrency, locale)}`}
+              {priceDisplay}
             </span>
           </div>
           <Slider.Root
@@ -363,10 +371,6 @@ function PropertySearchBarInner({
             onValueChange={(values) => {
               const [min, max] = values as [number, number];
               setPriceValues([min, max]);
-              const minChanged = min > currentRange.min;
-              const maxChanged = max < currentRange.max;
-              setMinPrice(minChanged ? String(min) : "");
-              setMaxPrice(maxChanged ? String(max) : "");
             }}
           >
             <Slider.Track className="bg-dark/10 dark:bg-white/20 relative grow rounded-full h-1">

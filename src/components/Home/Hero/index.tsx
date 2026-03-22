@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { fetchCatalogFilterOptions } from '@/lib/sanity/client'
+import { fetchCatalogFilterOptions, fetchSiteSettings } from '@/lib/sanity/client'
 import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'
+import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 
 type HeroData = {
   shortLine?: string;
@@ -37,7 +38,13 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
         .filter(Boolean) as Array<{ key: 'sale' | 'rent' | 'short-term'; label?: string }>
     : []
 
-  const filterOptions = await fetchCatalogFilterOptions(locale)
+  const [filterOptions, siteSettings] = await Promise.all([
+    fetchCatalogFilterOptions(locale),
+    fetchSiteSettings(),
+  ])
+  const priceRangesByDeal = toRangesByDeal(
+    resolvePriceRange((siteSettings as Record<string, unknown>)?.priceRange)
+  )
   const locationOptions = filterOptions.locations.map((o) => ({ value: o.value, label: o.label }))
   const propertyTypeOptions = filterOptions.propertyTypes
     .filter((o) => o.value && o.value !== 'any')
@@ -102,6 +109,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                   locationOptions={locationOptions}
                   propertyTypeOptions={propertyTypeOptions}
                   searchTabs={cmsTabs}
+                  priceRangesByDeal={priceRangesByDeal}
                 />
               </div>
             ) : null}

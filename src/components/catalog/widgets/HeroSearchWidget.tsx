@@ -10,25 +10,28 @@ import * as Slider from "@radix-ui/react-slider";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { convertFromBaseEur, convertToBaseEur } from "@/lib/currency/convert";
 import { formatMoney } from "@/lib/currency/format";
+import {
+  DEFAULT_PRICE_RANGES,
+  type PriceRangesByDeal,
+  interpretPriceRangeState,
+  formatPriceRangeDisplay,
+  getPriceQueryParams,
+} from "@/lib/catalog/priceRanges";
 
 type DealTab = "sale" | "rent" | "short-term";
-
-const DEFAULT_RANGES_EUR: Record<DealTab | "any", { min: number; max: number }> = {
-  any: { min: 50_000, max: 1_000_000 },
-  sale: { min: 50_000, max: 1_000_000 },
-  rent: { min: 300, max: 10_000 },
-  "short-term": { min: 50, max: 2_000 },
-};
 
 export function HeroSearchWidget({
   locationOptions,
   propertyTypeOptions,
   searchTabs,
+  priceRangesByDeal,
 }: {
   locationOptions: FilterOption[];
   propertyTypeOptions: FilterOption[];
   searchTabs: Array<{ key: DealTab; label?: string }>;
+  priceRangesByDeal?: PriceRangesByDeal;
 }) {
+  const ranges = priceRangesByDeal ?? DEFAULT_PRICE_RANGES;
   const router = useRouter();
   const locale = useLocale();
   const tFilters = useTranslations("Catalog.filters");
@@ -61,7 +64,7 @@ export function HeroSearchWidget({
     }
   }, [tabs, deal]);
 
-  const range = deal ? DEFAULT_RANGES_EUR[deal] ?? DEFAULT_RANGES_EUR.any : DEFAULT_RANGES_EUR.any;
+  const range = deal ? ranges[deal] ?? ranges.any : ranges.any;
   const [priceValuesEur, setPriceValuesEur] = React.useState<[number, number]>([
     range.min,
     range.max,
@@ -69,9 +72,15 @@ export function HeroSearchWidget({
 
   React.useEffect(() => {
     if (!deal) return;
-    const next = DEFAULT_RANGES_EUR[deal] ?? DEFAULT_RANGES_EUR.any;
+    const next = ranges[deal] ?? ranges.any;
     setPriceValuesEur([next.min, next.max]);
-  }, [deal]);
+  }, [deal, ranges]);
+
+  const defaultRange = { min: range.min, max: range.max };
+  const priceRangeState = interpretPriceRangeState(
+    { min: priceValuesEur[0], max: priceValuesEur[1] },
+    defaultRange
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,16 +91,19 @@ export function HeroSearchWidget({
     if (city && city !== "any") params.set("city", city);
     if (type && type !== "any") params.set("type", type);
 
-    const [minEur, maxEur] = priceValuesEur;
-    if (Number.isFinite(minEur) && minEur > 0) params.set("minPrice", String(Math.round(minEur)));
-    if (Number.isFinite(maxEur) && maxEur > 0) params.set("maxPrice", String(Math.round(maxEur)));
+    const priceParams = getPriceQueryParams(priceRangeState);
+    if (priceParams.minPrice) params.set("minPrice", priceParams.minPrice);
+    if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
 
     router.push(`${catalogPath(locale)}?${params.toString()}`);
   };
 
-  const [minEur, maxEur] = priceValuesEur;
-  const minDisplay = formatMoney(convertFromBaseEur(minEur, currency, rates), currency, locale);
-  const maxDisplay = formatMoney(convertFromBaseEur(maxEur, currency, rates), currency, locale);
+  const formatAmount = (eur: number) =>
+    formatMoney(convertFromBaseEur(eur, currency, rates), currency, locale);
+  const priceDisplay = formatPriceRangeDisplay(priceRangeState, {
+    formatAmount,
+    t: tFilters,
+  });
 
   const onSliderValueChange = (values: number[]) => {
     const [min, max] = values as [number, number];
@@ -166,7 +178,7 @@ export function HeroSearchWidget({
           <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
             <span className="truncate">{tFilters("priceRange")}</span>
             <span className="font-medium text-dark dark:text-white text-[11px] shrink-0">
-              {minDisplay} – {maxDisplay}
+              {priceDisplay}
             </span>
           </div>
           <Slider.Root
