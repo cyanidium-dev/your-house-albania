@@ -44,7 +44,7 @@ export default async function CityLandingPage({ params }: Props) {
 
   return (
     <>
-      <section className="pt-44">
+      <section className="pt-20 md:pt-32">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <CityLandingBreadcrumb locale={locale} city={citySlug} />
         </div>

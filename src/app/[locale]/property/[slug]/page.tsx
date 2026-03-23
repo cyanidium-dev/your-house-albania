@@ -163,7 +163,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const dealTypeLabel = tPropertyDetail(dealTypeKey);
 
   return (
-        <section className="!pt-44 pb-24 lg:pb-20 relative" >
+        <section className="pt-20 md:pt-32 pb-24 lg:pb-20 relative">
             <PropertyJsonLd
               name={title}
               slug={slug}

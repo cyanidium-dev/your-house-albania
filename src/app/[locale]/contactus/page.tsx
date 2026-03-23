@@ -11,7 +11,7 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function ContactUs({ params }: Props) {
   const { locale } = await params;
   return (
-    <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-44 pb-14 md:pb-28">
+    <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-20 md:pt-32 pb-14 md:pb-28">
       <div className="mb-16">
         <div className="flex gap-2.5 items-center justify-center mb-3">
           <span>
