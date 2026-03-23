@@ -3,6 +3,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapSanityAmenities, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
+import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
 import { Icon } from '@iconify/react';
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
 import Link from 'next/link';
@@ -43,6 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
   );
 
+  const propertySeo = (sanityProperty as { seo?: unknown })?.seo;
   const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
     | {
         metaTitle?: Record<string, string>;
@@ -50,32 +52,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       }
     | undefined;
 
-  const resolveLocalizedString = (await import('@/lib/sanity/localized'))
-    .resolveLocalizedString;
+  const fallbackTitle = fields.title || slug;
+  const fallbackDescription =
+    fields.description || `Details for property ${fallbackTitle}`;
 
-  const siteTitle =
-    defaultSeo?.metaTitle &&
-    resolveLocalizedString(defaultSeo.metaTitle as never, locale);
-  const siteDescription =
-    defaultSeo?.metaDescription &&
-    resolveLocalizedString(defaultSeo.metaDescription as never, locale);
+  const coverImageUrl = (sanityProperty as { gallery?: Array<{ asset?: { url?: string } }> })?.gallery?.[0]?.asset?.url;
 
-  const title = fields.title || slug;
-  const description =
-    fields.description ||
-    siteDescription ||
-    `Details for property ${title}`;
-
-  const fullTitle = siteTitle ? `${title} | ${siteTitle}` : title;
-
-  return {
-    title: fullTitle,
-    description,
-    openGraph: {
-      title: fullTitle,
-      description,
-    },
-  };
+  return buildPropertyMetadata(
+    propertySeo as never,
+    defaultSeo as never,
+    locale,
+    {
+      fallbackTitle,
+      fallbackDescription,
+      coverImageUrl: coverImageUrl ?? undefined,
+    }
+  );
 }
 
 function getSimilarCount(settings: unknown): number {
