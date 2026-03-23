@@ -527,7 +527,14 @@ const cachedFetchSiteSettings = unstable_cache(
       priceRange {
         from,
         to
-      }
+      },
+      "currencyRates": currencyRates[code in ^.displayCurrencies]{
+        code,
+        rate,
+        symbol
+      },
+      displayCurrencies,
+      currencyLastSyncedAt
     }`;
     try {
       const result = await client.fetch(query);

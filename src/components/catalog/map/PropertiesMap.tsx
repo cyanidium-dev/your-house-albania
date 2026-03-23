@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import maplibregl from 'maplibre-gl'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { cn } from '@/lib/utils'
@@ -88,6 +89,7 @@ export function PropertiesMap({
   selectedDistrictSlug?: string
   selectedDealType?: string
 }) {
+  const { formatFromEur } = useCurrency()
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const mapRef = React.useRef<MapLibreMap | null>(null)
   const resizeRafRef = React.useRef<number | null>(null)
@@ -132,8 +134,8 @@ export function PropertiesMap({
 
         const priceText =
           typeof it.price === 'number' && Number.isFinite(it.price)
-            ? `${Math.round(it.price).toLocaleString()}${String(it.currency || 'EUR').toUpperCase() === 'EUR' ? '€' : ''}`
-            : it.rate
+            ? formatFromEur(it.price)
+            : it.rate /* legacy fallback when price missing */
               ? it.rate
               : ''
         const dealText = normalizeDeal(it.status)
@@ -147,7 +149,7 @@ export function PropertiesMap({
         }
       })
       .filter(Boolean) as Array<{ slug: string; lat: number; lng: number; markerLabel: string }>
-  }, [items, selectedDealType])
+  }, [items, selectedDealType, formatFromEur])
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'development') {

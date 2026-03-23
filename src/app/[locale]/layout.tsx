@@ -28,6 +28,12 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   const siteSettings = mapSiteSettingsToResolved(rawSiteSettings as never, locale);
 
+  const raw = rawSiteSettings as Record<string, unknown> | null | undefined;
+  const currencyRates = Array.isArray(raw?.currencyRates) ? raw.currencyRates : [];
+  const displayCurrencies = Array.isArray(raw?.displayCurrencies)
+    ? (raw.displayCurrencies as string[]).filter((c): c is string => typeof c === 'string' && c.trim() !== '')
+    : [];
+
   if (process.env.NODE_ENV === "development") {
     console.log("[Layout] siteSettings:", rawSiteSettings ? "found" : "not found", {
       hasFooterQuickLinks: siteSettings.footerQuickLinks.length > 0,
@@ -40,7 +46,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <Providers>
+      <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
         <Header siteSettings={siteSettings} locale={locale} />
         {children}
         <Footer siteSettings={siteSettings} />

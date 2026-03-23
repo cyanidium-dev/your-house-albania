@@ -8,6 +8,7 @@ import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import type { ViewMode } from "@/lib/catalog/viewMode";
@@ -54,6 +55,7 @@ export function CatalogBodyClient({
   currentPage,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
+  const { formatFromEur } = useCurrency();
   const tCard = useTranslations("Shared.propertyCard");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
@@ -268,9 +270,9 @@ export function CatalogBodyClient({
                             {previewItem.propertyType || previewItem.status || "Property"}
                           </p>
                           <p className="text-sm font-semibold text-dark dark:text-white truncate">
-                            {previewItem.price
-                              ? `${Math.round(previewItem.price).toLocaleString()} ${previewItem.currency || "EUR"}`
-                              : previewItem.rate}
+                            {previewItem.price != null && Number.isFinite(previewItem.price)
+                              ? formatFromEur(previewItem.price)
+                              : previewItem.rate /* legacy fallback when price missing */}
                           </p>
                           <p className="text-xs text-dark dark:text-white truncate">{previewItem.name}</p>
                           <p className="text-[11px] text-dark/60 dark:text-white/60 truncate mt-0.5">
@@ -300,9 +302,9 @@ export function CatalogBodyClient({
                           {previewItem.propertyType || previewItem.status || "Property"}
                         </p>
                         <p className="text-sm font-semibold text-dark dark:text-white truncate">
-                          {previewItem.price
-                            ? `${Math.round(previewItem.price).toLocaleString()} ${previewItem.currency || "EUR"}`
-                            : previewItem.rate}
+                          {previewItem.price != null && Number.isFinite(previewItem.price)
+                            ? formatFromEur(previewItem.price)
+                            : previewItem.rate /* legacy fallback when price missing */}
                         </p>
                         <p className="text-sm text-dark dark:text-white truncate">{previewItem.name}</p>
                         <p className="text-xs text-dark/60 dark:text-white/60 truncate">{previewItem.location}</p>

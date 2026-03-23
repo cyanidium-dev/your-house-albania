@@ -132,6 +132,7 @@ export function mapSanityPropertyToDetailsFields(
   const desc = resolveLocalizedString(p.description as never, locale);
   const price = p.price ?? 0;
   const currency = p.currency ?? 'EUR';
+  /** @legacy Pre-formatted string fallback when UI lacks formatFromEur. Prefer price + useCurrency().formatFromEur. */
   const rate = price > 0 ? `${price.toLocaleString()} ${currency}` : '';
   return {
     title: resolveLocalizedString(p.title as never, locale) || '',
@@ -305,6 +306,7 @@ export function mapSanityPropertyToCard(
     | null
     | undefined;
   const localizedDescription = resolveLocalizedString(rawDescription as never, locale);
+  /** @legacy Fallback string when price is missing. Prefer price + formatFromEur. */
   const rate = String(p.price ?? 0);
   const lat =
     typeof p.coordinatesLat === 'number' && Number.isFinite(p.coordinatesLat) ? p.coordinatesLat : undefined
