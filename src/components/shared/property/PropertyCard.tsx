@@ -51,18 +51,6 @@ function truncateTeaser(text: string, maxChars: number): string {
   return `${t.slice(0, Math.max(0, maxChars - 1)).trimEnd()}…`
 }
 
-function formatPrice(rate: string, price?: number | null, currency?: string | null): string {
-  if (rate && rate.trim().length > 0) return rate
-  if (typeof price === 'number' && !Number.isNaN(price)) {
-    const cur = (currency && currency.trim()) || 'EUR'
-    if (cur.toUpperCase() === 'EUR') {
-      return `${price.toLocaleString()} €`
-    }
-    return `${price.toLocaleString()} ${cur}`
-  }
-  return ''
-}
-
 function PropertyCard({
   item,
   locale,

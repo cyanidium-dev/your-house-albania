@@ -94,5 +94,6 @@ export async function GET(request: NextRequest) {
     ok: true,
     syncedCount: payload.length,
     syncedAt,
+    payload: payload,
   });
 }

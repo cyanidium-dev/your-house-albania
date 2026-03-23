@@ -5,12 +5,13 @@ import { Icon } from '@iconify/react'
 import { useTranslations } from 'next-intl'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { cn } from '@/lib/utils'
-import { CURRENCIES, getCurrencyMeta } from '@/lib/currency/registry'
+import { getCurrencyMeta } from '@/lib/currency/registry'
 
 export default function CurrencySwitcher() {
   const t = useTranslations('Currency')
-  const { currency, setCurrency } = useCurrency()
+  const { currency, setCurrency, displayCurrencies } = useCurrency()
   const meta = getCurrencyMeta(currency)
+  const currencies = displayCurrencies.length > 0 ? displayCurrencies : ['EUR']
   const [open, setOpen] = React.useState(false)
   const ref = React.useRef<HTMLDivElement>(null)
 
@@ -37,8 +38,14 @@ export default function CurrencySwitcher() {
         aria-haspopup="listbox"
       >
         <span className="inline-flex items-center gap-1 min-w-0">
-          <span className="shrink-0">{meta.symbol}</span>
-          <span className="truncate">{meta.code}</span>
+          {meta.symbol !== meta.code ? (
+            <>
+              <span className="shrink-0">{meta.symbol}</span>
+              <span className="truncate">{meta.code}</span>
+            </>
+          ) : (
+            <span className="truncate">{meta.code}</span>
+          )}
         </span>
         <Icon
           icon="ph:caret-down"
@@ -68,24 +75,34 @@ export default function CurrencySwitcher() {
               'animate-in fade-in-0 zoom-in-95 slide-in-from-top-2'
             )}
           >
-            {CURRENCIES.map((c) => (
-              <button
-                key={c.code}
-                type="button"
-                role="option"
-                aria-selected={c.code === currency}
-                onClick={() => handleSelect(c.code)}
-                className={cn(
-                  'flex items-center gap-2 w-full px-3 py-1.5 text-sm cursor-pointer outline-none',
-                  'text-dark dark:text-white',
-                  'hover:bg-primary/15 dark:hover:bg-primary/25 hover:text-primary',
-                  c.code === currency && 'text-primary bg-primary/10 dark:bg-primary/25'
-                )}
-              >
-                <span className="w-4 text-center">{c.symbol}</span>
-                <span className="font-semibold">{c.code}</span>
-              </button>
-            ))}
+            {currencies.map((code) => {
+              const c = getCurrencyMeta(code)
+              const showSymbol = c.symbol !== c.code
+              return (
+                <button
+                  key={c.code}
+                  type="button"
+                  role="option"
+                  aria-selected={c.code === currency}
+                  onClick={() => handleSelect(c.code)}
+                  className={cn(
+                    'flex items-center gap-2 w-full px-3 py-1.5 text-sm cursor-pointer outline-none',
+                    'text-dark dark:text-white',
+                    'hover:bg-primary/15 dark:hover:bg-primary/25 hover:text-primary',
+                    c.code === currency && 'text-primary bg-primary/10 dark:bg-primary/25'
+                  )}
+                >
+                  {showSymbol ? (
+                    <>
+                      <span className="w-4 text-center shrink-0">{c.symbol}</span>
+                      <span className="font-semibold">{c.code}</span>
+                    </>
+                  ) : (
+                    <span className="font-semibold">{c.code}</span>
+                  )}
+                </button>
+              )
+            })}
           </div>
         </>
       )}
