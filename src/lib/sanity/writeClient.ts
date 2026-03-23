@@ -1,5 +1,14 @@
 import { createClient } from '@sanity/client';
-import type { CurrencyRateEntry } from '@/lib/currency/fixer';
+
+/** Sanity array item shape for currencyRates — includes _key and _type required by Studio. */
+export type SanityCurrencyRateItem = {
+  _key: string;
+  _type: 'currencyRate';
+  code: string;
+  rate: number;
+  name?: string;
+  symbol?: string;
+};
 
 const projectId =
   process.env.SANITY_PROJECT_ID ?? process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '';
@@ -26,7 +35,7 @@ export function getWriteClient() {
  * Does NOT modify displayCurrencies.
  */
 export async function patchSiteSettingsCurrency(
-  currencyRates: CurrencyRateEntry[],
+  currencyRates: SanityCurrencyRateItem[],
   currencyLastSyncedAt: string,
 ): Promise<boolean> {
   const client = getWriteClient();
