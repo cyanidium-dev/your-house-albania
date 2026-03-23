@@ -13,13 +13,6 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
 
-const imageSizes = {
-  large: { width: 440, height: 300 },
-  small: { width: 280, height: 180 },
-  // slightly wider, lower image footprint for compact horizontal list rows
-  list: { width: 420, height: 236 },
-} as const
-
 function displayStatusLabel(status?: string | null): string | null {
   if (!status) return null
   const s = status.toLowerCase().trim()
@@ -135,13 +128,14 @@ function PropertyCard({
 
   const imageWrapper = cn(
     'overflow-hidden relative shrink-0',
-    isList ? 'w-36 sm:w-52 md:w-72 rounded-l-2xl' : 'rounded-t-2xl'
+    isList ? 'w-36 sm:w-52 md:w-72 rounded-l-2xl aspect-[16/9]' : 'rounded-t-2xl w-full',
+    isLarge && 'aspect-[22/15]',
+    isSmall && !isList && 'aspect-[16/10]'
   )
 
   const imageClass = cn(
-    'h-full w-full object-cover',
-    isList ? 'rounded-l-2xl aspect-[16/9]' : 'rounded-t-2xl',
-    isSmall && !isList && 'aspect-[16/10]'
+    'object-cover',
+    isList ? 'rounded-l-2xl' : 'rounded-t-2xl'
   )
 
   const contentPadding = cn(
@@ -318,8 +312,8 @@ function PropertyCard({
         </p>
       )}
 
-      {/* property name (no name in small mode unless compactShowTitle) */}
-      {((!isSmall || compactShowTitle) && name) && (
+      {/* property title */}
+      {name && (
         fullClickable ? (
           <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
             {name}
@@ -464,7 +458,7 @@ function PropertyCard({
             )}
           </div>
           {fullClickable ? (
-            <div className={cn('block group/image h-full')}>
+            <div className={cn('block group/image h-full w-full')}>
               {displayImages.length > 0 && (
                 <div className="relative h-full w-full overflow-hidden">
                   <div
@@ -484,8 +478,8 @@ function PropertyCard({
                         <Image
                           src={img.src}
                           alt={name}
-                          width={imageSizes[view].width}
-                          height={imageSizes[view].height}
+                          fill
+                          sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
                           className={imageClass}
                           unoptimized
                         />
@@ -496,7 +490,7 @@ function PropertyCard({
               )}
             </div>
           ) : (
-            <Link href={href} className={cn('block group/image h-full')}>
+            <Link href={href} className={cn('block group/image h-full w-full')}>
             {displayImages.length > 0 && (
               <div className="relative h-full w-full overflow-hidden">
                 <div
@@ -516,8 +510,8 @@ function PropertyCard({
                       <Image
                         src={img.src}
                         alt={name}
-                        width={imageSizes[view].width}
-                        height={imageSizes[view].height}
+                        fill
+                        sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
                         className={imageClass}
                         unoptimized
                       />
