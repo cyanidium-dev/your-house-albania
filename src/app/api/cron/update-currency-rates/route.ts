@@ -1,7 +1,10 @@
 import { NextRequest } from 'next/server';
 import { fetchFixerRates, fetchFixerSymbols, type CurrencyRateEntry } from '@/lib/currency/fixer';
 import { CURRENCY_SYMBOL_MAP } from '@/lib/currency/currencySymbolMap';
-import { patchSiteSettingsCurrency } from '@/lib/sanity/writeClient';
+import {
+  patchSiteSettingsCurrency,
+  type SanityCurrencyRateItem,
+} from '@/lib/sanity/writeClient';
 
 function enrichWithSymbols(entries: CurrencyRateEntry[]): CurrencyRateEntry[] {
   return entries.map((e) => {
@@ -22,11 +25,11 @@ function validateRates(entries: CurrencyRateEntry[]): boolean {
 }
 
 /** Build Sanity currencyRates payload with required _key and _type. */
-function toSanityCurrencyRates(entries: CurrencyRateEntry[]) {
+function toSanityCurrencyRates(entries: CurrencyRateEntry[]): SanityCurrencyRateItem[] {
   return entries
     .filter((e) => typeof e.code === 'string' && e.code.trim() !== '')
     .map((e) => {
-      const item: Record<string, unknown> = {
+      const item: SanityCurrencyRateItem = {
         _key: e.code.toLowerCase(),
         _type: 'currencyRate',
         code: e.code,
