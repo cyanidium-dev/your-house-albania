@@ -52,9 +52,11 @@ export function PropertyGallery({ images }: Props) {
     };
     window.addEventListener('keydown', onKeyDown);
     document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('gallery-open');
     return () => {
       window.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = '';
+      document.documentElement.classList.remove('gallery-open');
     };
   }, [lightboxOpen, closeLightbox, goPrev, goNext]);
 
@@ -333,6 +335,15 @@ export function PropertyGallery({ images }: Props) {
           aria-modal="true"
           aria-label="Image gallery"
         >
+          {/* Safari chrome blend: fixed tint bars so translucent top/bottom browser UI blends with modal backdrop */}
+          <div
+            className="fixed inset-x-0 top-0 h-[max(env(safe-area-inset-top,0px),7.5rem)] bg-black pointer-events-none z-[1]"
+            aria-hidden
+          />
+          <div
+            className="fixed inset-x-0 bottom-0 h-[max(env(safe-area-inset-bottom,0px),5rem)] bg-black pointer-events-none z-[1]"
+            aria-hidden
+          />
           <button
             type="button"
             onClick={closeLightbox}

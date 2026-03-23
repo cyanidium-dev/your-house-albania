@@ -78,6 +78,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* iPhone Safari: when gallery modal is open, page background behind translucent
+   browser chrome should match the dark modal backdrop for visual blending. */
+html.gallery-open,
+html.gallery-open body {
+  background-color: #000 !important;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
