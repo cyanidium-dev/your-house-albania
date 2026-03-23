@@ -75,7 +75,6 @@ export function SimilarPropertiesCarousel({ items, locale }: Props) {
               locale={locale}
               view={view}
               fullClickable
-              compactShowTitle={isMobile}
               singleImage={isMobile}
               fillHeight
             />

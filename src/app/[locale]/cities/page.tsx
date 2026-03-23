@@ -51,7 +51,7 @@ export default async function CitiesIndexPage({ params }: Props) {
 
     return (
       <>
-        <section className="pt-44">
+        <section className="pt-20 md:pt-32">
           <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
             <CitiesBreadcrumb locale={locale} />
           </div>
@@ -63,7 +63,7 @@ export default async function CitiesIndexPage({ params }: Props) {
 
   const t = await getTranslations("Cities");
   return (
-    <section className="pt-44 pb-20">
+    <section className="pt-20 md:pt-32 pb-20">
       <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
         <CitiesBreadcrumb locale={locale} />
         <h1 className="text-4xl font-semibold text-dark dark:text-white mt-4">

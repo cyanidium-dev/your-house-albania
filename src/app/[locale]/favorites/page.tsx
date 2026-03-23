@@ -18,7 +18,7 @@ export default async function FavoritesPage({ params }: Props) {
   const t = await getTranslations("Favorites");
 
   return (
-    <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-44 pb-14 md:pb-28">
+    <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-20 md:pt-32 pb-14 md:pb-28">
       <div className="mb-8">
         <FavoritesBreadcrumb locale={locale} />
       </div>
