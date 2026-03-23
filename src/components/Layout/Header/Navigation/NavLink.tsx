@@ -18,8 +18,13 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick }) => {
   const path = usePathname()
   const locale = useLocale()
   const href = item.href === "/" ? `/${locale}` : `/${locale}${item.href}`
-
-  const isActive = path === href || path.startsWith(href + "/")
+  const isHomepage = item.href === "/"
+  const baseMatch = path === href || path.startsWith(href + "/")
+  const propertiesDetailMatch =
+    item.href === "/properties" && path.startsWith(`/${locale}/property/`)
+  const isActive = isHomepage
+    ? path === href
+    : baseMatch || propertiesDetailMatch
 
   const linkclasses = clsx(
     'py-3 text-3xl sm:text-5xl font-medium text-white/40 rounded-full group-hover:text-primary',
