@@ -49,7 +49,6 @@ function PropertyCard({
   locale,
   view = 'large',
   fullClickable = false,
-  compactShowTitle = false,
   singleImage = false,
   fillHeight = false,
 }: {
@@ -57,8 +56,6 @@ function PropertyCard({
   locale: string
   view?: ViewMode
   fullClickable?: boolean
-  /** When view is small, show title if true (for compact carousel use) */
-  compactShowTitle?: boolean
   /** Show only first image, no slider/gallery (for carousel on mobile to avoid gesture conflict) */
   singleImage?: boolean
   /** Fill parent height for even card alignment in carousel */
