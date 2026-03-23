@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
-export type GalleryImage = { url: string; alt?: string };
+export type GalleryImage = { url: string; alt?: string; label?: string };
 
 type Props = {
   images: GalleryImage[];
@@ -429,13 +429,15 @@ export function PropertyGallery({ images }: Props) {
                   showThumbs ? 'max-h-[220px] opacity-100' : 'max-h-0 opacity-0'
                 )}
               >
-                {/* Label row */}
+                {/* Label row — caption: label first, then alt, then none */}
                 <div className="px-4 pt-3 pb-2">
-                  {(galleryImages[currentIndex]?.alt ?? '') && (
-                    <p className="text-white/90 text-sm lg:text-base truncate">
-                      {galleryImages[currentIndex]?.alt}
-                    </p>
-                  )}
+                  {(() => {
+                    const img = galleryImages[currentIndex];
+                    const caption = img?.label?.trim() || img?.alt?.trim() || '';
+                    return caption ? (
+                      <p className="text-white/90 text-sm lg:text-base truncate">{caption}</p>
+                    ) : null;
+                  })()}
                 </div>
                 {/* Thumbnail rail */}
                 <div className="overflow-x-auto px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">

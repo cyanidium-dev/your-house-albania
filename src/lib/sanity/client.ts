@@ -71,7 +71,8 @@ export async function fetchHomePage(): Promise<unknown | null> {
         asset-> { _id, url, metadata },
         crop,
         hotspot,
-        alt
+        alt,
+        label
       }
     },
     "cities": cities[]-> {
@@ -85,7 +86,8 @@ export async function fetchHomePage(): Promise<unknown | null> {
         asset-> { _id, url, metadata },
         crop,
         hotspot,
-        alt
+        alt,
+        label
       }
     },
     "districts": districts[]-> {
@@ -102,7 +104,8 @@ export async function fetchHomePage(): Promise<unknown | null> {
         asset-> { _id, url, metadata },
         crop,
         hotspot,
-        alt
+        alt,
+        label
       }
     },
     "propertyTypes": propertyTypes[]-> {
@@ -339,7 +342,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       asset-> { _id, url, metadata },
       crop,
       hotspot,
-      alt
+      alt,
+      label
     },
     coordinates,
     coordinatesLat,
@@ -360,7 +364,15 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       iconKey,
       "customIconUrl": customIcon.asset->url,
       "customIconAlt": customIcon.alt
-    }, [])
+    }, []),
+    seo {
+      metaTitle,
+      metaDescription,
+      ogTitle,
+      ogDescription,
+      ogImage { asset-> { url } },
+      noIndex
+    }
   }`;
   try {
     const result = await client.fetch(query, { slug });
@@ -1042,7 +1054,7 @@ const landingPageSectionsProjection = `{
   secondaryImage { asset-> { url }, alt },
   imageMode,
   backgroundImage { asset-> { url }, alt },
-  "cities": cities[]-> { _id, title, "slug": slug.current, shortDescription, heroImage { asset-> { url }, alt } },
+  "cities": cities[]-> { _id, title, "slug": slug.current, shortDescription, heroImage { asset-> { url }, alt, label } },
   "resolvedManualItems": coalesce(
     manualItems[]-> {
       _id,
@@ -1050,7 +1062,7 @@ const landingPageSectionsProjection = `{
       title,
       "slug": slug.current,
       shortDescription,
-      heroImage { asset-> { url }, alt },
+      heroImage { asset-> { url }, alt, label },
       "city": city-> { "slug": slug.current }
     },
     manualItems[] {
@@ -1059,7 +1071,7 @@ const landingPageSectionsProjection = `{
       title,
       "slug": slug.current,
       shortDescription,
-      heroImage { asset-> { url }, alt },
+      heroImage { asset-> { url }, alt, label },
       "city": city-> { "slug": slug.current }
     }
   ),

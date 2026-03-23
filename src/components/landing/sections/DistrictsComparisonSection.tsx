@@ -9,7 +9,7 @@ type District = {
   slug?: string | { current?: string }
   shortDescription?: unknown
   city?: { slug?: string | { current?: string }; title?: unknown }
-  heroImage?: { asset?: { url?: string }; alt?: string }
+  heroImage?: { asset?: { url?: string }; alt?: string; label?: string }
 }
 
 type ComparisonSection = {
