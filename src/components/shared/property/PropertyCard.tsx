@@ -309,15 +309,15 @@ function PropertyCard({
         </p>
       )}
 
-      {/* property title */}
+      {/* property title – min-h reserves 2-line space for even card height */}
       {name && (
         fullClickable ? (
-          <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
+          <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 min-h-[2.5em] hover:text-primary transition-colors')}>
             {name}
           </h3>
         ) : (
           <Link href={href}>
-            <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 hover:text-primary transition-colors')}>
+            <h3 className={cn('text-sm md:text-base font-medium text-black dark:text-white line-clamp-2 min-h-[2.5em] hover:text-primary transition-colors')}>
               {name}
             </h3>
           </Link>
@@ -554,15 +554,15 @@ function PropertyCard({
                   )}
                 </div>
 
-                {/* title */}
+                {/* title – line-clamp-2 + min-h for even row height */}
                 {name && (
                   fullClickable ? (
-                    <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white truncate hover:text-primary transition-colors">
+                    <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white line-clamp-2 min-h-[2.5em] hover:text-primary transition-colors">
                       {name}
                     </h3>
                   ) : (
                     <Link href={href}>
-                      <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white truncate hover:text-primary transition-colors">
+                      <h3 className="mt-1 text-sm sm:text-base font-medium text-black dark:text-white line-clamp-2 min-h-[2.5em] hover:text-primary transition-colors">
                         {name}
                       </h3>
                     </Link>
