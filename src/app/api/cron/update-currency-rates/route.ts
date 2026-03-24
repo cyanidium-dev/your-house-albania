@@ -1,16 +1,21 @@
 import { NextRequest } from 'next/server';
 import { fetchFixerRates, fetchFixerSymbols, type CurrencyRateEntry } from '@/lib/currency/fixer';
-import { CURRENCY_SYMBOL_MAP } from '@/lib/currency/currencySymbolMap';
+import { resolveCurrencyDisplaySymbol } from '@/lib/currency/currencySymbolMap';
 import {
   patchSiteSettingsCurrency,
   type SanityCurrencyRateItem,
 } from '@/lib/sanity/writeClient';
 
+/** Apply symbol: Fixer non-empty first, else local fallback; omit `symbol` when neither applies. */
 function enrichWithSymbols(entries: CurrencyRateEntry[]): CurrencyRateEntry[] {
   return entries.map((e) => {
-    const symbol = CURRENCY_SYMBOL_MAP[e.code];
-    if (symbol) return { ...e, symbol };
-    return e;
+    const resolved = resolveCurrencyDisplaySymbol(e.code, e.symbol);
+    if (resolved) return { ...e, symbol: resolved };
+    return {
+      code: e.code,
+      rate: e.rate,
+      ...(e.name !== undefined ? { name: e.name } : {}),
+    };
   });
 }
 

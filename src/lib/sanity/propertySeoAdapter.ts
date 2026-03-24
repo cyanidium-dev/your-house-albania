@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
-import { resolveLocalizedString } from './localized';
-
-type LocalizedField = { en?: string; uk?: string; ru?: string; sq?: string; it?: string } | null | undefined;
+import type { LocalizedField } from './socialMetadataResolution';
+import {
+  pickAbsoluteOgImageUrl,
+  resolveChainedDescription,
+  resolveChainedTitle,
+} from './socialMetadataResolution';
 
 type PropertySeo = {
   metaTitle?: LocalizedField;
@@ -15,17 +18,23 @@ type PropertySeo = {
 type SiteDefaultSeo = {
   metaTitle?: LocalizedField;
   metaDescription?: LocalizedField;
+  ogImage?: { asset?: { url?: string } };
 } | null | undefined;
 
-type PropertyMetadataOptions = {
-  fallbackTitle: string;
-  fallbackDescription: string;
+export type PropertyMetadataOptions = {
+  /** Localized property title (maps to `title` field). */
+  itemTitle: string;
+  /** Localized property body description; omit if empty. */
+  itemDescription?: string;
   coverImageUrl?: string;
 };
 
 /**
- * Builds Next Metadata from property SEO (localized).
- * Uses property SEO first, then site default, then fallbacks.
+ * Builds Next Metadata from property SEO (localized) with social fallback chain:
+ * title: ogTitle → metaTitle → itemTitle → site metaTitle → template
+ * description: ogDescription → metaDescription → itemDescription → site metaDescription → template
+ * Images: seo.ogImage → gallery first image → site defaultSeo.ogImage
+ * Twitter: summary (compact card hint); Open Graph image tags unchanged when URL exists.
  */
 export function buildPropertyMetadata(
   propertySeo: PropertySeo,
@@ -33,32 +42,27 @@ export function buildPropertyMetadata(
   locale: string,
   options: PropertyMetadataOptions
 ): Metadata {
-  const { fallbackTitle, fallbackDescription, coverImageUrl } = options;
+  const { itemTitle, itemDescription, coverImageUrl } = options;
 
-  const propertyMetaTitle = resolveLocalizedString(propertySeo?.metaTitle as never, locale);
-  const siteTitle = resolveLocalizedString(siteDefaultSeo?.metaTitle as never, locale);
+  const title = resolveChainedTitle(locale, {
+    ogTitle: propertySeo?.ogTitle,
+    metaTitle: propertySeo?.metaTitle,
+    itemTitle,
+    siteMetaTitle: siteDefaultSeo?.metaTitle,
+  });
 
-  const title =
-    propertyMetaTitle ||
-    (siteTitle ? `${fallbackTitle} | ${siteTitle}` : fallbackTitle);
+  const description = resolveChainedDescription(locale, {
+    ogDescription: propertySeo?.ogDescription,
+    metaDescription: propertySeo?.metaDescription,
+    itemDescription,
+    siteMetaDescription: siteDefaultSeo?.metaDescription,
+  });
 
-  const description =
-    resolveLocalizedString(propertySeo?.metaDescription as never, locale) ||
-    resolveLocalizedString(siteDefaultSeo?.metaDescription as never, locale) ||
-    fallbackDescription;
-
-  const ogTitle =
-    resolveLocalizedString(propertySeo?.ogTitle as never, locale) ||
-    title;
-
-  const ogDescription =
-    resolveLocalizedString(propertySeo?.ogDescription as never, locale) ||
-    description;
-
-  const seoOgImageUrl = (propertySeo?.ogImage as { asset?: { url?: string } })?.asset?.url;
-  const ogImageAbsolute =
-    (seoOgImageUrl && seoOgImageUrl.startsWith('http') ? seoOgImageUrl : undefined) ||
-    (coverImageUrl && coverImageUrl.startsWith('http') ? coverImageUrl : undefined);
+  const ogImageAbsolute = pickAbsoluteOgImageUrl(
+    propertySeo?.ogImage?.asset?.url,
+    coverImageUrl,
+    siteDefaultSeo?.ogImage?.asset?.url
+  );
 
   const noIndex = propertySeo?.noIndex ?? false;
 
@@ -66,16 +70,16 @@ export function buildPropertyMetadata(
     title,
     description: description || undefined,
     openGraph: {
-      title: ogTitle,
-      description: ogDescription,
+      title,
+      description,
       ...(ogImageAbsolute && {
-        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle }],
+        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: title }],
       }),
     },
     twitter: {
-      card: ogImageAbsolute ? 'summary_large_image' : 'summary',
-      title: ogTitle,
-      description: ogDescription,
+      card: 'summary',
+      title,
+      description,
     },
     robots: noIndex ? { index: false, follow: true } : undefined,
   };
