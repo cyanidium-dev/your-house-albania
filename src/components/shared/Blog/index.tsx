@@ -107,6 +107,7 @@ const BlogSmall: React.FC<{
                   coverImageUrl: blog.coverImageUrl,
                   publishedAt: blog.publishedAt,
                   categoryLabel: blog.categoryLabel,
+                  featured: blog.featured,
                 }}
                 locale={locale}
               />

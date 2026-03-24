@@ -17,6 +17,7 @@ type BlogCardInput = {
   tag?: string;
   categoryLabel?: string;
   categorySlug?: string;
+  featured?: boolean;
 };
 
 async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string }) {
@@ -51,7 +52,10 @@ async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string 
     );
     const articleUrl = `/${locale}/blog/${slug}`;
     return (
-        <div className="flex flex-col gap-4 group">
+        <div
+          className="flex flex-col gap-4 group"
+          data-featured={blog.featured ? "true" : undefined}
+        >
             <Link href={articleUrl} aria-label={t('ariaLabel')} className="block">
                 <div className="overflow-hidden rounded-2xl flex-shrink-0 aspect-video w-full bg-dark/5 dark:bg-white/10">
                     {coverImage ? (

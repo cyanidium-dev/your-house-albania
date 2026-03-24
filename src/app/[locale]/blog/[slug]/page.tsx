@@ -4,8 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
-import { fetchBlogPostBySlug, fetchSiteSettings } from "@/lib/sanity/client";
-import { mapSanityBlogPostToDetail } from "@/lib/sanity/blogAdapter";
+import {
+  fetchBlogPostBySlug,
+  fetchBlogPostsPaginated,
+  fetchBlogSettings,
+  fetchSiteSettings,
+} from "@/lib/sanity/client";
+import {
+  mapSanityBlogPostToDetail,
+  mapSanityBlogPostToList,
+  sanitizeBlogRelatedPosts,
+  type BlogRelatedPost,
+  type SanityListingPost,
+} from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { BlogArticleContent } from "@/components/Blog/BlogArticleContent";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
@@ -16,6 +27,32 @@ import { BlogCardClient } from "@/components/Blog/BlogCardClient";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { formatBlogDate } from "@/lib/date/formatLocale";
+
+function clamp(n: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, n));
+}
+
+function resolveRelatedSidebarCount(blogSettings: unknown): number {
+  const raw = (blogSettings as { relatedPostsSidebarCount?: unknown } | null)
+    ?.relatedPostsSidebarCount;
+
+  if (raw === null || raw === undefined) {
+    return 5;
+  }
+
+  const value =
+    typeof raw === "number" && Number.isFinite(raw)
+      ? raw
+      : typeof raw === "string" && raw.trim() !== "" && Number.isFinite(Number(raw))
+        ? Number(raw)
+        : NaN;
+
+  if (Number.isNaN(value) || value === 0) {
+    return 5;
+  }
+
+  return clamp(Math.round(value), 1, 50);
+}
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -63,15 +100,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Post({ params }: Props) {
   const { locale, slug } = await params;
-  const [post, siteSettings, baseUrl] = await Promise.all([
+  const [post, siteSettings, baseUrl, blogSettings] = await Promise.all([
     fetchBlogPostBySlug(slug),
     fetchSiteSettings(),
     getBaseUrl(),
+    fetchBlogSettings(),
   ]);
   if (!post) notFound();
 
   const detail = mapSanityBlogPostToDetail(post, locale);
   if (!detail) notFound();
+
+  const relatedCount = resolveRelatedSidebarCount(blogSettings);
+
+  const manualRelated = sanitizeBlogRelatedPosts(detail.relatedPosts, detail.slug);
+  let finalRelatedPosts: BlogRelatedPost[] = manualRelated;
+  if (manualRelated.length < relatedCount) {
+    const need = relatedCount - manualRelated.length;
+    const reserved = new Set<string>([detail.slug, ...manualRelated.map((p) => p.slug)]);
+    const { items } = await fetchBlogPostsPaginated({
+      page: 1,
+      pageSize: Math.min(50, Math.max(need * 4, relatedCount * 4)),
+    });
+    const fallback: BlogRelatedPost[] = [];
+    for (const raw of items) {
+      const item = mapSanityBlogPostToList(raw as SanityListingPost, locale);
+      const s = item.slug.trim();
+      if (!s || reserved.has(s)) continue;
+      reserved.add(s);
+      fallback.push({
+        slug: item.slug,
+        title: item.title,
+        excerpt: item.excerpt,
+        coverImageUrl: item.coverImageUrl,
+        publishedAt: item.publishedAt,
+        categoryLabel: item.categoryLabel,
+        categorySlug: item.categorySlug,
+      });
+      if (fallback.length >= need) break;
+    }
+    finalRelatedPosts = [...manualRelated, ...fallback].slice(0, relatedCount);
+  } else {
+    finalRelatedPosts = manualRelated.slice(0, relatedCount);
+  }
 
   const rawSite = siteSettings as { siteName?: unknown; logo?: { asset?: { url?: string } } } | null;
   const siteName = rawSite?.siteName
@@ -95,9 +166,9 @@ export default async function Post({ params }: Props) {
           <Icon icon="ph:arrow-left" width={20} height={20} />
           <span>{t("goBack")}</span>
         </Link>
-        <h2 className="text-dark dark:text-white md:text-52 text-40 leading-[1.2] font-semibold pt-7">
+        <h1 className="text-dark dark:text-white md:text-52 text-40 leading-[1.2] font-semibold pt-7">
           {detail.title}
-        </h2>
+        </h1>
       </div>
       {detail.subtitle && (
         <div className="flex-1 min-h-0 pt-6 flex items-start">
@@ -196,7 +267,7 @@ export default async function Post({ params }: Props) {
         <div className="container max-w-8xl mx-auto px-4 md:px-5 2xl:px-0">
           <div
             className={
-              detail.relatedPosts.length > 0 || detail.properties.length > 0
+              finalRelatedPosts.length > 0 || detail.properties.length > 0
                 ? "grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16 lg:items-start"
                 : "max-w-3xl mx-auto"
             }
@@ -204,15 +275,15 @@ export default async function Post({ params }: Props) {
             <div className="min-w-0">
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
             </div>
-            {(detail.relatedPosts.length > 0 || detail.properties.length > 0) && (
+            {(finalRelatedPosts.length > 0 || detail.properties.length > 0) && (
               <aside className="space-y-10">
-                {detail.relatedPosts.length > 0 && (
+                {finalRelatedPosts.length > 0 && (
                   <div>
                     <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
                       {tBlog("relatedArticles")}
                     </h3>
                     <div className="flex flex-col gap-6">
-                      {detail.relatedPosts.map((p) => (
+                      {finalRelatedPosts.map((p) => (
                         <BlogCardClient key={p.slug} blog={p} locale={locale} />
                       ))}
                     </div>
