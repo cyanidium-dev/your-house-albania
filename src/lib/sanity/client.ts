@@ -534,7 +534,8 @@ const cachedFetchSiteSettings = unstable_cache(
       defaultSeo {
         metaTitle,
         metaDescription,
-        noIndex
+        noIndex,
+        ogImage { asset-> { url } }
       },
       priceRange {
         from,
@@ -1006,6 +1007,14 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     _id,
     _type,
     pageType,
+    title,
+    subtitle,
+    cardDescription,
+    "linkedCity": linkedCity->{
+      title,
+      shortDescription,
+      heroImage { asset-> { url } }
+    },
     "pageSections": pageSections[]${landingPageSectionsProjection},
     seo
   }`;

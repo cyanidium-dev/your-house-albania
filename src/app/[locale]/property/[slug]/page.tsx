@@ -52,9 +52,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       }
     | undefined;
 
-  const fallbackTitle = fields.title || slug;
-  const fallbackDescription =
-    fields.description || `Details for property ${fallbackTitle}`;
+  const itemTitle = fields.title || slug;
+  const itemDescription = fields.description?.trim() || undefined;
 
   const coverImageUrl = (sanityProperty as { gallery?: Array<{ asset?: { url?: string } }> })?.gallery?.[0]?.asset?.url;
 
@@ -63,8 +62,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     defaultSeo as never,
     locale,
     {
-      fallbackTitle,
-      fallbackDescription,
+      itemTitle,
+      itemDescription,
       coverImageUrl: coverImageUrl ?? undefined,
     }
   );

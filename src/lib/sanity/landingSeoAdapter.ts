@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import { resolveLocalizedString } from './localized'
-
-type LocalizedField = { en?: string; ru?: string; uk?: string; sq?: string; it?: string } | null | undefined
+import {
+  pickAbsoluteOgImageUrl,
+  resolveChainedDescription,
+  resolveChainedTitle,
+  type LocalizedField,
+} from './socialMetadataResolution'
 
 export type LandingSeoObject = {
   metaTitle?: LocalizedField
@@ -22,12 +26,19 @@ export type LandingSeo = LandingSeoObject | null
 type SiteDefaultSeo = {
   metaTitle?: LocalizedField
   metaDescription?: LocalizedField
+  ogImage?: { asset?: { url?: string } }
   noIndex?: boolean
   noFollow?: boolean
 } | null
 
-const TEMPLATE_TITLE = 'Your House Albania'
-const TEMPLATE_DESCRIPTION = 'Real estate in Albania. Buy, rent, and invest in properties across Albania.'
+export type LandingMetadataItemContext = {
+  /** landingPage.title or linked city title, localized by caller */
+  itemTitle?: string
+  /** subtitle, cardDescription, linkedCity.shortDescription, etc. */
+  itemDescription?: string
+  /** Hero / linked city image URL */
+  itemOgImageUrl?: string
+}
 
 function resolveCanonicalUrl(
   raw: LandingSeoObject['canonicalUrl'] | null | undefined,
@@ -48,31 +59,42 @@ function resolveKeywords(raw: LandingSeoObject['keywords'] | null | undefined, l
   return items.length ? items : undefined
 }
 
-/** Canonical landingPage.seo → Next Metadata (landing-home + inner city landings). */
+/**
+ * landingPage.seo → Next Metadata (home, cities index, city detail landings).
+ * Title/description: og → meta → item (optional) → site default → template.
+ * Images: landing seo.ogImage → item image → site defaultSeo.ogImage
+ * Twitter: summary (compact); Open Graph tags preserved.
+ */
 export function buildLandingMetadata(
   landingSeo: LandingSeo | undefined,
   siteDefaultSeo: SiteDefaultSeo | undefined,
   locale: string,
+  itemContext?: LandingMetadataItemContext,
 ): Metadata {
-  const title =
-    resolveLocalizedString(landingSeo?.metaTitle as never, locale) ||
-    resolveLocalizedString(siteDefaultSeo?.metaTitle as never, locale) ||
-    TEMPLATE_TITLE
+  const title = resolveChainedTitle(locale, {
+    ogTitle: landingSeo?.ogTitle,
+    metaTitle: landingSeo?.metaTitle,
+    itemTitle: itemContext?.itemTitle,
+    siteMetaTitle: siteDefaultSeo?.metaTitle,
+  })
 
-  const description =
-    resolveLocalizedString(landingSeo?.metaDescription as never, locale) ||
-    resolveLocalizedString(siteDefaultSeo?.metaDescription as never, locale) ||
-    TEMPLATE_DESCRIPTION
+  const description = resolveChainedDescription(locale, {
+    ogDescription: landingSeo?.ogDescription,
+    metaDescription: landingSeo?.metaDescription,
+    itemDescription: itemContext?.itemDescription,
+    siteMetaDescription: siteDefaultSeo?.metaDescription,
+  })
 
-  const ogTitle = resolveLocalizedString(landingSeo?.ogTitle as never, locale) || title
-  const ogDescription = resolveLocalizedString(landingSeo?.ogDescription as never, locale) || description
+  const ogImageAbsolute = pickAbsoluteOgImageUrl(
+    landingSeo?.ogImage?.asset?.url,
+    itemContext?.itemOgImageUrl,
+    siteDefaultSeo?.ogImage?.asset?.url,
+  )
 
-  const ogImageUrl = (landingSeo?.ogImage as { asset?: { url?: string } })?.asset?.url
-  const ogImageAbsolute = ogImageUrl && ogImageUrl.startsWith('http') ? ogImageUrl : undefined
-
-  const twitterTitle = resolveLocalizedString(landingSeo?.twitterTitle as never, locale) || ogTitle
+  const twitterTitle =
+    resolveLocalizedString(landingSeo?.twitterTitle as never, locale) || title
   const twitterDescription =
-    resolveLocalizedString(landingSeo?.twitterDescription as never, locale) || ogDescription
+    resolveLocalizedString(landingSeo?.twitterDescription as never, locale) || description
 
   const canonical = resolveCanonicalUrl(landingSeo?.canonicalUrl, locale)
   const noIndex = landingSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false
@@ -84,17 +106,16 @@ export function buildLandingMetadata(
     keywords: resolveKeywords(landingSeo?.keywords, locale),
     alternates: canonical ? { canonical } : undefined,
     openGraph: {
-      title: ogTitle,
-      description: ogDescription,
+      title,
+      description,
       ...(ogImageAbsolute && {
-        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle }],
+        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: title }],
       }),
     },
     twitter: {
-      card: ogImageAbsolute ? 'summary_large_image' : 'summary',
+      card: 'summary',
       title: twitterTitle,
       description: twitterDescription,
-      ...(ogImageAbsolute ? { images: [ogImageAbsolute] } : {}),
     },
     robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
   }
