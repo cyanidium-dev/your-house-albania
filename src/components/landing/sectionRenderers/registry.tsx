@@ -1,4 +1,5 @@
 import * as React from 'react'
+import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
 import type { LandingSectionBase } from './types'
 import type { SectionHandler } from './handlers/types'
 import { heroSectionHandler } from './handlers/heroSection'
@@ -38,6 +39,7 @@ export async function renderLandingSection(input: {
   section: LandingSectionBase
   citySlug?: string
   breadcrumb?: React.ReactNode
+  propertiesDeal?: PropertiesDealParam
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null
