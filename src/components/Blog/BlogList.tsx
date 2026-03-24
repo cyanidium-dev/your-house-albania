@@ -64,6 +64,7 @@ export default function BlogList({
                   publishedAt: blog.publishedAt,
                   categoryLabel: blog.categoryLabel,
                   categorySlug: blog.categorySlug,
+                  featured: blog.featured,
                 }}
                 locale={locale}
               />

@@ -41,6 +41,52 @@ function resolveCtaHref(
   return s.startsWith("/") ? `/${locale}${s}` : `/${locale}/${s}`;
 }
 
+function createSharedPortableTextComponents(
+  locale: string
+): Pick<PortableTextComponents, "marks" | "list" | "listItem"> {
+  return {
+    marks: {
+      link: ({ children, value }) => {
+        const href = resolveCtaHref(
+          typeof value?.href === "string" ? value.href : undefined,
+          locale
+        );
+        const isExternal =
+          href.startsWith("http://") || href.startsWith("https://");
+        return (
+          <Link
+            href={href}
+            className="text-primary hover:underline"
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+          >
+            {children}
+          </Link>
+        );
+      },
+    },
+    list: {
+      bullet: ({ children }) => (
+        <ul className="mt-4 flex flex-col gap-2 list-none pl-0">{children}</ul>
+      ),
+      number: ({ children }) => (
+        <ol className="mt-4 flex flex-col gap-2 list-decimal pl-6">{children}</ol>
+      ),
+    },
+    listItem: {
+      bullet: ({ children }) => (
+        <li className="flex items-start gap-2 text-dark/75 dark:text-white/75 text-base">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
+          {children}
+        </li>
+      ),
+      number: ({ children }) => (
+        <li className="text-dark/75 dark:text-white/75 text-base">{children}</li>
+      ),
+    },
+  };
+}
+
 function createBlogComponents(
   locale: string,
   learnMoreFallback: string
@@ -68,42 +114,11 @@ function createBlogComponents(
     ),
   };
 
+  const sharedPortable = createSharedPortableTextComponents(locale);
+
   return {
     block: blockComponents,
-    list: {
-      bullet: ({ children }) => (
-        <ul className="mt-4 flex flex-col gap-2 list-none pl-0">{children}</ul>
-      ),
-      number: ({ children }) => (
-        <ol className="mt-4 flex flex-col gap-2 list-decimal pl-6">{children}</ol>
-      ),
-    },
-    listItem: {
-      bullet: ({ children }) => (
-        <li className="flex items-start gap-2 text-dark/75 dark:text-white/75 text-base">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-          {children}
-        </li>
-      ),
-      number: ({ children }) => (
-        <li className="text-dark/75 dark:text-white/75 text-base">{children}</li>
-      ),
-    },
-    marks: {
-      link: ({ children, value }) => {
-        const href = value?.href ?? "#";
-        return (
-          <Link
-            href={href}
-            className="text-primary hover:underline"
-            target={href.startsWith("http") ? "_blank" : undefined}
-            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-          >
-            {children}
-          </Link>
-        );
-      },
-    },
+    ...sharedPortable,
     types: {
       image: ({ value }) => <BlogContentImage value={value as { asset?: { url?: string }; alt?: string; caption?: string }} />,
       blogCtaBlock: ({ value }) => {
@@ -279,8 +294,7 @@ function createBlogComponents(
                           value={answerBlocks}
                           components={{
                             block: blockComponents,
-                            list: { bullet: ({ children }) => <ul className="list-none pl-0">{children}</ul> },
-                            listItem: { bullet: ({ children }) => <li className="mt-1">{children}</li> },
+                            ...sharedPortable,
                           }}
                         />
                       ) : (
@@ -326,6 +340,7 @@ function createBlogComponents(
                     </p>
                   ),
                 },
+                ...sharedPortable,
               }}
             />
           </div>

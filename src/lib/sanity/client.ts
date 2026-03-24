@@ -1365,7 +1365,7 @@ const blogListingProjection = `{
 export async function fetchBlogPosts(): Promise<unknown[] | null> {
   const client = getClient();
   if (!client) return null;
-  const query = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now()] | order(publishedAt desc) ${blogListingProjection}`;
+  const query = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now()] | order(featured desc, publishedAt desc) ${blogListingProjection}`;
   try {
     const result = await client.fetch<unknown[]>(query);
     return Array.isArray(result) ? result : [];
@@ -1400,7 +1400,7 @@ export async function fetchBlogPostsPaginated(
     ? `&& $categorySlug in categories[]->slug.current`
     : '';
   const filter = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() ${categoryFilter}]`;
-  const order = `| order(publishedAt desc)`;
+  const order = `| order(featured desc, publishedAt desc)`;
   const slice = `[${offset}...${offset + limit}]`;
 
   const query = `${filter} ${order} ${slice} ${blogListingProjection}`;
@@ -1448,6 +1448,7 @@ export async function fetchBlogSettings(): Promise<unknown | null> {
   const query = `*[_type == "blog-settings"][0]{
     title,
     intro,
+    relatedPostsSidebarCount,
     seo {
       metaTitle,
       metaDescription,

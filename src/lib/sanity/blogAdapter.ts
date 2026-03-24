@@ -12,6 +12,7 @@ export type BlogListItem = {
   categoryLabel: string;
   categorySlug: string;
   readingTimeMinutes?: number;
+  featured?: boolean;
 };
 
 /** Shape for related post card. */
@@ -57,6 +58,7 @@ export type SanityListingPost = {
   authorName?: string;
   authorImage?: { asset?: { url?: string } };
   contentForReadingTime?: unknown[];
+  featured?: boolean;
 };
 
 type SanityDetailPost = SanityListingPost & {
@@ -111,13 +113,41 @@ function getCategorySlug(post: SanityListingPost): string {
   return typeof cat?.slug === 'string' ? cat.slug : '';
 }
 
+/**
+ * Drops empty slugs, excludes the current article, dedupes by slug (first wins).
+ */
+export function sanitizeBlogRelatedPosts(
+  posts: BlogRelatedPost[],
+  currentSlug: string
+): BlogRelatedPost[] {
+  const seen = new Set<string>();
+  const out: BlogRelatedPost[] = [];
+  const current = currentSlug.trim();
+  for (const p of posts) {
+    const slug = (p.slug ?? '').trim();
+    if (!slug || slug === current || seen.has(slug)) continue;
+    seen.add(slug);
+    out.push({ ...p, slug });
+  }
+  return out;
+}
+
 /** Maps Sanity blog post to listing item shape for BlogCard. */
 export function mapSanityBlogPostToList(
   post: SanityListingPost | null | undefined,
   locale: string
 ): BlogListItem {
   if (!post) {
-    return { slug: '', title: '', excerpt: '', coverImageUrl: '', publishedAt: '', categoryLabel: '', categorySlug: '' };
+    return {
+      slug: '',
+      title: '',
+      excerpt: '',
+      coverImageUrl: '',
+      publishedAt: '',
+      categoryLabel: '',
+      categorySlug: '',
+      featured: false,
+    };
   }
   const contentBlocks = Array.isArray(post.contentForReadingTime) ? post.contentForReadingTime : [];
   const readingTimeMinutes = contentBlocks.length > 0 ? computeReadingTime(contentBlocks) : undefined;
@@ -129,6 +159,7 @@ export function mapSanityBlogPostToList(
     publishedAt: post.publishedAt ?? '',
     categoryLabel: getCategoryLabel(post, locale),
     categorySlug: getCategorySlug(post),
+    featured: post.featured ?? false,
     ...(readingTimeMinutes !== undefined && readingTimeMinutes > 0 && { readingTimeMinutes }),
   };
 }

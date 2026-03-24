@@ -14,7 +14,17 @@ export function BlogCardClient({
   locale: string;
 }) {
   const t = useTranslations("Shared.blogCard");
-  const { title, excerpt, coverImageUrl, publishedAt, slug, categoryLabel, categorySlug, readingTimeMinutes } = blog;
+  const {
+    title,
+    excerpt,
+    coverImageUrl,
+    publishedAt,
+    slug,
+    categoryLabel,
+    categorySlug,
+    readingTimeMinutes,
+    featured,
+  } = blog;
   const hasValidDate =
     typeof publishedAt === "string" &&
     publishedAt.trim() !== "" &&
@@ -40,7 +50,10 @@ export function BlogCardClient({
     )
   );
   return (
-    <div className="flex flex-col gap-4 group">
+    <div
+      className="flex flex-col gap-4 group"
+      data-featured={featured ? "true" : undefined}
+    >
       <Link href={articleUrl} aria-label={t("ariaLabel")} className="block">
         <div className="overflow-hidden rounded-2xl flex-shrink-0 aspect-video w-full bg-dark/5 dark:bg-white/10">
           {coverImageUrl ? (
