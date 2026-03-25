@@ -60,6 +60,7 @@ export function FilterSelect({
   radius,
 }: Props & VariantProps<typeof triggerVariants>) {
   const [open, setOpen] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selectedLabel = React.useMemo(() => {
     if (value === anyValue) return anyLabel;
@@ -76,13 +77,24 @@ export function FilterSelect({
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  React.useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const t = e.target;
+      if (!(t instanceof Node)) return;
+      if (!containerRef.current?.contains(t)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
   const pick = (v: string) => {
     onValueChange(v);
     setOpen(false);
   };
 
   return (
-    <div className="min-w-0 relative">
+    <div ref={containerRef} className="min-w-0 relative">
       <label className="block text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
         {label}
       </label>

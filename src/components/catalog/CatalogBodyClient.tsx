@@ -210,8 +210,8 @@ export function CatalogBodyClient({
 
   return (
     <>
-      {/* Filters: layout containment so results grid (viewMode) never affects this block */}
-      <div className="min-w-0 [contain:layout]">
+      {/* Filters: stack above results grid; layout containment so viewMode does not affect this block */}
+      <div className="relative z-20 min-w-0 [contain:layout]">
         <PropertySearchBar
           {...filterProps}
           getCurrentView={getCurrentView}

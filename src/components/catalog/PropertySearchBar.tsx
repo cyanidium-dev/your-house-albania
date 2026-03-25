@@ -100,6 +100,11 @@ import {
 type Option = { value: string; label: string };
 type DistrictOption = Option & { citySlug?: string };
 
+function districtSlugForPath(d: string | undefined): string | undefined {
+  if (!d || d === "any") return undefined;
+  return d;
+}
+
 type Props = {
   locations: Option[];
   propertyTypes: Option[];
@@ -122,7 +127,7 @@ type Props = {
   getCurrentView?: () => ViewMode;
 };
 
-function PropertySearchBarInner({
+export function PropertySearchBar({
   locations,
   propertyTypes,
   dealTypeValues,
@@ -156,10 +161,10 @@ function PropertySearchBarInner({
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const advancedInnerRef = React.useRef<HTMLDivElement>(null);
   const [advancedHeight, setAdvancedHeight] = React.useState(0);
-  React.useEffect(() => {
+  // useLayoutEffect: measure before paint so advanced row is not height 0 on first open (clipped / unclickable).
+  React.useLayoutEffect(() => {
     const el = advancedInnerRef.current;
     if (!el) return;
-    // Measure only when open/close toggles to avoid continuous layout thrash
     if (showAdvanced) {
       setAdvancedHeight(el.scrollHeight);
     } else {
@@ -236,6 +241,28 @@ function PropertySearchBarInner({
     }
   }, [city, district, districtOptionsFiltered]);
 
+  const initialAmenitiesKey = initialAmenities.join(",");
+
+  React.useEffect(() => {
+    setBeds(initialBeds || "any");
+    setDistrict(initialDistrict || "any");
+    setSort(initialSort || "newest");
+    setPageSize(initialPageSize || "24");
+    setAmenities(
+      Array.isArray(initialAmenities) && initialAmenities.length > 0
+        ? [...initialAmenities]
+        : []
+    );
+    // initialAmenities: synced when initialAmenitiesKey changes (stable vs parent array identity)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- initialAmenities read from props; key avoids loop
+  }, [
+    initialAmenitiesKey,
+    initialBeds,
+    initialDistrict,
+    initialPageSize,
+    initialSort,
+  ]);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -270,25 +297,38 @@ function PropertySearchBarInner({
     params.delete("view");
     params.delete("page");
     params.delete("city");
+    // District in path when city is set; when no city, catalogPath carries ?district= (do not duplicate in params)
     params.delete("district");
 
     const qs = params.toString();
-    const path = catalogPath(locale, city || undefined, district && district !== "any" ? district : undefined);
-    router.push(qs ? `${path}?${qs}` : path);
-  }, [
-    amenities,
-    beds,
-    city,
-    deal,
-    district,
-    locale,
-    pageSize,
-    priceRangeState,
-    router,
-    searchParams,
-    sort,
-    type,
-  ]);
+    const path = catalogPath(
+      locale,
+      city || undefined,
+      districtSlugForPath(district)
+    );
+    const url =
+      qs === ""
+        ? path
+        : path.includes("?")
+          ? `${path}&${qs}`
+          : `${path}?${qs}`;
+    router.push(url);
+  },
+    [
+      amenities,
+      beds,
+      city,
+      deal,
+      district,
+      locale,
+      pageSize,
+      priceRangeState,
+      router,
+      searchParams,
+      sort,
+      type,
+    ]
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -420,7 +460,10 @@ function PropertySearchBarInner({
         aria-hidden={!showAdvanced}
         style={{ height: showAdvanced ? advancedHeight : 0 }}
         className={cn(
-          "overflow-hidden will-change-[height] transition-[height] duration-300 ease-out"
+          "will-change-[height] transition-[height] duration-300 ease-out",
+          // overflow-visible while open: FilterSelect panels are position:absolute below the trigger;
+          // advancedHeight is measured with menus closed, so overflow-hidden clips open menus.
+          showAdvanced ? "overflow-visible" : "overflow-hidden"
         )}
       >
         <div
@@ -510,5 +553,3 @@ function PropertySearchBarInner({
     </form>
   );
 }
-
-export const PropertySearchBar = React.memo(PropertySearchBarInner);
