@@ -1007,6 +1007,7 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     _id,
     _type,
     pageType,
+    "slug": slug.current,
     title,
     subtitle,
     cardDescription,
@@ -1131,6 +1132,7 @@ export async function fetchCitiesIndexLanding(): Promise<{
     _id,
     _type,
     pageType,
+    "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
     seo
   }`;
@@ -1167,6 +1169,7 @@ export async function fetchHomeLanding(): Promise<{
     _id,
     _type,
     pageType,
+    "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
     seo
   }`;

@@ -5,7 +5,11 @@ import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { mapSanityPropertyTypeToCard } from '@/lib/sanity/propertyTypeAdapter'
 import type { SectionHandler } from './types'
 
-export const propertyTypesSectionHandler: SectionHandler = async ({ locale, section }) => {
+export const propertyTypesSectionHandler: SectionHandler = async ({
+  locale,
+  section,
+  propertiesDeal,
+}) => {
   let rawTypes = Array.isArray(section.propertyTypes) ? section.propertyTypes : []
   if (rawTypes.length === 0) {
     const enriched = await fetchActivePropertyTypes(8)
@@ -26,6 +30,7 @@ export const propertyTypesSectionHandler: SectionHandler = async ({ locale, sect
       key={section._key ?? 'propertyTypes'}
       locale={locale}
       propertyTypesData={propertyTypesData}
+      propertiesDeal={propertiesDeal}
     />
   )
 }

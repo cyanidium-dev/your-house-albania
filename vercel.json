@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/update-currency-rates?secret=CRON_SECRET",
+      "path": "/api/cron/update-currency-rates",
       "schedule": "0 1 * * *"
     }
   ]

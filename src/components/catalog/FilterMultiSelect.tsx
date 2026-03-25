@@ -99,18 +99,6 @@ export function FilterMultiSelect({
     };
   }, [mounted, updatePosition]);
 
-  // Lock body scroll when mobile sheet-style dropdown is open
-  React.useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (open && isMobileSheet) {
-      const previous = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = previous;
-      };
-    }
-  }, [open, isMobileSheet]);
-
   React.useEffect(() => {
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node;

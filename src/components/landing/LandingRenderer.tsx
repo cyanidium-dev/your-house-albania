@@ -1,27 +1,43 @@
+import * as React from 'react'
+import {
+  propertiesDealFromLandingContext,
+  type PropertiesDealParam,
+} from '@/lib/catalog/propertiesDealFromLanding'
+import { asSections } from './sectionRenderers/helpers'
+import { renderLandingSection } from './sectionRenderers/registry'
+
 export type LandingPageDoc = {
   _id?: string
   _type?: 'landingPage' | string
   pageType?: string
+  /** Document slug (e.g. for deal context on generic landings). */
+  slug?: string
   pageSections?: import('./sectionRenderers/types').LandingSectionBase[]
   seo?: unknown
 }
-import * as React from 'react'
-import { asSections } from './sectionRenderers/helpers'
-import { renderLandingSection } from './sectionRenderers/registry'
 
 export async function LandingRenderer({
   locale,
   landing,
   citySlug,
   breadcrumb,
+  propertiesDeal: propertiesDealOverride,
 }: {
   locale: string
   landing: LandingPageDoc | null
   citySlug?: string
   /** Rendered inside the first section when it is heroSection (avoids white gap above hero) */
   breadcrumb?: React.ReactNode
+  /** When set, wins over inferring `deal` from landing pageType/slug for property-type card links. */
+  propertiesDeal?: PropertiesDealParam
 }) {
   const sections = asSections(landing)
+  const propertiesDeal =
+    propertiesDealOverride ??
+    propertiesDealFromLandingContext({
+      pageType: landing?.pageType,
+      slug: landing?.slug,
+    })
   if (process.env.NODE_ENV === 'development') {
     const types = sections.map((s) => s?._type).filter(Boolean)
     console.log('[LandingRenderer] sections', {
@@ -43,10 +59,10 @@ export async function LandingRenderer({
       section,
       citySlug,
       breadcrumb: isFirstHero ? breadcrumb : undefined,
+      propertiesDeal,
     })
     if (node) nodes.push(node)
   }
 
   return <main>{nodes}</main>
 }
-

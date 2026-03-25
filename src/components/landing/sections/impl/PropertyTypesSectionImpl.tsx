@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
 
 export type PropertyTypesData = {
@@ -12,10 +13,23 @@ export type PropertyTypesData = {
   propertyTypes: PropertyTypeCard[];
 } | null;
 
-const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyTypesData }> = async ({
-  locale,
-  propertyTypesData,
-}) => {
+function buildPropertiesListingHref(
+  locale: string,
+  typeSlug: string | undefined,
+  propertiesDeal?: PropertiesDealParam
+): string {
+  const params = new URLSearchParams();
+  if (typeSlug) params.set("type", typeSlug);
+  if (propertiesDeal) params.set("deal", propertiesDeal);
+  const q = params.toString();
+  return q ? `/${locale}/properties?${q}` : `/${locale}/properties`;
+}
+
+const PropertyTypes: React.FC<{
+  locale: string;
+  propertyTypesData?: PropertyTypesData;
+  propertiesDeal?: PropertiesDealParam;
+}> = async ({ locale, propertyTypesData, propertiesDeal }) => {
   const title = propertyTypesData?.title;
   const subtitle = propertyTypesData?.subtitle;
   const shortLine = propertyTypesData?.shortLine;
@@ -33,10 +47,8 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
     return null;
   }
 
-  const getTypeLink = (type: PropertyTypeCard) => {
-    if (type.slug) return `/${locale}/properties?type=${type.slug}`;
-    return `/${locale}/properties`;
-  };
+  const getTypeLink = (type: PropertyTypeCard) =>
+    buildPropertiesListingHref(locale, type.slug || undefined, propertiesDeal);
 
   return (
     <section className="py-12 md:py-16">

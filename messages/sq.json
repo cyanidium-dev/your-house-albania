@@ -153,7 +153,7 @@
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",
       "bedroomsCount": "{count, plural, one {# dhomë gjumi} other {# dhoma gjumi}}",
-      "bathroomsCount": "{count, plural, one {# banjo} other {# banjo}}",
+      "bathroomsCount": "{count, plural, one {# banjë} other {# banja}}",
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Imazhi i mëparshëm",
