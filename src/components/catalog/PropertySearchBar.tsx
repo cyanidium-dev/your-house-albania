@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
@@ -160,6 +161,9 @@ export function PropertySearchBar({
   const [amenities, setAmenities] = React.useState<string[]>(initialAmenities);
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const [isCompact, setIsCompact] = React.useState(false);
+  const [isMobileViewport, setIsMobileViewport] = React.useState(false);
+  const [mobileFilterModalOpen, setMobileFilterModalOpen] = React.useState(false);
+  const [clientMounted, setClientMounted] = React.useState(false);
   const wasCompactRef = React.useRef(false);
   const advancedInnerRef = React.useRef<HTMLDivElement>(null);
   const [advancedHeight, setAdvancedHeight] = React.useState(0);
@@ -178,6 +182,42 @@ export function PropertySearchBar({
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  React.useEffect(() => {
+    setClientMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onChange = () => setIsMobileViewport(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isMobileViewport && mobileFilterModalOpen) {
+      setMobileFilterModalOpen(false);
+    }
+  }, [isMobileViewport, mobileFilterModalOpen]);
+
+  React.useEffect(() => {
+    if (!mobileFilterModalOpen || !isMobileViewport) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileFilterModalOpen, isMobileViewport]);
+
+  React.useEffect(() => {
+    if (!mobileFilterModalOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileFilterModalOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileFilterModalOpen]);
 
   // useLayoutEffect: measure before paint so advanced row is not height 0 on first open (clipped / unclickable).
   React.useLayoutEffect(() => {
@@ -284,16 +324,31 @@ export function PropertySearchBar({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const applyFilters = React.useCallback(() => {
+  const applyFilters = React.useCallback(
+    (opts?: {
+      /** Compact mobile deal tabs only: apply before React state commits */
+      dealForQuery?: string;
+      priceTupleOverride?: [number, number];
+    }) => {
+    const effectiveDeal = opts?.dealForQuery ?? deal;
+    const pv: [number, number] = opts?.priceTupleOverride ?? priceValues;
+    const rangeForDeal =
+      priceRangesByDeal[effectiveDeal || "any"] ||
+      priceRangesByDeal.any || { min: 0, max: 1_000_000 };
+    const priceStateForApply = interpretPriceRangeState(
+      { min: pv[0], max: pv[1] },
+      rangeForDeal
+    );
+
     const params = new URLSearchParams(searchParams.toString());
 
     if (type) params.set("type", type);
     else params.delete("type");
 
-    if (deal && deal !== "any") params.set("deal", deal);
+    if (effectiveDeal && effectiveDeal !== "any") params.set("deal", effectiveDeal);
     else params.delete("deal");
 
-    const priceParams = getPriceQueryParams(priceRangeState);
+    const priceParams = getPriceQueryParams(priceStateForApply);
     if (priceParams.minPrice) params.set("minPrice", priceParams.minPrice);
     else params.delete("minPrice");
     if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
@@ -340,7 +395,8 @@ export function PropertySearchBar({
       district,
       locale,
       pageSize,
-      priceRangeState,
+      priceRangesByDeal,
+      priceValues,
       router,
       searchParams,
       sort,
@@ -348,9 +404,24 @@ export function PropertySearchBar({
     ]
   );
 
+  const applyCompactDealTab = React.useCallback(
+    (nextRaw: string) => {
+      const next = nextRaw === "any" || nextRaw === "" ? "any" : nextRaw;
+      const range =
+        priceRangesByDeal[next === "any" ? "any" : next] ||
+        priceRangesByDeal.any || { min: 0, max: 1_000_000 };
+      const tuple: [number, number] = [range.min, range.max];
+      setDeal(next);
+      setPriceValues(tuple);
+      applyFilters({ dealForQuery: next, priceTupleOverride: tuple });
+    },
+    [applyFilters, priceRangesByDeal]
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     applyFilters();
+    setMobileFilterModalOpen(false);
   };
 
   const locationOptions: FilterOption[] = locations.map((o) => ({
@@ -369,13 +440,17 @@ export function PropertySearchBar({
     label: o.label,
   }));
 
-  return (
+  const renderFilterForm = (placement: "inline" | "modal") => (
     <form
       onSubmit={handleSubmit}
       className={cn(
-        "mb-6 rounded-2xl border border-dark/10 dark:border-white/10 shadow-sm px-4 sm:px-6 flex flex-col min-w-0",
-        "bg-white dark:bg-dark",
-        isCompact ? "py-3 sm:py-4 gap-3" : "py-4 sm:py-5 gap-4"
+        placement === "inline"
+          ? cn(
+              "mb-6 flex min-w-0 flex-col rounded-2xl border border-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-dark",
+              "px-4 sm:px-6",
+              isCompact ? "gap-3 py-3 sm:py-4" : "gap-4 py-4 sm:py-5"
+            )
+          : "mb-0 flex min-h-0 w-full min-w-0 max-w-full flex-col gap-4 rounded-none border-0 bg-transparent px-0 py-0 shadow-none"
       )}
     >
       {/* BASIC FILTERS */}
@@ -461,11 +536,8 @@ export function PropertySearchBar({
             className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
             onClick={() => setShowAdvanced((v) => !v)}
           >
-            <span className="hidden sm:inline max-w-full truncate">
+            <span className="inline-block max-w-full truncate">
               {t("advancedFilters")}
-            </span>
-            <span className="sm:hidden max-w-full truncate">
-              {t("filtersShort")}
             </span>
           </Button>
           <Button
@@ -573,5 +645,105 @@ export function PropertySearchBar({
         </div>
       </div>
     </form>
+  );
+
+  return (
+    <>
+      {/* Mobile: compact chrome on small viewports only (md:hidden). No scroll gate — avoids initial layout shift. */}
+      <div
+        className={cn(
+          "mb-6 min-w-0 rounded-2xl border px-3 py-2.5 shadow-md backdrop-blur-md md:hidden",
+          "border-dark/10 bg-white/95 dark:border-white/10 dark:bg-dark/95"
+        )}
+      >
+        <div
+          className="no-scrollbar inline-flex min-h-10 w-full min-w-0 items-stretch gap-0.5 overflow-x-auto rounded-full bg-dark/5 p-0.5 dark:bg-white/10"
+          role="group"
+          aria-label={t("dealType")}
+        >
+          <button
+            type="button"
+            onClick={() => applyCompactDealTab("any")}
+            className={cn(
+              "shrink-0 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+              deal === "any" || deal === ""
+                ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
+                : "text-dark/70 hover:bg-dark/10 dark:text-white/70 dark:hover:bg-white/10"
+            )}
+          >
+            {t("dealAll")}
+          </button>
+          {dealTypeValues.map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => applyCompactDealTab(v)}
+              className={cn(
+                "shrink-0 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                deal === v
+                  ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
+                  : "text-dark/70 hover:bg-dark/10 dark:text-white/70 dark:hover:bg-white/10"
+              )}
+            >
+              {getDealLabel(v)}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setMobileFilterModalOpen((o) => !o)}
+            className={cn(
+              "ml-0.5 shrink-0 rounded-full border-l border-dark/10 px-2.5 py-1.5 pl-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 dark:border-white/15",
+              "text-primary hover:bg-dark/10 dark:hover:bg-white/10"
+            )}
+          >
+            {mobileFilterModalOpen ? t("closeModal") : t("filtersShort")}
+          </button>
+        </div>
+      </div>
+      {/* Desktop/tablet inline form only (md+). Hidden on mobile via CSS — same HTML on SSR/client, no hydration mismatch. */}
+      <div className="hidden min-w-0 md:block">{renderFilterForm("inline")}</div>
+      {clientMounted &&
+        mobileFilterModalOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99] flex flex-col justify-end md:hidden"
+            role="presentation"
+          >
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/50"
+              aria-label={t("closeModal")}
+              onClick={() => setMobileFilterModalOpen(false)}
+            />
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="catalog-filter-modal-title"
+              className="relative z-10 flex max-h-[92dvh] w-full flex-col rounded-t-2xl border border-dark/10 bg-white shadow-xl dark:border-white/10 dark:bg-dark"
+            >
+              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-dark/10 px-4 py-3 dark:border-white/10">
+                <h2
+                  id="catalog-filter-modal-title"
+                  className="truncate text-lg font-semibold text-dark dark:text-white"
+                >
+                  {t("filtersShort")}
+                </h2>
+                <button
+                  type="button"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-dark/70 transition-colors hover:bg-dark/5 dark:text-white/80 dark:hover:bg-white/10"
+                  onClick={() => setMobileFilterModalOpen(false)}
+                  aria-label={t("closeModal")}
+                >
+                  <Icon icon="ph:x" width={22} height={22} aria-hidden />
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-2 pb-6 pt-2">
+                {renderFilterForm("modal")}
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
   );
 }
