@@ -46,13 +46,18 @@ function toSanityCurrencyRates(entries: CurrencyRateEntry[]): SanityCurrencyRate
     });
 }
 
-// Auth uses query param ?secret= because Vercel cron does NOT support custom headers.
-// Set CRON_SECRET in Vercel env; vercel.json path must use the same value in ?secret=
-export async function GET(request: NextRequest) {
-  const url = new URL(request.url);
-  const secret = url.searchParams.get('secret');
+/** Vercel cron sends Authorization: Bearer <CRON_SECRET>. Optional ?secret= for manual/local calls. */
+function isCronAuthorized(request: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || secret !== cronSecret) {
+  if (!cronSecret) return false;
+  const auth = request.headers.get('authorization');
+  if (auth === `Bearer ${cronSecret}`) return true;
+  const secret = new URL(request.url).searchParams.get('secret');
+  return secret === cronSecret;
+}
+
+export async function GET(request: NextRequest) {
+  if (!isCronAuthorized(request)) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

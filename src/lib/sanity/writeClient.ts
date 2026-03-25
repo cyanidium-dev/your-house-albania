@@ -46,7 +46,11 @@ export async function patchSiteSettingsCurrency(
       .set({ currencyRates, currencyLastSyncedAt })
       .commit();
     return true;
-  } catch {
+  } catch (err) {
+    console.error(
+      '[patchSiteSettingsCurrency]',
+      err instanceof Error ? err.message : err,
+    );
     return false;
   }
 }
