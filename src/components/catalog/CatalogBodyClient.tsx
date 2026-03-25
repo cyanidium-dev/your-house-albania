@@ -210,8 +210,14 @@ export function CatalogBodyClient({
 
   return (
     <>
-      {/* Filters: stack above results grid; layout containment so viewMode does not affect this block */}
-      <div className="relative z-20 min-w-0 [contain:layout]">
+      {/* Filters: sticky below fixed header (z-50); z-40 above property card overlays (z-30). Background lives on PropertySearchBar only — no second white shell. */}
+      <div
+        className={cn(
+          "sticky z-40 min-w-0 [contain:layout]",
+          "top-[calc(env(safe-area-inset-top,0px)+60px)] md:top-[118px]",
+          "border-b border-dark/10 dark:border-white/10"
+        )}
+      >
         <PropertySearchBar
           {...filterProps}
           getCurrentView={getCurrentView}

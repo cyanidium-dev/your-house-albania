@@ -159,8 +159,26 @@ export function PropertySearchBar({
   const [pageSize, setPageSize] = React.useState(initialPageSize || "24");
   const [amenities, setAmenities] = React.useState<string[]>(initialAmenities);
   const [showAdvanced, setShowAdvanced] = React.useState(false);
+  const [isCompact, setIsCompact] = React.useState(false);
+  const wasCompactRef = React.useRef(false);
   const advancedInnerRef = React.useRef<HTMLDivElement>(null);
   const [advancedHeight, setAdvancedHeight] = React.useState(0);
+
+  React.useEffect(() => {
+    function handleScroll() {
+      const compact = window.scrollY > 50;
+      // Collapse advanced only on transition into compact scroll state (not on every scroll while open).
+      if (compact && !wasCompactRef.current) {
+        setShowAdvanced(false);
+      }
+      wasCompactRef.current = compact;
+      setIsCompact(compact);
+    }
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // useLayoutEffect: measure before paint so advanced row is not height 0 on first open (clipped / unclickable).
   React.useLayoutEffect(() => {
     const el = advancedInnerRef.current;
@@ -354,7 +372,11 @@ export function PropertySearchBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 rounded-2xl border border-dark/10 dark:border-white/10 bg-white/80 dark:bg-dark/80 shadow-sm px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-4 min-w-0"
+      className={cn(
+        "mb-6 rounded-2xl border border-dark/10 dark:border-white/10 shadow-sm px-4 sm:px-6 flex flex-col min-w-0",
+        "bg-white dark:bg-dark",
+        isCompact ? "py-3 sm:py-4 gap-3" : "py-4 sm:py-5 gap-4"
+      )}
     >
       {/* BASIC FILTERS */}
       <div
