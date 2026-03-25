@@ -8,7 +8,12 @@ export function catalogPath(
   district?: string
 ): string {
   const base = `/${locale}/properties`;
-  if (!city) return base;
+  if (!city) {
+    if (district) {
+      return `${base}?district=${encodeURIComponent(district)}`;
+    }
+    return base;
+  }
   if (!district) return `${base}/${city}`;
   return `${base}/${city}/${district}`;
 }
