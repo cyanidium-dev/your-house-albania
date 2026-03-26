@@ -10,10 +10,12 @@ import {
   fetchCatalogProperties,
   fetchCatalogFilterOptions,
   fetchSiteSettings,
+  fetchCatalogAreaBoundsFromData,
   type CatalogSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
+import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -39,9 +41,10 @@ async function PropertiesListing({
   searchParams: SearchParams
   catalogSeo?: CatalogSeoContent
 }) {
-  const [filterOptions, siteSettings] = await Promise.all([
+  const [filterOptions, siteSettings, areaBoundsFromData] = await Promise.all([
     fetchCatalogFilterOptions(locale),
     fetchSiteSettings(),
+    fetchCatalogAreaBoundsFromData(),
   ])
   const {
     locations: locationOptions,
@@ -51,6 +54,10 @@ async function PropertiesListing({
   } = filterOptions
   const priceRangesByDeal = toRangesByDeal(
     resolvePriceRange((siteSettings as Record<string, unknown>)?.priceRange)
+  )
+  const defaultAreaRange = resolveAreaRangeBounds(
+    (siteSettings as Record<string, unknown>)?.areaRange,
+    areaBoundsFromData
   )
 
   const cityFilter = (pathCity || (typeof searchParams.city === 'string' ? searchParams.city : '')).toLowerCase()
@@ -77,6 +84,10 @@ async function PropertiesListing({
     typeof searchParams.minPrice === 'string' ? Number(searchParams.minPrice) || 0 : 0
   const maxPriceFilter =
     typeof searchParams.maxPrice === 'string' ? Number(searchParams.maxPrice) || 0 : 0
+  const minAreaFilter =
+    typeof searchParams.minArea === 'string' ? Number(searchParams.minArea) || 0 : 0
+  const maxAreaFilter =
+    typeof searchParams.maxArea === 'string' ? Number(searchParams.maxArea) || 0 : 0
   const bedsFilter =
     typeof searchParams.beds === 'string' ? Number(searchParams.beds) || 0 : 0
   const viewMode = parseViewMode(searchParams.view)
@@ -91,6 +102,8 @@ async function PropertiesListing({
       deal: dealFilter || undefined,
       minPrice: minPriceFilter || undefined,
       maxPrice: maxPriceFilter || undefined,
+      minArea: minAreaFilter || undefined,
+      maxArea: maxAreaFilter || undefined,
       beds: bedsFilter || undefined,
       amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
       sort: sort as CatalogSort,
@@ -140,12 +153,15 @@ async function PropertiesListing({
     dealTypeValues: DEAL_TYPE_VALUES,
     districtOptions,
     priceRangesByDeal,
+    defaultAreaRange,
     amenityOptions,
     initialCity: cityFilter || '',
     initialType: typeFilter,
     initialDealType: dealFilter,
     initialMinPrice: typeof searchParams.minPrice === 'string' ? searchParams.minPrice : '',
     initialMaxPrice: typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : '',
+    initialMinArea: typeof searchParams.minArea === 'string' ? searchParams.minArea : '',
+    initialMaxArea: typeof searchParams.maxArea === 'string' ? searchParams.maxArea : '',
     initialBeds: typeof searchParams.beds === 'string' ? searchParams.beds : '',
     initialDistrict: districtFilter,
     initialSort: sort,

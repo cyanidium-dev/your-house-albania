@@ -543,6 +543,10 @@ const cachedFetchSiteSettings = unstable_cache(
         from,
         to
       },
+      areaRange {
+        from,
+        to
+      },
       "currencyRates": currencyRates[code in ^.displayCurrencies]{
         code,
         rate,
@@ -578,6 +582,44 @@ const cachedFetchSiteSettings = unstable_cache(
 /** Fetch siteSettings singleton. Returns null if not found or client not configured. */
 export async function fetchSiteSettings(): Promise<unknown | null> {
   return cachedFetchSiteSettings();
+}
+
+const cachedFetchCatalogAreaBoundsFromData = unstable_cache(
+  async () => {
+    const client = getClient();
+    if (!client) return null;
+    const query = `{
+      "min": *[_type == "property" && defined(area) && area > 0] | order(area asc)[0].area,
+      "max": *[_type == "property" && defined(area) && area > 0] | order(area desc)[0].area
+    }`;
+    try {
+      const result = await client.fetch<{ min?: number; max?: number }>(query);
+      if (
+        typeof result?.min === 'number' &&
+        typeof result?.max === 'number' &&
+        Number.isFinite(result.min) &&
+        Number.isFinite(result.max)
+      ) {
+        return { min: result.min, max: result.max };
+      }
+      return null;
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogAreaBoundsFromData failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-area-bounds'],
+  { revalidate: 120 },
+);
+
+/**
+ * Min/max area from published properties (m²). Used when CMS areaRange is absent.
+ */
+export async function fetchCatalogAreaBoundsFromData(): Promise<{
+  min: number;
+  max: number;
+} | null> {
+  return cachedFetchCatalogAreaBoundsFromData();
 }
 
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
@@ -617,6 +659,8 @@ export type CatalogFilters = {
   deal?: string;
   minPrice?: number;
   maxPrice?: number;
+  minArea?: number;
+  maxArea?: number;
   beds?: number;
   amenities?: string[];
   sort?: CatalogSort;
@@ -682,6 +726,8 @@ export async function fetchCatalogProperties(
     deal,
     minPrice,
     maxPrice,
+    minArea,
+    maxArea,
     beds,
     amenities,
     sort = 'newest',
@@ -716,6 +762,12 @@ export async function fetchCatalogProperties(
   }
   if (typeof maxPrice === 'number' && maxPrice > 0) {
     parts.push('price <= $maxPrice');
+  }
+  if (typeof minArea === 'number' && minArea > 0) {
+    parts.push('area >= $minArea');
+  }
+  if (typeof maxArea === 'number' && maxArea > 0) {
+    parts.push('area <= $maxArea');
   }
   if (typeof beds === 'number' && beds > 0) {
     parts.push('bedrooms >= $beds');
@@ -780,6 +832,8 @@ export async function fetchCatalogProperties(
     deal,
     minPrice,
     maxPrice,
+    minArea,
+    maxArea,
     beds,
     amenities,
   };

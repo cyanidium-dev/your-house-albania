@@ -20,12 +20,15 @@ export type CatalogFilterProps = {
   dealTypeValues: readonly string[];
   districtOptions: Array<{ value: string; label: string; citySlug?: string }>;
   priceRangesByDeal: Record<string, { min: number; max: number }>;
+  defaultAreaRange: { min: number; max: number };
   amenityOptions: Array<{ value: string; label: string }>;
   initialCity: string;
   initialType: string;
   initialDealType: string;
   initialMinPrice: string;
   initialMaxPrice: string;
+  initialMinArea: string;
+  initialMaxArea: string;
   initialBeds: string;
   initialDistrict: string;
   initialSort: string;

@@ -90,6 +90,11 @@ import {
   getPriceQueryParams,
 } from "@/lib/catalog/priceRanges";
 import {
+  formatAreaRangeDisplay,
+  getAreaQueryParams,
+  interpretAreaRangeState,
+} from "@/lib/catalog/areaRanges";
+import {
   FilterSelect,
   type FilterOption,
 } from "@/components/catalog/FilterSelect";
@@ -112,12 +117,15 @@ type Props = {
   dealTypeValues: readonly string[];
   districtOptions: DistrictOption[];
   priceRangesByDeal: Record<string, { min: number; max: number }>;
+  defaultAreaRange: { min: number; max: number };
   amenityOptions: Option[];
   initialCity?: string;
   initialType?: string;
   initialDealType?: string;
   initialMinPrice?: string;
   initialMaxPrice?: string;
+  initialMinArea?: string;
+  initialMaxArea?: string;
   initialBeds?: string;
   initialDistrict?: string;
   initialSort?: string;
@@ -134,12 +142,15 @@ export function PropertySearchBar({
   dealTypeValues,
   districtOptions: allDistricts,
   priceRangesByDeal,
+  defaultAreaRange,
   amenityOptions,
   initialCity = "",
   initialType = "",
   initialDealType = "",
   initialMinPrice = "",
   initialMaxPrice = "",
+  initialMinArea = "",
+  initialMaxArea = "",
   initialBeds = "",
   initialDistrict = "",
   initialSort = "",
@@ -231,8 +242,12 @@ export function PropertySearchBar({
   }, [showAdvanced]);
 
   const currentDealKey = deal || "any";
-  const currentRange = priceRangesByDeal[currentDealKey] ||
-    priceRangesByDeal.any || { min: 0, max: 1_000_000 };
+  const currentRange = React.useMemo(
+    () =>
+      priceRangesByDeal[currentDealKey] ||
+      priceRangesByDeal.any || { min: 0, max: 1_000_000 },
+    [priceRangesByDeal, currentDealKey]
+  );
 
   const hasInitialPriceFromQuery =
     (typeof initialMinPrice === "string" && initialMinPrice.trim().length > 0) ||
@@ -251,7 +266,7 @@ export function PropertySearchBar({
         { min: priceValues[0], max: priceValues[1] },
         currentRange
       ),
-    [priceValues, currentRange.min, currentRange.max]
+    [priceValues, currentRange]
   );
 
   const priceDisplay = React.useMemo(() => {
@@ -274,6 +289,30 @@ export function PropertySearchBar({
     setPriceValues([range.min, range.max]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deal]);
+
+  const [areaValues, setAreaValues] = React.useState<[number, number]>(() => {
+    const fromMin = Number(initialMinArea) || defaultAreaRange.min;
+    const fromMax = Number(initialMaxArea) || defaultAreaRange.max;
+    return [fromMin, fromMax];
+  });
+
+  const areaRangeState = React.useMemo(
+    () =>
+      interpretAreaRangeState(
+        { min: areaValues[0], max: areaValues[1] },
+        defaultAreaRange
+      ),
+    [areaValues, defaultAreaRange]
+  );
+
+  const areaDisplay = React.useMemo(
+    () =>
+      formatAreaRangeDisplay(areaRangeState, {
+        t: (key) => t(key),
+        unit: t("areaUnit"),
+      }),
+    [areaRangeState, t]
+  );
 
   const getDealLabel = (value: string) => {
     if (value === "sale") return t("dealSale");
@@ -311,6 +350,10 @@ export function PropertySearchBar({
         ? [...initialAmenities]
         : []
     );
+    setAreaValues([
+      Number(initialMinArea) || defaultAreaRange.min,
+      Number(initialMaxArea) || defaultAreaRange.max,
+    ]);
     // initialAmenities: synced when initialAmenitiesKey changes (stable vs parent array identity)
     // eslint-disable-next-line react-hooks/exhaustive-deps -- initialAmenities read from props; key avoids loop
   }, [
@@ -319,6 +362,10 @@ export function PropertySearchBar({
     initialDistrict,
     initialPageSize,
     initialSort,
+    initialMinArea,
+    initialMaxArea,
+    defaultAreaRange.min,
+    defaultAreaRange.max,
   ]);
 
   const router = useRouter();
@@ -353,6 +400,16 @@ export function PropertySearchBar({
     else params.delete("minPrice");
     if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
     else params.delete("maxPrice");
+
+    const areaStateForApply = interpretAreaRangeState(
+      { min: areaValues[0], max: areaValues[1] },
+      defaultAreaRange
+    );
+    const areaParams = getAreaQueryParams(areaStateForApply);
+    if (areaParams.minArea) params.set("minArea", areaParams.minArea);
+    else params.delete("minArea");
+    if (areaParams.maxArea) params.set("maxArea", areaParams.maxArea);
+    else params.delete("maxArea");
 
     if (beds && beds !== "any") params.set("beds", beds);
     else params.delete("beds");
@@ -395,6 +452,8 @@ export function PropertySearchBar({
       district,
       locale,
       pageSize,
+      areaValues,
+      defaultAreaRange,
       priceRangesByDeal,
       priceValues,
       router,
@@ -458,7 +517,7 @@ export function PropertySearchBar({
         className={cn(
           "grid grid-cols-1 gap-4 items-end min-w-0",
           "md:grid-cols-4",
-          "xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_auto_auto]",
+          "xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1fr)_auto_auto]",
           "[&>*]:min-w-0"
         )}
       >
@@ -518,8 +577,35 @@ export function PropertySearchBar({
           </Slider.Root>
         </div>
 
+        {/* Area range (m²) */}
+        <div className="min-w-0">
+          <div className="flex items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
+            <span className="min-w-0 truncate">{t("area")}</span>
+            <span className="font-medium text-dark dark:text-white text-[11px] min-w-0 truncate text-right">
+              {areaDisplay}
+            </span>
+          </div>
+          <Slider.Root
+            className="relative flex items-center select-none touch-none w-full h-4"
+            min={defaultAreaRange.min}
+            max={defaultAreaRange.max}
+            step={1}
+            value={areaValues}
+            onValueChange={(values) => {
+              const [min, max] = values as [number, number];
+              setAreaValues([min, max]);
+            }}
+          >
+            <Slider.Track className="bg-dark/10 dark:bg-white/20 relative grow rounded-full h-1">
+              <Slider.Range className="absolute bg-primary rounded-full h-full" />
+            </Slider.Track>
+            <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
+            <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
+          </Slider.Root>
+        </div>
+
         {/* Reset + Advanced + Search */}
-        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-4 xl:col-span-2">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-3 xl:col-span-2">
           <Button
             type="button"
             variant="outline"
