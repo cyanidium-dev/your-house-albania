@@ -35,7 +35,7 @@ export default function HeaderMobileDrawer({
       )}
       <div
         ref={sideMenuRef}
-        className={`fixed top-0 right-0 h-full w-full bg-dark shadow-lg transition-transform duration-300 max-w-2xl ${open ? 'translate-x-0' : 'translate-x-full'} z-50 px-20 overflow-auto no-scrollbar`}
+        className={`fixed top-0 right-0 h-[100dvh] max-h-[100dvh] w-full max-w-2xl bg-dark shadow-lg transition-transform duration-300 no-scrollbar ${open ? 'translate-x-0' : 'translate-x-full'} z-50 overflow-hidden`}
       >
         {children}
       </div>

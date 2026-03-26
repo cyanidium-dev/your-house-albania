@@ -178,7 +178,7 @@ const FeaturedProperty: React.FC<{ locale: string }> = ({ locale }) => {
               </div>
             </div>
             <div className="flex gap-10">
-              <Link href={`/${locale}/contactus`} className="py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white">
+              <Link href={`/${locale}/contacts`} className="py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white">
                 {t('getInTouch')}
               </Link>
               <div>

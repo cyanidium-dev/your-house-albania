@@ -1,5 +1,7 @@
 import { unstable_cache } from 'next/cache';
 import { createClient } from '@sanity/client';
+import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
+import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '';
@@ -350,14 +352,15 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     coordinatesLng,
     description,
     content,
-    "amenities": coalesce(amenities[] {
-      _key,
+    "amenitiesRefs": amenitiesRefs[]-> {
+      _id,
       title,
+      "slug": slug.current,
       description,
       iconKey,
       "customIconUrl": customIcon.asset->url,
       "customIconAlt": customIcon.alt
-    }, []),
+    },
     "propertyOffers": coalesce(propertyOffers[] {
       _key,
       title,
@@ -541,6 +544,10 @@ const cachedFetchSiteSettings = unstable_cache(
         from,
         to
       },
+      areaRange {
+        from,
+        to
+      },
       "currencyRates": currencyRates[code in ^.displayCurrencies]{
         code,
         rate,
@@ -576,6 +583,44 @@ const cachedFetchSiteSettings = unstable_cache(
 /** Fetch siteSettings singleton. Returns null if not found or client not configured. */
 export async function fetchSiteSettings(): Promise<unknown | null> {
   return cachedFetchSiteSettings();
+}
+
+const cachedFetchCatalogAreaBoundsFromData = unstable_cache(
+  async () => {
+    const client = getClient();
+    if (!client) return null;
+    const query = `{
+      "min": *[_type == "property" && defined(area) && area > 0] | order(area asc)[0].area,
+      "max": *[_type == "property" && defined(area) && area > 0] | order(area desc)[0].area
+    }`;
+    try {
+      const result = await client.fetch<{ min?: number; max?: number }>(query);
+      if (
+        typeof result?.min === 'number' &&
+        typeof result?.max === 'number' &&
+        Number.isFinite(result.min) &&
+        Number.isFinite(result.max)
+      ) {
+        return { min: result.min, max: result.max };
+      }
+      return null;
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogAreaBoundsFromData failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-area-bounds'],
+  { revalidate: 120 },
+);
+
+/**
+ * Min/max area from published properties (m²). Used when CMS areaRange is absent.
+ */
+export async function fetchCatalogAreaBoundsFromData(): Promise<{
+  min: number;
+  max: number;
+} | null> {
+  return cachedFetchCatalogAreaBoundsFromData();
 }
 
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
@@ -615,6 +660,8 @@ export type CatalogFilters = {
   deal?: string;
   minPrice?: number;
   maxPrice?: number;
+  minArea?: number;
+  maxArea?: number;
   beds?: number;
   amenities?: string[];
   sort?: CatalogSort;
@@ -680,6 +727,8 @@ export async function fetchCatalogProperties(
     deal,
     minPrice,
     maxPrice,
+    minArea,
+    maxArea,
     beds,
     amenities,
     sort = 'newest',
@@ -714,6 +763,12 @@ export async function fetchCatalogProperties(
   }
   if (typeof maxPrice === 'number' && maxPrice > 0) {
     parts.push('price <= $maxPrice');
+  }
+  if (typeof minArea === 'number' && minArea > 0) {
+    parts.push('area >= $minArea');
+  }
+  if (typeof maxArea === 'number' && maxArea > 0) {
+    parts.push('area <= $maxArea');
   }
   if (typeof beds === 'number' && beds > 0) {
     parts.push('bedrooms >= $beds');
@@ -778,6 +833,8 @@ export async function fetchCatalogProperties(
     deal,
     minPrice,
     maxPrice,
+    minArea,
+    maxArea,
     beds,
     amenities,
   };
@@ -1179,6 +1236,83 @@ export async function fetchHomeLanding(): Promise<{
     console.warn("[Sanity] fetchHomeLanding failed:", err);
     return null;
   }
+}
+
+/**
+ * Fetch landingPage for deal-type marketing routes (`/sale`, `/rent`, `/short-term-rent`).
+ * Resolves the CMS document by **slug only** (`dealTypeToLandingDocumentSlug`); pageType is not used
+ * (deal landings share a common pageType such as "investment" in Studio).
+ */
+export async function fetchDealTypeLanding(deal: PropertiesDealParam): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  slug?: string;
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const slug = dealTypeToLandingDocumentSlug(deal);
+  if (!slug) return null;
+
+  const cached = unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[_type == "landingPage" && slug.current == $slug][0] {
+    _id,
+    _type,
+    pageType,
+    "slug": slug.current,
+    "pageSections": pageSections[]${landingPageSectionsProjection},
+    seo
+  }`;
+      try {
+        return await client.fetch(query, { slug });
+      } catch (err) {
+        console.warn('[Sanity] fetchDealTypeLanding failed:', err);
+        return null;
+      }
+    },
+    ['sanity-deal-landing-v2', deal],
+    { revalidate: 60 },
+  );
+
+  return cached();
+}
+
+export type CityLandingNavItem = { slug: string; label: string };
+
+/**
+ * City links for drawer nav: only `landingPage` documents with `pageType == "city"` and a linked city slug.
+ */
+export async function fetchCityLandingNavItems(locale: string): Promise<CityLandingNavItem[]> {
+  const cached = unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return [];
+      const query = `*[_type == "landingPage" && pageType == "city" && defined(linkedCity->slug.current)] | order(linkedCity->slug.current asc) {
+        "slug": linkedCity->slug.current,
+        "title": linkedCity->title
+      }`;
+      try {
+        const rows = await client.fetch<Array<{ slug?: string; title?: unknown }>>(query);
+        if (!Array.isArray(rows)) return [];
+        return rows
+          .filter((r): r is { slug: string; title?: unknown } => typeof r.slug === 'string' && r.slug.length > 0)
+          .map((r) => ({
+            slug: r.slug,
+            label: resolveLocalizedString(r.title as never, locale) || r.slug,
+          }));
+      } catch (err) {
+        console.warn('[Sanity] fetchCityLandingNavItems failed:', err);
+        return [];
+      }
+    },
+    ['sanity-city-nav-items-v1', locale],
+    { revalidate: 60 },
+  );
+
+  return cached();
 }
 
 /** Fetch catalog SEO page for a city. Returns null if none or inactive. */

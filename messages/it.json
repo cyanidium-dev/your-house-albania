@@ -6,12 +6,19 @@
     "contact": "Contatto",
     "nav": {
       "home": "Home",
-      "properties": "Immobili",
+      "sale": "Vendita",
+      "rent": "Affitto",
+      "shortTermRent": "Affitto breve",
       "cities": "Città",
-      "favorites": "Preferiti",
+      "realtors": "Per agenti",
+      "realtorsAbout": "Informazioni",
+      "realtorsRegister": "Registrazione",
+      "expandRealtors": "Espandi la sezione per agenti",
+      "collapseRealtors": "Comprimi la sezione per agenti",
       "blog": "Blog",
-      "contact": "Contatto",
-      "docs": "Documentazione"
+      "contacts": "Contatti",
+      "expandCities": "Espandi elenco città",
+      "collapseCities": "Comprimi elenco città"
     },
     "cta": {
       "viewProperties": "Vedi immobili"
@@ -234,8 +241,13 @@
       "dealShortTerm": "Affitto a breve termine",
       "dealAll": "Tutti",
       "priceRange": "Fascia di prezzo",
+      "area": "Superficie",
+      "areaFrom": "Min.",
+      "areaTo": "Max.",
+      "areaUnit": "m²",
       "advancedFilters": "Filtri avanzati",
       "filtersShort": "Filtri",
+      "mobileSearchOpen": "Cerca",
       "closeModal": "Chiudi",
       "resetFilters": "Reimposta filtri",
       "search": "Cerca",

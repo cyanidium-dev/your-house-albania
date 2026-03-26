@@ -2,7 +2,24 @@ import { getTranslations } from 'next-intl/server'
 import HeaderClient from './HeaderClient'
 import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
 import type { HeaderTranslations } from './HeaderClient'
-import { getNavLinks } from '@/data/navigation'
+import { fetchCityLandingNavItems } from '@/lib/sanity/client'
+
+const NAV_TRANSLATION_KEYS = [
+  'home',
+  'sale',
+  'rent',
+  'shortTermRent',
+  'cities',
+  'realtors',
+  'realtorsAbout',
+  'realtorsRegister',
+  'expandRealtors',
+  'collapseRealtors',
+  'blog',
+  'contacts',
+  'expandCities',
+  'collapseCities',
+] as const
 
 type HeaderProps = {
   siteSettings?: ResolvedSiteSettings
@@ -11,13 +28,15 @@ type HeaderProps = {
 
 export default async function Header({ siteSettings, locale }: HeaderProps) {
   const t = await getTranslations('Header')
-  const navLinks = getNavLinks()
+  const cityNavItems = await fetchCityLandingNavItems(locale)
 
   const translations: HeaderTranslations = {
     menu: t('menu'),
     contact: t('contact'),
     cta: { viewProperties: t('cta.viewProperties') },
-    nav: Object.fromEntries(navLinks.map((item) => [item.key, t(`nav.${item.key}`)])),
+    nav: Object.fromEntries(
+      NAV_TRANSLATION_KEYS.map((key) => [key, t(`nav.${key}`)]),
+    ),
   }
 
   return (
@@ -25,6 +44,7 @@ export default async function Header({ siteSettings, locale }: HeaderProps) {
       locale={locale}
       siteSettings={siteSettings}
       translations={translations}
+      cityNavItems={cityNavItems}
     />
   )
 }

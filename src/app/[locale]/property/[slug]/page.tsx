@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
-import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapSanityAmenities, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
+import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapPropertyAmenityDisplayItems, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
 import { Icon } from '@iconify/react';
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
@@ -140,7 +140,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const t = await getTranslations('Shared.propertyCard');
   const tPropertyDetail = await getTranslations('Shared.propertyDetail');
-  const amenities = mapSanityAmenities(sanityProperty as never, locale);
+  const amenities = mapPropertyAmenityDisplayItems(sanityProperty as never, locale);
   const propertyOffers = mapSanityPropertyOffers(sanityProperty as never, locale);
 
   const dealTypeKey = (() => {

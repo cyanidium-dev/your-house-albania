@@ -18,6 +18,7 @@ type BlogCardInput = {
   categoryLabel?: string;
   categorySlug?: string;
   featured?: boolean;
+  readMoreLabel?: string;
 };
 
 async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string }) {
@@ -96,10 +97,10 @@ async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string 
                         </span>
                     )}
                     <span
-                        className="mt-3 inline-block py-2 px-4 rounded-full bg-primary text-white text-sm font-semibold transition-opacity group-hover:opacity-90"
-                        aria-hidden
+                      className="mt-3 inline-block py-2 px-4 rounded-full bg-primary text-white text-sm font-semibold transition-opacity group-hover:opacity-90"
+                      aria-hidden
                     >
-                        {t('readMore')}
+                        {blog.readMoreLabel?.trim() ? blog.readMoreLabel.trim() : t('readMore')}
                     </span>
                 </Link>
                 {categoryPill}

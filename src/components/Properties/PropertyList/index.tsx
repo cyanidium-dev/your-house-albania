@@ -10,10 +10,13 @@ import {
   fetchCatalogProperties,
   fetchCatalogFilterOptions,
   fetchSiteSettings,
+  fetchCatalogAreaBoundsFromData,
+  fetchFeaturedProperties,
   type CatalogSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
+import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -21,6 +24,19 @@ const DEFAULT_PAGE_SIZE = 24
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
 const DEAL_TYPE_VALUES = ['sale', 'rent', 'short-term'] as const
+
+function resolveMaxFeaturedProperties(settings: unknown): number {
+  const raw = (settings as { maxFeaturedProperties?: unknown })?.maxFeaturedProperties
+  if (raw === null || raw === undefined) return 6
+  const n =
+    typeof raw === 'number' && Number.isFinite(raw)
+      ? Math.floor(raw)
+      : typeof raw === 'string' && raw.trim() !== '' && Number.isFinite(Number(raw))
+        ? Math.floor(Number(raw))
+        : NaN
+  if (Number.isNaN(n) || n < 0) return 6
+  return Math.min(n, 48)
+}
 
 type CatalogSeoContent = {
   bottomText?: unknown[]
@@ -39,9 +55,10 @@ async function PropertiesListing({
   searchParams: SearchParams
   catalogSeo?: CatalogSeoContent
 }) {
-  const [filterOptions, siteSettings] = await Promise.all([
+  const [filterOptions, siteSettings, areaBoundsFromData] = await Promise.all([
     fetchCatalogFilterOptions(locale),
     fetchSiteSettings(),
+    fetchCatalogAreaBoundsFromData(),
   ])
   const {
     locations: locationOptions,
@@ -51,6 +68,10 @@ async function PropertiesListing({
   } = filterOptions
   const priceRangesByDeal = toRangesByDeal(
     resolvePriceRange((siteSettings as Record<string, unknown>)?.priceRange)
+  )
+  const defaultAreaRange = resolveAreaRangeBounds(
+    (siteSettings as Record<string, unknown>)?.areaRange,
+    areaBoundsFromData
   )
 
   const cityFilter = (pathCity || (typeof searchParams.city === 'string' ? searchParams.city : '')).toLowerCase()
@@ -77,12 +98,29 @@ async function PropertiesListing({
     typeof searchParams.minPrice === 'string' ? Number(searchParams.minPrice) || 0 : 0
   const maxPriceFilter =
     typeof searchParams.maxPrice === 'string' ? Number(searchParams.maxPrice) || 0 : 0
+  const minAreaFilter =
+    typeof searchParams.minArea === 'string' ? Number(searchParams.minArea) || 0 : 0
+  const maxAreaFilter =
+    typeof searchParams.maxArea === 'string' ? Number(searchParams.maxArea) || 0 : 0
   const bedsFilter =
     typeof searchParams.beds === 'string' ? Number(searchParams.beds) || 0 : 0
   const viewMode = parseViewMode(searchParams.view)
 
   const rawPage =
     typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
+
+  const maxFeatured = resolveMaxFeaturedProperties(siteSettings)
+  const featuredPromoFetched =
+    maxFeatured > 0 ? await fetchFeaturedProperties(maxFeatured) : null
+  const featuredPromoRaw = Array.isArray(featuredPromoFetched)
+    ? featuredPromoFetched
+    : []
+  const promoIdSet = new Set(
+    featuredPromoRaw
+      .map((p) => p._id)
+      .filter((id): id is string => typeof id === 'string' && id.length > 0)
+  )
+
   const catalogResult =
     (await fetchCatalogProperties({
       city: cityFilter || undefined,
@@ -91,12 +129,33 @@ async function PropertiesListing({
       deal: dealFilter || undefined,
       minPrice: minPriceFilter || undefined,
       maxPrice: maxPriceFilter || undefined,
+      minArea: minAreaFilter || undefined,
+      maxArea: maxAreaFilter || undefined,
       beds: bedsFilter || undefined,
       amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
       sort: sort as CatalogSort,
       page: rawPage,
       pageSize,
     })) ?? { items: [], totalCount: 0 }
+
+  const filteredResults = catalogResult.items ?? []
+  let filteredForDisplay =
+    rawPage === 1
+      ? filteredResults.filter(
+          (item) =>
+            typeof item._id === 'string' && !promoIdSet.has(item._id)
+        )
+      : filteredResults
+
+  {
+    const seen = new Set<string>()
+    filteredForDisplay = filteredForDisplay.filter((item) => {
+      if (typeof item._id !== 'string') return true
+      if (seen.has(item._id)) return false
+      seen.add(item._id)
+      return true
+    })
+  }
 
   const totalItems = catalogResult.totalCount ?? 0
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
@@ -123,9 +182,14 @@ async function PropertiesListing({
     redirect(path + (qs ? `?${qs}` : ''))
   }
 
-  const pageItems: PropertyHomes[] = Array.isArray(catalogResult.items)
-    ? catalogResult.items.map((item) => mapCatalogPropertyToCard(item, locale))
+  const pageItems: PropertyHomes[] = Array.isArray(filteredForDisplay)
+    ? filteredForDisplay.map((item) => mapCatalogPropertyToCard(item, locale))
     : []
+
+  const promoItems: PropertyHomes[] =
+    rawPage === 1 && featuredPromoRaw.length > 0
+      ? featuredPromoRaw.map((item) => mapCatalogPropertyToCard(item, locale))
+      : []
 
   const baseUrl = await getBaseUrl()
   const itemListEntries = pageItems.map((item) => ({
@@ -140,12 +204,15 @@ async function PropertiesListing({
     dealTypeValues: DEAL_TYPE_VALUES,
     districtOptions,
     priceRangesByDeal,
+    defaultAreaRange,
     amenityOptions,
     initialCity: cityFilter || '',
     initialType: typeFilter,
     initialDealType: dealFilter,
     initialMinPrice: typeof searchParams.minPrice === 'string' ? searchParams.minPrice : '',
     initialMaxPrice: typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : '',
+    initialMinArea: typeof searchParams.minArea === 'string' ? searchParams.minArea : '',
+    initialMaxArea: typeof searchParams.maxArea === 'string' ? searchParams.maxArea : '',
     initialBeds: typeof searchParams.beds === 'string' ? searchParams.beds : '',
     initialDistrict: districtFilter,
     initialSort: sort,
@@ -164,6 +231,7 @@ async function PropertiesListing({
           <CatalogBodyClient
             filterProps={filterProps}
             pageItems={pageItems}
+            promoItems={promoItems}
             locale={locale}
             totalPages={totalPages}
             currentPage={currentPage}

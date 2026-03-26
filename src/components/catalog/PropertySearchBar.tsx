@@ -90,6 +90,11 @@ import {
   getPriceQueryParams,
 } from "@/lib/catalog/priceRanges";
 import {
+  formatAreaRangeDisplay,
+  getAreaQueryParams,
+  interpretAreaRangeState,
+} from "@/lib/catalog/areaRanges";
+import {
   FilterSelect,
   type FilterOption,
 } from "@/components/catalog/FilterSelect";
@@ -112,12 +117,15 @@ type Props = {
   dealTypeValues: readonly string[];
   districtOptions: DistrictOption[];
   priceRangesByDeal: Record<string, { min: number; max: number }>;
+  defaultAreaRange: { min: number; max: number };
   amenityOptions: Option[];
   initialCity?: string;
   initialType?: string;
   initialDealType?: string;
   initialMinPrice?: string;
   initialMaxPrice?: string;
+  initialMinArea?: string;
+  initialMaxArea?: string;
   initialBeds?: string;
   initialDistrict?: string;
   initialSort?: string;
@@ -134,12 +142,15 @@ export function PropertySearchBar({
   dealTypeValues,
   districtOptions: allDistricts,
   priceRangesByDeal,
+  defaultAreaRange,
   amenityOptions,
   initialCity = "",
   initialType = "",
   initialDealType = "",
   initialMinPrice = "",
   initialMaxPrice = "",
+  initialMinArea = "",
+  initialMaxArea = "",
   initialBeds = "",
   initialDistrict = "",
   initialSort = "",
@@ -231,8 +242,12 @@ export function PropertySearchBar({
   }, [showAdvanced]);
 
   const currentDealKey = deal || "any";
-  const currentRange = priceRangesByDeal[currentDealKey] ||
-    priceRangesByDeal.any || { min: 0, max: 1_000_000 };
+  const currentRange = React.useMemo(
+    () =>
+      priceRangesByDeal[currentDealKey] ||
+      priceRangesByDeal.any || { min: 0, max: 1_000_000 },
+    [priceRangesByDeal, currentDealKey]
+  );
 
   const hasInitialPriceFromQuery =
     (typeof initialMinPrice === "string" && initialMinPrice.trim().length > 0) ||
@@ -251,7 +266,7 @@ export function PropertySearchBar({
         { min: priceValues[0], max: priceValues[1] },
         currentRange
       ),
-    [priceValues, currentRange.min, currentRange.max]
+    [priceValues, currentRange]
   );
 
   const priceDisplay = React.useMemo(() => {
@@ -274,6 +289,30 @@ export function PropertySearchBar({
     setPriceValues([range.min, range.max]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deal]);
+
+  const [areaValues, setAreaValues] = React.useState<[number, number]>(() => {
+    const fromMin = Number(initialMinArea) || defaultAreaRange.min;
+    const fromMax = Number(initialMaxArea) || defaultAreaRange.max;
+    return [fromMin, fromMax];
+  });
+
+  const areaRangeState = React.useMemo(
+    () =>
+      interpretAreaRangeState(
+        { min: areaValues[0], max: areaValues[1] },
+        defaultAreaRange
+      ),
+    [areaValues, defaultAreaRange]
+  );
+
+  const areaDisplay = React.useMemo(
+    () =>
+      formatAreaRangeDisplay(areaRangeState, {
+        t: (key) => t(key),
+        unit: t("areaUnit"),
+      }),
+    [areaRangeState, t]
+  );
 
   const getDealLabel = (value: string) => {
     if (value === "sale") return t("dealSale");
@@ -311,6 +350,10 @@ export function PropertySearchBar({
         ? [...initialAmenities]
         : []
     );
+    setAreaValues([
+      Number(initialMinArea) || defaultAreaRange.min,
+      Number(initialMaxArea) || defaultAreaRange.max,
+    ]);
     // initialAmenities: synced when initialAmenitiesKey changes (stable vs parent array identity)
     // eslint-disable-next-line react-hooks/exhaustive-deps -- initialAmenities read from props; key avoids loop
   }, [
@@ -319,6 +362,10 @@ export function PropertySearchBar({
     initialDistrict,
     initialPageSize,
     initialSort,
+    initialMinArea,
+    initialMaxArea,
+    defaultAreaRange.min,
+    defaultAreaRange.max,
   ]);
 
   const router = useRouter();
@@ -353,6 +400,16 @@ export function PropertySearchBar({
     else params.delete("minPrice");
     if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
     else params.delete("maxPrice");
+
+    const areaStateForApply = interpretAreaRangeState(
+      { min: areaValues[0], max: areaValues[1] },
+      defaultAreaRange
+    );
+    const areaParams = getAreaQueryParams(areaStateForApply);
+    if (areaParams.minArea) params.set("minArea", areaParams.minArea);
+    else params.delete("minArea");
+    if (areaParams.maxArea) params.set("maxArea", areaParams.maxArea);
+    else params.delete("maxArea");
 
     if (beds && beds !== "any") params.set("beds", beds);
     else params.delete("beds");
@@ -395,6 +452,8 @@ export function PropertySearchBar({
       district,
       locale,
       pageSize,
+      areaValues,
+      defaultAreaRange,
       priceRangesByDeal,
       priceValues,
       router,
@@ -446,7 +505,7 @@ export function PropertySearchBar({
       className={cn(
         placement === "inline"
           ? cn(
-              "mb-6 flex min-w-0 flex-col rounded-2xl border border-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-dark",
+              "mb-6 flex min-w-0 flex-col rounded-2xl border border-dark/10 bg-white/55 shadow-md backdrop-blur-md dark:border-white/10 dark:bg-dark/55",
               "px-4 sm:px-6",
               isCompact ? "gap-3 py-3 sm:py-4" : "gap-4 py-4 sm:py-5"
             )
@@ -458,7 +517,7 @@ export function PropertySearchBar({
         className={cn(
           "grid grid-cols-1 gap-4 items-end min-w-0",
           "md:grid-cols-4",
-          "xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_auto_auto]",
+          "xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1fr)_auto_auto]",
           "[&>*]:min-w-0"
         )}
       >
@@ -518,8 +577,35 @@ export function PropertySearchBar({
           </Slider.Root>
         </div>
 
+        {/* Area range (m²) */}
+        <div className="min-w-0">
+          <div className="flex items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
+            <span className="min-w-0 truncate">{t("area")}</span>
+            <span className="font-medium text-dark dark:text-white text-[11px] min-w-0 truncate text-right">
+              {areaDisplay}
+            </span>
+          </div>
+          <Slider.Root
+            className="relative flex items-center select-none touch-none w-full h-4"
+            min={defaultAreaRange.min}
+            max={defaultAreaRange.max}
+            step={1}
+            value={areaValues}
+            onValueChange={(values) => {
+              const [min, max] = values as [number, number];
+              setAreaValues([min, max]);
+            }}
+          >
+            <Slider.Track className="bg-dark/10 dark:bg-white/20 relative grow rounded-full h-1">
+              <Slider.Range className="absolute bg-primary rounded-full h-full" />
+            </Slider.Track>
+            <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
+            <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
+          </Slider.Root>
+        </div>
+
         {/* Reset + Advanced + Search */}
-        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-4 xl:col-span-2">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-3 xl:col-span-2">
           <Button
             type="button"
             variant="outline"
@@ -652,52 +738,47 @@ export function PropertySearchBar({
       {/* Mobile: compact chrome on small viewports only (md:hidden). No scroll gate — avoids initial layout shift. */}
       <div
         className={cn(
-          "mb-6 min-w-0 rounded-2xl border px-3 py-2.5 shadow-md backdrop-blur-md md:hidden",
-          "border-dark/10 bg-white/95 dark:border-white/10 dark:bg-dark/95"
+          "mb-6 min-w-0 rounded-2xl border px-3 py-3 shadow-md backdrop-blur-md md:hidden",
+          "border-dark/10 bg-white/55 dark:border-white/10 dark:bg-dark/55"
         )}
       >
-        <div
-          className="no-scrollbar inline-flex min-h-10 w-full min-w-0 items-stretch gap-0.5 overflow-x-auto rounded-full bg-dark/5 p-0.5 dark:bg-white/10"
-          role="group"
-          aria-label={t("dealType")}
-        >
-          <button
-            type="button"
-            onClick={() => applyCompactDealTab("any")}
-            className={cn(
-              "shrink-0 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-              deal === "any" || deal === ""
-                ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
-                : "text-dark/70 hover:bg-dark/10 dark:text-white/70 dark:hover:bg-white/10"
-            )}
-          >
-            {t("dealAll")}
-          </button>
-          {dealTypeValues.map((v) => (
-            <button
-              key={v}
-              type="button"
-              onClick={() => applyCompactDealTab(v)}
-              className={cn(
-                "shrink-0 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-                deal === v
-                  ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
-                  : "text-dark/70 hover:bg-dark/10 dark:text-white/70 dark:hover:bg-white/10"
-              )}
-            >
-              {getDealLabel(v)}
-            </button>
-          ))}
+        <div className="flex min-w-0 flex-col gap-3">
           <button
             type="button"
             onClick={() => setMobileFilterModalOpen((o) => !o)}
             className={cn(
-              "ml-0.5 shrink-0 rounded-full border-l border-dark/10 px-2.5 py-1.5 pl-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 dark:border-white/15",
-              "text-primary hover:bg-dark/10 dark:hover:bg-white/10"
+              "flex min-h-12 w-full items-center justify-center rounded-full border border-dark/10 bg-dark/5 px-4 py-3 text-sm font-semibold shadow-sm transition-colors",
+              "text-primary hover:bg-dark/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+              "dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/15"
             )}
           >
-            {mobileFilterModalOpen ? t("closeModal") : t("filtersShort")}
+            {mobileFilterModalOpen ? t("closeModal") : t("mobileSearchOpen")}
           </button>
+          <div className="border-t border-dark/10 pt-3 dark:border-white/10">
+            <div
+              className="grid min-h-10 w-full min-w-0 grid-cols-3 rounded-full bg-dark/[0.07] p-1 dark:bg-white/[0.08]"
+              role="group"
+              aria-label={t("dealType")}
+            >
+              {dealTypeValues.map((v) => (
+                <div key={v} className="not-last:border-r overflow-hidden first:rounded-l-full last:rounded-r-full border-dark/10 dark:border-white/10 flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={() => applyCompactDealTab(v)}
+                    className={cn(
+                      "min-h-10 min-w-0 w-full h-full truncate px-1.5 py-1.5 text-center text-xs font-medium transition-colors",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                      deal === v
+                        ? "bg-white text-dark shadow-sm ring-1 ring-dark/10 dark:bg-dark dark:text-white dark:ring-white/15"
+                        : "text-dark/70 ring-1 ring-transparent hover:bg-dark/10 hover:ring-dark/5 dark:text-white/70 dark:hover:bg-white/10 dark:hover:ring-white/10"
+                    )}
+                  >
+                    <span className="block truncate px-0.5">{getDealLabel(v)}</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       {/* Desktop/tablet inline form only (md+). Hidden on mobile via CSS — same HTML on SSR/client, no hydration mismatch. */}

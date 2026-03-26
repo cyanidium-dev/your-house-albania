@@ -150,9 +150,11 @@ export function mapSanityPropertyToDetailsFields(
   };
 }
 
-type SanityAmenityItem = {
+/** Resolved global `amenity` document row from `amenitiesRefs[]->` (property detail display). */
+type SanityAmenityDisplayRow = {
   _id?: string;
   _key?: string;
+  slug?: string;
   title?: unknown;
   description?: unknown;
   iconKey?: string;
@@ -215,19 +217,22 @@ function pickCustomIconAlt(item: {
   return undefined;
 }
 
-/** Maps Sanity amenities to Property details block. Skips items with empty title after localization. */
-export function mapSanityAmenities(
-  p: { amenities?: SanityAmenityItem[] } | null | undefined,
+function mapAmenityDisplayRowsToItems(
+  items: SanityAmenityDisplayRow[],
   locale: string
 ): PropertyAmenityItem[] {
-  const items = Array.isArray(p?.amenities) ? p.amenities : [];
   const result: PropertyAmenityItem[] = [];
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    const title = resolveLocalizedString(item?.title as never, locale)?.trim() ?? '';
+    if (!item) continue;
+    const title = resolveLocalizedString(item.title as never, locale)?.trim() ?? '';
     if (!title) continue;
-    const key = (item as { _key?: string })._key ?? (item as { _id?: string })._id ?? `amenity-${i}`;
-    const description = resolveLocalizedString(item?.description as never, locale)?.trim() || undefined;
+    const key =
+      (typeof item._key === 'string' && item._key.trim()) ||
+      (typeof item._id === 'string' && item._id.trim()) ||
+      (typeof item.slug === 'string' && item.slug.trim()) ||
+      `amenity-${i}`;
+    const description = resolveLocalizedString(item.description as never, locale)?.trim() || undefined;
     result.push({
       key: String(key),
       title,
@@ -238,6 +243,24 @@ export function mapSanityAmenities(
     });
   }
   return result;
+}
+
+type PropertyForAmenityDisplay = {
+  amenitiesRefs?: (SanityAmenityDisplayRow | null)[] | null;
+} | null | undefined;
+
+/**
+ * Maps resolved `amenitiesRefs` (global amenity documents) to the property detail amenities list.
+ * Order follows the property’s reference order in Sanity.
+ */
+export function mapPropertyAmenityDisplayItems(
+  p: PropertyForAmenityDisplay,
+  locale: string
+): PropertyAmenityItem[] {
+  const refs = Array.isArray(p?.amenitiesRefs)
+    ? p.amenitiesRefs.filter((x): x is SanityAmenityDisplayRow => x != null)
+    : [];
+  return mapAmenityDisplayRowsToItems(refs, locale);
 }
 
 /** Maps Sanity propertyOffers to What this property offers block. Skips items with empty title after localization. */

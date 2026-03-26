@@ -87,7 +87,7 @@ const Footer = ({ siteSettings }: FooterProps) => {
               <h2 className="text-white leading-[1.2] text-40 font-medium mb-6 lg:max-w-3/4">
                 {t('cta')}
               </h2>
-              <Link href={`/${locale}/contactus`} className="bg-primary text-base font-semibold py-4 px-8 rounded-full text-white hover:bg-white hover:text-dark duration-300 hover:cursor-pointer">
+              <Link href={`/${locale}/contacts`} className="bg-primary text-base font-semibold py-4 px-8 rounded-full text-white hover:bg-white hover:text-dark duration-300 hover:cursor-pointer">
                 {t('getInTouch')}
               </Link>
               {(siteSettings?.phone || siteSettings?.email || siteSettings?.companyAddress) ? (

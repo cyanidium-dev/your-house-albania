@@ -1,8 +1,9 @@
 'use client'
 
-import { getNavLinks } from '@/data/navigation'
 import Link from 'next/link'
-import NavLink from './Navigation/NavLink'
+import DrawerNavList from './Navigation/DrawerNavList'
+import { DRAWER_NAV_ITEMS } from '@/data/navConfig'
+import type { CityLandingNavItem } from '@/lib/sanity/client'
 import LanguageSwitcher from './LanguageSwitcher'
 import CurrencySwitcher from './CurrencySwitcher'
 import HeaderThemeToggle from './HeaderThemeToggle'
@@ -27,12 +28,14 @@ type HeaderClientProps = {
   locale: string
   siteSettings?: ResolvedSiteSettings
   translations: HeaderTranslations
+  cityNavItems: CityLandingNavItem[]
 }
 
 const HeaderClient: React.FC<HeaderClientProps> = ({
   locale,
   siteSettings,
   translations: t,
+  cityNavItems,
 }) => {
   return (
     <HeaderVisualState>
@@ -120,58 +123,81 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
               </div>
 
               <HeaderMobileDrawer open={navbarOpen} onClose={onClose}>
-                <div className="flex flex-col h-full justify-between">
-                  <div className="">
-                    <div className='flex items-center justify-start py-10'>
+                <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden px-20">
+                  <div className="shrink-0 pt-[max(0.75rem,env(safe-area-inset-top))]">
+                    <div className="flex items-center justify-start py-10">
                       <button
                         onClick={onClose}
-                        aria-label='Close mobile menu'
-                        className='bg-white p-3 rounded-full hover:cursor-pointer'>
+                        aria-label="Close mobile menu"
+                        className="rounded-full bg-white p-3 hover:cursor-pointer"
+                        type="button"
+                      >
                         <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'>
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          aria-hidden
+                        >
                           <path
-                            fill='none'
-                            stroke='black'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            strokeWidth='2'
-                            d='M6 18L18 6M6 6l12 12'
+                            fill="none"
+                            stroke="black"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M6 18L18 6M6 6l12 12"
                           />
                         </svg>
                       </button>
                     </div>
-                    <nav className='flex flex-col items-start gap-4'>
-                      <ul className='w-full'>
-                        {getNavLinks().map((item, index) => (
-                          <NavLink key={index} item={{ label: t.nav[item.key] ?? item.key, href: item.href }} onClick={onClose} />
-                        ))}
-                        <li className='flex items-center gap-4 flex-wrap'>
-                          <Link href={catalogPath(locale)} className='py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full border border-primary font-semibold mt-3 hover:bg-transparent hover:text-primary duration-300'>
-                            {t.cta.viewProperties}
-                          </Link>
-                          <Link href={`/${locale}/contactus`} className='py-4 px-8 bg-transparent border border-primary text-base leading-4 block w-fit text-primary rounded-full font-semibold mt-3 hover:bg-primary hover:text-white duration-300'>
-                            {t.nav.contact}
-                          </Link>
-                        </li>
-                      </ul>
+                  </div>
+
+                  <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overflow-x-hidden pb-4">
+                    <nav className="flex flex-col items-start gap-4" aria-label="Main">
+                      <DrawerNavList
+                        items={DRAWER_NAV_ITEMS}
+                        cityItems={cityNavItems}
+                        translations={{ nav: t.nav }}
+                        onNavigate={onClose}
+                      />
                     </nav>
                   </div>
 
-                  <div className='flex flex-col gap-1 my-16 text-white'>
-                    <p className='text-base sm:text-xm font-normal text-white/40'>
-                      {t.contact}
-                    </p>
-                    {siteSettings?.email ? (
-                      <Link href={`mailto:${siteSettings.email}`} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-                        {siteSettings.email}
+                  <div className="shrink-0 space-y-4 border-t border-white/10 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <Link
+                        href={catalogPath(locale)}
+                        className="block w-fit rounded-full border border-primary bg-primary px-8 py-4 text-base font-semibold leading-4 text-white duration-300 hover:bg-transparent hover:text-primary"
+                        onClick={onClose}
+                      >
+                        {t.cta.viewProperties}
                       </Link>
-                    ) : null}
-                    <Link href={catalogPath(locale)} className='text-base sm:text-xm font-medium text-inherit hover:text-primary'>
-                      {t.cta.viewProperties}
-                    </Link>
+                      <Link
+                        href={`/${locale}/contacts`}
+                        className="block w-fit rounded-full border border-primary bg-transparent px-8 py-4 text-base font-semibold leading-4 text-primary duration-300 hover:bg-primary hover:text-white"
+                        onClick={onClose}
+                      >
+                        {t.nav.contacts}
+                      </Link>
+                    </div>
+                    <div className="flex flex-col gap-1 text-white">
+                      <p className="text-base font-normal text-white/40 sm:text-xm">{t.contact}</p>
+                      {siteSettings?.email ? (
+                        <Link
+                          href={`mailto:${siteSettings.email}`}
+                          className="text-base font-medium text-inherit hover:text-primary sm:text-xm"
+                        >
+                          {siteSettings.email}
+                        </Link>
+                      ) : null}
+                      <Link
+                        href={catalogPath(locale)}
+                        className="text-base font-medium text-inherit hover:text-primary sm:text-xm"
+                        onClick={onClose}
+                      >
+                        {t.cta.viewProperties}
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </HeaderMobileDrawer>

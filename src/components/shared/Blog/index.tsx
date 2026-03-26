@@ -20,7 +20,17 @@ const BlogSmall: React.FC<{
   cta?: CmsCta;
   mode?: unknown;
   manualArticleTitles?: unknown;
-}> = async ({ locale, posts, title, subtitle, cta }) => {
+  /** Overrides default “Read more” on cards when set (e.g. property articlesSection.cardCtaLabel). */
+  cardCtaLabel?: string | undefined;
+}> = async ({
+  locale,
+  posts,
+  title,
+  subtitle,
+  cta,
+  mode,
+  cardCtaLabel,
+}) => {
   const t = await getTranslations("Home.blog");
 
   function hasUsableSlug(p: unknown): boolean {
@@ -33,10 +43,19 @@ const BlogSmall: React.FC<{
     return false;
   }
 
+  const modeStr = String(mode ?? "").toLowerCase();
+
   const hasValidCmsPosts =
     Array.isArray(posts) &&
     posts.length > 0 &&
     posts.some((p) => hasUsableSlug(p));
+
+  if (
+    (modeStr === "selected" || modeStr === "manual") &&
+    !hasValidCmsPosts
+  ) {
+    return null;
+  }
 
   let cmsPosts: BlogListItem[] = [];
   let fetchedPosts: BlogListItem[] = [];
@@ -51,11 +70,15 @@ const BlogSmall: React.FC<{
           .filter((p) => p.slug)
       : [];
 
-    fetchedPosts = hasValidCmsPosts
-      ? []
-      : (await fetchBlogPostsPaginated({ page: 1, pageSize: 3 })).items.map(
-          (p) => mapSanityBlogPostToList(p as SanityListingPost, locale)
-        );
+    const shouldFetchLatest =
+      modeStr === "latest" || (!modeStr && !hasValidCmsPosts);
+
+    fetchedPosts =
+      shouldFetchLatest && !hasValidCmsPosts
+        ? (await fetchBlogPostsPaginated({ page: 1, pageSize: 3 })).items.map(
+            (p) => mapSanityBlogPostToList(p as SanityListingPost, locale)
+          )
+        : [];
   } catch (err) {
     if (process.env.NODE_ENV === "development") {
       console.warn("[BlogSmall] Blog data fetch failed, using empty list:", err);
@@ -63,6 +86,10 @@ const BlogSmall: React.FC<{
   }
 
   const finalPosts = (hasValidCmsPosts ? cmsPosts : fetchedPosts).slice(0, 3);
+
+  if (finalPosts.length === 0) {
+    return null;
+  }
 
   const headerTitle = title?.trim() ? title : t("title");
   const headerDescription = subtitle?.trim() ? subtitle : t("description");
@@ -108,6 +135,7 @@ const BlogSmall: React.FC<{
                   publishedAt: blog.publishedAt,
                   categoryLabel: blog.categoryLabel,
                   featured: blog.featured,
+                  readMoreLabel: cardCtaLabel,
                 }}
                 locale={locale}
               />
