@@ -6,12 +6,19 @@
     "contact": "Contact",
     "nav": {
       "home": "Home",
-      "properties": "Properties",
+      "sale": "Sales",
+      "rent": "Rent",
+      "shortTermRent": "Short-term rent",
       "cities": "Cities",
-      "favorites": "Favorites",
+      "realtors": "For realtors",
+      "realtorsAbout": "About",
+      "realtorsRegister": "Register",
+      "expandRealtors": "Expand For realtors section",
+      "collapseRealtors": "Collapse For realtors section",
       "blog": "Blog",
-      "contact": "Contact",
-      "docs": "Docs"
+      "contacts": "Contacts",
+      "expandCities": "Expand cities list",
+      "collapseCities": "Collapse cities list"
     },
     "cta": {
       "viewProperties": "View properties"
@@ -236,6 +243,7 @@
       "priceRange": "Price range",
       "advancedFilters": "Advanced filters",
       "filtersShort": "Filters",
+      "mobileSearchOpen": "Search",
       "closeModal": "Close",
       "resetFilters": "Reset filters",
       "search": "Search",

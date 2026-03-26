@@ -6,12 +6,19 @@
     "contact": "Контакты",
     "nav": {
       "home": "Главная",
-      "properties": "Объекты",
+      "sale": "Продажа",
+      "rent": "Аренда",
+      "shortTermRent": "Краткосрочная аренда",
       "cities": "Города",
-      "favorites": "Избранное",
+      "realtors": "Риелторам",
+      "realtorsAbout": "О нас",
+      "realtorsRegister": "Регистрация",
+      "expandRealtors": "Развернуть раздел для риелторов",
+      "collapseRealtors": "Свернуть раздел для риелторов",
       "blog": "Блог",
-      "contact": "Контакты",
-      "docs": "Документация"
+      "contacts": "Контакты",
+      "expandCities": "Развернуть список городов",
+      "collapseCities": "Свернуть список городов"
     },
     "cta": {
       "viewProperties": "Смотреть объекты"
@@ -236,6 +243,7 @@
       "priceRange": "Диапазон цены",
       "advancedFilters": "Дополнительные фильтры",
       "filtersShort": "Фильтры",
+      "mobileSearchOpen": "Поиск",
       "closeModal": "Закрыть",
       "resetFilters": "Сбросить фильтры",
       "search": "Поиск",

@@ -6,12 +6,19 @@
     "contact": "Контакт",
     "nav": {
       "home": "Головна",
-      "properties": "Нерухомість",
+      "sale": "Продаж",
+      "rent": "Оренда",
+      "shortTermRent": "Короткострокова оренда",
       "cities": "Міста",
-      "favorites": "Обране",
+      "realtors": "Для ріелторів",
+      "realtorsAbout": "Про нас",
+      "realtorsRegister": "Реєстрація",
+      "expandRealtors": "Розгорнути розділ для ріелторів",
+      "collapseRealtors": "Згорнути розділ для ріелторів",
       "blog": "Блог",
-      "contact": "Контакт",
-      "docs": "Документація"
+      "contacts": "Контакти",
+      "expandCities": "Розгорнути список міст",
+      "collapseCities": "Згорнути список міст"
     },
     "cta": {
       "viewProperties": "Переглянути об'єкти"
@@ -236,6 +243,7 @@
       "priceRange": "Діапазон ціни",
       "advancedFilters": "Додаткові фільтри",
       "filtersShort": "Фільтри",
+      "mobileSearchOpen": "Пошук",
       "closeModal": "Закрити",
       "resetFilters": "Скинути фільтри",
       "search": "Пошук",

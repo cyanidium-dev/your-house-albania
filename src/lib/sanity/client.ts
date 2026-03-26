@@ -1,5 +1,7 @@
 import { unstable_cache } from 'next/cache';
 import { createClient } from '@sanity/client';
+import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
+import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '';
@@ -1179,6 +1181,83 @@ export async function fetchHomeLanding(): Promise<{
     console.warn("[Sanity] fetchHomeLanding failed:", err);
     return null;
   }
+}
+
+/**
+ * Fetch landingPage for deal-type marketing routes (`/sale`, `/rent`, `/short-term-rent`).
+ * Resolves the CMS document by **slug only** (`dealTypeToLandingDocumentSlug`); pageType is not used
+ * (deal landings share a common pageType such as "investment" in Studio).
+ */
+export async function fetchDealTypeLanding(deal: PropertiesDealParam): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  slug?: string;
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const slug = dealTypeToLandingDocumentSlug(deal);
+  if (!slug) return null;
+
+  const cached = unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[_type == "landingPage" && slug.current == $slug][0] {
+    _id,
+    _type,
+    pageType,
+    "slug": slug.current,
+    "pageSections": pageSections[]${landingPageSectionsProjection},
+    seo
+  }`;
+      try {
+        return await client.fetch(query, { slug });
+      } catch (err) {
+        console.warn('[Sanity] fetchDealTypeLanding failed:', err);
+        return null;
+      }
+    },
+    ['sanity-deal-landing-v2', deal],
+    { revalidate: 60 },
+  );
+
+  return cached();
+}
+
+export type CityLandingNavItem = { slug: string; label: string };
+
+/**
+ * City links for drawer nav: only `landingPage` documents with `pageType == "city"` and a linked city slug.
+ */
+export async function fetchCityLandingNavItems(locale: string): Promise<CityLandingNavItem[]> {
+  const cached = unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return [];
+      const query = `*[_type == "landingPage" && pageType == "city" && defined(linkedCity->slug.current)] | order(linkedCity->slug.current asc) {
+        "slug": linkedCity->slug.current,
+        "title": linkedCity->title
+      }`;
+      try {
+        const rows = await client.fetch<Array<{ slug?: string; title?: unknown }>>(query);
+        if (!Array.isArray(rows)) return [];
+        return rows
+          .filter((r): r is { slug: string; title?: unknown } => typeof r.slug === 'string' && r.slug.length > 0)
+          .map((r) => ({
+            slug: r.slug,
+            label: resolveLocalizedString(r.title as never, locale) || r.slug,
+          }));
+      } catch (err) {
+        console.warn('[Sanity] fetchCityLandingNavItems failed:', err);
+        return [];
+      }
+    },
+    ['sanity-city-nav-items-v1', locale],
+    { revalidate: 60 },
+  );
+
+  return cached();
 }
 
 /** Fetch catalog SEO page for a city. Returns null if none or inactive. */

@@ -6,12 +6,19 @@
     "contact": "Kontakt",
     "nav": {
       "home": "Kryefaqja",
-      "properties": "Prona",
+      "sale": "Shitje",
+      "rent": "Qira",
+      "shortTermRent": "Qira afatshkurtër",
       "cities": "Qytetet",
-      "favorites": "Të preferuarat",
+      "realtors": "Për agjentë",
+      "realtorsAbout": "Rreth nesh",
+      "realtorsRegister": "Regjistrimi",
+      "expandRealtors": "Zgjero seksionin për agjentë",
+      "collapseRealtors": "Mbyll seksionin për agjentë",
       "blog": "Blog",
-      "contact": "Kontakt",
-      "docs": "Dokumentacioni"
+      "contacts": "Kontakte",
+      "expandCities": "Zgjero listën e qyteteve",
+      "collapseCities": "Mbyll listën e qyteteve"
     },
     "cta": {
       "viewProperties": "Shiko pronat"
@@ -236,6 +243,7 @@
       "priceRange": "Gama e çmimit",
       "advancedFilters": "Filtrat e avancuar",
       "filtersShort": "Filtrat",
+      "mobileSearchOpen": "Kërko",
       "closeModal": "Mbyll",
       "resetFilters": "Rivendos filtrat",
       "search": "Kërko",
