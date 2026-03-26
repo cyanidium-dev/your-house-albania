@@ -352,14 +352,15 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     coordinatesLng,
     description,
     content,
-    "amenities": coalesce(amenities[] {
-      _key,
+    "amenitiesRefs": amenitiesRefs[]-> {
+      _id,
       title,
+      "slug": slug.current,
       description,
       iconKey,
       "customIconUrl": customIcon.asset->url,
       "customIconAlt": customIcon.alt
-    }, []),
+    },
     "propertyOffers": coalesce(propertyOffers[] {
       _key,
       title,
