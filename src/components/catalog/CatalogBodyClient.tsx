@@ -39,10 +39,8 @@ export type CatalogFilterProps = {
 
 export type CatalogBodyClientProps = {
   filterProps: CatalogFilterProps;
-  /** Filtered catalog page (excludes promo featured ids). Map + list use this. */
+  /** Filtered catalog page. Map + list use this. */
   pageItems: PropertyHomes[];
-  /** Page 1 only: global featured promo, shown above `pageItems`. Ignores catalog filters. */
-  promoItems?: PropertyHomes[];
   locale: string;
   totalPages: number;
   currentPage: number;
@@ -56,7 +54,6 @@ export type CatalogBodyClientProps = {
 export function CatalogBodyClient({
   filterProps,
   pageItems,
-  promoItems = [],
   locale,
   totalPages,
   currentPage,
@@ -330,14 +327,6 @@ export function CatalogBodyClient({
               </div>
             )}
           </div>
-          {promoItems.map((item, index) => (
-            <div
-              key={`promo-${item.slug ?? index}`}
-              className="min-w-0 ring-2 ring-primary/25 rounded-2xl"
-            >
-              <PropertyCard item={item} locale={locale} view={viewMode} />
-            </div>
-          ))}
           {pageItems.map((item, index) => {
             const isActive = activeSlug === item.slug
             return (
@@ -354,7 +343,7 @@ export function CatalogBodyClient({
             )
           })}
         </div>
-        {pageItems.length === 0 && promoItems.length === 0 ? (
+        {pageItems.length === 0 ? (
           <CatalogEmptyState locale={locale} />
         ) : (
           totalPages > 1 && (

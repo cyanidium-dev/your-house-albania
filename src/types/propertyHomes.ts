@@ -13,7 +13,11 @@ export type PropertyHomes = {
   price?: number
   currency?: string
   status?: string
-  featured?: boolean
+  /** CMS promotion flags (Sanity). */
+  promoted?: boolean
+  promotionType?: 'premium' | 'top' | 'sale'
+  featuredOrder?: number
+  discountPercent?: number
   investment?: string | boolean
   propertyType?: string
   propertyTypeSlug?: string
