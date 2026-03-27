@@ -1076,7 +1076,17 @@ const landingPageSectionsProjection = `{
   search,
   content,
   body,
-  items,
+  "items": items[] {
+    _key,
+    label,
+    href,
+    question,
+    answer,
+    image {
+      asset-> { url },
+      alt
+    }
+  },
   posts,
   enabled,
   sourceMode,
