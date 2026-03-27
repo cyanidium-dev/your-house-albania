@@ -16,6 +16,7 @@ import { cityRichDescriptionSectionHandler } from './handlers/cityRichDescriptio
 import { districtsComparisonSectionHandler } from './handlers/districtsComparisonSection'
 import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
 import { landingGridSectionHandler } from './handlers/landingGridSection'
+import { investorLogosSectionHandler } from './handlers/investorLogosSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -32,6 +33,7 @@ const registry: Record<string, SectionHandler> = {
   districtsComparisonSection: districtsComparisonSectionHandler,
   linkedGallerySection: linkedGallerySectionHandler,
   landingGridSection: landingGridSectionHandler,
+  investorLogosSection: investorLogosSectionHandler,
 }
 
 export async function renderLandingSection(input: {
