@@ -752,8 +752,9 @@ export async function fetchCatalogProperties(
 
   const where = parts.length > 0 ? parts.join(' && ') : 'true';
 
+  // Numeric ranks: promoted vs not; tier (premium > top > sale); featuredOrder with missing last in tier.
   const promotionOrder =
-    'promoted desc, promotionType == "premium" desc, promotionType == "top" desc, promotionType == "sale" desc, featuredOrder asc';
+    'select(promoted == true => 1, 0) desc, select(promotionType == "premium" => 3, promotionType == "top" => 2, promotionType == "sale" => 1, 0) desc, coalesce(featuredOrder, 999999) asc';
   let order = `| order(${promotionOrder}, _createdAt desc)`;
   if (sort === 'priceAsc') order = `| order(${promotionOrder}, price asc)`;
   else if (sort === 'priceDesc') order = `| order(${promotionOrder}, price desc)`;
@@ -761,10 +762,11 @@ export async function fetchCatalogProperties(
   else if (sort === 'areaDesc') order = `| order(${promotionOrder}, area desc)`;
   else order = `| order(${promotionOrder}, _createdAt desc)`;
 
-  const baseSelector = `*${where ? `[${where}]` : ''} ${order}`;
+  const baseFilter = `*${where ? `[${where}]` : ''}`;
+  const orderedSelector = `${baseFilter} ${order}`;
 
-  const countQuery = `count(${baseSelector})`;
-  const pageQuery = `${baseSelector}[${start}...${end}] {
+  const countQuery = `count(${baseFilter})`;
+  const pageQuery = `${orderedSelector}[${start}...${end}] {
     _id,
     _type,
     title,
