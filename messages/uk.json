@@ -164,7 +164,11 @@
       "areaUnit": "м²",
       "pricePrefix": "$",
       "previousImage": "Попереднє фото",
-      "nextImage": "Наступне фото"
+      "nextImage": "Наступне фото",
+      "premium": "Преміум",
+      "top": "Топ",
+      "sale": "Знижка",
+      "discount": "-{value}%"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",

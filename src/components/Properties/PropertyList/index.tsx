@@ -11,7 +11,6 @@ import {
   fetchCatalogFilterOptions,
   fetchSiteSettings,
   fetchCatalogAreaBoundsFromData,
-  fetchFeaturedProperties,
   type CatalogSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
@@ -24,19 +23,6 @@ const DEFAULT_PAGE_SIZE = 24
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
 const DEAL_TYPE_VALUES = ['sale', 'rent', 'short-term'] as const
-
-function resolveMaxFeaturedProperties(settings: unknown): number {
-  const raw = (settings as { maxFeaturedProperties?: unknown })?.maxFeaturedProperties
-  if (raw === null || raw === undefined) return 6
-  const n =
-    typeof raw === 'number' && Number.isFinite(raw)
-      ? Math.floor(raw)
-      : typeof raw === 'string' && raw.trim() !== '' && Number.isFinite(Number(raw))
-        ? Math.floor(Number(raw))
-        : NaN
-  if (Number.isNaN(n) || n < 0) return 6
-  return Math.min(n, 48)
-}
 
 type CatalogSeoContent = {
   bottomText?: unknown[]
@@ -109,18 +95,6 @@ async function PropertiesListing({
   const rawPage =
     typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
 
-  const maxFeatured = resolveMaxFeaturedProperties(siteSettings)
-  const featuredPromoFetched =
-    maxFeatured > 0 ? await fetchFeaturedProperties(maxFeatured) : null
-  const featuredPromoRaw = Array.isArray(featuredPromoFetched)
-    ? featuredPromoFetched
-    : []
-  const promoIdSet = new Set(
-    featuredPromoRaw
-      .map((p) => p._id)
-      .filter((id): id is string => typeof id === 'string' && id.length > 0)
-  )
-
   const catalogResult =
     (await fetchCatalogProperties({
       city: cityFilter || undefined,
@@ -139,13 +113,7 @@ async function PropertiesListing({
     })) ?? { items: [], totalCount: 0 }
 
   const filteredResults = catalogResult.items ?? []
-  let filteredForDisplay =
-    rawPage === 1
-      ? filteredResults.filter(
-          (item) =>
-            typeof item._id === 'string' && !promoIdSet.has(item._id)
-        )
-      : filteredResults
+  let filteredForDisplay = filteredResults
 
   {
     const seen = new Set<string>()
@@ -185,11 +153,6 @@ async function PropertiesListing({
   const pageItems: PropertyHomes[] = Array.isArray(filteredForDisplay)
     ? filteredForDisplay.map((item) => mapCatalogPropertyToCard(item, locale))
     : []
-
-  const promoItems: PropertyHomes[] =
-    rawPage === 1 && featuredPromoRaw.length > 0
-      ? featuredPromoRaw.map((item) => mapCatalogPropertyToCard(item, locale))
-      : []
 
   const baseUrl = await getBaseUrl()
   const itemListEntries = pageItems.map((item) => ({
@@ -231,7 +194,6 @@ async function PropertiesListing({
           <CatalogBodyClient
             filterProps={filterProps}
             pageItems={pageItems}
-            promoItems={promoItems}
             locale={locale}
             totalPages={totalPages}
             currentPage={currentPage}

@@ -164,7 +164,11 @@
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Imazhi i mëparshëm",
-      "nextImage": "Imazhi tjetër"
+      "nextImage": "Imazhi tjetër",
+      "premium": "Premium",
+      "top": "Top",
+      "sale": "Ulje çmimi",
+      "discount": "-{value}%"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",

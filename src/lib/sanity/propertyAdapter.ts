@@ -297,7 +297,10 @@ type SanityProperty = {
   bedrooms?: number;
   bathrooms?: number;
   status?: string;
-  featured?: boolean;
+  promoted?: boolean;
+  promotionType?: 'premium' | 'top' | 'sale';
+  featuredOrder?: number;
+  discountPercent?: number;
   investment?: string | boolean;
   coordinatesLat?: number | null;
   coordinatesLng?: number | null;
@@ -354,7 +357,17 @@ export function mapSanityPropertyToCard(
     price: p.price,
     currency: p.currency,
     status: p.status,
-    featured: typeof p.featured === 'boolean' ? p.featured : undefined,
+    promoted: typeof p.promoted === 'boolean' ? p.promoted : undefined,
+    promotionType:
+      p.promotionType === 'premium' || p.promotionType === 'top' || p.promotionType === 'sale'
+        ? p.promotionType
+        : undefined,
+    featuredOrder:
+      typeof p.featuredOrder === 'number' && Number.isFinite(p.featuredOrder) ? p.featuredOrder : undefined,
+    discountPercent:
+      typeof p.discountPercent === 'number' && Number.isFinite(p.discountPercent)
+        ? p.discountPercent
+        : undefined,
     investment: p.investment,
     propertyType: p.type?.title
       ? (resolveLocalizedString(p.type.title as never, locale) || String(p.type.title))
@@ -396,7 +409,10 @@ export function mapCatalogPropertyToCard(
       bedrooms: p.bedrooms,
       bathrooms: p.bathrooms,
       status: p.status,
-      featured: p.featured,
+      promoted: p.promoted,
+      promotionType: p.promotionType,
+      featuredOrder: p.featuredOrder,
+      discountPercent: p.discountPercent,
       investment: p.investment,
       city: p.city as { title?: unknown; slug?: string },
       district: p.district as { title?: unknown; slug?: string; citySlug?: string },

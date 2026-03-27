@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useMemo } from 'react'
 import { PropertyHomes } from '@/types/propertyHomes'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
@@ -76,8 +76,53 @@ function PropertyCard({
     propertyType,
     city,
     teaser,
+    promotionType,
+    discountPercent,
   } = item
   const t = useTranslations('Shared.propertyCard')
+
+  const marketingBadge = useMemo(() => {
+    if (promotionType === 'premium') {
+      return {
+        type: 'premium' as const,
+        label: t('premium'),
+        icon: 'ph:star-fill' as const,
+      }
+    }
+    if (promotionType === 'top') {
+      return {
+        type: 'top' as const,
+        label: t('top'),
+        icon: 'ph:fire-fill' as const,
+      }
+    }
+    if (promotionType === 'sale') {
+      return {
+        type: 'sale' as const,
+        label:
+          typeof discountPercent === 'number'
+            ? t('discount', { value: discountPercent })
+            : t('sale'),
+        icon: 'ph:tag-fill' as const,
+      }
+    }
+    return null
+  }, [promotionType, discountPercent, t])
+
+  const badgeClass = (() => {
+    switch (marketingBadge?.type) {
+      case 'premium':
+        return 'bg-yellow-400/80 text-black'
+      case 'top':
+        return 'bg-primary/80 text-white'
+      case 'sale':
+        return 'bg-red-500/80 text-white'
+      default:
+        return 'bg-black/70 text-white'
+    }
+  })()
+
+  const isPremium = promotionType === 'premium'
   const { currency: activeCurrency, rates } = useCurrency()
   const imageList = images?.length ? images : (images?.[0]?.src ? [images[0]] : [])
   const [imageIndex, setImageIndex] = useState(0)
@@ -120,7 +165,9 @@ function PropertyCard({
     'relative rounded-2xl border border-dark/10 dark:border-white/10 duration-300 min-w-0',
     '[&:hover:not(:has(.property-card-overlay:hover))]:shadow-3xl dark:[&:hover:not(:has(.property-card-overlay:hover))]:shadow-white/20',
     isList && 'flex flex-row overflow-hidden items-stretch',
-    fillHeight && !isList && 'flex-1 min-h-0 flex flex-col'
+    fillHeight && !isList && 'flex-1 min-h-0 flex flex-col',
+    isPremium &&
+      'border-primary/25 dark:border-primary/35 bg-primary/[0.04] dark:bg-primary/[0.07] shadow-sm'
   )
 
   const imageWrapper = cn(
@@ -171,6 +218,7 @@ function PropertyCard({
   )
 
   const iconSize = isList ? 16 : isSmall ? 14 : 20
+  const badgeIconSize = isList || isSmall ? 12 : 14
 
   const basePriceEur =
     typeof price === 'number'
@@ -392,6 +440,31 @@ function PropertyCard({
           onTouchEnd={singleImage ? undefined : handleTouchEnd}
         >
           <div className="property-card-overlay absolute inset-0 z-20 pointer-events-none [&>*]:pointer-events-auto">
+            {marketingBadge && (
+              <div
+                className={cn(
+                  'absolute z-[35] pointer-events-none max-w-[calc(100%-3.5rem)]',
+                  isList ? 'top-2 left-2' : 'top-4 left-4',
+                  isSmall && !isList && 'top-2 left-2'
+                )}
+              >
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1.5 min-w-0 max-w-full rounded px-2 py-1 text-xs font-semibold shadow-sm backdrop-blur-[1px]',
+                    badgeClass
+                  )}
+                >
+                  <Icon
+                    icon={marketingBadge.icon}
+                    width={badgeIconSize}
+                    height={badgeIconSize}
+                    className="shrink-0"
+                    aria-hidden
+                  />
+                  <span className="min-w-0 truncate">{marketingBadge.label}</span>
+                </span>
+              </div>
+            )}
             <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
               <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
             </div>

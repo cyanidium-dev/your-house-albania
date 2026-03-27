@@ -48,7 +48,10 @@ export async function fetchHomePage(): Promise<unknown | null> {
       price,
       currency,
       status,
-      featured,
+      promoted,
+      promotionType,
+      featuredOrder,
+      discountPercent,
       investment,
       area,
       bedrooms,
@@ -189,52 +192,6 @@ export async function fetchHomePage(): Promise<unknown | null> {
   }
 }
 
-/** Fetch featured/popular properties for homePropertyCarouselSection mode=auto. */
-export async function fetchFeaturedProperties(limit = 6): Promise<CatalogProperty[] | null> {
-  const client = getClient();
-  if (!client) return null;
-  const query = `*[_type == "property" && (featured == true || defined(investment))][0...${limit}] {
-    _id,
-    _type,
-    title,
-    "slug": slug.current,
-    price,
-    currency,
-    area,
-    bedrooms,
-    bathrooms,
-    status,
-    featured,
-    investment,
-    "city": city-> {
-      _id,
-      title,
-      "slug": slug.current
-    },
-    "district": district-> {
-      _id,
-      title,
-      "slug": slug.current,
-      "citySlug": city->slug.current
-    },
-    "type": type-> {
-      _id,
-      title,
-      "slug": slug.current
-    },
-    description,
-    "mainImageUrl": gallery[0].asset->url,
-    "galleryUrls": gallery[].asset->url
-  }`;
-  try {
-    const result = await client.fetch<CatalogProperty[]>(query);
-    return Array.isArray(result) ? result : null;
-  } catch (err) {
-    console.warn('[Sanity] fetchFeaturedProperties failed:', err);
-    return null;
-  }
-}
-
 export type HomeTopOffersGroup = 'popular' | 'new' | 'highDemand';
 export type HomeTopOffersSort = 'newest' | 'priceAsc' | 'priceDesc' | 'areaAsc' | 'areaDesc';
 
@@ -251,7 +208,7 @@ export async function fetchHomeTopOffers(
   let order = '| order(_createdAt desc)';
 
   if (group === 'popular') {
-    where = `${where} && featured == true`;
+    where = `${where} && promoted == true`;
   } else if (group === 'highDemand') {
     where = `${where} && defined(investment)`;
   }
@@ -276,7 +233,10 @@ export async function fetchHomeTopOffers(
     bedrooms,
     bathrooms,
     status,
-    featured,
+    promoted,
+    promotionType,
+    featuredOrder,
+    discountPercent,
     investment,
     "city": city-> {
       _id,
@@ -322,7 +282,10 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     bedrooms,
     bathrooms,
     status,
-    featured,
+    promoted,
+    promotionType,
+    featuredOrder,
+    discountPercent,
     investment,
     "city": city-> {
       _id,
@@ -411,7 +374,10 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
     bedrooms,
     bathrooms,
     status,
-    featured,
+    promoted,
+    promotionType,
+    featuredOrder,
+    discountPercent,
     investment,
     "city": city-> {
       _id,
@@ -467,7 +433,10 @@ export async function fetchSimilarPropertyCandidates(
     bedrooms,
     bathrooms,
     status,
-    featured,
+    promoted,
+    promotionType,
+    featuredOrder,
+    discountPercent,
     investment,
     coordinatesLat,
     coordinatesLng,
@@ -685,7 +654,10 @@ export type CatalogProperty = {
   bedrooms?: number;
   bathrooms?: number;
   status?: string;
-  featured?: boolean;
+  promoted?: boolean;
+  promotionType?: 'premium' | 'top' | 'sale';
+  featuredOrder?: number;
+  discountPercent?: number;
   investment?: string;
   city?: {
     _id?: string;
@@ -780,12 +752,14 @@ export async function fetchCatalogProperties(
 
   const where = parts.length > 0 ? parts.join(' && ') : 'true';
 
-  let order = '[_createdAt desc]';
-  if (sort === 'priceAsc') order = '| order(price asc)';
-  else if (sort === 'priceDesc') order = '| order(price desc)';
-  else if (sort === 'areaAsc') order = '| order(area asc)';
-  else if (sort === 'areaDesc') order = '| order(area desc)';
-  else order = '| order(_createdAt desc)';
+  const promotionOrder =
+    'promoted desc, promotionType == "premium" desc, promotionType == "top" desc, promotionType == "sale" desc, featuredOrder asc';
+  let order = `| order(${promotionOrder}, _createdAt desc)`;
+  if (sort === 'priceAsc') order = `| order(${promotionOrder}, price asc)`;
+  else if (sort === 'priceDesc') order = `| order(${promotionOrder}, price desc)`;
+  else if (sort === 'areaAsc') order = `| order(${promotionOrder}, area asc)`;
+  else if (sort === 'areaDesc') order = `| order(${promotionOrder}, area desc)`;
+  else order = `| order(${promotionOrder}, _createdAt desc)`;
 
   const baseSelector = `*${where ? `[${where}]` : ''} ${order}`;
 
@@ -801,7 +775,10 @@ export async function fetchCatalogProperties(
     bedrooms,
     bathrooms,
     status,
-    featured,
+    promoted,
+    promotionType,
+    featuredOrder,
+    discountPercent,
     investment,
     coordinatesLat,
     coordinatesLng,

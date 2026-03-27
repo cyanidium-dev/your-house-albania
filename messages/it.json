@@ -164,7 +164,11 @@
       "areaUnit": "m²",
       "pricePrefix": "$",
       "previousImage": "Immagine precedente",
-      "nextImage": "Immagine successiva"
+      "nextImage": "Immagine successiva",
+      "premium": "Premium",
+      "top": "Top",
+      "sale": "Offerta",
+      "discount": "-{value}%"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
