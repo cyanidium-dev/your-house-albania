@@ -517,7 +517,7 @@ export function PropertySearchBar({
         className={cn(
           "grid grid-cols-1 gap-4 items-end min-w-0",
           "md:grid-cols-4",
-          "xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1fr)_auto_auto]",
+          "xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_auto_auto]",
           "[&>*]:min-w-0"
         )}
       >
@@ -577,35 +577,8 @@ export function PropertySearchBar({
           </Slider.Root>
         </div>
 
-        {/* Area range (m²) */}
-        <div className="min-w-0">
-          <div className="flex items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
-            <span className="min-w-0 truncate">{t("area")}</span>
-            <span className="font-medium text-dark dark:text-white text-[11px] min-w-0 truncate text-right">
-              {areaDisplay}
-            </span>
-          </div>
-          <Slider.Root
-            className="relative flex items-center select-none touch-none w-full h-4"
-            min={defaultAreaRange.min}
-            max={defaultAreaRange.max}
-            step={1}
-            value={areaValues}
-            onValueChange={(values) => {
-              const [min, max] = values as [number, number];
-              setAreaValues([min, max]);
-            }}
-          >
-            <Slider.Track className="bg-dark/10 dark:bg-white/20 relative grow rounded-full h-1">
-              <Slider.Range className="absolute bg-primary rounded-full h-full" />
-            </Slider.Track>
-            <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
-            <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
-          </Slider.Root>
-        </div>
-
         {/* Reset + Advanced + Search */}
-        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-3 xl:col-span-2">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0 md:col-span-4 xl:col-span-2">
           <Button
             type="button"
             variant="outline"
@@ -655,78 +628,108 @@ export function PropertySearchBar({
             showAdvanced ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1 pointer-events-none"
           )}
         >
-          <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-w-0 [&>*]:min-w-0">
-            {/* Bedrooms */}
-            <FilterSelect
-              label={t("bedrooms")}
-              value={beds || "any"}
-              onValueChange={setBeds}
-              options={[
-                { value: "1", label: t("bedsAtLeast", { count: 1 }) },
-                { value: "2", label: t("bedsAtLeast", { count: 2 }) },
-                { value: "3", label: t("bedsAtLeast", { count: 3 }) },
-                { value: "4", label: t("bedsAtLeast", { count: 4 }) },
-                { value: "5", label: t("bedsAtLeast", { count: 5 }) },
-              ]}
-              anyLabel={t("any")}
-            />
+          <div className="flex flex-col gap-3 min-w-0">
+            {/* Select / display controls — single grid rhythm */}
+            <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-w-0 [&>*]:min-w-0">
+              {/* Bedrooms */}
+              <FilterSelect
+                label={t("bedrooms")}
+                value={beds || "any"}
+                onValueChange={setBeds}
+                options={[
+                  { value: "1", label: t("bedsAtLeast", { count: 1 }) },
+                  { value: "2", label: t("bedsAtLeast", { count: 2 }) },
+                  { value: "3", label: t("bedsAtLeast", { count: 3 }) },
+                  { value: "4", label: t("bedsAtLeast", { count: 4 }) },
+                  { value: "5", label: t("bedsAtLeast", { count: 5 }) },
+                ]}
+                anyLabel={t("any")}
+              />
 
-            {/* District */}
-            <FilterSelect
-              label={t("district")}
-              value={district || "any"}
-              onValueChange={(v) => setDistrict(v === "any" ? "" : v)}
-              options={districtOptionsFiltered.map((o) => ({
-                value: o.value,
-                label: o.label,
-              }))}
-              anyLabel={t("anyDistrict")}
-            />
+              {/* District */}
+              <FilterSelect
+                label={t("district")}
+                value={district || "any"}
+                onValueChange={(v) => setDistrict(v === "any" ? "" : v)}
+                options={districtOptionsFiltered.map((o) => ({
+                  value: o.value,
+                  label: o.label,
+                }))}
+                anyLabel={t("anyDistrict")}
+              />
 
-            <FilterMultiSelect
-              label={t("amenities")}
-              value={amenities}
-              onValueChange={setAmenities}
-              options={amenityMultiOptions}
-              summaryLabel={(count) =>
-                count === 0
-                  ? t("amenities")
-                  : t("amenitiesSelected", { count })
-              }
-            />
+              <FilterMultiSelect
+                label={t("amenities")}
+                value={amenities}
+                onValueChange={setAmenities}
+                options={amenityMultiOptions}
+                summaryLabel={(count) =>
+                  count === 0
+                    ? t("amenities")
+                    : t("amenitiesSelected", { count })
+                }
+              />
 
-            {/* Sort */}
-            <FilterSelect
-              label={t("sortBy")}
-              value={sort || "newest"}
-              onValueChange={setSort}
-              anyLabel={t("sortNewest")}
-              anyValue="newest"
-              options={[
-                { value: "priceAsc", label: t("sortPriceAsc") },
-                { value: "priceDesc", label: t("sortPriceDesc") },
-                { value: "areaDesc", label: t("sortAreaDesc") },
-              ]}
-            />
+              {/* Sort */}
+              <FilterSelect
+                label={t("sortBy")}
+                value={sort || "newest"}
+                onValueChange={setSort}
+                anyLabel={t("sortNewest")}
+                anyValue="newest"
+                options={[
+                  { value: "priceAsc", label: t("sortPriceAsc") },
+                  { value: "priceDesc", label: t("sortPriceDesc") },
+                  { value: "areaDesc", label: t("sortAreaDesc") },
+                ]}
+              />
 
-            {/* Results per page */}
-            <FilterSelect
-              label={t("resultsPerPage")}
-              value={pageSize || "24"}
-              onValueChange={setPageSize}
-              anyLabel="24"
-              anyValue="24"
-              options={[
-                { value: "12", label: "12" },
-                { value: "36", label: "36" },
-                { value: "48", label: "48" },
-              ]}
-            />
-            {/* View mode switcher: presentation control for results row */}
-            <ViewModeSwitcherUI
-              fallbackViewMode={viewModeFromProps}
-              fallbackSetViewMode={() => {}}
-            />
+              {/* Results per page */}
+              <FilterSelect
+                label={t("resultsPerPage")}
+                value={pageSize || "24"}
+                onValueChange={setPageSize}
+                anyLabel="24"
+                anyValue="24"
+                options={[
+                  { value: "12", label: "12" },
+                  { value: "36", label: "36" },
+                  { value: "48", label: "48" },
+                ]}
+              />
+              {/* View mode switcher: presentation control for results row */}
+              <ViewModeSwitcherUI
+                fallbackViewMode={viewModeFromProps}
+                fallbackSetViewMode={() => {}}
+              />
+            </div>
+
+            {/* Area (m²) — separate block below selects; not mixed into the dropdown grid */}
+            <div className="min-w-0 w-1/2 max-w-full md:max-w-2xl pt-3 border-t border-dark/5 dark:border-white/10">
+              <div className="flex items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
+                <span className="min-w-0 truncate">{t("area")}</span>
+                <span className="font-medium text-dark dark:text-white text-[11px] min-w-0 truncate text-right">
+                  {areaDisplay}
+                </span>
+              </div>
+              <Slider.Root
+                className="relative flex items-center select-none touch-none w-full h-4"
+                min={defaultAreaRange.min}
+                max={defaultAreaRange.max}
+                step={1}
+                value={areaValues}
+                onValueChange={(values) => {
+                  const [min, max] = values as [number, number];
+                  setAreaValues([min, max]);
+                }}
+              >
+                <Slider.Track className="bg-dark/10 dark:bg-white/20 relative grow rounded-full h-1">
+                  <Slider.Range className="absolute bg-primary rounded-full h-full" />
+                </Slider.Track>
+                <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
+                <Slider.Thumb className="block size-4 rounded-full border border-white bg-primary shadow cursor-pointer transition-[transform,box-shadow] duration-200 ease-out hover:scale-110 hover:shadow-md focus:scale-110 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40" />
+              </Slider.Root>
+            </div>
           </div>
         </div>
       </div>
