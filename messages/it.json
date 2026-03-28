@@ -278,6 +278,39 @@
       "viewList": "Elenco"
     }
   },
+  "ContactAgent": {
+    "badge": "Contatti",
+    "subtitle": "Contatta {name}",
+    "about": "Informazioni",
+    "email": "Email",
+    "phone": "Telefono",
+    "follow": "Social",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "youtube": "YouTube",
+    "formHeading": "Invia un messaggio",
+    "formName": "Nome",
+    "formPhone": "Telefono",
+    "formEmail": "Email",
+    "formMessage": "Il tuo messaggio",
+    "formSubmit": "Invia",
+    "formComingSoon": "Invio online in arrivo — usa telefono o email sopra per ora.",
+    "formIntro": "Descrivi cosa cerchi e come possiamo contattarti.",
+    "formSubmitting": "Invio in corso…",
+    "errorSubmit": "Qualcosa è andato storto. Riprova.",
+    "formSubmitRequest": "Invia richiesta",
+    "photoAlt": "Foto di {name}",
+    "metaTitleSuffix": "Contatti"
+  },
+  "ContactThankYou": {
+    "metaTitle": "Grazie",
+    "metaDescription": "Abbiamo ricevuto la tua richiesta. Ti contatteremo presto.",
+    "title": "Grazie! La tua richiesta è stata inviata con successo",
+    "description": "Il nostro manager ti contatterà a breve e ti proporrà una selezione di immobili in linea con le tue esigenze.",
+    "cta": "Vedi altri immobili",
+    "imageAlt": "Foto decorativa"
+  },
   "Favorites": {
     "title": "Preferiti",
     "description": "Proprietà che hai aggiunto ai preferiti.",

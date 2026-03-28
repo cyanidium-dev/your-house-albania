@@ -12,6 +12,11 @@ type District = {
   heroImage?: { asset?: { url?: string }; alt?: string; label?: string }
 }
 
+type CtaShape = {
+  href?: string
+  label?: unknown
+}
+
 type ComparisonSection = {
   title?: unknown
   subtitle?: unknown
@@ -19,7 +24,8 @@ type ComparisonSection = {
   headings?: unknown[]
   rows?: Array<{ cells?: unknown[] }>
   closingText?: unknown
-  cta?: { href?: string; label?: unknown }
+  cta?: CtaShape
+  secondaryCta?: CtaShape
 }
 
 function slugOf(x: unknown): string {
@@ -34,6 +40,63 @@ function resolveCell(cell: unknown, locale: string): string {
   return resolveLocalizedString(cell as never, locale) || ''
 }
 
+function resolveHref(href: string, locale: string): string {
+  if (!href) return '#'
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+    return href
+  }
+  if (href.startsWith('#')) {
+    return href
+  }
+  if (href.startsWith('/')) {
+    return `/${locale}${href}`
+  }
+  return `/${locale}/${href}`
+}
+
+function isExternalHttp(href: string): boolean {
+  return href.startsWith('http://') || href.startsWith('https://')
+}
+
+function CtaButton({
+  href,
+  label,
+  locale,
+  variant,
+}: {
+  href: string
+  label: string
+  locale: string
+  variant: 'primary' | 'secondary'
+}) {
+  const resolved = resolveHref(href, locale)
+  const primaryClass =
+    'inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-medium text-white hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
+  const secondaryClass =
+    'inline-flex items-center justify-center gap-2 rounded-xl border border-dark/15 bg-transparent px-6 py-3 text-base font-medium text-dark hover:bg-dark/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
+  const className = variant === 'primary' ? primaryClass : secondaryClass
+
+  if (isExternalHttp(resolved)) {
+    return (
+      <a href={resolved} className={className} target="_blank" rel="noopener noreferrer">
+        {label}
+      </a>
+    )
+  }
+  if (resolved.startsWith('mailto:') || resolved.startsWith('tel:') || resolved.startsWith('#')) {
+    return (
+      <a href={resolved} className={className}>
+        {label}
+      </a>
+    )
+  }
+  return (
+    <Link href={resolved} className={className}>
+      {label}
+    </Link>
+  )
+}
+
 export function DistrictsComparisonSection({
   locale,
   section,
@@ -46,6 +109,8 @@ export function DistrictsComparisonSection({
   const closingText = resolveLocalizedString(section.closingText as never, locale) || ''
   const ctaLabel = resolveLocalizedString(section.cta?.label as never, locale) || ''
   const ctaHref = section.cta?.href
+  const secondaryLabel = resolveLocalizedString(section.secondaryCta?.label as never, locale) || ''
+  const secondaryHref = section.secondaryCta?.href
 
   const headings = Array.isArray(section.headings) ? section.headings : []
   const rows = Array.isArray(section.rows) ? section.rows : []
@@ -53,6 +118,31 @@ export function DistrictsComparisonSection({
 
   const hasTable = headings.length > 0 || rows.length > 0
   const hasDistricts = districts.length > 0
+
+  const showPrimary = Boolean(ctaLabel && ctaHref)
+  const showSecondary = Boolean(secondaryLabel && secondaryHref)
+  const showCtaRow = showPrimary || showSecondary
+
+  function renderCtas() {
+    if (!closingText && !showCtaRow) return null
+    return (
+      <div className="mt-8 flex flex-col gap-6">
+        {closingText ? (
+          <p className="text-dark/75 dark:text-white/75 text-base leading-relaxed">{closingText}</p>
+        ) : null}
+        {showCtaRow ? (
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+            {showPrimary ? (
+              <CtaButton href={ctaHref!} label={ctaLabel} locale={locale} variant="primary" />
+            ) : null}
+            {showSecondary ? (
+              <CtaButton href={secondaryHref!} label={secondaryLabel} locale={locale} variant="secondary" />
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    )
+  }
 
   if (!hasTable && !hasDistricts) return null
 
@@ -103,21 +193,7 @@ export function DistrictsComparisonSection({
           </div>
         ) : null}
 
-        {hasTable && (closingText || (ctaLabel && ctaHref)) && (
-          <div className="mt-8 flex flex-col gap-6">
-            {closingText ? (
-              <p className="text-dark/75 dark:text-white/75 text-base leading-relaxed">{closingText}</p>
-            ) : null}
-            {ctaLabel && ctaHref ? (
-              <Link
-                href={ctaHref.startsWith('/') ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-medium text-white hover:bg-primary/90 transition-colors w-fit"
-              >
-                {ctaLabel}
-              </Link>
-            ) : null}
-          </div>
-        )}
+        {hasTable ? renderCtas() : null}
 
         {!hasTable && hasDistricts ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -165,21 +241,7 @@ export function DistrictsComparisonSection({
           </div>
         ) : null}
 
-        {hasDistricts && !hasTable && (closingText || (ctaLabel && ctaHref)) && (
-          <div className="mt-8 flex flex-col gap-6">
-            {closingText ? (
-              <p className="text-dark/75 dark:text-white/75 text-base leading-relaxed">{closingText}</p>
-            ) : null}
-            {ctaLabel && ctaHref ? (
-              <Link
-                href={ctaHref.startsWith('/') ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-medium text-white hover:bg-primary/90 transition-colors w-fit"
-              >
-                {ctaLabel}
-              </Link>
-            ) : null}
-          </div>
-        )}
+        {hasDistricts && !hasTable ? renderCtas() : null}
       </div>
     </section>
   )

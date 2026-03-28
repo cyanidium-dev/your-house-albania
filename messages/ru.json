@@ -278,6 +278,39 @@
       "viewList": "Список"
     }
   },
+  "ContactAgent": {
+    "badge": "Контакты",
+    "subtitle": "Связаться с {name}",
+    "about": "О агенте",
+    "email": "Email",
+    "phone": "Телефон",
+    "follow": "Соцсети",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "youtube": "YouTube",
+    "formHeading": "Отправить сообщение",
+    "formName": "Имя",
+    "formPhone": "Телефон",
+    "formEmail": "Email",
+    "formMessage": "Ваше сообщение",
+    "formSubmit": "Отправить",
+    "formComingSoon": "Отправка формы скоро — пока свяжитесь по телефону или email выше.",
+    "formIntro": "Опишите, что вы ищете, и как с вами связаться.",
+    "formSubmitting": "Отправка…",
+    "errorSubmit": "Что-то пошло не так. Попробуйте ещё раз.",
+    "formSubmitRequest": "Отправить заявку",
+    "photoAlt": "Фото: {name}",
+    "metaTitleSuffix": "Контакты"
+  },
+  "ContactThankYou": {
+    "metaTitle": "Спасибо",
+    "metaDescription": "Мы получили вашу заявку. Скоро с вами свяжутся.",
+    "title": "Спасибо! Ваша заявка успешно отправлена",
+    "description": "Наш менеджер свяжется с вами в ближайшее время и предоставит подбор объектов, полностью соответствующих вашим требованиям.",
+    "cta": "Просмотреть другие объекты",
+    "imageAlt": "Декоративное фото"
+  },
   "Favorites": {
     "title": "Избранное",
     "description": "Объекты, которые вы добавили в избранное.",
