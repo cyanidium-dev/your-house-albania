@@ -278,6 +278,39 @@
       "viewList": "List view"
     }
   },
+  "ContactAgent": {
+    "badge": "Contact",
+    "subtitle": "Reach out to {name}",
+    "about": "About",
+    "email": "Email",
+    "phone": "Phone",
+    "follow": "Follow",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "youtube": "YouTube",
+    "formHeading": "Send a message",
+    "formName": "Name",
+    "formPhone": "Phone number",
+    "formEmail": "Email address",
+    "formMessage": "Your message",
+    "formSubmit": "Send message",
+    "formComingSoon": "Online submission is coming soon — use the phone or email above to reach this agent now.",
+    "formIntro": "Describe what you are looking for and how we can reach you.",
+    "formSubmitting": "Sending…",
+    "errorSubmit": "Something went wrong. Please try again.",
+    "formSubmitRequest": "Send request",
+    "photoAlt": "Photo of {name}",
+    "metaTitleSuffix": "Contact"
+  },
+  "ContactThankYou": {
+    "metaTitle": "Thank you",
+    "metaDescription": "Your request was received. Our team will contact you soon.",
+    "title": "Thank you! Your request was sent successfully",
+    "description": "Our manager will contact you shortly and offer a selection of properties matching your requirements.",
+    "cta": "Browse other properties",
+    "imageAlt": "Interior photo"
+  },
   "Favorites": {
     "title": "Favorites",
     "description": "Properties you've added to your favorites.",

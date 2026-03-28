@@ -278,6 +278,39 @@
       "viewList": "Список"
     }
   },
+  "ContactAgent": {
+    "badge": "Контакти",
+    "subtitle": "Зв'яжіться з {name}",
+    "about": "Про агента",
+    "email": "Email",
+    "phone": "Телефон",
+    "follow": "Соцмережі",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "youtube": "YouTube",
+    "formHeading": "Надішліть повідомлення",
+    "formName": "Ім'я",
+    "formPhone": "Телефон",
+    "formEmail": "Email",
+    "formMessage": "Ваше повідомлення",
+    "formSubmit": "Надіслати",
+    "formComingSoon": "Відправка форми незабаром — зараз зв'яжіться через телефон або email вище.",
+    "formIntro": "Опишіть, що ви шукаєте, і як з вами зв'язатися.",
+    "formSubmitting": "Надсилання…",
+    "errorSubmit": "Щось пішло не так. Спробуйте ще раз.",
+    "formSubmitRequest": "Надіслати заявку",
+    "photoAlt": "Фото: {name}",
+    "metaTitleSuffix": "Контакти"
+  },
+  "ContactThankYou": {
+    "metaTitle": "Дякуємо",
+    "metaDescription": "Ми отримали вашу заявку. Незабаром з вами зв'яжуться.",
+    "title": "Дякуємо! Вашу заявку успішно надіслано",
+    "description": "Наш менеджер зв'яжеться з вами найближчим часом і запропонує підбір об'єктів відповідно до ваших вимог.",
+    "cta": "Переглянути інші об'єкти",
+    "imageAlt": "Декоративне фото"
+  },
   "Favorites": {
     "title": "Обране",
     "description": "Об'єкти, які ви додали до обраного.",
