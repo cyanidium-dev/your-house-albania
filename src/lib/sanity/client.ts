@@ -1071,6 +1071,7 @@ const landingPageSectionsProjection = `{
   subtitle,
   shortLine,
   cta,
+  secondaryCta,
   mode,
   linkTargetType,
   search,
