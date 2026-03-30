@@ -37,11 +37,28 @@ export type LandingSectionBase = {
   limit?: number
   sort?: string
   linkTargetType?: 'catalog' | 'landing' | string
-  mediaType?: 'image' | 'video' | string
-  mediaImage?: { asset?: { url?: string }; alt?: string }
+  /** `marketingContentSection` splitDark: legacy image field */
+  image?: { asset?: { url?: string }; alt?: string }
   mediaVideoUrl?: string
-  stats?: unknown[]
+  /** Alternate CMS field name for external video URL */
+  videoUrl?: string
+  mediaVideo?: { asset?: { url?: string } }
   imageMode?: 'withImage' | 'withoutImage'
+  /** `marketingContentSection` */
+  variant?: 'split' | 'splitDark' | 'grouped' | string
+  eyebrow?: unknown
+  supportingText?: unknown
+  mediaMode?: 'none' | 'fallback' | 'custom' | string
+  promoMediaType?: 'image' | 'video' | string
+  contentGroups?: unknown[]
+  /** `marketingContentSection` */
+  highlightsDisplay?: 'list' | 'cards' | string
+  highlightsCards?: unknown[]
+  /** `marketingContentSection` grouped variant */
+  groupedMediaMode?: 'none' | 'default' | 'custom' | string
+  groupedImage?: { asset?: { url?: string }; alt?: string }
+  /** `marketingContentSection` split + grouped custom media */
+  images?: unknown[]
 }
 
 export type LandingPageDoc = {

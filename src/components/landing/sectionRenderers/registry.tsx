@@ -6,9 +6,6 @@ import { heroSectionHandler } from './handlers/heroSection'
 import { propertyCarouselSectionHandler } from './handlers/propertyCarouselSection'
 import { locationCarouselSectionHandler } from './handlers/locationCarouselSection'
 import { propertyTypesSectionHandler } from './handlers/propertyTypesSection'
-import { investmentSectionHandler } from './handlers/investmentSection'
-import { aboutSectionHandler } from './handlers/aboutSection'
-import { agentsPromoSectionHandler } from './handlers/agentsPromoSection'
 import { seoTextSectionHandler } from './handlers/seoTextSection'
 import { faqSectionHandler } from './handlers/faqSection'
 import { articlesSectionHandler } from './handlers/articlesSection'
@@ -17,15 +14,13 @@ import { districtsComparisonSectionHandler } from './handlers/districtsCompariso
 import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
 import { landingGridSectionHandler } from './handlers/landingGridSection'
 import { investorLogosSectionHandler } from './handlers/investorLogosSection'
+import { marketingContentSectionHandler } from './handlers/marketingContentSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
   propertyCarouselSection: propertyCarouselSectionHandler,
   locationCarouselSection: locationCarouselSectionHandler,
   propertyTypesSection: propertyTypesSectionHandler,
-  investmentSection: investmentSectionHandler,
-  aboutSection: aboutSectionHandler,
-  agentsPromoSection: agentsPromoSectionHandler,
   seoTextSection: seoTextSectionHandler,
   faqSection: faqSectionHandler,
   articlesSection: articlesSectionHandler,
@@ -34,6 +29,7 @@ const registry: Record<string, SectionHandler> = {
   linkedGallerySection: linkedGallerySectionHandler,
   landingGridSection: landingGridSectionHandler,
   investorLogosSection: investorLogosSectionHandler,
+  marketingContentSection: marketingContentSectionHandler,
 }
 
 export async function renderLandingSection(input: {
@@ -48,11 +44,18 @@ export async function renderLandingSection(input: {
   const handler = registry[type]
   if (!handler) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('[LandingRegistry] no handler for section type', {
-        locale: input.locale,
-        type,
-        key: (input.section as any)?._key ?? null,
-      })
+      if (type === 'landingCarouselSection') {
+        console.warn(
+          '[LandingRegistry] landingCarouselSection is not implemented yet (Phase 0: no renderer). Remove it from the page or add a handler when the section is ready. Section skipped.',
+          { locale: input.locale, key: (input.section as { _key?: string })?._key ?? null },
+        )
+      } else {
+        console.log('[LandingRegistry] no handler for section type', {
+          locale: input.locale,
+          type,
+          key: (input.section as { _key?: string })?._key ?? null,
+        })
+      }
     }
     return null
   }
