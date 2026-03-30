@@ -1111,7 +1111,44 @@ const landingPageSectionsProjection = `{
   rows,
   closingText,
   description,
+  variant,
+  eyebrow,
+  supportingText,
+  mediaMode,
+  promoMediaType,
+  videoUrl,
+  groupedMediaMode,
+  groupedImage { asset-> { url }, alt },
+  "images": images[] {
+    _key,
+    asset-> { url },
+    alt,
+    image { asset-> { url }, alt }
+  },
+  "contentGroups": contentGroups[] {
+    _key,
+    groupTitle,
+    description,
+    bullets,
+    groupDisplay,
+    "cards": cards[] {
+      _key,
+      value,
+      label,
+      description
+    }
+  },
   benefits,
+  highlightsDisplay,
+  "highlightsCards": highlightsCards[] {
+    _key,
+    value,
+    label,
+    description
+  },
+  mediaVideoUrl,
+  image { asset-> { url }, alt },
+  mediaVideo { asset-> { url } },
   primaryImage { asset-> { url }, alt },
   secondaryImage { asset-> { url }, alt },
   imageMode,
