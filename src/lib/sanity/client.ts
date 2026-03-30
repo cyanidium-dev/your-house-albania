@@ -1137,6 +1137,17 @@ const landingPageSectionsProjection = `{
       "city": city-> { "slug": slug.current }
     }
   ),
+  "agents": agents[]-> {
+    _id,
+    name,
+    "slug": slug.current,
+    photo { alt, asset-> { url } },
+    agentLogo { alt, asset-> { url } },
+    telegramUrl,
+    instagramUrl,
+    facebookUrl,
+    youtubeUrl
+  },
   "landings": select(
     count(coalesce(landings, resolvedLandings, manualItems, items)) > 0 && defined((coalesce(landings, resolvedLandings, manualItems, items))[0]._ref) => (coalesce(landings, resolvedLandings, manualItems, items))[]-> {
       _id,
