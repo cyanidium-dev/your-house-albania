@@ -27,6 +27,8 @@ export type LandingSectionBase = {
   secondaryImage?: { asset?: { url?: string }; alt?: string }
   content?: unknown
   items?: unknown[]
+  /** `investorLogosSection`: dereferenced `agent` documents */
+  agents?: unknown[]
   posts?: unknown[]
   search?: { tabs?: LandingHeroTab[] }
   enabled?: boolean
