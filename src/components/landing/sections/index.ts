@@ -10,4 +10,5 @@ export { LocationCarouselSection } from "./LocationCarouselSection";
 export { PropertyCarouselSection } from "./PropertyCarouselSection";
 export { PropertyTypesSection } from "./PropertyTypesSection";
 export { SeoTextSection } from "./SeoTextSection";
+export { CtaSection } from "./CtaSection";
 

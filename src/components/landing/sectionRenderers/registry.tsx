@@ -15,6 +15,7 @@ import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
 import { landingGridSectionHandler } from './handlers/landingGridSection'
 import { investorLogosSectionHandler } from './handlers/investorLogosSection'
 import { marketingContentSectionHandler } from './handlers/marketingContentSection'
+import { ctaSectionHandler } from './handlers/ctaSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -30,6 +31,7 @@ const registry: Record<string, SectionHandler> = {
   landingGridSection: landingGridSectionHandler,
   investorLogosSection: investorLogosSectionHandler,
   marketingContentSection: marketingContentSectionHandler,
+  ctaSection: ctaSectionHandler,
 }
 
 export async function renderLandingSection(input: {

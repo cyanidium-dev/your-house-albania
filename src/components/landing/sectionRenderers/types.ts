@@ -13,6 +13,7 @@ export type LandingSectionBase = {
   subtitle?: unknown
   shortLine?: unknown
   cta?: { href?: string; label?: unknown }
+  secondaryCta?: { href?: string; label?: unknown }
   mode?: string
   properties?: unknown[]
   cities?: unknown[]
@@ -49,6 +50,8 @@ export type LandingSectionBase = {
   eyebrow?: unknown
   supportingText?: unknown
   mediaMode?: 'none' | 'fallback' | 'custom' | string
+  /** `marketingContentSection`: media column order on large screens */
+  mediaSide?: 'left' | 'right' | string
   promoMediaType?: 'image' | 'video' | string
   contentGroups?: unknown[]
   /** `marketingContentSection` */

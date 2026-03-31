@@ -2,6 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import { cn } from "@/lib/utils";
 
 export type MarketingVariant = "split" | "splitDark" | "grouped";
 
@@ -36,6 +37,8 @@ export type MarketingContentData = {
   ctaLabel?: string;
   ctaHref?: string;
   mediaMode?: "none" | "fallback" | "custom";
+  /** Large-screen column order when a media column exists (`split` / `grouped`). */
+  mediaSide?: "left" | "right";
   /** Split `custom` + grouped `custom` intro: max two URLs used in UI. */
   images?: Array<{ url: string; alt?: string }>;
   promoMediaType?: "image" | "video";
@@ -102,7 +105,7 @@ function DarkBulletList({ items }: { items: string[] }) {
   );
 }
 
-/** Investment-style stats grid; optional description for marketing cards. */
+/** Mirrors `InvestmentSectionImpl` stats grid; optional description for marketing cards. */
 function HighlightCardsLight({ cards }: { cards: MarketingHighlightCard[] }) {
   if (cards.length === 0) return null;
   return (
@@ -322,6 +325,7 @@ function SplitVariant({
   const hasCustom = mode === "custom" && customImages.length > 0;
   const useFallback = mode === "fallback";
   const showMediaColumn = hasCustom || useFallback;
+  const mediaSideRight = data.mediaSide === "right";
 
   const benefits = data.benefits ?? [];
 
@@ -350,51 +354,71 @@ function SplitVariant({
     );
   }
 
-  /** Image column + copy column spacing aligned with investment-style split (fallback media only). */
+  /** Matches `InvestmentSectionImpl` image column + copy column spacing (fallback media only). */
   if (useFallback) {
     const primaryAlt = data.title || "Marketing";
     const secondaryAlt = data.title || "Marketing";
+    const mediaBlock = (
+      <div className="grid grid-cols-2 gap-4">
+        <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
+          <Image
+            src={SPLIT_PRIMARY_FALLBACK}
+            alt={primaryAlt}
+            fill
+            className="object-cover object-center"
+            sizes="25vw"
+            unoptimized={false}
+          />
+        </div>
+        <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
+          <Image
+            src={SPLIT_SECONDARY_FALLBACK}
+            alt={secondaryAlt}
+            fill
+            className="object-cover object-center"
+            sizes="25vw"
+            unoptimized={false}
+          />
+        </div>
+      </div>
+    );
+    const copyBlock = (
+      <div className="flex flex-col justify-start gap-8">
+        <MarketingIntro
+          locale={locale}
+          theme="light"
+          eyebrow={data.eyebrow}
+          title={data.title}
+          subtitle={data.subtitle}
+          description={data.description}
+          benefits={benefits}
+          highlightsDisplay={data.highlightsDisplay}
+          highlightCards={data.highlightCards}
+          supportingText={data.supportingText}
+          ctaLabel={data.ctaLabel}
+          ctaHref={data.ctaHref}
+        />
+      </div>
+    );
     return (
       <section className="py-16 md:py-24">
         <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
           <div className="grid lg:grid-cols-2 gap-10">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
-                <Image
-                  src={SPLIT_PRIMARY_FALLBACK}
-                  alt={primaryAlt}
-                  fill
-                  className="object-cover object-center"
-                  sizes="25vw"
-                  unoptimized={false}
-                />
-              </div>
-              <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
-                <Image
-                  src={SPLIT_SECONDARY_FALLBACK}
-                  alt={secondaryAlt}
-                  fill
-                  className="object-cover object-center"
-                  sizes="25vw"
-                  unoptimized={false}
-                />
-              </div>
+            <div
+              className={cn(
+                "order-1 min-w-0",
+                mediaSideRight ? "lg:order-2" : "lg:order-1",
+              )}
+            >
+              {mediaBlock}
             </div>
-            <div className="flex flex-col justify-start gap-8">
-              <MarketingIntro
-                locale={locale}
-                theme="light"
-                eyebrow={data.eyebrow}
-                title={data.title}
-                subtitle={data.subtitle}
-                description={data.description}
-                benefits={benefits}
-                highlightsDisplay={data.highlightsDisplay}
-                highlightCards={data.highlightCards}
-                supportingText={data.supportingText}
-                ctaLabel={data.ctaLabel}
-                ctaHref={data.ctaHref}
-              />
+            <div
+              className={cn(
+                "order-2 min-w-0",
+                mediaSideRight ? "lg:order-1" : "lg:order-2",
+              )}
+            >
+              {copyBlock}
             </div>
           </div>
         </div>
@@ -405,61 +429,83 @@ function SplitVariant({
   const showPrimary = customImages[0];
   const showSecondary = customImages[1];
 
+  const mediaBlock = (
+    <div
+      className={cn(
+        "grid gap-4",
+        showPrimary && showSecondary ? "grid-cols-2" : "grid-cols-1",
+      )}
+    >
+      {showPrimary ? (
+        <div
+          className={cn(
+            "relative rounded-2xl overflow-hidden aspect-[320/386]",
+            !showSecondary && "lg:col-span-2 max-w-lg mx-auto lg:max-w-none w-full",
+          )}
+        >
+          <Image
+            src={showPrimary.url}
+            alt={showPrimary.alt || data.title || "Marketing"}
+            fill
+            className="object-cover object-center"
+            sizes="(max-width: 1023px) 100vw, 25vw"
+            unoptimized={showPrimary.url.startsWith("http")}
+          />
+        </div>
+      ) : null}
+      {showSecondary ? (
+        <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
+          <Image
+            src={showSecondary.url}
+            alt={showSecondary.alt || data.title || "Marketing"}
+            fill
+            className="object-cover object-center"
+            sizes="25vw"
+            unoptimized={showSecondary.url.startsWith("http")}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+
+  const copyBlock = (
+    <div className="flex flex-col justify-start gap-8 lg:px-4">
+      <MarketingIntro
+        locale={locale}
+        theme="light"
+        eyebrow={data.eyebrow}
+        title={data.title}
+        subtitle={data.subtitle}
+        description={data.description}
+        benefits={benefits}
+        highlightsDisplay={data.highlightsDisplay}
+        highlightCards={data.highlightCards}
+        supportingText={data.supportingText}
+        ctaLabel={data.ctaLabel}
+        ctaHref={data.ctaHref}
+      />
+    </div>
+  );
+
   return (
     <section className="py-16 md:py-24">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="grid lg:grid-cols-2 gap-10">
           <div
-            className={`grid gap-4 ${
-              showPrimary && showSecondary ? "grid-cols-2" : "grid-cols-1"
-            }`}
+            className={cn(
+              "order-1 min-w-0",
+              mediaSideRight ? "lg:order-2" : "lg:order-1",
+            )}
           >
-            {showPrimary ? (
-              <div
-                className={`relative rounded-2xl overflow-hidden aspect-[320/386] ${
-                  !showSecondary
-                    ? "lg:col-span-2 max-w-lg mx-auto lg:max-w-none w-full"
-                    : ""
-                }`}
-              >
-                <Image
-                  src={showPrimary.url}
-                  alt={showPrimary.alt || data.title || "Marketing"}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 1023px) 100vw, 25vw"
-                  unoptimized={showPrimary.url.startsWith("http")}
-                />
-              </div>
-            ) : null}
-            {showSecondary ? (
-              <div className="relative rounded-2xl overflow-hidden aspect-[320/386]">
-                <Image
-                  src={showSecondary.url}
-                  alt={showSecondary.alt || data.title || "Marketing"}
-                  fill
-                  className="object-cover object-center"
-                  sizes="25vw"
-                  unoptimized={showSecondary.url.startsWith("http")}
-                />
-              </div>
-            ) : null}
+            {mediaBlock}
           </div>
-          <div className="flex flex-col justify-start gap-8 lg:px-4">
-            <MarketingIntro
-              locale={locale}
-              theme="light"
-              eyebrow={data.eyebrow}
-              title={data.title}
-              subtitle={data.subtitle}
-              description={data.description}
-              benefits={benefits}
-              highlightsDisplay={data.highlightsDisplay}
-              highlightCards={data.highlightCards}
-              supportingText={data.supportingText}
-              ctaLabel={data.ctaLabel}
-              ctaHref={data.ctaHref}
-            />
+          <div
+            className={cn(
+              "order-2 min-w-0",
+              mediaSideRight ? "lg:order-1" : "lg:order-2",
+            )}
+          >
+            {copyBlock}
           </div>
         </div>
       </div>
@@ -547,7 +593,7 @@ function groupHasHighlights(g: MarketingContentGroup): boolean {
   return false;
 }
 
-/** True when grouped layout should reserve the left media column (desktop). */
+/** True when grouped layout should use a 2-column split (media + content) on large screens. */
 function groupedMediaHasRenderableContent(data: MarketingContentData): boolean {
   const mode = data.groupedMediaMode ?? "none";
   if (mode === "none") return false;
@@ -559,7 +605,7 @@ function groupedMediaHasRenderableContent(data: MarketingContentData): boolean {
   return false;
 }
 
-/** Grouped variant only: media column (left on `lg+`); stacked above copy on mobile. */
+/** Grouped variant only: media column when `groupedMediaMode` is default or custom with images. */
 function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
   const mode = data.groupedMediaMode ?? "none";
   if (mode === "none") return null;
@@ -568,23 +614,23 @@ function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
 
   if (mode === "default") {
     return (
-        <div className="grid grid-cols-2 gap-4 w-full">
-        <div className="relative w-full rounded-2xl overflow-hidden aspect-[16/10]">
+      <div className="grid grid-cols-2 gap-4 w-full">
+        <div className="relative w-full rounded-2xl overflow-hidden aspect-[3/4] max-h-[min(72vh,520px)]">
           <Image
             src={SPLIT_PRIMARY_FALLBACK}
             alt={titleAlt}
             fill
             className="object-cover object-center"
-            sizes="(max-width: 1023px) 45vw, 40vw"
+            sizes="(max-width: 1024px) 45vw, 33vw"
           />
         </div>
-        <div className="relative w-full rounded-2xl overflow-hidden aspect-[16/10]">
+        <div className="relative w-full rounded-2xl overflow-hidden aspect-[3/4] max-h-[min(72vh,520px)]">
           <Image
             src={SPLIT_SECONDARY_FALLBACK}
             alt={titleAlt}
             fill
             className="object-cover object-center"
-            sizes="(max-width: 1023px) 45vw, 40vw"
+            sizes="(max-width: 1024px) 45vw, 33vw"
           />
         </div>
       </div>
@@ -597,13 +643,13 @@ function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
     if (imgs.length === 1) {
       const img = imgs[0]!;
       return (
-        <div className="relative w-full rounded-2xl overflow-hidden aspect-[16/10] md:aspect-[2/1]">
+        <div className="relative w-full max-w-[min(100%,420px)] lg:max-w-none mx-auto lg:mx-0 rounded-2xl overflow-hidden aspect-[3/4] max-h-[min(72vh,560px)]">
           <Image
             src={img.url}
             alt={img.alt || titleAlt}
             fill
             className="object-cover object-center"
-            sizes="(max-width: 1023px) 100vw, 40vw"
+            sizes="(max-width: 1024px) 100vw, 40vw"
             unoptimized={img.url.startsWith("http")}
           />
         </div>
@@ -613,23 +659,23 @@ function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
     const b = imgs[1]!;
     return (
       <div className="grid grid-cols-2 gap-4 w-full">
-        <div className="relative w-full rounded-2xl overflow-hidden aspect-[16/10]">
+        <div className="relative w-full rounded-2xl overflow-hidden aspect-[3/4] max-h-[min(72vh,520px)]">
           <Image
             src={a.url}
             alt={a.alt || titleAlt}
             fill
             className="object-cover object-center"
-            sizes="(max-width: 1023px) 45vw, 40vw"
+            sizes="(max-width: 1024px) 45vw, 33vw"
             unoptimized={a.url.startsWith("http")}
           />
         </div>
-        <div className="relative w-full rounded-2xl overflow-hidden aspect-[16/10]">
+        <div className="relative w-full rounded-2xl overflow-hidden aspect-[3/4] max-h-[min(72vh,520px)]">
           <Image
             src={b.url}
             alt={b.alt || titleAlt}
             fill
             className="object-cover object-center"
-            sizes="(max-width: 1023px) 45vw, 40vw"
+            sizes="(max-width: 1024px) 45vw, 33vw"
             unoptimized={b.url.startsWith("http")}
           />
         </div>
@@ -664,6 +710,7 @@ function GroupedVariant({
 }) {
   const groups = data.contentGroups ?? [];
   const hasMediaColumn = groupedMediaHasRenderableContent(data);
+  const mediaSideRight = data.mediaSide === "right";
 
   const introBlock = (
     <div className="flex flex-col gap-4">
@@ -756,13 +803,30 @@ function GroupedVariant({
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {hasMediaColumn ? (
           <div className="grid lg:grid-cols-2 gap-10 lg:items-start">
-            <div className="w-full min-w-0">
+            <div
+              className={cn(
+                "w-full min-w-0 order-1",
+                mediaSideRight ? "lg:order-2" : "lg:order-1",
+              )}
+            >
               <GroupedIntroMedia data={data} />
             </div>
-            <div className="w-full min-w-0">{contentColumn}</div>
+            <div
+              className={cn(
+                "w-full min-w-0 order-2",
+                mediaSideRight ? "lg:order-1" : "lg:order-2",
+              )}
+            >
+              {contentColumn}
+            </div>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto">{contentColumn}</div>
+          <div className="max-w-3xl mx-auto flex flex-col gap-8 md:gap-10">
+            {introBlock}
+            {groupsBlock}
+            {supportingBlock}
+            {ctaBlock}
+          </div>
         )}
       </div>
     </section>
