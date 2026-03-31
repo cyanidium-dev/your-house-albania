@@ -1,0 +1,48 @@
+/* Page-local numbered steps (CSS counters), semantic <ol> hidden markers */
+.steps {
+  counter-reset: howto-step;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step {
+  counter-increment: howto-step;
+  position: relative;
+  margin: 0;
+  padding-left: 3.75rem;
+  min-height: 2.75rem;
+}
+
+.step::before {
+  content: counter(howto-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  /* matches @theme --color-primary */
+  background-color: #07be8a;
+  color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .step {
+    padding-left: 4rem;
+  }
+  .step::before {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+}

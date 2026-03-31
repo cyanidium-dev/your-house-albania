@@ -13,7 +13,7 @@ export type CtaSectionProps = {
   secondaryHref?: string
 }
 
-function resolveHref(href: string, locale: string): string {
+export function resolveHref(href: string, locale: string): string {
   if (!href) return '#'
   if (
     href.startsWith('http://') ||
@@ -32,7 +32,7 @@ function isExternalHttp(href: string): boolean {
   return href.startsWith('http://') || href.startsWith('https://')
 }
 
-function CtaButton({
+export function CtaButton({
   href,
   label,
   locale,

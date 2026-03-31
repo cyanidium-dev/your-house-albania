@@ -71,7 +71,18 @@ function DrawerNavList({
 
   useEffect(() => {
     const realtorsBase = `/${locale}/for-realtors`
-    if (path === realtorsBase || path.startsWith(`${realtorsBase}/`)) setRealtorsOpen(true)
+    const howToBase = `/${locale}/how-to-publish`
+    const registerBase = `/${locale}/register`
+    if (
+      path === realtorsBase ||
+      path.startsWith(`${realtorsBase}/`) ||
+      path === howToBase ||
+      path.startsWith(`${howToBase}/`) ||
+      path === registerBase ||
+      path.startsWith(`${registerBase}/`)
+    ) {
+      setRealtorsOpen(true)
+    }
   }, [path, locale])
 
   const isHomeActive = path === `/${locale}` || path === `/${locale}/`
@@ -222,8 +233,16 @@ function DrawerNavList({
           }
 
           if (item.key === 'realtors') {
+            const howToHref = resolvedHref('/how-to-publish', locale)
+            const registerHref = resolvedHref('/register', locale)
+            const isHowToActive = path === howToHref || path.startsWith(`${howToHref}/`)
+            const isRegisterActive =
+              path === registerHref || path.startsWith(`${registerHref}/`)
             const isRealtorsParentActive =
-              path === parentHref || path.startsWith(`${parentHref}/`)
+              path === parentHref ||
+              path.startsWith(`${parentHref}/`) ||
+              isHowToActive ||
+              isRegisterActive
             const expandLabel = translations.nav.expandRealtors ?? 'Expand For realtors section'
             const collapseLabel =
               translations.nav.collapseRealtors ?? 'Collapse For realtors section'
@@ -291,20 +310,39 @@ function DrawerNavList({
                     className="mt-2 space-y-0.5 border-l border-white/15 pl-5"
                     role="list"
                   >
-                    {realtorChildKeys.map((childKey) => (
-                      <li key={childKey}>
-                        <span
-                          className={clsx(
-                            childLinkClass,
-                            'cursor-not-allowed select-none text-white/25',
-                            'overflow-hidden',
-                          )}
-                          aria-disabled="true"
-                        >
-                          {translations.nav[childKey] ?? childKey}
-                        </span>
-                      </li>
-                    ))}
+                    {realtorChildKeys.map((childKey) =>
+                      childKey === 'realtorsAbout' ? (
+                        <li key={childKey}>
+                          <Link
+                            href={howToHref}
+                            className={clsx(
+                              childLinkClass,
+                              isHowToActive
+                                ? 'text-primary'
+                                : 'text-white/40 hover:text-primary',
+                            )}
+                            onClick={onNavigate}
+                          >
+                            {translations.nav[childKey] ?? childKey}
+                          </Link>
+                        </li>
+                      ) : (
+                        <li key={childKey}>
+                          <Link
+                            href={registerHref}
+                            className={clsx(
+                              childLinkClass,
+                              isRegisterActive
+                                ? 'text-primary'
+                                : 'text-white/40 hover:text-primary',
+                            )}
+                            onClick={onNavigate}
+                          >
+                            {translations.nav[childKey] ?? childKey}
+                          </Link>
+                        </li>
+                      ),
+                    )}
                   </ul>
                 ) : null}
               </li>

@@ -528,7 +528,8 @@ const cachedFetchSiteSettings = unstable_cache(
         symbol
       },
       displayCurrencies,
-      currencyLastSyncedAt
+      currencyLastSyncedAt,
+      howToPublishVideoUrl
     }`;
     try {
       const result = await client.fetch(query);
