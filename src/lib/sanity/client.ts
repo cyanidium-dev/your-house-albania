@@ -491,6 +491,8 @@ const cachedFetchSiteSettings = unstable_cache(
       siteTagline,
       contactPhone,
       contactEmail,
+      contactsManagerPhoto { alt, asset-> { url } },
+      managerPhoto { alt, asset-> { url } },
       companyAddress,
       copyrightText,
       footerQuickLinks[] {
@@ -1814,7 +1816,7 @@ export function resolveCatalogSeoPage(
 const AGENT_SLUG_REGEX = /^[a-z0-9-]+$/;
 
 /**
- * Fetch a single `agent` by slug for the future contact-realtor page.
+ * Fetch a single `agent` by slug (e.g. for future per-agent flows).
  * Returns null if missing, invalid slug, or on fetch error.
  */
 export async function fetchAgentBySlug(

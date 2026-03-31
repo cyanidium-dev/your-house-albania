@@ -1,6 +1,13 @@
 import type { AgentContactTelegramRouting } from './types'
 
 /**
+ * Bot token for Bot API `sendMessage` (general contacts + future agent delivery).
+ */
+export function resolveTelegramBotToken(): string | undefined {
+  return process.env.TELEGRAM_BOT_TOKEN?.trim() || undefined
+}
+
+/**
  * Reads Telegram routing from environment.
  * Per-agent chat IDs are expected to come from Sanity (or similar) later; until then
  * TELEGRAM_AGENT_CONTACT_CHAT_ID can act as a single “personal” inbox for testing.

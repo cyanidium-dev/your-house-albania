@@ -1,8 +1,9 @@
 /**
- * Normalized agent contact submission after validation (server-side).
- * Used for Telegram formatting and future persistence.
+ * Normalized contact submission after validation (server-side).
+ * `submissionKind: 'general'` is used by `/contacts`; `'agent'` reserved for future per-agent flows.
  */
 export type NormalizedAgentContactSubmission = {
+  submissionKind: 'agent' | 'general'
   agentSlug: string
   /** Display name for notifications; may later be verified server-side. */
   agentName: string

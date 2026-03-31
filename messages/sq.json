@@ -278,37 +278,32 @@
       "viewList": "Listë"
     }
   },
-  "ContactAgent": {
-    "badge": "Kontakt",
-    "subtitle": "Kontaktoni {name}",
-    "about": "Rreth agentit",
-    "email": "Email",
-    "phone": "Telefon",
+  "Contacts": {
+    "metaTitle": "Na kontaktoni | Your House Albania",
+    "metaDescription": "Dërgoni një kërkesë dhe ekipi ynë do t'ju përgjigjet me opsione që përputhen me nevojat tuaja.",
+    "heroH1": "Nuk keni gjetur shtëpinë e duhur?",
+    "heroH2": "Lërni një kërkesë, ne do t'ju ofrojmë zgjedhje individuale!",
+    "heroDescription": "Plotësoni formularin më poshtë, dhe menaxheri ynë do t'ju kontaktojë dhe do t'ju ofrojë opsionet që përputhen me kërkesat tuaja. Shpejt, lehtë dhe pa mesazhe të tepërta.",
+    "heroImageAlt": "Na kontaktoni",
+    "managerPhotoAlt": "Menaxheri ynë",
+    "managerEmailLabel": "Email",
     "follow": "Rrjetet sociale",
-    "telegram": "Telegram",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "youtube": "YouTube",
-    "formHeading": "Dërgoni një mesazh",
+    "formHeading": "Dërgoni një kërkesë",
+    "formIntro": "Na tregoni si t'ju kontaktojmë dhe çfarë kërkoni.",
     "formName": "Emri",
     "formPhone": "Telefoni",
     "formEmail": "Email",
     "formMessage": "Mesazhi juaj",
     "formSubmit": "Dërgo",
-    "formComingSoon": "Dërgimi online së shpejti — përdorni telefonin ose emailin më sipër.",
-    "formIntro": "Përshkruani çfarë kërkoni dhe si mund t'ju kontaktojmë.",
     "formSubmitting": "Duke dërguar…",
-    "errorSubmit": "Diçka shkoi keq. Ju lutemi provoni përsëri.",
-    "formSubmitRequest": "Dërgo kërkesën",
-    "photoAlt": "Foto e {name}",
-    "metaTitleSuffix": "Kontakt"
+    "errorSubmit": "Diçka shkoi keq. Ju lutemi provoni përsëri."
   },
   "ContactThankYou": {
     "metaTitle": "Faleminderit",
     "metaDescription": "Kërkesa juaj u mor. Ekipi ynë do t'ju kontaktojë së shpejti.",
     "title": "Faleminderit! Kërkesa juaj u dërgua me sukses",
-    "description": "Menaxheri ynë do t'ju kontaktojë së shpejti dhe do t'ju ofrojë një përzgjedhje të objekteve që përputhen me kërkesat tuaja.",
-    "cta": "Shikoni objekte të tjera",
+    "description": "Menaxheri ynë do t'ju kontaktojë së shpejti me opsione që përputhen me atë që kërkuat.",
+    "cta": "Shfletoni pronat",
     "imageAlt": "Foto dekoruese"
   },
   "Favorites": {

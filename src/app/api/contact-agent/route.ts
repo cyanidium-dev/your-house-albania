@@ -7,6 +7,7 @@ import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agent
 const MAX_MESSAGE = 8000
 
 type Body = {
+  submissionKind?: 'agent' | 'general'
   agentSlug?: string
   agentName?: string
   locale?: string
@@ -38,7 +39,8 @@ function jsonOk() {
 }
 
 /**
- * Agent contact + preferences. Validates input, honeypot, then runs Telegram delivery stub.
+ * Contact requests: general `/contacts` (`submissionKind: 'general'`) or future agent-specific payloads.
+ * Validates input, honeypot, then runs Telegram delivery stub.
  */
 export async function POST(request: Request) {
   console.log('[contact-agent] submission received')
@@ -50,7 +52,6 @@ export async function POST(request: Request) {
     return jsonError(400, 'Invalid JSON')
   }
 
-  // Honeypot: bots often fill hidden fields
   const hp =
     typeof body.companyWebsite === 'string' ? body.companyWebsite.trim() : ''
   if (hp.length > 0) {
@@ -58,9 +59,8 @@ export async function POST(request: Request) {
     return jsonError(400, 'Bad request')
   }
 
-  if (!isNonEmptyString(body.agentSlug)) {
-    return jsonError(400, 'Missing agent')
-  }
+  const isGeneral = body.submissionKind === 'general'
+
   if (!isNonEmptyString(body.name)) {
     return jsonError(400, 'Missing name')
   }
@@ -82,30 +82,66 @@ export async function POST(request: Request) {
     return jsonError(400, 'Invalid email')
   }
 
-  const agentName =
-    typeof body.agentName === 'string' && body.agentName.trim() ? body.agentName.trim() : '—'
+  const locale =
+    typeof body.locale === 'string' && body.locale.trim() ? body.locale.trim() : '—'
 
-  const normalized: NormalizedAgentContactSubmission = {
-    agentSlug: body.agentSlug.trim(),
-    agentName,
-    locale: typeof body.locale === 'string' && body.locale.trim() ? body.locale.trim() : '—',
-    location: body.city?.trim() || undefined,
-    propertyType: body.propertyType?.trim() || undefined,
-    dealType: body.deal?.trim() || undefined,
-    priceRangeLabel: formatMinMaxLabel(
-      typeof body.minPrice === 'number' && Number.isFinite(body.minPrice) ? body.minPrice : undefined,
-      typeof body.maxPrice === 'number' && Number.isFinite(body.maxPrice) ? body.maxPrice : undefined,
-      ' EUR'
-    ),
-    areaRangeLabel: formatMinMaxLabel(
-      typeof body.minArea === 'number' && Number.isFinite(body.minArea) ? body.minArea : undefined,
-      typeof body.maxArea === 'number' && Number.isFinite(body.maxArea) ? body.maxArea : undefined,
-      ' m²'
-    ),
-    customerName: body.name.trim(),
-    phone: body.phone.trim(),
-    email,
-    message: body.message.trim(),
+  let normalized: NormalizedAgentContactSubmission
+
+  if (isGeneral) {
+    normalized = {
+      submissionKind: 'general',
+      agentSlug: '—',
+      agentName: '—',
+      locale,
+      location: body.city?.trim() || undefined,
+      propertyType: body.propertyType?.trim() || undefined,
+      dealType: body.deal?.trim() || undefined,
+      priceRangeLabel: formatMinMaxLabel(
+        typeof body.minPrice === 'number' && Number.isFinite(body.minPrice) ? body.minPrice : undefined,
+        typeof body.maxPrice === 'number' && Number.isFinite(body.maxPrice) ? body.maxPrice : undefined,
+        ' EUR'
+      ),
+      areaRangeLabel: formatMinMaxLabel(
+        typeof body.minArea === 'number' && Number.isFinite(body.minArea) ? body.minArea : undefined,
+        typeof body.maxArea === 'number' && Number.isFinite(body.maxArea) ? body.maxArea : undefined,
+        ' m²'
+      ),
+      customerName: body.name.trim(),
+      phone: body.phone.trim(),
+      email,
+      message: body.message.trim(),
+    }
+  } else {
+    if (!isNonEmptyString(body.agentSlug)) {
+      return jsonError(400, 'Missing agent')
+    }
+
+    const agentName =
+      typeof body.agentName === 'string' && body.agentName.trim() ? body.agentName.trim() : '—'
+
+    normalized = {
+      submissionKind: 'agent',
+      agentSlug: body.agentSlug.trim(),
+      agentName,
+      locale,
+      location: body.city?.trim() || undefined,
+      propertyType: body.propertyType?.trim() || undefined,
+      dealType: body.deal?.trim() || undefined,
+      priceRangeLabel: formatMinMaxLabel(
+        typeof body.minPrice === 'number' && Number.isFinite(body.minPrice) ? body.minPrice : undefined,
+        typeof body.maxPrice === 'number' && Number.isFinite(body.maxPrice) ? body.maxPrice : undefined,
+        ' EUR'
+      ),
+      areaRangeLabel: formatMinMaxLabel(
+        typeof body.minArea === 'number' && Number.isFinite(body.minArea) ? body.minArea : undefined,
+        typeof body.maxArea === 'number' && Number.isFinite(body.maxArea) ? body.maxArea : undefined,
+        ' m²'
+      ),
+      customerName: body.name.trim(),
+      phone: body.phone.trim(),
+      email,
+      message: body.message.trim(),
+    }
   }
 
   console.log('[contact-agent] normalized payload', {

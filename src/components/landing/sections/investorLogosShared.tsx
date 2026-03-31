@@ -3,9 +3,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 
-/** Same rule as `src/app/[locale]/contact/[slug]/page.tsx` — safe path segment. */
-export const AGENT_SLUG_REGEX = /^[a-z0-9-]+$/
-
 export type AgentDoc = {
   _id?: string
   name?: unknown
@@ -38,14 +35,10 @@ export function pickAgentLogoImage(agent: AgentDoc): { url: string; alt?: string
 }
 
 /**
- * Internal agent page first (`/[locale]/contact/[slug]`), else first social URL by priority.
+ * Per-agent contact page is decommissioned; prefer first social URL by priority.
  * Returns `null` when the logo should render without a link.
  */
 export function resolveAgentHref(agent: AgentDoc): string | null {
-  const raw = typeof agent.slug === 'string' ? agent.slug.trim() : ''
-  if (raw && AGENT_SLUG_REGEX.test(raw)) {
-    return `/contact/${raw}`
-  }
   for (const key of SOCIAL_PRIORITY) {
     const u = agent[key]
     if (typeof u === 'string' && u.trim()) return u.trim()
