@@ -39,6 +39,10 @@ type Props = {
   onValueChange: (value: string) => void;
   options: FilterOption[];
   placeholder?: string;
+  /** Optional one-line helper under the label (e.g. field context). */
+  hint?: string;
+  /** When false, only `options` are shown (no “any / all” row). Default true. */
+  includeAnyOption?: boolean;
   anyLabel?: string;
   anyValue?: string;
   disabled?: boolean;
@@ -52,6 +56,8 @@ export function FilterSelect({
   onValueChange,
   options,
   placeholder,
+  hint,
+  includeAnyOption = true,
   anyLabel = "Any",
   anyValue = "any",
   disabled,
@@ -63,10 +69,10 @@ export function FilterSelect({
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selectedLabel = React.useMemo(() => {
-    if (value === anyValue) return anyLabel;
+    if (includeAnyOption && value === anyValue) return anyLabel;
     const opt = options.find((o) => o.value === value);
-    return opt?.label ?? placeholder ?? anyLabel;
-  }, [value, anyValue, anyLabel, options, placeholder]);
+    return opt?.label ?? placeholder ?? (includeAnyOption ? anyLabel : "");
+  }, [value, anyValue, anyLabel, options, placeholder, includeAnyOption]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -98,6 +104,9 @@ export function FilterSelect({
       <label className="block text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
         {label}
       </label>
+      {hint ? (
+        <p className="mb-2 text-xs leading-relaxed text-dark/55 dark:text-white/50">{hint}</p>
+      ) : null}
       <button
         type="button"
         disabled={disabled}
@@ -141,15 +150,17 @@ export function FilterSelect({
               contentClassName
             )}
           >
-            <button
-              type="button"
-              role="option"
-              aria-selected={value === anyValue}
-              onClick={() => pick(anyValue)}
-              className="w-full px-3 py-1.5 cursor-pointer text-left text-dark dark:text-white outline-none hover:bg-primary/15 dark:hover:bg-primary/25 hover:text-primary"
-            >
-              {anyLabel}
-            </button>
+            {includeAnyOption ? (
+              <button
+                type="button"
+                role="option"
+                aria-selected={value === anyValue}
+                onClick={() => pick(anyValue)}
+                className="w-full px-3 py-1.5 cursor-pointer text-left text-dark dark:text-white outline-none hover:bg-primary/15 dark:hover:bg-primary/25 hover:text-primary"
+              >
+                {anyLabel}
+              </button>
+            ) : null}
             {options.map((opt) => (
               <button
                 key={opt.value}
