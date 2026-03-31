@@ -135,6 +135,10 @@ export const marketingContentSectionHandler: SectionHandler = ({ locale, section
     groupedMediaRaw === 'default' || groupedMediaRaw === 'custom' || groupedMediaRaw === 'none'
       ? groupedMediaRaw
       : 'none'
+
+  const mediaSideRaw = (section as { mediaSide?: unknown }).mediaSide
+  const mediaSide: 'left' | 'right' = mediaSideRaw === 'right' ? 'right' : 'left'
+
   const data: MarketingContentData = {
     variant,
     eyebrow,
@@ -148,6 +152,7 @@ export const marketingContentSectionHandler: SectionHandler = ({ locale, section
     ctaLabel: resolveLocalizedString(section.cta?.label as never, locale) || undefined,
     ctaHref: section.cta?.href,
     mediaMode,
+    mediaSide,
     images: imagesResolved.length > 0 ? imagesResolved : undefined,
     promoMediaType,
     splitDarkImageUrl: legacyImage?.asset?.url,

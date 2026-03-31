@@ -11,6 +11,8 @@ type HeroData = {
   subtitle?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
   searchTabs?: Array<{ key?: string; label?: string }>;
   searchEnabled?: boolean;
   backgroundImageUrl?: string;
@@ -28,6 +30,12 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
   const bgImageUrl = heroData?.backgroundImageUrl
   const bgImageAlt = heroData?.backgroundImageAlt || title || 'Hero background'
   const searchEnabled = heroData?.searchEnabled === true
+  const hasPrimaryCta = Boolean(heroData?.ctaLabel && heroData?.ctaHref)
+  const hasSecondaryCta = Boolean(heroData?.secondaryCtaLabel && heroData?.secondaryCtaHref)
+  const primaryCtaHref = heroData?.ctaHref
+  const primaryCtaLabel = heroData?.ctaLabel
+  const secondaryCtaHref = heroData?.secondaryCtaHref
+  const secondaryCtaLabel = heroData?.secondaryCtaLabel
   const cmsTabs = Array.isArray(heroData?.searchTabs)
     ? heroData.searchTabs
         .map((tab) => {
@@ -95,13 +103,33 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
             {subtitle ? (
               <p className='text-inherit text-lg mb-6'>{subtitle}</p>
             ) : null}
-            {heroData?.ctaLabel && heroData?.ctaHref ? (
-              <Link
-                href={heroData.ctaHref.startsWith('/') ? `/${locale}${heroData.ctaHref}` : heroData.ctaHref}
-                className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
-              >
-                {heroData.ctaLabel}
-              </Link>
+            {hasPrimaryCta || hasSecondaryCta ? (
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start">
+                {hasPrimaryCta ? (
+                  <Link
+                    href={
+                      primaryCtaHref!.startsWith('/')
+                        ? `/${locale}${primaryCtaHref}`
+                        : primaryCtaHref!
+                    }
+                    className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
+                  >
+                    {primaryCtaLabel}
+                  </Link>
+                ) : null}
+                {hasSecondaryCta ? (
+                  <Link
+                    href={
+                      secondaryCtaHref!.startsWith('/')
+                        ? `/${locale}${secondaryCtaHref}`
+                        : secondaryCtaHref!
+                    }
+                    className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold border-2 border-white text-white hover:bg-white/15 transition-colors duration-200 ease-out"
+                  >
+                    {secondaryCtaLabel}
+                  </Link>
+                ) : null}
+              </div>
             ) : null}
             {searchEnabled ? (
               <div className="mt-12 md:mt-16 flex justify-center">

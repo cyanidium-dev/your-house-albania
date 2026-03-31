@@ -1115,6 +1115,7 @@ const landingPageSectionsProjection = `{
   eyebrow,
   supportingText,
   mediaMode,
+  mediaSide,
   promoMediaType,
   videoUrl,
   groupedMediaMode,
@@ -1317,6 +1318,47 @@ export async function fetchDealTypeLanding(deal: PropertiesDealParam): Promise<{
       }
     },
     ['sanity-deal-landing-v2', deal],
+    { revalidate: 60 },
+  );
+
+  return cached();
+}
+
+/**
+ * Fetch a `landingPage` by `slug.current` (e.g. custom marketing pages).
+ * Same document shape and `landingPageSectionsProjection` as `fetchDealTypeLanding`.
+ */
+export async function fetchLandingPageBySlug(slug: string): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  slug?: string;
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const trimmed = typeof slug === 'string' ? slug.trim() : '';
+  if (!trimmed) return null;
+
+  const cached = unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[_type == "landingPage" && slug.current == $slug][0] {
+    _id,
+    _type,
+    pageType,
+    "slug": slug.current,
+    "pageSections": pageSections[]${landingPageSectionsProjection},
+    seo
+  }`;
+      try {
+        return await client.fetch(query, { slug: trimmed });
+      } catch (err) {
+        console.warn('[Sanity] fetchLandingPageBySlug failed:', err);
+        return null;
+      }
+    },
+    ['sanity-landing-by-slug', trimmed],
     { revalidate: 60 },
   );
 
