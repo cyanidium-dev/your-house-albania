@@ -278,37 +278,32 @@
       "viewList": "Elenco"
     }
   },
-  "ContactAgent": {
-    "badge": "Contatti",
-    "subtitle": "Contatta {name}",
-    "about": "Informazioni",
-    "email": "Email",
-    "phone": "Telefono",
+  "Contacts": {
+    "metaTitle": "Contattaci | Your House Albania",
+    "metaDescription": "Invia una richiesta: ti risponderemo con opzioni adatte alle tue esigenze.",
+    "heroH1": "Non avete trovato la casa giusta?",
+    "heroH2": "Lasciate una richiesta: vi offriremo una selezione su misura!",
+    "heroDescription": "Compilate il modulo qui sotto e il nostro manager vi contatterà con opzioni in linea con le vostre richieste. Veloce, semplice e senza messaggi superflui.",
+    "heroImageAlt": "Contattaci",
+    "managerPhotoAlt": "Il nostro manager",
+    "managerEmailLabel": "Email",
     "follow": "Social",
-    "telegram": "Telegram",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "youtube": "YouTube",
-    "formHeading": "Invia un messaggio",
+    "formHeading": "Invia una richiesta",
+    "formIntro": "Indicate come contattarvi e cosa cercate.",
     "formName": "Nome",
     "formPhone": "Telefono",
     "formEmail": "Email",
     "formMessage": "Il tuo messaggio",
     "formSubmit": "Invia",
-    "formComingSoon": "Invio online in arrivo — usa telefono o email sopra per ora.",
-    "formIntro": "Descrivi cosa cerchi e come possiamo contattarti.",
     "formSubmitting": "Invio in corso…",
-    "errorSubmit": "Qualcosa è andato storto. Riprova.",
-    "formSubmitRequest": "Invia richiesta",
-    "photoAlt": "Foto di {name}",
-    "metaTitleSuffix": "Contatti"
+    "errorSubmit": "Qualcosa è andato storto. Riprova."
   },
   "ContactThankYou": {
     "metaTitle": "Grazie",
     "metaDescription": "Abbiamo ricevuto la tua richiesta. Ti contatteremo presto.",
     "title": "Grazie! La tua richiesta è stata inviata con successo",
-    "description": "Il nostro manager ti contatterà a breve e ti proporrà una selezione di immobili in linea con le tue esigenze.",
-    "cta": "Vedi altri immobili",
+    "description": "Il nostro manager ti contatterà a breve con opzioni in linea con la tua richiesta.",
+    "cta": "Sfoglia gli immobili",
     "imageAlt": "Foto decorativa"
   },
   "Favorites": {

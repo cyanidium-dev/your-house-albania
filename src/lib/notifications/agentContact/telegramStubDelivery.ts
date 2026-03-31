@@ -1,4 +1,6 @@
 import { formatAgentContactTelegramMessage } from './formatTelegramAgentContact'
+import { resolveTelegramBotToken } from './routing'
+import { sendTelegramTextMessage } from './telegramBotSend'
 import type {
   AgentContactTelegramRouting,
   NormalizedAgentContactSubmission,
@@ -6,7 +8,7 @@ import type {
   TelegramStubResult,
 } from './types'
 
-/** Short delay per simulated send so the route mirrors a real async pipeline. */
+/** Short delay per simulated send (agent branch stub only). */
 const SIMULATED_SEND_MS = 140
 
 function sleep(ms: number): Promise<void> {
@@ -23,7 +25,7 @@ function debugStubShouldFail(target: TelegramDeliveryTarget): boolean {
 }
 
 /**
- * Simulates sending one Telegram message. Replace body with `fetch` to Telegram API when ready.
+ * Simulates sending one Telegram message (used for `submissionKind: 'agent'` until real multi-target delivery is implemented).
  */
 export async function simulateTelegramSend(params: {
   target: TelegramDeliveryTarget
@@ -49,17 +51,48 @@ export async function simulateTelegramSend(params: {
 }
 
 /**
- * Builds both messages and runs simulated delivery for general + agent targets.
- * Success only if both complete without failure.
+ * Delivers contact notifications. **`submissionKind: 'general'`** uses real Telegram Bot API
+ * (`sendMessage`) when `TELEGRAM_BOT_TOKEN` and `TELEGRAM_GENERAL_CHAT_ID` are set.
+ * **`submissionKind: 'agent'`** still uses the stub for both targets (future work).
  */
 export async function deliverAgentContactTelegramStub(
   normalized: NormalizedAgentContactSubmission,
   routing: AgentContactTelegramRouting
 ): Promise<TelegramStubResult> {
+  if (normalized.submissionKind === 'general') {
+    const textGeneral = formatAgentContactTelegramMessage('general', normalized)
+    const botToken = resolveTelegramBotToken()
+    const chatId = routing.generalChatId
+
+    if (!botToken || !chatId) {
+      console.error('[contact-agent] Telegram not configured for general contacts', {
+        hasBotToken: !!botToken,
+        hasGeneralChatId: !!chatId,
+      })
+      return { ok: false, reason: 'Telegram is not configured' }
+    }
+
+    if (debugStubShouldFail('general')) {
+      console.warn('[contact-agent] TELEGRAM_DEBUG_STUB_FAIL=general — skipping real send')
+      return { ok: false, reason: 'debug stub failure (general)' }
+    }
+
+    console.log('[contact-agent] sending Telegram (general contacts)', {
+      chatIdLength: chatId.length,
+      textLength: textGeneral.length,
+    })
+
+    return sendTelegramTextMessage({
+      botToken,
+      chatId,
+      text: textGeneral,
+    })
+  }
+
   const textGeneral = formatAgentContactTelegramMessage('general', normalized)
   const textAgent = formatAgentContactTelegramMessage('agent', normalized)
 
-  console.log('[contact-agent] outgoing Telegram payloads (stub)', {
+  console.log('[contact-agent] outgoing Telegram payloads (stub, agent submission)', {
     generalChatId: routing.generalChatId ?? '(unset)',
     agentChatId: routing.agentChatId ?? '(unset)',
   })
@@ -80,6 +113,6 @@ export async function deliverAgentContactTelegramStub(
   })
   if (!r2.ok) return r2
 
-  console.log('[contact-agent] route: both simulated Telegram deliveries succeeded')
+  console.log('[contact-agent] route: both simulated Telegram deliveries succeeded (agent branch)')
   return { ok: true }
 }
