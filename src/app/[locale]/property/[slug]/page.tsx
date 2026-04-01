@@ -107,10 +107,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const baths = sanityFields.baths;
   const area = sanityFields.area;
 
-  const descriptionParas = sanityFields.description
-    ? sanityFields.description.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
-    : [];
-
   const sanityWithCoords = sanityProperty as {
     coordinates?: { lat?: number; lng?: number } | null;
     coordinatesLat?: number | null;
@@ -223,13 +219,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           checkAllLabel={tPropertyDetail('checkAllAmenities')}
                         />
                         )}
-                        <div className="flex flex-col gap-5">
-                            {descriptionParas.map((para, i) => (
-                              <p key={i} className='text-dark dark:text-white text-xm '>
-                                {para}
-                              </p>
-                            ))}
-                        </div>
+                        {sanityFields.description ? (
+                          <p className='text-dark dark:text-white text-xm whitespace-pre-line'>
+                            {sanityFields.description}
+                          </p>
+                        ) : null}
                         {propertyOffers.length > 0 && (
                         <div className="py-8 mt-8 border-t border-dark/5 dark:border-white/15">
                             <h3 className='text-xl font-medium'>{tPropertyDetail('whatThisPropertyOffers')}</h3>

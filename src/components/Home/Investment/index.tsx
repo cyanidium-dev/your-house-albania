@@ -80,7 +80,7 @@ const Investment: React.FC<{ locale: string; investmentData?: InvestmentData }> 
               {title}
             </h2>
             {description && (
-              <p className="text-base text-dark/50 dark:text-white/50">
+              <p className="text-base text-dark/50 dark:text-white/50 whitespace-pre-line">
                 {description}
               </p>
             )}

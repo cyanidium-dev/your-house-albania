@@ -117,7 +117,7 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
             <h2 className="text-2xl sm:text-3xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0">
               {title}
             </h2>
-            <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0">
+            <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0 whitespace-pre-line">
               {description}
             </p>
             <Link

@@ -66,7 +66,7 @@ export function LandingGridSection({
                 <h2 className="lg:text-52 text-40 font-medium dark:text-white">{title}</h2>
               ) : null}
               {subtitle ? (
-                <p className="text-dark/50 dark:text-white/50 text-xm mt-2">{subtitle}</p>
+                <p className="text-dark/50 dark:text-white/50 text-xm mt-2 whitespace-pre-line">{subtitle}</p>
               ) : null}
             </div>
           </div>
@@ -109,7 +109,7 @@ export function LandingGridSection({
                     {cardTitle}
                   </div>
                   {cardDescription ? (
-                    <div className="mt-2 text-sm text-dark/60 dark:text-white/60 line-clamp-2">
+                    <div className="mt-2 text-sm text-dark/60 dark:text-white/60 line-clamp-2 whitespace-pre-line">
                       {cardDescription}
                     </div>
                   ) : null}

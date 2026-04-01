@@ -84,7 +84,7 @@ const Properties: React.FC<{
             </h2>
           ) : null}
           {description ? (
-            <p className='text-xm font-normal text-black/50 dark:text-white/50 text-center'>
+            <p className='text-xm font-normal text-black/50 dark:text-white/50 text-center whitespace-pre-line'>
               {description}
             </p>
           ) : null}

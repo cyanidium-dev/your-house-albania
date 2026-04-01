@@ -92,7 +92,7 @@ const Cities: React.FC<{
               </h2>
             ) : null}
             {description ? (
-              <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0">
+              <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0 whitespace-pre-line">
                 {description}
               </p>
             ) : null}

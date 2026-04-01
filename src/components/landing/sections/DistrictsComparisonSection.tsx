@@ -128,7 +128,7 @@ export function DistrictsComparisonSection({
     return (
       <div className="mt-8 flex flex-col gap-6">
         {closingText ? (
-          <p className="text-dark/75 dark:text-white/75 text-base leading-relaxed">{closingText}</p>
+          <p className="text-dark/75 dark:text-white/75 text-base leading-relaxed whitespace-pre-line">{closingText}</p>
         ) : null}
         {showCtaRow ? (
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
@@ -155,7 +155,7 @@ export function DistrictsComparisonSection({
               <h2 className="lg:text-52 text-40 font-medium dark:text-white">{title}</h2>
             ) : null}
             {subtitle ? (
-              <p className="text-dark/50 dark:text-white/50 text-xm mt-2">{subtitle}</p>
+              <p className="text-dark/50 dark:text-white/50 text-xm mt-2 whitespace-pre-line">{subtitle}</p>
             ) : null}
           </div>
         )}

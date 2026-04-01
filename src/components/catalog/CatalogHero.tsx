@@ -49,7 +49,7 @@ export function CatalogHero({
       />
     </div>
   ) : (
-    <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 w-full mx-auto md:mt-3">
+    <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 w-full mx-auto md:mt-3 whitespace-pre-line">
       {introFallback}
     </p>
   );

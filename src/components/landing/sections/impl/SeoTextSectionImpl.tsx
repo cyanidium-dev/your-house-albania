@@ -66,20 +66,9 @@ const SeoText: React.FC<{ seoTextData?: SeoTextData }> = async ({ seoTextData })
                 {fallbackMsg}
               </p>
             ) : isPlainText && typeof content === "string" ? (
-              <div className="space-y-5">
-                {content
-                  .split(/\n\n+/)
-                  .map((p) => p.trim())
-                  .filter(Boolean)
-                  .map((para, i) => (
-                    <p
-                      key={i}
-                      className="text-dark/75 dark:text-white/75 text-base sm:text-lg leading-[1.7]"
-                    >
-                      {para}
-                    </p>
-                  ))}
-              </div>
+              <p className="text-dark/75 dark:text-white/75 text-base sm:text-lg leading-[1.7] whitespace-pre-line">
+                {content}
+              </p>
             ) : (
               <PortableText
                 value={((content as unknown[]) ?? []) as PortableTextBlock[]}
