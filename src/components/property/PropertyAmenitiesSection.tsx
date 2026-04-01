@@ -26,7 +26,7 @@ function AmenityRow({
             width={32}
             height={32}
             alt={item.customIconAlt ?? ''}
-            className="w-8 h-8 object-contain"
+            className="w-8 h-8 object-contain dark:invert"
             unoptimized
           />
         ) : (

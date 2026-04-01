@@ -48,7 +48,7 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
               <h2 className="lg:text-52 text-40 font-medium text-dark dark:text-white mt-4 mb-2">
                 {title}
               </h2>
-              <p className="text-base text-dark/50 dark:text-white/50">
+              <p className="text-base text-dark/50 dark:text-white/50 whitespace-pre-line">
                 {subtitle}
               </p>
             </div>
@@ -88,7 +88,7 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
                   </div>
                   <div className="flex flex-col gap-2.5">
                     <h3 className="text-white text-2xl">{type.title}</h3>
-                    <p className="text-white/80 text-base leading-6">
+                    <p className="text-white/80 text-base leading-6 whitespace-pre-line">
                       {type.shortDescription || ""}
                     </p>
                   </div>

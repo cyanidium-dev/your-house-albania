@@ -26,7 +26,7 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge }) => {
                     </p>
                 </div>
                 <h2 className="text-dark text-52 relative font-bold dark:text-white " >{title}</h2>
-                <p className="text-lg text-dark/50 dark:text-white/50 font-normal w-full mx-auto">
+                <p className="text-lg text-dark/50 dark:text-white/50 font-normal w-full mx-auto whitespace-pre-line">
                     {description}
                 </p>
             </section>

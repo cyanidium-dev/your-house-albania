@@ -116,7 +116,7 @@ function HighlightCardsLight({ cards }: { cards: MarketingHighlightCard[] }) {
             </div>
           )}
           {c.description ? (
-            <div className="mt-2 text-xs text-dark/50 dark:text-white/50 leading-snug">
+            <div className="mt-2 text-xs text-dark/50 dark:text-white/50 leading-snug whitespace-pre-line">
               {c.description}
             </div>
           ) : null}
@@ -157,7 +157,7 @@ function HighlightCardsDark({
             </div>
           )}
           {c.description ? (
-            <div className="mt-2 text-xs text-white/50 leading-snug">
+            <div className="mt-2 text-xs text-white/50 leading-snug whitespace-pre-line">
               {c.description}
             </div>
           ) : null}
@@ -257,7 +257,7 @@ function MarketingIntro({
             isDark
               ? "text-white/80 max-w-2xl"
               : "text-dark/50 dark:text-white/50"
-          } ${textAlign}`}
+          } ${textAlign} whitespace-pre-line`}
         >
           {description}
         </p>
@@ -278,7 +278,7 @@ function MarketingIntro({
         <p
           className={`text-sm ${
             isDark ? "text-white/70" : "text-dark/60 dark:text-white/60"
-          } ${textAlign}`}
+          } ${textAlign} whitespace-pre-line`}
         >
           {supportingText}
         </p>
@@ -715,12 +715,12 @@ function GroupedVariant({
         </h2>
       ) : null}
       {data.subtitle?.trim() ? (
-        <p className="text-lg md:text-xl text-dark/70 dark:text-white/70 leading-snug">
+        <p className="text-lg md:text-xl text-dark/70 dark:text-white/70 leading-snug whitespace-pre-line">
           {data.subtitle}
         </p>
       ) : null}
       {data.description ? (
-        <p className="text-dark/50 dark:text-white/50 text-base">
+        <p className="text-dark/50 dark:text-white/50 text-base whitespace-pre-line">
           {data.description}
         </p>
       ) : null}
@@ -743,7 +743,7 @@ function GroupedVariant({
               </h3>
             ) : null}
             {hasDesc ? (
-              <p className="text-dark/60 dark:text-white/60 text-base leading-relaxed">
+              <p className="text-dark/60 dark:text-white/60 text-base leading-relaxed whitespace-pre-line">
                 {g.description}
               </p>
             ) : null}
@@ -758,7 +758,7 @@ function GroupedVariant({
 
   const supportingBlock =
     data.supportingText?.trim() ? (
-      <p className="text-dark/60 dark:text-white/60 text-sm leading-relaxed">
+      <p className="text-dark/60 dark:text-white/60 text-sm leading-relaxed whitespace-pre-line">
         {data.supportingText}
       </p>
     ) : null;

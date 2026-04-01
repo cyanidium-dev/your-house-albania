@@ -26,6 +26,8 @@ export function PropertyArticlesSection({
   if (!section || typeof section !== "object") return null;
 
   const s = section as Record<string, unknown>;
+  if (s.enabled === false) return null;
+
   const modeRaw = String(s.mode ?? "").toLowerCase();
   const posts = s.posts;
   const hasPosts =

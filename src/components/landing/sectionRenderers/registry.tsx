@@ -5,11 +5,11 @@ import type { SectionHandler } from './handlers/types'
 import { heroSectionHandler } from './handlers/heroSection'
 import { propertyCarouselSectionHandler } from './handlers/propertyCarouselSection'
 import { locationCarouselSectionHandler } from './handlers/locationCarouselSection'
+import { landingCarouselSectionHandler } from './handlers/landingCarouselSection'
 import { propertyTypesSectionHandler } from './handlers/propertyTypesSection'
 import { seoTextSectionHandler } from './handlers/seoTextSection'
 import { faqSectionHandler } from './handlers/faqSection'
 import { articlesSectionHandler } from './handlers/articlesSection'
-import { cityRichDescriptionSectionHandler } from './handlers/cityRichDescriptionSection'
 import { districtsComparisonSectionHandler } from './handlers/districtsComparisonSection'
 import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
 import { landingCollectionSectionHandler } from './handlers/landingCollectionSection'
@@ -21,11 +21,11 @@ const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
   propertyCarouselSection: propertyCarouselSectionHandler,
   locationCarouselSection: locationCarouselSectionHandler,
+  landingCarouselSection: landingCarouselSectionHandler,
   propertyTypesSection: propertyTypesSectionHandler,
   seoTextSection: seoTextSectionHandler,
   faqSection: faqSectionHandler,
   articlesSection: articlesSectionHandler,
-  cityRichDescriptionSection: cityRichDescriptionSectionHandler,
   districtsComparisonSection: districtsComparisonSectionHandler,
   linkedGallerySection: linkedGallerySectionHandler,
   landingCollectionSection: landingCollectionSectionHandler,

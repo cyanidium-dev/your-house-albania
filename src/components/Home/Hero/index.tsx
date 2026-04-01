@@ -101,7 +101,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               {title}
             </h1>
             {subtitle ? (
-              <p className='text-inherit text-lg mb-6'>{subtitle}</p>
+              <p className='text-inherit text-lg mb-6 whitespace-pre-line'>{subtitle}</p>
             ) : null}
             {hasPrimaryCta || hasSecondaryCta ? (
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start">

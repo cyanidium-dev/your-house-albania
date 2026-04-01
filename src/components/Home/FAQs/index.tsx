@@ -64,7 +64,7 @@ const FAQ: React.FC<Props> = async ({ faqData }) => {
                                     <AccordionTrigger>{item.question}</AccordionTrigger>
                                     <AccordionContent>
                                       {typeof item.answer === 'string' ? (
-                                        item.answer
+                                        <span className="whitespace-pre-line">{item.answer}</span>
                                       ) : Array.isArray(item.answer) ? (
                                         <PortableText value={item.answer} />
                                       ) : null}

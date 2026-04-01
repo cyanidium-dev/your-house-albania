@@ -71,7 +71,7 @@ export function ConfirmModal(props: ConfirmModalProps) {
         <h2 id="confirm-modal-title" className="text-xl font-semibold text-dark dark:text-white mb-2">
           {title}
         </h2>
-        <p id="confirm-modal-desc" className="text-dark/70 dark:text-white/70 text-sm mb-6">
+        <p id="confirm-modal-desc" className="text-dark/70 dark:text-white/70 text-sm mb-6 whitespace-pre-line">
           {description}
         </p>
         <div className="flex gap-3 justify-end">

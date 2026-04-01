@@ -63,7 +63,7 @@ const PropertyTypes: React.FC<{
               <h2 className="lg:text-52 text-40 font-medium text-dark dark:text-white mt-4 mb-2">
                 {title}
               </h2>
-              {subtitle ? <p className="text-base text-dark/50 dark:text-white/50">{subtitle}</p> : null}
+              {subtitle ? <p className="text-base text-dark/50 dark:text-white/50 whitespace-pre-line">{subtitle}</p> : null}
             </div>
             {ctaLabel && href ? (
               <Link
@@ -107,7 +107,7 @@ const PropertyTypes: React.FC<{
                   </div>
                   <div className="flex flex-col gap-2.5">
                     <h3 className="text-white text-2xl">{type.title}</h3>
-                    <p className="text-white/80 text-base leading-6">
+                    <p className="text-white/80 text-base leading-6 whitespace-pre-line">
                       {type.shortDescription || ""}
                     </p>
                   </div>

@@ -54,12 +54,12 @@ const AgentsPromo: React.FC<{ agentsPromoData?: AgentsPromoData }> = async ({
                 {title}
               </h2>
               {subtitle && (
-                <p className="text-white/90 text-center text-lg max-w-2xl">
+                <p className="text-white/90 text-center text-lg max-w-2xl whitespace-pre-line">
                   {subtitle}
                 </p>
               )}
               {description && (
-                <p className="text-white/80 text-center text-base max-w-2xl">
+                <p className="text-white/80 text-center text-base max-w-2xl whitespace-pre-line">
                   {description}
                 </p>
               )}

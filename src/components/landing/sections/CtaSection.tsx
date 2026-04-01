@@ -92,7 +92,7 @@ export function CtaSection({
             </h2>
           ) : null}
           {description?.trim() ? (
-            <p className="text-dark/60 dark:text-white/60 text-base md:text-lg leading-relaxed">{description}</p>
+            <p className="text-dark/60 dark:text-white/60 text-base md:text-lg leading-relaxed whitespace-pre-line">{description}</p>
           ) : null}
           {showCtas ? (
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center w-full mt-2">
