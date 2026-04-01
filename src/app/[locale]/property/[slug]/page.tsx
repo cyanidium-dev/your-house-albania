@@ -16,6 +16,7 @@ import { getBaseUrl } from '@/lib/seo/baseUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
+import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
@@ -138,6 +139,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const tPropertyDetail = await getTranslations('Shared.propertyDetail');
   const amenities = mapPropertyAmenityDisplayItems(sanityProperty as never, locale);
   const propertyOffers = mapSanityPropertyOffers(sanityProperty as never, locale);
+
+  const articlesSection = (sanityProperty as { articlesSection?: unknown }).articlesSection;
 
   const dealTypeKey = (() => {
     const s = (rawProperty.status ?? '').toLowerCase();
@@ -274,6 +277,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     </div>
                   </section>
                 )}
+                <PropertyArticlesSection locale={locale} section={articlesSection} />
             </div>
             {/* Mobile-only sticky bottom bar: price + CTA */}
             <div

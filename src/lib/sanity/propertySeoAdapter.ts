@@ -34,7 +34,7 @@ export type PropertyMetadataOptions = {
  * title: ogTitle → metaTitle → itemTitle → site metaTitle → template
  * description: ogDescription → metaDescription → itemDescription → site metaDescription → template
  * Images: seo.ogImage → gallery first image → site defaultSeo.ogImage
- * Twitter: summary (compact card hint); Open Graph image tags unchanged when URL exists.
+ * Twitter: same resolved title/description as metadata / Open Graph (summary card).
  */
 export function buildPropertyMetadata(
   propertySeo: PropertySeo,

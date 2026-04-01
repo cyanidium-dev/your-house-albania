@@ -23,6 +23,10 @@ const BlogSmall: React.FC<{
   manualArticleTitles?: unknown;
   /** Overrides default “Read more” on cards when set (e.g. property articlesSection.cardCtaLabel). */
   cardCtaLabel?: string | undefined;
+  /**
+   * Property articles block: manual CMS posts only — no latest fetch, no empty section without posts.
+   */
+  manualOnly?: boolean | undefined;
 }> = async ({
   locale,
   posts,
@@ -31,6 +35,7 @@ const BlogSmall: React.FC<{
   cta,
   mode,
   cardCtaLabel,
+  manualOnly,
 }) => {
   const t = await getTranslations("Home.blog");
 
@@ -50,6 +55,10 @@ const BlogSmall: React.FC<{
     Array.isArray(posts) &&
     posts.length > 0 &&
     posts.some((p) => hasUsableSlug(p));
+
+  if (manualOnly && !hasValidCmsPosts) {
+    return null;
+  }
 
   if (
     (modeStr === "selected" || modeStr === "manual") &&
@@ -72,7 +81,8 @@ const BlogSmall: React.FC<{
       : [];
 
     const shouldFetchLatest =
-      modeStr === "latest" || (!modeStr && !hasValidCmsPosts);
+      !manualOnly &&
+      (modeStr === "latest" || (!modeStr && !hasValidCmsPosts));
 
     fetchedPosts =
       shouldFetchLatest && !hasValidCmsPosts

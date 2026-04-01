@@ -14,8 +14,6 @@ export type LandingSeoObject = {
   ogDescription?: LocalizedField
   ogImage?: { asset?: { url?: string } }
   keywords?: LocalizedField
-  twitterTitle?: LocalizedField
-  twitterDescription?: LocalizedField
   canonicalUrl?: string | LocalizedField
   noIndex?: boolean
   noFollow?: boolean
@@ -63,7 +61,7 @@ function resolveKeywords(raw: LandingSeoObject['keywords'] | null | undefined, l
  * landingPage.seo → Next Metadata (home, cities index, city detail landings).
  * Title/description: og → meta → item (optional) → site default → template.
  * Images: landing seo.ogImage → item image → site defaultSeo.ogImage
- * Twitter: summary (compact); Open Graph tags preserved.
+ * Twitter: same resolved title/description as metadata / Open Graph (no separate CMS Twitter fields).
  */
 export function buildLandingMetadata(
   landingSeo: LandingSeo | undefined,
@@ -91,11 +89,6 @@ export function buildLandingMetadata(
     siteDefaultSeo?.ogImage?.asset?.url,
   )
 
-  const twitterTitle =
-    resolveLocalizedString(landingSeo?.twitterTitle as never, locale) || title
-  const twitterDescription =
-    resolveLocalizedString(landingSeo?.twitterDescription as never, locale) || description
-
   const canonical = resolveCanonicalUrl(landingSeo?.canonicalUrl, locale)
   const noIndex = landingSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false
   const noFollow = landingSeo?.noFollow ?? siteDefaultSeo?.noFollow ?? false
@@ -114,8 +107,8 @@ export function buildLandingMetadata(
     },
     twitter: {
       card: 'summary',
-      title: twitterTitle,
-      description: twitterDescription,
+      title,
+      description,
     },
     robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
   }
