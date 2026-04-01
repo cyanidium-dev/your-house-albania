@@ -231,7 +231,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                 {propertyOffers.map((item) => (
                                   <div key={item.key} className="flex items-center gap-2.5">
                                     {item.customIconUrl ? (
-                                      <Image src={item.customIconUrl} width={24} height={24} alt={item.customIconAlt ?? ''} className="w-6 h-6 object-contain shrink-0" unoptimized={true} />
+                                      <Image src={item.customIconUrl} width={24} height={24} alt={item.customIconAlt ?? ''} className="w-6 h-6 object-contain shrink-0 dark:invert" unoptimized={true} />
                                     ) : (
                                       <Icon icon={resolvePropertyIconKey(item.iconKey)} width={24} height={24} className="text-dark dark:text-white shrink-0" />
                                     )}
