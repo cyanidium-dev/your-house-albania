@@ -26,6 +26,7 @@ export type LandingSectionBase = {
   benefits?: unknown[]
   primaryImage?: { asset?: { url?: string }; alt?: string }
   secondaryImage?: { asset?: { url?: string }; alt?: string }
+  /** Portable text / body; `seoTextSection` may pair with optional `title`, `videoUrl`, `cta` */
   content?: unknown
   items?: unknown[]
   /** `investorLogosSection`: dereferenced `agent` documents */
