@@ -12,7 +12,7 @@ import { articlesSectionHandler } from './handlers/articlesSection'
 import { cityRichDescriptionSectionHandler } from './handlers/cityRichDescriptionSection'
 import { districtsComparisonSectionHandler } from './handlers/districtsComparisonSection'
 import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
-import { landingGridSectionHandler } from './handlers/landingGridSection'
+import { landingCollectionSectionHandler } from './handlers/landingCollectionSection'
 import { investorLogosSectionHandler } from './handlers/investorLogosSection'
 import { marketingContentSectionHandler } from './handlers/marketingContentSection'
 import { ctaSectionHandler } from './handlers/ctaSection'
@@ -28,7 +28,7 @@ const registry: Record<string, SectionHandler> = {
   cityRichDescriptionSection: cityRichDescriptionSectionHandler,
   districtsComparisonSection: districtsComparisonSectionHandler,
   linkedGallerySection: linkedGallerySectionHandler,
-  landingGridSection: landingGridSectionHandler,
+  landingCollectionSection: landingCollectionSectionHandler,
   investorLogosSection: investorLogosSectionHandler,
   marketingContentSection: marketingContentSectionHandler,
   ctaSection: ctaSectionHandler,
@@ -46,18 +46,11 @@ export async function renderLandingSection(input: {
   const handler = registry[type]
   if (!handler) {
     if (process.env.NODE_ENV === 'development') {
-      if (type === 'landingCarouselSection') {
-        console.warn(
-          '[LandingRegistry] landingCarouselSection is not implemented yet (Phase 0: no renderer). Remove it from the page or add a handler when the section is ready. Section skipped.',
-          { locale: input.locale, key: (input.section as { _key?: string })?._key ?? null },
-        )
-      } else {
-        console.log('[LandingRegistry] no handler for section type', {
-          locale: input.locale,
-          type,
-          key: (input.section as { _key?: string })?._key ?? null,
-        })
-      }
+      console.log('[LandingRegistry] no handler for section type', {
+        locale: input.locale,
+        type,
+        key: (input.section as { _key?: string })?._key ?? null,
+      })
     }
     return null
   }
