@@ -59,8 +59,8 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
     .map((o) => ({ value: o.value, label: o.label }))
 
   return (
-    <section className='!py-0'>
-      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 overflow-hidden relative min-h-screen flex'>
+    <section className='relative z-10 !py-0'>
+      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 relative min-h-screen flex'>
         {bgImageUrl ? (
           <>
             <div className="absolute inset-0 z-0">

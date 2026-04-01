@@ -2,6 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { cn } from "@/lib/utils";
 
 export type MarketingVariant = "split" | "splitDark" | "grouped";
@@ -52,21 +53,6 @@ export type MarketingContentData = {
 
 const SPLIT_PRIMARY_FALLBACK = "/images/investment/primary-fallback.jpg";
 const SPLIT_SECONDARY_FALLBACK = "/images/investment/secondary-fallback.jpg";
-
-function marketingCtaHref(locale: string, href: string | undefined): string {
-  if (!href) return "#";
-  if (
-    href.startsWith("http://") ||
-    href.startsWith("https://") ||
-    href.startsWith("mailto:") ||
-    href.startsWith("tel:") ||
-    href.startsWith("#")
-  ) {
-    return href;
-  }
-  if (href.startsWith("/")) return `/${locale}${href}`;
-  return `/${locale}/${href}`;
-}
 
 function LightBulletList({
   items,
@@ -212,7 +198,7 @@ function MarketingIntro({
   theme,
   align = "start",
 }: IntroProps) {
-  const href = marketingCtaHref(locale, ctaHref);
+  const href = resolveLocaleHref(ctaHref ?? "", locale);
   const isDark = theme === "dark";
   const textAlign = align === "center" ? "text-center" : "";
   const flexAlign = align === "center" ? "items-center" : "";
@@ -781,7 +767,7 @@ function GroupedVariant({
     data.ctaLabel && data.ctaHref ? (
       <div>
         <Link
-          href={marketingCtaHref(locale, data.ctaHref)}
+          href={resolveLocaleHref(data.ctaHref ?? "", locale)}
           className="inline-flex bg-primary py-4 px-8 rounded-full text-white hover:bg-dark duration-300"
         >
           {data.ctaLabel}
