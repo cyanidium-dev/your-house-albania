@@ -343,6 +343,10 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       ogDescription,
       ogImage { asset-> { url } },
       noIndex
+    },
+    "articlesSection": articlesSection {
+      enabled,
+      "posts": posts[]-> ${blogListingProjection}
     }
   }`;
   try {

@@ -1,6 +1,5 @@
 import * as React from "react";
 import BlogSmall from "@/components/shared/Blog";
-import { resolveLocalizedString } from "@/lib/sanity/localized";
 
 function hasUsableSlug(p: unknown): boolean {
   if (!p || typeof p !== "object") return false;
@@ -12,9 +11,14 @@ function hasUsableSlug(p: unknown): boolean {
   return false;
 }
 
+export type PropertyArticlesSectionSlice = {
+  enabled?: boolean;
+  posts?: unknown[];
+};
+
 /**
- * CMS `articlesSection` on property documents (same shape as landing).
- * Renders only when section has content; no empty chrome.
+ * Property document `articlesSection`: manual posts only (`enabled` + `posts`).
+ * Section heading, subheading, and CTA copy come from `Home.blog` via `BlogSmall`.
  */
 export function PropertyArticlesSection({
   locale,
@@ -25,45 +29,21 @@ export function PropertyArticlesSection({
 }) {
   if (!section || typeof section !== "object") return null;
 
-  const s = section as Record<string, unknown>;
+  const s = section as PropertyArticlesSectionSlice;
   if (s.enabled === false) return null;
 
-  const modeRaw = String(s.mode ?? "").toLowerCase();
   const posts = s.posts;
   const hasPosts =
-    Array.isArray(posts) && posts.length > 0 && posts.some((p) => hasUsableSlug(p));
-
-  if (modeRaw === "selected" || modeRaw === "manual") {
-    if (!hasPosts) return null;
-  }
-
-  const title =
-    resolveLocalizedString(s.title as never, locale)?.trim() || undefined;
-  const subtitle =
-    resolveLocalizedString(s.subtitle as never, locale)?.trim() || undefined;
-  const ctaRaw = s.cta as { href?: string; label?: unknown } | undefined;
-  const ctaHref = typeof ctaRaw?.href === "string" ? ctaRaw.href : undefined;
-  const ctaLabel = resolveLocalizedString(ctaRaw?.label as never, locale) || undefined;
-  const cardCtaLabel =
-    resolveLocalizedString(s.cardCtaLabel as never, locale)?.trim() || undefined;
-
-  const cta =
-    ctaHref || ctaLabel ? { href: ctaHref, label: ctaLabel } : undefined;
-
-  const effectivePosts = modeRaw === "latest" ? undefined : (posts as never);
+    Array.isArray(posts) &&
+    posts.length > 0 &&
+    posts.some((p) => hasUsableSlug(p));
+  if (!hasPosts) return null;
 
   return (
     <BlogSmall
       locale={locale}
-      posts={effectivePosts}
-      title={title}
-      subtitle={subtitle}
-      cta={cta}
-      mode={modeRaw || undefined}
-      manualArticleTitles={
-        Array.isArray(s.manualArticleTitles) ? s.manualArticleTitles : undefined
-      }
-      cardCtaLabel={cardCtaLabel}
+      posts={posts}
+      manualOnly
     />
   );
 }

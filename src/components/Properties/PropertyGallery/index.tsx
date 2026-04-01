@@ -23,6 +23,8 @@ export function PropertyGallery({ images }: Props) {
   const mobileScrollerRef = useRef<HTMLDivElement>(null);
   const galleryImages = images;
   const t = useTranslations('Shared.propertyDetail');
+  const tCard = useTranslations('Shared.propertyCard');
+  /** Desktop grid: at most first N images; mobile slider shows the full gallery. */
   const previewImages = galleryImages.slice(0, PREVIEW_MAX);
   const count = previewImages.length;
   const hasMoreImages = galleryImages.length > PREVIEW_MAX;
@@ -73,17 +75,33 @@ export function PropertyGallery({ images }: Props) {
 
   useEffect(() => {
     const el = mobileScrollerRef.current;
-    if (!el || previewImages.length <= 1) return;
+    if (!el || galleryImages.length <= 1) return;
     const onScroll = () => {
       const w = el.clientWidth;
       if (w <= 0) return;
       const idx = Math.round(el.scrollLeft / w);
-      setMobileSlideIndex(Math.min(idx, previewImages.length - 1));
+      setMobileSlideIndex(Math.min(idx, galleryImages.length - 1));
     };
     el.addEventListener('scroll', onScroll);
     onScroll();
     return () => el.removeEventListener('scroll', onScroll);
-  }, [previewImages.length]);
+  }, [galleryImages.length]);
+
+  const goMobilePrev = useCallback(() => {
+    const el = mobileScrollerRef.current;
+    if (!el) return;
+    const w = el.clientWidth;
+    if (w <= 0) return;
+    el.scrollBy({ left: -w, behavior: 'smooth' });
+  }, []);
+
+  const goMobileNext = useCallback(() => {
+    const el = mobileScrollerRef.current;
+    if (!el) return;
+    const w = el.clientWidth;
+    if (w <= 0) return;
+    el.scrollBy({ left: w, behavior: 'smooth' });
+  }, []);
 
   useEffect(() => {
     if (lightboxOpen && typeof window !== 'undefined') {
@@ -123,9 +141,9 @@ export function PropertyGallery({ images }: Props) {
   return (
     <>
       <div className="mt-8">
-        {/* Mobile: slider (no arrows, counter bottom-right, tap opens gallery) */}
+        {/* Mobile: full gallery slider + prev/next; tap slide opens lightbox */}
         <div className="lg:hidden relative">
-          {previewImages.length === 1 ? (
+          {galleryImages.length === 1 ? (
             <button
               type="button"
               onClick={() => openLightbox(0)}
@@ -133,8 +151,8 @@ export function PropertyGallery({ images }: Props) {
               aria-label="Open image"
             >
               <Image
-                src={previewImages[0].url}
-                alt={imgAlt(previewImages[0], 'Property image')}
+                src={galleryImages[0].url}
+                alt={imgAlt(galleryImages[0], 'Property image')}
                 fill
                 className="object-cover object-center"
                 sizes="100vw"
@@ -150,7 +168,7 @@ export function PropertyGallery({ images }: Props) {
                   '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
                 )}
               >
-                {previewImages.map((img, idx) => (
+                {galleryImages.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -169,16 +187,50 @@ export function PropertyGallery({ images }: Props) {
                   </button>
                 ))}
               </div>
-              <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/60 text-white text-sm font-medium pointer-events-none">
-                {mobileSlideIndex + 1}/{previewImages.length}
+              <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/60 text-white text-sm font-medium pointer-events-none z-[1]">
+                {mobileSlideIndex + 1}/{galleryImages.length}
               </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goMobilePrev();
+                }}
+                disabled={mobileSlideIndex <= 0}
+                className={cn(
+                  'absolute left-2 top-1/2 -translate-y-1/2 z-[2] p-2 rounded-full bg-black/50 text-white focus:outline-none focus:ring-2 focus:ring-white/80',
+                  mobileSlideIndex <= 0
+                    ? 'opacity-40 cursor-not-allowed'
+                    : 'hover:bg-black/65',
+                )}
+                aria-label={tCard('previousImage')}
+              >
+                <Icon icon="ph:caret-left" width={28} height={28} />
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goMobileNext();
+                }}
+                disabled={mobileSlideIndex >= galleryImages.length - 1}
+                className={cn(
+                  'absolute right-2 top-1/2 -translate-y-1/2 z-[2] p-2 rounded-full bg-black/50 text-white focus:outline-none focus:ring-2 focus:ring-white/80',
+                  mobileSlideIndex >= galleryImages.length - 1
+                    ? 'opacity-40 cursor-not-allowed'
+                    : 'hover:bg-black/65',
+                )}
+                aria-label={tCard('nextImage')}
+              >
+                <Icon icon="ph:caret-right" width={28} height={28} />
+              </button>
             </div>
           )}
-          {hasMoreImages && (
+          {galleryImages.length > 1 && (
             <button
               type="button"
-              onClick={() => openLightbox(0)}
-              className="mt-3 w-full py-3 rounded-full font-semibold bg-dark/10 dark:bg-white/10 hover:bg-dark/20 dark:hover:bg-white/20 text-dark dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer lg:hidden"
+              onClick={() => openLightbox(mobileSlideIndex)}
+              className="mt-3 w-full py-3 rounded-full font-semibold bg-dark/10 dark:bg-white/10 hover:bg-dark/20 dark:hover:bg-white/20 text-dark dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
             >
               {t('checkAllPhotos')} ({totalCount})
             </button>
