@@ -738,49 +738,58 @@ export function PropertySearchBar({
 
   return (
     <>
-      {/* Mobile: compact chrome on small viewports only (md:hidden). No scroll gate — avoids initial layout shift. */}
+      {/* Mobile: single compact row — deal tabs + filters icon (md:hidden). Modal toggle preserves existing portal/handlers. */}
       <div
         className={cn(
-          "mb-6 min-w-0 rounded-2xl border px-3 py-3 shadow-md backdrop-blur-md md:hidden",
+          "mb-5 min-w-0 rounded-2xl border px-2.5 py-2 shadow-md backdrop-blur-md md:hidden",
           "border-dark/10 bg-white/55 dark:border-white/10 dark:bg-dark/55"
         )}
       >
-        <div className="flex min-w-0 flex-col gap-3">
-          <button
-            type="button"
-            onClick={() => setMobileFilterModalOpen((o) => !o)}
-            className={cn(
-              "flex min-h-12 w-full items-center justify-center rounded-full border border-dark/10 bg-dark/5 px-4 py-3 text-sm font-semibold shadow-sm transition-colors",
-              "text-primary hover:bg-dark/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-              "dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/15"
-            )}
+        <div className="flex min-h-[2.25rem] min-w-0 w-full items-stretch overflow-hidden rounded-full bg-dark/[0.07] p-0.5 dark:bg-white/[0.08]">
+          <div
+            className="flex min-h-9 min-w-0 flex-1 items-stretch"
+            role="group"
+            aria-label={t("dealType")}
           >
-            {mobileFilterModalOpen ? t("closeModal") : t("mobileSearchOpen")}
-          </button>
-          <div className="border-t border-dark/10 pt-3 dark:border-white/10">
-            <div
-              className="grid min-h-10 w-full min-w-0 grid-cols-3 rounded-full bg-dark/[0.07] p-1 dark:bg-white/[0.08]"
-              role="group"
-              aria-label={t("dealType")}
+            {dealTypeValues.map((v) => (
+              <div
+                key={v}
+                className="flex min-h-9 min-w-0 flex-1 items-stretch overflow-hidden border-r border-dark/10 dark:border-white/10"
+              >
+                <button
+                  type="button"
+                  onClick={() => applyCompactDealTab(v)}
+                  className={cn(
+                    "flex min-h-9 min-w-0 w-full max-w-full items-center justify-center px-1 py-1 text-center text-[11px] font-medium leading-tight transition-colors sm:text-xs",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
+                    deal === v
+                      ? "rounded-full bg-white text-dark shadow-sm ring-1 ring-dark/10 dark:bg-dark dark:text-white dark:ring-white/15"
+                      : "rounded-full text-dark/70 ring-1 ring-transparent hover:bg-dark/10 hover:ring-dark/5 dark:text-white/70 dark:hover:bg-white/10 dark:hover:ring-white/10"
+                  )}
+                >
+                  <span className="min-w-0 max-w-full truncate px-0.5">{getDealLabel(v)}</span>
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="flex min-h-9 shrink-0 items-stretch pl-0.5">
+            <button
+              type="button"
+              onClick={() => setMobileFilterModalOpen((o) => !o)}
+              aria-label={
+                mobileFilterModalOpen ? t("closeModal") : t("mobileSearchOpen")
+              }
+              aria-expanded={mobileFilterModalOpen}
+              className={cn(
+                "flex h-full min-h-9 min-w-9 max-w-[2.25rem] shrink-0 items-center justify-center rounded-full transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
+                mobileFilterModalOpen
+                  ? "bg-white text-primary shadow-sm ring-1 ring-dark/10 dark:bg-dark dark:text-primary dark:ring-white/15"
+                  : "text-dark/70 hover:bg-dark/10 dark:text-white/70 dark:hover:bg-white/10"
+              )}
             >
-              {dealTypeValues.map((v) => (
-                <div key={v} className="not-last:border-r overflow-hidden first:rounded-l-full last:rounded-r-full border-dark/10 dark:border-white/10 flex items-center justify-center">
-                  <button
-                    type="button"
-                    onClick={() => applyCompactDealTab(v)}
-                    className={cn(
-                      "min-h-10 min-w-0 w-full h-full truncate px-1.5 py-1.5 text-center text-xs font-medium transition-colors",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-                      deal === v
-                        ? "bg-white text-dark shadow-sm ring-1 ring-dark/10 dark:bg-dark dark:text-white dark:ring-white/15"
-                        : "text-dark/70 ring-1 ring-transparent hover:bg-dark/10 hover:ring-dark/5 dark:text-white/70 dark:hover:bg-white/10 dark:hover:ring-white/10"
-                    )}
-                  >
-                    <span className="block truncate px-0.5">{getDealLabel(v)}</span>
-                  </button>
-                </div>
-              ))}
-            </div>
+              <Icon icon="ph:magnifying-glass" width={18} height={18} aria-hidden />
+            </button>
           </div>
         </div>
       </div>
