@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 
 type District = {
@@ -40,20 +41,6 @@ function resolveCell(cell: unknown, locale: string): string {
   return resolveLocalizedString(cell as never, locale) || ''
 }
 
-function resolveHref(href: string, locale: string): string {
-  if (!href) return '#'
-  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) {
-    return href
-  }
-  if (href.startsWith('#')) {
-    return href
-  }
-  if (href.startsWith('/')) {
-    return `/${locale}${href}`
-  }
-  return `/${locale}/${href}`
-}
-
 function isExternalHttp(href: string): boolean {
   return href.startsWith('http://') || href.startsWith('https://')
 }
@@ -69,7 +56,7 @@ function CtaButton({
   locale: string
   variant: 'primary' | 'secondary'
 }) {
-  const resolved = resolveHref(href, locale)
+  const resolved = resolveLocaleHref(href, locale)
   const primaryClass =
     'inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-medium text-white hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
   const secondaryClass =

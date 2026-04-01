@@ -1,5 +1,5 @@
-import { Icon } from '@iconify/react';
 import Image from 'next/image';
+import { SectionHeader } from '@/components/landing/sectionPrimitives';
 import { getTranslations } from 'next-intl/server';
 import { PortableText } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
@@ -51,16 +51,13 @@ const FAQ: React.FC<Props> = async ({ faqData }) => {
                     </div>
                     ) : null}
                     <div className={showImage ? 'lg:px-12' : ''}>
-                        <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex gap-2">
-                            <Icon icon="ph:house-simple-fill" className="text-2xl text-primary " />
-                            {t('badge')}
-                        </p>
-                        <h2 className='lg:text-52 text-40 leading-[1.2] font-medium text-dark dark:text-white'>
-                            {title}
-                        </h2>
-                        <p className='text-dark/50 dark:text-white/50 pr-20'>
-                            {t('description')}
-                        </p>
+                        <SectionHeader
+                          variant="left"
+                          eyebrowText={t('badge')}
+                          title={title}
+                          subtitle={t('description')}
+                          subtitleClassName="pr-20"
+                        />
                         <div className="my-8">
                             <Accordion type="single" defaultValue="item-0" collapsible className="w-full flex flex-col gap-6">
                                 {items.map((item, i) => (

@@ -12,7 +12,7 @@ import { faqSectionHandler } from './handlers/faqSection'
 import { articlesSectionHandler } from './handlers/articlesSection'
 import { districtsComparisonSectionHandler } from './handlers/districtsComparisonSection'
 import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
-import { landingGridSectionHandler } from './handlers/landingGridSection'
+import { landingCollectionSectionHandler } from './handlers/landingCollectionSection'
 import { investorLogosSectionHandler } from './handlers/investorLogosSection'
 import { marketingContentSectionHandler } from './handlers/marketingContentSection'
 import { ctaSectionHandler } from './handlers/ctaSection'
@@ -28,7 +28,7 @@ const registry: Record<string, SectionHandler> = {
   articlesSection: articlesSectionHandler,
   districtsComparisonSection: districtsComparisonSectionHandler,
   linkedGallerySection: linkedGallerySectionHandler,
-  landingGridSection: landingGridSectionHandler,
+  landingCollectionSection: landingCollectionSectionHandler,
   investorLogosSection: investorLogosSectionHandler,
   marketingContentSection: marketingContentSectionHandler,
   ctaSection: ctaSectionHandler,

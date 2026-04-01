@@ -34,8 +34,11 @@ export type LandingSectionBase = {
   posts?: unknown[]
   search?: { tabs?: LandingHeroTab[] }
   enabled?: boolean
-  sourceMode?: 'manual' | 'auto' | string
+  /** `landingCollectionSection`: `grid` | `carousel` */
+  presentation?: string
   landings?: unknown[]
+  /** `landingCollectionSection`: raw manual refs when not yet coalesced into `landings` */
+  manualItems?: unknown[]
   limit?: number
   sort?: string
   linkTargetType?: 'catalog' | 'landing' | string

@@ -1098,7 +1098,7 @@ const landingPageSectionsProjection = `{
   },
   posts,
   enabled,
-  sourceMode,
+  presentation,
   limit,
   sort,
   properties,
@@ -1190,7 +1190,7 @@ const landingPageSectionsProjection = `{
     youtubeUrl
   },
   "landings": select(
-    count(coalesce(landings, resolvedLandings, manualItems, items)) > 0 && defined((coalesce(landings, resolvedLandings, manualItems, items))[0]._ref) => (coalesce(landings, resolvedLandings, manualItems, items))[]-> {
+    count(coalesce(landings, manualItems)) > 0 && defined((coalesce(landings, manualItems))[0]._ref) => (coalesce(landings, manualItems))[]-> {
       _id,
       pageType,
       "slug": slug.current,
@@ -1200,7 +1200,7 @@ const landingPageSectionsProjection = `{
       cardImage { asset-> { url }, alt },
       "linkedCity": linkedCity-> { "slug": slug.current }
     },
-    (coalesce(landings, resolvedLandings, manualItems, items))[] {
+    (coalesce(landings, manualItems))[] {
       _id,
       pageType,
       "slug": coalesce(slug.current, slug),
