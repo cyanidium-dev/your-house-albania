@@ -24,6 +24,7 @@ export type CatalogFilterProps = {
   priceRangesByDeal: Record<string, { min: number; max: number }>;
   defaultAreaRange: { min: number; max: number };
   amenityOptions: Array<{ value: string; label: string }>;
+  initialAgentSlug: string;
   initialCity: string;
   initialType: string;
   initialDealType: string;

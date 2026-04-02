@@ -17,6 +17,7 @@ import {
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
+import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -31,12 +32,14 @@ type CatalogSeoContent = {
 
 async function PropertiesListing({
   locale,
+  pathAgentSlug = '',
   pathCity = '',
   pathDistrict = '',
   searchParams,
   catalogSeo,
 }: {
   locale: string
+  pathAgentSlug?: string
   pathCity?: string
   pathDistrict?: string
   searchParams: SearchParams
@@ -61,45 +64,37 @@ async function PropertiesListing({
     areaBoundsFromData
   )
 
-  const cityFilter = (pathCity || (typeof searchParams.city === 'string' ? searchParams.city : '')).toLowerCase()
-  const districtFilter =
-    pathDistrict ||
-    (typeof searchParams.district === 'string' ? searchParams.district : '')
-  const typeFilter =
-    typeof searchParams.type === 'string' ? searchParams.type.toLowerCase() : ''
-  const dealFilter =
-    typeof searchParams.deal === 'string' ? searchParams.deal.toLowerCase() : ''
-  const sort =
-    typeof searchParams.sort === 'string' ? searchParams.sort : 'newest'
-  const amenitiesFilter =
-    typeof searchParams.amenities === 'string' && searchParams.amenities.trim()
-      ? searchParams.amenities
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean)
-      : []
-  const pageSizeRaw =
-    typeof searchParams.pageSize === 'string' ? Number(searchParams.pageSize) || DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE
+  const parsedFilters = parseCatalogFilters(
+    {
+      agentSlug: pathAgentSlug || undefined,
+      city: pathCity || undefined,
+      district: pathDistrict || undefined,
+    },
+    searchParams
+  )
+  const agentSlugFilter = parsedFilters.agentSlug
+  const cityFilter = parsedFilters.city
+  const districtFilter = parsedFilters.district
+  const typeFilter = parsedFilters.type
+  const dealFilter = parsedFilters.deal
+  const sort = parsedFilters.sort
+  const amenitiesFilter = parsedFilters.amenities
+  const pageSizeRaw = parsedFilters.pageSize || DEFAULT_PAGE_SIZE
   const pageSize = PAGE_SIZE_OPTIONS.includes(pageSizeRaw) ? pageSizeRaw : DEFAULT_PAGE_SIZE
-  const minPriceFilter =
-    typeof searchParams.minPrice === 'string' ? Number(searchParams.minPrice) || 0 : 0
-  const maxPriceFilter =
-    typeof searchParams.maxPrice === 'string' ? Number(searchParams.maxPrice) || 0 : 0
-  const minAreaFilter =
-    typeof searchParams.minArea === 'string' ? Number(searchParams.minArea) || 0 : 0
-  const maxAreaFilter =
-    typeof searchParams.maxArea === 'string' ? Number(searchParams.maxArea) || 0 : 0
-  const bedsFilter =
-    typeof searchParams.beds === 'string' ? Number(searchParams.beds) || 0 : 0
+  const minPriceFilter = parsedFilters.minPrice
+  const maxPriceFilter = parsedFilters.maxPrice
+  const minAreaFilter = parsedFilters.minArea
+  const maxAreaFilter = parsedFilters.maxArea
+  const bedsFilter = parsedFilters.beds
   const viewMode = parseViewMode(searchParams.view)
 
-  const rawPage =
-    typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
+  const rawPage = parsedFilters.page
 
   // --- Catalog banners (siteSettings.propertySettings.propertyCatalogBanners) ---
   const selectedBanners = await fetchSelectedPropertyCatalogBanners({
     locale,
     filters: {
+      agentSlug: agentSlugFilter || undefined,
       city: cityFilter || undefined,
       district: districtFilter || undefined,
       type: typeFilter || undefined,
@@ -117,6 +112,7 @@ async function PropertiesListing({
 
   const catalogResult =
     (await fetchCatalogProperties({
+      agentSlug: agentSlugFilter || undefined,
       city: cityFilter || undefined,
       district: districtFilter || undefined,
       type: typeFilter || undefined,
@@ -167,6 +163,7 @@ async function PropertiesListing({
     params.set('page', String(currentPage))
     const qs = params.toString()
     const path = `/${locale}/properties` +
+      (agentSlugFilter ? `/agent/${encodeURIComponent(agentSlugFilter)}` : '') +
       (pathCity ? `/${encodeURIComponent(pathCity)}` : '') +
       (pathDistrict ? `/${encodeURIComponent(pathDistrict)}` : '')
     redirect(path + (qs ? `?${qs}` : ''))
@@ -191,6 +188,7 @@ async function PropertiesListing({
     priceRangesByDeal,
     defaultAreaRange,
     amenityOptions,
+    initialAgentSlug: agentSlugFilter || '',
     initialCity: cityFilter || '',
     initialType: typeFilter,
     initialDealType: dealFilter,

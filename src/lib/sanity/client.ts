@@ -636,6 +636,7 @@ export type CatalogSort =
   | 'areaDesc';
 
 export type CatalogFilters = {
+  agentSlug?: string;
   city?: string;
   district?: string;
   type?: string;
@@ -709,6 +710,7 @@ function buildCatalogPredicateParts(
   prefix: string,
   filters: Pick<
     CatalogFilters,
+    | 'agentSlug'
     | 'city'
     | 'district'
     | 'type'
@@ -723,6 +725,7 @@ function buildCatalogPredicateParts(
   >,
 ): string[] {
   const {
+    agentSlug,
     city,
     district,
     type,
@@ -738,6 +741,9 @@ function buildCatalogPredicateParts(
 
   const parts: string[] = [];
 
+  if (agentSlug) {
+    parts.push(`${prefix}agent->slug.current == $agentSlug`);
+  }
   if (city) {
     parts.push(`${prefix}city->slug.current == $city`);
   }
@@ -785,6 +791,7 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
 
   const where = parts.length > 0 ? parts.join(' && ') : 'true';
   const params: Record<string, unknown> = {
+    agentSlug: filters.agentSlug,
     city: filters.city,
     district: filters.district,
     type: filters.type,
