@@ -9,6 +9,7 @@ import { parseViewMode } from '@/lib/catalog/viewMode'
 import {
   fetchCatalogProperties,
   fetchCatalogFilterOptions,
+  fetchSelectedPropertyCatalogBanners,
   fetchSiteSettings,
   fetchCatalogAreaBoundsFromData,
   type CatalogSort,
@@ -95,6 +96,25 @@ async function PropertiesListing({
   const rawPage =
     typeof searchParams.page === 'string' ? Number(searchParams.page) || 1 : 1
 
+  // --- Catalog banners (siteSettings.propertySettings.propertyCatalogBanners) ---
+  const selectedBanners = await fetchSelectedPropertyCatalogBanners({
+    locale,
+    filters: {
+      city: cityFilter || undefined,
+      district: districtFilter || undefined,
+      type: typeFilter || undefined,
+      deal: dealFilter || undefined,
+      minPrice: minPriceFilter || undefined,
+      maxPrice: maxPriceFilter || undefined,
+      minArea: minAreaFilter || undefined,
+      maxArea: maxAreaFilter || undefined,
+      beds: bedsFilter || undefined,
+      amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
+    },
+    limit: 3,
+  })
+  const excludedBannerPropertyIds = selectedBanners.map((x) => x.propertyId)
+
   const catalogResult =
     (await fetchCatalogProperties({
       city: cityFilter || undefined,
@@ -110,6 +130,8 @@ async function PropertiesListing({
       sort: sort as CatalogSort,
       page: rawPage,
       pageSize,
+      // Critical: exclusion is applied in query before ordering/slicing (page-size safe).
+      excludedPropertyIds: excludedBannerPropertyIds.length ? excludedBannerPropertyIds : undefined,
     })) ?? { items: [], totalCount: 0 }
 
   const filteredResults = catalogResult.items ?? []
@@ -194,6 +216,7 @@ async function PropertiesListing({
           <CatalogBodyClient
             filterProps={filterProps}
             pageItems={pageItems}
+            banners={selectedBanners}
             locale={locale}
             totalPages={totalPages}
             currentPage={currentPage}
