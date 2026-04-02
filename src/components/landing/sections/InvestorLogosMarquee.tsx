@@ -7,13 +7,18 @@ import { LogoTile, type LogoRow } from '@/components/landing/sections/investorLo
 /** Pixels per second — slow, steady drift (time-based for consistent speed across refresh rates). */
 const AUTO_SCROLL_PX_PER_SEC = 32
 const RESUME_AFTER_DRAG_MS = 1600
-const DRAG_SUPPRESS_CLICK_PX = 8
+/** Horizontal movement before marquee drag + pointer capture start (keeps clicks on links reliable). */
+const DRAG_START_PX = 6
+/** Movement that counts as an intentional drag (post-drag pause + distinguishes drag from noisy micro-moves). */
+const DRAG_CANCEL_CLICK_PX = 12
 
 const MAX_REPEATS = 24
 /** Minimum repeat copies so few logos still tile wide viewports. */
 const MIN_REPEATS = 6
 /** Cover viewport width × this many “cycles” before we stop growing repeats. */
 const VIEWPORT_COVER_FACTOR = 2.5
+
+const WINDOW_LISTENER_OPTS = { capture: true } as const
 
 function wrapOffset(offset: number, cycle: number): number {
   if (cycle <= 0 || !Number.isFinite(cycle)) return offset
@@ -25,6 +30,13 @@ function wrapOffset(offset: number, cycle: number): number {
 function defaultRepeatCount(n: number): number {
   const count = Math.max(1, n)
   return Math.min(MAX_REPEATS, Math.max(MIN_REPEATS, Math.ceil(18 / count)))
+}
+
+type GestureSession = {
+  pointerId: number
+  initialX: number
+  maxDelta: number
+  dragCommitted: boolean
 }
 
 export function InvestorLogosMarquee({
@@ -57,9 +69,15 @@ export function InvestorLogosMarquee({
     startX: 0,
     startOffset: 0,
     pointerId: -1,
-    maxDelta: 0,
   })
-  const suppressNextClickRef = React.useRef(false)
+
+  /** -1 = no active press session; otherwise tracking pointer until up/cancel. */
+  const sessionRef = React.useRef<GestureSession | null>(null)
+  const removeWindowListenersRef = React.useRef<(() => void) | null>(null)
+
+  const isHoveredRef = React.useRef(false)
+  const prefersReducedMotionRef = React.useRef(false)
+
   const resumeTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [isGrabbing, setIsGrabbing] = React.useState(false)
@@ -89,6 +107,11 @@ export function InvestorLogosMarquee({
     applyTransform()
   }, [applyTransform])
 
+  const measureRef = React.useRef(measureCycleAndMaybeGrow)
+  measureRef.current = measureCycleAndMaybeGrow
+  const applyRef = React.useRef(applyTransform)
+  applyRef.current = applyTransform
+
   React.useLayoutEffect(() => {
     setRepeatCount(defaultRepeatCount(rows.length))
     offsetRef.current = 0
@@ -117,6 +140,17 @@ export function InvestorLogosMarquee({
     return () => ro.disconnect()
   }, [measureCycleAndMaybeGrow, repeatCount, rows])
 
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => {
+      prefersReducedMotionRef.current = mq.matches
+    }
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
   const clearResumeTimer = React.useCallback(() => {
     if (resumeTimerRef.current) {
       clearTimeout(resumeTimerRef.current)
@@ -132,72 +166,37 @@ export function InvestorLogosMarquee({
     }, RESUME_AFTER_DRAG_MS)
   }, [clearResumeTimer])
 
-  const onPointerDownCapture = React.useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return
-      const el = viewportRef.current
-      if (!el) return
+  const detachWindowListeners = React.useCallback(() => {
+    if (removeWindowListenersRef.current) {
+      removeWindowListenersRef.current()
+      removeWindowListenersRef.current = null
+    }
+  }, [])
 
-      measureCycleAndMaybeGrow()
-      clearResumeTimer()
-      interactionPausedRef.current = false
+  const endGesture = React.useCallback(
+    (e: PointerEvent) => {
+      const session = sessionRef.current
+      if (!session || e.pointerId !== session.pointerId) return
 
-      dragRef.current = {
-        active: true,
-        startX: e.clientX,
-        startOffset: offsetRef.current,
-        pointerId: e.pointerId,
-        maxDelta: 0,
-      }
-      setIsGrabbing(true)
-      try {
-        el.setPointerCapture(e.pointerId)
-      } catch {
-        /* ignore */
-      }
-    },
-    [clearResumeTimer, measureCycleAndMaybeGrow]
-  )
-
-  const onPointerMove = React.useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!dragRef.current.active) return
-      measureCycleAndMaybeGrow()
-      const cycle = cycleWidthRef.current
-      dragRef.current.maxDelta = Math.max(
-        dragRef.current.maxDelta,
-        Math.abs(e.clientX - dragRef.current.startX)
-      )
-      let next = dragRef.current.startOffset + (dragRef.current.startX - e.clientX)
-      next = wrapOffset(next, cycle)
-      offsetRef.current = next
-      applyTransform()
-    },
-    [applyTransform, measureCycleAndMaybeGrow]
-  )
-
-  const endPointerDrag = React.useCallback(
-    (e?: React.PointerEvent<HTMLDivElement>) => {
-      const el = viewportRef.current
-      const pid = e?.pointerId ?? dragRef.current.pointerId
-      const wasDrag = dragRef.current.maxDelta >= DRAG_SUPPRESS_CLICK_PX
-
-      if (dragRef.current.active && el && pid === dragRef.current.pointerId) {
+      const viewport = viewportRef.current
+      if (session.dragCommitted && viewport) {
         try {
-          el.releasePointerCapture(pid)
+          viewport.releasePointerCapture(e.pointerId)
         } catch {
           /* ignore */
         }
-        if (wasDrag) {
-          suppressNextClickRef.current = true
-        }
       }
+
+      const wasRealDrag = session.dragCommitted && session.maxDelta >= DRAG_CANCEL_CLICK_PX
+
+      detachWindowListeners()
+      sessionRef.current = null
 
       dragRef.current.active = false
       dragRef.current.pointerId = -1
       setIsGrabbing(false)
 
-      if (wasDrag) {
+      if (wasRealDrag) {
         interactionPausedRef.current = true
         scheduleResumeAuto()
       } else {
@@ -205,30 +204,91 @@ export function InvestorLogosMarquee({
         clearResumeTimer()
       }
     },
-    [clearResumeTimer, scheduleResumeAuto]
+    [clearResumeTimer, detachWindowListeners, scheduleResumeAuto]
   )
 
-  const onPointerUp = React.useCallback(
+  const onPointerDown = React.useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      endPointerDrag(e)
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      const viewport = viewportRef.current
+      if (!viewport) return
+      if (sessionRef.current) return
+
+      measureCycleAndMaybeGrow()
+      clearResumeTimer()
+      interactionPausedRef.current = false
+
+      sessionRef.current = {
+        pointerId: e.pointerId,
+        initialX: e.clientX,
+        maxDelta: 0,
+        dragCommitted: false,
+      }
+
+      const onWinMove = (ev: PointerEvent) => {
+        const session = sessionRef.current
+        if (!session || ev.pointerId !== session.pointerId) return
+
+        session.maxDelta = Math.max(session.maxDelta, Math.abs(ev.clientX - session.initialX))
+
+        if (!session.dragCommitted && session.maxDelta >= DRAG_START_PX) {
+          session.dragCommitted = true
+          dragRef.current.active = true
+          dragRef.current.startX = ev.clientX
+          dragRef.current.startOffset = offsetRef.current
+          dragRef.current.pointerId = ev.pointerId
+          measureRef.current()
+          try {
+            viewport.setPointerCapture(ev.pointerId)
+          } catch {
+            /* ignore */
+          }
+          setIsGrabbing(true)
+        }
+
+        if (session.dragCommitted) {
+          measureRef.current()
+          const cycle = cycleWidthRef.current
+          let next = dragRef.current.startOffset + (dragRef.current.startX - ev.clientX)
+          next = wrapOffset(next, cycle)
+          offsetRef.current = next
+          applyRef.current()
+        }
+      }
+
+      const onWinUp = (ev: PointerEvent) => {
+        endGesture(ev)
+      }
+
+      window.addEventListener('pointermove', onWinMove, WINDOW_LISTENER_OPTS)
+      window.addEventListener('pointerup', onWinUp, WINDOW_LISTENER_OPTS)
+      window.addEventListener('pointercancel', onWinUp, WINDOW_LISTENER_OPTS)
+
+      removeWindowListenersRef.current = () => {
+        window.removeEventListener('pointermove', onWinMove, WINDOW_LISTENER_OPTS)
+        window.removeEventListener('pointerup', onWinUp, WINDOW_LISTENER_OPTS)
+        window.removeEventListener('pointercancel', onWinUp, WINDOW_LISTENER_OPTS)
+      }
     },
-    [endPointerDrag]
+    [clearResumeTimer, endGesture, measureCycleAndMaybeGrow]
   )
 
-  const onPointerCancel = React.useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      endPointerDrag(e)
-    },
-    [endPointerDrag]
-  )
-
-  const onClickCapture = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (suppressNextClickRef.current) {
-      e.preventDefault()
-      e.stopPropagation()
-      suppressNextClickRef.current = false
+  React.useEffect(() => {
+    const viewportSnapshot = viewportRef.current
+    return () => {
+      const session = sessionRef.current
+      if (session?.dragCommitted && viewportSnapshot && session.pointerId >= 0) {
+        try {
+          viewportSnapshot.releasePointerCapture(session.pointerId)
+        } catch {
+          /* ignore */
+        }
+      }
+      sessionRef.current = null
+      detachWindowListeners()
+      clearResumeTimer()
     }
-  }, [])
+  }, [clearResumeTimer, detachWindowListeners])
 
   React.useEffect(() => {
     const tick = (ts: number) => {
@@ -238,7 +298,10 @@ export function InvestorLogosMarquee({
 
       const cycle = cycleWidthRef.current
       const dragging = dragRef.current.active
-      const autoOff = dragging || interactionPausedRef.current
+      const autoOff =
+        dragging ||
+        interactionPausedRef.current ||
+        isHoveredRef.current
 
       if (cycle > 0 && !autoOff && dtSec > 0) {
         offsetRef.current += AUTO_SCROLL_PX_PER_SEC * dtSec
@@ -293,11 +356,13 @@ export function InvestorLogosMarquee({
       <div className="relative z-10 min-w-0">
         <div
           ref={viewportRef}
-          onPointerDownCapture={onPointerDownCapture}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerCancel}
-          onClickCapture={onClickCapture}
+          onPointerDown={onPointerDown}
+          onPointerEnter={() => {
+            isHoveredRef.current = true
+          }}
+          onPointerLeave={() => {
+            isHoveredRef.current = false
+          }}
           className={cn(
             'min-w-0 cursor-grab touch-pan-y overflow-x-hidden overflow-y-visible select-none',
             isGrabbing && 'cursor-grabbing'
