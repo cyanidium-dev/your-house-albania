@@ -20,6 +20,7 @@ import React from "react";
 import { getTranslations } from "next-intl/server";
 import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -72,8 +73,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function page({ params, searchParams }: Props) {
   const [{ locale }, search] = await Promise.all([params, searchParams]);
 
-  const cityQ = typeof search.city === "string" ? search.city.trim().toLowerCase() : "";
-  const districtQ = typeof search.district === "string" ? search.district.trim() : "";
+  const parsed = parseCatalogFilters({}, search);
+  const cityQ = parsed.city;
+  const districtQ = parsed.district;
   if (cityQ && districtQ) {
     redirect(`/${locale}/properties/${encodeURIComponent(cityQ)}/${encodeURIComponent(districtQ)}${buildQueryString(search, ["city", "district"])}`);
   }

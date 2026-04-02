@@ -3,23 +3,31 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { catalogPath } from "@/lib/routes/catalog";
 import type { BreadcrumbItem } from "../Breadcrumb";
 
 type CatalogBreadcrumbProps = {
   locale: string;
+  agentSlug?: string;
+  agentName?: string;
   city?: string;
   district?: string;
 };
 
 export async function CatalogBreadcrumb({
   locale,
+  agentSlug,
+  agentName,
   city,
   district,
 }: CatalogBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
   const items: BreadcrumbItem[] = [
     { label: t("home"), href: `/${locale}` },
-    { label: t("properties"), href: city ? `/${locale}/properties` : undefined },
+    {
+      label: t("properties"),
+      href: city || district || agentSlug ? `/${locale}/properties` : undefined,
+    },
   ];
 
   let locations: { value: string; label: string }[] = [];
@@ -31,12 +39,21 @@ export async function CatalogBreadcrumb({
     districts = opts.districts;
   }
 
+  if (agentSlug) {
+    items.push({
+      label: agentName || formatSlug(agentSlug),
+      href: city || district
+        ? catalogPath(locale, undefined, undefined, agentSlug)
+        : undefined,
+    });
+  }
+
   if (city) {
     const cityLabel =
       locations.find((l) => l.value.toLowerCase() === city.toLowerCase())
         ?.label || formatSlug(city);
     const cityHref = district
-      ? `/${locale}/properties/${encodeURIComponent(city)}`
+      ? catalogPath(locale, city, undefined, agentSlug)
       : undefined;
     items.push({ label: cityLabel, href: cityHref });
   }
@@ -49,7 +66,7 @@ export async function CatalogBreadcrumb({
   }
 
   const baseUrl = await getBaseUrl();
-  const currentPath = buildCurrentPath(locale, city, district);
+  const currentPath = buildCurrentPath(locale, agentSlug, city, district);
   const jsonLdItems = items.map((it, i) => ({
     name: it.label,
     url: it.href ?? (i === items.length - 1 ? currentPath : undefined),
@@ -71,11 +88,9 @@ function formatSlug(slug: string): string {
 
 function buildCurrentPath(
   locale: string,
+  agentSlug?: string,
   city?: string,
   district?: string
 ): string {
-  const base = `/${locale}/properties`;
-  if (!city) return base;
-  if (!district) return `${base}/${encodeURIComponent(city)}`;
-  return `${base}/${encodeURIComponent(city)}/${encodeURIComponent(district)}`;
+  return catalogPath(locale, city, district, agentSlug);
 }

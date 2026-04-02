@@ -6,6 +6,7 @@ import React from "react";
 import { getTranslations } from "next-intl/server";
 import { fetchSiteSettings, fetchCatalogSeoPageByDistrict, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 
 type Props = {
   params: Promise<{ locale: string; city: string; district: string }>;
@@ -63,8 +64,9 @@ export default async function CatalogCityDistrictPage({
     params,
     searchParams,
   ]);
-  const citySlug = decodeURIComponent(city).toLowerCase();
-  const districtSlug = decodeURIComponent(district).toLowerCase();
+  const parsed = parseCatalogFilters({ city, district }, search);
+  const citySlug = parsed.city;
+  const districtSlug = parsed.district;
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");

@@ -119,6 +119,7 @@ type Props = {
   priceRangesByDeal: Record<string, { min: number; max: number }>;
   defaultAreaRange: { min: number; max: number };
   amenityOptions: Option[];
+  initialAgentSlug?: string;
   initialCity?: string;
   initialType?: string;
   initialDealType?: string;
@@ -144,6 +145,7 @@ export function PropertySearchBar({
   priceRangesByDeal,
   defaultAreaRange,
   amenityOptions,
+  initialAgentSlug = "",
   initialCity = "",
   initialType = "",
   initialDealType = "",
@@ -434,7 +436,8 @@ export function PropertySearchBar({
     const path = catalogPath(
       locale,
       city || undefined,
-      districtSlugForPath(district)
+      districtSlugForPath(district),
+      initialAgentSlug || undefined
     );
     const url =
       qs === ""
@@ -450,6 +453,7 @@ export function PropertySearchBar({
       city,
       deal,
       district,
+      initialAgentSlug,
       locale,
       pageSize,
       areaValues,
@@ -583,7 +587,7 @@ export function PropertySearchBar({
             type="button"
             variant="outline"
             className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
-            onClick={() => router.push(catalogPath(locale))}
+            onClick={() => router.push(catalogPath(locale, undefined, undefined, initialAgentSlug || undefined))}
           >
             <span className="inline-block max-w-full truncate">
               {t("resetFilters")}

@@ -31,6 +31,7 @@ type Props = {
   intro: unknown[] | null;
   introFallback: string;
   breadcrumb: ReactNode;
+  agentName?: string;
 };
 
 export function CatalogHero({
@@ -39,7 +40,12 @@ export function CatalogHero({
   intro,
   introFallback,
   breadcrumb,
+  agentName,
 }: Props) {
+  const effectiveTitle = agentName ? `Properties by ${agentName}` : title;
+  const effectiveFallback = agentName
+    ? "Showing listings from this agent"
+    : introFallback;
   const hasIntro = Array.isArray(intro) && intro.length > 0;
   const subtitle = hasIntro ? (
     <div className="mt-2 max-w-2xl mx-auto md:mt-3">
@@ -50,7 +56,7 @@ export function CatalogHero({
     </div>
   ) : (
     <p className="text-lg text-dark/50 dark:text-white/50 font-normal mt-2 w-full mx-auto md:mt-3 whitespace-pre-line">
-      {introFallback}
+      {effectiveFallback}
     </p>
   );
 
@@ -72,7 +78,7 @@ export function CatalogHero({
           </p>
         </div>
         <h1 className="text-dark text-3xl sm:text-4xl md:text-5xl lg:text-6xl relative font-bold dark:text-white mt-1.5 md:mt-2">
-          {title}
+          {effectiveTitle}
         </h1>
         {subtitle}
       </div>

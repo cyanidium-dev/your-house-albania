@@ -36,6 +36,7 @@ export function pickAgentLogoImage(agent: AgentDoc): { url: string; alt?: string
 
 /**
  * Per-agent contact page is decommissioned; prefer first social URL by priority.
+ * Used as fallback when an agent has no catalog slug.
  * Returns `null` when the logo should render without a link.
  */
 export function resolveAgentHref(agent: AgentDoc): string | null {
@@ -44,6 +45,18 @@ export function resolveAgentHref(agent: AgentDoc): string | null {
     if (typeof u === 'string' && u.trim()) return u.trim()
   }
   return null
+}
+
+/** Locale-prefixed internal path for agent-scoped catalog (`/[locale]/properties/agent/[slug]`). */
+export function resolveAgentCatalogHref(agent: AgentDoc): string | null {
+  const raw = typeof agent.slug === 'string' ? agent.slug.trim() : ''
+  if (!raw) return null
+  const slug = raw.toLowerCase()
+  return `/properties/agent/${encodeURIComponent(slug)}`
+}
+
+function resolveAgentLogoHref(agent: AgentDoc): string | null {
+  return resolveAgentCatalogHref(agent) ?? resolveAgentHref(agent)
 }
 
 /** Matches blog CTA / portable-text link behavior: locale-prefix internal paths. */
@@ -113,7 +126,7 @@ export function buildLogoRows(
       if (!image) return null
       const nameStr = resolveLocalizedString(agent.name as never, locale).trim()
       const alt = (typeof image.alt === 'string' && image.alt.trim()) || nameStr || 'Agent logo'
-      const href = resolveAgentHref(agent)
+      const href = resolveAgentLogoHref(agent)
       return { image, alt, href, key: agent._id ?? image.url }
     })
     .filter((row): row is LogoRow => row !== null)

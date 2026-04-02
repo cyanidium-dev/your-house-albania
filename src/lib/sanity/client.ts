@@ -3,6 +3,7 @@ import { createClient } from '@sanity/client';
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
 import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
+import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import {
   mapSanityAgentToContactPage,
   type AgentContactPage,
@@ -635,6 +636,7 @@ export type CatalogSort =
   | 'areaDesc';
 
 export type CatalogFilters = {
+  agentSlug?: string;
   city?: string;
   district?: string;
   type?: string;
@@ -648,6 +650,8 @@ export type CatalogFilters = {
   sort?: CatalogSort;
   page?: number;
   pageSize?: number;
+  /** Property document IDs to exclude (applied before ordering + slicing). */
+  excludedPropertyIds?: string[];
 };
 
 export type CatalogProperty = {
@@ -697,14 +701,31 @@ export type CatalogResult = {
   totalCount: number;
 };
 
-/** Fetch paginated catalog properties with filters. Does NOT yet power the UI. */
-export async function fetchCatalogProperties(
-  filters: CatalogFilters,
-): Promise<CatalogResult | null> {
-  const client = getClient();
-  if (!client) return null;
+type CatalogWhereParams = {
+  where: string;
+  params: Record<string, unknown>;
+};
 
+function buildCatalogPredicateParts(
+  prefix: string,
+  filters: Pick<
+    CatalogFilters,
+    | 'agentSlug'
+    | 'city'
+    | 'district'
+    | 'type'
+    | 'deal'
+    | 'minPrice'
+    | 'maxPrice'
+    | 'minArea'
+    | 'maxArea'
+    | 'beds'
+    | 'amenities'
+    | 'excludedPropertyIds'
+  >,
+): string[] {
   const {
+    agentSlug,
     city,
     district,
     type,
@@ -715,10 +736,86 @@ export async function fetchCatalogProperties(
     maxArea,
     beds,
     amenities,
-    sort = 'newest',
-    page = 1,
-    pageSize = 12,
+    excludedPropertyIds,
   } = filters;
+
+  const parts: string[] = [];
+
+  if (agentSlug) {
+    parts.push(`${prefix}agent->slug.current == $agentSlug`);
+  }
+  if (city) {
+    parts.push(`${prefix}city->slug.current == $city`);
+  }
+  if (district) {
+    parts.push(`${prefix}district->slug.current == $district`);
+  }
+  if (type) {
+    parts.push(`${prefix}type->slug.current == $type`);
+  }
+  if (deal) {
+    parts.push(`${prefix}status == $deal`);
+  }
+  if (typeof minPrice === 'number' && minPrice > 0) {
+    parts.push(`${prefix}price >= $minPrice`);
+  }
+  if (typeof maxPrice === 'number' && maxPrice > 0) {
+    parts.push(`${prefix}price <= $maxPrice`);
+  }
+  if (typeof minArea === 'number' && minArea > 0) {
+    parts.push(`${prefix}area >= $minArea`);
+  }
+  if (typeof maxArea === 'number' && maxArea > 0) {
+    parts.push(`${prefix}area <= $maxArea`);
+  }
+  if (typeof beds === 'number' && beds > 0) {
+    parts.push(`${prefix}bedrooms >= $beds`);
+  }
+
+  if (Array.isArray(amenities) && amenities.length > 0) {
+    parts.push(`count(${prefix}amenitiesRefs[@->slug.current in $amenities]) > 0`);
+  }
+
+  if (Array.isArray(excludedPropertyIds) && excludedPropertyIds.length > 0) {
+    parts.push(`!(${prefix}_id in $excludedPropertyIds)`);
+  }
+
+  return parts;
+}
+
+function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
+  const { excludedPropertyIds } = filters;
+
+  const parts: string[] = ['_type == "property"'];
+  parts.push(...buildCatalogPredicateParts('', filters));
+
+  const where = parts.length > 0 ? parts.join(' && ') : 'true';
+  const params: Record<string, unknown> = {
+    agentSlug: filters.agentSlug,
+    city: filters.city,
+    district: filters.district,
+    type: filters.type,
+    deal: filters.deal,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    minArea: filters.minArea,
+    maxArea: filters.maxArea,
+    beds: filters.beds,
+    amenities: filters.amenities,
+    excludedPropertyIds,
+  };
+
+  return { where, params };
+}
+
+/** Fetch paginated catalog properties with filters. Does NOT yet power the UI. */
+export async function fetchCatalogProperties(
+  filters: CatalogFilters,
+): Promise<CatalogResult | null> {
+  const client = getClient();
+  if (!client) return null;
+
+  const { sort = 'newest', page = 1, pageSize = 12 } = filters;
 
   const safePage = Number.isFinite(page) && page > 0 ? page : 1;
   const safePageSize =
@@ -728,41 +825,7 @@ export async function fetchCatalogProperties(
   const start = (safePage - 1) * safePageSize;
   const end = start + safePageSize;
 
-  const parts: string[] = ['_type == "property"'];
-
-  if (city) {
-    parts.push('city->slug.current == $city');
-  }
-  if (district) {
-    parts.push('district->slug.current == $district');
-  }
-  if (type) {
-    parts.push('type->slug.current == $type');
-  }
-  if (deal) {
-    parts.push('status == $deal');
-  }
-  if (typeof minPrice === 'number' && minPrice > 0) {
-    parts.push('price >= $minPrice');
-  }
-  if (typeof maxPrice === 'number' && maxPrice > 0) {
-    parts.push('price <= $maxPrice');
-  }
-  if (typeof minArea === 'number' && minArea > 0) {
-    parts.push('area >= $minArea');
-  }
-  if (typeof maxArea === 'number' && maxArea > 0) {
-    parts.push('area <= $maxArea');
-  }
-  if (typeof beds === 'number' && beds > 0) {
-    parts.push('bedrooms >= $beds');
-  }
-
-  if (Array.isArray(amenities) && amenities.length > 0) {
-    parts.push('count(amenitiesRefs[@->slug.current in $amenities]) > 0');
-  }
-
-  const where = parts.length > 0 ? parts.join(' && ') : 'true';
+  const { where, params } = buildCatalogWhereClause(filters);
 
   // Numeric ranks: promoted vs not; tier (premium > top > sale); featuredOrder with missing last in tier.
   const promotionOrder =
@@ -817,19 +880,6 @@ export async function fetchCatalogProperties(
     "galleryUrls": gallery[].asset->url
   }`;
 
-  const params: Record<string, unknown> = {
-    city,
-    district,
-    type,
-    deal,
-    minPrice,
-    maxPrice,
-    minArea,
-    maxArea,
-    beds,
-    amenities,
-  };
-
   try {
     const [totalCount, items] = await Promise.all([
       client.fetch<number>(countQuery, params),
@@ -844,6 +894,131 @@ export async function fetchCatalogProperties(
     console.warn('[Sanity] fetchCatalogProperties failed:', err);
     return null;
   }
+}
+
+type PropertyCatalogBannerCandidate = {
+  _key?: string;
+  internalLabel?: string;
+  enabled?: boolean;
+  order?: number;
+  imageSmall?: { alt?: string; asset?: { url?: string } };
+  imageBig?: { alt?: string; asset?: { url?: string } };
+  property?: { _id?: string; slug?: string };
+};
+
+/**
+ * Fetches up to 3 **eligible** catalog banners for `/[locale]/properties` given current catalog filters.
+ *
+ * This pushes most narrowing into GROQ:
+ * - enabled only
+ * - linked property exists, has slug
+ * - linked property is not a draft
+ * - linked property matches current catalog filters
+ * - required images exist for both small and big variants
+ *
+ * Remaining small JS step:
+ * - dedupe by linked `property._id` (CMS can accidentally duplicate)
+ */
+export async function fetchSelectedPropertyCatalogBanners(args: {
+  locale: string;
+  filters: Omit<CatalogFilters, 'page' | 'pageSize' | 'sort' | 'excludedPropertyIds'>;
+  limit?: number;
+}): Promise<PropertyCatalogBanner[]> {
+  const client = getClient();
+  if (!client) return [];
+
+  const limit = typeof args.limit === 'number' && Number.isFinite(args.limit) && args.limit > 0
+    ? Math.min(Math.floor(args.limit), 3)
+    : 3;
+  const locale = args.locale;
+
+  const predicateParts = buildCatalogPredicateParts('property->', {
+    ...args.filters,
+    excludedPropertyIds: undefined,
+  });
+  const propertyEligibility = predicateParts.length > 0 ? predicateParts.join(' && ') : 'true';
+
+  // Pull a small, ordered window then dedupe-by-property-id in JS (GROQ can't reliably unique array objects by a nested field).
+  const windowSize = Math.max(12, limit * 4);
+
+  const query = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
+    "banners": coalesce(
+      propertySettings.propertyCatalogBanners[
+        enabled == true &&
+        defined(property) &&
+        defined(property->_id) &&
+        !(property->_id in path("drafts.**")) &&
+        defined(property->slug.current) &&
+        ${propertyEligibility} &&
+        defined(imageSmall.asset) &&
+        defined(imageBig.asset) &&
+        defined(imageSmall.alt) &&
+        defined(imageBig.alt)
+      ] | order(order asc, _key asc)[0...${windowSize}]{
+        _key,
+        "internalLabel": label,
+        enabled,
+        order,
+        imageSmall{alt,asset->{url}},
+        imageBig{alt,asset->{url}},
+        "property": property->{
+          _id,
+          "slug": slug.current
+        }
+      },
+      []
+    )
+  }.banners`;
+
+  const { params } = buildCatalogWhereClause({
+    ...args.filters,
+    sort: 'newest',
+    page: 1,
+    pageSize: 1,
+    excludedPropertyIds: undefined,
+  });
+
+  let candidates: PropertyCatalogBannerCandidate[] = [];
+  try {
+    const result = await client.fetch<PropertyCatalogBannerCandidate[] | null>(query, params);
+    candidates = Array.isArray(result) ? result : [];
+  } catch (err) {
+    console.warn('[Sanity] fetchSelectedPropertyCatalogBanners failed:', err);
+    return [];
+  }
+
+  const byPropertyId = new Map<string, PropertyCatalogBannerCandidate>();
+  for (const c of candidates) {
+    const pid = c?.property?._id;
+    if (!pid || typeof pid !== 'string') continue;
+    if (byPropertyId.has(pid)) continue; // keep first (already ordered)
+    byPropertyId.set(pid, c);
+  }
+
+  const selected = Array.from(byPropertyId.values()).slice(0, limit);
+
+  return selected.map((b, idx) => {
+    const pid = b.property!._id!;
+    const slug = b.property!.slug!;
+    const key =
+      typeof b._key === 'string' && b._key.trim()
+        ? b._key
+        : `catalog-banner-${idx}-${pid}`;
+    const imageSmallUrl = b.imageSmall?.asset?.url ?? '';
+    const imageSmallAlt = b.imageSmall?.alt ?? '';
+    const imageBigUrl = b.imageBig?.asset?.url ?? '';
+    const imageBigAlt = b.imageBig?.alt ?? '';
+    return {
+      key,
+      propertyId: pid,
+      propertySlug: slug,
+      href: `/${locale}/property/${slug}`,
+      imageSmallUrl,
+      imageSmallAlt,
+      imageBigUrl,
+      imageBigAlt,
+    };
+  });
 }
 
 export type CatalogLocationOption = {
