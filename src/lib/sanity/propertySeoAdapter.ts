@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { buildHreflangAlternates } from '@/lib/seo/hreflang';
+import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import type { LocalizedField } from './socialMetadataResolution';
 import {
   pickAbsoluteOgImageUrl,
@@ -27,6 +29,10 @@ export type PropertyMetadataOptions = {
   /** Localized property body description; omit if empty. */
   itemDescription?: string;
   coverImageUrl?: string;
+  /**
+   * When set, adds canonical (unless overridden later) and hreflang for `/property/[slug]`.
+   */
+  propertyPath?: { baseUrl: string; locale: string; slug: string };
 };
 
 /**
@@ -42,7 +48,7 @@ export function buildPropertyMetadata(
   locale: string,
   options: PropertyMetadataOptions
 ): Metadata {
-  const { itemTitle, itemDescription, coverImageUrl } = options;
+  const { itemTitle, itemDescription, coverImageUrl, propertyPath } = options;
 
   const title = resolveChainedTitle(locale, {
     ogTitle: propertySeo?.ogTitle,
@@ -66,15 +72,50 @@ export function buildPropertyMetadata(
 
   const noIndex = propertySeo?.noIndex ?? false;
 
+  const ogBase: Metadata['openGraph'] = {
+    title,
+    description,
+    ...(ogImageAbsolute && {
+      images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: title }],
+    }),
+  };
+
+  if (!isIndexingEnabled()) {
+    return {
+      title,
+      description: description || undefined,
+      openGraph: ogBase,
+      twitter: {
+        card: 'summary',
+        title,
+        description,
+      },
+      robots: indexingDisabledRobots,
+    };
+  }
+
+  const pathSeg =
+    propertyPath != null ? `/property/${encodeURIComponent(propertyPath.slug)}` : undefined;
+  const canonicalFallback =
+    propertyPath != null
+      ? `${propertyPath.baseUrl.replace(/\/$/, '')}/${propertyPath.locale}${pathSeg}`
+      : undefined;
+  const hreflang = pathSeg != null ? buildHreflangAlternates(pathSeg) : undefined;
+  const alternates =
+    canonicalFallback || hreflang?.languages
+      ? {
+          ...(canonicalFallback ? { canonical: canonicalFallback } : {}),
+          ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
+        }
+      : undefined;
+
   return {
     title,
     description: description || undefined,
+    alternates,
     openGraph: {
-      title,
-      description,
-      ...(ogImageAbsolute && {
-        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: title }],
-      }),
+      ...ogBase,
+      ...(canonicalFallback ? { url: canonicalFallback } : {}),
     },
     twitter: {
       card: 'summary',

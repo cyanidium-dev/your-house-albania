@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     itemTitle,
     itemDescription,
     itemOgImageUrl,
+    pathnameForAlternates: `cities/${citySlug}`,
   });
 }
 

@@ -8,6 +8,9 @@ import {
   fetchSiteSettings,
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
+import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -22,12 +25,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (landing) {
     const seo = (landing as { seo?: unknown }).seo ?? null;
     const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
-    return buildLandingMetadata(seo as never, siteDefaultSeo as never, locale);
+    return buildLandingMetadata(seo as never, siteDefaultSeo as never, locale, {
+      pathnameForAlternates: "cities",
+    });
   }
   const t = await getTranslations("Cities");
+  if (!isIndexingEnabled()) {
+    return {
+      title: t("title"),
+      description: t("description"),
+      robots: indexingDisabledRobots,
+    };
+  }
+  const baseUrl = getSiteBaseUrl();
+  const path = "/cities";
+  const canonical = `${baseUrl}/${locale}${path}`;
+  const href = buildHreflangAlternates(path);
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical,
+      ...(href?.languages ? { languages: href.languages } : {}),
+    },
   };
 }
 

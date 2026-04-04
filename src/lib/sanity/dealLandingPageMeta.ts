@@ -21,5 +21,15 @@ export async function buildDealTypeLandingMetadata(
   }
   const landingSeo = (landing as { seo?: unknown }).seo ?? null;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
-  return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale);
+  const pathnameForAlternates =
+    deal === "sale"
+      ? "sale"
+      : deal === "rent"
+        ? "rent"
+        : deal === "short-term"
+          ? "short-term-rent"
+          : undefined;
+  return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale, {
+    ...(pathnameForAlternates ? { pathnameForAlternates } : {}),
+  });
 }

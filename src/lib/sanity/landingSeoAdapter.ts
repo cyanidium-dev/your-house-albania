@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { buildHreflangAlternates } from '@/lib/seo/hreflang'
+import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
 import { resolveLocalizedString } from './localized'
 import {
   pickAbsoluteOgImageUrl,
@@ -36,6 +38,8 @@ export type LandingMetadataItemContext = {
   itemDescription?: string
   /** Hero / linked city image URL */
   itemOgImageUrl?: string
+  /** Path after locale (e.g. `/cities`, `/sale`). Used for hreflang alternates. */
+  pathnameForAlternates?: string
 }
 
 function resolveCanonicalUrl(
@@ -93,11 +97,10 @@ export function buildLandingMetadata(
   const noIndex = landingSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false
   const noFollow = landingSeo?.noFollow ?? siteDefaultSeo?.noFollow ?? false
 
-  return {
+  const base: Metadata = {
     title,
     description,
     keywords: resolveKeywords(landingSeo?.keywords, locale),
-    alternates: canonical ? { canonical } : undefined,
     openGraph: {
       title,
       description,
@@ -110,6 +113,25 @@ export function buildLandingMetadata(
       title,
       description,
     },
+  }
+
+  if (!isIndexingEnabled()) {
+    return { ...base, robots: indexingDisabledRobots }
+  }
+
+  const hrefPath = itemContext?.pathnameForAlternates
+  const hreflang = hrefPath !== undefined ? buildHreflangAlternates(hrefPath) : undefined
+  const alternates =
+    canonical || hreflang?.languages
+      ? {
+          ...(canonical ? { canonical } : {}),
+          ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
+        }
+      : undefined
+
+  return {
+    ...base,
+    alternates,
     robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
   }
 }

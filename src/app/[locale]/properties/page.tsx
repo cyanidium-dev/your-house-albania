@@ -21,14 +21,19 @@ import { getTranslations } from "next-intl/server";
 import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
+import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
+import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const search = await searchParams;
   const [siteSettings, rawSeo] = await Promise.all([
     fetchSiteSettings(),
     fetchCatalogSeoPageRoot(),
@@ -64,9 +69,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     localizedDescriptionFromSeo ||
     listDescription;
 
+  if (!isIndexingEnabled()) {
+    return {
+      title,
+      description,
+      robots: indexingDisabledRobots,
+    };
+  }
+
+  const baseUrl = getSiteBaseUrl();
+  const path = "/properties";
+  const canonical = `${baseUrl}/${locale}${path}`;
+  const href = buildHreflangAlternates(path);
+  const noindexQuery = shouldCatalogListingNoindex(search);
+  const seoNoIndex = catalogSeo?.noIndex ?? false;
+  const robots =
+    noindexQuery || seoNoIndex ? { index: false as const, follow: true as const } : undefined;
+
   return {
     title,
     description,
+    alternates: {
+      canonical,
+      ...(href?.languages ? { languages: href.languages } : {}),
+    },
+    robots,
   };
 }
 

@@ -22,7 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const landingSeo = (landing as { seo?: unknown } | null)?.seo ?? null;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
-  return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale);
+  return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale, {
+    pathnameForAlternates: "",
+  });
 }
 
 export default async function Home({ params }: Props) {
