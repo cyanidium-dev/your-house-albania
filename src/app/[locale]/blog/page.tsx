@@ -12,6 +12,8 @@ import {
 import { mapSanityBlogPostToList, type SanityListingPost } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 const PAGE_SIZE = 12;
 
@@ -28,11 +30,13 @@ export async function generateMetadata({
   const categoryParam =
     typeof search.category === "string" ? search.category.trim() : undefined;
 
-  const [blogSettings, siteSettings, categoriesRaw] = await Promise.all([
+  const [blogSettings, siteSettings, categoriesRaw, baseUrlRaw] = await Promise.all([
     fetchBlogSettings(),
     fetchSiteSettings(),
     fetchBlogCategories(),
+    getBaseUrl(),
   ]);
+  const baseUrl = (baseUrlRaw || getSiteBaseUrl()).replace(/\/$/, "");
 
   const blogSeo = (blogSettings as { seo?: unknown })?.seo;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo;
@@ -64,7 +68,8 @@ export async function generateMetadata({
     locale,
     t("title"),
     t("description"),
-    categoryLabel
+    categoryLabel,
+    { baseUrl, pathnameForAlternates: "/blog" }
   );
 }
 

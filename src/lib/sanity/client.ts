@@ -9,6 +9,10 @@ import {
   type AgentContactPage,
   type SanityAgentDocument,
 } from './agentAdapter';
+import {
+  resolveLandingPathForSitemap,
+  type LandingPageSitemapRow,
+} from './landingSitemapPaths';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
@@ -1167,6 +1171,7 @@ export type CatalogSeoPageResolved = {
   bottomText: unknown[];
   metaTitle: string;
   metaDescription: string;
+  noIndex: boolean;
 };
 
 const catalogSeoPageProjection = `{
@@ -1176,7 +1181,8 @@ const catalogSeoPageProjection = `{
   bottomText,
   seo {
     metaTitle,
-    metaDescription
+    metaDescription,
+    noIndex
   }
 }`;
 
@@ -1201,7 +1207,7 @@ export async function fetchCatalogSeoPageRoot(): Promise<{
   title?: unknown;
   intro?: unknown;
   bottomText?: unknown;
-  seo?: { metaTitle?: unknown; metaDescription?: unknown };
+  seo?: { metaTitle?: unknown; metaDescription?: unknown; noIndex?: unknown };
 } | null> {
   return cachedFetchCatalogSeoPageRoot();
 }
@@ -1587,7 +1593,7 @@ export async function fetchCatalogSeoPageByCity(citySlug: string): Promise<{
   title?: unknown;
   intro?: unknown;
   bottomText?: unknown;
-  seo?: { metaTitle?: unknown; metaDescription?: unknown };
+  seo?: { metaTitle?: unknown; metaDescription?: unknown; noIndex?: unknown };
 } | null> {
   const client = getClient();
   if (!client) return null;
@@ -1608,7 +1614,7 @@ export async function fetchCatalogSeoPageByDistrict(
   title?: unknown;
   intro?: unknown;
   bottomText?: unknown;
-  seo?: { metaTitle?: unknown; metaDescription?: unknown };
+  seo?: { metaTitle?: unknown; metaDescription?: unknown; noIndex?: unknown };
 } | null> {
   const client = getClient();
   if (!client) return null;
@@ -1968,7 +1974,12 @@ export async function fetchBlogCategories(): Promise<unknown[] | null> {
 
 /** Resolve catalog SEO page raw result to localized strings/arrays. */
 export function resolveCatalogSeoPage(
-  raw: { title?: unknown; intro?: unknown; bottomText?: unknown; seo?: { metaTitle?: unknown; metaDescription?: unknown } } | null,
+  raw: {
+    title?: unknown;
+    intro?: unknown;
+    bottomText?: unknown;
+    seo?: { metaTitle?: unknown; metaDescription?: unknown; noIndex?: unknown };
+  } | null,
   locale: string
 ): CatalogSeoPageResolved | null {
   if (!raw) return null;
@@ -1982,12 +1993,14 @@ export function resolveCatalogSeoPage(
   const metaDescription = seo?.metaDescription
     ? resolveLocalizedString(seo.metaDescription as never, locale)
     : '';
+  const noIndex = seo?.noIndex === true;
   return {
     title,
     intro: Array.isArray(intro) ? intro : [],
     bottomText: Array.isArray(bottomText) ? bottomText : [],
     metaTitle,
     metaDescription,
+    noIndex,
   };
 }
 
@@ -2034,6 +2047,236 @@ export async function fetchAgentBySlug(
   } catch (err) {
     console.warn('[Sanity] fetchAgentBySlug failed:', err);
     return null;
+  }
+}
+
+function parseSitemapDate(raw: string | undefined): Date {
+  if (raw) {
+    const d = new Date(raw);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
+  return new Date();
+}
+
+export type AgentSitemapEntry = { slug: string; lastModified: Date };
+
+/**
+ * Published agents with valid path slugs for `/properties/agent/[slug]`.
+ * Draft documents excluded via default API; slugs validated with `AGENT_SLUG_REGEX`.
+ */
+export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[_type == "agent" && defined(slug.current)]{
+    "slug": slug.current,
+    _updatedAt
+  }`;
+  try {
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    if (!Array.isArray(rows)) return [];
+    const out: AgentSitemapEntry[] = [];
+    for (const row of rows) {
+      const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
+      if (!slug || !AGENT_SLUG_REGEX.test(slug)) continue;
+      out.push({
+        slug,
+        lastModified: parseSitemapDate(row._updatedAt),
+      });
+    }
+    return out;
+  } catch (err) {
+    console.warn('[Sanity] fetchAllAgentSlugsForSitemap failed:', err);
+    return [];
+  }
+}
+
+export type LandingPathSitemapEntry = { path: string; lastModified: Date };
+
+/**
+ * Indexable CMS landing routes (paths after `/{locale}/`), deduped by path.
+ * Only documents that map to a real App Router path via `resolveLandingPathForSitemap` are included.
+ */
+export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitemapEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[
+    _type == "landingPage" &&
+    defined(slug.current) &&
+    !(_id in path("drafts.**"))
+  ]{
+    _id,
+    "slug": slug.current,
+    _updatedAt,
+    pageType,
+    seo,
+    "linkedCitySlug": linkedCity->slug.current
+  }`;
+  try {
+    const rows = await client.fetch<LandingPageSitemapRow[]>(query);
+    if (!Array.isArray(rows)) return [];
+    const best = new Map<string, Date>();
+    for (const row of rows) {
+      const path = resolveLandingPathForSitemap(row);
+      if (!path) continue;
+      const lm = parseSitemapDate(row._updatedAt);
+      const prev = best.get(path);
+      if (!prev || lm > prev) best.set(path, lm);
+    }
+    return Array.from(best.entries()).map(([path, lastModified]) => ({ path, lastModified }));
+  } catch (err) {
+    console.warn('[Sanity] fetchAllLandingPathsForSitemap failed:', err);
+    return [];
+  }
+}
+
+/** Relative path after `/{locale}` for property-type sitemap (existing routes only). */
+const SITEMAP_TYPE_STATIC_SEGMENTS = new Set([
+  'appartment',
+  'luxury-villa',
+  'residential-homes',
+  'office-spaces',
+]);
+
+export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified: Date };
+
+/**
+ * City URLs: `/cities/[slug]` from `city` docs and city landings (deduped).
+ */
+export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `{
+    "cities": *[_type == "city" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+      "slug": slug.current,
+      _updatedAt
+    },
+    "landings": *[_type == "landingPage" && pageType == "city" && defined(linkedCity->slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+      "slug": linkedCity->slug.current,
+      _updatedAt
+    }
+  }`;
+  try {
+    const result = await client.fetch<{
+      cities?: Array<{ slug?: string; _updatedAt?: string }>;
+      landings?: Array<{ slug?: string; _updatedAt?: string }>;
+    }>(query);
+    const best = new Map<string, Date>();
+    const rows = [...(result?.cities ?? []), ...(result?.landings ?? [])];
+    for (const row of rows) {
+      const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
+      if (!slug) continue;
+      const lm = parseSitemapDate(row._updatedAt);
+      const prev = best.get(slug);
+      if (!prev || lm > prev) best.set(slug, lm);
+    }
+    return Array.from(best.entries()).map(([slug, lastModified]) => ({
+      segmentAfterLocale: `cities/${encodeURIComponent(slug)}`,
+      lastModified,
+    }));
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapCityEntries failed:', err);
+    return [];
+  }
+}
+
+/**
+ * Property type URLs: static segment or `properties?type=slug` under each locale.
+ */
+export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `{
+    "types": *[_type == "propertyType" && active == true && defined(slug.current)]{
+      "slug": slug.current,
+      _updatedAt
+    },
+    "landings": *[_type == "landingPage" && pageType == "propertyType" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+      "slug": slug.current,
+      _updatedAt
+    }
+  }`;
+  try {
+    const result = await client.fetch<{
+      types?: Array<{ slug?: string; _updatedAt?: string }>;
+      landings?: Array<{ slug?: string; _updatedAt?: string }>;
+    }>(query);
+    const best = new Map<string, Date>();
+    const rows = [...(result?.types ?? []), ...(result?.landings ?? [])];
+    for (const row of rows) {
+      const raw = typeof row.slug === 'string' ? row.slug.trim() : '';
+      if (!raw) continue;
+      const slug = raw.toLowerCase();
+      const lm = parseSitemapDate(row._updatedAt);
+      const prev = best.get(slug);
+      if (!prev || lm > prev) best.set(slug, lm);
+    }
+    const out: SitemapSimpleEntry[] = [];
+    for (const [slug, lastModified] of best) {
+      const seg = SITEMAP_TYPE_STATIC_SEGMENTS.has(slug)
+        ? slug
+        : `properties?type=${encodeURIComponent(slug)}`;
+      out.push({ segmentAfterLocale: seg, lastModified });
+    }
+    return out;
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapTypeEntries failed:', err);
+    return [];
+  }
+}
+
+export type SitemapPropertyEntry = { slug: string; lastModified: Date };
+
+export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[_type == "property" && defined(slug.current) && (!defined(isPublished) || isPublished == true)]{
+    "slug": slug.current,
+    _updatedAt
+  }`;
+  try {
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    if (!Array.isArray(rows)) return [];
+    const out: SitemapPropertyEntry[] = [];
+    for (const row of rows) {
+      const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
+      if (!slug) continue;
+      out.push({
+        slug,
+        lastModified: parseSitemapDate(row._updatedAt),
+      });
+    }
+    return out;
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapPropertyEntries failed:', err);
+    return [];
+  }
+}
+
+export type SitemapBlogEntry = { slug: string; lastModified: Date };
+
+export async function fetchSitemapBlogEntries(): Promise<SitemapBlogEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() && defined(slug.current)]{
+    "slug": slug.current,
+    _updatedAt
+  }`;
+  try {
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    if (!Array.isArray(rows)) return [];
+    const out: SitemapBlogEntry[] = [];
+    for (const row of rows) {
+      const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
+      if (!slug) continue;
+      out.push({
+        slug,
+        lastModified: parseSitemapDate(row._updatedAt),
+      });
+    }
+    return out;
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapBlogEntries failed:', err);
+    return [];
   }
 }
 

@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { buildHreflangAlternates } from '@/lib/seo/hreflang';
+import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import { resolveLocalizedString } from './localized';
 
 type LocalizedField = { en?: string; uk?: string; ru?: string; sq?: string; it?: string } | null | undefined;
@@ -22,6 +24,8 @@ type ArticleMetadataOptions = {
   coverImageUrl?: string;
   baseUrl?: string;
   slug?: string;
+  /** Path after locale for hreflang, e.g. `/blog` or `/blog/my-post`. */
+  pathnameForAlternates?: string;
 };
 
 /** Builds Next Metadata from blog post SEO or blog settings SEO. */
@@ -77,19 +81,45 @@ export function buildBlogMetadata(
   const noIndex = blogSeo?.noIndex ?? false;
   const noFollow = blogSeo?.noFollow ?? false;
 
+  const og: Metadata['openGraph'] = {
+    title: ogTitle,
+    description: ogDescription,
+    ...(ogImageAbsolute && {
+      images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle }],
+    }),
+  };
+
+  if (!isIndexingEnabled()) {
+    return {
+      title,
+      description: description || undefined,
+      openGraph: og,
+      twitter: {
+        card: ogImageAbsolute ? 'summary_large_image' : 'summary',
+        title: ogTitle,
+        description: ogDescription,
+      },
+      robots: indexingDisabledRobots,
+    };
+  }
+
+  const hrefPath = articleOptions?.pathnameForAlternates;
+  const hreflang = hrefPath !== undefined ? buildHreflangAlternates(hrefPath) : undefined;
+  const alternates =
+    canonicalUrl || hreflang?.languages
+      ? {
+          ...(canonicalUrl ? { canonical: canonicalUrl } : {}),
+          ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
+        }
+      : undefined;
+
   return {
     title,
     description: description || undefined,
-    ...(canonicalUrl && {
-      alternates: { canonical: canonicalUrl },
-    }),
+    ...(alternates ? { alternates } : {}),
     openGraph: {
-      title: ogTitle,
-      description: ogDescription,
+      ...og,
       ...(canonicalUrl && { url: canonicalUrl }),
-      ...(ogImageAbsolute && {
-        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle }],
-      }),
     },
     twitter: {
       card: ogImageAbsolute ? 'summary_large_image' : 'summary',

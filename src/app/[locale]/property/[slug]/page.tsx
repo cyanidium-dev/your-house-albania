@@ -13,6 +13,7 @@ import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBrea
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
+import { getSiteBaseUrl } from '@/lib/siteUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
@@ -58,6 +59,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const coverImageUrl = (sanityProperty as { gallery?: Array<{ asset?: { url?: string } }> })?.gallery?.[0]?.asset?.url;
 
+  const baseUrl = ((await getBaseUrl()) || getSiteBaseUrl()).replace(/\/$/, '');
+
   return buildPropertyMetadata(
     propertySeo as never,
     defaultSeo as never,
@@ -66,6 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       itemTitle,
       itemDescription,
       coverImageUrl: coverImageUrl ?? undefined,
+      propertyPath: { baseUrl, locale, slug },
     }
   );
 }

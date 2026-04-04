@@ -25,6 +25,7 @@ import { computeReadingTime } from "@/lib/blog/readingTime";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { formatBlogDate } from "@/lib/date/formatLocale";
 
@@ -64,10 +65,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) {
     return { title: "Not Found", description: "No blog article has been found" };
   }
-  const [siteSettings, baseUrl] = await Promise.all([
+  const [siteSettings, baseUrlRaw] = await Promise.all([
     fetchSiteSettings(),
     getBaseUrl(),
   ]);
+  const baseUrl = (baseUrlRaw || getSiteBaseUrl()).replace(/\/$/, "");
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo;
   const postSeo = (post as { seo?: unknown }).seo;
   const title = (post as { title?: unknown }).title;
@@ -94,7 +96,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     fallbackTitle,
     fallbackDesc,
     undefined,
-    { coverImageUrl, baseUrl, slug }
+    { coverImageUrl, baseUrl, slug, pathnameForAlternates: `/blog/${slug}` }
   );
 }
 
