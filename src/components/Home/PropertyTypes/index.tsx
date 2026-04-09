@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
-import { catalogPath } from "@/lib/routes/catalog";
+import { canonicalCatalogUrl, catalogPath } from "@/lib/routes/catalog";
 
 export type PropertyTypesData = {
   title?: string;
@@ -32,7 +32,7 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
   }
 
   const getTypeLink = (type: PropertyTypeCard) => {
-    if (type.slug) return `${catalogPath(locale)}?type=${encodeURIComponent(type.slug)}`;
+    if (type.slug) return canonicalCatalogUrl({ locale, propertyType: type.slug });
     return catalogPath(locale);
   };
 

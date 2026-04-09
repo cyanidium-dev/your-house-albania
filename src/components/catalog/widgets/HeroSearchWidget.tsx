@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { catalogPath } from "@/lib/routes/catalog";
+import { canonicalCatalogUrl } from "@/lib/routes/catalog";
 import { FilterSelect, type FilterOption } from "@/components/catalog/FilterSelect";
 import * as Slider from "@radix-ui/react-slider";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -95,7 +95,15 @@ export function HeroSearchWidget({
     if (priceParams.minPrice) params.set("minPrice", priceParams.minPrice);
     if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
 
-    router.push(`${catalogPath(locale)}?${params.toString()}`);
+    router.push(
+      canonicalCatalogUrl({
+        locale,
+        city: city !== "any" ? city : undefined,
+        deal: deal || undefined,
+        propertyType: type !== "any" ? type : undefined,
+        query: params,
+      })
+    );
   };
 
   const formatAmount = (eur: number) =>
