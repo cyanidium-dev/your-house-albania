@@ -87,6 +87,15 @@ type SingleFilterInput = {
   propertyType?: string;
 };
 
+type CanonicalCatalogUrlInput = {
+  locale: string;
+  city?: string;
+  deal?: string;
+  propertyType?: string;
+  country?: string;
+  query?: URLSearchParams;
+};
+
 export function singleFilterPath({
   locale,
   city,
@@ -160,4 +169,51 @@ export function catalogPath(locale: string, city?: string, district?: string, ag
     return base;
   }
   return catalogFilterPath({ locale, city, district });
+}
+
+export function canonicalCatalogUrl({
+  locale,
+  city,
+  deal,
+  propertyType,
+  country,
+  query,
+}: CanonicalCatalogUrlInput): string {
+  const citySlug = city?.trim() || "";
+  const typeSlug = propertyType?.trim() || "";
+  const dealSegment = dealQueryValueToRouteSegment(deal?.trim() || undefined);
+  const hasCountry = Boolean(country && country.trim());
+  const path = hasCountry && citySlug
+    ? catalogFilterPath({
+        locale,
+        country,
+        city: citySlug,
+        dealType: dealSegment || undefined,
+        propertyType: typeSlug || undefined,
+      })
+    : !hasCountry && (Boolean(citySlug) + Boolean(dealSegment) + Boolean(typeSlug) === 1)
+      ? singleFilterPath({
+          locale,
+          city: citySlug || undefined,
+          dealType: dealSegment || undefined,
+          propertyType: typeSlug || undefined,
+        })
+      : citySlug
+        ? catalogFilterPath({
+            locale,
+            city: citySlug,
+            dealType: dealSegment || undefined,
+            propertyType: typeSlug || undefined,
+          })
+        : catalogPath(locale);
+
+  if (!query) return path;
+  const params = new URLSearchParams(query.toString());
+  if (citySlug) params.delete("city");
+  if (dealSegment && path.includes(`/${encodeURIComponent(dealSegment)}`)) params.delete("deal");
+  if (typeSlug && path.includes(`/${encodeURIComponent(typeSlug)}`)) params.delete("type");
+  if (hasCountry) params.delete("country");
+  const qs = params.toString();
+  if (!qs) return path;
+  return path.includes("?") ? `${path}&${qs}` : `${path}?${qs}`;
 }

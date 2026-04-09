@@ -38,13 +38,11 @@ export async function CatalogBreadcrumb({
     fetchCatalogFilterOptions(locale),
   ]);
   const dealsT = await getTranslations("Catalog.filters");
-  const items: BreadcrumbItem[] = [
-    { label: t("home"), href: `/${locale}` },
-    {
-      label: t("properties"),
-      href: city || dealType || propertyType || country || agentSlug ? catalogPath(locale) : undefined,
-    },
-  ];
+  const hasCatalogScope = Boolean(city || dealType || propertyType || country || agentSlug);
+  const items: BreadcrumbItem[] = [{ label: t("home"), href: `/${locale}` }];
+  if (!hasCatalogScope) {
+    items.push({ label: "Catalog" });
+  }
 
   const locations = options.locations;
   const propertyTypes = options.propertyTypes;
@@ -78,7 +76,12 @@ export async function CatalogBreadcrumb({
           ? catalogFilterPath({ locale, country: normalizeCatalogCountrySlug(country), city })
           : singleFilterPath({ locale, city })
       : undefined;
-    items.push({ label: t("cities") });
+    const cityResetHref = agentSlug
+      ? agentFilterPath({ locale, agentSlug })
+      : country
+        ? `/${locale}/${encodeURIComponent(normalizeCatalogCountrySlug(country))}`
+        : catalogPath(locale);
+    items.push({ label: t("cities"), href: cityResetHref });
     items.push({ label: cityLabel, href: cityHref });
   }
 
@@ -106,7 +109,21 @@ export async function CatalogBreadcrumb({
     const typeLabel =
       propertyTypes.find((p) => p.value.toLowerCase() === propertyType.toLowerCase())
         ?.label || formatSlug(propertyType);
-    items.push({ label: "Property types" });
+    const propertyTypeResetHref = agentSlug
+      ? agentFilterPath({ locale, agentSlug, city, dealType })
+      : country && city
+        ? catalogFilterPath({
+            locale,
+            country: normalizeCatalogCountrySlug(country),
+            city,
+            dealType,
+          })
+        : city
+          ? singleFilterPath({ locale, city })
+          : dealType
+            ? singleFilterPath({ locale, dealType })
+            : catalogPath(locale);
+    items.push({ label: "Property types", href: propertyTypeResetHref });
     items.push({ label: typeLabel });
   }
 
