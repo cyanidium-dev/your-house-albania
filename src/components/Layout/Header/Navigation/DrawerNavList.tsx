@@ -88,7 +88,8 @@ function DrawerNavList({
   const isHomeActive = path === `/${locale}` || path === `/${locale}/`
 
   const isDealActive = (segment: string) =>
-    path === `/${locale}/${segment}` || path === `/${locale}/${encodeURIComponent(segment)}`
+    path === `/${locale}/investment/${segment}` ||
+    path === `/${locale}/investment/${encodeURIComponent(segment)}`
 
   const isCitiesParentActive =
     path === `/${locale}/cities` || path.startsWith(`/${locale}/cities/`)

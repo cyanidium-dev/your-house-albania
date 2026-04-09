@@ -47,12 +47,12 @@ export function resolveAgentHref(agent: AgentDoc): string | null {
   return null
 }
 
-/** Locale-prefixed internal path for agent-scoped catalog (`/[locale]/properties/agent/[slug]`). */
+/** Locale-prefixed internal path for agent-scoped listings (`/[locale]/agent/[slug]`). */
 export function resolveAgentCatalogHref(agent: AgentDoc): string | null {
   const raw = typeof agent.slug === 'string' ? agent.slug.trim() : ''
   if (!raw) return null
   const slug = raw.toLowerCase()
-  return `/properties/agent/${encodeURIComponent(slug)}`
+  return `/agent/${encodeURIComponent(slug)}`
 }
 
 function resolveAgentLogoHref(agent: AgentDoc): string | null {

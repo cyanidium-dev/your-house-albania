@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { catalogPath } from "@/lib/routes/catalog";
 
 const Categories: React.FC<{ locale: string }> = async ({ locale }) => {
   const t = await getTranslations('Home.services');
@@ -38,7 +39,7 @@ const Categories: React.FC<{ locale: string }> = async ({ locale }) => {
             <p className="text-dark/50 dark:text-white/50 text-lg lg:max-w-full leading-[1.3] md:max-w-3/4">
               {t('description')}
             </p>
-            <Link href={`/${locale}/properties`} className="py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full font-semibold mt-8 hover:bg-dark duration-300">
+            <Link href={catalogPath(locale)} className="py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full font-semibold mt-8 hover:bg-dark duration-300">
               {t('viewProperties')}
             </Link>
           </div>

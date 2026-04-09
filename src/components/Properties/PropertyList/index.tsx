@@ -18,6 +18,7 @@ import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
+import { catalogPath } from '@/lib/routes/catalog'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -162,10 +163,12 @@ async function PropertiesListing({
     }
     params.set('page', String(currentPage))
     const qs = params.toString()
-    const path = `/${locale}/properties` +
-      (agentSlugFilter ? `/agent/${encodeURIComponent(agentSlugFilter)}` : '') +
-      (pathCity ? `/${encodeURIComponent(pathCity)}` : '') +
-      (pathDistrict ? `/${encodeURIComponent(pathDistrict)}` : '')
+    const path = catalogPath(
+      locale,
+      pathCity || undefined,
+      pathDistrict || undefined,
+      agentSlugFilter || undefined
+    )
     redirect(path + (qs ? `?${qs}` : ''))
   }
 

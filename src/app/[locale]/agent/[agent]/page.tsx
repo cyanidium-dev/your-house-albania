@@ -6,47 +6,63 @@ import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import {
   fetchAgentBySlug,
-  fetchCatalogSeoPageByDistrict,
+  fetchCatalogSeoPageRoot,
   resolveCatalogSeoPage,
 } from "@/lib/sanity/client";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
+import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
+import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
+import { agentFilterPath } from "@/lib/routes/catalog";
 
 type Props = {
-  params: Promise<{ locale: string; agent: string; city: string; district: string }>;
+  params: Promise<{ locale: string; agent: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, city, district, agent } = await params;
-  const parsed = parseCatalogFilters({ city, district, agentSlug: agent }, {});
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const [{ locale, agent }, search] = await Promise.all([params, searchParams]);
+  const parsed = parseCatalogFilters({ agentSlug: agent }, search);
   const [agentDoc, rawSeo, t] = await Promise.all([
     fetchAgentBySlug(parsed.agentSlug, locale),
-    fetchCatalogSeoPageByDistrict(parsed.city, parsed.district),
+    fetchCatalogSeoPageRoot(),
     getTranslations("Listing.properties"),
   ]);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const title = agentDoc?.name
-    ? `Properties by ${agentDoc.name} — ${parsed.district.replace(/-/g, " ")}`
+    ? `Properties by ${agentDoc.name}`
     : catalogSeo?.metaTitle || t("title");
   const description = catalogSeo?.metaDescription || t("description");
-  return { title, description };
+  if (!isIndexingEnabled()) return { title, description, robots: indexingDisabledRobots };
+
+  const path = agentFilterPath({ locale, agentSlug: parsed.agentSlug });
+  const base = getSiteBaseUrl();
+  const href = buildHreflangAlternates(path.replace(`/${locale}`, ""));
+  const robots =
+    shouldCatalogListingNoindex(search) || (catalogSeo?.noIndex ?? false)
+      ? { index: false as const, follow: true as const }
+      : undefined;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${base}${path}`,
+      ...(href?.languages ? { languages: href.languages } : {}),
+    },
+    robots,
+  };
 }
 
-export default async function CatalogAgentCityDistrictPage({
-  params,
-  searchParams,
-}: Props) {
-  const [{ locale, city, district, agent }, search] = await Promise.all([
-    params,
-    searchParams,
-  ]);
-  const parsed = parseCatalogFilters({ city, district, agentSlug: agent }, search);
+export default async function AgentCatalogPage({ params, searchParams }: Props) {
+  const [{ locale, agent }, search] = await Promise.all([params, searchParams]);
+  const parsed = parseCatalogFilters({ agentSlug: agent }, search);
   const agentDoc = await fetchAgentBySlug(parsed.agentSlug, locale);
   if (!agentDoc) notFound();
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");
-  const rawSeo = await fetchCatalogSeoPageByDistrict(parsed.city, parsed.district);
+  const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
 
   return (
@@ -62,16 +78,12 @@ export default async function CatalogAgentCityDistrictPage({
             locale={locale}
             agentSlug={parsed.agentSlug}
             agentName={agentDoc.name}
-            city={parsed.city}
-            district={parsed.district}
           />
         }
       />
       <PropertiesListing
         locale={locale}
         pathAgentSlug={parsed.agentSlug}
-        pathCity={parsed.city}
-        pathDistrict={parsed.district}
         searchParams={search}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />

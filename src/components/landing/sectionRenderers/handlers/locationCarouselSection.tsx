@@ -7,6 +7,7 @@ import {
 } from '@/lib/sanity/cityAdapter'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { SectionHandler } from './types'
+import { catalogFilterPath } from '@/lib/routes/catalog'
 
 export const locationCarouselSectionHandler: SectionHandler = ({ locale, section }) => {
   const linkTargetTypeRaw = section.linkTargetType
@@ -31,7 +32,7 @@ export const locationCarouselSectionHandler: SectionHandler = ({ locale, section
       ...c,
       href: linkLanding
         ? `/${locale}/cities/${c.slug}`
-        : `/${locale}/properties?city=${c.slug}`,
+        : catalogFilterPath({ locale, city: c.slug }),
     }))
   }
 

@@ -17,9 +17,9 @@ export type DrawerNavItem = DrawerNavLinkItem | DrawerNavExpandableItem
 
 export const DRAWER_NAV_ITEMS: DrawerNavItem[] = [
   { kind: 'link', key: 'home', href: '/' },
-  { kind: 'link', key: 'sale', href: '/sale' },
-  { kind: 'link', key: 'rent', href: '/rent' },
-  { kind: 'link', key: 'shortTermRent', href: '/short-term-rent' },
+  { kind: 'link', key: 'sale', href: '/investment/sale' },
+  { kind: 'link', key: 'rent', href: '/investment/rent' },
+  { kind: 'link', key: 'shortTermRent', href: '/investment/short-term-rent' },
   { kind: 'expandable', key: 'cities', href: '/cities' },
   { kind: 'expandable', key: 'realtors', href: '/for-realtors' },
   { kind: 'link', key: 'blog', href: '/blog' },

@@ -41,7 +41,7 @@ export async function GET() {
 
   for (const locale of routing.locales) {
     push(`${base}/${locale}`, staticNow);
-    push(`${base}/${locale}/properties`, staticNow);
+    push(`${base}/${locale}/catalog`, staticNow);
 
     for (const { slug, lastModified } of agents) {
       const path = catalogPath(locale, undefined, undefined, slug);

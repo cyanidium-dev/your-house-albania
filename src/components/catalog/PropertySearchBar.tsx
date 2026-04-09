@@ -5,7 +5,12 @@ import { createPortal } from "react-dom";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
-import { catalogPath } from "@/lib/routes/catalog";
+import {
+  catalogFilterPath,
+  catalogPath,
+  dealQueryValueToRouteSegment,
+  singleFilterPath,
+} from "@/lib/routes/catalog";
 import {
   type ViewMode,
   DEFAULT_VIEW_MODE,
@@ -432,13 +437,39 @@ export function PropertySearchBar({
     // District in path when city is set; when no city, catalogPath carries ?district= (do not duplicate in params)
     params.delete("district");
 
-    const qs = params.toString();
-    const path = catalogPath(
-      locale,
-      city || undefined,
-      districtSlugForPath(district),
-      initialAgentSlug || undefined
+    const citySlug = city || undefined;
+    const dealSegment = dealQueryValueToRouteSegment(
+      effectiveDeal && effectiveDeal !== "any" ? effectiveDeal : undefined
     );
+    const typeSlug = type || undefined;
+    const singleCount = Number(Boolean(citySlug)) + Number(Boolean(dealSegment)) + Number(Boolean(typeSlug));
+    const path =
+      !initialAgentSlug && singleCount === 1
+        ? singleFilterPath({
+            locale,
+            city: citySlug,
+            dealType: dealSegment || undefined,
+            propertyType: typeSlug,
+          })
+        : citySlug && !initialAgentSlug
+        ? catalogFilterPath({
+            locale,
+            city: citySlug,
+            dealType: dealSegment || undefined,
+            propertyType: typeSlug,
+            district: districtSlugForPath(district),
+          })
+        : catalogPath(
+            locale,
+            citySlug,
+            districtSlugForPath(district),
+            initialAgentSlug || undefined
+          );
+    // Keep query params only for filters that are not encoded in the path.
+    if (citySlug) params.delete("city");
+    if (dealSegment && path.includes(`/${encodeURIComponent(dealSegment)}`)) params.delete("deal");
+    if (typeSlug && path.includes(`/${encodeURIComponent(typeSlug)}`)) params.delete("type");
+    const qs = params.toString();
     const url =
       qs === ""
         ? path

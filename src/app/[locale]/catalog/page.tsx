@@ -1,5 +1,18 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { CatalogHero } from "@/components/catalog/CatalogHero";
+import PropertiesListing from "@/components/Properties/PropertyList";
+import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
+import React from "react";
+import { getTranslations } from "next-intl/server";
+import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
+import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
+import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
+import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { catalogFilterPath, dealQueryValueToRouteSegment, singleFilterPath } from "@/lib/routes/catalog";
 
 function buildQueryString(
   search: Record<string, string | string[] | undefined>,
@@ -13,18 +26,6 @@ function buildQueryString(
   const qs = params.toString();
   return qs ? `?${qs}` : "";
 }
-import { CatalogHero } from "@/components/catalog/CatalogHero";
-import PropertiesListing from "@/components/Properties/PropertyList";
-import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
-import React from "react";
-import { getTranslations } from "next-intl/server";
-import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
-import { resolveLocalizedString } from "@/lib/sanity/localized";
-import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
-import { buildHreflangAlternates } from "@/lib/seo/hreflang";
-import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
-import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
-import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -78,7 +79,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 
   const baseUrl = getSiteBaseUrl();
-  const path = "/properties";
+  const path = "/catalog";
   const canonical = `${baseUrl}/${locale}${path}`;
   const href = buildHreflangAlternates(path);
   const noindexQuery = shouldCatalogListingNoindex(search);
@@ -97,17 +98,30 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   };
 }
 
-export default async function page({ params, searchParams }: Props) {
+export default async function CatalogRootPage({ params, searchParams }: Props) {
   const [{ locale }, search] = await Promise.all([params, searchParams]);
 
   const parsed = parseCatalogFilters({}, search);
   const cityQ = parsed.city;
-  const districtQ = parsed.district;
-  if (cityQ && districtQ) {
-    redirect(`/${locale}/properties/${encodeURIComponent(cityQ)}/${encodeURIComponent(districtQ)}${buildQueryString(search, ["city", "district"])}`);
-  }
+  const dealQ = dealQueryValueToRouteSegment(parsed.deal || undefined);
+  const typeQ = parsed.type || "";
+  const singleShorthandCount = Number(Boolean(cityQ)) + Number(Boolean(dealQ)) + Number(Boolean(typeQ));
   if (cityQ) {
-    redirect(`/${locale}/properties/${encodeURIComponent(cityQ)}${buildQueryString(search, ["city", "district"])}`);
+    redirect(
+      `${catalogFilterPath({ locale, city: cityQ, district: parsed.district || undefined })}${buildQueryString(
+        search,
+        ["city", "district"]
+      )}`
+    );
+  }
+  if (singleShorthandCount === 1) {
+    const shorthandPath = singleFilterPath({
+      locale,
+      city: cityQ || undefined,
+      dealType: dealQ || undefined,
+      propertyType: typeQ || undefined,
+    });
+    redirect(`${shorthandPath}${buildQueryString(search, ["city", "deal", "type"])}`);
   }
 
   const t = await getTranslations("Listing.properties");
@@ -132,4 +146,3 @@ export default async function page({ params, searchParams }: Props) {
     </>
   );
 }
-

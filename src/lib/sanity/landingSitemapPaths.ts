@@ -37,10 +37,10 @@ export function resolveLandingPathForSitemap(doc: LandingPageSitemapRow): string
     return `cities/${city}`;
   }
 
-  // Deal landings: CMS slug → app path (see `dealLandingSlug.ts` / `sale`, `rent`, `short-term-rent` pages).
-  if (slug === "sale") return "sale";
-  if (slug === "long-term-rent") return "rent";
-  if (slug === "short-term-rent") return "short-term-rent";
+  // Deal landings: CMS slug → editorial investment path.
+  if (slug === "sale") return "investment/sale";
+  if (slug === "long-term-rent") return "investment/rent";
+  if (slug === "short-term-rent") return "investment/short-term-rent";
 
   // Slug matches a dedicated route that loads this document via `fetchLandingPageBySlug`.
   if (slug === "for-realtors") return "for-realtors";
