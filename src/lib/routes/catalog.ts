@@ -191,7 +191,8 @@ export function canonicalCatalogUrl({
         dealType: dealSegment || undefined,
         propertyType: typeSlug || undefined,
       })
-    : !hasCountry && (Boolean(citySlug) + Boolean(dealSegment) + Boolean(typeSlug) === 1)
+    : !hasCountry &&
+      (Number(Boolean(citySlug)) + Number(Boolean(dealSegment)) + Number(Boolean(typeSlug)) === 1)
       ? singleFilterPath({
           locale,
           city: citySlug || undefined,
