@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import type { BreadcrumbItem } from "../Breadcrumb";
+import { catalogFilterPath, catalogPath } from "@/lib/routes/catalog";
 
 type PropertyDetailBreadcrumbProps = {
   locale: string;
@@ -23,7 +24,7 @@ export async function PropertyDetailBreadcrumb({
   const t = await getTranslations("Breadcrumbs");
   const items: BreadcrumbItem[] = [
     { label: t("home"), href: `/${locale}` },
-    { label: t("properties"), href: `/${locale}/properties` },
+    { label: t("properties"), href: catalogPath(locale) },
   ];
 
   let locations: { value: string; label: string }[] = [];
@@ -40,7 +41,7 @@ export async function PropertyDetailBreadcrumb({
     const cityLabel =
       locations.find((l) => l.value.toLowerCase() === city)?.label ||
       formatSlug(citySlug);
-    const cityHref = `/${locale}/properties/${encodeURIComponent(citySlug)}`;
+    const cityHref = catalogFilterPath({ locale, city: citySlug });
     items.push({ label: cityLabel, href: cityHref });
   }
 
@@ -51,7 +52,7 @@ export async function PropertyDetailBreadcrumb({
       formatSlug(districtSlug);
     items.push({
       label: districtLabel,
-      href: `/${locale}/properties/${encodeURIComponent(citySlug!)}/${encodeURIComponent(districtSlug)}`,
+      href: catalogFilterPath({ locale, city: citySlug!, district: districtSlug }),
     });
   }
 

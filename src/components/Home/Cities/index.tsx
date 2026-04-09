@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { CityCard } from "@/lib/sanity/cityAdapter";
+import { catalogFilterPath } from "@/lib/routes/catalog";
 
 export type CitiesData = {
   title?: string;
@@ -21,7 +22,7 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
   const title = citiesData?.title ?? t("title");
   const description = citiesData?.subtitle ?? t("description");
   const ctaLabel = citiesData?.ctaLabel ?? t("viewProperties");
-  const ctaHref = citiesData?.ctaHref ?? "/properties";
+  const ctaHref = citiesData?.ctaHref ?? "/catalog";
   const href = ctaHref.startsWith("/")
     ? `/${locale}${ctaHref}`
     : `/${locale}/${ctaHref}`;
@@ -128,20 +129,20 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
             </Link>
           </div>
           {big1 &&
-            renderCard(big1, "big", `/${locale}/properties?city=${big1.slug}`)}
+            renderCard(big1, "big", catalogFilterPath({ locale, city: big1.slug }))}
           {big2 &&
-            renderCard(big2, "big", `/${locale}/properties?city=${big2.slug}`)}
+            renderCard(big2, "big", catalogFilterPath({ locale, city: big2.slug }))}
           {small1 &&
             renderCard(
               small1,
               "small",
-              `/${locale}/properties?city=${small1.slug}`,
+              catalogFilterPath({ locale, city: small1.slug }),
             )}
           {small2 &&
             renderCard(
               small2,
               "small",
-              `/${locale}/properties?city=${small2.slug}`,
+              catalogFilterPath({ locale, city: small2.slug }),
             )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
 
-export default async function CatalogAgentRootPage() {
+export default async function AgentRootPage() {
   notFound();
 }

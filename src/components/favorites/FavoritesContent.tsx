@@ -10,6 +10,7 @@ import { PropertyCardSkeleton } from "@/components/favorites/PropertyCardSkeleto
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { Button } from "@/components/ui/button";
 import type { PropertyHomes } from "@/types/propertyHomes";
+import { catalogPath } from "@/lib/routes/catalog";
 
 const SKELETON_COUNT = 6;
 
@@ -77,7 +78,7 @@ export function FavoritesContent({ locale }: Props) {
         <p className="text-dark dark:text-white text-lg mb-2">{t("emptyTitle")}</p>
         <p className="text-dark/50 dark:text-white/50 text-sm mb-6">{t("emptyDescription")}</p>
         <Link
-          href={`/${locale}/properties`}
+          href={catalogPath(locale)}
           className="inline-flex items-center gap-2 py-3 px-6 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
         >
           {t("browseProperties")}
@@ -103,7 +104,7 @@ export function FavoritesContent({ locale }: Props) {
         <p className="text-dark dark:text-white text-lg mb-2">{t("noDataTitle")}</p>
         <p className="text-dark/50 dark:text-white/50 text-sm mb-6">{t("noDataDescription")}</p>
         <Link
-          href={`/${locale}/properties`}
+          href={catalogPath(locale)}
           className="inline-flex items-center gap-2 py-3 px-6 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
         >
           {t("browseProperties")}

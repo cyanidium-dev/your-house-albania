@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { catalogPath } from "@/lib/routes/catalog";
 
 export type TopOffersGroup = "popular" | "new" | "highDemand";
 
@@ -133,7 +134,7 @@ export function TopOffersCarouselClient({
       {/* CTA */}
       <div className="mt-8 flex justify-center">
         <Link
-          href={`/${locale}/properties`}
+          href={catalogPath(locale)}
           className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-dark text-white hover:bg-primary transition-colors duration-200 ease-out cursor-pointer"
         >
           {t("ctaAll")}

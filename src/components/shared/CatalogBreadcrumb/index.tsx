@@ -3,48 +3,67 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
-import { catalogPath } from "@/lib/routes/catalog";
+import {
+  agentFilterPath,
+  catalogFilterPath,
+  catalogPath,
+  getCatalogCountrySlug,
+  normalizeCatalogCountrySlug,
+  singleFilterPath,
+} from "@/lib/routes/catalog";
 import type { BreadcrumbItem } from "../Breadcrumb";
 
 type CatalogBreadcrumbProps = {
   locale: string;
   agentSlug?: string;
   agentName?: string;
+  country?: string;
   city?: string;
-  district?: string;
+  dealType?: string;
+  propertyType?: string;
 };
 
 export async function CatalogBreadcrumb({
   locale,
   agentSlug,
   agentName,
+  country,
   city,
-  district,
+  dealType,
+  propertyType,
 }: CatalogBreadcrumbProps) {
-  const t = await getTranslations("Breadcrumbs");
+  const catalogCountrySlug = getCatalogCountrySlug();
+  const [t, options] = await Promise.all([
+    getTranslations("Breadcrumbs"),
+    fetchCatalogFilterOptions(locale),
+  ]);
+  const dealsT = await getTranslations("Catalog.filters");
   const items: BreadcrumbItem[] = [
     { label: t("home"), href: `/${locale}` },
     {
       label: t("properties"),
-      href: city || district || agentSlug ? `/${locale}/properties` : undefined,
+      href: city || dealType || propertyType || country || agentSlug ? catalogPath(locale) : undefined,
     },
   ];
 
-  let locations: { value: string; label: string }[] = [];
-  let districts: { value: string; label: string; citySlug?: string }[] = [];
-
-  if (city || district) {
-    const opts = await fetchCatalogFilterOptions(locale);
-    locations = opts.locations;
-    districts = opts.districts;
-  }
+  const locations = options.locations;
+  const propertyTypes = options.propertyTypes;
 
   if (agentSlug) {
+    const agentPath = agentFilterPath({ locale, agentSlug });
+    items.push({ label: "Agents", href: agentPath });
     items.push({
       label: agentName || formatSlug(agentSlug),
-      href: city || district
-        ? catalogPath(locale, undefined, undefined, agentSlug)
-        : undefined,
+      href: city || dealType || propertyType ? agentPath : undefined,
+    });
+  }
+
+  if (country) {
+    const normalizedCountry = normalizeCatalogCountrySlug(country);
+    items.push({ label: "Country", href: `/${locale}/${encodeURIComponent(catalogCountrySlug)}` });
+    items.push({
+      label: formatSlug(normalizedCountry),
+      href: undefined,
     });
   }
 
@@ -52,21 +71,54 @@ export async function CatalogBreadcrumb({
     const cityLabel =
       locations.find((l) => l.value.toLowerCase() === city.toLowerCase())
         ?.label || formatSlug(city);
-    const cityHref = district
-      ? catalogPath(locale, city, undefined, agentSlug)
+    const cityHref = dealType || propertyType
+      ? agentSlug
+        ? agentFilterPath({ locale, agentSlug, city })
+        : country
+          ? catalogFilterPath({ locale, country: normalizeCatalogCountrySlug(country), city })
+          : singleFilterPath({ locale, city })
       : undefined;
+    items.push({ label: t("cities") });
     items.push({ label: cityLabel, href: cityHref });
   }
 
-  if (district) {
-    const districtLabel =
-      districts.find((d) => d.value.toLowerCase() === district.toLowerCase())
-        ?.label || formatSlug(district);
-    items.push({ label: districtLabel });
+  if (dealType) {
+    const dealLabel =
+      dealType === "sale"
+        ? dealsT("dealSale")
+        : dealType === "rent"
+          ? dealsT("dealRent")
+          : dealType === "short-term-rent"
+            ? dealsT("dealShortTerm")
+            : formatSlug(dealType);
+    const dealHref = propertyType
+      ? agentSlug
+        ? agentFilterPath({ locale, agentSlug, city, dealType })
+        : country && city
+          ? catalogFilterPath({ locale, country: normalizeCatalogCountrySlug(country), city, dealType })
+          : singleFilterPath({ locale, dealType })
+      : undefined;
+    items.push({ label: dealsT("dealType") });
+    items.push({ label: dealLabel, href: dealHref });
+  }
+
+  if (propertyType) {
+    const typeLabel =
+      propertyTypes.find((p) => p.value.toLowerCase() === propertyType.toLowerCase())
+        ?.label || formatSlug(propertyType);
+    items.push({ label: "Property types" });
+    items.push({ label: typeLabel });
   }
 
   const baseUrl = await getBaseUrl();
-  const currentPath = buildCurrentPath(locale, agentSlug, city, district);
+  const currentPath = buildCurrentPath({
+    locale,
+    agentSlug,
+    country,
+    city,
+    dealType,
+    propertyType,
+  });
   const jsonLdItems = items.map((it, i) => ({
     name: it.label,
     url: it.href ?? (i === items.length - 1 ? currentPath : undefined),
@@ -86,11 +138,38 @@ function formatSlug(slug: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function buildCurrentPath(
-  locale: string,
-  agentSlug?: string,
-  city?: string,
-  district?: string
-): string {
-  return catalogPath(locale, city, district, agentSlug);
+function buildCurrentPath({
+  locale,
+  agentSlug,
+  country,
+  city,
+  dealType,
+  propertyType,
+}: {
+  locale: string;
+  agentSlug?: string;
+  country?: string;
+  city?: string;
+  dealType?: string;
+  propertyType?: string;
+}): string {
+  if (agentSlug) {
+    return agentFilterPath({ locale, agentSlug, city, dealType, propertyType });
+  }
+  if (city || dealType || propertyType) {
+    if (country && !city && !dealType && !propertyType) {
+      return `/${locale}/${encodeURIComponent(normalizeCatalogCountrySlug(country))}`;
+    }
+    if (country && city) {
+      return catalogFilterPath({
+        locale,
+        country: normalizeCatalogCountrySlug(country),
+        city,
+        dealType,
+        propertyType,
+      });
+    }
+    return singleFilterPath({ locale, city, dealType, propertyType });
+  }
+  return catalogPath(locale);
 }

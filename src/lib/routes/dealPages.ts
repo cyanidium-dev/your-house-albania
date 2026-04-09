@@ -1,12 +1,10 @@
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
 
-/**
- * Canonical marketing routes for deal types (`src/app/[locale]/sale`, `rent`, `short-term-rent`).
- */
+/** Canonical editorial investment routes for deal pages (`src/app/[locale]/investment/...`). */
 export function dealMarketingPagePath(
   locale: string,
   deal: PropertiesDealParam,
 ): string {
-  if (deal === 'short-term') return `/${locale}/short-term-rent`
-  return `/${locale}/${deal}`
+  if (deal === 'short-term') return `/${locale}/investment/short-term-rent`
+  return `/${locale}/investment/${deal}`
 }

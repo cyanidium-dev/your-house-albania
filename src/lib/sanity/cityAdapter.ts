@@ -1,4 +1,5 @@
 import { resolveLocalizedString } from './localized';
+import { catalogFilterPath, catalogPath } from '@/lib/routes/catalog';
 
 /** Preferred order: Durrës, Tirana, Vlorë, Sarandë. Slugs: durres, tirana, vlore, sarande */
 const PREFERRED_SLUGS = ['durres', 'tirana', 'vlore', 'sarande'];
@@ -101,11 +102,11 @@ export function mapResolvedManualItemsToCards(
     const href =
       item._type === 'district'
         ? citySlug
-          ? `/${locale}/properties/${citySlug}/${slug}`
-          : `/${locale}/properties`
+          ? catalogFilterPath({ locale, city: citySlug, district: slug })
+          : catalogPath(locale)
         : linkLanding
           ? `/${locale}/cities/${slug}`
-          : `/${locale}/properties?city=${slug}`;
+          : catalogFilterPath({ locale, city: slug });
     result.push({
       _id: item._id,
       title,

@@ -7,6 +7,7 @@ import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 export async function buildDealTypeLandingMetadata(
   deal: PropertiesDealParam,
   locale: string,
+  options?: { investmentPath?: boolean },
 ): Promise<Metadata> {
   const [landing, siteSettings] = await Promise.all([
     fetchDealTypeLanding(deal),
@@ -23,11 +24,11 @@ export async function buildDealTypeLandingMetadata(
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
   const pathnameForAlternates =
     deal === "sale"
-      ? "sale"
+      ? options?.investmentPath ? "investment/sale" : "sale"
       : deal === "rent"
-        ? "rent"
+        ? options?.investmentPath ? "investment/rent" : "rent"
         : deal === "short-term"
-          ? "short-term-rent"
+          ? options?.investmentPath ? "investment/short-term-rent" : "short-term-rent"
           : undefined;
   return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale, {
     ...(pathnameForAlternates ? { pathnameForAlternates } : {}),

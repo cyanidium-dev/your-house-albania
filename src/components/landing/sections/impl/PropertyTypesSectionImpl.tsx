@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
+import { catalogPath } from "@/lib/routes/catalog";
 
 export type PropertyTypesData = {
   title?: string;
@@ -22,7 +23,8 @@ function buildPropertiesListingHref(
   if (typeSlug) params.set("type", typeSlug);
   if (propertiesDeal) params.set("deal", propertiesDeal);
   const q = params.toString();
-  return q ? `/${locale}/properties?${q}` : `/${locale}/properties`;
+  const base = catalogPath(locale);
+  return q ? `${base}?${q}` : base;
 }
 
 const PropertyTypes: React.FC<{

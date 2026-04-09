@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
+import { catalogFilterPath } from '@/lib/routes/catalog'
 
 type District = {
   _id?: string
@@ -188,7 +189,9 @@ export function DistrictsComparisonSection({
               const districtSlug = slugOf(d.slug)
               const citySlug = slugOf(d.city?.slug)
               const href =
-                citySlug && districtSlug ? `/${locale}/properties/${citySlug}/${districtSlug}` : undefined
+                citySlug && districtSlug
+                  ? catalogFilterPath({ locale, city: citySlug, district: districtSlug })
+                  : undefined
               const imgUrl = d.heroImage?.asset?.url
               const name = resolveLocalizedString(d.title as never, locale) || '—'
               const desc = resolveLocalizedString(d.shortDescription as never, locale) || ''

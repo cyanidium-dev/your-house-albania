@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
+import { catalogPath } from "@/lib/routes/catalog";
 
 export type PropertyTypesData = {
   title?: string;
@@ -21,7 +22,7 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
   const title = propertyTypesData?.title ?? t("title");
   const subtitle = propertyTypesData?.subtitle ?? t("description");
   const ctaLabel = propertyTypesData?.ctaLabel ?? t("viewProperties");
-  const ctaHref = propertyTypesData?.ctaHref ?? "/properties";
+  const ctaHref = propertyTypesData?.ctaHref ?? "/catalog";
   const href = ctaHref.startsWith("/") ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`;
 
   const types = Array.isArray(propertyTypesData?.propertyTypes) ? propertyTypesData.propertyTypes : [];
@@ -31,8 +32,8 @@ const PropertyTypes: React.FC<{ locale: string; propertyTypesData?: PropertyType
   }
 
   const getTypeLink = (type: PropertyTypeCard) => {
-    if (type.slug) return `/${locale}/properties?type=${type.slug}`;
-    return `/${locale}/properties`;
+    if (type.slug) return `${catalogPath(locale)}?type=${encodeURIComponent(type.slug)}`;
+    return catalogPath(locale);
   };
 
   return (

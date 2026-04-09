@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { LandingRenderer } from '@/components/landing/LandingRenderer'
 import { fetchDealTypeLanding } from '@/lib/sanity/client'
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
+import { catalogPath } from '@/lib/routes/catalog'
 
 export async function DealTypeLandingPage({
   locale,
@@ -12,7 +13,7 @@ export async function DealTypeLandingPage({
 }) {
   const landing = await fetchDealTypeLanding(deal)
   if (!landing) {
-    redirect(`/${locale}/properties?deal=${encodeURIComponent(deal)}`)
+    redirect(`${catalogPath(locale)}?deal=${encodeURIComponent(deal)}`)
   }
   return (
     <LandingRenderer
