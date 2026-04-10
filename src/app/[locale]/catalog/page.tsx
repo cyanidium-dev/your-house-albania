@@ -9,7 +9,6 @@ import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } fro
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
-import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, dealQueryValueToRouteSegment, singleFilterPath } from "@/lib/routes/catalog";
@@ -34,7 +33,7 @@ type Props = {
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const search = await searchParams;
+  void searchParams;
   const [siteSettings, rawSeo] = await Promise.all([
     fetchSiteSettings(),
     fetchCatalogSeoPageRoot(),
@@ -82,10 +81,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const path = "/catalog";
   const canonical = `${baseUrl}/${locale}${path}`;
   const href = buildHreflangAlternates(path);
-  const noindexQuery = shouldCatalogListingNoindex(search);
-  const seoNoIndex = catalogSeo?.noIndex ?? false;
-  const robots =
-    noindexQuery || seoNoIndex ? { index: false as const, follow: true as const } : undefined;
+  // Policy: `/catalog` is always non-indexable; canonical remains the clean route.
+  const robots = { index: false as const, follow: true as const };
 
   return {
     title,

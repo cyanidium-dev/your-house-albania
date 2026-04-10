@@ -27,7 +27,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const href = buildHreflangAlternates(canonicalPath);
   const base = getSiteBaseUrl();
   const robots =
-    shouldCatalogListingNoindex({ ...search, deal: "sale" }) || (catalogSeo?.noIndex ?? false)
+    shouldCatalogListingNoindex({ ...search, deal: "sale" }, { ignoredQueryKeys: ["deal"] }) || (catalogSeo?.noIndex ?? false)
       ? { index: false as const, follow: true as const }
       : undefined;
   return {
