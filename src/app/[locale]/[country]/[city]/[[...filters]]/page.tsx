@@ -10,6 +10,7 @@ import {
   fetchCatalogSeoPageByCity,
   resolveCatalogSeoPage,
   fetchCatalogFilterOptions,
+  fetchCatalogProperties,
 } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
@@ -165,11 +166,39 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const canonical = `${baseUrl}${path.split("?")[0]}`;
   const href = buildHreflangAlternates(path.split("?")[0].replace(`/${locale}`, ""));
   const noindexQuery = shouldCatalogListingNoindex(
-    mergedSearchParams(search, dealForPath, typeSlug || undefined)
+    mergedSearchParams(search, dealForPath, typeSlug || undefined),
+    // `district` is a route-owned geo facet in this family, not an arbitrary filter.
+    { ignoredQueryKeys: ["deal", "type", "district"] }
   );
   const seoNoIndex = catalogSeo?.noIndex ?? false;
+  let noindexByThreshold = false;
+  let noindexByDistrictThreshold = false;
+  if (!noindexQuery && !seoNoIndex && dealForPath && typeSlug) {
+    const listing = await fetchCatalogProperties({
+      city: citySlug,
+      deal: dealRouteSegmentToQueryValue(dealForPath),
+      type: typeSlug,
+      page: 1,
+      pageSize: 1,
+    });
+    const totalCount = listing?.totalCount ?? 0;
+    // Keep thin city/deal/type combinations out of index; future demand signals can override.
+    noindexByThreshold = totalCount <= 15;
+  }
+  if (!noindexQuery && !seoNoIndex && typeof search.district === "string" && search.district.trim()) {
+    const listing = await fetchCatalogProperties({
+      city: citySlug,
+      district: search.district.trim().toLowerCase(),
+      page: 1,
+      pageSize: 1,
+    });
+    const totalCount = listing?.totalCount ?? 0;
+    noindexByDistrictThreshold = totalCount <= 20;
+  }
   const robots =
-    noindexQuery || seoNoIndex ? { index: false as const, follow: true as const } : undefined;
+    noindexQuery || seoNoIndex || noindexByThreshold || noindexByDistrictThreshold
+      ? { index: false as const, follow: true as const }
+      : undefined;
 
   return {
     title,

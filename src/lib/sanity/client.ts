@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache';
 import { createClient } from '@sanity/client';
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
 import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
+import { DEFAULT_FILTER_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import {
@@ -2129,13 +2130,7 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
   }
 }
 
-/** Relative path after `/{locale}` for property-type sitemap (existing routes only). */
-const SITEMAP_TYPE_STATIC_SEGMENTS = new Set([
-  'appartment',
-  'luxury-villa',
-  'residential-homes',
-  'office-spaces',
-]);
+const SITEMAP_CITY_DEAL_SEGMENTS = ['sale', 'rent', 'short-term-rent'] as const;
 
 export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified: Date };
 
@@ -2170,7 +2165,8 @@ export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
       if (!prev || lm > prev) best.set(slug, lm);
     }
     return Array.from(best.entries()).map(([slug, lastModified]) => ({
-      segmentAfterLocale: `cities/${encodeURIComponent(slug)}`,
+      // Canonical city listing route is shorthand: `/{locale}/{city}`.
+      segmentAfterLocale: encodeURIComponent(slug),
       lastModified,
     }));
   } catch (err) {
@@ -2180,44 +2176,110 @@ export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
 }
 
 /**
- * Property type URLs: static segment or `properties?type=slug` under each locale.
+ * Listing family URLs for sitemap.
+ * Emits canonical city+deal pages and city+deal+type pages when they pass threshold.
  */
 export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
   const client = getClient();
   if (!client) return [];
   const query = `{
-    "types": *[_type == "propertyType" && active == true && defined(slug.current)]{
-      "slug": slug.current,
+    "cityRows": *[_type == "city" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+      "citySlug": slug.current,
       _updatedAt
     },
-    "landings": *[_type == "landingPage" && pageType == "propertyType" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
-      "slug": slug.current,
+    "catalogCitySeoNoIndex": *[_type == "catalogSeoPage" && active == true && pageScope == "city" && seo.noIndex == true]{
+      "citySlug": city->slug.current
+    },
+    "propertyRows": *[_type == "property" && defined(city->slug.current) && defined(status)]{
+      "citySlug": city->slug.current,
+      "deal": status,
+      "typeSlug": type->slug.current,
       _updatedAt
     }
   }`;
   try {
     const result = await client.fetch<{
-      types?: Array<{ slug?: string; _updatedAt?: string }>;
-      landings?: Array<{ slug?: string; _updatedAt?: string }>;
+      cityRows?: Array<{ citySlug?: string; _updatedAt?: string }>;
+      catalogCitySeoNoIndex?: Array<{ citySlug?: string }>;
+      propertyRows?: Array<{
+        citySlug?: string;
+        deal?: string;
+        typeSlug?: string;
+        _updatedAt?: string;
+      }>;
     }>(query);
-    const best = new Map<string, Date>();
-    const rows = [...(result?.types ?? []), ...(result?.landings ?? [])];
-    for (const row of rows) {
-      const raw = typeof row.slug === 'string' ? row.slug.trim() : '';
-      if (!raw) continue;
-      const slug = raw.toLowerCase();
+    const blockedCitySeo = new Set(
+      (result?.catalogCitySeoNoIndex ?? [])
+        .map((r) => (typeof r.citySlug === 'string' ? r.citySlug.trim().toLowerCase() : ''))
+        .filter(Boolean)
+    );
+    const cityRows = (result?.cityRows ?? []).filter(
+      (r): r is { citySlug: string; _updatedAt?: string } =>
+        typeof r.citySlug === 'string' && r.citySlug.trim().length > 0
+    );
+    const citySlugs = new Set(
+      cityRows
+        .map((r) => r.citySlug.trim().toLowerCase())
+        .filter((slug) => !blockedCitySeo.has(slug))
+    );
+
+    const dealBest = new Map<string, Date>();
+    const typeCount = new Map<string, { count: number; lastmod: Date }>();
+    const propertyRows = result?.propertyRows ?? [];
+    for (const row of propertyRows) {
+      const citySlug = typeof row.citySlug === 'string' ? row.citySlug.trim().toLowerCase() : '';
+      if (!citySlug || !citySlugs.has(citySlug)) continue;
+      const deal = typeof row.deal === 'string' ? row.deal.trim().toLowerCase() : '';
+      const dealSegment =
+        deal === 'sale' || deal === 'rent' ? deal : deal === 'short-term' ? 'short-term-rent' : '';
+      if (!dealSegment) continue;
       const lm = parseSitemapDate(row._updatedAt);
-      const prev = best.get(slug);
-      if (!prev || lm > prev) best.set(slug, lm);
+
+      const dealKey = `${citySlug}|${dealSegment}`;
+      const prevDeal = dealBest.get(dealKey);
+      if (!prevDeal || lm > prevDeal) dealBest.set(dealKey, lm);
+
+      const typeSlug = typeof row.typeSlug === 'string' ? row.typeSlug.trim().toLowerCase() : '';
+      if (typeSlug) {
+        const key = `${citySlug}|${dealSegment}|${typeSlug}`;
+        const prev = typeCount.get(key);
+        if (!prev) typeCount.set(key, { count: 1, lastmod: lm });
+        else typeCount.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
+      }
     }
+
     const out: SitemapSimpleEntry[] = [];
-    for (const [slug, lastModified] of best) {
-      const seg = SITEMAP_TYPE_STATIC_SEGMENTS.has(slug)
-        ? slug
-        : `properties?type=${encodeURIComponent(slug)}`;
-      out.push({ segmentAfterLocale: seg, lastModified });
+    for (const citySlug of citySlugs) {
+      for (const dealSegment of SITEMAP_CITY_DEAL_SEGMENTS) {
+        const dealKey = `${citySlug}|${dealSegment}`;
+        const lm = dealBest.get(dealKey);
+        if (!lm) continue;
+        out.push({
+          segmentAfterLocale: `${encodeURIComponent(DEFAULT_FILTER_COUNTRY_SLUG)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}`,
+          lastModified: lm,
+        });
+      }
     }
-    return out;
+
+    for (const [key, value] of typeCount.entries()) {
+      // Keep thin city/deal/type combinations out of sitemap unless they pass index threshold.
+      if (value.count <= 15) continue;
+      const [citySlug, dealSegment, typeSlug] = key.split('|');
+      out.push({
+        segmentAfterLocale: `${encodeURIComponent(DEFAULT_FILTER_COUNTRY_SLUG)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}/${encodeURIComponent(typeSlug)}`,
+        lastModified: value.lastmod,
+      });
+    }
+
+    const dedup = new Map<string, Date>();
+    for (const row of out) {
+      const prev = dedup.get(row.segmentAfterLocale);
+      if (!prev || row.lastModified > prev) dedup.set(row.segmentAfterLocale, row.lastModified);
+    }
+    return Array.from(dedup.entries()).map(([segmentAfterLocale, lastModified]) => ({
+      segmentAfterLocale,
+      lastModified,
+    }));
   } catch (err) {
     console.warn('[Sanity] fetchSitemapTypeEntries failed:', err);
     return [];
@@ -2229,7 +2291,7 @@ export type SitemapPropertyEntry = { slug: string; lastModified: Date };
 export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntry[]> {
   const client = getClient();
   if (!client) return [];
-  const query = `*[_type == "property" && defined(slug.current) && (!defined(isPublished) || isPublished == true)]{
+  const query = `*[_type == "property" && defined(slug.current) && (!defined(isPublished) || isPublished == true) && (!defined(seo.noIndex) || seo.noIndex != true)]{
     "slug": slug.current,
     _updatedAt
   }`;
@@ -2257,7 +2319,7 @@ export type SitemapBlogEntry = { slug: string; lastModified: Date };
 export async function fetchSitemapBlogEntries(): Promise<SitemapBlogEntry[]> {
   const client = getClient();
   if (!client) return [];
-  const query = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() && defined(slug.current)]{
+  const query = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
     "slug": slug.current,
     _updatedAt
   }`;

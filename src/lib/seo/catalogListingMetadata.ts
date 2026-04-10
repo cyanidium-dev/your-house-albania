@@ -30,8 +30,10 @@ function isNonEmptyFilterValue(key: string, raw: string): boolean {
  * Returns true when the listing should be noindexed: page > 1 or any active filter query.
  */
 export function shouldCatalogListingNoindex(
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams: Record<string, string | string[] | undefined>,
+  options?: { ignoredQueryKeys?: string[] }
 ): boolean {
+  const ignored = new Set((options?.ignoredQueryKeys ?? []).map((k) => k.trim()).filter(Boolean));
   const pageRaw = stringParam(searchParams, "page");
   const pageNum = pageRaw ? parseInt(pageRaw, 10) : 1;
   if (Number.isFinite(pageNum) && pageNum > 1) return true;
@@ -53,6 +55,7 @@ export function shouldCatalogListingNoindex(
   ] as const;
 
   for (const key of keys) {
+    if (ignored.has(key)) continue;
     const v = searchParams[key];
     if (typeof v === "string" && isNonEmptyFilterValue(key, v)) return true;
     if (Array.isArray(v) && v.some((s) => typeof s === "string" && isNonEmptyFilterValue(key, s))) {

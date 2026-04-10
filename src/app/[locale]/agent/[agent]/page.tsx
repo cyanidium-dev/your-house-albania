@@ -40,7 +40,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const base = getSiteBaseUrl();
   const href = buildHreflangAlternates(path.replace(`/${locale}`, ""));
   const robots =
-    shouldCatalogListingNoindex(search) || (catalogSeo?.noIndex ?? false)
+    shouldCatalogListingNoindex(search, { ignoredQueryKeys: ["agent"] }) || (catalogSeo?.noIndex ?? false)
       ? { index: false as const, follow: true as const }
       : undefined;
   return {

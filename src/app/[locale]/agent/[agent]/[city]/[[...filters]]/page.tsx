@@ -102,7 +102,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const base = getSiteBaseUrl();
   const href = buildHreflangAlternates(path.replace(`/${locale}`, ""));
   const robots =
-    shouldCatalogListingNoindex(mergedSearch) || (catalogSeo?.noIndex ?? false)
+    shouldCatalogListingNoindex(mergedSearch, {
+      ignoredQueryKeys: ["agent", "city", "deal", "type"],
+    }) || (catalogSeo?.noIndex ?? false)
       ? { index: false as const, follow: true as const }
       : undefined;
 

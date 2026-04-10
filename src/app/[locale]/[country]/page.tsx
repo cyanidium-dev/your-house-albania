@@ -118,7 +118,15 @@ async function buildListingMetadata(
   const base = getSiteBaseUrl();
   const canonical = `${base}${canonicalPath}`;
   const href = buildHreflangAlternates(canonicalPath.replace(`/${locale}`, ""));
-  const robots = shouldCatalogListingNoindex(search) || (catalogSeo?.noIndex ?? false)
+  const ignoredQueryKeys =
+    kind === "deal"
+      ? ["deal"]
+      : kind === "type"
+        ? ["type"]
+        : kind === "city"
+          ? ["city"]
+          : [];
+  const robots = shouldCatalogListingNoindex(search, { ignoredQueryKeys }) || (catalogSeo?.noIndex ?? false)
     ? { index: false as const, follow: true as const }
     : undefined;
 
