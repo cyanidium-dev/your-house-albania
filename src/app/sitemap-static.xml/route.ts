@@ -48,7 +48,7 @@ export async function GET() {
     }
 
     for (const { path, lastModified } of landings) {
-      // City detail URLs are emitted by sitemap-cities.xml; keep only cities index here.
+      // City listing shorthand URLs live in sitemap-cities.xml / sitemap-types; city editorial uses `{country}/{city}/info`.
       if (path.startsWith("cities/")) continue;
       push(joinLocalePath(base, locale, path), lastModified);
     }

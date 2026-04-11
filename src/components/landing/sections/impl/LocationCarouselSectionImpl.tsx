@@ -4,7 +4,7 @@ import { SectionHeader } from "@/components/landing/sectionPrimitives";
 import type { CityCard, LocationCarouselCard } from "@/lib/sanity/cityAdapter";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { CitiesCarouselClient } from "./CitiesCarouselClient";
-import { catalogFilterPath } from "@/lib/routes/catalog";
+import { catalogFilterPath, cityInfoPath } from "@/lib/routes/catalog";
 
 export type CitiesData = {
   title?: string;
@@ -40,8 +40,8 @@ const Cities: React.FC<{
     locationCards: (citiesData.cities ?? []).map((c) => ({
       ...c,
       href: citiesData.linkTargetType === "landing"
-        ? `/${locale}/cities/${c.slug}`
-        : catalogFilterPath({ locale, city: c.slug }),
+        ? cityInfoPath(locale, c.slug, c.countrySlug)
+        : catalogFilterPath({ locale, city: c.slug, country: c.countrySlug }),
     })),
   } : null);
 

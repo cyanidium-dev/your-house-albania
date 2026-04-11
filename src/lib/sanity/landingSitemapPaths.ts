@@ -4,6 +4,11 @@
  * a matching page + CMS convention is added here.
  */
 
+import {
+  LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG,
+  normalizeCatalogCountrySlug,
+} from "@/lib/routes/catalog";
+
 export type LandingPageSitemapRow = {
   _id: string;
   slug: string;
@@ -11,6 +16,7 @@ export type LandingPageSitemapRow = {
   _updatedAt?: string;
   seo?: { noIndex?: boolean };
   linkedCitySlug?: string | null;
+  linkedCityCountrySlug?: string | null;
 };
 
 /**
@@ -34,7 +40,10 @@ export function resolveLandingPathForSitemap(doc: LandingPageSitemapRow): string
   if (doc.pageType === "city" && doc.linkedCitySlug && typeof doc.linkedCitySlug === "string") {
     const city = doc.linkedCitySlug.trim();
     if (!city) return null;
-    return `cities/${city}`;
+    const country = normalizeCatalogCountrySlug(
+      typeof doc.linkedCityCountrySlug === "string" ? doc.linkedCityCountrySlug : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG
+    );
+    return `${country}/${city}/info`;
   }
 
   // Deal landings: CMS slug → editorial investment path.

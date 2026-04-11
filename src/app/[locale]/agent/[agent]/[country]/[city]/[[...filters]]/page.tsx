@@ -9,68 +9,62 @@ import {
   fetchCatalogFilterOptions,
   fetchCatalogSeoPageByCity,
   resolveCatalogSeoPage,
+  fetchCityCountrySlugByCitySlug,
 } from "@/lib/sanity/client";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
+import { agentFilterPath } from "@/lib/routes/catalog";
 import {
-  agentFilterPath,
-  dealRouteSegmentToQueryValue,
-} from "@/lib/routes/catalog";
+  getAgentGeoDistrictNormalizeRedirect,
+  getAgentGeoPromoteQueryToPathRedirect,
+  getAgentGeoPromoteTypeQueryToPathRedirect,
+  mergeListingSearchParams,
+  normalizeListingPathSegment,
+  resolveListingPathFilters,
+} from "@/lib/routes/listingRouteResolver";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
-import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
+import {
+  listingUrlHasQueryParams,
+  shouldCatalogListingNoindex,
+} from "@/lib/seo/catalogListingMetadata";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 type Props = {
-  params: Promise<{ locale: string; agent: string; city: string; filters?: string[] }>;
+  params: Promise<{
+    locale: string;
+    agent: string;
+    country: string;
+    city: string;
+    filters?: string[];
+  }>;
   searchParams: Promise<SearchParams>;
 };
-
-function normalizePathSegment(value?: string): string {
-  if (typeof value !== "string") return "";
-  return decodeURIComponent(value).trim().toLowerCase();
-}
-
-function buildQueryString(search: SearchParams, exclude: string[]): string {
-  const params = new URLSearchParams();
-  for (const [k, v] of Object.entries(search)) {
-    if (exclude.includes(k)) continue;
-    if (typeof v === "string") params.set(k, v);
-  }
-  const qs = params.toString();
-  return qs ? `?${qs}` : "";
-}
-
-function mergeSearch(search: SearchParams, deal?: string, propertyType?: string): SearchParams {
-  const merged: SearchParams = { ...search };
-  if (deal) merged.deal = deal;
-  if (propertyType) merged.type = propertyType;
-  return merged;
-}
 
 async function resolveRoute(
   locale: string,
   agent: string,
+  country: string,
   city: string,
-  filters: string[]
+  filters: string[],
+  propertyTypeOptions: { value: string }[]
 ) {
-  const [dealSegment, propertyTypeSegment] = filters;
-  const agentSlug = normalizePathSegment(agent);
-  const citySlug = normalizePathSegment(city);
-  const dealType = normalizePathSegment(dealSegment);
-  const propertyType = normalizePathSegment(propertyTypeSegment);
-  const dealQuery = dealRouteSegmentToQueryValue(dealType || undefined);
-  if (dealSegment && !dealQuery) notFound();
-  if (filters.length > 2) notFound();
+  const countrySlug = normalizeListingPathSegment(country);
+  const agentSlug = normalizeListingPathSegment(agent);
+  const citySlug = normalizeListingPathSegment(city);
+  const parsed = resolveListingPathFilters(filters, propertyTypeOptions, "agentCity");
+  if (!parsed) notFound();
+
+  const { dealType, propertyType, dealQuery } = parsed;
 
   const agentDoc = await fetchAgentBySlug(agentSlug, locale);
   if (!agentDoc) notFound();
 
+  const cmsCountry = await fetchCityCountrySlugByCitySlug(citySlug);
+  if (!cmsCountry || cmsCountry !== countrySlug) notFound();
+
   if (propertyType) {
-    const options = await fetchCatalogFilterOptions(locale);
-    const knownType = options.propertyTypes.some(
-      (t) => normalizePathSegment(t.value) === propertyType
-    );
+    const knownType = propertyTypeOptions.some((t) => normalizeListingPathSegment(t.value) === propertyType);
     if (!knownType) notFound();
   }
 
@@ -78,9 +72,10 @@ async function resolveRoute(
 }
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  const [{ locale, agent, city, filters = [] }, search] = await Promise.all([params, searchParams]);
-  const resolved = await resolveRoute(locale, agent, city, filters);
-  const mergedSearch = mergeSearch(search, resolved.dealQuery, resolved.propertyType || undefined);
+  const [{ locale, agent, country, city, filters = [] }, search] = await Promise.all([params, searchParams]);
+  const options = await fetchCatalogFilterOptions(locale);
+  const resolved = await resolveRoute(locale, agent, country, city, filters, options.propertyTypes);
+  const mergedSearch = mergeListingSearchParams(search, resolved.dealType || undefined, resolved.propertyType || undefined);
   const [rawSeo, t] = await Promise.all([
     fetchCatalogSeoPageByCity(resolved.citySlug),
     getTranslations("Listing.properties"),
@@ -95,16 +90,20 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const path = agentFilterPath({
     locale,
     agentSlug: resolved.agentSlug,
+    country,
     city: resolved.citySlug,
     dealType: resolved.dealType || undefined,
     propertyType: resolved.propertyType || undefined,
   });
+  const pathOnly = path.split("?")[0];
   const base = getSiteBaseUrl();
-  const href = buildHreflangAlternates(path.replace(`/${locale}`, ""));
+  const href = buildHreflangAlternates(pathOnly.replace(`/${locale}`, ""));
   const robots =
+    listingUrlHasQueryParams(search) ||
     shouldCatalogListingNoindex(mergedSearch, {
       ignoredQueryKeys: ["agent", "city", "deal", "type"],
-    }) || (catalogSeo?.noIndex ?? false)
+    }) ||
+    (catalogSeo?.noIndex ?? false)
       ? { index: false as const, follow: true as const }
       : undefined;
 
@@ -112,7 +111,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     title,
     description,
     alternates: {
-      canonical: `${base}${path}`,
+      canonical: `${base}${pathOnly}`,
       ...(href?.languages ? { languages: href.languages } : {}),
     },
     robots,
@@ -120,26 +119,55 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 }
 
 export default async function AgentCityCatalogPage({ params, searchParams }: Props) {
-  const [{ locale, agent, city, filters = [] }, search] = await Promise.all([params, searchParams]);
-  const resolved = await resolveRoute(locale, agent, city, filters);
-  const mergedSearch = mergeSearch(search, resolved.dealQuery, resolved.propertyType || undefined);
+  const [{ locale, agent, country, city, filters = [] }, search] = await Promise.all([params, searchParams]);
+  const countrySlug = normalizeListingPathSegment(country);
+  const options = await fetchCatalogFilterOptions(locale);
+  const resolved = await resolveRoute(locale, agent, country, city, filters, options.propertyTypes);
+
+  if (filters.length === 0) {
+    const q = getAgentGeoPromoteQueryToPathRedirect({
+      locale,
+      agentSlug: resolved.agentSlug,
+      country,
+      citySlug: resolved.citySlug,
+      search,
+      propertyTypeOptions: options.propertyTypes,
+    });
+    if (q) redirect(q);
+  } else if (filters.length === 1) {
+    const q = getAgentGeoPromoteTypeQueryToPathRedirect({
+      locale,
+      agentSlug: resolved.agentSlug,
+      country,
+      citySlug: resolved.citySlug,
+      dealTypeSegment: resolved.dealType || "",
+      search,
+      propertyTypeOptions: options.propertyTypes,
+    });
+    if (q) redirect(q);
+  }
+
+  const mergedSearch = mergeListingSearchParams(
+    search,
+    resolved.dealType || undefined,
+    resolved.propertyType || undefined
+  );
   const parsed = parseCatalogFilters(
     { agentSlug: resolved.agentSlug, city: resolved.citySlug },
     mergedSearch
   );
 
-  const district = parsed.district;
-  if (district && normalizePathSegment(search.district as string) !== district) {
-    const normalizedPath = agentFilterPath({
-      locale,
-      agentSlug: resolved.agentSlug,
-      city: resolved.citySlug,
-      dealType: resolved.dealType || undefined,
-      propertyType: resolved.propertyType || undefined,
-      district,
-    });
-    redirect(`${normalizedPath}${buildQueryString(mergedSearch, ["district"])}`);
-  }
+  const d = getAgentGeoDistrictNormalizeRedirect({
+    locale,
+    agentSlug: resolved.agentSlug,
+    country,
+    citySlug: resolved.citySlug,
+    dealType: resolved.dealType || "",
+    propertyType: resolved.propertyType || "",
+    search: mergedSearch,
+    parsedDistrict: parsed.district,
+  });
+  if (d) redirect(d);
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");
@@ -159,6 +187,7 @@ export default async function AgentCityCatalogPage({ params, searchParams }: Pro
             locale={locale}
             agentSlug={resolved.agentSlug}
             agentName={resolved.agentDoc.name}
+            country={countrySlug}
             city={resolved.citySlug}
             dealType={resolved.dealType || undefined}
             propertyType={resolved.propertyType || undefined}
@@ -169,6 +198,7 @@ export default async function AgentCityCatalogPage({ params, searchParams }: Pro
         locale={locale}
         pathAgentSlug={parsed.agentSlug}
         pathCity={parsed.city}
+        pathCountrySlug={countrySlug}
         searchParams={mergedSearch}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />

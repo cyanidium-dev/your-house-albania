@@ -1,0 +1,32 @@
+import { NextResponse } from "next/server";
+import { routing } from "@/i18n/routing";
+import { isIndexingEnabled } from "@/lib/seo/envSeo";
+import { fetchSitemapNonGeoListingEntries } from "@/lib/sanity/client";
+import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
+
+export const revalidate = 3600;
+
+/** National deal category + deal/type listing URLs (not editorial `investment/*`). */
+export async function GET() {
+  if (!isIndexingEnabled()) {
+    return new NextResponse(buildUrlsetXml([]), {
+      headers: { "Content-Type": "application/xml; charset=utf-8" },
+    });
+  }
+  const base = getSiteBaseUrl();
+  const rows = await fetchSitemapNonGeoListingEntries();
+  const urls: Array<{ loc: string; lastmod?: Date }> = [];
+  for (const locale of routing.locales) {
+    for (const row of rows) {
+      urls.push({
+        loc: `${base}/${locale}/${row.segmentAfterLocale}`,
+        lastmod: row.lastModified,
+      });
+    }
+  }
+  const xml = buildUrlsetXml(urls);
+  return new NextResponse(xml, {
+    headers: { "Content-Type": "application/xml; charset=utf-8" },
+  });
+}

@@ -2,7 +2,12 @@ import { unstable_cache } from 'next/cache';
 import { createClient } from '@sanity/client';
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
 import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
-import { DEFAULT_FILTER_COUNTRY_SLUG } from '@/lib/routes/catalog';
+import {
+  LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG,
+  allowsSingleSegmentCityListingPath,
+} from '@/lib/routes/catalog';
+import { buildListingPath } from '@/lib/routes/listingRoutes';
+import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import {
@@ -95,6 +100,7 @@ export async function fetchHomePage(): Promise<unknown | null> {
       _id,
       title,
       "slug": slug.current,
+      "countrySlug": country->slug.current,
       shortDescription,
       popular,
       order,
@@ -1029,6 +1035,8 @@ export async function fetchSelectedPropertyCatalogBanners(args: {
 export type CatalogLocationOption = {
   value: string;
   label: string;
+  /** Sanity `city.country->slug.current` */
+  countrySlug?: string;
 };
 
 export type CatalogTypeOption = {
@@ -1054,7 +1062,7 @@ export type CatalogFilterOptions = {
   districts: CatalogDistrictOption[];
 };
 
-type RawFilterItem = { value?: string; title?: unknown; citySlug?: string };
+type RawFilterItem = { value?: string; title?: unknown; citySlug?: string; countrySlug?: string };
 
 function mapToLocalizedOption(
   x: RawFilterItem,
@@ -1095,7 +1103,8 @@ function getCachedFetchCatalogFilterOptions(
         const query = `{
           "locations": *[_type == "city"] | order(title asc) {
             "value": slug.current,
-            title
+            title,
+            "countrySlug": country->slug.current
           },
           "propertyTypes": *[_type == "propertyType" && active == true] | order(order asc) {
             "value": slug.current,
@@ -1123,7 +1132,13 @@ function getCachedFetchCatalogFilterOptions(
           const locations = Array.isArray(result?.locations)
             ? result.locations
                 .filter((x): x is RawFilterItem => typeof x?.value === 'string' && !!x.value)
-                .map((x) => mapToLocalizedOption(x, locale))
+                .map((x) => ({
+                  ...mapToLocalizedOption(x, locale),
+                  countrySlug:
+                    typeof x.countrySlug === 'string' && x.countrySlug.trim()
+                      ? x.countrySlug.trim().toLowerCase()
+                      : undefined,
+                }))
             : [];
 
           const propertyTypes = Array.isArray(result?.propertyTypes)
@@ -1164,6 +1179,59 @@ function getCachedFetchCatalogFilterOptions(
 /** Fetch options for catalog filters (cities, property types, amenities). */
 export async function fetchCatalogFilterOptions(locale: string): Promise<CatalogFilterOptions> {
   return getCachedFetchCatalogFilterOptions(locale)();
+}
+
+const fetchCatalogCountryDocumentSlugsCached = unstable_cache(
+  async (): Promise<string[]> => {
+    const client = getClient();
+    if (!client) return [];
+    try {
+      const rows = await client.fetch<string[]>(
+        `*[_type == "country" && defined(slug.current)].slug.current`
+      );
+      if (!Array.isArray(rows)) return [];
+      return rows
+        .filter((s): s is string => typeof s === 'string' && s.trim().length > 0)
+        .map((s) => s.trim().toLowerCase());
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogCountryDocumentSlugs failed:', err);
+      return [];
+    }
+  },
+  ['sanity-country-document-slugs'],
+  { revalidate: 300 }
+);
+
+/** Slugs of published `country` documents (for validating `/{locale}/[country]` hub segments). */
+export async function fetchCatalogCountryDocumentSlugs(): Promise<string[]> {
+  return fetchCatalogCountryDocumentSlugsCached();
+}
+
+/**
+ * Sanity `city.country->slug.current` for catalog routing. Cached per city slug.
+ */
+export async function fetchCityCountrySlugByCitySlug(citySlug: string): Promise<string | null> {
+  const key = citySlug.trim().toLowerCase();
+  if (!key) return null;
+  return unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      try {
+        const slug = await client.fetch<string | null>(
+          `*[_type == "city" && slug.current == $citySlug][0].country->slug.current`,
+          { citySlug: key }
+        );
+        if (typeof slug !== 'string' || !slug.trim()) return null;
+        return slug.trim().toLowerCase();
+      } catch (err) {
+        console.warn('[Sanity] fetchCityCountrySlugByCitySlug failed:', err);
+        return null;
+      }
+    },
+    ['sanity-city-country', key],
+    { revalidate: 120 }
+  )();
 }
 
 export type CatalogSeoPageResolved = {
@@ -1214,7 +1282,7 @@ export async function fetchCatalogSeoPageRoot(): Promise<{
 }
 
 /**
- * Fetch landingPage document for a city route `/[locale]/cities/[city]`.
+ * Fetch landingPage document for a city editorial route `/[locale]/[country]/[city]/info` (legacy `/cities/[city]` redirects).
  * Returns null if not found or client not configured.
  */
 export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
@@ -1343,7 +1411,7 @@ const landingPageSectionsProjection = `{
   secondaryImage { asset-> { url }, alt },
   imageMode,
   backgroundImage { asset-> { url }, alt },
-  "cities": cities[]-> { _id, title, "slug": slug.current, shortDescription, heroImage { asset-> { url }, alt, label } },
+  "cities": cities[]-> { _id, title, "slug": slug.current, shortDescription, heroImage { asset-> { url }, alt, label }, "countrySlug": country->slug.current },
   "resolvedManualItems": coalesce(
     manualItems[]-> {
       _id,
@@ -1352,7 +1420,8 @@ const landingPageSectionsProjection = `{
       "slug": slug.current,
       shortDescription,
       heroImage { asset-> { url }, alt, label },
-      "city": city-> { "slug": slug.current }
+      "countrySlug": country->slug.current,
+      "city": city-> { "slug": slug.current, "countrySlug": country->slug.current }
     },
     manualItems[] {
       _id,
@@ -1361,7 +1430,8 @@ const landingPageSectionsProjection = `{
       "slug": slug.current,
       shortDescription,
       heroImage { asset-> { url }, alt, label },
-      "city": city-> { "slug": slug.current }
+      "countrySlug": country->slug.current,
+      "city": city-> { "slug": slug.current, "countrySlug": country->slug.current }
     }
   ),
   "agents": agents[]-> {
@@ -1384,7 +1454,7 @@ const landingPageSectionsProjection = `{
       cardTitle,
       cardDescription,
       cardImage { asset-> { url }, alt },
-      "linkedCity": linkedCity-> { "slug": slug.current }
+      "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current }
     },
     (coalesce(landings, manualItems))[] {
       _id,
@@ -1394,7 +1464,7 @@ const landingPageSectionsProjection = `{
       cardTitle,
       cardDescription,
       cardImage { asset-> { url }, alt },
-      "linkedCity": linkedCity-> { "slug": slug.current }
+      "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current }
     }
   )
 }`;
@@ -1554,7 +1624,7 @@ export async function fetchLandingPageBySlug(slug: string): Promise<{
   return cached();
 }
 
-export type CityLandingNavItem = { slug: string; label: string };
+export type CityLandingNavItem = { slug: string; label: string; countrySlug?: string };
 
 /**
  * City links for drawer nav: only `landingPage` documents with `pageType == "city"` and a linked city slug.
@@ -1566,16 +1636,21 @@ export async function fetchCityLandingNavItems(locale: string): Promise<CityLand
       if (!client) return [];
       const query = `*[_type == "landingPage" && pageType == "city" && defined(linkedCity->slug.current)] | order(linkedCity->slug.current asc) {
         "slug": linkedCity->slug.current,
-        "title": linkedCity->title
+        "title": linkedCity->title,
+        "countrySlug": linkedCity->country->slug.current
       }`;
       try {
-        const rows = await client.fetch<Array<{ slug?: string; title?: unknown }>>(query);
+        const rows = await client.fetch<Array<{ slug?: string; title?: unknown; countrySlug?: string }>>(query);
         if (!Array.isArray(rows)) return [];
         return rows
-          .filter((r): r is { slug: string; title?: unknown } => typeof r.slug === 'string' && r.slug.length > 0)
+          .filter((r): r is { slug: string; title?: unknown; countrySlug?: string } => typeof r.slug === 'string' && r.slug.length > 0)
           .map((r) => ({
             slug: r.slug,
             label: resolveLocalizedString(r.title as never, locale) || r.slug,
+            countrySlug:
+              typeof r.countrySlug === 'string' && r.countrySlug.trim()
+                ? r.countrySlug.trim().toLowerCase()
+                : undefined,
           }));
       } catch (err) {
         console.warn('[Sanity] fetchCityLandingNavItems failed:', err);
@@ -2110,7 +2185,8 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
     _updatedAt,
     pageType,
     seo,
-    "linkedCitySlug": linkedCity->slug.current
+    "linkedCitySlug": linkedCity->slug.current,
+    "linkedCityCountrySlug": linkedCity->country->slug.current
   }`;
   try {
     const rows = await client.fetch<LandingPageSitemapRow[]>(query);
@@ -2135,7 +2211,7 @@ const SITEMAP_CITY_DEAL_SEGMENTS = ['sale', 'rent', 'short-term-rent'] as const;
 export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified: Date };
 
 /**
- * City URLs: `/cities/[slug]` from `city` docs and city landings (deduped).
+ * City listing shorthand URLs from `city` docs and city landings (deduped). Editorial pages use `/{country}/{slug}/info`.
  */
 export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
   const client = getClient();
@@ -2143,32 +2219,40 @@ export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
   const query = `{
     "cities": *[_type == "city" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
       "slug": slug.current,
+      "countrySlug": country->slug.current,
       _updatedAt
     },
     "landings": *[_type == "landingPage" && pageType == "city" && defined(linkedCity->slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
       "slug": linkedCity->slug.current,
+      "countrySlug": linkedCity->country->slug.current,
       _updatedAt
     }
   }`;
   try {
     const result = await client.fetch<{
-      cities?: Array<{ slug?: string; _updatedAt?: string }>;
-      landings?: Array<{ slug?: string; _updatedAt?: string }>;
+      cities?: Array<{ slug?: string; countrySlug?: string; _updatedAt?: string }>;
+      landings?: Array<{ slug?: string; countrySlug?: string; _updatedAt?: string }>;
     }>(query);
-    const best = new Map<string, Date>();
+    const best = new Map<string, { lastModified: Date; countrySlug?: string }>();
     const rows = [...(result?.cities ?? []), ...(result?.landings ?? [])];
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
       if (!slug) continue;
       const lm = parseSitemapDate(row._updatedAt);
+      const countrySlug =
+        typeof row.countrySlug === 'string' && row.countrySlug.trim()
+          ? row.countrySlug.trim().toLowerCase()
+          : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
       const prev = best.get(slug);
-      if (!prev || lm > prev) best.set(slug, lm);
+      if (!prev || lm > prev.lastModified) best.set(slug, { lastModified: lm, countrySlug });
     }
-    return Array.from(best.entries()).map(([slug, lastModified]) => ({
-      // Canonical city listing route is shorthand: `/{locale}/{city}`.
-      segmentAfterLocale: encodeURIComponent(slug),
-      lastModified,
-    }));
+    return Array.from(best.entries()).map(([slug, { lastModified, countrySlug }]) => {
+      const c = countrySlug ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      const segmentAfterLocale = allowsSingleSegmentCityListingPath(c)
+        ? encodeURIComponent(slug)
+        : `${encodeURIComponent(c)}/${encodeURIComponent(slug)}`;
+      return { segmentAfterLocale, lastModified };
+    });
   } catch (err) {
     console.warn('[Sanity] fetchSitemapCityEntries failed:', err);
     return [];
@@ -2185,6 +2269,7 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
   const query = `{
     "cityRows": *[_type == "city" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
       "citySlug": slug.current,
+      "countrySlug": country->slug.current,
       _updatedAt
     },
     "catalogCitySeoNoIndex": *[_type == "catalogSeoPage" && active == true && pageScope == "city" && seo.noIndex == true]{
@@ -2199,7 +2284,7 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
   }`;
   try {
     const result = await client.fetch<{
-      cityRows?: Array<{ citySlug?: string; _updatedAt?: string }>;
+      cityRows?: Array<{ citySlug?: string; countrySlug?: string; _updatedAt?: string }>;
       catalogCitySeoNoIndex?: Array<{ citySlug?: string }>;
       propertyRows?: Array<{
         citySlug?: string;
@@ -2214,9 +2299,18 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
         .filter(Boolean)
     );
     const cityRows = (result?.cityRows ?? []).filter(
-      (r): r is { citySlug: string; _updatedAt?: string } =>
+      (r): r is { citySlug: string; countrySlug?: string; _updatedAt?: string } =>
         typeof r.citySlug === 'string' && r.citySlug.trim().length > 0
     );
+    const cityCountryBySlug = new Map<string, string>();
+    for (const r of cityRows) {
+      const cs = r.citySlug.trim().toLowerCase();
+      const ctry =
+        typeof r.countrySlug === 'string' && r.countrySlug.trim()
+          ? r.countrySlug.trim().toLowerCase()
+          : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      cityCountryBySlug.set(cs, ctry);
+    }
     const citySlugs = new Set(
       cityRows
         .map((r) => r.citySlug.trim().toLowerCase())
@@ -2250,12 +2344,15 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
 
     const out: SitemapSimpleEntry[] = [];
     for (const citySlug of citySlugs) {
+      const countryForCity =
+        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      const countrySeg = encodeURIComponent(countryForCity);
       for (const dealSegment of SITEMAP_CITY_DEAL_SEGMENTS) {
         const dealKey = `${citySlug}|${dealSegment}`;
         const lm = dealBest.get(dealKey);
         if (!lm) continue;
         out.push({
-          segmentAfterLocale: `${encodeURIComponent(DEFAULT_FILTER_COUNTRY_SLUG)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}`,
+          segmentAfterLocale: `${countrySeg}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}`,
           lastModified: lm,
         });
       }
@@ -2263,10 +2360,13 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
 
     for (const [key, value] of typeCount.entries()) {
       // Keep thin city/deal/type combinations out of sitemap unless they pass index threshold.
-      if (value.count <= 15) continue;
+      if (value.count <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD) continue;
       const [citySlug, dealSegment, typeSlug] = key.split('|');
+      const countryForCity =
+        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      const countrySeg = encodeURIComponent(countryForCity);
       out.push({
-        segmentAfterLocale: `${encodeURIComponent(DEFAULT_FILTER_COUNTRY_SLUG)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}/${encodeURIComponent(typeSlug)}`,
+        segmentAfterLocale: `${countrySeg}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}/${encodeURIComponent(typeSlug)}`,
         lastModified: value.lastmod,
       });
     }
@@ -2282,6 +2382,121 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
     }));
   } catch (err) {
     console.warn('[Sanity] fetchSitemapTypeEntries failed:', err);
+    return [];
+  }
+}
+
+/** Segments after `/{locale}/` for national deal routes; uses `buildListingPath` with dummy locale `en`. */
+function nonGeoListingSitemapSegmentAfterLocale(
+  dealQuery: 'sale' | 'rent' | 'short-term',
+  propertyTypeSlug?: string
+): string {
+  const path = buildListingPath({
+    scope: 'catalog',
+    locale: 'en',
+    dealQuery,
+    propertyType: propertyTypeSlug?.trim() || undefined,
+  });
+  return path.replace(/^\/en\//, '');
+}
+
+const NON_GEO_SITEMAP_DEAL_QUERIES = ['sale', 'rent', 'short-term'] as const;
+
+/**
+ * National deal listing URLs: `/sale`, `/rent`, `/short-term-rent` and `/deal/type` when count exceeds threshold.
+ * Editorial `investment/*` paths are omitted here (landings sitemap only).
+ */
+export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+
+  const query = `{
+    "propertyRows": *[_type == "property" && defined(status) && defined(type->slug.current)]{
+      "deal": status,
+      "typeSlug": type->slug.current,
+      _updatedAt
+    }
+  }`;
+
+  try {
+    const result = await client.fetch<{
+      propertyRows?: Array<{ deal?: string; typeSlug?: string; _updatedAt?: string }>;
+    }>(query);
+
+    const dealLastMod = new Map<string, Date>();
+    const typeCount = new Map<string, { count: number; lastmod: Date }>();
+
+    for (const row of result?.propertyRows ?? []) {
+      const dealRaw = typeof row.deal === 'string' ? row.deal.trim().toLowerCase() : '';
+      let dealQuery: 'sale' | 'rent' | 'short-term' | null = null;
+      let mapSeg: string | null = null;
+      if (dealRaw === 'sale') {
+        dealQuery = 'sale';
+        mapSeg = 'sale';
+      } else if (dealRaw === 'rent') {
+        dealQuery = 'rent';
+        mapSeg = 'rent';
+      } else if (dealRaw === 'short-term') {
+        dealQuery = 'short-term';
+        mapSeg = 'short-term-rent';
+      }
+      if (!dealQuery || !mapSeg) continue;
+
+      const lm = parseSitemapDate(row._updatedAt);
+      const prevD = dealLastMod.get(mapSeg);
+      if (!prevD || lm > prevD) dealLastMod.set(mapSeg, lm);
+
+      const typeSlug = typeof row.typeSlug === 'string' ? row.typeSlug.trim().toLowerCase() : '';
+      if (typeSlug) {
+        const key = `${dealQuery}|${typeSlug}`;
+        const prev = typeCount.get(key);
+        if (!prev) typeCount.set(key, { count: 1, lastmod: lm });
+        else {
+          typeCount.set(key, {
+            count: prev.count + 1,
+            lastmod: lm > prev.lastmod ? lm : prev.lastmod,
+          });
+        }
+      }
+    }
+
+    const staticNow = new Date();
+    const out: SitemapSimpleEntry[] = [];
+
+    for (const dq of NON_GEO_SITEMAP_DEAL_QUERIES) {
+      const seg = dq === 'short-term' ? 'short-term-rent' : dq;
+      const lm = dealLastMod.get(seg) ?? staticNow;
+      out.push({
+        segmentAfterLocale: nonGeoListingSitemapSegmentAfterLocale(dq),
+        lastModified: lm,
+      });
+    }
+
+    for (const [key, value] of typeCount.entries()) {
+      if (value.count <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD) continue;
+      const pipe = key.indexOf('|');
+      if (pipe < 0) continue;
+      const dq = key.slice(0, pipe) as 'sale' | 'rent' | 'short-term';
+      const typeSlug = key.slice(pipe + 1);
+      if (!typeSlug || !['sale', 'rent', 'short-term'].includes(dq)) continue;
+      out.push({
+        segmentAfterLocale: nonGeoListingSitemapSegmentAfterLocale(dq, typeSlug),
+        lastModified: value.lastmod,
+      });
+    }
+
+    const dedup = new Map<string, Date>();
+    for (const row of out) {
+      const prev = dedup.get(row.segmentAfterLocale);
+      if (!prev || row.lastModified > prev) dedup.set(row.segmentAfterLocale, row.lastModified);
+    }
+
+    return Array.from(dedup.entries()).map(([segmentAfterLocale, lastModified]) => ({
+      segmentAfterLocale,
+      lastModified,
+    }));
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapNonGeoListingEntries failed:', err);
     return [];
   }
 }

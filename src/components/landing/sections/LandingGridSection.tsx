@@ -14,7 +14,7 @@ type LandingCard = {
   cardTitle?: LocalizedString
   cardDescription?: LocalizedString
   cardImage?: { asset?: { url?: string }; alt?: string }
-  linkedCity?: { slug?: string }
+  linkedCity?: { slug?: string; countrySlug?: string }
 }
 
 function resolveCardTitle(card: LandingCard, locale: string): string {
@@ -83,6 +83,7 @@ export function LandingGridSection({
               pageType: c.pageType ?? null,
               slug: c.slug ?? null,
               linkedCitySlug,
+              linkedCityCountrySlug: c.linkedCity?.countrySlug ?? null,
             })
             const unoptimized = imgUrl?.startsWith('http') ?? false
 

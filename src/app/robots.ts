@@ -18,6 +18,7 @@ export default function robots(): MetadataRoute.Robots {
       `${base}/sitemap-static.xml`,
       `${base}/sitemap-cities.xml`,
       `${base}/sitemap-types.xml`,
+      `${base}/sitemap-non-geo-listings.xml`,
       `${base}/sitemap-properties.xml`,
       `${base}/sitemap-blog.xml`,
     ],

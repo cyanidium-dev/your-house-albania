@@ -8,6 +8,7 @@ import { useEffect, useId, useState } from 'react'
 import { Icon } from '@iconify/react'
 import type { DrawerNavItem } from '@/data/navConfig'
 import type { CityLandingNavItem } from '@/lib/sanity/client'
+import { cityInfoPath } from '@/lib/routes/catalog'
 
 export type DrawerNavTranslations = {
   nav: Record<string, string>
@@ -66,7 +67,8 @@ function DrawerNavList({
 
   useEffect(() => {
     const citiesBase = `/${locale}/cities`
-    if (path.startsWith(`${citiesBase}/`)) setCitiesOpen(true)
+    const onCityInfo = new RegExp(`^/${locale}/[^/]+/[^/]+/info/?$`).test(path)
+    if (path.startsWith(`${citiesBase}/`) || onCityInfo) setCitiesOpen(true)
   }, [path, locale])
 
   useEffect(() => {
@@ -91,8 +93,11 @@ function DrawerNavList({
     path === `/${locale}/investment/${segment}` ||
     path === `/${locale}/investment/${encodeURIComponent(segment)}`
 
+  const isCityInfoPath = new RegExp(`^/${locale}/[^/]+/[^/]+/info/?$`).test(path)
   const isCitiesParentActive =
-    path === `/${locale}/cities` || path.startsWith(`/${locale}/cities/`)
+    path === `/${locale}/cities` ||
+    path.startsWith(`/${locale}/cities/`) ||
+    isCityInfoPath
 
   const isBlogActive =
     path === `/${locale}/blog` || path.startsWith(`/${locale}/blog/`)
@@ -210,8 +215,8 @@ function DrawerNavList({
                     className="mt-2 space-y-0.5 border-l border-white/15 pl-5"
                   >
                     {cityItems.map((c) => {
-                      const ch = `/${locale}/cities/${encodeURIComponent(c.slug)}`
-                      const childActive = path === ch || path === `/${locale}/cities/${c.slug}`
+                      const ch = cityInfoPath(locale, c.slug, c.countrySlug)
+                      const childActive = path === ch
                       return (
                         <li key={c.slug}>
                           <Link

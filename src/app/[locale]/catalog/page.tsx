@@ -11,20 +11,7 @@ import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { catalogFilterPath, dealQueryValueToRouteSegment, singleFilterPath } from "@/lib/routes/catalog";
-
-function buildQueryString(
-  search: Record<string, string | string[] | undefined>,
-  exclude: string[]
-): string {
-  const params = new URLSearchParams();
-  for (const [k, v] of Object.entries(search)) {
-    if (exclude.includes(k)) continue;
-    if (typeof v === "string") params.set(k, v);
-  }
-  const qs = params.toString();
-  return qs ? `?${qs}` : "";
-}
+import { getCatalogRootRedirectUrl } from "@/lib/routes/listingRouteResolver";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -81,7 +68,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const path = "/catalog";
   const canonical = `${baseUrl}/${locale}${path}`;
   const href = buildHreflangAlternates(path);
-  // Policy: `/catalog` is always non-indexable; canonical remains the clean route.
+  /** `/catalog` is always noindex; canonical is the clean path (no query). National deal categories use `/sale`, `/rent`, `/short-term-rent`. */
   const robots = { index: false as const, follow: true as const };
 
   return {
@@ -99,27 +86,8 @@ export default async function CatalogRootPage({ params, searchParams }: Props) {
   const [{ locale }, search] = await Promise.all([params, searchParams]);
 
   const parsed = parseCatalogFilters({}, search);
-  const cityQ = parsed.city;
-  const dealQ = dealQueryValueToRouteSegment(parsed.deal || undefined);
-  const typeQ = parsed.type || "";
-  const singleShorthandCount = Number(Boolean(cityQ)) + Number(Boolean(dealQ)) + Number(Boolean(typeQ));
-  if (cityQ) {
-    redirect(
-      `${catalogFilterPath({ locale, city: cityQ, district: parsed.district || undefined })}${buildQueryString(
-        search,
-        ["city", "district"]
-      )}`
-    );
-  }
-  if (singleShorthandCount === 1) {
-    const shorthandPath = singleFilterPath({
-      locale,
-      city: cityQ || undefined,
-      dealType: dealQ || undefined,
-      propertyType: typeQ || undefined,
-    });
-    redirect(`${shorthandPath}${buildQueryString(search, ["city", "deal", "type"])}`);
-  }
+  const catalogRedirect = getCatalogRootRedirectUrl(locale, search, parsed);
+  if (catalogRedirect) redirect(catalogRedirect);
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");
