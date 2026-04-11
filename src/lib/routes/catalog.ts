@@ -1,24 +1,46 @@
-// Canonical geo shorthand routes currently target a single default country.
-// This is intentional frontend routing behavior (not CMS-driven country discovery).
-export const DEFAULT_FILTER_COUNTRY_SLUG = "albania";
-
-export function getCatalogCountrySlug(): string {
-  return DEFAULT_FILTER_COUNTRY_SLUG;
-}
-
 /**
- * Single-country guardrail:
- * until multi-country routing is introduced, normalize any provided country
- * to the canonical slug so route builders remain deterministic.
+ * Catalog / listing route helpers.
+ * URL construction is centralized in `./listingRoutes` (`buildListingPath` / `buildListingUrl`);
+ * functions below delegate there while preserving existing export names.
  */
-export function normalizeCatalogCountrySlug(country?: string): string {
-  void country;
-  return DEFAULT_FILTER_COUNTRY_SLUG;
+
+import {
+  LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG,
+  dealRouteSegmentToQueryValue,
+  normalizeCatalogCountrySlug,
+} from "./catalogPathPrimitives";
+import {
+  buildListingPath,
+  buildListingUrl,
+  type BuildListingPathInput,
+  type BuildListingUrlInput,
+  type ListingScope,
+} from "./listingRoutes";
+
+export {
+  LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG,
+  allowsSingleSegmentCityListingPath,
+  dealQueryValueToRouteSegment,
+  dealRouteSegmentToQueryValue,
+  nonGeoDealListingPath,
+  normalizeCatalogCountrySlug,
+} from "./catalogPathPrimitives";
+
+export type { BuildListingPathInput, BuildListingUrlInput, ListingScope };
+export { buildListingPath, buildListingUrl } from "./listingRoutes";
+
+/** @deprecated Use CMS-backed country slugs; kept for imports that still expect this name. */
+export const DEFAULT_FILTER_COUNTRY_SLUG = LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+
+/** Legacy middleware / redirects only: when the true country cannot be inferred. */
+export function getLegacyFallbackCatalogCountrySlug(): string {
+  return LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
 }
 
 export const FILTER_ROUTE_RESERVED_SEGMENTS = new Set([
   "catalog",
   "country",
+  "info",
   "investment",
   "properties",
   "property",
@@ -40,23 +62,6 @@ export const FILTER_ROUTE_RESERVED_SEGMENTS = new Set([
   "luxury-villa",
 ]);
 
-const DEAL_SEGMENT_TO_QUERY = {
-  sale: "sale",
-  rent: "rent",
-  "short-term-rent": "short-term",
-} as const;
-
-export function dealRouteSegmentToQueryValue(segment?: string): string {
-  if (!segment) return "";
-  return DEAL_SEGMENT_TO_QUERY[segment as keyof typeof DEAL_SEGMENT_TO_QUERY] ?? "";
-}
-
-export function dealQueryValueToRouteSegment(deal?: string): string {
-  if (deal === "short-term") return "short-term-rent";
-  if (deal === "sale" || deal === "rent") return deal;
-  return "";
-}
-
 export function isReservedFilterCountrySegment(segment?: string): boolean {
   if (!segment) return true;
   return FILTER_ROUTE_RESERVED_SEGMENTS.has(segment.toLowerCase());
@@ -74,6 +79,7 @@ type CatalogFilterPathInput = {
 type AgentFilterPathInput = {
   locale: string;
   agentSlug: string;
+  country?: string;
   city?: string;
   dealType?: string;
   propertyType?: string;
@@ -96,79 +102,116 @@ type CanonicalCatalogUrlInput = {
   query?: URLSearchParams;
 };
 
+/** Maps legacy `dealType` route segments to `buildListingPath` `dealQuery` values. */
+function dealTypeSegmentToListingDealQuery(dealType?: string): string | undefined {
+  if (!dealType) return undefined;
+  const q = dealRouteSegmentToQueryValue(String(dealType));
+  return q || undefined;
+}
+
+/**
+ * City editorial / info pages: `/{locale}/{country}/{city}/info`
+ */
+export function cityInfoPath(
+  locale: string,
+  citySlug: string,
+  country?: string | null
+): string {
+  const c = normalizeCatalogCountrySlug(country);
+  return `/${locale}/${encodeURIComponent(c)}/${encodeURIComponent(citySlug)}/info`;
+}
+
 export function singleFilterPath({
   locale,
   city,
   dealType,
   propertyType,
 }: SingleFilterInput): string {
-  if (city) return `/${locale}/${encodeURIComponent(city)}`;
-  if (dealType) return `/${locale}/${encodeURIComponent(dealType)}`;
-  if (propertyType) return `/${locale}/${encodeURIComponent(propertyType)}`;
-  return `/${locale}/catalog`;
+  return buildListingPath({
+    scope: "catalog",
+    locale,
+    city,
+    dealQuery: dealTypeSegmentToListingDealQuery(dealType),
+    propertyType,
+  });
 }
 
 export function catalogFilterPath({
   locale,
-  country = DEFAULT_FILTER_COUNTRY_SLUG,
+  country,
   city,
   dealType,
   propertyType,
   district,
 }: CatalogFilterPathInput): string {
-  const normalizedCountry = normalizeCatalogCountrySlug(country);
-  const encodedCountry = encodeURIComponent(normalizedCountry);
-  if (!city) return `/${locale}/catalog`;
-  if (!dealType && !propertyType && normalizedCountry === DEFAULT_FILTER_COUNTRY_SLUG) {
-    return singleFilterPath({ locale, city });
-  }
-  const encodedCity = encodeURIComponent(city);
-  let path = `/${locale}/${encodedCountry}/${encodedCity}`;
-  if (dealType) path += `/${encodeURIComponent(dealType)}`;
-  if (propertyType) path += `/${encodeURIComponent(propertyType)}`;
-  if (district) path += `?district=${encodeURIComponent(district)}`;
-  return path;
+  return buildListingUrl({
+    scope: "catalog",
+    locale,
+    country,
+    city,
+    dealQuery: dealTypeSegmentToListingDealQuery(dealType),
+    propertyType,
+    district,
+  });
 }
 
 export function agentFilterPath({
   locale,
   agentSlug,
+  country,
   city,
   dealType,
   propertyType,
   district,
 }: AgentFilterPathInput): string {
-  let path = `/${locale}/agent/${encodeURIComponent(agentSlug)}`;
-  if (city) path += `/${encodeURIComponent(city)}`;
-  if (dealType) path += `/${encodeURIComponent(dealType)}`;
-  if (propertyType) path += `/${encodeURIComponent(propertyType)}`;
-  if (district) path += `?district=${encodeURIComponent(district)}`;
-  return path;
+  return buildListingUrl({
+    scope: "agent",
+    locale,
+    agentSlug,
+    country,
+    city,
+    dealQuery: dealTypeSegmentToListingDealQuery(dealType),
+    propertyType,
+    district,
+  });
 }
 
 /**
- * Backward-compatible helper used across existing UI.
- * - root: /[locale]/catalog
- * - city catalog: /[locale]/[country]/[city]
- * - agent listing remains under /[locale]/agent/...
- * - district remains query param for catalog pages
+ * Backward-compatible entry point; all branches delegate to `buildListingUrl`.
+ * When there is no city, the path is `/{locale}/catalog` (+ optional `?district=`). `country` is ignored
+ * in that case (legacy callers relied on this; do not pass country expecting a country hub here).
  */
-export function catalogPath(locale: string, city?: string, district?: string, agentSlug?: string): string {
-  const base = `/${locale}/catalog`;
-  const hasAgent = Boolean(agentSlug && agentSlug.trim());
-  if (hasAgent) {
-    return agentFilterPath({
+export function catalogPath(
+  locale: string,
+  city?: string,
+  district?: string,
+  agentSlug?: string,
+  country?: string
+): string {
+  if (agentSlug?.trim()) {
+    return buildListingUrl({
+      scope: "agent",
       locale,
-      agentSlug: agentSlug!,
+      agentSlug,
+      country,
       city,
       district,
     });
   }
-  if (!city) {
-    if (district) return `${base}?district=${encodeURIComponent(district)}`;
-    return base;
+  if (city?.trim()) {
+    return buildListingUrl({
+      scope: "catalog",
+      locale,
+      country,
+      city,
+      district,
+    });
   }
-  return catalogFilterPath({ locale, city, district });
+  return buildListingUrl({
+    scope: "catalog",
+    locale,
+    district,
+  });
 }
 
 export function canonicalCatalogUrl({
@@ -179,42 +222,13 @@ export function canonicalCatalogUrl({
   country,
   query,
 }: CanonicalCatalogUrlInput): string {
-  const citySlug = city?.trim() || "";
-  const typeSlug = propertyType?.trim() || "";
-  const dealSegment = dealQueryValueToRouteSegment(deal?.trim() || undefined);
-  const hasCountry = Boolean(country && country.trim());
-  const path = hasCountry && citySlug
-    ? catalogFilterPath({
-        locale,
-        country,
-        city: citySlug,
-        dealType: dealSegment || undefined,
-        propertyType: typeSlug || undefined,
-      })
-    : !hasCountry &&
-      (Number(Boolean(citySlug)) + Number(Boolean(dealSegment)) + Number(Boolean(typeSlug)) === 1)
-      ? singleFilterPath({
-          locale,
-          city: citySlug || undefined,
-          dealType: dealSegment || undefined,
-          propertyType: typeSlug || undefined,
-        })
-      : citySlug
-        ? catalogFilterPath({
-            locale,
-            city: citySlug,
-            dealType: dealSegment || undefined,
-            propertyType: typeSlug || undefined,
-          })
-        : catalogPath(locale);
-
-  if (!query) return path;
-  const params = new URLSearchParams(query.toString());
-  if (citySlug) params.delete("city");
-  if (dealSegment && path.includes(`/${encodeURIComponent(dealSegment)}`)) params.delete("deal");
-  if (typeSlug && path.includes(`/${encodeURIComponent(typeSlug)}`)) params.delete("type");
-  if (hasCountry) params.delete("country");
-  const qs = params.toString();
-  if (!qs) return path;
-  return path.includes("?") ? `${path}&${qs}` : `${path}?${qs}`;
+  return buildListingUrl({
+    scope: "catalog",
+    locale,
+    country,
+    city,
+    dealQuery: deal?.trim() || undefined,
+    propertyType,
+    query,
+  });
 }

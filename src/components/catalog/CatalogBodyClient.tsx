@@ -17,7 +17,7 @@ import { PropertiesMap } from "@/components/catalog/map/PropertiesMap";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
 
 export type CatalogFilterProps = {
-  locations: Array<{ value: string; label: string }>;
+  locations: Array<{ value: string; label: string; countrySlug?: string }>;
   propertyTypes: Array<{ value: string; label: string }>;
   dealTypeValues: readonly string[];
   districtOptions: Array<{ value: string; label: string; citySlug?: string }>;
@@ -25,6 +25,7 @@ export type CatalogFilterProps = {
   defaultAreaRange: { min: number; max: number };
   amenityOptions: Array<{ value: string; label: string }>;
   initialAgentSlug: string;
+  initialCountrySlug: string;
   initialCity: string;
   initialType: string;
   initialDealType: string;

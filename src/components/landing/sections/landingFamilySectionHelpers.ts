@@ -10,7 +10,7 @@ export type LandingCardModel = {
   cardTitle?: { en?: unknown; ru?: unknown; uk?: unknown; sq?: unknown; it?: unknown }
   cardDescription?: { en?: unknown; ru?: unknown; uk?: unknown; sq?: unknown; it?: unknown }
   cardImage?: { asset?: { url?: string }; alt?: string }
-  linkedCity?: { slug?: string }
+  linkedCity?: { slug?: string; countrySlug?: string }
 }
 
 /**

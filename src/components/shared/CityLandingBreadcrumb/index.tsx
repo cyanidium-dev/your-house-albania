@@ -3,6 +3,7 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { cityInfoPath } from "@/lib/routes/catalog";
 import type { BreadcrumbItem } from "../Breadcrumb";
 
 type CityLandingBreadcrumbProps = {
@@ -19,9 +20,10 @@ export async function CityLandingBreadcrumb({
 }: CityLandingBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
   const { locations } = await fetchCatalogFilterOptions(locale);
-  const cityLabel =
-    locations.find((l) => l.value.toLowerCase() === city.toLowerCase())
-      ?.label || formatSlug(city);
+  const locationMatch = locations.find(
+    (l) => l.value.toLowerCase() === city.toLowerCase()
+  );
+  const cityLabel = locationMatch?.label || formatSlug(city);
 
   const items: BreadcrumbItem[] = [
     { label: t("home"), href: `/${locale}` },
@@ -30,7 +32,7 @@ export async function CityLandingBreadcrumb({
   ];
 
   const baseUrl = await getBaseUrl();
-  const currentPath = `/${locale}/cities/${encodeURIComponent(city)}`;
+  const currentPath = cityInfoPath(locale, city, locationMatch?.countrySlug);
   const jsonLdItems = items.map((it, i) => ({
     name: it.label,
     url: it.href ?? (i === items.length - 1 ? currentPath : undefined),

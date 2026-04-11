@@ -17,6 +17,7 @@ export async function GET() {
     "/sitemap-static.xml",
     "/sitemap-cities.xml",
     "/sitemap-types.xml",
+    "/sitemap-non-geo-listings.xml",
     "/sitemap-properties.xml",
     "/sitemap-blog.xml",
   ];

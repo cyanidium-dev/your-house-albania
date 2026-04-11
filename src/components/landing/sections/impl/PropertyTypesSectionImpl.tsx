@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
+import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { canonicalCatalogUrl } from "@/lib/routes/catalog";
 
 export type PropertyTypesData = {
@@ -19,14 +20,10 @@ function buildPropertiesListingHref(
   typeSlug: string | undefined,
   propertiesDeal?: PropertiesDealParam
 ): string {
-  const params = new URLSearchParams();
-  if (typeSlug) params.set("type", typeSlug);
-  if (propertiesDeal) params.set("deal", propertiesDeal);
   return canonicalCatalogUrl({
     locale,
     propertyType: typeSlug,
     deal: propertiesDeal,
-    query: params,
   });
 }
 
@@ -42,9 +39,8 @@ const PropertyTypes: React.FC<{
   const ctaHref = propertyTypesData?.ctaHref;
   if (!title) return null
 
-  const href = ctaHref
-    ? ctaHref.startsWith("/") ? `/${locale}${ctaHref}` : `/${locale}/${ctaHref}`
-    : null;
+  const trimmedCta = typeof ctaHref === "string" ? ctaHref.trim() : "";
+  const href = trimmedCta ? resolveLocaleHref(trimmedCta, locale) : null;
 
   const types = Array.isArray(propertyTypesData?.propertyTypes) ? propertyTypesData.propertyTypes : [];
 

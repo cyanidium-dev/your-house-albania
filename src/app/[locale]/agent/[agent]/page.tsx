@@ -13,7 +13,10 @@ import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
-import { shouldCatalogListingNoindex } from "@/lib/seo/catalogListingMetadata";
+import {
+  listingUrlHasQueryParams,
+  shouldCatalogListingNoindex,
+} from "@/lib/seo/catalogListingMetadata";
 import { agentFilterPath } from "@/lib/routes/catalog";
 
 type Props = {
@@ -37,17 +40,20 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (!isIndexingEnabled()) return { title, description, robots: indexingDisabledRobots };
 
   const path = agentFilterPath({ locale, agentSlug: parsed.agentSlug });
+  const pathOnly = path.split("?")[0];
   const base = getSiteBaseUrl();
-  const href = buildHreflangAlternates(path.replace(`/${locale}`, ""));
+  const href = buildHreflangAlternates(pathOnly.replace(`/${locale}`, ""));
   const robots =
-    shouldCatalogListingNoindex(search, { ignoredQueryKeys: ["agent"] }) || (catalogSeo?.noIndex ?? false)
+    listingUrlHasQueryParams(search) ||
+    shouldCatalogListingNoindex(search, { ignoredQueryKeys: ["agent"] }) ||
+    (catalogSeo?.noIndex ?? false)
       ? { index: false as const, follow: true as const }
       : undefined;
   return {
     title,
     description,
     alternates: {
-      canonical: `${base}${path}`,
+      canonical: `${base}${pathOnly}`,
       ...(href?.languages ? { languages: href.languages } : {}),
     },
     robots,

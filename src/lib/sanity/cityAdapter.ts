@@ -1,5 +1,5 @@
 import { resolveLocalizedString } from './localized';
-import { catalogFilterPath, catalogPath } from '@/lib/routes/catalog';
+import { catalogFilterPath, catalogPath, cityInfoPath } from '@/lib/routes/catalog';
 
 /** Preferred order: Durrës, Tirana, Vlorë, Sarandë. Slugs: durres, tirana, vlore, sarande */
 const PREFERRED_SLUGS = ['durres', 'tirana', 'vlore', 'sarande'];
@@ -10,12 +10,15 @@ export type CityCard = {
   slug: string;
   shortDescription: string;
   heroImageUrl: string;
+  /** Sanity `city.country->slug.current` */
+  countrySlug?: string;
 };
 
 type SanityCity = {
   _id?: string;
   title?: unknown;
   slug?: string | { current?: string };
+  countrySlug?: string;
   shortDescription?: unknown;
   heroImageUrl?: string;
   heroImage?: { asset?: { url?: string } };
@@ -27,12 +30,17 @@ export function mapSanityCityToCard(c: SanityCity, locale: string): CityCard {
     c.heroImageUrl ??
     (c.heroImage as { asset?: { url?: string } } | undefined)?.asset?.url ??
     '';
+  const rawCountry =
+    typeof c.countrySlug === 'string' && c.countrySlug.trim()
+      ? c.countrySlug.trim().toLowerCase()
+      : undefined;
   return {
     _id: c._id,
     title: resolveLocalizedString(c.title as never, locale) || '—',
     slug,
     shortDescription: resolveLocalizedString(c.shortDescription as never, locale) || '',
     heroImageUrl: heroUrl,
+    ...(rawCountry ? { countrySlug: rawCountry } : {}),
   };
 }
 
@@ -72,13 +80,26 @@ type ResolvedItem = {
   shortDescription?: unknown;
   heroImage?: { asset?: { url?: string } };
   heroImageUrl?: string;
-  city?: { slug?: string | { current?: string } };
+  /** Present when the manual item is a city document. */
+  countrySlug?: string;
+  city?: { slug?: string | { current?: string }; countrySlug?: string };
 };
 
 function slugOf(x: unknown): string {
   if (!x) return '';
   if (typeof x === 'string') return x;
   return (x as { current?: string } | null | undefined)?.current ?? '';
+}
+
+function countrySlugFromResolvedItem(item: ResolvedItem): string | undefined {
+  const top =
+    typeof item.countrySlug === 'string' && item.countrySlug.trim()
+      ? item.countrySlug.trim().toLowerCase()
+      : '';
+  if (top) return top;
+  const c = item.city?.countrySlug;
+  if (typeof c === 'string' && c.trim()) return c.trim().toLowerCase();
+  return undefined;
 }
 
 /** Map resolvedManualItems (city or district) to LocationCarouselCard with correct href. */
@@ -99,14 +120,15 @@ export function mapResolvedManualItemsToCards(
       (item.heroImage as { asset?: { url?: string } } | undefined)?.asset?.url ??
       '';
     const citySlug = slugOf(item.city?.slug);
+    const countryForPath = countrySlugFromResolvedItem(item);
     const href =
       item._type === 'district'
         ? citySlug
-          ? catalogFilterPath({ locale, city: citySlug, district: slug })
+          ? catalogFilterPath({ locale, city: citySlug, district: slug, country: countryForPath })
           : catalogPath(locale)
         : linkLanding
-          ? `/${locale}/cities/${slug}`
-          : catalogFilterPath({ locale, city: slug });
+          ? cityInfoPath(locale, slug, countryForPath)
+          : catalogFilterPath({ locale, city: slug, country: countryForPath });
     result.push({
       _id: item._id,
       title,

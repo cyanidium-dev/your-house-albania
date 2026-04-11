@@ -5,12 +5,7 @@ import { createPortal } from "react-dom";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
-import {
-  catalogFilterPath,
-  catalogPath,
-  dealQueryValueToRouteSegment,
-  singleFilterPath,
-} from "@/lib/routes/catalog";
+import { buildListingUrl, type BuildListingUrlInput } from "@/lib/routes/listingRoutes";
 import {
   type ViewMode,
   DEFAULT_VIEW_MODE,
@@ -108,7 +103,7 @@ import {
   type FilterMultiOption,
 } from "@/components/catalog/FilterMultiSelect";
 
-type Option = { value: string; label: string };
+type Option = { value: string; label: string; countrySlug?: string };
 type DistrictOption = Option & { citySlug?: string };
 
 function districtSlugForPath(d: string | undefined): string | undefined {
@@ -125,6 +120,8 @@ type Props = {
   defaultAreaRange: { min: number; max: number };
   amenityOptions: Option[];
   initialAgentSlug?: string;
+  /** From URL on geo catalog routes, or derived server-side from `city.country`. */
+  initialCountrySlug?: string;
   initialCity?: string;
   initialType?: string;
   initialDealType?: string;
@@ -151,6 +148,7 @@ export function PropertySearchBar({
   defaultAreaRange,
   amenityOptions,
   initialAgentSlug = "",
+  initialCountrySlug = "",
   initialCity = "",
   initialType = "",
   initialDealType = "",
@@ -434,48 +432,25 @@ export function PropertySearchBar({
     params.delete("view");
     params.delete("page");
     params.delete("city");
-    // District in path when city is set; when no city, catalogPath carries ?district= (do not duplicate in params)
+    // District is a query facet; `buildListingUrl` adds `?district=` when needed (do not duplicate in params)
     params.delete("district");
 
     const citySlug = city || undefined;
-    const dealSegment = dealQueryValueToRouteSegment(
-      effectiveDeal && effectiveDeal !== "any" ? effectiveDeal : undefined
-    );
     const typeSlug = type || undefined;
-    const singleCount = Number(Boolean(citySlug)) + Number(Boolean(dealSegment)) + Number(Boolean(typeSlug));
-    const path =
-      !initialAgentSlug && singleCount === 1
-        ? singleFilterPath({
-            locale,
-            city: citySlug,
-            dealType: dealSegment || undefined,
-            propertyType: typeSlug,
-          })
-        : citySlug && !initialAgentSlug
-        ? catalogFilterPath({
-            locale,
-            city: citySlug,
-            dealType: dealSegment || undefined,
-            propertyType: typeSlug,
-            district: districtSlugForPath(district),
-          })
-        : catalogPath(
-            locale,
-            citySlug,
-            districtSlugForPath(district),
-            initialAgentSlug || undefined
-          );
-    // Keep query params only for filters that are not encoded in the path.
-    if (citySlug) params.delete("city");
-    if (dealSegment && path.includes(`/${encodeURIComponent(dealSegment)}`)) params.delete("deal");
-    if (typeSlug && path.includes(`/${encodeURIComponent(typeSlug)}`)) params.delete("type");
-    const qs = params.toString();
-    const url =
-      qs === ""
-        ? path
-        : path.includes("?")
-          ? `${path}&${qs}`
-          : `${path}?${qs}`;
+    const countryFromSelection = locations.find((l) => l.value === citySlug)?.countrySlug;
+    const listingInput: BuildListingUrlInput = {
+      locale,
+      scope: initialAgentSlug ? "agent" : "catalog",
+      agentSlug: initialAgentSlug || undefined,
+      country: initialCountrySlug.trim() || countryFromSelection || undefined,
+      city: citySlug,
+      dealQuery:
+        effectiveDeal && effectiveDeal !== "any" ? effectiveDeal : undefined,
+      propertyType: typeSlug,
+      district: districtSlugForPath(district),
+      query: params,
+    };
+    const url = buildListingUrl(listingInput);
     router.push(url);
   },
     [
@@ -485,6 +460,8 @@ export function PropertySearchBar({
       deal,
       district,
       initialAgentSlug,
+      initialCountrySlug,
+      locations,
       locale,
       pageSize,
       areaValues,
@@ -618,7 +595,15 @@ export function PropertySearchBar({
             type="button"
             variant="outline"
             className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
-            onClick={() => router.push(catalogPath(locale, undefined, undefined, initialAgentSlug || undefined))}
+            onClick={() =>
+              router.push(
+                buildListingUrl({
+                  scope: "agent",
+                  locale,
+                  agentSlug: initialAgentSlug || "",
+                })
+              )
+            }
           >
             <span className="inline-block max-w-full truncate">
               {t("resetFilters")}

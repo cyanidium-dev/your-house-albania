@@ -32,6 +32,7 @@ export function LandingCard({
     pageType: card.pageType ?? null,
     slug: card.slug ?? null,
     linkedCitySlug,
+    linkedCityCountrySlug: card.linkedCity?.countrySlug ?? null,
   })
   const unoptimized = imgUrl?.startsWith('http') ?? false
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { buildHreflangAlternates } from '@/lib/seo/hreflang'
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
+import { getSiteBaseUrl } from '@/lib/siteUrl'
 import { resolveLocalizedString } from './localized'
 import {
   pickAbsoluteOgImageUrl,
@@ -93,7 +94,17 @@ export function buildLandingMetadata(
     siteDefaultSeo?.ogImage?.asset?.url,
   )
 
-  const canonical = resolveCanonicalUrl(landingSeo?.canonicalUrl, locale)
+  const canonicalFromCms = resolveCanonicalUrl(landingSeo?.canonicalUrl, locale)
+  const pathnameAfterLocale = itemContext?.pathnameForAlternates?.trim()
+  const canonicalFallback =
+    !canonicalFromCms && pathnameAfterLocale
+      ? `${getSiteBaseUrl().replace(/\/$/, '')}/${locale}/${pathnameAfterLocale
+          .split('/')
+          .filter(Boolean)
+          .map((s) => encodeURIComponent(s))
+          .join('/')}`
+      : undefined
+  const canonical = canonicalFromCms ?? canonicalFallback
   const noIndex = landingSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false
   const noFollow = landingSeo?.noFollow ?? siteDefaultSeo?.noFollow ?? false
 

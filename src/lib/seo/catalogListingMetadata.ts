@@ -1,7 +1,17 @@
 /**
  * Catalog listing SEO helpers: when to noindex based on query (metadata only).
  * Does not change filter parsing or UI.
+ *
+ * Policy (listing/filter pages):
+ * - Any real query string on the URL → noindex; canonical is always the path without `?…`.
+ * - Deal + property-type URLs → also noindex when inventory is at or below
+ *   `LISTING_DEAL_TYPE_NOINDEX_THRESHOLD` (same rule as geo listings + sitemap-types).
  */
+
+import { fetchCatalogProperties } from "@/lib/sanity/client";
+import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
+
+export { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
 
 const DEFAULT_PAGE_SIZE = "24";
 const DEFAULT_SORT = "newest";
@@ -24,6 +34,43 @@ function isNonEmptyFilterValue(key: string, raw: string): boolean {
     return false;
   }
   return true;
+}
+
+/**
+ * True when the request has any query string (listing pages: always noindex; canonical = path-only).
+ * Stricter than {@link shouldCatalogListingNoindex} (e.g. `?page=1` still counts as a query).
+ */
+export function listingUrlHasQueryParams(
+  searchParams: Record<string, string | string[] | undefined>
+): boolean {
+  for (const value of Object.values(searchParams)) {
+    if (value === undefined) continue;
+    if (Array.isArray(value)) {
+      if (value.some((s) => typeof s === "string" && s.trim() !== "")) return true;
+    } else if (typeof value === "string" && value.trim() !== "") {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Non-geo national deal+type URLs: thin inventory → noindex (same threshold as geo + sitemap).
+ */
+export async function shouldNoindexNonGeoDealTypeCombo(
+  dealQuery: "sale" | "rent" | "short-term",
+  propertyTypeSlug: string
+): Promise<boolean> {
+  const slug = propertyTypeSlug.trim();
+  if (!slug) return false;
+  const listing = await fetchCatalogProperties({
+    deal: dealQuery,
+    type: slug,
+    page: 1,
+    pageSize: 1,
+  });
+  const totalCount = listing?.totalCount ?? 0;
+  return totalCount <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD;
 }
 
 /**

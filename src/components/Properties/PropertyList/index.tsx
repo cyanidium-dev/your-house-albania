@@ -12,13 +12,14 @@ import {
   fetchSelectedPropertyCatalogBanners,
   fetchSiteSettings,
   fetchCatalogAreaBoundsFromData,
+  fetchCityCountrySlugByCitySlug,
   type CatalogSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
-import { catalogPath } from '@/lib/routes/catalog'
+import { buildListingUrl } from '@/lib/routes/listingRoutes'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -36,6 +37,8 @@ async function PropertiesListing({
   pathAgentSlug = '',
   pathCity = '',
   pathDistrict = '',
+  /** Country segment from URL on geo routes; otherwise derived from Sanity `city.country`. */
+  pathCountrySlug = '',
   searchParams,
   catalogSeo,
 }: {
@@ -43,6 +46,7 @@ async function PropertiesListing({
   pathAgentSlug?: string
   pathCity?: string
   pathDistrict?: string
+  pathCountrySlug?: string
   searchParams: SearchParams
   catalogSeo?: CatalogSeoContent
 }) {
@@ -90,6 +94,11 @@ async function PropertiesListing({
   const viewMode = parseViewMode(searchParams.view)
 
   const rawPage = parsedFilters.page
+
+  let initialCountrySlug = pathCountrySlug.trim()
+  if (cityFilter && !initialCountrySlug) {
+    initialCountrySlug = (await fetchCityCountrySlugByCitySlug(cityFilter)) || ''
+  }
 
   // --- Catalog banners (siteSettings.propertySettings.propertyCatalogBanners) ---
   const selectedBanners = await fetchSelectedPropertyCatalogBanners({
@@ -162,14 +171,19 @@ async function PropertiesListing({
       }
     }
     params.set('page', String(currentPage))
-    const qs = params.toString()
-    const path = catalogPath(
+
+    const url = buildListingUrl({
+      scope: agentSlugFilter ? 'agent' : 'catalog',
       locale,
-      pathCity || undefined,
-      pathDistrict || undefined,
-      agentSlugFilter || undefined
-    )
-    redirect(path + (qs ? `?${qs}` : ''))
+      agentSlug: agentSlugFilter || undefined,
+      country: initialCountrySlug || undefined,
+      city: pathCity || undefined,
+      dealQuery: dealFilter && dealFilter !== '' ? dealFilter : undefined,
+      propertyType: typeFilter || undefined,
+      district: pathDistrict || undefined,
+      query: params,
+    })
+    redirect(url)
   }
 
   const pageItems: PropertyHomes[] = Array.isArray(filteredForDisplay)
@@ -192,6 +206,7 @@ async function PropertiesListing({
     defaultAreaRange,
     amenityOptions,
     initialAgentSlug: agentSlugFilter || '',
+    initialCountrySlug,
     initialCity: cityFilter || '',
     initialType: typeFilter,
     initialDealType: dealFilter,
