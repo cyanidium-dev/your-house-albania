@@ -6,7 +6,7 @@
     "contact": "Contatto",
     "nav": {
       "home": "Home",
-      "sale": "Vendita",
+      "buy": "Acquista",
       "rent": "Affitto",
       "shortTermRent": "Affitto breve",
       "cities": "Città",
@@ -28,27 +28,51 @@
     "switchTo": "Cambia valuta in {currency}"
   },
   "Footer": {
-    "contactRequest": "Lascia il tuo numero per una selezione personalizzata di immobili.",
-    "phonePlaceholder": "Numero di telefono",
-    "submitButton": "Richiedi una chiamata",
-    "helperText": "Vuoi una selezione personalizzata di appartamenti? Lascia una richiesta e ti contatteremo.",
-    "newsletter": "Resta aggiornato con news, promozioni e offerte esclusive.",
-    "emailPlaceholder": "Inserisci la tua email",
-    "subscribe": "Iscriviti",
-    "disclaimer": "Iscrivendoti accetti di ricevere email promozionali. Puoi annullare l'iscrizione in qualsiasi momento.",
-    "cta": "Inizia il tuo percorso verso il successo, contattaci oggi.",
-    "getInTouch": "Contattaci",
-    "copyright": "©2025 Domlivo - Design & Developed by",
-    "termsOfService": "Termini di servizio",
-    "privacyPolicy": "Informativa sulla privacy",
-    "links": {
-      "luxuryVillas": "Ville di lusso",
-      "residentialHomes": "Abitazioni",
-      "apartments": "Appartamenti",
-      "contactUs": "Contattaci",
-      "blog": "Blog",
-      "notFound": "Pagina 404",
-      "documentation": "Documentazione"
+    "columns": {
+      "navigation": "Navigazione",
+      "cities": "Città",
+      "contacts": "Contatti",
+      "socials": "Social",
+      "app": "App"
+    },
+    "nav": {
+      "home": "Home",
+      "buy": "Acquista",
+      "rent": "Affitto",
+      "shortTermRent": "Affitto breve",
+      "cities": "Città",
+      "realtors": "Per agenti",
+      "blog": "Blog"
+    },
+    "cities": {
+      "empty": "Nessuna città da mostrare."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Seguici su Instagram",
+      "followFacebook": "Seguici su Facebook",
+      "followLinkedin": "Seguici su LinkedIn",
+      "followX": "Seguici su X",
+      "followTwitter": "Seguici su Twitter",
+      "followYoutube": "Seguici su YouTube",
+      "followTiktok": "Seguici su TikTok",
+      "followGeneric": "Seguici su {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Creato da"
+    },
+    "partners": {
+      "codesite": "CodeSite.Art",
+      "webbond": "WebBond"
     }
   },
   "Home": {

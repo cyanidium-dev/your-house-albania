@@ -1,7 +1,7 @@
 import { Breadcrumb } from "../Breadcrumb";
 import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
-import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
+import { fetchCatalogFilterOptions, fetchCityCountrySlugByCitySlug } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
   agentFilterPath,
@@ -34,11 +34,19 @@ export async function CatalogBreadcrumb({
   dealType,
   propertyType,
 }: CatalogBreadcrumbProps) {
-  const countrySeg = country ? normalizeCatalogCountrySlug(country) : undefined;
   const [t, options] = await Promise.all([
     getTranslations("Breadcrumbs"),
     fetchCatalogFilterOptions(locale),
   ]);
+  const locations = options.locations;
+
+  let countryForPath = country;
+  if (city && typeof country === "string" && country.trim()) {
+    const fromLoc = locations.find((l) => l.value.toLowerCase() === city.toLowerCase())?.countrySlug;
+    const derived = fromLoc ?? (await fetchCityCountrySlugByCitySlug(city));
+    if (derived) countryForPath = derived;
+  }
+  const countrySeg = countryForPath ? normalizeCatalogCountrySlug(countryForPath) : undefined;
   const dealsT = await getTranslations("Catalog.filters");
   const hasCatalogScope = Boolean(city || dealType || propertyType || country || agentSlug);
   const items: BreadcrumbItem[] = [{ label: t("home"), href: `/${locale}` }];
@@ -46,7 +54,6 @@ export async function CatalogBreadcrumb({
     items.push({ label: "Catalog" });
   }
 
-  const locations = options.locations;
   const propertyTypes = options.propertyTypes;
 
   if (agentSlug) {
@@ -74,13 +81,13 @@ export async function CatalogBreadcrumb({
     const cityHref = dealType || propertyType
       ? agentSlug
         ? agentFilterPath({ locale, agentSlug, country: countrySeg, city })
-        : country
-          ? catalogFilterPath({ locale, country: countrySeg, city })
-          : singleFilterPath({ locale, city })
+        : countryForPath
+          ? catalogFilterPath({ locale, country: countrySeg, city, trustedCityCountrySlug: countrySeg })
+          : singleFilterPath({ locale, city, trustedCityCountrySlug: countrySeg })
       : undefined;
     const cityResetHref = agentSlug
       ? agentFilterPath({ locale, agentSlug })
-      : country
+      : countryForPath
         ? `/${locale}/${encodeURIComponent(countrySeg!)}`
         : catalogPath(locale);
     items.push({ label: t("cities"), href: cityResetHref });
@@ -99,8 +106,8 @@ export async function CatalogBreadcrumb({
     const dealHref = propertyType
       ? agentSlug
         ? agentFilterPath({ locale, agentSlug, country: countrySeg, city, dealType })
-        : country && city
-          ? catalogFilterPath({ locale, country: countrySeg, city, dealType })
+        : countryForPath && city
+          ? catalogFilterPath({ locale, country: countrySeg, city, dealType, trustedCityCountrySlug: countrySeg })
           : dealType
             ? nonGeoDealListingPath(locale, dealType)
             : undefined
@@ -115,15 +122,16 @@ export async function CatalogBreadcrumb({
         ?.label || formatSlug(propertyType);
     const propertyTypeResetHref = agentSlug
       ? agentFilterPath({ locale, agentSlug, country: countrySeg, city, dealType })
-      : country && city
+      : countryForPath && city
         ? catalogFilterPath({
             locale,
             country: countrySeg,
             city,
             dealType,
+            trustedCityCountrySlug: countrySeg,
           })
         : city
-          ? singleFilterPath({ locale, city })
+          ? singleFilterPath({ locale, city, trustedCityCountrySlug: countrySeg })
           : dealType
             ? nonGeoDealListingPath(locale, dealType)
             : catalogPath(locale);
@@ -135,7 +143,7 @@ export async function CatalogBreadcrumb({
   const currentPath = buildCurrentPath({
     locale,
     agentSlug,
-    country,
+    country: countryForPath,
     city,
     dealType,
     propertyType,

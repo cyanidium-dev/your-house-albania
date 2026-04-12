@@ -12,17 +12,17 @@
  * `dealQuery` / `propertyType` are written to **`deal`** / **`type`** query params (and are not stripped,
  * since they are not represented in the path). This is intentional, not accidental.
  *
- * ## Catalog single-segment shorthand (legacy)
- * Implemented entirely in `buildCatalogPathname`: when there is **no explicit country** in the input,
- * exactly **one** of city / deal / type may collapse to a single URL segment under `/{locale}/…`.
- * Precedence for full geo paths and non-geo deals is handled before that block; see comments there.
+ * ## Catalog path segments
+ * Geo listings with a **city** use `resolveEffectiveCountryForListingBuild`. If country is known
+ * (trusted or explicit), pathname is `/{locale}/{country}/{city}/…`. If country is unknown, pathname is
+ * path-based **`/{locale}/{city}/…`** (and deal/type in subsequent segments / catch-all per route shape)
+ * — **not** `/catalog?city=…`. Albania fallback applies only when **no city** is in the input.
  */
 
 import {
-  allowsSingleSegmentCityListingPath,
   dealQueryValueToRouteSegment,
   nonGeoDealListingPath,
-  normalizeCatalogCountrySlug,
+  resolveEffectiveCountryForListingBuild,
 } from "./catalogPathPrimitives";
 
 export type ListingScope = "catalog" | "agent";
@@ -34,6 +34,8 @@ export type BuildListingPathInput = {
   /** Required when scope === "agent" */
   agentSlug?: string;
   country?: string | null;
+  /** When set with `city`, wins over `country` (CMS / locations / server fetch). */
+  trustedCityCountrySlug?: string | null;
   city?: string | null;
   /** Catalog filter value: `sale` | `rent` | `short-term` (not the URL segment for short-term rent). */
   dealQuery?: string | null;
@@ -64,6 +66,9 @@ function buildAgentPathname(
   if (!slug) return `/${locale}/catalog`;
   const base = `/${locale}/agent/${encodeURIComponent(slug)}`;
   if (!city) {
+    return base;
+  }
+  if (!countryNorm) {
     return base;
   }
   let p = `${base}/${encodeURIComponent(countryNorm)}/${encodeURIComponent(city)}`;
@@ -102,9 +107,23 @@ function buildCatalogPathname(
   }
 
   /**
-   * Legacy single-segment shorthand (no explicit country):
+   * City without a resolvable country (omit-country shape): `/{locale}/{city}/…` — never fake country,
+   * never `/catalog?city=…`. Optional deal/type continue as path segments (route: first seg = city,
+   * second = deal, catch-all = type).
+   */
+  if (hasCity && !countryNorm) {
+    if (!dealSeg && !type) {
+      return `/${locale}/${encodeURIComponent(city)}`;
+    }
+    let p = `/${locale}/${encodeURIComponent(city)}`;
+    if (dealSeg) p += `/${encodeURIComponent(dealSeg)}`;
+    if (type) p += `/${encodeURIComponent(type)}`;
+    return p;
+  }
+
+  /**
+   * Legacy single-segment shorthand (no country segment in input):
    * exactly one of city, deal segment, or property type becomes `/{locale}/{oneSegment}`.
-   * Does not run when an explicit country is set (geo listings use full `/{locale}/{country}/{city}/…`).
    */
   const singleFacetCount =
     Number(Boolean(hasCity)) + Number(Boolean(dealSeg)) + Number(Boolean(type));
@@ -115,13 +134,6 @@ function buildCatalogPathname(
   }
 
   if (hasCity) {
-    /**
-     * City-only shorthand when allowed (Albania default country): `/{locale}/{city}` — same segment as
-     * country/city ambiguity is resolved by `allowsSingleSegmentCityListingPath`.
-     */
-    if (!dealSeg && !type && allowsSingleSegmentCityListingPath(countryNorm)) {
-      return `/${locale}/${encodeURIComponent(city)}`;
-    }
     let p = `/${locale}/${encodeURIComponent(countryNorm)}/${encodeURIComponent(city)}`;
     if (dealSeg) p += `/${encodeURIComponent(dealSeg)}`;
     if (type) p += `/${encodeURIComponent(type)}`;
@@ -136,9 +148,12 @@ function buildCatalogPathname(
  */
 export function buildListingPath(input: BuildListingPathInput): string {
   const locale = input.locale;
-  const countryNorm = normalizeCatalogCountrySlug(input.country ?? undefined);
-  const countryRaw = typeof input.country === "string" ? input.country.trim() : "";
   const city = input.city?.trim() || "";
+  const { countryRaw, countryNorm } = resolveEffectiveCountryForListingBuild({
+    city: city || undefined,
+    country: input.country,
+    trustedCityCountrySlug: input.trustedCityCountrySlug,
+  });
   const dealSeg = dealQueryValueToRouteSegment(input.dealQuery?.trim() || undefined);
   const type = input.propertyType?.trim() || "";
 
@@ -159,12 +174,22 @@ export function buildListingUrl(input: BuildListingUrlInput): string {
   const citySlug = input.city?.trim() || "";
   const typeSlug = input.propertyType?.trim() || "";
   const dealSeg = dealQueryValueToRouteSegment(input.dealQuery?.trim() || undefined);
-  const hasCountryInInput = Boolean(input.country?.trim());
+  const { countryRaw } = resolveEffectiveCountryForListingBuild({
+    city: citySlug || undefined,
+    country: input.country,
+    trustedCityCountrySlug: input.trustedCityCountrySlug,
+  });
+  const hasCountryInPath =
+    Boolean(input.country?.trim()) ||
+    Boolean(input.trustedCityCountrySlug?.trim()) ||
+    (Boolean(citySlug) && Boolean(countryRaw));
 
-  if (citySlug) params.delete("city");
+  if (citySlug && pathIncludesSegment(path, citySlug)) {
+    params.delete("city");
+  }
   if (dealSeg && pathIncludesSegment(path, dealSeg)) params.delete("deal");
   if (typeSlug && pathIncludesSegment(path, typeSlug)) params.delete("type");
-  if (hasCountryInInput) params.delete("country");
+  if (hasCountryInPath) params.delete("country");
 
   const agentRoot =
     input.scope === "agent" &&

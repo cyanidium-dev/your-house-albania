@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import {
   fetchCatalogSeoPageByCity,
   fetchCatalogSeoPageRoot,
+  fetchCityCountrySlugByCitySlug,
   fetchSiteSettings,
   resolveCatalogSeoPage,
 } from "@/lib/sanity/client";
@@ -18,7 +19,7 @@ import {
 } from "@/lib/seo/catalogListingMetadata";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { singleFilterPath } from "@/lib/routes/catalog";
+import { catalogFilterPath, singleFilterPath } from "@/lib/routes/catalog";
 import {
   mergeTopLevelSearch,
   resolveTopLevelListingSegment,
@@ -67,12 +68,19 @@ async function buildListingMetadata(
     return { title, description, robots: indexingDisabledRobots };
   }
 
-  const path = singleFilterPath({
-    locale,
-    city: kind === "city" ? slug : undefined,
-    dealType: kind === "deal" ? slug : undefined,
-    propertyType: kind === "type" ? slug : undefined,
-  });
+  let path: string;
+  if (kind === "city") {
+    const cc = await fetchCityCountrySlugByCitySlug(slug);
+    path = cc
+      ? catalogFilterPath({ locale, city: slug, country: cc, trustedCityCountrySlug: cc })
+      : catalogFilterPath({ locale, city: slug });
+  } else {
+    path = singleFilterPath({
+      locale,
+      dealType: kind === "deal" ? slug : undefined,
+      propertyType: kind === "type" ? slug : undefined,
+    });
+  }
   /** Country hub: CMS country index (`/{locale}/{country}`), not a listing shorthand — kept explicit vs `buildListingUrl`. */
   const canonicalPath = kind === "country" ? `/${locale}/${encodeURIComponent(slug)}` : path;
   const base = getSiteBaseUrl();

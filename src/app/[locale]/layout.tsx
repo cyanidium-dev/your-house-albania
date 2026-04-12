@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
-import { fetchSiteSettings } from "@/lib/sanity/client";
+import { fetchCatalogCountryDocumentSlugs, fetchSiteSettings } from "@/lib/sanity/client";
 import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 
@@ -21,9 +21,10 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const [messages, rawSiteSettings] = await Promise.all([
+  const [messages, rawSiteSettings, countrySlugs] = await Promise.all([
     getMessages(),
     fetchSiteSettings(),
+    fetchCatalogCountryDocumentSlugs(),
   ]);
 
   const siteSettings = mapSiteSettingsToResolved(rawSiteSettings as never, locale);
@@ -36,7 +37,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   if (process.env.NODE_ENV === "development") {
     console.log("[Layout] siteSettings:", rawSiteSettings ? "found" : "not found", {
-      hasFooterQuickLinks: siteSettings.footerQuickLinks.length > 0,
+      countrySlugCount: countrySlugs.length,
       hasSocialLinks: siteSettings.socialLinks.length > 0,
       hasContactEmail: !!siteSettings.email,
       hasCopyright: !!siteSettings.copyrightText,
@@ -47,9 +48,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <NextIntlClientProvider messages={messages}>
       <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
-        <Header siteSettings={siteSettings} locale={locale} />
+        <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
         {children}
-        <Footer siteSettings={siteSettings} />
+        <Footer siteSettings={siteSettings} countrySlugs={countrySlugs} />
       </Providers>
     </NextIntlClientProvider>
   );

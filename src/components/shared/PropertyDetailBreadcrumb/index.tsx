@@ -27,7 +27,7 @@ export async function PropertyDetailBreadcrumb({
     { label: t("properties"), href: catalogPath(locale) },
   ];
 
-  let locations: { value: string; label: string }[] = [];
+  let locations: { value: string; label: string; countrySlug?: string }[] = [];
   let districts: { value: string; label: string }[] = [];
 
   if (citySlug || districtSlug) {
@@ -41,7 +41,8 @@ export async function PropertyDetailBreadcrumb({
     const cityLabel =
       locations.find((l) => l.value.toLowerCase() === city)?.label ||
       formatSlug(citySlug);
-    const cityHref = catalogFilterPath({ locale, city: citySlug });
+    const trustedCityCountrySlug = locations.find((l) => l.value.toLowerCase() === city)?.countrySlug;
+    const cityHref = catalogFilterPath({ locale, city: citySlug, trustedCityCountrySlug });
     items.push({ label: cityLabel, href: cityHref });
   }
 
@@ -50,9 +51,12 @@ export async function PropertyDetailBreadcrumb({
     const districtLabel =
       districts.find((d) => d.value.toLowerCase() === district)?.label ||
       formatSlug(districtSlug);
+    const trustedCityCountrySlug = locations.find(
+      (l) => l.value.toLowerCase() === citySlug.toLowerCase(),
+    )?.countrySlug;
     items.push({
       label: districtLabel,
-      href: catalogFilterPath({ locale, city: citySlug!, district: districtSlug }),
+      href: catalogFilterPath({ locale, city: citySlug!, district: districtSlug, trustedCityCountrySlug }),
     });
   }
 

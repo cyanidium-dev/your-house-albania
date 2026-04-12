@@ -86,7 +86,7 @@ export default async function CatalogRootPage({ params, searchParams }: Props) {
   const [{ locale }, search] = await Promise.all([params, searchParams]);
 
   const parsed = parseCatalogFilters({}, search);
-  const catalogRedirect = getCatalogRootRedirectUrl(locale, search, parsed);
+  const catalogRedirect = await getCatalogRootRedirectUrl(locale, search, parsed);
   if (catalogRedirect) redirect(catalogRedirect);
 
   const t = await getTranslations("Listing.properties");

@@ -6,7 +6,7 @@
     "contact": "Contact",
     "nav": {
       "home": "Home",
-      "sale": "Sales",
+      "buy": "Buy",
       "rent": "Rent",
       "shortTermRent": "Short-term rent",
       "cities": "Cities",
@@ -28,27 +28,51 @@
     "switchTo": "Switch currency to {currency}"
   },
   "Footer": {
-    "contactRequest": "Leave your phone number for a personalized property selection.",
-    "phonePlaceholder": "Phone number",
-    "submitButton": "Request a call",
-    "helperText": "Want a personalized apartment selection? Leave a request and we'll contact you.",
-    "newsletter": "Stay updated with the latest news, promotions, and exclusive offers.",
-    "emailPlaceholder": "Enter Your Email",
-    "subscribe": "Subscribe",
-    "disclaimer": "By subscribing, you agree to receive our promotional emails. You can unsubscribe at any time.",
-    "cta": "Begin your path to success contact us today.",
-    "getInTouch": "Get In Touch",
-    "copyright": "©2025 Domlivo - Design & Developed by",
-    "termsOfService": "Terms of service",
-    "privacyPolicy": "Privacy policy",
-    "links": {
-      "luxuryVillas": "Luxury Villas",
-      "residentialHomes": "Residential Homes",
-      "apartments": "Apartments",
-      "contactUs": "Contact Us",
-      "blog": "Blog",
-      "notFound": "404 Page",
-      "documentation": "Documentation"
+    "columns": {
+      "navigation": "Navigation",
+      "cities": "Cities",
+      "contacts": "Contacts",
+      "socials": "Social",
+      "app": "App"
+    },
+    "nav": {
+      "home": "Home",
+      "buy": "Buy",
+      "rent": "Rent",
+      "shortTermRent": "Short-term rent",
+      "cities": "Cities",
+      "realtors": "For realtors",
+      "blog": "Blog"
+    },
+    "cities": {
+      "empty": "No cities to show."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Follow us on Instagram",
+      "followFacebook": "Follow us on Facebook",
+      "followLinkedin": "Follow us on LinkedIn",
+      "followX": "Follow us on X",
+      "followTwitter": "Follow us on Twitter",
+      "followYoutube": "Follow us on YouTube",
+      "followTiktok": "Follow us on TikTok",
+      "followGeneric": "Follow us on {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Created by"
+    },
+    "partners": {
+      "codesite": "CodeSite.Art",
+      "webbond": "WebBond"
     }
   },
   "Home": {

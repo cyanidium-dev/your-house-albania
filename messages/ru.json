@@ -6,7 +6,7 @@
     "contact": "Контакты",
     "nav": {
       "home": "Главная",
-      "sale": "Продажа",
+      "buy": "Купить",
       "rent": "Аренда",
       "shortTermRent": "Краткосрочная аренда",
       "cities": "Города",
@@ -28,27 +28,51 @@
     "switchTo": "Сменить валюту на {currency}"
   },
   "Footer": {
-    "contactRequest": "Оставьте номер телефона для индивидуального подбора недвижимости.",
-    "phonePlaceholder": "Номер телефона",
-    "submitButton": "Оставить заявку",
-    "helperText": "Хотите индивидуальный подбор квартиры? Оставьте заявку, и мы свяжемся с вами.",
-    "newsletter": "Получайте новости, акции и эксклюзивные предложения.",
-    "emailPlaceholder": "Введите email",
-    "subscribe": "Подписаться",
-    "disclaimer": "Подписываясь, вы соглашаетесь получать рассылку. Отписаться можно в любой момент.",
-    "cta": "Начните путь к успеху — свяжитесь с нами сегодня.",
-    "getInTouch": "Связаться",
-    "copyright": "©2025 Domlivo - Design & Developed by",
-    "termsOfService": "Условия использования",
-    "privacyPolicy": "Политика конфиденциальности",
-    "links": {
-      "luxuryVillas": "Люксовые виллы",
-      "residentialHomes": "Жилые дома",
-      "apartments": "Квартиры",
-      "contactUs": "Контакты",
-      "blog": "Блог",
-      "notFound": "Страница 404",
-      "documentation": "Документация"
+    "columns": {
+      "navigation": "Навигация",
+      "cities": "Города",
+      "contacts": "Контакты",
+      "socials": "Соцсети",
+      "app": "Приложение"
+    },
+    "nav": {
+      "home": "Главная",
+      "buy": "Купить",
+      "rent": "Аренда",
+      "shortTermRent": "Краткосрочная аренда",
+      "cities": "Города",
+      "realtors": "Риелторам",
+      "blog": "Блог"
+    },
+    "cities": {
+      "empty": "Нет городов для отображения."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Мы в Instagram",
+      "followFacebook": "Мы в Facebook",
+      "followLinkedin": "Мы в LinkedIn",
+      "followX": "Мы в X",
+      "followTwitter": "Мы в Twitter",
+      "followYoutube": "Мы на YouTube",
+      "followTiktok": "Мы в TikTok",
+      "followGeneric": "Мы в {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Создано"
+    },
+    "partners": {
+      "codesite": "CodeSite.Art",
+      "webbond": "WebBond"
     }
   },
   "Home": {

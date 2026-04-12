@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import DrawerNavList from './Navigation/DrawerNavList'
 import { DRAWER_NAV_ITEMS } from '@/data/navConfig'
-import type { CityLandingNavItem } from '@/lib/sanity/client'
 import LanguageSwitcher from './LanguageSwitcher'
 import CurrencySwitcher from './CurrencySwitcher'
 import HeaderThemeToggle from './HeaderThemeToggle'
@@ -19,7 +19,6 @@ import { cn } from '@/lib/utils'
 
 export type HeaderTranslations = {
   menu: string
-  contact: string
   cta: { viewProperties: string }
   nav: Record<string, string>
 }
@@ -27,16 +26,20 @@ export type HeaderTranslations = {
 type HeaderClientProps = {
   locale: string
   siteSettings?: ResolvedSiteSettings
+  countrySlugs: string[]
   translations: HeaderTranslations
-  cityNavItems: CityLandingNavItem[]
 }
 
 const HeaderClient: React.FC<HeaderClientProps> = ({
   locale,
   siteSettings,
+  countrySlugs,
   translations: t,
-  cityNavItems,
 }) => {
+  const [drawerCitiesOpen, setDrawerCitiesOpen] = useState(false)
+  const [drawerRealtorsOpen, setDrawerRealtorsOpen] = useState(false)
+  const drawerExpanded = drawerCitiesOpen || drawerRealtorsOpen
+
   return (
     <HeaderVisualState>
       {({ sticky, isHomepage }) => (
@@ -123,9 +126,9 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
               </div>
 
               <HeaderMobileDrawer open={navbarOpen} onClose={onClose}>
-                <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden px-20">
-                  <div className="shrink-0 pt-[max(0.75rem,env(safe-area-inset-top))]">
-                    <div className="flex items-center justify-start py-10">
+                <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden px-12 sm:px-16 md:px-20">
+                  <div className="shrink-0 pt-[max(0.5rem,env(safe-area-inset-top))]">
+                    <div className="flex w-full items-center justify-end py-4 md:py-5">
                       <button
                         onClick={onClose}
                         aria-label="Close mobile menu"
@@ -152,52 +155,34 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     </div>
                   </div>
 
-                  <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overflow-x-hidden pb-4">
-                    <nav className="flex flex-col items-start gap-4" aria-label="Main">
+                  <div
+                    className={cn(
+                      'no-scrollbar min-h-0 flex-1 flex flex-col',
+                      drawerExpanded ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden',
+                    )}
+                  >
+                    <nav className="flex min-h-0 flex-1 flex-col items-start gap-2 sm:gap-2.5" aria-label="Main">
                       <DrawerNavList
                         items={DRAWER_NAV_ITEMS}
-                        cityItems={cityNavItems}
+                        countrySlugs={countrySlugs}
                         translations={{ nav: t.nav }}
                         onNavigate={onClose}
+                        citiesOpen={drawerCitiesOpen}
+                        onCitiesOpenChange={setDrawerCitiesOpen}
+                        realtorsOpen={drawerRealtorsOpen}
+                        onRealtorsOpenChange={setDrawerRealtorsOpen}
                       />
                     </nav>
                   </div>
 
-                  <div className="shrink-0 space-y-4 border-t border-white/10 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))]">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <Link
-                        href={catalogPath(locale)}
-                        className="block w-fit rounded-full border border-primary bg-primary px-8 py-4 text-base font-semibold leading-4 text-white duration-300 hover:bg-transparent hover:text-primary"
-                        onClick={onClose}
-                      >
-                        {t.cta.viewProperties}
-                      </Link>
-                      <Link
-                        href={`/${locale}/contacts`}
-                        className="block w-fit rounded-full border border-primary bg-transparent px-8 py-4 text-base font-semibold leading-4 text-primary duration-300 hover:bg-primary hover:text-white"
-                        onClick={onClose}
-                      >
-                        {t.nav.contacts}
-                      </Link>
-                    </div>
-                    <div className="flex flex-col gap-1 text-white">
-                      <p className="text-base font-normal text-white/40 sm:text-xm">{t.contact}</p>
-                      {siteSettings?.email ? (
-                        <Link
-                          href={`mailto:${siteSettings.email}`}
-                          className="text-base font-medium text-inherit hover:text-primary sm:text-xm"
-                        >
-                          {siteSettings.email}
-                        </Link>
-                      ) : null}
-                      <Link
-                        href={catalogPath(locale)}
-                        className="text-base font-medium text-inherit hover:text-primary sm:text-xm"
-                        onClick={onClose}
-                      >
-                        {t.cta.viewProperties}
-                      </Link>
-                    </div>
+                  <div className="shrink-0 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                    <Link
+                      href={catalogPath(locale)}
+                      className="inline-flex w-fit min-h-11 items-center justify-center rounded-full border border-primary bg-primary px-7 py-3.5 text-base font-semibold leading-tight text-white duration-300 hover:bg-transparent hover:text-primary"
+                      onClick={onClose}
+                    >
+                      {t.cta.viewProperties}
+                    </Link>
                   </div>
                 </div>
               </HeaderMobileDrawer>

@@ -2,10 +2,7 @@ import { unstable_cache } from 'next/cache';
 import { createClient } from '@sanity/client';
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
 import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
-import {
-  LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG,
-  allowsSingleSegmentCityListingPath,
-} from '@/lib/routes/catalog';
+import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { buildListingPath } from '@/lib/routes/listingRoutes';
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
 import { resolveLocalizedString, resolveLocalizedContent } from './localized';
@@ -120,7 +117,8 @@ export async function fetchHomePage(): Promise<unknown | null> {
       "city": city-> {
         _id,
         title,
-        "slug": slug.current
+        "slug": slug.current,
+        "countrySlug": country->slug.current
       },
       heroImage {
         asset-> { _id, url, metadata },
@@ -198,7 +196,7 @@ export async function fetchHomePage(): Promise<unknown | null> {
     if (process.env.NODE_ENV === 'development') {
       const doc = result as { homepageSections?: { _type: string }[] } | null;
       const seoSection = Array.isArray(doc?.homepageSections)
-        ? doc.homepageSections.find((s) => s._type === 'homeSeoTextSection')
+        ? doc?.homepageSections.find((s) => s._type === 'homeSeoTextSection')
         : undefined;
       console.log('[Sanity] fetchHomePage OK, hasSeoSection:', !!seoSection);
     }
@@ -511,11 +509,16 @@ const cachedFetchSiteSettings = unstable_cache(
       managerPhoto { alt, asset-> { url } },
       companyAddress,
       copyrightText,
-      footerQuickLinks[] {
-        _key,
-        href,
-        label
+      footerIntro,
+      footerTelegramUrl,
+      footerWhatsappUrl,
+      footerApp {
+        enabled,
+        iosUrl,
+        androidUrl
       },
+      footerCodesiteUrl,
+      footerWebbondUrl,
       socialLinks[] {
         _key,
         platform,
@@ -553,14 +556,13 @@ const cachedFetchSiteSettings = unstable_cache(
       const result = await client.fetch(query);
       if (process.env.NODE_ENV === 'development' && result) {
         const s = result as Record<string, unknown>;
-        const ql = Array.isArray(s?.footerQuickLinks) ? (s.footerQuickLinks as unknown[]).length : 0;
         const sl = Array.isArray(s?.socialLinks) ? (s.socialLinks as unknown[]).length : 0;
         console.log('[Sanity] fetchSiteSettings OK:', {
-          hasFooterQuickLinks: ql > 0,
           hasSocialLinks: sl > 0,
           hasContactEmail: !!s?.contactEmail,
           hasCopyright: !!s?.copyrightText,
           hasPhone: !!s?.contactPhone,
+          hasFooterIntro: !!s?.footerIntro,
         });
       }
       return result;
@@ -1207,6 +1209,60 @@ export async function fetchCatalogCountryDocumentSlugs(): Promise<string[]> {
   return fetchCatalogCountryDocumentSlugsCached();
 }
 
+export type FooterCityNavItem = {
+  slug: string;
+  label: string;
+  countrySlug?: string;
+};
+
+/**
+ * Cities for footer column: filtered by `city.country`, ordered by title, capped (default 6).
+ */
+export async function fetchFooterCitiesByCountry(
+  locale: string,
+  countrySlug: string,
+  limit = 6
+): Promise<FooterCityNavItem[]> {
+  const key = countrySlug.trim().toLowerCase();
+  if (!key) return [];
+  const safeLimit = Math.min(Math.max(1, limit), 24);
+  return unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return [];
+      const query = `*[_type == "city" && country->slug.current == $country] | order(title asc) {
+        "slug": slug.current,
+        title,
+        "countrySlug": country->slug.current
+      }`;
+      try {
+        const rows = await client.fetch<
+          Array<{ slug?: string; title?: unknown; countrySlug?: string }>
+        >(query, { country: key });
+        if (!Array.isArray(rows)) return [];
+        return rows
+          .filter((r): r is { slug: string; title?: unknown; countrySlug?: string } => typeof r.slug === 'string' && r.slug.length > 0)
+          .slice(0, safeLimit)
+          .map((r) => {
+            const label =
+              resolveLocalizedString(r.title as never, locale) ||
+              r.slug.replace(/-/g, ' ');
+            const cs =
+              typeof r.countrySlug === 'string' && r.countrySlug.trim()
+                ? r.countrySlug.trim().toLowerCase()
+                : undefined;
+            return { slug: r.slug, label, countrySlug: cs };
+          });
+      } catch (err) {
+        console.warn('[Sanity] fetchFooterCitiesByCountry failed:', err);
+        return [];
+      }
+    },
+    ['sanity-footer-cities', key, locale, String(safeLimit)],
+    { revalidate: 120 }
+  )();
+}
+
 /**
  * Sanity `city.country->slug.current` for catalog routing. Cached per city slug.
  */
@@ -1230,6 +1286,30 @@ export async function fetchCityCountrySlugByCitySlug(citySlug: string): Promise<
       }
     },
     ['sanity-city-country', key],
+    { revalidate: 120 }
+  )();
+}
+
+/** True if a `city` document exists for this slug (country may be unset). */
+export async function fetchCityExistsBySlug(citySlug: string): Promise<boolean> {
+  const key = citySlug.trim().toLowerCase();
+  if (!key) return false;
+  return unstable_cache(
+    async () => {
+      const client = getClient();
+      if (!client) return false;
+      try {
+        const exists = await client.fetch<boolean>(
+          `count(*[_type == "city" && slug.current == $citySlug]) > 0`,
+          { citySlug: key }
+        );
+        return Boolean(exists);
+      } catch (err) {
+        console.warn('[Sanity] fetchCityExistsBySlug failed:', err);
+        return false;
+      }
+    },
+    ['sanity-city-exists', key],
     { revalidate: 120 }
   )();
 }
@@ -2242,15 +2322,14 @@ export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
       const countrySlug =
         typeof row.countrySlug === 'string' && row.countrySlug.trim()
           ? row.countrySlug.trim().toLowerCase()
-          : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+          : '';
       const prev = best.get(slug);
       if (!prev || lm > prev.lastModified) best.set(slug, { lastModified: lm, countrySlug });
     }
     return Array.from(best.entries()).map(([slug, { lastModified, countrySlug }]) => {
-      const c = countrySlug ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
-      const segmentAfterLocale = allowsSingleSegmentCityListingPath(c)
-        ? encodeURIComponent(slug)
-        : `${encodeURIComponent(c)}/${encodeURIComponent(slug)}`;
+      const segmentAfterLocale = countrySlug
+        ? `${encodeURIComponent(countrySlug)}/${encodeURIComponent(slug)}`
+        : encodeURIComponent(slug);
       return { segmentAfterLocale, lastModified };
     });
   } catch (err) {
