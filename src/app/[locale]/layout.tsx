@@ -48,7 +48,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <NextIntlClientProvider messages={messages}>
       <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
-        <Header siteSettings={siteSettings} locale={locale} />
+        <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
         {children}
         <Footer siteSettings={siteSettings} countrySlugs={countrySlugs} />
       </Providers>

@@ -4,11 +4,12 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale } from 'next-intl'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useMemo, useState } from 'react'
 import { Icon } from '@iconify/react'
 import type { DrawerNavItem } from '@/data/navConfig'
-import type { CityLandingNavItem } from '@/lib/sanity/client'
-import { cityInfoPath } from '@/lib/routes/catalog'
+import type { FooterCityNavItem } from '@/lib/sanity/client'
+import { catalogFilterPath, nonGeoDealListingPath } from '@/lib/routes/catalog'
+import { deriveFooterCountrySlugFromPathname } from '@/lib/routes/footerCountry'
 
 export type DrawerNavTranslations = {
   nav: Record<string, string>
@@ -16,9 +17,13 @@ export type DrawerNavTranslations = {
 
 type DrawerNavListProps = {
   items: DrawerNavItem[]
-  cityItems: CityLandingNavItem[]
+  countrySlugs: readonly string[]
   translations: DrawerNavTranslations
   onNavigate: () => void
+  citiesOpen: boolean
+  onCitiesOpenChange: (open: boolean) => void
+  realtorsOpen: boolean
+  onRealtorsOpenChange: (open: boolean) => void
 }
 
 function resolvedHref(href: string, locale: string): string {
@@ -26,16 +31,35 @@ function resolvedHref(href: string, locale: string): string {
   return `/${locale}${href}`
 }
 
-/** Stable row height for alignment; touch-friendly baseline. */
-const ROW_MIN = 'min-h-14'
+function stripQuery(path: string): string {
+  const i = path.indexOf('?')
+  return i >= 0 ? path.slice(0, i) : path
+}
 
-/** Primary nav labels — slightly reduced vs original for better fold fit. */
+/** True when pathname is the listing base or a deeper segment (deal/type/…) for the same city. */
+function isPathUnderListingBase(pathname: string, baseHref: string): boolean {
+  const p = stripQuery(pathname).replace(/\/$/, '') || '/'
+  const b = stripQuery(baseHref).replace(/\/$/, '') || '/'
+  if (p === b) return true
+  return p.startsWith(`${b}/`)
+}
+
+function drawerCityCatalogHref(locale: string, city: FooterCityNavItem): string {
+  return catalogFilterPath({
+    locale,
+    city: city.slug,
+    trustedCityCountrySlug: city.countrySlug,
+    country: city.countrySlug,
+  })
+}
+
+const ROW_MIN = 'min-h-11'
+
 const linkBase = clsx(
-  'py-2 text-2xl font-medium leading-snug text-white/40 transition-colors sm:text-4xl',
+  'py-1.5 text-xl font-medium leading-snug text-white/40 transition-colors sm:text-3xl',
   'rounded-lg group-hover:text-primary',
 )
 
-/** Expand/collapse control: fixed width band so labels can truncate without stealing space. */
 const expandToggleClass = clsx(
   'w-[35%] max-w-[120px] min-w-[80px] shrink-0 touch-manipulation',
   'flex flex-col items-end justify-center rounded-xl text-white/50 transition',
@@ -54,22 +78,51 @@ function activeBar(active: boolean) {
 
 function DrawerNavList({
   items,
-  cityItems,
+  countrySlugs,
   translations,
   onNavigate,
+  citiesOpen,
+  onCitiesOpenChange,
+  realtorsOpen,
+  onRealtorsOpenChange,
 }: DrawerNavListProps) {
   const path = usePathname()
   const locale = useLocale()
   const citiesPanelId = useId()
   const realtorsPanelId = useId()
-  const [citiesOpen, setCitiesOpen] = useState(false)
-  const [realtorsOpen, setRealtorsOpen] = useState(false)
+
+  const [cityItems, setCityItems] = useState<FooterCityNavItem[]>([])
+
+  const activeCountry = useMemo(
+    () => deriveFooterCountrySlugFromPathname(path, locale, countrySlugs),
+    [path, locale, countrySlugs],
+  )
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(
+      `/api/footer-cities?locale=${encodeURIComponent(locale)}&country=${encodeURIComponent(activeCountry)}`,
+    )
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: FooterCityNavItem[]) => {
+        if (!cancelled && Array.isArray(data)) setCityItems(data)
+      })
+      .catch(() => {
+        if (!cancelled) setCityItems([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [locale, activeCountry])
 
   useEffect(() => {
     const citiesBase = `/${locale}/cities`
-    const onCityInfo = new RegExp(`^/${locale}/[^/]+/[^/]+/info/?$`).test(path)
-    if (path.startsWith(`${citiesBase}/`) || onCityInfo) setCitiesOpen(true)
-  }, [path, locale])
+    const onCitiesHub = path === citiesBase || path.startsWith(`${citiesBase}/`)
+    const onCityListing =
+      cityItems.length > 0 &&
+      cityItems.some((c) => isPathUnderListingBase(path, drawerCityCatalogHref(locale, c)))
+    if (onCitiesHub || onCityListing) onCitiesOpenChange(true)
+  }, [path, locale, cityItems, onCitiesOpenChange])
 
   useEffect(() => {
     const realtorsBase = `/${locale}/for-realtors`
@@ -83,21 +136,25 @@ function DrawerNavList({
       path === registerBase ||
       path.startsWith(`${registerBase}/`)
     ) {
-      setRealtorsOpen(true)
+      onRealtorsOpenChange(true)
     }
-  }, [path, locale])
+  }, [path, locale, onRealtorsOpenChange])
 
   const isHomeActive = path === `/${locale}` || path === `/${locale}/`
 
-  const isDealActive = (segment: string) =>
-    path === `/${locale}/investment/${segment}` ||
-    path === `/${locale}/investment/${encodeURIComponent(segment)}`
+  /** Non-geo deal category routes: `/{locale}/{sale|rent|short-term-rent}/…` */
+  const isNonGeoDealCategoryActive = (dealRouteSegment: string) => {
+    const base = nonGeoDealListingPath(locale, dealRouteSegment)
+    const p = stripQuery(path).replace(/\/$/, '') || '/'
+    const b = base.replace(/\/$/, '') || '/'
+    return p === b || p.startsWith(`${b}/`)
+  }
 
-  const isCityInfoPath = new RegExp(`^/${locale}/[^/]+/[^/]+/info/?$`).test(path)
   const isCitiesParentActive =
     path === `/${locale}/cities` ||
     path.startsWith(`/${locale}/cities/`) ||
-    isCityInfoPath
+    (cityItems.length > 0 &&
+      cityItems.some((c) => isPathUnderListingBase(path, drawerCityCatalogHref(locale, c))))
 
   const isBlogActive =
     path === `/${locale}/blog` || path.startsWith(`/${locale}/blog/`)
@@ -106,7 +163,7 @@ function DrawerNavList({
     path === `/${locale}/contacts` || path === `/${locale}/contactus`
 
   const childLinkClass =
-    'flex min-h-11 min-w-0 items-center truncate py-1.5 text-lg font-medium leading-snug sm:text-2xl'
+    'flex min-h-10 min-w-0 items-center truncate py-1 text-base font-medium leading-snug sm:text-2xl'
 
   return (
     <ul className="w-full">
@@ -115,9 +172,9 @@ function DrawerNavList({
           const href = resolvedHref(item.href, locale)
           let active = false
           if (item.key === 'home') active = isHomeActive
-          else if (item.key === 'sale') active = isDealActive('sale')
-          else if (item.key === 'rent') active = isDealActive('rent')
-          else if (item.key === 'shortTermRent') active = isDealActive('short-term-rent')
+          else if (item.key === 'buy') active = isNonGeoDealCategoryActive('sale')
+          else if (item.key === 'rent') active = isNonGeoDealCategoryActive('rent')
+          else if (item.key === 'shortTermRent') active = isNonGeoDealCategoryActive('short-term-rent')
           else if (item.key === 'blog') active = isBlogActive
           else if (item.key === 'contacts') active = isContactsActive
           else active = path === href || path.startsWith(`${href}/`)
@@ -159,14 +216,14 @@ function DrawerNavList({
                   className={clsx(
                     'flex w-full max-w-full items-stretch gap-2',
                     ROW_MIN,
-                    'sm:min-h-[3.25rem]',
+                    'sm:min-h-12',
                   )}
                 >
                   <div
                     className={clsx(
                       'flex w-6 shrink-0 flex-col items-center justify-center self-stretch',
                       ROW_MIN,
-                      'sm:min-h-[3.25rem]',
+                      'sm:min-h-12',
                     )}
                   >
                     <div className={activeBar(isCitiesParentActive)} />
@@ -187,20 +244,20 @@ function DrawerNavList({
                     className={clsx(
                       expandToggleClass,
                       ROW_MIN,
-                      'sm:min-h-[3.25rem]',
+                      'sm:min-h-12',
                     )}
                     aria-expanded={citiesOpen}
                     aria-controls={citiesPanelId}
                     aria-label={citiesOpen ? collapseLabel : expandLabel}
                     onClick={(e) => {
                       e.preventDefault()
-                      setCitiesOpen((o) => !o)
+                      onCitiesOpenChange(!citiesOpen)
                     }}
                   >
                     <Icon
                       icon="ph:caret-down"
-                      width={24}
-                      height={24}
+                      width={22}
+                      height={22}
                       className={clsx(
                         'transition-transform duration-200',
                         citiesOpen && 'rotate-180',
@@ -212,13 +269,13 @@ function DrawerNavList({
                 {citiesOpen ? (
                   <ul
                     id={citiesPanelId}
-                    className="mt-2 space-y-0.5 border-l border-white/15 pl-5"
+                    className="mt-1.5 space-y-0 border-l border-white/15 pl-4"
                   >
                     {cityItems.map((c) => {
-                      const ch = cityInfoPath(locale, c.slug, c.countrySlug)
-                      const childActive = path === ch
+                      const ch = drawerCityCatalogHref(locale, c)
+                      const childActive = isPathUnderListingBase(path, ch)
                       return (
-                        <li key={c.slug}>
+                        <li key={`${c.slug}-${c.countrySlug ?? ''}`}>
                           <Link
                             href={ch}
                             className={clsx(
@@ -260,14 +317,14 @@ function DrawerNavList({
                   className={clsx(
                     'flex w-full max-w-full items-stretch gap-2',
                     ROW_MIN,
-                    'sm:min-h-[3.25rem]',
+                    'sm:min-h-12',
                   )}
                 >
                   <div
                     className={clsx(
                       'flex w-6 shrink-0 flex-col items-center justify-center self-stretch',
                       ROW_MIN,
-                      'sm:min-h-[3.25rem]',
+                      'sm:min-h-12',
                     )}
                   >
                     <div className={activeBar(isRealtorsParentActive)} />
@@ -288,20 +345,20 @@ function DrawerNavList({
                     className={clsx(
                       expandToggleClass,
                       ROW_MIN,
-                      'sm:min-h-[3.25rem]',
+                      'sm:min-h-12',
                     )}
                     aria-expanded={realtorsOpen}
                     aria-controls={realtorsPanelId}
                     aria-label={realtorsOpen ? collapseLabel : expandLabel}
                     onClick={(e) => {
                       e.preventDefault()
-                      setRealtorsOpen((o) => !o)
+                      onRealtorsOpenChange(!realtorsOpen)
                     }}
                   >
                     <Icon
                       icon="ph:caret-down"
-                      width={24}
-                      height={24}
+                      width={22}
+                      height={22}
                       className={clsx(
                         'transition-transform duration-200',
                         realtorsOpen && 'rotate-180',
@@ -313,7 +370,7 @@ function DrawerNavList({
                 {realtorsOpen ? (
                   <ul
                     id={realtorsPanelId}
-                    className="mt-2 space-y-0.5 border-l border-white/15 pl-5"
+                    className="mt-1.5 space-y-0 border-l border-white/15 pl-4"
                     role="list"
                   >
                     {realtorChildKeys.map((childKey) =>
