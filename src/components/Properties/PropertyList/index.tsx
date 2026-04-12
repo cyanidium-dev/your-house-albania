@@ -39,6 +39,8 @@ async function PropertiesListing({
   pathDistrict = '',
   /** Country segment from URL on geo routes; otherwise derived from Sanity `city.country`. */
   pathCountrySlug = '',
+  /** When the listing URL omits a country segment (`/{locale}/{city}/…`); do not inject CMS country into canonical URLs. */
+  omitCountryInPath = false,
   searchParams,
   catalogSeo,
 }: {
@@ -47,6 +49,7 @@ async function PropertiesListing({
   pathCity?: string
   pathDistrict?: string
   pathCountrySlug?: string
+  omitCountryInPath?: boolean
   searchParams: SearchParams
   catalogSeo?: CatalogSeoContent
 }) {
@@ -96,9 +99,13 @@ async function PropertiesListing({
   const rawPage = parsedFilters.page
 
   let initialCountrySlug = pathCountrySlug.trim()
-  if (cityFilter && !initialCountrySlug) {
+  if (cityFilter && !initialCountrySlug && !omitCountryInPath) {
     initialCountrySlug = (await fetchCityCountrySlugByCitySlug(cityFilter)) || ''
   }
+
+  const locationCountrySlugForCity = cityFilter
+    ? locationOptions.find((l) => l.value.toLowerCase() === cityFilter.toLowerCase())?.countrySlug
+    : undefined
 
   // --- Catalog banners (siteSettings.propertySettings.propertyCatalogBanners) ---
   const selectedBanners = await fetchSelectedPropertyCatalogBanners({
@@ -176,7 +183,8 @@ async function PropertiesListing({
       scope: agentSlugFilter ? 'agent' : 'catalog',
       locale,
       agentSlug: agentSlugFilter || undefined,
-      country: initialCountrySlug || undefined,
+      country: omitCountryInPath ? undefined : initialCountrySlug || undefined,
+      trustedCityCountrySlug: omitCountryInPath ? undefined : locationCountrySlugForCity,
       city: pathCity || undefined,
       dealQuery: dealFilter && dealFilter !== '' ? dealFilter : undefined,
       propertyType: typeFilter || undefined,

@@ -442,7 +442,8 @@ export function PropertySearchBar({
       locale,
       scope: initialAgentSlug ? "agent" : "catalog",
       agentSlug: initialAgentSlug || undefined,
-      country: initialCountrySlug.trim() || countryFromSelection || undefined,
+      country: initialCountrySlug.trim() || undefined,
+      trustedCityCountrySlug: countryFromSelection,
       city: citySlug,
       dealQuery:
         effectiveDeal && effectiveDeal !== "any" ? effectiveDeal : undefined,

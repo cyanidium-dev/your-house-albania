@@ -22,17 +22,15 @@ import {
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import {
-  catalogFilterPath,
-  dealRouteSegmentToQueryValue,
-  isReservedFilterCountrySegment,
-} from "@/lib/routes/catalog";
+import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
 import {
   getGeoListingDistrictNormalizeRedirectUrl,
   getGeoListingDuplicateFacetRedirectUrl,
   mergeListingSearchParams,
   normalizeListingPathSegment,
+  resolveCatalogGeoListingInterpretation,
   resolveListingPathFilters,
+  resolveOmitCountryListingPathFilters,
 } from "@/lib/routes/listingRouteResolver";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -46,26 +44,15 @@ function mergedSearchParams(search: SearchParams, dealSegment?: string, property
   return mergeListingSearchParams(search, dealSegment, propertyType);
 }
 
-async function validateRoute(
+async function validateListingGeoContent(
   locale: string,
-  country: string,
-  city: string,
+  listingCitySlug: string,
   propertyTypeOptions: { value: string }[],
   propertyType?: string
 ) {
-  const countrySlug = normalizeListingPathSegment(country);
-  if (isReservedFilterCountrySegment(country)) {
-    notFound();
-  }
-
-  const cmsCountry = await fetchCityCountrySlugByCitySlug(normalizeListingPathSegment(city));
-  if (!cmsCountry || cmsCountry !== countrySlug) {
-    notFound();
-  }
-
-  const property = await fetchPropertyBySlug(city);
+  const property = await fetchPropertyBySlug(listingCitySlug);
   if (property != null) {
-    redirect(`/${locale}/property/${city}`);
+    redirect(`/${locale}/property/${listingCitySlug}`);
   }
 
   if (!propertyType) return;
@@ -79,22 +66,32 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const citySlug = normalizeListingPathSegment(city);
   const countrySlug = normalizeListingPathSegment(country);
   const options = await fetchCatalogFilterOptions(locale);
-  const resolved = resolveListingPathFilters(filters, options.propertyTypes, "geoCity");
-  if (!resolved) return {};
-  const { dealType, propertyType } = resolved;
-  const typeSlug = propertyType;
 
   if (isReservedFilterCountrySegment(countrySlug)) {
     return {};
   }
-  const cmsCountryMeta = await fetchCityCountrySlugByCitySlug(citySlug);
-  if (!cmsCountryMeta || cmsCountryMeta !== countrySlug) {
-    return {};
+
+  const geo = await resolveCatalogGeoListingInterpretation(countrySlug, citySlug);
+  if (!geo) return {};
+
+  const resolved =
+    geo.mode === "fullGeo"
+      ? resolveListingPathFilters(filters, options.propertyTypes, "geoCity")
+      : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
+  if (!resolved) return {};
+  const { dealType, propertyType } = resolved;
+  const typeSlug = propertyType;
+
+  if (geo.mode === "fullGeo") {
+    const cmsCountryMeta = await fetchCityCountrySlugByCitySlug(geo.listingCitySlug);
+    if (!cmsCountryMeta || cmsCountryMeta !== geo.listingCountrySlug) {
+      return {};
+    }
   }
 
   const [siteSettings, rawSeo] = await Promise.all([
     fetchSiteSettings(),
-    fetchCatalogSeoPageByCity(citySlug),
+    fetchCatalogSeoPageByCity(geo.listingCitySlug),
   ]);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
@@ -106,7 +103,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const t = await getTranslations("Listing.properties");
   const listTitle = t("title");
   const listDescription = t("description");
-  const cityTitle = citySlug ? citySlug.replace(/-/g, " ") : "";
+  const cityTitle = geo.listingCitySlug ? geo.listingCitySlug.replace(/-/g, " ") : "";
   const localizedTitleFromSeo =
     defaultSeo?.metaTitle &&
     resolveLocalizedString(defaultSeo.metaTitle as never, locale);
@@ -130,8 +127,10 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const dealForPath = dealType;
   const path = catalogFilterPath({
     locale,
-    country: countrySlug,
-    city: citySlug,
+    city: geo.listingCitySlug,
+    ...(geo.mode === "fullGeo"
+      ? { country: geo.listingCountrySlug, trustedCityCountrySlug: geo.listingCountrySlug }
+      : {}),
     dealType: dealForPath || undefined,
     propertyType: typeSlug || undefined,
     district: typeof search.district === "string" ? search.district : undefined,
@@ -149,7 +148,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   let noindexByDistrictThreshold = false;
   if (!noindexQuery && !seoNoIndex && dealForPath && typeSlug) {
     const listing = await fetchCatalogProperties({
-      city: citySlug,
+      city: geo.listingCitySlug,
       deal: dealRouteSegmentToQueryValue(dealForPath),
       type: typeSlug,
       page: 1,
@@ -160,7 +159,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
   if (!noindexQuery && !seoNoIndex && typeof search.district === "string" && search.district.trim()) {
     const listing = await fetchCatalogProperties({
-      city: citySlug,
+      city: geo.listingCitySlug,
       district: search.district.trim().toLowerCase(),
       page: 1,
       pageSize: 1,
@@ -189,17 +188,24 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   const citySlug = normalizeListingPathSegment(city);
   const countrySlug = normalizeListingPathSegment(country);
   const options = await fetchCatalogFilterOptions(locale);
-  const resolved = resolveListingPathFilters(filters, options.propertyTypes, "geoCity");
+
+  const geo = await resolveCatalogGeoListingInterpretation(countrySlug, citySlug);
+  if (!geo) notFound();
+
+  const resolved =
+    geo.mode === "fullGeo"
+      ? resolveListingPathFilters(filters, options.propertyTypes, "geoCity")
+      : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
   if (!resolved) notFound();
   const { dealType, propertyType, dealQuery } = resolved;
   const typeSlug = propertyType;
-  await validateRoute(locale, countrySlug, citySlug, options.propertyTypes, typeSlug || undefined);
+
+  await validateListingGeoContent(locale, geo.listingCitySlug, options.propertyTypes, typeSlug || undefined);
 
   const mergedSearch = mergedSearchParams(search, dealType || undefined, typeSlug || undefined);
   const dupUrl = getGeoListingDuplicateFacetRedirectUrl({
     locale,
-    countrySlug,
-    citySlug,
+    geo,
     dealType,
     propertyType: typeSlug,
     dealQuery,
@@ -209,8 +215,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
 
   const districtUrl = getGeoListingDistrictNormalizeRedirectUrl({
     locale,
-    countrySlug,
-    citySlug,
+    geo,
     dealType,
     propertyType: typeSlug,
     rawSearch: search,
@@ -220,8 +225,11 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");
-  const rawSeo = await fetchCatalogSeoPageByCity(citySlug);
+  const rawSeo = await fetchCatalogSeoPageByCity(geo.listingCitySlug);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+
+  const breadcrumbCountry: string | undefined =
+    geo.mode === "fullGeo" ? geo.listingCountrySlug : undefined;
 
   return (
     <>
@@ -233,8 +241,8 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
         breadcrumb={
           <CatalogBreadcrumb
             locale={locale}
-            country={countrySlug}
-            city={citySlug}
+            country={breadcrumbCountry}
+            city={geo.listingCitySlug}
             dealType={dealType || undefined}
             propertyType={typeSlug || undefined}
           />
@@ -242,8 +250,9 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
       />
       <PropertiesListing
         locale={locale}
-        pathCity={citySlug}
-        pathCountrySlug={countrySlug}
+        pathCity={geo.listingCitySlug}
+        pathCountrySlug={geo.mode === "fullGeo" ? geo.listingCountrySlug : ""}
+        omitCountryInPath={geo.mode === "omitCountry"}
         searchParams={mergedSearch}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />

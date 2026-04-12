@@ -24,6 +24,7 @@ export {
   dealRouteSegmentToQueryValue,
   nonGeoDealListingPath,
   normalizeCatalogCountrySlug,
+  resolveEffectiveCountryForListingBuild,
 } from "./catalogPathPrimitives";
 
 export type { BuildListingPathInput, BuildListingUrlInput, ListingScope };
@@ -70,6 +71,8 @@ export function isReservedFilterCountrySegment(segment?: string): boolean {
 type CatalogFilterPathInput = {
   locale: string;
   country?: string;
+  /** When set with `city`, wins over `country` for the path segment. */
+  trustedCityCountrySlug?: string;
   city?: string;
   dealType?: string;
   propertyType?: string;
@@ -80,6 +83,7 @@ type AgentFilterPathInput = {
   locale: string;
   agentSlug: string;
   country?: string;
+  trustedCityCountrySlug?: string;
   city?: string;
   dealType?: string;
   propertyType?: string;
@@ -89,6 +93,8 @@ type AgentFilterPathInput = {
 type SingleFilterInput = {
   locale: string;
   city?: string;
+  country?: string;
+  trustedCityCountrySlug?: string;
   dealType?: string;
   propertyType?: string;
 };
@@ -99,6 +105,7 @@ type CanonicalCatalogUrlInput = {
   deal?: string;
   propertyType?: string;
   country?: string;
+  trustedCityCountrySlug?: string;
   query?: URLSearchParams;
 };
 
@@ -124,6 +131,8 @@ export function cityInfoPath(
 export function singleFilterPath({
   locale,
   city,
+  country,
+  trustedCityCountrySlug,
   dealType,
   propertyType,
 }: SingleFilterInput): string {
@@ -131,6 +140,8 @@ export function singleFilterPath({
     scope: "catalog",
     locale,
     city,
+    country,
+    trustedCityCountrySlug,
     dealQuery: dealTypeSegmentToListingDealQuery(dealType),
     propertyType,
   });
@@ -139,6 +150,7 @@ export function singleFilterPath({
 export function catalogFilterPath({
   locale,
   country,
+  trustedCityCountrySlug,
   city,
   dealType,
   propertyType,
@@ -148,6 +160,7 @@ export function catalogFilterPath({
     scope: "catalog",
     locale,
     country,
+    trustedCityCountrySlug,
     city,
     dealQuery: dealTypeSegmentToListingDealQuery(dealType),
     propertyType,
@@ -159,6 +172,7 @@ export function agentFilterPath({
   locale,
   agentSlug,
   country,
+  trustedCityCountrySlug,
   city,
   dealType,
   propertyType,
@@ -169,6 +183,7 @@ export function agentFilterPath({
     locale,
     agentSlug,
     country,
+    trustedCityCountrySlug,
     city,
     dealQuery: dealTypeSegmentToListingDealQuery(dealType),
     propertyType,
@@ -220,12 +235,14 @@ export function canonicalCatalogUrl({
   deal,
   propertyType,
   country,
+  trustedCityCountrySlug,
   query,
 }: CanonicalCatalogUrlInput): string {
   return buildListingUrl({
     scope: "catalog",
     locale,
     country,
+    trustedCityCountrySlug,
     city,
     dealQuery: deal?.trim() || undefined,
     propertyType,

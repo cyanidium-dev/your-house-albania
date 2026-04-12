@@ -28,27 +28,51 @@
     "switchTo": "Ndrysho monedhën në {currency}"
   },
   "Footer": {
-    "contactRequest": "Lini numrin tuaj të telefonit për zgjedhje të personalizuar të pasurive.",
-    "phonePlaceholder": "Numri i telefonit",
-    "submitButton": "Kërko një telefonatë",
-    "helperText": "Dëshironi zgjedhje të personalizuar apartamenti? Lini një kërkesë dhe do t'ju kontaktojmë.",
-    "newsletter": "Qëndroni të përditësuar me lajmet, ofertat dhe propozimet ekskluzive.",
-    "emailPlaceholder": "Vendosni email",
-    "subscribe": "Abonohu",
-    "disclaimer": "Duke u abonuar, pranoni të merrni email-e reklamuese. Mund të çabonohuni në çdo kohë.",
-    "cta": "Filloni rrugën drejt suksesit — na kontaktoni sot.",
-    "getInTouch": "Na kontaktoni",
-    "copyright": "©2025 Domlivo - Design & Developed by",
-    "termsOfService": "Kushtet e shërbimit",
-    "privacyPolicy": "Politika e privatësisë",
-    "links": {
-      "luxuryVillas": "Vila luksoze",
-      "residentialHomes": "Shtëpi banimi",
-      "apartments": "Apartamente",
-      "contactUs": "Na kontaktoni",
-      "blog": "Blog",
-      "notFound": "Faqja 404",
-      "documentation": "Dokumentacioni"
+    "columns": {
+      "navigation": "Navigimi",
+      "cities": "Qytetet",
+      "contacts": "Kontakte",
+      "socials": "Rrjetet sociale",
+      "app": "Aplikacioni"
+    },
+    "nav": {
+      "home": "Kryefaqja",
+      "buy": "Bli",
+      "rent": "Qira",
+      "shortTermRent": "Qira afatshkurtër",
+      "cities": "Qytetet",
+      "realtors": "Për agjentë",
+      "blog": "Blog"
+    },
+    "cities": {
+      "empty": "Nuk ka qytete për të shfaqur."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Na ndiqni në Instagram",
+      "followFacebook": "Na ndiqni në Facebook",
+      "followLinkedin": "Na ndiqni në LinkedIn",
+      "followX": "Na ndiqni në X",
+      "followTwitter": "Na ndiqni në Twitter",
+      "followYoutube": "Na ndiqni në YouTube",
+      "followTiktok": "Na ndiqni në TikTok",
+      "followGeneric": "Na ndiqni në {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Krijuar nga"
+    },
+    "partners": {
+      "codesite": "CodeSite.Art",
+      "webbond": "WebBond"
     }
   },
   "Home": {

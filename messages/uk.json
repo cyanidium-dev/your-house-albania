@@ -28,27 +28,51 @@
     "switchTo": "Змінити валюту на {currency}"
   },
   "Footer": {
-    "contactRequest": "Залиште номер телефону для індивідуального підбору нерухомості.",
-    "phonePlaceholder": "Номер телефону",
-    "submitButton": "Залишити заявку",
-    "helperText": "Бажаєте індивідуальний підбір квартири? Залишіть заявку і ми зв'яжемося.",
-    "newsletter": "Отримуйте останні новини, акції та ексклюзивні пропозиції.",
-    "emailPlaceholder": "Введіть email",
-    "subscribe": "Підписатися",
-    "disclaimer": "Підписуючись, ви погоджуєтесь отримувати рекламні листи. Ви можете відписатися в будь-який момент.",
-    "cta": "Почніть шлях до успіху – зв'яжіться з нами сьогодні.",
-    "getInTouch": "Зв'язатися",
-    "copyright": "©2025 Domlivo - Design & Developed by",
-    "termsOfService": "Умови використання",
-    "privacyPolicy": "Політика конфіденційності",
-    "links": {
-      "luxuryVillas": "Розкішні вілли",
-      "residentialHomes": "Житлові будинки",
-      "apartments": "Квартири",
-      "contactUs": "Контакт",
-      "blog": "Блог",
-      "notFound": "Сторінка 404",
-      "documentation": "Документація"
+    "columns": {
+      "navigation": "Навігація",
+      "cities": "Міста",
+      "contacts": "Контакти",
+      "socials": "Соцмережі",
+      "app": "Застосунок"
+    },
+    "nav": {
+      "home": "Головна",
+      "buy": "Купівля",
+      "rent": "Оренда",
+      "shortTermRent": "Короткострокова оренда",
+      "cities": "Міста",
+      "realtors": "Для ріелторів",
+      "blog": "Блог"
+    },
+    "cities": {
+      "empty": "Немає міст для відображення."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Слідкуйте за нами в Instagram",
+      "followFacebook": "Слідкуйте за нами у Facebook",
+      "followLinkedin": "Слідкуйте за нами в LinkedIn",
+      "followX": "Слідкуйте за нами в X",
+      "followTwitter": "Слідкуйте за нами в Twitter",
+      "followYoutube": "Слідкуйте за нами на YouTube",
+      "followTiktok": "Слідкуйте за нами в TikTok",
+      "followGeneric": "Слідкуйте за нами в {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Створено"
+    },
+    "partners": {
+      "codesite": "CodeSite.Art",
+      "webbond": "WebBond"
     }
   },
   "Home": {

@@ -10,7 +10,12 @@ type District = {
   title?: unknown
   slug?: string | { current?: string }
   shortDescription?: unknown
-  city?: { slug?: string | { current?: string }; title?: unknown }
+  city?: {
+    slug?: string | { current?: string }
+    title?: unknown
+    /** Sanity `city.country->slug.current` (from landing projection) */
+    countrySlug?: string
+  }
   heroImage?: { asset?: { url?: string }; alt?: string; label?: string }
 }
 
@@ -188,9 +193,18 @@ export function DistrictsComparisonSection({
             {districts.map((d, idx) => {
               const districtSlug = slugOf(d.slug)
               const citySlug = slugOf(d.city?.slug)
+              const countrySlug =
+                typeof d.city?.countrySlug === 'string' && d.city.countrySlug.trim()
+                  ? d.city.countrySlug.trim().toLowerCase()
+                  : undefined
               const href =
                 citySlug && districtSlug
-                  ? catalogFilterPath({ locale, city: citySlug, district: districtSlug })
+                  ? catalogFilterPath({
+                      locale,
+                      city: citySlug,
+                      district: districtSlug,
+                      trustedCityCountrySlug: countrySlug,
+                    })
                   : undefined
               const imgUrl = d.heroImage?.asset?.url
               const name = resolveLocalizedString(d.title as never, locale) || '—'

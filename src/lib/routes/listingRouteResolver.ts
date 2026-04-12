@@ -17,6 +17,8 @@ import type { ParsedCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 import {
   fetchCatalogCountryDocumentSlugs,
   fetchCatalogFilterOptions,
+  fetchCityCountrySlugByCitySlug,
+  fetchCityExistsBySlug,
 } from "@/lib/sanity/client";
 import {
   dealQueryValueToRouteSegment,
@@ -141,6 +143,56 @@ export function resolveListingPathFilters(
   return { dealType: first, propertyType: second, dealQuery: firstDeal };
 }
 
+/**
+ * `[[...filters]]` on **omit-country** geo URLs: `/{locale}/{city}/{deal}/…` — deal sits in the `[city]`
+ * param; filters are optional property type only (0–1 segment).
+ */
+export function resolveOmitCountryListingPathFilters(
+  filters: string[],
+  propertyTypeOptions: { value: string }[],
+  dealSegmentNormalized: string
+): { dealType: string; propertyType: string; dealQuery: string } | null {
+  if (filters.length > 1) return null;
+  const dSeg = normalizeListingPathSegment(dealSegmentNormalized);
+  const dealQuery = dealRouteSegmentToQueryValue(dSeg);
+  if (!dealQuery) return null;
+  if (filters.length === 0) {
+    return { dealType: dSeg, propertyType: "", dealQuery };
+  }
+  const only = normalizeListingPathSegment(filters[0]);
+  const knownType = propertyTypeOptions.some((t) => normalizeListingPathSegment(t.value) === only);
+  if (!knownType) return null;
+  return { dealType: dSeg, propertyType: only, dealQuery };
+}
+
+export type CatalogGeoListingInterpretation =
+  | { mode: "fullGeo"; listingCountrySlug: string; listingCitySlug: string }
+  | { mode: "omitCountry"; listingCitySlug: string; dealSegment: string };
+
+/**
+ * Distinguishes full geo `/{country}/{city}/…` from omit-country `/{city}/{deal}/…` on the same route file.
+ */
+export async function resolveCatalogGeoListingInterpretation(
+  countrySeg: string,
+  citySeg: string
+): Promise<CatalogGeoListingInterpretation | null> {
+  const countrySlug = normalizeListingPathSegment(countrySeg);
+  const citySlug = normalizeListingPathSegment(citySeg);
+  if (isReservedFilterCountrySegment(countrySlug)) return null;
+
+  const cmsCountryForCityInSecondSeg = await fetchCityCountrySlugByCitySlug(citySlug);
+  if (cmsCountryForCityInSecondSeg && cmsCountryForCityInSecondSeg === countrySlug) {
+    return { mode: "fullGeo", listingCountrySlug: countrySlug, listingCitySlug: citySlug };
+  }
+
+  const dealQuery = dealRouteSegmentToQueryValue(citySlug);
+  if (!dealQuery) return null;
+  const cityExistsInFirstSeg = await fetchCityExistsBySlug(countrySlug);
+  if (!cityExistsInFirstSeg) return null;
+
+  return { mode: "omitCountry", listingCitySlug: countrySlug, dealSegment: citySlug };
+}
+
 // =============================================================================
 // Canonical listing URLs (delegate to `buildListingUrl`)
 // =============================================================================
@@ -225,8 +277,7 @@ export function canonicalNonGeoDealListingPath(
  */
 export function getGeoListingDuplicateFacetRedirectUrl(opts: {
   locale: string;
-  countrySlug: string;
-  citySlug: string;
+  geo: CatalogGeoListingInterpretation;
   dealType: string;
   propertyType: string;
   dealQuery: string;
@@ -242,10 +293,21 @@ export function getGeoListingDuplicateFacetRedirectUrl(opts: {
   const merged = mergeListingSearchParams(opts.search, opts.dealType || undefined, opts.propertyType || undefined);
   const district =
     typeof merged.district === "string" ? normalizeListingPathSegment(merged.district) : undefined;
+  if (opts.geo.mode === "omitCountry") {
+    return buildListingUrl({
+      scope: "catalog",
+      locale: opts.locale,
+      city: opts.geo.listingCitySlug,
+      dealQuery: dealRouteSegmentToQueryValue(opts.dealType) || undefined,
+      propertyType: opts.propertyType || undefined,
+      district,
+      query: pickSearchParamsExcluding(merged, ["deal", "type", "city"]),
+    });
+  }
   return canonicalCatalogGeoListingHref({
     locale: opts.locale,
-    countrySlug: opts.countrySlug,
-    citySlug: opts.citySlug,
+    countrySlug: opts.geo.listingCountrySlug,
+    citySlug: opts.geo.listingCitySlug,
     dealTypeSegment: opts.dealType,
     propertyType: opts.propertyType,
     district,
@@ -257,8 +319,7 @@ export function getGeoListingDuplicateFacetRedirectUrl(opts: {
 /** Normalize district in query when path + `catalogFilterPath` canonicalize casing. */
 export function getGeoListingDistrictNormalizeRedirectUrl(opts: {
   locale: string;
-  countrySlug: string;
-  citySlug: string;
+  geo: CatalogGeoListingInterpretation;
   dealType: string;
   propertyType: string;
   /** Original `searchParams` from the request. */
@@ -272,10 +333,21 @@ export function getGeoListingDistrictNormalizeRedirectUrl(opts: {
       : "";
   if (!district) return null;
   if (normalizeListingPathSegment(opts.rawSearch.district as string) === district) return null;
+  if (opts.geo.mode === "omitCountry") {
+    return buildListingUrl({
+      scope: "catalog",
+      locale: opts.locale,
+      city: opts.geo.listingCitySlug,
+      dealQuery: dealRouteSegmentToQueryValue(opts.dealType) || undefined,
+      propertyType: opts.propertyType || undefined,
+      district,
+      query: pickSearchParamsExcluding(opts.mergedSearch, ["district"]),
+    });
+  }
   return canonicalCatalogGeoListingHref({
     locale: opts.locale,
-    countrySlug: opts.countrySlug,
-    citySlug: opts.citySlug,
+    countrySlug: opts.geo.listingCountrySlug,
+    citySlug: opts.geo.listingCitySlug,
     dealTypeSegment: opts.dealType,
     propertyType: opts.propertyType,
     district,
@@ -290,12 +362,14 @@ export function getGeoListingDistrictNormalizeRedirectUrl(opts: {
 
 /**
  * `/catalog` query-only redirects → canonical listing paths (uses `buildListingUrl` / builder rules).
+ * When `?city=` is present: if CMS resolves a country → `/{locale}/{country}/{city}/…`; if not → path-based
+ * omit-country URLs (`/{locale}/{city}/…`), never `/catalog?city=…`.
  */
-export function getCatalogRootRedirectUrl(
+export async function getCatalogRootRedirectUrl(
   locale: string,
   search: ListingSearchParams,
   parsed: ParsedCatalogFilters
-): string | null {
+): Promise<string | null> {
   const cityQ = parsed.city;
   const dealSeg = dealQueryValueToRouteSegment(parsed.deal || undefined);
   const typeQ = parsed.type || "";
@@ -303,10 +377,12 @@ export function getCatalogRootRedirectUrl(
     Number(Boolean(cityQ)) + Number(Boolean(dealSeg)) + Number(Boolean(typeQ));
 
   if (cityQ) {
+    const derived = await fetchCityCountrySlugByCitySlug(cityQ);
     return buildListingUrl({
       scope: "catalog",
       locale,
       city: cityQ,
+      trustedCityCountrySlug: derived || undefined,
       district: parsed.district || undefined,
       query: pickSearchParamsExcluding(search, ["city", "district"]),
     });

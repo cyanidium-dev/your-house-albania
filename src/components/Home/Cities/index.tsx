@@ -129,20 +129,20 @@ const Cities: React.FC<{ locale: string; citiesData?: CitiesData }> = async ({
             </Link>
           </div>
           {big1 &&
-            renderCard(big1, "big", catalogFilterPath({ locale, city: big1.slug }))}
+            renderCard(big1, "big", catalogFilterPath({ locale, city: big1.slug, trustedCityCountrySlug: big1.countrySlug }))}
           {big2 &&
-            renderCard(big2, "big", catalogFilterPath({ locale, city: big2.slug }))}
+            renderCard(big2, "big", catalogFilterPath({ locale, city: big2.slug, trustedCityCountrySlug: big2.countrySlug }))}
           {small1 &&
             renderCard(
               small1,
               "small",
-              catalogFilterPath({ locale, city: small1.slug }),
+              catalogFilterPath({ locale, city: small1.slug, trustedCityCountrySlug: small1.countrySlug }),
             )}
           {small2 &&
             renderCard(
               small2,
               "small",
-              catalogFilterPath({ locale, city: small2.slug }),
+              catalogFilterPath({ locale, city: small2.slug, trustedCityCountrySlug: small2.countrySlug }),
             )}
         </div>
       </div>
