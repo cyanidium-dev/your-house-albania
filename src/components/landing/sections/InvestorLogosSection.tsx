@@ -4,6 +4,7 @@ import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { resolveRichTextDataFromContent } from '@/components/landing/sectionRenderers/helpers'
 import { InvestorLogosMarquee } from '@/components/landing/sections/InvestorLogosMarquee'
 import { buildLogoRows } from '@/components/landing/sections/investorLogosShared'
+import { SectionHeader } from '@/components/landing/sectionPrimitives'
 
 const descriptionPortableComponents: PortableTextComponents = {
   block: {
@@ -21,6 +22,7 @@ export function InvestorLogosSection({
   section: {
     enabled?: boolean
     title?: unknown
+    shortLine?: unknown
     description?: unknown
     agents?: unknown[]
   }
@@ -31,6 +33,7 @@ export function InvestorLogosSection({
   if (rows.length === 0) return null
 
   const title = resolveLocalizedString(section.title as never, locale) || ''
+  const eyebrow = resolveLocalizedString(section.shortLine as never, locale) || ''
   const descData = resolveRichTextDataFromContent(section.description, locale)
   const hasDesc =
     descData &&
@@ -41,16 +44,19 @@ export function InvestorLogosSection({
   const scrollRegionLabel = title.trim() ? `${title} — logos` : 'Partner logos'
 
   return (
-    <section className="py-12 md:py-16">
-      {(title || hasDesc) && (
+    <section className="py-16 md:py-24">
+      {(title || hasDesc || eyebrow) && (
         <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-          <div className="mb-8 md:mb-10">
-            {title ? (
-              <h2 className="lg:text-52 text-40 font-medium dark:text-white">{title}</h2>
-            ) : null}
+          <div className="mb-10 md:mb-12">
+            <SectionHeader
+              variant="left"
+              eyebrowText={eyebrow || undefined}
+              title={title || undefined}
+              titleClassName="lg:text-52 text-40 font-medium text-dark dark:text-white leading-[1.2] mt-4"
+            />
             {hasDesc && descData ? (
               descData.isPlainText && typeof descData.content === 'string' ? (
-                <div className="mt-2 max-w-3xl text-dark/50 dark:text-white/50 text-xm leading-relaxed">
+                <div className="mt-3 max-w-3xl text-dark/50 dark:text-white/50 text-xm leading-relaxed">
                   {descData.content
                     .split(/\n\n+/)
                     .map((p) => p.trim())
@@ -60,7 +66,7 @@ export function InvestorLogosSection({
                     ))}
                 </div>
               ) : (
-                <div className="mt-2 max-w-3xl">
+                <div className="mt-3 max-w-3xl">
                   <PortableText
                     value={(descData.content as unknown[]) as PortableTextBlock[]}
                     components={descriptionPortableComponents}

@@ -1,9 +1,9 @@
 import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { cn } from "@/lib/utils";
+import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
 
 export type MarketingVariant = "split" | "splitDark" | "grouped";
 
@@ -95,28 +95,28 @@ function DarkBulletList({ items }: { items: string[] }) {
 function HighlightCardsLight({ cards }: { cards: MarketingHighlightCard[] }) {
   if (cards.length === 0) return null;
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
       {cards.map((c, idx) => (
         <div
           key={`${c.label}-${c.value}-${idx}`}
-          className="rounded-xl border border-dark/10 dark:border-white/20 bg-white/60 dark:bg-white/5 p-3"
+          className="rounded-2xl border border-dark/10 dark:border-white/20 bg-white/60 dark:bg-white/5 p-4 md:p-5"
         >
           {c.value && c.label ? (
             <>
-              <div className="text-lg font-semibold text-dark dark:text-white">
+              <div className="text-xl md:text-2xl font-semibold text-dark dark:text-white leading-tight">
                 {c.value}
               </div>
-              <div className="text-xs text-dark/60 dark:text-white/60">
+              <div className="mt-1 text-sm text-dark/60 dark:text-white/60">
                 {c.label}
               </div>
             </>
           ) : (
-            <div className="text-lg font-semibold text-dark dark:text-white">
+            <div className="text-xl md:text-2xl font-semibold text-dark dark:text-white leading-tight">
               {c.value || c.label}
             </div>
           )}
           {c.description ? (
-            <div className="mt-2 text-xs text-dark/50 dark:text-white/50 leading-snug whitespace-pre-line">
+            <div className="mt-2.5 text-sm text-dark/55 dark:text-white/55 leading-snug whitespace-pre-line">
               {c.description}
             </div>
           ) : null}
@@ -137,27 +137,27 @@ function HighlightCardsDark({
   const textAlign = align === "center" ? "text-center" : "";
   return (
     <div
-      className={`grid grid-cols-2 gap-3 max-w-2xl w-full ${
+      className={`grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 max-w-2xl w-full ${
         align === "center" ? "mx-auto" : ""
       }`}
     >
       {cards.map((c, idx) => (
         <div
           key={`${c.label}-${c.value}-${idx}`}
-          className={`rounded-xl border border-white/20 bg-white/10 p-3 ${textAlign}`}
+          className={`rounded-2xl border border-white/20 bg-white/10 p-4 md:p-5 ${textAlign}`}
         >
           {c.value && c.label ? (
             <>
-              <div className="text-lg font-semibold text-white">{c.value}</div>
-              <div className="text-xs text-white/60">{c.label}</div>
+              <div className="text-xl md:text-2xl font-semibold text-white leading-tight">{c.value}</div>
+              <div className="mt-1 text-sm text-white/65">{c.label}</div>
             </>
           ) : (
-            <div className="text-lg font-semibold text-white">
+            <div className="text-xl md:text-2xl font-semibold text-white leading-tight">
               {c.value || c.label}
             </div>
           )}
           {c.description ? (
-            <div className="mt-2 text-xs text-white/50 leading-snug whitespace-pre-line">
+            <div className="mt-2.5 text-sm text-white/55 leading-snug whitespace-pre-line">
               {c.description}
             </div>
           ) : null}
@@ -284,16 +284,11 @@ function MarketingIntro({
         </p>
       ) : null}
       {ctaLabel && ctaHref ? (
-        <Link
+        <SectionCtaLink
           href={href}
-          className={
-            isDark
-              ? "bg-white py-4 px-8 rounded-full text-dark hover:bg-primary hover:text-white duration-300 w-fit"
-              : "bg-primary py-4 px-8 rounded-full text-white hover:bg-dark duration-300 w-fit"
-          }
-        >
-          {ctaLabel}
-        </Link>
+          label={ctaLabel}
+          variant={isDark ? "light" : "primary"}
+        />
       ) : null}
     </div>
   );
@@ -766,12 +761,10 @@ function GroupedVariant({
   const ctaBlock =
     data.ctaLabel && data.ctaHref ? (
       <div>
-        <Link
+        <SectionCtaLink
           href={resolveLocaleHref(data.ctaHref ?? "", locale)}
-          className="inline-flex bg-primary py-4 px-8 rounded-full text-white hover:bg-dark duration-300"
-        >
-          {data.ctaLabel}
-        </Link>
+          label={data.ctaLabel}
+        />
       </div>
     ) : null;
 

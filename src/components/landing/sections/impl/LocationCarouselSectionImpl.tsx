@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { SectionHeader } from "@/components/landing/sectionPrimitives";
+import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { CityCard, LocationCarouselCard } from "@/lib/sanity/cityAdapter";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { CitiesCarouselClient } from "./CitiesCarouselClient";
@@ -55,11 +54,11 @@ const Cities: React.FC<{
   if (cards.length === 0) return null;
 
   return (
-    <section className="relative overflow-hidden py-12 md:py-16">
-      <div className="absolute left-0 top-0">
+    <section className="relative overflow-hidden py-16 md:py-24">
+      <div className="absolute left-0 top-0" aria-hidden>
         <Image
           src="/images/categories/Vector.svg"
-          alt="vector"
+          alt=""
           width={800}
           height={1050}
           className="dark:hidden"
@@ -67,7 +66,7 @@ const Cities: React.FC<{
         />
         <Image
           src="/images/categories/Vector-dark.svg"
-          alt="vector"
+          alt=""
           width={800}
           height={1050}
           className="hidden dark:block"
@@ -87,12 +86,9 @@ const Cities: React.FC<{
               subtitleClassName="text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0"
             />
             {ctaLabel && href ? (
-              <Link
-                href={href}
-                className="py-4 px-8 bg-primary text-base leading-4 block w-fit text-white rounded-full font-semibold mt-8 hover:bg-dark duration-300"
-              >
-                {ctaLabel}
-              </Link>
+              <div className="mt-8">
+                <SectionCtaLink href={href} label={ctaLabel} />
+              </div>
             ) : null}
           </div>
           <div className="relative -mx-4 px-4 lg:-mx-12 lg:px-12">
