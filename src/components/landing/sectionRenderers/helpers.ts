@@ -1,5 +1,5 @@
-import type { FaqData } from '@/components/Home/FAQs'
-import type { SeoTextData } from '@/components/Home/SeoText'
+import type { FaqData } from '@/components/landing/sections/impl/FaqSectionImpl'
+import type { SeoTextData } from '@/components/landing/sections/impl/SeoTextSectionImpl'
 import type { PortableTextBlock } from '@portabletext/types'
 import { resolveLocalizedContent, resolveLocalizedString } from '@/lib/sanity/localized'
 import type { LandingPageDoc, LandingSectionBase } from './types'

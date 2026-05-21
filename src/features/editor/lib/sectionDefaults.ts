@@ -1,0 +1,88 @@
+import type { EditorSection } from '../state/types';
+
+/**
+ * Section types the editor is allowed to insert.
+ * 1:1 with the registry at `src/components/landing/sectionRenderers/registry.tsx`.
+ * Extend when the CMS gains a new landing section type.
+ */
+export const ALLOWED_SECTION_TYPES = [
+  'heroSection',
+  'propertyCarouselSection',
+  'locationCarouselSection',
+  'landingCarouselSection',
+  'propertyTypesSection',
+  'seoTextSection',
+  'faqSection',
+  'articlesSection',
+  'districtsComparisonSection',
+  'linkedGallerySection',
+  'landingCollectionSection',
+  'investorLogosSection',
+  'marketingContentSection',
+  'ctaSection',
+] as const;
+
+export type AllowedSectionType = (typeof ALLOWED_SECTION_TYPES)[number];
+
+export function isAllowedSectionType(t: unknown): t is AllowedSectionType {
+  return typeof t === 'string' && (ALLOWED_SECTION_TYPES as readonly string[]).includes(t);
+}
+
+/** Friendly labels used in the add-section chooser and inspector. */
+export const SECTION_LABELS: Record<AllowedSectionType, string> = {
+  heroSection: 'Hero',
+  propertyCarouselSection: 'Property carousel',
+  locationCarouselSection: 'Cities carousel',
+  landingCarouselSection: 'Landings carousel',
+  propertyTypesSection: 'Property types',
+  seoTextSection: 'SEO text',
+  faqSection: 'FAQ',
+  articlesSection: 'Blog articles',
+  districtsComparisonSection: 'Districts comparison',
+  linkedGallerySection: 'Linked gallery',
+  landingCollectionSection: 'Landing collection',
+  investorLogosSection: 'Investor logos',
+  marketingContentSection: 'Marketing content',
+  ctaSection: 'CTA',
+};
+
+/**
+ * Generates a Sanity-style array item key — 12 hex chars, same shape Studio emits.
+ * Avoids any crypto API that is not available in all runtimes.
+ */
+export function generateSectionKey(): string {
+  const bytes = new Uint8Array(6);
+  if (typeof crypto !== 'undefined' && 'getRandomValues' in crypto) {
+    crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  let out = '';
+  for (const b of bytes) out += b.toString(16).padStart(2, '0');
+  return out;
+}
+
+/**
+ * Safe minimal body for an inserted section. Only `_type` is guaranteed —
+ * everything else is optional in Studio so the editor creates near-empty
+ * sections that the content team fills in after save.
+ */
+export function createSectionDefaults(type: AllowedSectionType): EditorSection {
+  const base: EditorSection = {
+    _key: generateSectionKey(),
+    _type: type,
+  };
+
+  // Type-specific hints kept deliberately tiny. Anything richer belongs in
+  // Studio where localization + references are first-class.
+  switch (type) {
+    case 'seoTextSection':
+      return { ...base, content: 'New SEO text — edit in Sanity Studio.' };
+    case 'ctaSection':
+      return { ...base, title: 'New CTA' };
+    case 'heroSection':
+      return { ...base, title: 'New hero' };
+    default:
+      return base;
+  }
+}

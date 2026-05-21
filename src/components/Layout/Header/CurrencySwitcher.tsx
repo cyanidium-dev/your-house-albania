@@ -19,6 +19,12 @@ export default function CurrencySwitcher() {
   const handleSelect = (newCurrency: string) => {
     setCurrency(newCurrency as never)
     setOpen(false)
+    // Persist currency in URL so links can be shared with a specific currency
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      params.set('currency', newCurrency)
+      window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
+    }
   }
 
   return (

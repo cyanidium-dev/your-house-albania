@@ -112,13 +112,13 @@ function PropertyCard({
   const badgeClass = (() => {
     switch (marketingBadge?.type) {
       case 'premium':
-        return 'bg-yellow-400/80 text-black'
+        return 'bg-yellow-400 text-black ring-1 ring-yellow-500/50'
       case 'top':
-        return 'bg-primary/80 text-white'
+        return 'bg-primary text-white ring-1 ring-primary/40'
       case 'sale':
-        return 'bg-red-500/80 text-white'
+        return 'bg-red-500 text-white ring-1 ring-red-600/40'
       default:
-        return 'bg-black/70 text-white'
+        return 'bg-dark text-white'
     }
   })()
 
@@ -217,8 +217,8 @@ function PropertyCard({
     !isSmall && !isList && 'gap-1.5 text-sm mobile:text-base'
   )
 
-  const iconSize = isList ? 16 : isSmall ? 14 : 20
-  const badgeIconSize = isList || isSmall ? 12 : 14
+  const iconSize = isList ? 18 : isSmall ? 16 : 20
+  const badgeIconSize = isList || isSmall ? 13 : 14
 
   const basePriceEur =
     typeof price === 'number'
@@ -227,6 +227,16 @@ function PropertyCard({
   const formattedPrice =
     Number.isFinite(basePriceEur)
       ? formatMoney(convertFromBaseEur(basePriceEur as number, activeCurrency, rates), activeCurrency, locale)
+      : ''
+
+  const numericArea = typeof area === 'number' ? area : NaN
+  const pricePerSqm =
+    Number.isFinite(basePriceEur) && Number.isFinite(numericArea) && numericArea > 0
+      ? Math.round((basePriceEur as number) / numericArea)
+      : null
+  const formattedPricePerSqm =
+    pricePerSqm !== null
+      ? `${formatMoney(convertFromBaseEur(pricePerSqm, activeCurrency, rates), activeCurrency, locale)} / m²`
       : ''
 
   const typeLine = propertyType || ''
@@ -305,10 +315,15 @@ function PropertyCard({
           isList && 'justify-start gap-2 sm:gap-3 flex-wrap'
         )}
       >
-        <div className="min-w-0">
+        <div className="min-w-0 flex items-center gap-2 flex-wrap">
           {formattedPrice && (
             <span className={priceClass}>
               {formattedPrice}
+            </span>
+          )}
+          {isLarge && formattedPricePerSqm && (
+            <span className="text-xs text-dark/55 dark:text-white/55 font-medium whitespace-nowrap">
+              {formattedPricePerSqm}
             </span>
           )}
         </div>
@@ -602,6 +617,11 @@ function PropertyCard({
                 <div className="flex items-center gap-2 flex-nowrap sm:flex-wrap min-w-0 overflow-hidden">
                   {formattedPrice && (
                     <span className={priceClass}>{formattedPrice}</span>
+                  )}
+                  {formattedPricePerSqm && (
+                    <span className="hidden sm:inline text-xs text-dark/55 dark:text-white/55 font-medium whitespace-nowrap">
+                      {formattedPricePerSqm}
+                    </span>
                   )}
                   {status && (
                     <span className="inline-flex items-center justify-center rounded-full text-xs px-3 h-7 leading-none border border-primary/80 text-primary bg-primary/5">

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 export type SectionCtaLinkProps = {
   href: string
   label: string
-  variant?: 'primary' | 'light' | 'dark'
+  variant?: 'primary' | 'secondary' | 'light' | 'dark' | 'onDark'
   className?: string
   ariaLabel?: string
   /** Append trailing arrow. Defaults to true. */
@@ -15,8 +15,7 @@ export type SectionCtaLinkProps = {
 
 /**
  * Shared CTA link used across landing section headers/footers.
- * Normalizes padding, radius, hover, and focus-visible ring
- * so every section has a consistent affordance.
+ * One radius, one height, one focus ring across the whole site.
  */
 export function SectionCtaLink({
   href,
@@ -27,16 +26,20 @@ export function SectionCtaLink({
   showArrow = true,
 }: SectionCtaLinkProps) {
   const base =
-    'inline-flex items-center gap-2 py-4 px-8 rounded-full text-base font-semibold duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+    'group/cta inline-flex items-center justify-center gap-2 h-11 px-8 rounded-full text-base font-semibold transition-colors duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent w-fit'
   const styles: Record<NonNullable<SectionCtaLinkProps['variant']>, string> = {
     primary: 'bg-primary text-white hover:bg-dark focus-visible:ring-primary/50',
+    secondary:
+      'bg-transparent border border-dark/15 text-dark hover:bg-dark/5 dark:border-white/25 dark:text-white dark:hover:bg-white/10 focus-visible:ring-primary/40',
     light: 'bg-white text-dark hover:bg-primary hover:text-white focus-visible:ring-white/60',
     dark: 'bg-dark text-white hover:bg-primary focus-visible:ring-dark/50',
+    onDark:
+      'bg-transparent border border-white/40 text-white hover:bg-white/10 focus-visible:ring-white/60',
   }
   return (
     <Link
       href={href}
-      className={cn(base, styles[variant], 'w-fit', className)}
+      className={cn(base, styles[variant], className)}
       aria-label={ariaLabel ?? label}
     >
       <span className="truncate">{label}</span>

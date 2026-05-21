@@ -244,6 +244,8 @@ async function PropertiesListing({
             locale={locale}
             totalPages={totalPages}
             currentPage={currentPage}
+            totalCount={totalItems}
+            pageSize={pageSize}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (

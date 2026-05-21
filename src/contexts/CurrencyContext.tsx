@@ -84,8 +84,10 @@ export function CurrencyProvider({
   const validCurrenciesKey = validCurrencies.join(',')
   React.useEffect(() => {
     if (typeof window === 'undefined') return
+    // URL param takes priority over localStorage (enables shareable currency links)
+    const fromUrl = new URLSearchParams(window.location.search).get('currency')?.trim().toUpperCase() ?? null
     const fromStorage = window.localStorage.getItem(STORAGE_KEY)?.trim().toUpperCase() ?? null
-    const next = resolveCurrency(validCurrencies, fromStorage)
+    const next = resolveCurrency(validCurrencies, fromUrl ?? fromStorage)
     setCurrencyState(next)
     // eslint-disable-next-line react-hooks/exhaustive-deps -- validCurrenciesKey captures list changes
   }, [validCurrenciesKey])

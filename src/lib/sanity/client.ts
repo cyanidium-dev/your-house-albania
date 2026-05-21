@@ -1406,7 +1406,7 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
 }
 
 /** Projection for landing page sections with asset/ref dereferencing. */
-const landingPageSectionsProjection = `{
+export const landingPageSectionsProjection = `{
   _key,
   _type,
   title,

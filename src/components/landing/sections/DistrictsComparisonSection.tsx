@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { catalogFilterPath } from '@/lib/routes/catalog'
+import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'
 
 type District = {
   _id?: string
@@ -63,11 +64,8 @@ function CtaButton({
   variant: 'primary' | 'secondary'
 }) {
   const resolved = resolveLocaleHref(href, locale)
-  const primaryClass =
-    'inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-medium text-white hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
-  const secondaryClass =
-    'inline-flex items-center justify-center gap-2 rounded-xl border border-dark/15 bg-transparent px-6 py-3 text-base font-medium text-dark hover:bg-dark/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
-  const className = variant === 'primary' ? primaryClass : secondaryClass
+  const v: BrandButtonVariant = variant === 'primary' ? 'primary' : 'secondary'
+  const className = brandButtonClass(v)
 
   if (isExternalHttp(resolved)) {
     return (
@@ -140,28 +138,32 @@ export function DistrictsComparisonSection({
   if (!hasTable && !hasDistricts) return null
 
   return (
-    <section className="py-12 md:py-16">
+    <section className="py-16 md:py-24">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {(title || subtitle) && (
-          <div className="mb-10">
+          <div className="mb-10 max-w-3xl">
             {title ? (
-              <h2 className="lg:text-52 text-40 font-medium dark:text-white">{title}</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-52 font-medium text-dark dark:text-white leading-[1.15]">{title}</h2>
             ) : null}
             {subtitle ? (
-              <p className="text-dark/50 dark:text-white/50 text-xm mt-2 whitespace-pre-line">{subtitle}</p>
+              <p className="text-dark/55 dark:text-white/55 text-base sm:text-lg mt-3 whitespace-pre-line leading-relaxed">{subtitle}</p>
             ) : null}
           </div>
         )}
 
         {hasTable ? (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-dark/10 dark:border-white/20 min-w-[400px]">
-              <thead>
+          <div className="overflow-x-auto rounded-2xl border border-dark/10 dark:border-white/15">
+            <table className="w-full border-collapse min-w-[640px] text-left">
+              <thead className="bg-dark/[0.04] dark:bg-white/5">
                 <tr>
                   {headings.map((h, i) => (
                     <th
                       key={i}
-                      className="border border-dark/10 dark:border-white/20 px-4 py-3 text-left text-dark dark:text-white font-medium"
+                      className={`px-4 sm:px-5 py-3.5 text-dark dark:text-white font-semibold text-sm sm:text-base border-b border-dark/10 dark:border-white/15 ${
+                        i === 0
+                          ? 'sticky left-0 z-10 bg-dark/[0.04] dark:bg-[#1f292d] min-w-[10rem]'
+                          : ''
+                      }`}
                     >
                       {resolveCell(h, locale)}
                     </th>
@@ -170,11 +172,18 @@ export function DistrictsComparisonSection({
               </thead>
               <tbody>
                 {rows.map((row, ri) => (
-                  <tr key={ri}>
+                  <tr
+                    key={ri}
+                    className="odd:bg-transparent even:bg-dark/[0.02] dark:even:bg-white/[0.03]"
+                  >
                     {(row.cells ?? []).map((cell, ci) => (
                       <td
                         key={ci}
-                        className="border border-dark/10 dark:border-white/20 px-4 py-3 text-dark/80 dark:text-white/80 text-sm"
+                        className={`px-4 sm:px-5 py-3.5 text-dark/85 dark:text-white/85 text-sm sm:text-base border-t border-dark/5 dark:border-white/10 ${
+                          ci === 0
+                            ? 'sticky left-0 z-10 bg-white dark:bg-[#172023] font-medium text-dark dark:text-white'
+                            : ''
+                        }`}
                       >
                         {resolveCell(cell, locale)}
                       </td>

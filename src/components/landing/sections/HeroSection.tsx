@@ -1,8 +1,6 @@
 import * as React from "react";
-import Hero from "@/components/Home/Hero";
+import Hero from "@/components/landing/sections/impl/HeroSectionImpl";
 
-export async function HeroSection(props: React.ComponentProps<typeof Hero> & { breadcrumb?: React.ReactNode }) {
-  const { breadcrumb, ...heroProps } = props;
-  return <Hero {...heroProps} breadcrumb={breadcrumb} />;
+export async function HeroSection(props: React.ComponentProps<typeof Hero>) {
+  return <Hero {...props} />;
 }
-

@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
-import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
@@ -50,6 +49,8 @@ export type CatalogBodyClientProps = {
   locale: string;
   totalPages: number;
   currentPage: number;
+  totalCount: number;
+  pageSize: number;
 };
 
 type LayoutTier = "mobile" | "md" | "xl";
@@ -143,6 +144,8 @@ export function CatalogBodyClient({
   locale,
   totalPages,
   currentPage,
+  totalCount,
+  pageSize,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
   const { formatFromEur } = useCurrency();
@@ -155,6 +158,72 @@ export function CatalogBodyClient({
   const prevActiveSlugRef = React.useRef<string | null>(null);
   const mapCardRef = React.useRef<HTMLDivElement | null>(null);
   const previewRef = React.useRef<HTMLDivElement | null>(null);
+
+  // ── Infinite scroll state ───────────────────────────────────────────────
+  const [allItems, setAllItems] = React.useState<PropertyHomes[]>(pageItems);
+  const [nextPage, setNextPage] = React.useState(currentPage + 1);
+  const [hasMore, setHasMore] = React.useState(currentPage < totalPages);
+  const [isLoadingMore, setIsLoadingMore] = React.useState(false);
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  // Track the filter key so we reset when filters change (URL changes → SSR re-render → new props)
+  const filterKeyRef = React.useRef<string>('');
+
+  // Reset infinite scroll when SSR re-renders with new pageItems (filter change)
+  React.useEffect(() => {
+    const filterKey = JSON.stringify({ pageItems: pageItems.map(p => p.slug) });
+    if (filterKey !== filterKeyRef.current) {
+      filterKeyRef.current = filterKey;
+      setAllItems(pageItems);
+      setNextPage(currentPage + 1);
+      setHasMore(currentPage < totalPages);
+    }
+  }, [pageItems, currentPage, totalPages]);
+
+  const loadMore = React.useCallback(async () => {
+    if (isLoadingMore || !hasMore) return;
+    setIsLoadingMore(true);
+    try {
+      const params = new URLSearchParams(
+        typeof window !== 'undefined' ? window.location.search : ''
+      );
+      params.set('page', String(nextPage));
+      params.set('locale', locale);
+      const res = await fetch(`/api/catalog/properties?${params.toString()}`);
+      if (!res.ok) throw new Error('fetch failed');
+      const data: { items: PropertyHomes[]; totalCount: number } = await res.json();
+      const newItems = data.items ?? [];
+      if (newItems.length === 0) {
+        setHasMore(false);
+      } else {
+        setAllItems(prev => {
+          const existingSlugs = new Set(prev.map(p => p.slug));
+          const deduped = newItems.filter(p => !existingSlugs.has(p.slug));
+          return [...prev, ...deduped];
+        });
+        const loadedSoFar = (nextPage) * pageSize;
+        setHasMore(loadedSoFar < totalCount);
+        setNextPage(n => n + 1);
+      }
+    } catch {
+      // silent — user can scroll again
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [isLoadingMore, hasMore, nextPage, locale, pageSize, totalCount]);
+
+  // IntersectionObserver: trigger loadMore when sentinel enters viewport
+  React.useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) loadMore();
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [loadMore]);
 
   const handleActiveSlugFromMap = React.useCallback(
     (slug: string) => {
@@ -184,7 +253,7 @@ export function CatalogBodyClient({
 
   React.useEffect(() => {
     if (!activeSlug) return
-    const activeItem = pageItems.find((p) => p.slug === activeSlug)
+    const activeItem = allItems.find((p) => p.slug === activeSlug)
     if (!activeItem) {
       setActiveSlug(null)
       return
@@ -199,20 +268,19 @@ export function CatalogBodyClient({
       Number.isFinite(lng)
 
     if (!hasValidCoords) setActiveSlug(null)
-  }, [activeSlug, pageItems])
+  }, [activeSlug, allItems])
 
   React.useEffect(() => {
     if (activeSlug == null) {
-      // If selection was cleared (filter/pagination/invalid coords), don't scroll later.
       shouldScrollToActiveRef.current = false
     }
   }, [activeSlug])
 
   React.useEffect(() => {
     if (!previewSlug) return
-    const exists = pageItems.some((p) => p.slug === previewSlug)
+    const exists = allItems.some((p) => p.slug === previewSlug)
     if (!exists) setPreviewSlug(null)
-  }, [previewSlug, pageItems])
+  }, [previewSlug, allItems])
 
   React.useEffect(() => {
     const onPointerDown = (ev: PointerEvent) => {
@@ -230,10 +298,8 @@ export function CatalogBodyClient({
   React.useEffect(() => {
     if (!shouldScrollToActiveRef.current) return
     if (!activeSlug) return
-    // Avoid scrolling on pagination/filter re-renders when activeSlug didn't change.
     if (prevActiveSlugRef.current === activeSlug) return
-    // Only scroll if the active card exists in current results.
-    const activeExists = pageItems.some((p) => p.slug === activeSlug)
+    const activeExists = allItems.some((p) => p.slug === activeSlug)
     if (!activeExists) {
       shouldScrollToActiveRef.current = false
       return
@@ -245,7 +311,7 @@ export function CatalogBodyClient({
     }
     shouldScrollToActiveRef.current = false
     prevActiveSlugRef.current = activeSlug
-  }, [activeSlug, pageItems])
+  }, [activeSlug, allItems])
 
   React.useEffect(() => {
     prevActiveSlugRef.current = activeSlug
@@ -253,22 +319,22 @@ export function CatalogBodyClient({
 
   React.useEffect(() => {
     if (process.env.NODE_ENV !== 'development') return
-    const activeItem = activeSlug ? pageItems.find((p) => p.slug === activeSlug) : null
+    const activeItem = activeSlug ? allItems.find((p) => p.slug === activeSlug) : null
     const lat = activeItem?.coordinates?.lat
     const lng = activeItem?.coordinates?.lng
     const activeHasCoords =
       typeof lat === 'number' && Number.isFinite(lat) && typeof lng === 'number' && Number.isFinite(lng)
 
     console.log('[CatalogMap][debug]', {
-      pageItemsCount: pageItems.length,
+      allItemsCount: allItems.length,
       activeSlug,
       activeHasCoords,
     })
-  }, [pageItems, activeSlug])
+  }, [allItems, activeSlug])
 
   const mapItems = React.useMemo(
     () =>
-      pageItems.map((p) => ({
+      allItems.map((p) => ({
         slug: p.slug,
         price: p.price,
         currency: p.currency,
@@ -276,7 +342,7 @@ export function CatalogBodyClient({
         status: p.status,
         coordinates: p.coordinates,
       })),
-    [pageItems]
+    [allItems]
   )
 
   // List: fixed height. Grid modes: fixed on mobile; md+ use h-full so map matches row height.
@@ -303,12 +369,12 @@ export function CatalogBodyClient({
 
   const composedItems = React.useMemo(() => {
     const slots = getBannerSlots(viewMode, layoutTier);
-    return composeCatalogFlowItems({ pageItems, banners, slots });
-  }, [viewMode, layoutTier, pageItems, banners]);
+    return composeCatalogFlowItems({ pageItems: allItems, banners, slots });
+  }, [viewMode, layoutTier, allItems, banners]);
 
   const previewItem = React.useMemo(
-    () => (previewSlug ? pageItems.find((p) => p.slug === previewSlug) ?? null : null),
-    [previewSlug, pageItems]
+    () => (previewSlug ? allItems.find((p) => p.slug === previewSlug) ?? null : null),
+    [previewSlug, allItems]
   )
 
   const previewHref = React.useMemo(() => {
@@ -459,12 +525,23 @@ export function CatalogBodyClient({
             );
           })}
         </div>
-        {pageItems.length === 0 ? (
+        {allItems.length === 0 ? (
           <CatalogEmptyState locale={locale} />
         ) : (
-          totalPages > 1 && (
-            <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
-          )
+          <>
+            {/* Sentinel for IntersectionObserver — sits below the last card */}
+            <div ref={sentinelRef} className="h-1" aria-hidden />
+            {isLoadingMore && (
+              <div className="mt-8 flex justify-center">
+                <div className="flex items-center gap-3 text-sm text-dark/50 dark:text-white/40">
+                  <svg className="h-5 w-5 animate-spin text-primary" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </>

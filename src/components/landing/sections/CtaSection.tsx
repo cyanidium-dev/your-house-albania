@@ -2,6 +2,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
+import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'
 
 export type CtaSectionProps = {
   locale: string
@@ -33,11 +34,8 @@ export function CtaButton({
   variant: 'primary' | 'secondary'
 }) {
   const resolved = resolveLocaleHref(href, locale)
-  const primaryClass =
-    'inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
-  const secondaryClass =
-    'inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold border-2 border-dark/20 bg-transparent text-dark hover:bg-dark/5 dark:border-white/25 dark:text-white dark:hover:bg-white/10 transition-colors duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40'
-  const className = variant === 'primary' ? primaryClass : secondaryClass
+  const v: BrandButtonVariant = variant === 'primary' ? 'primary' : 'secondary'
+  const className = brandButtonClass(v)
 
   if (isExternalHttp(resolved)) {
     return (
@@ -87,7 +85,7 @@ export function CtaSection({
             </p>
           ) : null}
           {title?.trim() ? (
-            <h2 className="text-dark dark:text-white text-3xl md:text-4xl font-medium leading-[1.2]">
+            <h2 className="text-dark dark:text-white text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.15]">
               {title}
             </h2>
           ) : null}
