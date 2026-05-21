@@ -60,9 +60,21 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
   ],
   seoTextSection: [
     { path: ['title'], label: 'Heading', kind: 'textarea' },
+    { path: ['category'], label: 'Category chip', kind: 'text', hint: 'e.g. "Market analysis"' },
+    { path: ['author', 'name'], label: 'Author name', kind: 'text' },
+    { path: ['author', 'role'], label: 'Author role', kind: 'text', hint: 'e.g. "Head of analytics, Domlivo"' },
+    { path: ['pullQuote', 'text'], label: 'Pull quote text', kind: 'textarea' },
+    { path: ['pullQuote', 'author'], label: 'Pull quote attribution', kind: 'text' },
     { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
   ],
-  faqSection: [{ path: ['title'], label: 'Title', kind: 'textarea' }],
+  faqSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+    { path: ['callout', 'title'], label: 'Callout title', kind: 'text', hint: 'Sticky brand card title' },
+    { path: ['callout', 'subtitle'], label: 'Callout subtitle', kind: 'text' },
+    { path: ['callout', 'primaryCta', 'label'], label: 'Callout primary button', kind: 'text' },
+    { path: ['callout', 'secondaryCta', 'label'], label: 'Callout secondary button', kind: 'text' },
+  ],
   articlesSection: [
     { path: ['title'], label: 'Title', kind: 'textarea' },
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
@@ -94,7 +106,9 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
     { path: ['description'], label: 'Description', kind: 'textarea' },
     { path: ['supportingText'], label: 'Text below bullets', kind: 'textarea' },
-    { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
+    { path: ['cta', 'label'], label: 'Primary button', kind: 'text' },
+    { path: ['secondaryCta', 'label'], label: 'Secondary button', kind: 'text' },
+    { path: ['trustStripText'], label: 'Trust strip text', kind: 'text', hint: 'e.g. "10 240 realtors on the platform"' },
   ],
   ctaSection: [
     { path: ['eyebrow'], label: 'Eyebrow', kind: 'text' },

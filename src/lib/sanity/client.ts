@@ -1425,10 +1425,19 @@ export const landingPageSectionsProjection = `{
     href,
     question,
     answer,
+    tag,
+    cta,
     image {
       asset-> { url },
       alt
     }
+  },
+  "callout": callout {
+    title,
+    subtitle,
+    primaryCta,
+    secondaryCta,
+    secondaryIcon
   },
   posts,
   enabled,
@@ -1477,6 +1486,29 @@ export const landingPageSectionsProjection = `{
     }
   },
   benefits,
+  "benefitItems": benefitItems[] {
+    _key,
+    label,
+    iconKey
+  },
+  trustStripText,
+  category,
+  readingTimeMinutes,
+  "author": author {
+    name,
+    role,
+    initials,
+    "avatarUrl": avatar.asset->url
+  },
+  "stats": stats[] {
+    _key,
+    value,
+    label
+  },
+  "pullQuote": pullQuote {
+    text,
+    author
+  },
   highlightsDisplay,
   "highlightsCards": highlightsCards[] {
     _key,
@@ -1491,7 +1523,16 @@ export const landingPageSectionsProjection = `{
   secondaryImage { asset-> { url }, alt },
   imageMode,
   backgroundImage { asset-> { url }, alt },
-  "cities": cities[]-> { _id, title, "slug": slug.current, shortDescription, heroImage { asset-> { url }, alt, label }, "countrySlug": country->slug.current },
+  "cities": cities[]-> {
+    _id,
+    title,
+    "slug": slug.current,
+    shortDescription,
+    vibe,
+    heroImage { asset-> { url }, alt, label },
+    "countrySlug": country->slug.current,
+    "propertiesCount": count(*[_type=="property" && city._ref==^._id && isPublished==true])
+  },
   "resolvedManualItems": coalesce(
     manualItems[]-> {
       _id,
@@ -1499,9 +1540,15 @@ export const landingPageSectionsProjection = `{
       title,
       "slug": slug.current,
       shortDescription,
+      vibe,
       heroImage { asset-> { url }, alt, label },
       "countrySlug": country->slug.current,
-      "city": city-> { "slug": slug.current, "countrySlug": country->slug.current }
+      "city": city-> { "slug": slug.current, "countrySlug": country->slug.current },
+      "propertiesCount": select(
+        _type == "city" => count(*[_type=="property" && city._ref==^._id && isPublished==true]),
+        _type == "district" => count(*[_type=="property" && district._ref==^._id && isPublished==true]),
+        0
+      )
     },
     manualItems[] {
       _id,
@@ -1509,6 +1556,7 @@ export const landingPageSectionsProjection = `{
       title,
       "slug": slug.current,
       shortDescription,
+      vibe,
       heroImage { asset-> { url }, alt, label },
       "countrySlug": country->slug.current,
       "city": city-> { "slug": slug.current, "countrySlug": country->slug.current }

@@ -24,6 +24,6 @@ export const faqSectionHandler: SectionHandler = ({ locale, section }) => {
     })
   }
 
-  return <FaqSection key={section._key ?? 'faq'} faqData={faqData} />
+  return <FaqSection key={section._key ?? 'faq'} faqData={faqData} locale={locale} />
 }
 

@@ -14,6 +14,12 @@ export type MarketingHighlightCard = {
   description?: string;
 };
 
+/** Benefit row with optional Phosphor icon key (e.g. "check-circle", "users"). */
+export type MarketingBenefitItem = {
+  label: string;
+  iconKey?: string;
+};
+
 export type MarketingContentGroup = {
   groupTitle?: string;
   description?: string;
@@ -31,12 +37,19 @@ export type MarketingContentData = {
   subtitle?: string;
   description?: string;
   supportingText?: string;
+  /** Legacy plain text bullets — only used when `benefitItems` is empty. */
   benefits?: string[];
+  /** Preferred: bullets with explicit Phosphor icon keys. */
+  benefitItems?: MarketingBenefitItem[];
+  /** Optional trust line shown under CTAs (split layout). */
+  trustStripText?: string;
   /** Default `list` when omitted in CMS. */
   highlightsDisplay?: "list" | "cards";
   highlightCards?: MarketingHighlightCard[];
   ctaLabel?: string;
   ctaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
   mediaMode?: "none" | "fallback" | "custom";
   /** Large-screen column order when a media column exists (`split` / `grouped`). */
   mediaSide?: "left" | "right";
@@ -74,6 +87,69 @@ function LightBulletList({
         </li>
       ))}
     </ul>
+  );
+}
+
+function IconBulletList({
+  items,
+  theme,
+}: {
+  items: MarketingBenefitItem[];
+  theme: "light" | "dark";
+}) {
+  if (items.length === 0) return null;
+  const isDark = theme === "dark";
+  return (
+    <ul className="flex flex-col gap-3.5">
+      {items.map((b, i) => {
+        const iconName = `ph:${(b.iconKey || "check-circle").trim()}`;
+        return (
+          <li key={i} className="flex items-start gap-3">
+            <span
+              className={
+                "mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary"
+              }
+            >
+              <Icon icon={iconName} width={14} height={14} aria-hidden />
+            </span>
+            <span
+              className={
+                "text-[15px] leading-snug " +
+                (isDark ? "text-white/85" : "text-dark/85 dark:text-white/85")
+              }
+            >
+              {b.label}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function TrustStrip({ text, theme }: { text: string; theme: "light" | "dark" }) {
+  const isDark = theme === "dark";
+  return (
+    <div
+      className={
+        "flex items-center gap-2 text-xs " +
+        (isDark
+          ? "text-white/55"
+          : "text-dark/55 dark:text-white/55")
+      }
+    >
+      <span
+        className={
+          "inline-flex h-7 w-7 items-center justify-center rounded-full " +
+          (isDark
+            ? "bg-white/10 text-white/80"
+            : "bg-dark/[0.06] text-dark/70 dark:bg-white/10 dark:text-white/80")
+        }
+      >
+        <Icon icon="ph:users" width={14} height={14} />
+      </span>
+      <span>{text}</span>
+    </div>
   );
 }
 
@@ -173,11 +249,15 @@ type IntroProps = {
   subtitle?: string;
   description?: string;
   benefits?: string[];
+  benefitItems?: MarketingBenefitItem[];
   highlightsDisplay?: "list" | "cards";
   highlightCards?: MarketingHighlightCard[];
   supportingText?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
+  trustStripText?: string;
   locale: string;
   theme: "light" | "dark";
   align?: "start" | "center";
@@ -189,11 +269,15 @@ function MarketingIntro({
   subtitle,
   description,
   benefits,
+  benefitItems,
   highlightsDisplay = "list",
   highlightCards,
   supportingText,
   ctaLabel,
   ctaHref,
+  secondaryCtaLabel,
+  secondaryCtaHref,
+  trustStripText,
   locale,
   theme,
   align = "start",
@@ -204,11 +288,17 @@ function MarketingIntro({
   const flexAlign = align === "center" ? "items-center" : "";
 
   const bullets = benefits ?? [];
+  const rich = benefitItems ?? [];
   const useCards =
     highlightsDisplay === "cards" &&
     highlightCards &&
     highlightCards.length > 0;
-  const showBullets = !useCards && bullets.length > 0;
+  const useRichBullets = !useCards && rich.length > 0;
+  const showBullets = !useCards && !useRichBullets && bullets.length > 0;
+
+  const showSecondaryCta = Boolean(secondaryCtaLabel?.trim() && secondaryCtaHref?.trim());
+  const secondaryHref = showSecondaryCta ? resolveLocaleHref(secondaryCtaHref!, locale) : "";
+  const showTrustStrip = Boolean(trustStripText?.trim());
 
   return (
     <div className={`flex flex-col gap-6 ${flexAlign}`}>
@@ -268,6 +358,9 @@ function MarketingIntro({
       {useCards && theme === "dark" ? (
         <HighlightCardsDark cards={highlightCards!} align={align} />
       ) : null}
+      {useRichBullets ? (
+        <IconBulletList items={rich} theme={theme} />
+      ) : null}
       {showBullets && theme === "light" ? (
         <LightBulletList items={bullets} className="flex flex-col gap-3" />
       ) : null}
@@ -284,12 +377,29 @@ function MarketingIntro({
         </p>
       ) : null}
       {ctaLabel && ctaHref ? (
-        <SectionCtaLink
-          href={href}
-          label={ctaLabel}
-          variant={isDark ? "light" : "primary"}
-        />
+        <div className={`flex flex-wrap items-center gap-3 ${align === "center" ? "justify-center" : ""}`}>
+          <SectionCtaLink
+            href={href}
+            label={ctaLabel}
+            variant={isDark ? "light" : "primary"}
+          />
+          {showSecondaryCta ? (
+            <a
+              href={secondaryHref}
+              className={
+                "inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold transition-colors " +
+                (isDark
+                  ? "text-white/80 hover:text-white"
+                  : "text-dark/70 hover:text-dark dark:text-white/80 dark:hover:text-white")
+              }
+            >
+              {secondaryCtaLabel}
+              <Icon icon="ph:arrow-right" width={14} height={14} aria-hidden />
+            </a>
+          ) : null}
+        </div>
       ) : null}
+      {showTrustStrip ? <TrustStrip text={trustStripText!.trim()} theme={theme} /> : null}
     </div>
   );
 }
@@ -328,6 +438,10 @@ function SplitVariant({
               supportingText={data.supportingText}
               ctaLabel={data.ctaLabel}
               ctaHref={data.ctaHref}
+              secondaryCtaLabel={data.secondaryCtaLabel}
+              secondaryCtaHref={data.secondaryCtaHref}
+              benefitItems={data.benefitItems}
+              trustStripText={data.trustStripText}
             />
           </div>
         </div>
@@ -557,6 +671,10 @@ function SplitDarkVariant({
               supportingText={data.supportingText}
               ctaLabel={data.ctaLabel}
               ctaHref={data.ctaHref}
+              secondaryCtaLabel={data.secondaryCtaLabel}
+              secondaryCtaHref={data.secondaryCtaHref}
+              benefitItems={data.benefitItems}
+              trustStripText={data.trustStripText}
             />
           </div>
         </div>

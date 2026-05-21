@@ -42,6 +42,19 @@ export function resolveRichTextDataFromContent(
   return data
 }
 
+type LocalizedCtaShape = { href?: unknown; label?: unknown } | null | undefined
+
+function resolveLocalizedCta(
+  raw: LocalizedCtaShape,
+  locale: string,
+): { label: string; href: string } | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const href = typeof raw.href === 'string' ? raw.href.trim() : ''
+  const label = resolveLocalizedString(raw.label as never, locale)?.trim() || ''
+  if (!href || !label) return undefined
+  return { href, label }
+}
+
 export function resolveFaqDataFromSection(
   section: LandingSectionBase,
   locale: string,
@@ -49,7 +62,7 @@ export function resolveFaqDataFromSection(
   const rawItems = Array.isArray(section.items) ? section.items : []
   const itemsResolved = rawItems
     .map((item) => {
-      const it = item as { question?: unknown; answer?: unknown }
+      const it = item as { question?: unknown; answer?: unknown; tag?: unknown }
       const q = resolveLocalizedString(it.question as never, locale)
       const aRaw = it.answer
       const aText =
@@ -58,22 +71,53 @@ export function resolveFaqDataFromSection(
           : ''
       const aRich = Array.isArray(aRaw) ? (resolveLocalizedContent(aRaw as never, locale) as PortableTextBlock[]) : null
       const answer: string | PortableTextBlock[] = aRich && aRich.length ? aRich : aText
+      const tag = resolveLocalizedString(it.tag as never, locale)?.trim() || undefined
       if (q || (typeof answer === 'string' ? answer : answer.length)) {
-        return { question: q || '', answer }
+        return { question: q || '', answer, ...(tag ? { tag } : {}) }
       }
       return null
     })
-    .filter((x): x is { question: string; answer: string | PortableTextBlock[] } => x !== null)
+    .filter((x): x is { question: string; answer: string | PortableTextBlock[]; tag?: string } => x !== null)
 
   const imageModeRaw = (section as { imageMode?: string })?.imageMode
   const imageMode: 'withImage' | 'withoutImage' | undefined =
     imageModeRaw === 'withImage' || imageModeRaw === 'withoutImage' ? imageModeRaw : undefined
 
+  // Callout (optional sticky brand card next to accordion).
+  const calloutRaw = (section as { callout?: unknown }).callout
+  let callout: NonNullable<FaqData>['callout'] = undefined
+  if (calloutRaw && typeof calloutRaw === 'object') {
+    const c = calloutRaw as {
+      title?: unknown
+      subtitle?: unknown
+      primaryCta?: LocalizedCtaShape
+      secondaryCta?: LocalizedCtaShape
+      secondaryIcon?: unknown
+    }
+    const title = resolveLocalizedString(c.title as never, locale)?.trim() || undefined
+    const subtitle = resolveLocalizedString(c.subtitle as never, locale)?.trim() || undefined
+    const primary = resolveLocalizedCta(c.primaryCta, locale)
+    const secondary = resolveLocalizedCta(c.secondaryCta, locale)
+    const secondaryIcon = typeof c.secondaryIcon === 'string' ? c.secondaryIcon.trim() || undefined : undefined
+    if (title || subtitle || primary || secondary) {
+      callout = {
+        ...(title ? { title } : {}),
+        ...(subtitle ? { subtitle } : {}),
+        ...(primary ? { primary } : {}),
+        ...(secondary
+          ? { secondary: { ...secondary, ...(secondaryIcon ? { icon: secondaryIcon } : {}) } }
+          : {}),
+      }
+    }
+  }
+
   return itemsResolved.length > 0
     ? {
         title: resolveLocalizedString(section.title as never, locale) || undefined,
+        subtitle: resolveLocalizedString(section.subtitle as never, locale) || undefined,
         items: itemsResolved,
         imageMode,
+        ...(callout ? { callout } : {}),
       }
     : null
 }

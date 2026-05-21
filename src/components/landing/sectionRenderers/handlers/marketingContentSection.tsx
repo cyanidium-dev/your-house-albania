@@ -3,6 +3,7 @@ import { MarketingContentSection } from '@/components/landing/sections/Marketing
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { SectionHandler } from './types'
 import type {
+  MarketingBenefitItem,
   MarketingContentData,
   MarketingHighlightCard,
   MarketingVariant,
@@ -33,6 +34,19 @@ function resolveMarketingImages(raw: unknown, locale: string): Array<{ url: stri
     const altRaw = row.alt ?? row.image?.alt
     const alt = resolveLocalizedString(altRaw as never, locale) || undefined
     out.push({ url, alt })
+  }
+  return out
+}
+
+function resolveBenefitItems(raw: unknown, locale: string): MarketingBenefitItem[] {
+  if (!Array.isArray(raw)) return []
+  const out: MarketingBenefitItem[] = []
+  for (const row of raw) {
+    const r = row as { label?: unknown; iconKey?: unknown }
+    const label = resolveLocalizedString(r.label as never, locale)?.trim() || ''
+    if (!label) continue
+    const iconKey = typeof r.iconKey === 'string' && r.iconKey.trim() ? r.iconKey.trim() : undefined
+    out.push({ label, ...(iconKey ? { iconKey } : {}) })
   }
   return out
 }
@@ -69,6 +83,12 @@ export const marketingContentSectionHandler: SectionHandler = ({ locale, section
   const eyebrow = resolveLocalizedString((section as { eyebrow?: unknown }).eyebrow as never, locale) || undefined
   const supportingText = resolveLocalizedString((section as { supportingText?: unknown }).supportingText as never, locale) || undefined
   const benefitsResolved = resolveStringList(section.benefits, locale)
+  const benefitItemsResolved = resolveBenefitItems(
+    (section as { benefitItems?: unknown }).benefitItems,
+    locale,
+  )
+  const trustStripText =
+    resolveLocalizedString((section as { trustStripText?: unknown }).trustStripText as never, locale) || undefined
 
   const highlightsDisplayRaw = (section as { highlightsDisplay?: unknown }).highlightsDisplay
   const highlightsDisplay: 'list' | 'cards' = highlightsDisplayRaw === 'cards' ? 'cards' : 'list'
@@ -151,6 +171,14 @@ export const marketingContentSectionHandler: SectionHandler = ({ locale, section
     highlightCards: highlightCardsResolved.length > 0 ? highlightCardsResolved : undefined,
     ctaLabel: resolveLocalizedString(section.cta?.label as never, locale) || undefined,
     ctaHref: section.cta?.href,
+    secondaryCtaLabel:
+      resolveLocalizedString(
+        (section as { secondaryCta?: { label?: unknown } }).secondaryCta?.label as never,
+        locale,
+      ) || undefined,
+    secondaryCtaHref: (section as { secondaryCta?: { href?: string } }).secondaryCta?.href,
+    benefitItems: benefitItemsResolved.length > 0 ? benefitItemsResolved : undefined,
+    trustStripText,
     mediaMode,
     mediaSide,
     images: imagesResolved.length > 0 ? imagesResolved : undefined,

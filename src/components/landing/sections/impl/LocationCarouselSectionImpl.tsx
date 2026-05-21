@@ -2,7 +2,7 @@ import Image from "next/image";
 import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { CityCard, LocationCarouselCard } from "@/lib/sanity/cityAdapter";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
-import { CitiesCarouselClient } from "./CitiesCarouselClient";
+import { EntityCard } from "./EntityCard";
 import { catalogFilterPath, cityInfoPath } from "@/lib/routes/catalog";
 
 export type CitiesData = {
@@ -82,7 +82,7 @@ const Cities: React.FC<{
               title={title}
               subtitle={description}
               eyebrowRowClassName="gap-2.5"
-              titleClassName="text-2xl sm:text-3xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0"
+              titleClassName="text-3xl sm:text-4xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0"
               subtitleClassName="text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0"
             />
             {ctaLabel && href ? (
@@ -91,8 +91,20 @@ const Cities: React.FC<{
               </div>
             ) : null}
           </div>
-          <div className="relative -mx-4 px-4 lg:-mx-12 lg:px-12">
-            <CitiesCarouselClient cards={cards} />
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+            {cards.map((card) => (
+              <EntityCard
+                key={card._id ?? card.slug}
+                href={card.href}
+                title={card.title}
+                imageUrl={card.heroImageUrl}
+                shortDescription={card.shortDescription}
+                tag={card.vibe}
+                count={card.propertiesCount}
+                countLabel="properties"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              />
+            ))}
           </div>
         </div>
       </div>

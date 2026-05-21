@@ -12,6 +12,10 @@ export type CityCard = {
   heroImageUrl: string;
   /** Sanity `city.country->slug.current` */
   countrySlug?: string;
+  /** Short categorical tag (e.g. "Sea", "Business") — from city.vibe */
+  vibe?: string;
+  /** Live count of published properties in this city. */
+  propertiesCount?: number;
 };
 
 type SanityCity = {
@@ -22,6 +26,8 @@ type SanityCity = {
   shortDescription?: unknown;
   heroImageUrl?: string;
   heroImage?: { asset?: { url?: string } };
+  vibe?: unknown;
+  propertiesCount?: number;
 };
 
 export function mapSanityCityToCard(c: SanityCity, locale: string): CityCard {
@@ -34,6 +40,11 @@ export function mapSanityCityToCard(c: SanityCity, locale: string): CityCard {
     typeof c.countrySlug === 'string' && c.countrySlug.trim()
       ? c.countrySlug.trim().toLowerCase()
       : undefined;
+  const vibe = resolveLocalizedString(c.vibe as never, locale)?.trim() || undefined;
+  const propertiesCount =
+    typeof c.propertiesCount === 'number' && Number.isFinite(c.propertiesCount) && c.propertiesCount > 0
+      ? c.propertiesCount
+      : undefined;
   return {
     _id: c._id,
     title: resolveLocalizedString(c.title as never, locale) || '—',
@@ -41,6 +52,8 @@ export function mapSanityCityToCard(c: SanityCity, locale: string): CityCard {
     shortDescription: resolveLocalizedString(c.shortDescription as never, locale) || '',
     heroImageUrl: heroUrl,
     ...(rawCountry ? { countrySlug: rawCountry } : {}),
+    ...(vibe ? { vibe } : {}),
+    ...(propertiesCount !== undefined ? { propertiesCount } : {}),
   };
 }
 
@@ -70,6 +83,10 @@ export type LocationCarouselCard = {
   heroImageUrl: string;
   /** Resolved href for this item (city landing or district catalog). */
   href: string;
+  /** Short categorical tag (e.g. "Sea", "Business") — from `vibe`. */
+  vibe?: string;
+  /** Live count of published properties scoped to this city/district. */
+  propertiesCount?: number;
 };
 
 type ResolvedItem = {
@@ -83,6 +100,8 @@ type ResolvedItem = {
   /** Present when the manual item is a city document. */
   countrySlug?: string;
   city?: { slug?: string | { current?: string }; countrySlug?: string };
+  vibe?: unknown;
+  propertiesCount?: number;
 };
 
 function slugOf(x: unknown): string {
@@ -129,6 +148,13 @@ export function mapResolvedManualItemsToCards(
         : linkLanding
           ? cityInfoPath(locale, slug, countryForPath)
           : catalogFilterPath({ locale, city: slug, country: countryForPath });
+    const vibe = resolveLocalizedString(item.vibe as never, locale)?.trim() || undefined;
+    const propertiesCount =
+      typeof item.propertiesCount === 'number' &&
+      Number.isFinite(item.propertiesCount) &&
+      item.propertiesCount > 0
+        ? item.propertiesCount
+        : undefined;
     result.push({
       _id: item._id,
       title,
@@ -136,6 +162,8 @@ export function mapResolvedManualItemsToCards(
       shortDescription,
       heroImageUrl: heroUrl,
       href,
+      ...(vibe ? { vibe } : {}),
+      ...(propertiesCount !== undefined ? { propertiesCount } : {}),
     });
   }
   return result;

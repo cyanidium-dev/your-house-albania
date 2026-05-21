@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
 import { Icon } from '@iconify/react';
@@ -8,39 +9,56 @@ export type SeoTextData =
   | { content: unknown[] | string; isPlainText: boolean }
   | null;
 
-const components: PortableTextComponents = {
+export type SeoStat = { value: string; label: string };
+export type SeoAuthor = {
+  name?: string;
+  role?: string;
+  initials?: string;
+  avatarUrl?: string;
+};
+export type SeoPullQuote = { text: string; author?: string };
+
+const READ_LABEL_BY_LOCALE: Record<string, string> = {
+  en: 'min read',
+  uk: 'хв читання',
+  ru: 'мин чтения',
+  sq: 'min lexim',
+  it: 'min di lettura',
+};
+
+const portableComponents: PortableTextComponents = {
   block: {
     h1: ({ children }) => (
-      <h1 className="text-dark dark:text-white text-2xl sm:text-3xl lg:text-4xl font-medium leading-[1.25] mt-8 first:mt-0 mb-2">
+      <h1 className="text-dark dark:text-white text-3xl sm:text-4xl font-medium leading-[1.2] mt-10 first:mt-0 mb-3">
         {children}
       </h1>
     ),
     h2: ({ children }) => (
-      <h2 className="text-dark dark:text-white text-xl sm:text-2xl lg:text-3xl font-medium leading-[1.3] mt-6 first:mt-0 mb-1">
+      <h2 className="text-dark dark:text-white text-2xl lg:text-[28px] font-semibold tracking-tight leading-[1.25] mt-10 first:mt-0 mb-2">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-dark dark:text-white text-lg sm:text-xl font-medium leading-tight mt-5 first:mt-0 mb-1">
+      <h3 className="text-dark dark:text-white text-xl lg:text-2xl font-semibold leading-tight mt-8 first:mt-0 mb-1">
         {children}
       </h3>
     ),
     normal: ({ children }) => (
-      <p className="text-dark/75 dark:text-white/75 text-base sm:text-lg leading-[1.7] mt-4 first:mt-0">
+      <p className="text-dark/72 dark:text-white/72 text-[17px] leading-relaxed mt-5 first:mt-0">
         {children}
       </p>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="mt-4 flex flex-col gap-2 list-none pl-0">{children}</ul>
+      <ul className="mt-5 flex flex-col gap-2.5 list-none pl-0">{children}</ul>
     ),
   },
   listItem: {
     bullet: ({ children }) => (
-      <li className="flex items-start gap-2.5 text-dark/75 dark:text-white/75 text-base sm:text-lg leading-[1.6]">
-        <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />
-        {children}
+      <li className="flex items-start gap-3 text-dark/72 dark:text-white/72 text-[17px] leading-relaxed">
+        <span className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+        <span>{children}</span>
       </li>
     ),
   },
@@ -56,7 +74,6 @@ function safeHttpUrl(url: string): string | null {
   }
 }
 
-/** YouTube embed URL, or null to fall back to link / video element */
 function youtubeEmbedFromUrl(url: string): string | null {
   try {
     const u = new URL(url);
@@ -82,11 +99,10 @@ function youtubeEmbedFromUrl(url: string): string | null {
 function SeoTextVideo({ url }: { url: string }) {
   const safe = safeHttpUrl(url);
   if (!safe) return null;
-
   const yt = youtubeEmbedFromUrl(safe);
   if (yt) {
     return (
-      <div className="relative mt-6 w-full aspect-video overflow-hidden rounded-xl border border-dark/10 dark:border-white/20">
+      <div className="relative my-10 w-full aspect-video overflow-hidden rounded-2xl border border-dark/10 dark:border-white/15">
         <iframe
           src={yt}
           title="Video"
@@ -97,17 +113,15 @@ function SeoTextVideo({ url }: { url: string }) {
       </div>
     );
   }
-
   if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(safe)) {
     return (
-      <div className="relative mt-6 w-full aspect-video overflow-hidden rounded-xl border border-dark/10 dark:border-white/20 bg-black/5 dark:bg-white/5">
+      <div className="relative my-10 w-full aspect-video overflow-hidden rounded-2xl border border-dark/10 dark:border-white/15 bg-black/5 dark:bg-white/5">
         <video controls className="h-full w-full object-contain" src={safe} />
       </div>
     );
   }
-
   return (
-    <p className="mt-6">
+    <p className="my-6">
       <a
         href={safe}
         target="_blank"
@@ -120,21 +134,13 @@ function SeoTextVideo({ url }: { url: string }) {
   );
 }
 
-function SeoTextCta({
-  href,
-  label,
-  locale,
-}: {
-  href: string;
-  label: string;
-  locale: string;
-}) {
+function SeoTextCta({ href, label, locale }: { href: string; label: string; locale: string }) {
   const className =
-    'inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2';
+    'inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2';
   const external = /^https?:\/\//i.test(href);
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={`${className} mt-8`}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
         <span>{label}</span>
         <Icon icon="ph:arrow-right" width={18} height={18} aria-hidden />
       </a>
@@ -142,21 +148,20 @@ function SeoTextCta({
   }
   const path = href.startsWith('/') ? `/${locale}${href}` : `/${locale}/${href.replace(/^\//, '')}`;
   return (
-    <Link href={path} className={`${className} mt-8`}>
+    <Link href={path} className={className}>
       <span>{label}</span>
       <Icon icon="ph:arrow-right" width={18} height={18} aria-hidden />
     </Link>
   );
 }
 
-/** Estimate rendered text length across plain-text or portable-text content. */
 function estimateTextLength(content: unknown[] | string | undefined, isPlainText: boolean): number {
   if (isPlainText && typeof content === 'string') return content.trim().length;
   if (!Array.isArray(content)) return 0;
   let n = 0;
   for (const block of content) {
     if (!block || typeof block !== 'object') continue;
-    const b = block as { _type?: string; style?: string; children?: Array<{ text?: string }> };
+    const b = block as { _type?: string; children?: Array<{ text?: string }> };
     if (b._type !== 'block') continue;
     for (const child of b.children ?? []) {
       if (typeof child?.text === 'string') n += child.text.length;
@@ -165,7 +170,6 @@ function estimateTextLength(content: unknown[] | string | undefined, isPlainText
   return n;
 }
 
-/** True when content is portable-text but composed entirely of `normal` paragraph blocks. */
 function isFlowingProse(content: unknown[] | string | undefined, isPlainText: boolean): boolean {
   if (isPlainText) return true;
   if (!Array.isArray(content)) return false;
@@ -179,10 +183,9 @@ function isFlowingProse(content: unknown[] | string | undefined, isPlainText: bo
   return true;
 }
 
-/** Heuristic: long flowing prose reads better as 2 columns on desktop. */
 function useTwoColumns(content: unknown[] | string | undefined, isPlainText: boolean): boolean {
   if (!isFlowingProse(content, isPlainText)) return false;
-  return estimateTextLength(content, isPlainText) > 400;
+  return estimateTextLength(content, isPlainText) > 600;
 }
 
 const SeoText: React.FC<{
@@ -191,7 +194,23 @@ const SeoText: React.FC<{
   heading?: string;
   videoUrl?: string;
   cta?: { href: string; label: string };
-}> = async ({ locale, seoTextData, heading, videoUrl, cta }) => {
+  category?: string;
+  readingTimeMinutes?: number;
+  author?: SeoAuthor;
+  stats?: SeoStat[];
+  pullQuote?: SeoPullQuote;
+}> = async ({
+  locale,
+  seoTextData,
+  heading,
+  videoUrl,
+  cta,
+  category,
+  readingTimeMinutes,
+  author,
+  stats,
+  pullQuote,
+}) => {
   const t = await getTranslations('Shared.seoText');
   const content = seoTextData?.content;
   const isPlainText = seoTextData?.isPlainText ?? false;
@@ -206,73 +225,144 @@ const SeoText: React.FC<{
   const showVideo = videoUrl && safeHttpUrl(videoUrl);
   const twoCols = useTwoColumns(content, isPlainText);
 
+  const showAuthor = Boolean(
+    author && (author.name || author.role || author.initials || author.avatarUrl),
+  );
+  const showStats = Array.isArray(stats) && stats.length > 0;
+  const showHeader = Boolean(category || readingTimeMinutes);
+  const readLabel = READ_LABEL_BY_LOCALE[locale] ?? READ_LABEL_BY_LOCALE.en;
+
   return (
     <section className="py-16 md:py-24">
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-        <div className="relative overflow-hidden rounded-3xl border border-dark/5 dark:border-white/10 bg-gradient-to-br from-dark/[0.03] via-transparent to-primary/[0.04] dark:from-white/[0.04] dark:via-transparent dark:to-primary/10 p-6 sm:p-10 md:p-14 lg:p-16">
-          {/* Decorative accent bar */}
-          <div
-            aria-hidden
-            className="absolute inset-y-10 left-0 w-1 rounded-r-full bg-primary hidden md:block"
-          />
-          {/* Decorative corner icon */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-4 -right-4 text-primary/10 dark:text-primary/20"
-          >
-            <Icon icon="ph:buildings-fill" width={180} height={180} />
-          </div>
-
-          <div className="relative max-w-5xl lg:max-w-6xl">
-            {heading ? (
-              <>
-                <span
-                  aria-hidden
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"
-                >
-                  <Icon icon="ph:house-simple-fill" width={20} height={20} />
-                </span>
-                <h2 className="mt-4 text-dark dark:text-white text-2xl sm:text-3xl lg:text-4xl xl:text-[44px] font-medium leading-[1.2]">
-                  {heading}
-                </h2>
-              </>
-            ) : (
-              <span
-                aria-hidden
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"
-              >
-                <Icon icon="ph:house-simple-fill" width={20} height={20} />
+      <div className="container mx-auto max-w-4xl px-5 2xl:px-0">
+        {/* Header chip strip */}
+        {showHeader ? (
+          <div className="flex items-center gap-3 text-xs">
+            {category ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/12 text-primary px-3 py-1 font-semibold tracking-wide">
+                <Icon icon="ph:house-simple-fill" width={12} height={12} aria-hidden />
+                {category}
               </span>
-            )}
+            ) : null}
+            {readingTimeMinutes ? (
+              <span className="text-dark/45 dark:text-white/45">
+                {category ? '· ' : ''}
+                {readingTimeMinutes} {readLabel}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
 
-            {showVideo ? <SeoTextVideo url={videoUrl!} /> : null}
+        {heading ? (
+          <h2 className="mt-5 text-3xl sm:text-4xl lg:text-[44px] xl:text-[56px] font-medium leading-[1.04] tracking-tight text-dark dark:text-white">
+            {heading}
+          </h2>
+        ) : null}
 
-            {!hasContent ? (
-              <p className="mt-6 text-amber-600 dark:text-amber-400 text-sm font-medium bg-amber-50 dark:bg-amber-950/30 py-4 px-4 rounded-lg border border-amber-200 dark:border-amber-800">
-                {fallbackMsg}
-              </p>
-            ) : isPlainText && typeof content === 'string' ? (
+        {/* Author byline */}
+        {showAuthor ? (
+          <div className="mt-7 mb-10 flex items-center gap-3 pb-7 border-b border-dark/10 dark:border-white/10">
+            {author?.avatarUrl ? (
+              <Image
+                src={author.avatarUrl}
+                alt={author.name || 'Author'}
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full ring-1 ring-primary/40 object-cover"
+                unoptimized={author.avatarUrl.startsWith('http')}
+              />
+            ) : author?.initials ? (
+              <div className="h-10 w-10 rounded-full bg-primary/20 ring-1 ring-primary/40 flex items-center justify-center">
+                <span className="text-primary font-semibold text-sm">{author.initials}</span>
+              </div>
+            ) : null}
+            {author?.name || author?.role ? (
+              <div className="min-w-0">
+                {author?.name ? (
+                  <p className="text-sm font-semibold text-dark dark:text-white truncate">{author.name}</p>
+                ) : null}
+                {author?.role ? (
+                  <p className="text-xs text-dark/55 dark:text-white/55 truncate">{author.role}</p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {/* Stat strip */}
+        {showStats ? (
+          <div
+            className={
+              'grid gap-4 mb-10 rounded-2xl p-5 bg-[#f7f6f3] ring-1 ring-dark/[0.05] dark:bg-white/[0.04] dark:ring-white/[0.06] ' +
+              (stats!.length === 1 ? 'grid-cols-1' : stats!.length === 2 ? 'grid-cols-2' : 'grid-cols-3')
+            }
+          >
+            {stats!.map((s, i) => (
               <div
+                key={i}
                 className={
-                  twoCols
-                    ? 'mt-6 text-dark/75 dark:text-white/75 text-base sm:text-lg leading-[1.75] whitespace-pre-line lg:columns-2 lg:gap-12'
-                    : 'mt-6 text-dark/75 dark:text-white/75 text-base sm:text-lg leading-[1.75] whitespace-pre-line'
+                  i > 0 ? 'border-l border-dark/10 dark:border-white/10 pl-4' : ''
                 }
               >
-                <p>{content}</p>
+                <p className="text-primary text-2xl lg:text-3xl font-semibold">{s.value}</p>
+                <p className="mt-1 text-xs text-dark/55 dark:text-white/55">{s.label}</p>
               </div>
-            ) : (
-              <div className={twoCols ? 'mt-6 lg:columns-2 lg:gap-12 [&_p]:first:mt-0' : 'mt-6'}>
-                <PortableText
-                  value={((content as unknown[]) ?? []) as PortableTextBlock[]}
-                  components={components}
-                />
-              </div>
-            )}
-
-            {cta ? <SeoTextCta href={cta.href} label={cta.label} locale={locale} /> : null}
+            ))}
           </div>
-        </div>
+        ) : null}
+
+        {/* Video (when set) */}
+        {showVideo ? <SeoTextVideo url={videoUrl!} /> : null}
+
+        {/* Body */}
+        <article>
+          {!hasContent ? (
+            <p className="text-amber-600 dark:text-amber-400 text-sm font-medium bg-amber-50 dark:bg-amber-950/30 py-4 px-4 rounded-lg border border-amber-200 dark:border-amber-800">
+              {fallbackMsg}
+            </p>
+          ) : isPlainText && typeof content === 'string' ? (
+            <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:first:mt-0' : ''}>
+              {content
+                .split(/\n\n+/)
+                .map((p) => p.trim())
+                .filter(Boolean)
+                .map((para, i) => (
+                  <p
+                    key={i}
+                    className="text-dark/72 dark:text-white/72 text-[17px] leading-relaxed mt-5 first:mt-0"
+                  >
+                    {para}
+                  </p>
+                ))}
+            </div>
+          ) : (
+            <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:first:mt-0' : ''}>
+              <PortableText
+                value={((content as unknown[]) ?? []) as PortableTextBlock[]}
+                components={portableComponents}
+              />
+            </div>
+          )}
+        </article>
+
+        {/* Pull quote */}
+        {pullQuote ? (
+          <blockquote className="my-10 relative pl-6 border-l-2 border-primary">
+            <p className="text-2xl lg:text-[26px] font-medium leading-snug text-dark dark:text-white">
+              «{pullQuote.text}»
+            </p>
+            {pullQuote.author ? (
+              <footer className="mt-3 text-sm text-dark/55 dark:text-white/55">— {pullQuote.author}</footer>
+            ) : null}
+          </blockquote>
+        ) : null}
+
+        {/* Footer CTA */}
+        {cta ? (
+          <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-8 border-t border-dark/10 dark:border-white/10">
+            <SeoTextCta href={cta.href} label={cta.label} locale={locale} />
+          </div>
+        ) : null}
       </div>
     </section>
   );
