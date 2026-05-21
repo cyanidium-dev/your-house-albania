@@ -1,10 +1,9 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { fetchCatalogFilterOptions, fetchSiteSettings } from '@/lib/sanity/client'
 import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
-import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
-import { brandButtonClass } from '@/components/shared/BrandButton'
 
 export type HeroData = {
   shortLine?: string;
@@ -33,6 +32,10 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
   const searchEnabled = heroData?.searchEnabled === true
   const hasPrimaryCta = Boolean(heroData?.ctaLabel && heroData?.ctaHref)
   const hasSecondaryCta = Boolean(heroData?.secondaryCtaLabel && heroData?.secondaryCtaHref)
+  const primaryCtaHref = heroData?.ctaHref
+  const primaryCtaLabel = heroData?.ctaLabel
+  const secondaryCtaHref = heroData?.secondaryCtaHref
+  const secondaryCtaLabel = heroData?.secondaryCtaLabel
   const cmsTabs = Array.isArray(heroData?.searchTabs)
     ? heroData.searchTabs
         .map((tab) => {
@@ -55,73 +58,87 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
     .filter((o) => o.value && o.value !== 'any')
     .map((o) => ({ value: o.value, label: o.label }))
 
-  const primaryHref = hasPrimaryCta ? resolveLocaleHref(heroData!.ctaHref!, locale) : null
-  const secondaryHref = hasSecondaryCta ? resolveLocaleHref(heroData!.secondaryCtaHref!, locale) : null
-
   return (
-    <section className="relative z-10 !py-0">
-      <div className="relative min-h-[78vh] md:min-h-screen flex bg-dark">
+    <section className='relative z-10 !py-0'>
+      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 relative min-h-screen flex'>
         {bgImageUrl ? (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={bgImageUrl}
-              alt={bgImageAlt}
-              fill
-              className="object-cover object-center"
-              priority
-              sizes="100vw"
-              unoptimized={bgImageUrl.startsWith('http')}
+          <>
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={bgImageUrl}
+                alt={bgImageAlt}
+                fill
+                className="object-cover object-center"
+                priority={false}
+                unoptimized={bgImageUrl.startsWith('http')}
+              />
+            </div>
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-black dark:via-black/50"
+              aria-hidden
             />
-          </div>
+          </>
         ) : (
-          <div className="hidden md:block absolute bottom-0 -right-68 z-0">
-            <Image
-              src="/images/hero/heroBanner.png"
-              alt="Hero"
-              width={1082}
-              height={1016}
-              priority={false}
-              unoptimized
-              className="select-none"
+          <>
+            <div className='hidden md:block absolute bottom-0 -right-68 z-0'>
+              <Image
+                src='/images/hero/heroBanner.png'
+                alt='Hero'
+                width={1082}
+                height={1016}
+                priority={false}
+                unoptimized
+                className="select-none"
+              />
+            </div>
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-black dark:via-black/50"
+              aria-hidden
             />
-          </div>
+          </>
         )}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/55 via-black/25 to-black/65"
-        />
-        <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-28 sm:pt-32 md:pt-44 lg:pt-56 pb-16 md:pb-24 flex-1 relative">
+        <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
           {breadcrumb ? (
             <div className="relative z-20 text-left mb-4">{breadcrumb}</div>
           ) : null}
-          <div className="relative text-white text-left z-20">
-            <p className="text-inherit text-sm sm:text-base font-medium uppercase tracking-[0.18em] text-white/85">
-              {shortLine}
-            </p>
-            <h1 className="text-inherit text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] font-semibold -tracking-tight md:max-w-[60%] mt-5 mb-6">
+          <div className='relative text-white dark:text-dark text-center md:text-start z-20'>
+            <p className='text-inherit text-xm font-medium'>{shortLine}</p>
+            <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
               {title}
             </h1>
             {subtitle ? (
-              <p className="text-inherit text-base sm:text-lg mb-8 max-w-2xl whitespace-pre-line text-white/90">
-                {subtitle}
-              </p>
+              <p className='text-inherit text-lg mb-6 whitespace-pre-line'>{subtitle}</p>
             ) : null}
             {hasPrimaryCta || hasSecondaryCta ? (
-              <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-2">
-                {hasPrimaryCta && primaryHref ? (
-                  <a href={primaryHref} className={brandButtonClass('primary')}>
-                    {heroData!.ctaLabel}
-                  </a>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start">
+                {hasPrimaryCta ? (
+                  <Link
+                    href={
+                      primaryCtaHref!.startsWith('/')
+                        ? `/${locale}${primaryCtaHref}`
+                        : primaryCtaHref!
+                    }
+                    className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
+                  >
+                    {primaryCtaLabel}
+                  </Link>
                 ) : null}
-                {hasSecondaryCta && secondaryHref ? (
-                  <a href={secondaryHref} className={brandButtonClass('onDark')}>
-                    {heroData!.secondaryCtaLabel}
-                  </a>
+                {hasSecondaryCta ? (
+                  <Link
+                    href={
+                      secondaryCtaHref!.startsWith('/')
+                        ? `/${locale}${secondaryCtaHref}`
+                        : secondaryCtaHref!
+                    }
+                    className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold border-2 border-white text-white hover:bg-white/15 transition-colors duration-200 ease-out"
+                  >
+                    {secondaryCtaLabel}
+                  </Link>
                 ) : null}
               </div>
             ) : null}
             {searchEnabled ? (
-              <div className="mt-10 md:mt-14 flex justify-start">
+              <div className="mt-12 md:mt-16 flex justify-center">
                 <HeroSearchWidget
                   locationOptions={locationOptions}
                   propertyTypeOptions={propertyTypeOptions}
