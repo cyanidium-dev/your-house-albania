@@ -183,7 +183,7 @@ function isFlowingProse(content: unknown[] | string | undefined, isPlainText: bo
   return true;
 }
 
-function useTwoColumns(content: unknown[] | string | undefined, isPlainText: boolean): boolean {
+function shouldUseTwoColumns(content: unknown[] | string | undefined, isPlainText: boolean): boolean {
   if (!isFlowingProse(content, isPlainText)) return false;
   return estimateTextLength(content, isPlainText) > 600;
 }
@@ -223,7 +223,7 @@ const SeoText: React.FC<{
 
   const fallbackMsg = t('contentMissing');
   const showVideo = videoUrl && safeHttpUrl(videoUrl);
-  const twoCols = useTwoColumns(content, isPlainText);
+  const twoCols = shouldUseTwoColumns(content, isPlainText);
 
   const showAuthor = Boolean(
     author && (author.name || author.role || author.initials || author.avatarUrl),
