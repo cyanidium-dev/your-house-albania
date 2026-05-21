@@ -109,7 +109,10 @@ export function buildLandingMetadata(
   const noFollow = landingSeo?.noFollow ?? siteDefaultSeo?.noFollow ?? false
 
   const base: Metadata = {
-    title,
+    // `absolute` short-circuits the root layout's `%s — Brand` template
+    // when the CMS metaTitle already includes the brand. Empty string
+    // (no resolved title) is also safe to pass through.
+    title: title ? { absolute: title } : title,
     description,
     keywords: resolveKeywords(landingSeo?.keywords, locale),
     openGraph: {
