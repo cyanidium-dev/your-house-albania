@@ -4,12 +4,38 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { routing } from "@/i18n/routing";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"] });
 
+const SITE_NAME = "Domlivo";
+const DEFAULT_DESCRIPTION =
+  "Apartments, villas, and commercial property in Albania — verified listings, current prices, no commission. Buy, rent, or invest in Tirana, Durrës, Vlorë, Sarandë and along the Adriatic coast.";
+
 export const metadata: Metadata = {
-  title: "Your House Albania",
-  description: "Real estate in Albania. Buy, rent, and invest in properties across Albania.",
+  metadataBase: new URL(getSiteBaseUrl()),
+  title: {
+    default: `${SITE_NAME} — Real estate in Albania`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Real estate in Albania`,
+    description: DEFAULT_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Real estate in Albania`,
+    description: DEFAULT_DESCRIPTION,
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 };
 
 export const viewport = {
