@@ -8,6 +8,8 @@ import {
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { getTranslations } from "next-intl/server";
+import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -34,10 +36,27 @@ export default async function Home({ params }: Props) {
   }
 
   const landing = await fetchHomeLanding();
+  const siteSettings = await fetchSiteSettings();
+  const baseUrl = getSiteBaseUrl();
+  const siteLogoUrl =
+    (siteSettings as { logo?: { asset?: { url?: string } } } | null)?.logo?.asset?.url ||
+    undefined;
+  const siteJsonLd = (
+    <SiteJsonLd
+      baseUrl={baseUrl}
+      locale={locale}
+      brandName="Domlivo"
+      legalName="Domlivo — Real estate in Albania"
+      logoUrl={siteLogoUrl}
+      searchUrlTemplate="/catalog?q={search_term_string}"
+    />
+  );
+
   if (!landing) {
     const t = await getTranslations("Home.blog");
     return (
       <main>
+        {siteJsonLd}
         <HeroSub
           title={t("title")}
           description={t("description")}
@@ -47,5 +66,10 @@ export default async function Home({ params }: Props) {
       </main>
     );
   }
-  return <LandingRenderer locale={locale} landing={landing as never} />;
+  return (
+    <>
+      {siteJsonLd}
+      <LandingRenderer locale={locale} landing={landing as never} />
+    </>
+  );
 }

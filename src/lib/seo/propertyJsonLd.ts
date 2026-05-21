@@ -87,23 +87,55 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
         }
       : undefined;
 
-  const result: Record<string, unknown> = {
-    "@context": "https://schema.org",
+  const address = location && location.trim()
+    ? { "@type": "PostalAddress", addressLocality: location.trim() }
+    : undefined;
+
+  // Product node — broad commerce schema Google reads everywhere.
+  const product: Record<string, unknown> = {
     "@type": "Product",
+    "@id": `${url}#product`,
     name: name || "Property",
     url,
     ...(description && { description }),
     ...(image && { image }),
     ...(offers && { offers }),
     ...(additionalProperty.length > 0 && { additionalProperty }),
+    ...(address && { address }),
   };
 
-  if (location && location.trim()) {
-    result.address = {
-      "@type": "PostalAddress",
-      addressLocality: location.trim(),
-    };
-  }
+  // RealEstateListing node — preferred type for property listings per
+  // schema.org. Emitting both inside @graph lets crawlers pick whichever
+  // they understand without duplicating the entity (shared @id-less link).
+  const dealKey = status ? status.toLowerCase() : "";
+  const isRent = dealKey === "rent" || dealKey === "short-term";
+  const listingType = isRent ? "rental" : "sale";
+  const realEstateListing: Record<string, unknown> = {
+    "@type": "RealEstateListing",
+    "@id": `${url}#listing`,
+    name: name || "Property",
+    url,
+    ...(description && { description }),
+    ...(image && { image }),
+    ...(offers && { offers }),
+    ...(address && { address }),
+    ...(typeof area === "number" && area > 0
+      ? { floorSize: { "@type": "QuantitativeValue", value: area, unitCode: "MTK" } }
+      : {}),
+    ...(typeof beds === "number" && beds >= 0
+      ? { numberOfRooms: beds }
+      : {}),
+    ...(typeof baths === "number" && baths >= 0
+      ? { numberOfBathroomsTotal: baths }
+      : {}),
+    additionalType: listingType,
+    datePosted: undefined, // left for caller to enrich if needed
+  };
+  // Strip undefined keys so the JSON stays clean.
+  if (realEstateListing.datePosted === undefined) delete realEstateListing.datePosted;
 
-  return result;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [product, realEstateListing],
+  };
 }
