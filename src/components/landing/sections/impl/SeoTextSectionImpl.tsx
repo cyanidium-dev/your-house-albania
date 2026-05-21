@@ -188,6 +188,53 @@ function shouldUseTwoColumns(content: unknown[] | string | undefined, isPlainTex
   return estimateTextLength(content, isPlainText) > 600;
 }
 
+/**
+ * Pull every text fragment out of a portable-text block array into one string.
+ * Blocks are joined with double newline so existing block boundaries survive
+ * downstream paragraph splitting.
+ */
+function extractPlainTextFromBlocks(content: unknown[] | string | undefined): string {
+  if (!Array.isArray(content)) return '';
+  const out: string[] = [];
+  for (const block of content) {
+    if (!block || typeof block !== 'object') continue;
+    const b = block as { _type?: string; children?: Array<{ text?: string }> };
+    if (b._type !== 'block') continue;
+    const text = (b.children ?? [])
+      .map((c) => (typeof c?.text === 'string' ? c.text : ''))
+      .join('');
+    if (text.trim()) out.push(text);
+  }
+  return out.join('\n\n');
+}
+
+/**
+ * Split a plain-text body into readable paragraphs.
+ * - If it already has blank-line separators, use them.
+ * - Otherwise group sentences (~3 per paragraph) by splitting on ". " /
+ *   ".  " boundaries while keeping the trailing period.
+ */
+function splitPlainTextParagraphs(text: string): string[] {
+  const trimmed = text.trim();
+  if (!trimmed) return [];
+  const byBlankLines = trimmed.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean);
+  if (byBlankLines.length > 1) return byBlankLines;
+
+  // Split into sentences. Keep period via lookbehind.
+  const sentences = trimmed
+    .split(/(?<=[.!?])\s+(?=[A-ZА-ЯІЇЄҐ«"„])/u)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (sentences.length <= 3) return [trimmed];
+
+  const GROUP_SIZE = 3;
+  const out: string[] = [];
+  for (let i = 0; i < sentences.length; i += GROUP_SIZE) {
+    out.push(sentences.slice(i, i + GROUP_SIZE).join(' '));
+  }
+  return out;
+}
+
 const SeoText: React.FC<{
   locale: string;
   seoTextData?: SeoTextData;
@@ -224,6 +271,15 @@ const SeoText: React.FC<{
   const fallbackMsg = t('contentMissing');
   const showVideo = videoUrl && safeHttpUrl(videoUrl);
   const twoCols = shouldUseTwoColumns(content, isPlainText);
+  // Flowing prose (only `normal` paragraphs, no headings/lists) — render as
+  // plain text so we control paragraph splitting and lead-paragraph styling.
+  const flowing = isFlowingProse(content, isPlainText);
+  const plainBody: string | null = isPlainText && typeof content === 'string'
+    ? content
+    : flowing
+      ? extractPlainTextFromBlocks(content)
+      : null;
+  const renderAsPlain = Boolean(plainBody && plainBody.trim());
 
   const showAuthor = Boolean(
     author && (author.name || author.role || author.initials || author.avatarUrl),
@@ -315,28 +371,75 @@ const SeoText: React.FC<{
         {showVideo ? <SeoTextVideo url={videoUrl!} /> : null}
 
         {/* Body */}
-        <article>
+        <article
+          className={
+            // When nothing else (no header / heading / author / stats / video) sits above
+            // the body, wrap the prose in a soft branded card so it doesn't read as a
+            // raw wall of text.
+            !showHeader && !heading && !showAuthor && !showStats && !showVideo
+              ? 'relative overflow-hidden rounded-3xl border border-dark/5 dark:border-white/10 bg-gradient-to-br from-dark/[0.02] via-transparent to-primary/[0.04] dark:from-white/[0.03] dark:via-transparent dark:to-primary/10 p-6 sm:p-10 lg:p-12'
+              : ''
+          }
+        >
+          {!showHeader && !heading && !showAuthor && !showStats && !showVideo ? (
+            <>
+              <div
+                aria-hidden
+                className="absolute inset-y-10 left-0 w-1 rounded-r-full bg-primary hidden md:block"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -top-6 -right-6 text-primary/10 dark:text-primary/20"
+              >
+                <Icon icon="ph:buildings-fill" width={140} height={140} />
+              </div>
+              <span
+                aria-hidden
+                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary mb-5"
+              >
+                <Icon icon="ph:house-simple-fill" width={20} height={20} />
+              </span>
+            </>
+          ) : null}
+
           {!hasContent ? (
             <p className="text-amber-600 dark:text-amber-400 text-sm font-medium bg-amber-50 dark:bg-amber-950/30 py-4 px-4 rounded-lg border border-amber-200 dark:border-amber-800">
               {fallbackMsg}
             </p>
-          ) : isPlainText && typeof content === 'string' ? (
-            <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:first:mt-0' : ''}>
-              {content
-                .split(/\n\n+/)
-                .map((p) => p.trim())
-                .filter(Boolean)
-                .map((para, i) => (
-                  <p
-                    key={i}
-                    className="text-dark/72 dark:text-white/72 text-[17px] leading-relaxed mt-5 first:mt-0"
-                  >
-                    {para}
+          ) : renderAsPlain ? (
+            (() => {
+              const paragraphs = splitPlainTextParagraphs(plainBody!);
+              if (paragraphs.length === 0) return null;
+              return (
+                <div className="relative">
+                  {/* Lead paragraph — larger, dark-toned, sets the editorial rhythm */}
+                  <p className="text-dark dark:text-white text-lg sm:text-xl leading-[1.55] font-medium first-letter:text-primary first-letter:text-[2.4em] first-letter:font-semibold first-letter:float-left first-letter:mr-2 first-letter:leading-none first-letter:mt-1">
+                    {paragraphs[0]}
                   </p>
-                ))}
-            </div>
+                  {paragraphs.length > 1 ? (
+                    <div
+                      className={
+                        'relative mt-6 ' +
+                        (twoCols
+                          ? 'lg:columns-2 lg:gap-12 [&>p]:break-inside-avoid'
+                          : '')
+                      }
+                    >
+                      {paragraphs.slice(1).map((para, i) => (
+                        <p
+                          key={i}
+                          className="text-dark/72 dark:text-white/72 text-[17px] leading-relaxed mt-5 first:mt-0"
+                        >
+                          {para}
+                        </p>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })()
           ) : (
-            <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:first:mt-0' : ''}>
+            <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:break-inside-avoid' : ''}>
               <PortableText
                 value={((content as unknown[]) ?? []) as PortableTextBlock[]}
                 components={portableComponents}
