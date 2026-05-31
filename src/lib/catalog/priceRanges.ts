@@ -49,8 +49,15 @@ export function resolvePriceRange(priceRange: unknown): CmsPriceRange {
     return { ...normalized };
   }
 
-  if (process.env.NODE_ENV === "development") {
-    console.warn("[priceRanges] Invalid or empty priceRange from CMS, using defaults");
+  // Only warn for a value that was provided but failed validation. An absent or
+  // empty priceRange is a normal CMS state (not a misconfiguration), so it must
+  // not produce console noise on every render.
+  const provided =
+    priceRange != null &&
+    typeof priceRange === "object" &&
+    Object.keys(priceRange as Record<string, unknown>).length > 0;
+  if (provided && process.env.NODE_ENV === "development") {
+    console.warn("[priceRanges] Invalid priceRange from CMS, using defaults");
   }
 
   return { ...DEFAULT_PRICE_RANGE };

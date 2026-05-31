@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { HeroSection } from '@/components/landing/sections'
+import HeroSection from '@/components/landing/sections/impl/HeroSectionImpl'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { urlFor } from '@/lib/sanity/imageUrl'
 import { heroTabsFromSection } from '../helpers'

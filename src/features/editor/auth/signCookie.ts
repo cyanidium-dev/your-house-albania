@@ -11,11 +11,7 @@ export const EDITOR_COOKIE_NAME = 'domlivo_editor_session';
 export const EDITOR_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 12; // 12h
 
 function getSecret(): string {
-  const secret =
-    process.env.EDITOR_SESSION_SECRET ??
-    process.env.SANITY_WRITE_TOKEN ??
-    '';
-  return secret;
+  return process.env.EDITOR_SESSION_SECRET ?? '';
 }
 
 export function getEditorPassword(): string {

@@ -147,13 +147,21 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
   const year = new Date().getFullYear();
   const siteName = siteSettings?.siteName?.trim() ?? "";
 
+  // Property detail pages render a mobile-only fixed bottom bar (price + CTA);
+  // pad the footer below lg so its last rows clear that bar.
+  const hasMobileStickyBar = pathname.includes("/property/");
+
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
   const codesiteUrl = siteSettings?.footerCodesiteUrl?.trim();
   const webbondUrl = siteSettings?.footerWebbondUrl?.trim();
 
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
-      <div className="container mx-auto max-w-8xl min-w-0 px-5 py-8 sm:py-10 2xl:px-0 lg:py-12">
+      <div
+        className={`container mx-auto max-w-8xl min-w-0 px-5 py-8 sm:py-10 2xl:px-0 lg:py-12 ${
+          hasMobileStickyBar ? "pb-28 lg:pb-12" : ""
+        }`}
+      >
         {/* Branding: logo + intro in one block */}
         <div className="mb-6 max-w-xl lg:mb-7">
           <Link href={`/${locale}`} className="inline-block max-w-full">

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { PropertyHomes } from '@/types/propertyHomes'
-import { PropertyCarouselSection } from '@/components/landing/sections'
+import PropertyCarouselSection from '@/components/landing/sections/impl/PropertyCarouselSectionImpl'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import {
   fetchHomeTopOffers,

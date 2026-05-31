@@ -256,6 +256,8 @@
   },
   "Catalog": {
     "heroIntroFallback": "Browse our selection of properties.",
+    "agentTitle": "Properties by {name}",
+    "agentIntroFallback": "Showing listings from this agent",
     "empty": {
       "title": "No properties found",
       "description": "Try adjusting or resetting the filters.",

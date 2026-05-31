@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { buildHreflangAlternates } from '@/lib/seo/hreflang';
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import { resolveLocalizedString } from './localized';
+import { buildMetadata } from './socialMetadataResolution';
 
 type LocalizedField = { en?: string; uk?: string; ru?: string; sq?: string; it?: string } | null | undefined;
 
@@ -81,51 +82,33 @@ export function buildBlogMetadata(
   const noIndex = blogSeo?.noIndex ?? false;
   const noFollow = blogSeo?.noFollow ?? false;
 
-  const og: Metadata['openGraph'] = {
-    title: ogTitle,
-    description: ogDescription,
-    ...(ogImageAbsolute && {
-      images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle }],
-    }),
-  };
+  const twitterCard = ogImageAbsolute ? 'summary_large_image' : 'summary';
 
   if (!isIndexingEnabled()) {
-    return {
+    return buildMetadata({
       title,
-      description: description || undefined,
-      openGraph: og,
-      twitter: {
-        card: ogImageAbsolute ? 'summary_large_image' : 'summary',
-        title: ogTitle,
-        description: ogDescription,
-      },
+      description,
+      ogTitle,
+      ogDescription,
+      ogImageUrl: ogImageAbsolute,
+      twitterCard,
       robots: indexingDisabledRobots,
-    };
+    });
   }
 
   const hrefPath = articleOptions?.pathnameForAlternates;
   const hreflang = hrefPath !== undefined ? buildHreflangAlternates(hrefPath) : undefined;
-  const alternates =
-    canonicalUrl || hreflang?.languages
-      ? {
-          ...(canonicalUrl ? { canonical: canonicalUrl } : {}),
-          ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
-        }
-      : undefined;
 
-  return {
+  return buildMetadata({
     title,
-    description: description || undefined,
-    ...(alternates ? { alternates } : {}),
-    openGraph: {
-      ...og,
-      ...(canonicalUrl && { url: canonicalUrl }),
-    },
-    twitter: {
-      card: ogImageAbsolute ? 'summary_large_image' : 'summary',
-      title: ogTitle,
-      description: ogDescription,
-    },
+    description,
+    ogTitle,
+    ogDescription,
+    ogImageUrl: ogImageAbsolute,
+    ogUrl: canonicalUrl,
+    twitterCard,
+    canonical: canonicalUrl,
+    hreflangLanguages: hreflang?.languages,
     robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
-  };
+  });
 }

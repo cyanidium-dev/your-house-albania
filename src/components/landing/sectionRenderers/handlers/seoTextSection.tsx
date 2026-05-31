@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SeoTextSection } from '@/components/landing/sections'
+import SeoTextSection from '@/components/landing/sections/impl/SeoTextSectionImpl'
 import { resolveRichTextDataFromContent } from '../helpers'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { SectionHandler } from './types'

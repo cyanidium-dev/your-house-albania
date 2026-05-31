@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { PropertyTypesSection } from '@/components/landing/sections'
+import PropertyTypesSection from '@/components/landing/sections/impl/PropertyTypesSectionImpl'
 import { fetchActivePropertyTypes } from '@/lib/sanity/client'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { mapSanityPropertyTypeToCard } from '@/lib/sanity/propertyTypeAdapter'

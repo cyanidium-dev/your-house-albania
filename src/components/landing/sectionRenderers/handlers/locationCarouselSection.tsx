@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LocationCarouselSection } from '@/components/landing/sections'
+import LocationCarouselSection from '@/components/landing/sections/impl/LocationCarouselSectionImpl'
 import {
   normalizeCitiesOrder,
   mapResolvedManualItemsToCards,

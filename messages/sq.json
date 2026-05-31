@@ -256,6 +256,8 @@
   },
   "Catalog": {
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
+    "agentTitle": "Pronat nga {name}",
+    "agentIntroFallback": "Po shfaqen listimet nga ky agjent",
     "empty": {
       "title": "Nuk u gjetën pronat",
       "description": "Provoni të rregulloni ose të rivendosni filtrat.",

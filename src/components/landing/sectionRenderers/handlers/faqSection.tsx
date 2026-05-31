@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FaqSection } from '@/components/landing/sections'
+import FaqSection from '@/components/landing/sections/impl/FaqSectionImpl'
 import { resolveFaqDataFromSection } from '../helpers'
 import type { SectionHandler } from './types'
 

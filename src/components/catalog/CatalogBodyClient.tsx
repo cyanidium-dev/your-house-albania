@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
@@ -12,8 +13,20 @@ import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
-import { PropertiesMap } from "@/components/catalog/map/PropertiesMap";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+
+const PropertiesMap = dynamic(
+  () =>
+    import("@/components/catalog/map/PropertiesMap").then(
+      (m) => m.PropertiesMap
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full rounded-2xl bg-dark/5 dark:bg-white/10 animate-pulse" />
+    ),
+  }
+);
 
 export type CatalogFilterProps = {
   locations: Array<{ value: string; label: string; countrySlug?: string }>;

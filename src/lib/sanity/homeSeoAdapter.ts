@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { resolveLocalizedString } from "./localized";
+import { buildMetadata } from "./socialMetadataResolution";
 
 type RawSeo = {
   metaTitle?: Record<string, string>;
@@ -49,18 +50,12 @@ export function buildHomeMetadata(
 
   const noIndex = homeSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false;
 
-  return {
+  return buildMetadata({
     title,
     description,
-    openGraph: {
-      title: ogTitle,
-      description: ogDescription,
-      ...(ogImageAbsolute && {
-        images: [
-          { url: ogImageAbsolute, width: 1200, height: 630, alt: ogTitle },
-        ],
-      }),
-    },
+    ogTitle,
+    ogDescription,
+    ogImageUrl: ogImageAbsolute,
     robots: noIndex ? { index: false, follow: false } : undefined,
-  };
+  });
 }

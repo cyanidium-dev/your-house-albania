@@ -232,6 +232,7 @@ export default async function Post({ params }: Props) {
           width={1170}
           height={766}
           quality={100}
+          priority
           className="h-full w-full object-cover object-center"
           unoptimized={detail.coverImageUrl.startsWith("http")}
         />

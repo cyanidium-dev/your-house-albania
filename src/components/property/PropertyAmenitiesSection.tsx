@@ -17,7 +17,7 @@ function AmenityRow({
   return (
     <div
       key={item.key}
-      className={cn('flex items-center gap-6', className)}
+      className={cn('flex items-center gap-4 lg:gap-6', className)}
     >
       <div className="w-8 h-8 shrink-0 flex items-center justify-center">
         {item.customIconUrl ? (
@@ -80,7 +80,7 @@ export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabe
   return (
     <>
       <h3 className="text-xl font-medium">{sectionTitle}</h3>
-      <div className="py-8 my-8 border-y border-dark/10 dark:border-white/20 flex flex-col gap-8">
+      <div className="py-5 my-5 lg:py-8 lg:my-8 border-y border-dark/10 dark:border-white/20 flex flex-col gap-5 lg:gap-8">
         {/* Desktop/tablet: full list */}
         <div className="hidden lg:flex flex-col gap-8">
           {amenities.map((item) => (
@@ -88,7 +88,7 @@ export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabe
           ))}
         </div>
         {/* Mobile: first 3 + optional button */}
-        <div className="flex flex-col gap-8 lg:hidden">
+        <div className="flex flex-col gap-4 lg:hidden">
           {mobileItems.map((item) => (
             <AmenityRow key={item.key} item={item} />
           ))}

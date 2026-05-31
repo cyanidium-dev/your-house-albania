@@ -3,6 +3,7 @@ import { buildHreflangAlternates } from '@/lib/seo/hreflang';
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import type { LocalizedField } from './socialMetadataResolution';
 import {
+  buildMetadata,
   pickAbsoluteOgImageUrl,
   resolveChainedDescription,
   resolveChainedTitle,
@@ -72,26 +73,16 @@ export function buildPropertyMetadata(
 
   const noIndex = propertySeo?.noIndex ?? false;
 
-  const ogBase: Metadata['openGraph'] = {
-    title,
-    description,
-    ...(ogImageAbsolute && {
-      images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: title }],
-    }),
-  };
-
   if (!isIndexingEnabled()) {
-    return {
+    return buildMetadata({
       title,
-      description: description || undefined,
-      openGraph: ogBase,
-      twitter: {
-        card: 'summary',
-        title,
-        description,
-      },
+      description,
+      ogTitle: title,
+      ogDescription: description,
+      ogImageUrl: ogImageAbsolute,
+      twitterCard: 'summary',
       robots: indexingDisabledRobots,
-    };
+    });
   }
 
   const pathSeg =
@@ -101,27 +92,17 @@ export function buildPropertyMetadata(
       ? `${propertyPath.baseUrl.replace(/\/$/, '')}/${propertyPath.locale}${pathSeg}`
       : undefined;
   const hreflang = pathSeg != null ? buildHreflangAlternates(pathSeg) : undefined;
-  const alternates =
-    canonicalFallback || hreflang?.languages
-      ? {
-          ...(canonicalFallback ? { canonical: canonicalFallback } : {}),
-          ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
-        }
-      : undefined;
 
-  return {
+  return buildMetadata({
     title,
-    description: description || undefined,
-    alternates,
-    openGraph: {
-      ...ogBase,
-      ...(canonicalFallback ? { url: canonicalFallback } : {}),
-    },
-    twitter: {
-      card: 'summary',
-      title,
-      description,
-    },
+    description,
+    ogTitle: title,
+    ogDescription: description,
+    ogImageUrl: ogImageAbsolute,
+    ogUrl: canonicalFallback,
+    twitterCard: 'summary',
+    canonical: canonicalFallback,
+    hreflangLanguages: hreflang?.languages,
     robots: noIndex ? { index: false, follow: true } : undefined,
-  };
+  });
 }

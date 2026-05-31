@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { resolveLocalizedString } from './localized';
 
 export type LocalizedField =
@@ -72,4 +73,72 @@ export function pickAbsoluteOgImageUrl(...candidates: (string | undefined | null
     if (typeof u === 'string' && u.trim().startsWith('http')) return u.trim();
   }
   return undefined;
+}
+
+/** Standard 1200×630 Open Graph image array, or undefined when no image. */
+export function buildOgImageArray(
+  url: string | undefined,
+  alt: string
+): NonNullable<Metadata['openGraph']>['images'] | undefined {
+  return url ? [{ url, width: 1200, height: 630, alt }] : undefined;
+}
+
+export type BuildMetadataInput = {
+  /** Document title. Pass `{ absolute }` to bypass the root layout title template. */
+  title: string | { absolute: string };
+  description?: string;
+  keywords?: string[];
+  /** Open Graph / Twitter title (image alt also uses this). */
+  ogTitle: string;
+  ogDescription: string;
+  ogImageUrl?: string;
+  /** Absolute og:url; omit to leave it off (e.g. landing pages don't set it). */
+  ogUrl?: string;
+  /** Twitter card type; omit to drop the twitter block entirely. */
+  twitterCard?: 'summary' | 'summary_large_image';
+  canonical?: string;
+  hreflangLanguages?: NonNullable<Metadata['alternates']>['languages'];
+  robots?: Metadata['robots'];
+};
+
+/**
+ * Assembles the shared Next.js Metadata shape (openGraph/twitter/alternates) from
+ * already-resolved fields. Each *SeoAdapter maps its document to this input and
+ * keeps its own title/description/robots resolution.
+ */
+export function buildMetadata(input: BuildMetadataInput): Metadata {
+  const images = buildOgImageArray(input.ogImageUrl, input.ogTitle);
+
+  const openGraph: Metadata['openGraph'] = {
+    title: input.ogTitle,
+    description: input.ogDescription,
+    ...(images ? { images } : {}),
+    ...(input.ogUrl ? { url: input.ogUrl } : {}),
+  };
+
+  const alternates =
+    input.canonical || input.hreflangLanguages
+      ? {
+          ...(input.canonical ? { canonical: input.canonical } : {}),
+          ...(input.hreflangLanguages ? { languages: input.hreflangLanguages } : {}),
+        }
+      : undefined;
+
+  return {
+    title: input.title,
+    description: input.description || undefined,
+    ...(input.keywords ? { keywords: input.keywords } : {}),
+    ...(alternates ? { alternates } : {}),
+    openGraph,
+    ...(input.twitterCard
+      ? {
+          twitter: {
+            card: input.twitterCard,
+            title: input.ogTitle,
+            description: input.ogDescription,
+          },
+        }
+      : {}),
+    ...(input.robots !== undefined ? { robots: input.robots } : {}),
+  };
 }

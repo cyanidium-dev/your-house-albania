@@ -1,48 +1,15 @@
 "use client";
 
-import { useState, useCallback, useRef, useMemo } from 'react'
 import { PropertyHomes } from '@/types/propertyHomes'
-import { Icon } from '@iconify/react'
-import Image from 'next/image'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import { FavoriteButton } from '@/components/shared/FavoriteButton'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
-
-function displayStatusLabel(status?: string | null): string | null {
-  if (!status) return null
-  const s = status.toLowerCase().trim()
-  if (s === 'sale') return 'For sale'
-  if (s === 'rent') return 'For rent'
-  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent'
-  if (s === 'long-term' || s === 'longterm') return 'Long-term rent'
-  return status
-}
-
-function displayStatusShortLabel(status?: string | null): string | null {
-  const full = displayStatusLabel(status)
-  if (!full) return null
-  const s = full.toLowerCase()
-  if (s.includes('short-term')) return 'Short rent'
-  if (s.includes('long-term')) return 'Long rent'
-  if (s === 'for rent') return 'Rent'
-  return full
-}
-
-function displayDealLabel(status?: string | null, opts?: { compact?: boolean }): string | null {
-  return opts?.compact ? displayStatusShortLabel(status) : displayStatusLabel(status)
-}
-
-function truncateTeaser(text: string, maxChars: number): string {
-  const t = text.replace(/\s+/g, ' ').trim()
-  if (!t) return ''
-  if (t.length <= maxChars) return t
-  return `${t.slice(0, Math.max(0, maxChars - 1)).trimEnd()}…`
-}
+import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
+import { PropertyCardGallery } from './PropertyCardGallery'
+import { PropertyCardMeta } from './PropertyCardMeta'
 
 function PropertyCard({
   item,
@@ -71,91 +38,16 @@ function PropertyCard({
     slug,
     images,
     price,
-    currency,
     status,
     propertyType,
-    city,
     teaser,
     promotionType,
     discountPercent,
   } = item
-  const t = useTranslations('Shared.propertyCard')
-
-  const marketingBadge = useMemo(() => {
-    if (promotionType === 'premium') {
-      return {
-        type: 'premium' as const,
-        label: t('premium'),
-        icon: 'ph:star-fill' as const,
-      }
-    }
-    if (promotionType === 'top') {
-      return {
-        type: 'top' as const,
-        label: t('top'),
-        icon: 'ph:fire-fill' as const,
-      }
-    }
-    if (promotionType === 'sale') {
-      return {
-        type: 'sale' as const,
-        label:
-          typeof discountPercent === 'number'
-            ? t('discount', { value: discountPercent })
-            : t('sale'),
-        icon: 'ph:tag-fill' as const,
-      }
-    }
-    return null
-  }, [promotionType, discountPercent, t])
-
-  const badgeClass = (() => {
-    switch (marketingBadge?.type) {
-      case 'premium':
-        return 'bg-yellow-400 text-black ring-1 ring-yellow-500/50'
-      case 'top':
-        return 'bg-primary text-white ring-1 ring-primary/40'
-      case 'sale':
-        return 'bg-red-500 text-white ring-1 ring-red-600/40'
-      default:
-        return 'bg-dark text-white'
-    }
-  })()
 
   const isPremium = promotionType === 'premium'
   const { currency: activeCurrency, rates } = useCurrency()
-  const imageList = images?.length ? images : (images?.[0]?.src ? [images[0]] : [])
-  const [imageIndex, setImageIndex] = useState(0)
-  const [slideOffset, setSlideOffset] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
-  const touchStartX = useRef<number | null>(null)
-  const touchStartY = useRef<number | null>(null)
-  const touchActive = useRef(false)
-  const dragStartX = useRef<number | null>(null)
-  const currentImage = imageList[imageIndex % (imageList.length || 1)]?.src
-  const hasMultipleImages = imageList.length > 1 && !singleImage
-  const displayImages = singleImage ? imageList.slice(0, 1) : imageList
   const href = item._href ?? `/${locale}/property/${slug}`
-
-  const goPrev = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setImageIndex((i) => (i - 1 + imageList.length) % imageList.length)
-  }, [imageList.length])
-
-  const goNext = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setImageIndex((i) => (i + 1) % imageList.length)
-  }, [imageList.length])
-
-  const goPrevFromGesture = useCallback(() => {
-    setImageIndex((i) => (i - 1 + imageList.length) % imageList.length)
-  }, [imageList.length])
-
-  const goNextFromGesture = useCallback(() => {
-    setImageIndex((i) => (i + 1) % imageList.length)
-  }, [imageList.length])
 
   const isList = view === 'list'
   const isSmall = view === 'small'
@@ -189,36 +81,12 @@ function PropertyCard({
     fillHeight && !isList && 'flex-1 min-h-0 flex flex-col justify-between'
   )
 
-  const titleClass = cn(
-    'font-medium text-black dark:text-white duration-300 group-hover:text-primary',
-    isSmall && !isList && 'text-sm',
-    isList && 'text-sm sm:text-base',
-    !isSmall && !isList && 'text-xl'
-  )
-
-  const locationClass = cn(
-    'font-normal text-black/50 dark:text-white/50',
-    isSmall && !isList && 'text-xs',
-    isList && 'text-xs sm:text-sm',
-    isLarge && 'text-base'
-  )
-
   const priceClass = cn(
     'inline-flex items-center justify-center font-semibold rounded-full leading-none',
     isSmall && !isList && 'text-xs px-2 py-1 text-primary bg-primary/10',
     isList && 'h-7 text-sm px-3 bg-primary text-white',
     isLarge && 'h-8 text-base px-4 bg-primary text-white'
   )
-
-  const metaItemClass = cn(
-    'flex flex-col font-normal text-black dark:text-white',
-    isList && 'gap-0.5 text-xs',
-    isSmall && !isList && 'gap-0.5 text-[11px]',
-    !isSmall && !isList && 'gap-1.5 text-sm mobile:text-base'
-  )
-
-  const iconSize = isList ? 18 : isSmall ? 16 : 20
-  const badgeIconSize = isList || isSmall ? 13 : 14
 
   const basePriceEur =
     typeof price === 'number'
@@ -241,63 +109,6 @@ function PropertyCard({
 
   const typeLine = propertyType || ''
   const displayLocation = location
-
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!hasMultipleImages) return
-    const touch = e.touches[0]
-    touchStartX.current = touch.clientX
-    touchStartY.current = touch.clientY
-    touchActive.current = true
-    dragStartX.current = touch.clientX
-    setIsDragging(true)
-  }
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) return
-    const touch = e.touches[0]
-    const dx = touch.clientX - touchStartX.current
-    const dy = touch.clientY - touchStartY.current
-    // Если вертикальное движение сильнее — отдаём приоритет скроллу страницы
-    if (Math.abs(dy) > Math.abs(dx)) {
-      touchActive.current = false
-      return
-    }
-    // При выраженном горизонтальном жесте блокируем скролл/клик
-    if (Math.abs(dx) > 40) {
-      e.preventDefault()
-    }
-    if (dragStartX.current !== null) {
-      const dragDx = touch.clientX - dragStartX.current
-      setSlideOffset(dragDx)
-    }
-  }
-
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) {
-      touchStartX.current = null
-      touchStartY.current = null
-      touchActive.current = false
-      return
-    }
-    const touch = e.changedTouches[0]
-    const dx = touch.clientX - touchStartX.current
-    const dy = touch.clientY - touchStartY.current
-    touchStartX.current = null
-    touchStartY.current = null
-    touchActive.current = false
-    setIsDragging(false)
-    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) {
-      setSlideOffset(0)
-      return
-    }
-    if (dx < 0) {
-      goNextFromGesture()
-    } else {
-      goPrevFromGesture()
-    }
-    setSlideOffset(0)
-    e.preventDefault()
-  }
 
   const topBlock = (
     <div
@@ -389,54 +200,7 @@ function PropertyCard({
     </div>
   )
 
-  const metaBlock = (
-    <div
-      className={cn(
-        'grid grid-cols-3 w-full min-w-0',
-        isList && 'mt-1 pt-1.5 border-t border-black/5 dark:border-white/10'
-      )}
-    >
-      <div
-        className={cn(
-          'flex border-e border-black/10 dark:border-white/20 items-center',
-          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-          isList && 'gap-0.5 py-0.5 justify-start',
-          metaItemClass
-        )}
-      >
-        <Icon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
-        <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
-          {t('bedroomsCount', { count: beds })}
-        </span>
-      </div>
-      <div
-        className={cn(
-          'flex border-e border-black/10 dark:border-white/20 items-center',
-          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-          isList && 'gap-0.5 py-0.5 justify-start',
-          metaItemClass
-        )}
-      >
-        <Icon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
-        <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
-          {t('bathroomsCount', { count: baths })}
-        </span>
-      </div>
-      <div
-        className={cn(
-          'flex items-center min-w-0',
-          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-          isList && 'gap-0.5 py-0.5 justify-start',
-          metaItemClass
-        )}
-      >
-        <Icon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
-        <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
-          {area}{t('areaUnit')}
-        </span>
-      </div>
-    </div>
-  )
+  const metaBlock = <PropertyCardMeta view={view} beds={beds} baths={baths} area={area} />
 
   return (
     <div className={cn('min-w-0 w-full', fillHeight && 'h-full flex flex-col')}>
@@ -448,166 +212,19 @@ function PropertyCard({
             className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           />
         )}
-        <div
-          className={cn(imageWrapper, 'relative')}
-          onTouchStart={singleImage ? undefined : handleTouchStart}
-          onTouchMove={singleImage ? undefined : handleTouchMove}
-          onTouchEnd={singleImage ? undefined : handleTouchEnd}
-        >
-          <div className="property-card-overlay absolute inset-0 z-20 pointer-events-none [&>*]:pointer-events-auto">
-            {marketingBadge && (
-              <div
-                className={cn(
-                  'absolute z-[35] pointer-events-none max-w-[calc(100%-3.5rem)]',
-                  isList ? 'top-2 left-2' : 'top-4 left-4',
-                  isSmall && !isList && 'top-2 left-2'
-                )}
-              >
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1.5 min-w-0 max-w-full rounded px-2 py-1 text-xs font-semibold shadow-sm backdrop-blur-[1px]',
-                    badgeClass
-                  )}
-                >
-                  <Icon
-                    icon={marketingBadge.icon}
-                    width={badgeIconSize}
-                    height={badgeIconSize}
-                    className="shrink-0"
-                    aria-hidden
-                  />
-                  <span className="min-w-0 truncate">{marketingBadge.label}</span>
-                </span>
-              </div>
-            )}
-            <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
-              <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
-            </div>
-            {hasMultipleImages && (
-              <>
-                {/* Левая tappable-зона */}
-                <button
-                  type="button"
-                  aria-label={t('previousImage')}
-                  onClick={goPrev}
-                  className="absolute inset-y-0 left-0 w-1/3 z-20 flex items-center justify-start px-1 sm:px-2 bg-transparent cursor-pointer"
-                >
-                  <span
-                    className={cn(
-                      'inline-flex items-center justify-center rounded-full transition duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary/40',
-                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
-                      'hover:scale-105',
-                      view === 'large' && 'ml-5 p-2',
-                      (view === 'small' || view === 'list') && 'ml-1.5 p-1.5',
-                      isList && 'ml-2'
-                    )}
-                  >
-                    <Icon icon="solar:alt-arrow-left-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
-                  </span>
-                </button>
-                {/* Правая tappable-зона */}
-                <button
-                  type="button"
-                  aria-label={t('nextImage')}
-                  onClick={goNext}
-                  className="absolute inset-y-0 right-0 w-1/3 z-20 flex items-center justify-end px-1 sm:px-2 bg-transparent cursor-pointer"
-                >
-                  <span
-                    className={cn(
-                      'inline-flex items-center justify-center rounded-full transition duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary/40',
-                      'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
-                      'hover:scale-105',
-                      view === 'large' && 'mr-5 p-2',
-                      (view === 'small' || view === 'list') && 'mr-1.5 p-1.5',
-                      isList && 'mr-2'
-                    )}
-                  >
-                    <Icon icon="solar:alt-arrow-right-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
-                  </span>
-                </button>
-              </>
-            )}
-            {hasMultipleImages && view === 'large' && (
-              <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1 pointer-events-none">
-                {imageList.map((_, i) => (
-                  <span
-                    key={i}
-                    className={cn(
-                      'h-1 rounded-full transition-colors',
-                      i === imageIndex ? 'w-3 bg-white' : 'w-1.5 bg-white/60'
-                    )}
-                    aria-hidden
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-          {fullClickable ? (
-            <div className={cn('block group/image h-full w-full')}>
-              {displayImages.length > 0 && (
-                <div className="relative h-full w-full overflow-hidden">
-                  <div
-                    className={cn(
-                      'flex h-full w-full',
-                      !singleImage && isDragging && 'transition-none',
-                      !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
-                    )}
-                    style={
-                      singleImage
-                        ? undefined
-                        : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
-                    }
-                  >
-                    {displayImages.map((img, idx) => (
-                      <div key={idx} className="relative h-full w-full shrink-0">
-                        <Image
-                          src={img.src}
-                          alt={name}
-                          fill
-                          sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
-                          className={imageClass}
-                          unoptimized
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link href={href} className={cn('block group/image h-full w-full')}>
-            {displayImages.length > 0 && (
-              <div className="relative h-full w-full overflow-hidden">
-                <div
-                  className={cn(
-                    'flex h-full w-full',
-                    !singleImage && isDragging && 'transition-none',
-                    !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
-                  )}
-                  style={
-                    singleImage
-                      ? undefined
-                      : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
-                  }
-                >
-                  {displayImages.map((img, idx) => (
-                    <div key={idx} className="relative h-full w-full shrink-0">
-                      <Image
-                        src={img.src}
-                        alt={name}
-                        fill
-                        sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
-                        className={imageClass}
-                        unoptimized
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            </Link>
-          )}
-        </div>
+        <PropertyCardGallery
+          images={images}
+          name={name}
+          slug={slug}
+          href={href}
+          view={view}
+          singleImage={singleImage}
+          fullClickable={fullClickable}
+          imageWrapper={imageWrapper}
+          imageClass={imageClass}
+          promotionType={promotionType}
+          discountPercent={discountPercent}
+        />
         <div className={contentPadding}>
           {isList ? (
             <div className="flex-1 min-w-0 flex flex-col gap-1.5 justify-between h-full">
@@ -686,4 +303,3 @@ function PropertyCard({
 }
 
 export default PropertyCard
-

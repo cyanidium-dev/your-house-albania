@@ -3,8 +3,12 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
-import type { BreadcrumbItem } from "../Breadcrumb";
-import { catalogFilterPath, catalogPath } from "@/lib/routes/catalog";
+import {
+  buildPropertyDetailBreadcrumbItems,
+  toBreadcrumbJsonLdItems,
+  type BreadcrumbLocation,
+  type BreadcrumbDistrict,
+} from "@/lib/routes/breadcrumbs";
 
 type PropertyDetailBreadcrumbProps = {
   locale: string;
@@ -22,13 +26,9 @@ export async function PropertyDetailBreadcrumb({
   districtSlug,
 }: PropertyDetailBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
-  const items: BreadcrumbItem[] = [
-    { label: t("home"), href: `/${locale}` },
-    { label: t("properties"), href: catalogPath(locale) },
-  ];
 
-  let locations: { value: string; label: string; countrySlug?: string }[] = [];
-  let districts: { value: string; label: string }[] = [];
+  let locations: BreadcrumbLocation[] = [];
+  let districts: BreadcrumbDistrict[] = [];
 
   if (citySlug || districtSlug) {
     const opts = await fetchCatalogFilterOptions(locale);
@@ -36,38 +36,20 @@ export async function PropertyDetailBreadcrumb({
     districts = opts.districts;
   }
 
-  if (citySlug) {
-    const city = citySlug.toLowerCase();
-    const cityLabel =
-      locations.find((l) => l.value.toLowerCase() === city)?.label ||
-      formatSlug(citySlug);
-    const trustedCityCountrySlug = locations.find((l) => l.value.toLowerCase() === city)?.countrySlug;
-    const cityHref = catalogFilterPath({ locale, city: citySlug, trustedCityCountrySlug });
-    items.push({ label: cityLabel, href: cityHref });
-  }
-
-  if (districtSlug && citySlug) {
-    const district = districtSlug.toLowerCase();
-    const districtLabel =
-      districts.find((d) => d.value.toLowerCase() === district)?.label ||
-      formatSlug(districtSlug);
-    const trustedCityCountrySlug = locations.find(
-      (l) => l.value.toLowerCase() === citySlug.toLowerCase(),
-    )?.countrySlug;
-    items.push({
-      label: districtLabel,
-      href: catalogFilterPath({ locale, city: citySlug!, district: districtSlug, trustedCityCountrySlug }),
-    });
-  }
-
-  items.push({ label: propertyTitle });
+  const items = buildPropertyDetailBreadcrumbItems({
+    locale,
+    homeLabel: t("home"),
+    propertiesLabel: t("properties"),
+    propertyTitle,
+    citySlug,
+    districtSlug,
+    locations,
+    districts,
+  });
 
   const baseUrl = await getBaseUrl();
   const currentPath = `/${locale}/property/${encodeURIComponent(propertySlug)}`;
-  const jsonLdItems = items.map((it, i) => ({
-    name: it.label,
-    url: it.href ?? (i === items.length - 1 ? currentPath : undefined),
-  }));
+  const jsonLdItems = toBreadcrumbJsonLdItems(items, currentPath);
 
   return (
     <>
@@ -75,10 +57,4 @@ export async function PropertyDetailBreadcrumb({
       <Breadcrumb items={items} />
     </>
   );
-}
-
-function formatSlug(slug: string): string {
-  return decodeURIComponent(slug)
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
 }

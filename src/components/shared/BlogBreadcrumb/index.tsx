@@ -2,7 +2,12 @@ import { Breadcrumb } from "../Breadcrumb";
 import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
-import type { BreadcrumbItem } from "../Breadcrumb";
+import {
+  buildBlogBreadcrumbItems,
+  buildBlogBreadcrumbCurrentPath,
+  toBreadcrumbJsonLdItems,
+} from "@/lib/routes/breadcrumbs";
+
 type BlogBreadcrumbProps = {
   locale: string;
   categorySlug?: string;
@@ -19,35 +24,23 @@ export async function BlogBreadcrumb({
   postSlug,
 }: BlogBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
-  const homeLabel = t("home");
-  const blogLabel = t("blog");
 
-  const items: BreadcrumbItem[] = [
-    { label: homeLabel, href: `/${locale}` },
-    { label: blogLabel, href: postTitle ? `/${locale}/blog` : undefined },
-  ];
-
-  if (categorySlug && categoryLabel) {
-    const categoryHref = postTitle
-      ? `/${locale}/blog?category=${encodeURIComponent(categorySlug)}`
-      : undefined;
-    items.push({ label: categoryLabel, href: categoryHref });
-  }
-
-  if (postTitle) {
-    items.push({ label: postTitle });
-  }
+  const items = buildBlogBreadcrumbItems({
+    locale,
+    homeLabel: t("home"),
+    blogLabel: t("blog"),
+    categorySlug,
+    categoryLabel,
+    postTitle,
+  });
 
   const baseUrl = await getBaseUrl();
-  const currentPath = postSlug
-    ? `/${locale}/blog/${encodeURIComponent(postSlug)}`
-    : categorySlug
-      ? `/${locale}/blog?category=${encodeURIComponent(categorySlug)}`
-      : `/${locale}/blog`;
-  const jsonLdItems = items.map((it, i) => ({
-    name: it.label,
-    url: it.href ?? (i === items.length - 1 ? currentPath : undefined),
-  }));
+  const currentPath = buildBlogBreadcrumbCurrentPath({
+    locale,
+    postSlug,
+    categorySlug,
+  });
+  const jsonLdItems = toBreadcrumbJsonLdItems(items, currentPath);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 import { resolveLocalizedString } from './localized'
 import {
+  buildMetadata,
   pickAbsoluteOgImageUrl,
   resolveChainedDescription,
   resolveChainedTitle,
@@ -108,44 +109,37 @@ export function buildLandingMetadata(
   const noIndex = landingSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false
   const noFollow = landingSeo?.noFollow ?? siteDefaultSeo?.noFollow ?? false
 
-  const base: Metadata = {
-    // `absolute` short-circuits the root layout's `%s — Brand` template
-    // when the CMS metaTitle already includes the brand. Empty string
-    // (no resolved title) is also safe to pass through.
-    title: title ? { absolute: title } : title,
-    description,
-    keywords: resolveKeywords(landingSeo?.keywords, locale),
-    openGraph: {
-      title,
-      description,
-      ...(ogImageAbsolute && {
-        images: [{ url: ogImageAbsolute, width: 1200, height: 630, alt: title }],
-      }),
-    },
-    twitter: {
-      card: 'summary',
-      title,
-      description,
-    },
-  }
+  // `absolute` short-circuits the root layout's `%s — Brand` template when the
+  // CMS metaTitle already includes the brand. Empty string is safe to pass through.
+  const titleField: Metadata['title'] = title ? { absolute: title } : title
+  const keywords = resolveKeywords(landingSeo?.keywords, locale)
 
   if (!isIndexingEnabled()) {
-    return { ...base, robots: indexingDisabledRobots }
+    return buildMetadata({
+      title: titleField,
+      description,
+      keywords,
+      ogTitle: title,
+      ogDescription: description,
+      ogImageUrl: ogImageAbsolute,
+      twitterCard: 'summary',
+      robots: indexingDisabledRobots,
+    })
   }
 
   const hrefPath = itemContext?.pathnameForAlternates
   const hreflang = hrefPath !== undefined ? buildHreflangAlternates(hrefPath) : undefined
-  const alternates =
-    canonical || hreflang?.languages
-      ? {
-          ...(canonical ? { canonical } : {}),
-          ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
-        }
-      : undefined
 
-  return {
-    ...base,
-    alternates,
+  return buildMetadata({
+    title: titleField,
+    description,
+    keywords,
+    ogTitle: title,
+    ogDescription: description,
+    ogImageUrl: ogImageAbsolute,
+    twitterCard: 'summary',
+    canonical,
+    hreflangLanguages: hreflang?.languages,
     robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
-  }
+  })
 }

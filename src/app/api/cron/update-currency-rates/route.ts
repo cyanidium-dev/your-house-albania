@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
   try {
     const [rates, namesByCode] = await Promise.all([
       fetchFixerRates(fixerKey),
-      fetchFixerSymbols(fixerKey).catch(() => ({})),
+      fetchFixerSymbols(fixerKey).catch((): Record<string, string> => ({})),
     ]);
     entries = rates.map((e) => ({
       ...e,

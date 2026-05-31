@@ -1,8 +1,7 @@
-"use client";
-
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { Icon } from "@iconify/react";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 const introComponents: PortableTextComponents = {
@@ -42,9 +41,10 @@ export function CatalogHero({
   breadcrumb,
   agentName,
 }: Props) {
-  const effectiveTitle = agentName ? `Properties by ${agentName}` : title;
+  const t = useTranslations("Catalog");
+  const effectiveTitle = agentName ? t("agentTitle", { name: agentName }) : title;
   const effectiveFallback = agentName
-    ? "Showing listings from this agent"
+    ? t("agentIntroFallback")
     : introFallback;
   const hasIntro = Array.isArray(intro) && intro.length > 0;
   const subtitle = hasIntro ? (

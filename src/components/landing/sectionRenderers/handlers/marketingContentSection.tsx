@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { MarketingContentSection } from '@/components/landing/sections/MarketingContentSection'
+import MarketingContentSection from '@/components/landing/sections/impl/MarketingContentSectionImpl'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { SectionHandler } from './types'
 import type {

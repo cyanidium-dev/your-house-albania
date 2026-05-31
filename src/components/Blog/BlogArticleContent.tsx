@@ -1,5 +1,3 @@
-"use client";
-
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import Link from "next/link";
@@ -43,8 +41,13 @@ function resolveCtaHref(
 
 function createSharedPortableTextComponents(
   locale: string
-): Pick<PortableTextComponents, "marks" | "list" | "listItem"> {
+): Pick<PortableTextComponents, "marks" | "list" | "listItem" | "types"> {
   return {
+    types: {
+      // Legacy content occasionally carries a bare inline span at block level;
+      // render its text instead of emitting an "Unknown block type" warning.
+      span: ({ value }) => <>{(value as { text?: string })?.text ?? ""}</>,
+    },
     marks: {
       link: ({ children, value }) => {
         const href = resolveCtaHref(
@@ -120,6 +123,7 @@ function createBlogComponents(
     block: blockComponents,
     ...sharedPortable,
     types: {
+      ...sharedPortable.types,
       image: ({ value }) => <BlogContentImage value={value as { asset?: { url?: string }; alt?: string; caption?: string }} />,
       blogCtaBlock: ({ value }) => {
         const v = value as {

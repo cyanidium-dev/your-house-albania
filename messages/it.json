@@ -256,6 +256,8 @@
   },
   "Catalog": {
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
+    "agentTitle": "Immobili di {name}",
+    "agentIntroFallback": "Mostra gli annunci di questo agente",
     "empty": {
       "title": "Nessuna proprietà trovata",
       "description": "Prova a modificare o reimpostare i filtri.",
