@@ -42,10 +42,16 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
 
   return (
     <HeaderVisualState>
-      {({ sticky, isHomepage }) => (
+      {({ sticky, isHomepage, isCatalog }) => {
+        // Airbnb-style: on catalog/listing routes the header condenses while scrolled.
+        const shrink = sticky && isCatalog
+        const logoSizeClass = shrink
+          ? "md:h-12 md:w-[105px]"
+          : "md:h-[68px] md:w-[150px]"
+        return (
         <HeaderMobileController>
           {({ open: navbarOpen, onClose, onToggle }) => (
-            <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 md:h-24 md:py-1`}>
+            <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 ${shrink ? "md:h-16" : "md:h-24"} md:py-1`}>
               <div className="h-full min-w-0 px-4 lg:px-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-0">
                 <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
@@ -59,7 +65,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={siteSettings.logoUrl.startsWith('http')}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                             />
                             <Image
                               src={siteSettings.logoUrl}
@@ -67,7 +73,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={siteSettings.logoUrl.startsWith('http')}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                             />
                           </>
                         ) : (
@@ -78,7 +84,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={true}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                             />
                             <Image
                               src={'/images/header/logo.svg'}
@@ -86,7 +92,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={true}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto md:h-[68px] md:w-[150px] ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                             />
                           </>
                         )}
@@ -189,7 +195,8 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
             </header>
           )}
         </HeaderMobileController>
-      )}
+        )
+      }}
     </HeaderVisualState>
   )
 }

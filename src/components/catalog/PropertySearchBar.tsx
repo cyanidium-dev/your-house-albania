@@ -10,6 +10,8 @@ import {
   type PropertySearchBarProps,
 } from "@/components/catalog/useCatalogFilters";
 import { CatalogFilterForm } from "@/components/catalog/CatalogFilterForm";
+import { CatalogFilterCompactBar } from "@/components/catalog/CatalogFilterCompactBar";
+import { CatalogFilterCollapse } from "@/components/catalog/CatalogFilterCollapse";
 
 export function PropertySearchBar(props: PropertySearchBarProps) {
   const t = useTranslations("Catalog.filters");
@@ -22,6 +24,9 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
     mobileFilterModalOpen,
     setMobileFilterModalOpen,
     clientMounted,
+    isCompact,
+    collapsed,
+    expandCompactFilters,
   } = f;
 
   return (
@@ -74,9 +79,17 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
           <Icon icon="ph:sliders-horizontal" width={20} height={20} aria-hidden />
         </button>
       </div>
-      {/* Desktop/tablet inline form only (md+). Hidden on mobile via CSS — same HTML on SSR/client, no hydration mismatch. */}
-      <div className="hidden min-w-0 md:block">
-        <CatalogFilterForm placement="inline" filters={f} />
+      {/* Desktop/tablet inline form only (md+). Hidden on mobile via CSS — same HTML on SSR/client, no hydration mismatch.
+          On scroll-down it condenses to a compact summary pill (Airbnb-style); click to reopen the full form. */}
+      <div className="mb-6 hidden min-w-0 md:block">
+        <CatalogFilterCollapse
+          compact={isCompact}
+          collapsed={collapsed}
+          form={<CatalogFilterForm placement="inline" filters={f} />}
+          pill={
+            <CatalogFilterCompactBar filters={f} onExpand={expandCompactFilters} />
+          }
+        />
       </div>
       {clientMounted &&
         mobileFilterModalOpen &&

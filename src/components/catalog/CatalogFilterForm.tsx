@@ -124,7 +124,10 @@ export function CatalogFilterForm({
       className={cn(
         placement === "inline"
           ? cn(
-              "mb-6 flex min-w-0 flex-col rounded-2xl border border-dark/10 bg-white/55 shadow-md backdrop-blur-md dark:border-white/10 dark:bg-dark/55",
+              // No own glass background: the shared GLASS surface in
+              // CatalogFilterCollapse backs this form (avoids the backdrop-blur
+              // pop from fading a blurred layer). Only layout/padding here.
+              "flex min-w-0 flex-col",
               "px-4 sm:px-6",
               isCompact ? "gap-3 py-3 sm:py-4" : "gap-4 py-4 sm:py-5"
             )
@@ -132,85 +135,87 @@ export function CatalogFilterForm({
       )}
     >
       {/*
-        BASIC FILTERS — two tidy rows on desktop.
-        Row 1 (categorical): location · property type · deal type
-        Row 2 (ranges + action): price · area · Reset/Advanced/Search group
-        Tablet collapses to 2 columns; mobile (modal) stacks to a single column.
+        BASIC FILTERS — one field per grid cell so nothing ever crams.
+        Fields grid (3 cols on tablet+): location · type · deal / price · area · Search.
+        Secondary actions (Reset · Advanced) sit on their own slim right-aligned row.
+        Mobile (modal) stacks everything to a single column.
       */}
-      <div
-        className={cn(
-          "grid grid-cols-1 gap-4 items-end min-w-0",
-          "md:grid-cols-2 xl:grid-cols-3",
-          "[&>*]:min-w-0"
-        )}
-      >
-        {/* Location */}
-        <FilterSelect
-          label={t("location")}
-          value={city || "any"}
-          onValueChange={(v) => {
-            setCity(v === "any" ? "" : v);
-          }}
-          options={locationOptions}
-          anyLabel={t("anyLocation")}
-        />
+      <div className="flex min-w-0 flex-col gap-4">
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4 items-end min-w-0",
+            "sm:grid-cols-2 md:grid-cols-3",
+            "[&>*]:min-w-0"
+          )}
+        >
+          {/* Location */}
+          <FilterSelect
+            label={t("location")}
+            value={city || "any"}
+            onValueChange={(v) => {
+              setCity(v === "any" ? "" : v);
+            }}
+            options={locationOptions}
+            anyLabel={t("anyLocation")}
+          />
 
-        {/* Property type */}
-        <FilterSelect
-          label={t("propertyType")}
-          value={type || "any"}
-          onValueChange={(v) => setType(v === "any" ? "" : v)}
-          options={propertyTypeOptions}
-          anyLabel={t("anyType")}
-        />
+          {/* Property type */}
+          <FilterSelect
+            label={t("propertyType")}
+            value={type || "any"}
+            onValueChange={(v) => setType(v === "any" ? "" : v)}
+            options={propertyTypeOptions}
+            anyLabel={t("anyType")}
+          />
 
-        {/* Deal type */}
-        <FilterSelect
-          label={t("dealType")}
-          value={deal || "any"}
-          onValueChange={setDeal}
-          options={dealTypeOptions}
-          anyLabel={t("any")}
-        />
+          {/* Deal type */}
+          <FilterSelect
+            label={t("dealType")}
+            value={deal || "any"}
+            onValueChange={setDeal}
+            options={dealTypeOptions}
+            anyLabel={t("any")}
+          />
 
-        {/* Price range */}
-        <RangeField
-          label={t("priceRange")}
-          valueDisplay={priceDisplay}
-          min={currentRange.min}
-          max={currentRange.max}
-          step={1000}
-          value={priceValues}
-          onValueChange={setPriceValues}
-        />
+          {/* Price range */}
+          <RangeField
+            label={t("priceRange")}
+            valueDisplay={priceDisplay}
+            min={currentRange.min}
+            max={currentRange.max}
+            step={1000}
+            value={priceValues}
+            onValueChange={setPriceValues}
+          />
 
-        {/* Area / size range — paired inline with price, no longer a detached block */}
-        <RangeField
-          label={t("area")}
-          valueDisplay={areaDisplay}
-          min={defaultAreaRange.min}
-          max={defaultAreaRange.max}
-          step={1}
-          value={areaValues}
-          onValueChange={setAreaValues}
-        />
+          {/* Area / size range — paired inline with price, no longer a detached block */}
+          <RangeField
+            label={t("area")}
+            valueDisplay={areaDisplay}
+            min={defaultAreaRange.min}
+            max={defaultAreaRange.max}
+            step={1}
+            value={areaValues}
+            onValueChange={setAreaValues}
+          />
 
-        {/* Action group: Reset · Advanced · Search as one cluster */}
-        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-2 justify-end min-w-0">
+          {/* Search: one control per cell — fills the 6th cell, aligned to the field baseline */}
+          <div className="flex items-end">
+            <Button
+              type="submit"
+              className="h-10 w-full rounded-full cursor-pointer"
+            >
+              {t("search")}
+            </Button>
+          </div>
+        </div>
+
+        {/* Secondary actions: slim, right-aligned, never compete with the fields */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
-            onClick={resetFilters}
-          >
-            <span className="inline-block max-w-full truncate">
-              {t("resetFilters")}
-            </span>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 px-4 rounded-full cursor-pointer hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto shrink-0"
+            className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
             onClick={() => setShowAdvanced((v) => !v)}
           >
             <span className="inline-block max-w-full truncate">
@@ -218,10 +223,14 @@ export function CatalogFilterForm({
             </span>
           </Button>
           <Button
-            type="submit"
-            className="h-10 px-6 rounded-full cursor-pointer w-full sm:w-auto shrink-0"
+            type="button"
+            variant="outline"
+            className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
+            onClick={resetFilters}
           >
-            {t("search")}
+            <span className="inline-block max-w-full truncate">
+              {t("resetFilters")}
+            </span>
           </Button>
         </div>
       </div>
