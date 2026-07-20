@@ -28,12 +28,11 @@ const GLASS =
  * glass fills it) before switching to the measured absolute overlay.
  */
 export function CatalogFilterCollapse({
-  compact,
   collapsed,
   form,
   pill,
 }: {
-  /** Page scrolled past the condense threshold — reserve only the pill height. */
+  /** Page scrolled past the condense threshold. Accepted for API compatibility. */
   compact: boolean;
   /** Show the pill summary instead of the form (compact AND not revealed). */
   collapsed: boolean;
@@ -74,14 +73,24 @@ export function CatalogFilterCollapse({
     };
   }, [mounted]);
 
-  // Reserve the pill height whenever scrolled, so the form overlays (and the
-  // results stay put) on reveal/collapse. Full height only at the very top.
-  const reserveH = compact ? pillH : formH;
-  // The visible glass tracks the *content* shown (pill when collapsed, else form).
+  // The visible panel height tracks the *content* shown (pill when collapsed,
+  // else the full form).
   const glassH = collapsed ? pillH : formH;
+  // Reserve EXACTLY the visible panel height in normal flow, so the catalog grid
+  // always starts below the sticky bar. Previously only the pill height was
+  // reserved while scrolled, so re-expanding the form (scroll up) overlaid the
+  // cards. The wrapper's transition-[height] animates this recalculation.
+  const reserveH = glassH;
 
   // Smooth, slightly long ease so the morph feels premium rather than snappy.
   const ease = "duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
+
+  // When collapsed (scrolled pill), the bar reads as a centered floating control
+  // panel instead of stretching full width (desktop/tablet only — this component
+  // renders inside an md:block wrapper). Applied to the glass + pill layers only,
+  // so the full-width form layer still measures its natural height.
+  const collapsedPanel =
+    "md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[42rem] md:max-w-[calc(100%-1rem)]";
 
   // ONE constant radius for both states instead of animating rounded-2xl -> full.
   // 24px (rounded-3xl) is exactly half the pill height, so the collapsed bar reads
@@ -104,7 +113,8 @@ export function CatalogFilterCollapse({
           GLASS,
           mounted
             ? `absolute inset-x-0 top-0 transition-[height] ${ease}`
-            : "absolute inset-0"
+            : "absolute inset-0",
+          mounted && collapsed && collapsedPanel
         )}
         style={mounted ? { height: glassH } : undefined}
       />
@@ -132,7 +142,8 @@ export function CatalogFilterCollapse({
           "z-10",
           !mounted && "hidden",
           mounted && `absolute inset-x-0 top-0 transition-opacity ${ease}`,
-          mounted && collapsed ? "opacity-100" : "pointer-events-none opacity-0"
+          mounted && collapsed ? "opacity-100" : "pointer-events-none opacity-0",
+          mounted && collapsed && collapsedPanel
         )}
       >
         {pill}

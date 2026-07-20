@@ -108,8 +108,6 @@ export function CatalogFilterForm({
     amenityMultiOptions,
     sort,
     setSort,
-    pageSize,
-    setPageSize,
     viewModeFromProps,
     areaDisplay,
     defaultAreaRange,
@@ -311,19 +309,6 @@ export function CatalogFilterForm({
                 ]}
               />
 
-              {/* Results per page */}
-              <FilterSelect
-                label={t("resultsPerPage")}
-                value={pageSize || "24"}
-                onValueChange={setPageSize}
-                anyLabel="24"
-                anyValue="24"
-                options={[
-                  { value: "12", label: "12" },
-                  { value: "36", label: "36" },
-                  { value: "48", label: "48" },
-                ]}
-              />
               {/* View mode switcher: presentation control for results row */}
               <ViewModeSwitcherUI
                 fallbackViewMode={viewModeFromProps}

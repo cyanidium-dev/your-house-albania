@@ -181,6 +181,23 @@ export function CatalogBodyClient({
   // Track the filter key so we reset when filters change (URL changes → SSR re-render → new props)
   const filterKeyRef = React.useRef<string>('');
 
+  // Keep `pageSize` out of the visible URL (infinite scroll uses a fixed internal
+  // page size). Strip it client-side without a navigation, so inbound links that
+  // still carry ?pageSize render clean. loadMore() reads window.location.search
+  // and the API defaults to the same page size, so paging is unaffected.
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("pageSize")) {
+      url.searchParams.delete("pageSize");
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${url.pathname}${url.search}${url.hash}`
+      );
+    }
+  }, []);
+
   // Reset infinite scroll when SSR re-renders with new pageItems (filter change)
   React.useEffect(() => {
     const filterKey = JSON.stringify({ pageItems: pageItems.map(p => p.slug) });
@@ -253,7 +270,7 @@ export function CatalogBodyClient({
     viewMode === "small" &&
       "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 min-w-0",
     viewMode === "large" &&
-      "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 md:gap-10 min-w-0"
+      "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 min-w-0"
   );
 
   // Map item: in-flow with cards. Grid modes use stretch + h-full so map matches row height.
@@ -401,7 +418,7 @@ export function CatalogBodyClient({
       <div
         className={cn(
           "sticky z-40 min-w-0 [contain:layout]",
-          "top-[calc(env(safe-area-inset-top,0px)+72px)] md:top-[118px]"
+          "top-[calc(env(safe-area-inset-top,0px)+72px)] md:top-[84px]"
         )}
       >
         <PropertySearchBar

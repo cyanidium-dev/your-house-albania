@@ -1,44 +1,47 @@
-# Refactor Prompt 06 — Performance (P3)
+# Goal
+Cut client JS and layout instability: lazy-load the property-detail map, configure `next/image` for the Sanity CDN, remove dead heavy deps, push the currency boundary so cards can be server components, and kill a `matchMedia`-driven CLS. **No visual change.**
 
-## Goal
-Reduce payload and layout shift without changing visuals: drop runtime icon fetching and let `next/image` optimize Sanity CDN images.
+# Context
+Audit §11. `PropertiesMap` (catalog) is already lazy, but `PropertyLocationMap` is imported eagerly into every property page, shipping maplibre-gl in that route's bundle. `next.config.ts` has no `images` block. Three npm deps are unused. Several non-interactive components are needlessly `"use client"`, and a `matchMedia`→state pattern shifts card widths after mount.
 
-## Context
-`@iconify/react`'s runtime `Icon` is used in 37 files → per-icon network fetch + CLS. ~50 `next/image` usages set `unoptimized` (Sanity CDN bypasses Next optimization) → larger payloads. The map is already correctly lazy-loaded — leave it. Audit §11.
+# Files to inspect
+- `src/app/[locale]/property/[slug]/page.tsx:8` (eager `import` of `PropertyLocationMap`, rendered `:269`)
+- `src/components/catalog/CatalogBodyClient.tsx:18` (the correct `next/dynamic` pattern to copy) and `:462,495` (raw `<img>` in map popups)
+- `next.config.ts` (no `images.remotePatterns`)
+- `package.json` — confirm `react-slick`, `slick-carousel`, `react-phone-number-input` unused (grep), then ensure they were removed in Phase 2 (if not, remove here)
+- Currency boundary: `src/components/shared/PriceText.tsx` (+ `useCurrency`), `src/components/shared/property/PropertyCard.tsx`, `PropertyBadges.tsx`
+- CLS: `src/components/property/SimilarPropertiesCarousel.tsx:18` (`matchMedia`→`isMobile`)
+- Other server-able client components: `src/components/property/PropertyAmenitiesSection.tsx`, `src/components/Layout/Footer/index.tsx`, `src/components/catalog/ViewModeSwitcherUI.tsx`
 
-## Files to inspect
-- Grep `@iconify/react` (37 files) — catalog the actual icon names in use.
-- Grep `unoptimized` on `next/image` (~50 sites).
-- `next.config.*` (image config / loader).
+# Allowed changes
+- Convert `PropertyLocationMap` to `next/dynamic({ ssr:false })` with a sized placeholder (mirror `CatalogBodyClient.tsx:18`).
+- Add `images.remotePatterns` (Sanity CDN host) + sensible `formats`/`deviceSizes` to `next.config.ts`; convert the two `CatalogBodyClient` `<img>` to `next/image` where layout permits.
+- Isolate `useCurrency` into the smallest leaf (`PriceText`) so `PropertyCard`/`PropertyBadges` can drop `"use client"` and render on the server.
+- Replace the `matchMedia`→state width switch with a CSS/responsive approach (no post-mount state flip).
 
-## Allowed changes
-- Replace runtime Iconify with a build-time/offline approach: either `@iconify/json` + offline addon, or local SVG components for the finite icon set actually used.
-- Add a Sanity image loader (custom `loader` or `images.remotePatterns` + remove `unoptimized`) so `next/image` can serve sized/optimized images.
+# Forbidden changes
+- No visual/layout change: image sizes, card appearance, and map behavior must look identical.
+- Do NOT lazy-load anything above the fold that would hurt LCP; the map is below the fold on detail pages — verify.
+- Do NOT convert a component to a server component if it actually uses state/effects/handlers — verify each candidate first.
+- No new dependencies.
 
-## Forbidden changes
-- Do NOT change icon glyphs or sizes (visual parity required).
-- Do NOT change the lazy map setup.
-- Do NOT introduce a new heavy runtime dependency.
+# Step-by-step plan
+1. `next/dynamic` the property map; confirm the page renders and the map still appears on scroll; check the route's JS payload drops.
+2. Add the images config; convert the two `<img>`; verify Sanity images still load (no broken/remote-host errors).
+3. Move currency to `PriceText`; remove `"use client"` from `PropertyCard`/`PropertyBadges` only if they then have no client-only APIs.
+4. Replace the `matchMedia` width switch with CSS; verify no width jump on load.
 
-## Step-by-step plan
-1. Enumerate every icon name actually rendered; build the offline/local set covering exactly those.
-2. Swap `Icon` usages; verify each renders the same glyph/size.
-3. Configure the Sanity image loader; remove `unoptimized` only where the loader covers the host.
-4. Spot-check LCP/CLS on catalog + property detail before/after.
-5. Run checks.
+# Acceptance criteria
+- Property-detail route no longer bundles maplibre-gl in its initial JS (verify via build output / bundle analysis).
+- `next/image` serves Sanity images with no console/runtime remote-host error.
+- `PropertyCard`/`PropertyBadges` compile as server components (or are documented as why they must stay client).
+- No card-width shift on the similar-properties carousel during load (CLS).
+- All four previously-flagged deps are gone from `package.json`.
 
-## Acceptance criteria
-- No runtime icon network requests for the rendered set (verify in Network panel).
-- Visual parity (icons + images look identical).
-- LCP/CLS not regressed on catalog and property detail.
-- `lint`+`typecheck`+`build` green.
+# Required checks
+- `npm run lint`
+- `npx tsc --noEmit`
+- `npm run build`
 
-## Required checks
-```
-npm run lint
-npm run typecheck
-npm run build
-```
-
-## Output format
-List changed files, the icon-replacement strategy, the image-loader config, and a short before/after note on payload/CLS for one page.
+# Output format
+Report: bundle-size before/after for the property route (maplibre removed), images config added, components converted to server (or why not), the CLS fix, and any candidate you left as client (with the client-only API that requires it).

@@ -40,7 +40,6 @@ export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
     beds,
     sort,
     amenities,
-    pageSize,
     city,
     district,
     initialAgentSlug,
@@ -89,8 +88,8 @@ export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
   if (amenities.length > 0) params.set("amenities", amenities.join(","));
   else params.delete("amenities");
 
-  if (pageSize) params.set("pageSize", pageSize);
-  else params.delete("pageSize");
+  // pageSize is an internal/API concern only (infinite scroll). Never expose it in browser URLs.
+  params.delete("pageSize");
 
   // View mode is UI preference (localStorage), not part of search/filter query
   params.delete("view");

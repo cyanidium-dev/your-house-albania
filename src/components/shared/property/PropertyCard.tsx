@@ -15,7 +15,7 @@ function PropertyCard({
   item,
   locale,
   view = 'large',
-  fullClickable = false,
+  fullClickable = true,
   singleImage = false,
   fillHeight = false,
 }: {

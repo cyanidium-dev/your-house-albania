@@ -3,8 +3,10 @@ import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
+import Script from "next/script";
 import { routing } from "@/i18n/routing";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { GTM_ID, CLARITY_ID, analyticsEnabled } from "@/lib/analytics/config";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"] });
 
@@ -61,6 +63,43 @@ export default async function RootLayout({
       <body
         className={`${font.className} bg-white dark:bg-black antialiased transition-colors duration-300 ease-out`}
       >
+        {analyticsEnabled && (
+          <>
+            {/* Consent Mode v2 — default state (denied). Must run before GTM. */}
+            <Script id="consent-default" strategy="beforeInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});`}
+            </Script>
+            {/* Google Tag Manager (noscript) */}
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+                height="0"
+                width="0"
+                style={{ display: "none", visibility: "hidden" }}
+              />
+            </noscript>
+            {/* End Google Tag Manager (noscript) */}
+            {/* Google Tag Manager */}
+            <Script id="gtm-base" strategy="afterInteractive">
+              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`}
+            </Script>
+            {/* End Google Tag Manager */}
+            {/* Microsoft Clarity */}
+            <Script id="ms-clarity" strategy="afterInteractive">
+              {`(function(c,l,a,r,i,t,y){
+c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "${CLARITY_ID}");`}
+            </Script>
+            {/* End Microsoft Clarity */}
+          </>
+        )}
         <NextTopLoader color="#07be8a" />
         <ThemeProvider
           attribute="class"

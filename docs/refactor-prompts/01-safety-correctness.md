@@ -1,48 +1,49 @@
-# Refactor Prompt 01 — Safety & Correctness (P0)
+# Goal
+Remove safety footguns and correctness bugs **without changing any user-visible behavior**. This is the warm-up phase: small, low-risk, high-confidence fixes that make the rest of the roadmap safe.
 
-## Goal
-Stop unpublished, sold, and archived properties from leaking into every public surface. Public property queries must match the Studio's own contract: published + active lifecycle only.
+# Context
+Domlyva is a Next.js 15 (App Router, React 19) real-estate site backed by Sanity CMS, 5 locales (next-intl), planned to become a multi-tenant SaaS. A fresh audit (`docs/TECHNICAL_AUDIT_LATEST.md`) found the codebase is sound but carries a few defense-in-depth gaps and a correctness bug in a locale list. Fix these first so later phases build on a clean base.
 
-## Context
-The Sanity schema defines `isPublished` (boolean) and `lifecycleStatus` (string) on `property` — see `domlivo-admin/schemaTypes/documents/property.ts:107,116`. The Studio's listing query already enforces them (`domlivo-admin/lib/sanity/queries.ts:258`):
-`*[_type == "property" && isPublished == true && (lifecycleStatus == "active" || !defined(lifecycleStatus))]`.
-The frontend does NOT, so sold/draft/archived listings appear in catalog, detail, homepage, and sitemap. This is the single highest-risk defect in the audit (§2.1).
+# Files to inspect
+- `src/lib/sanity/writeClient.ts` (missing `server-only`)
+- `src/app/editor/login/page.tsx` (~line 33) and `.env.example` (~line 42) — stale editor-secret guidance
+- `src/components/Auth/SignIn/index.tsx` (line 11) and `src/components/Auth/SignUp/index.tsx` (line 9) — `LOCALES` array missing `it`
+- `src/app/api/contact-agent/route.ts` and `src/app/api/registration-request/route.ts` — no rate limiting; PII logging at `contact-agent/route.ts:~147`
+- `src/app/api/editor/login/route.ts` (~line 28) — non-constant-time password compare
 
-## Files to inspect
-- `src/lib/sanity/queries/catalog.ts:127-150` (`buildCatalogWhereClause`)
-- `src/lib/sanity/queries/property.ts:9, 105, 164`
-- `src/lib/sanity/queries/home.ts:28`
-- `src/app/sitemap.ts:159` (`fetchSitemapTypeEntries`), `:295` (`fetchSitemapNonGeoListingEntries`), `:390` (already correct — use as reference)
-- `domlivo-admin/lib/sanity/queries.ts:258` (the canonical predicate)
+# Allowed changes
+- Add `import 'server-only';` to `writeClient.ts`.
+- Add `it` to the hardcoded locale arrays in the two Auth files (ONLY if you are NOT deleting `Auth/**` in Phase 2; if Phase 2 deletes it, skip).
+- Add a minimal in-memory/edge IP token-bucket rate limiter to the two public form routes (return 429 on abuse). Keep it dependency-free or use an existing lightweight approach.
+- Reduce `contact-agent` log line to non-PII (counts/lengths only, not name/phone/email).
+- Make the editor password comparison constant-time (e.g. `crypto.timingSafeEqual`).
+- Update the stale docs strings in `editor/login/page.tsx` and `.env.example` to state that `EDITOR_SESSION_SECRET` is required and `SANITY_WRITE_TOKEN` is NOT a fallback.
 
-## Allowed changes
-- Add the publish/lifecycle predicate to each public property query.
-- Create one shared GROQ fragment string (e.g. `src/lib/sanity/groq/publishedPropertyFilter.ts`) and reuse it so the rule lives in one place.
+# Forbidden changes
+- No refactors, renames, file moves, or deletions (that is Phase 2+).
+- No change to the editor auth flow semantics, cookie flags, or token handling beyond constant-time compare.
+- No new heavy dependencies.
+- Do not alter form fields, endpoints, or the Telegram payload shape.
 
-## Forbidden changes
-- Do NOT change pagination, sorting, projections, or returned fields.
-- Do NOT alter the already-correct `sitemap.ts:390`.
-- Do NOT touch the admin repo.
-- Do NOT change caching/revalidate config.
+# Step-by-step plan
+1. `server-only` import in `writeClient.ts`; verify nothing client-side imports it (grep).
+2. Fix the `it` locale omission in both Auth files (or note skipped because Phase 2 deletes them).
+3. Implement the rate limiter as a small helper; wire into both routes before processing.
+4. Swap the PII log for a safe summary.
+5. Constant-time password compare in the login route.
+6. Correct the two stale doc strings.
 
-## Step-by-step plan
-1. Add `export const PUBLISHED_PROPERTY_FILTER = 'isPublished == true && (lifecycleStatus == "active" || !defined(lifecycleStatus))'`.
-2. In `buildCatalogWhereClause`, push this into `parts` right after `_type == "property"`.
-3. In `property.ts` (3 query sites) and `home.ts:28`, append `&& ${PUBLISHED_PROPERTY_FILTER}` to the property predicate.
-4. In `sitemap.ts:159` and `:295`, replace/augment `defined(status)` with the published filter.
-5. Run the required checks.
+# Acceptance criteria
+- `writeClient.ts` starts with `import 'server-only';` and build still succeeds.
+- Hitting `contact-agent`/`registration-request` rapidly returns 429 after the threshold; a single normal submit still works.
+- Editor login still succeeds with the correct password and fails with a wrong one.
+- No PII (name/phone/email) appears in server logs for a contact submit.
+- `.env.example` and the login page no longer mention `SANITY_WRITE_TOKEN` as an editor secret.
 
-## Acceptance criteria
-- A property with `isPublished == false` or `lifecycleStatus == "archived"/"sold"` does NOT appear in: catalog list, property detail (returns 404/notFound), homepage blocks, or any sitemap entry.
-- A property with `isPublished == true` and undefined `lifecycleStatus` still appears (back-compat).
-- No change to field projections or ordering for published properties.
+# Required checks
+- `npm run lint`
+- `npx tsc --noEmit`
+- `npm run build`
 
-## Required checks
-```
-npm run lint
-npm run typecheck   # or: npx tsc --noEmit
-npm run build
-```
-
-## Output format
-List changed files, the exact predicate added per file, and a short note confirming an unpublished fixture is excluded from each surface.
+# Output format
+Report: changed files (with one-line rationale each), any files intentionally skipped (and why), residual risks, and what is deferred to later phases.
