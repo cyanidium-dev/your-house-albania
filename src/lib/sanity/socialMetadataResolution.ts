@@ -99,6 +99,11 @@ export type BuildMetadataInput = {
   canonical?: string;
   hreflangLanguages?: NonNullable<Metadata['alternates']>['languages'];
   robots?: Metadata['robots'];
+  /**
+   * Editorial freshness → `article:modified_time` meta tag. Emitted via `other`
+   * so the current og:type (unset/website) stays untouched.
+   */
+  modifiedTimeIso?: string;
 };
 
 /**
@@ -140,5 +145,8 @@ export function buildMetadata(input: BuildMetadataInput): Metadata {
         }
       : {}),
     ...(input.robots !== undefined ? { robots: input.robots } : {}),
+    ...(input.modifiedTimeIso
+      ? { other: { 'article:modified_time': input.modifiedTimeIso } }
+      : {}),
   };
 }

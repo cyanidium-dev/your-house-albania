@@ -42,6 +42,14 @@ export type LandingMetadataItemContext = {
   itemOgImageUrl?: string
   /** Path after locale (e.g. `/cities`, `/sale`). Used for hreflang alternates. */
   pathnameForAlternates?: string
+  /** `landingPage.contentUpdatedAt` (date string) → `article:modified_time`. */
+  contentUpdatedAt?: string
+}
+
+function resolveModifiedTimeIso(raw: string | undefined): string | undefined {
+  if (!raw) return undefined
+  const d = new Date(raw)
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString()
 }
 
 function resolveCanonicalUrl(
@@ -113,6 +121,7 @@ export function buildLandingMetadata(
   // CMS metaTitle already includes the brand. Empty string is safe to pass through.
   const titleField: Metadata['title'] = title ? { absolute: title } : title
   const keywords = resolveKeywords(landingSeo?.keywords, locale)
+  const modifiedTimeIso = resolveModifiedTimeIso(itemContext?.contentUpdatedAt)
 
   if (!isIndexingEnabled()) {
     return buildMetadata({
@@ -124,6 +133,7 @@ export function buildLandingMetadata(
       ogImageUrl: ogImageAbsolute,
       twitterCard: 'summary',
       robots: indexingDisabledRobots,
+      modifiedTimeIso,
     })
   }
 
@@ -141,5 +151,6 @@ export function buildLandingMetadata(
     canonical,
     hreflangLanguages: hreflang?.languages,
     robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
+    modifiedTimeIso,
   })
 }

@@ -1,5 +1,10 @@
 import type { BreadcrumbItem } from "@/components/shared/Breadcrumb";
-import { catalogFilterPath, catalogPath, cityInfoPath } from "@/lib/routes/catalog";
+import {
+  catalogFilterPath,
+  catalogPath,
+  cityInfoPath,
+  districtsHubPath,
+} from "@/lib/routes/catalog";
 
 export type BreadcrumbLocation = {
   value: string;
@@ -97,6 +102,63 @@ export function buildCityLandingBreadcrumbItems(args: {
     { label: citiesLabel, href: `/${locale}/cities` },
     { label: cityLabel },
   ];
+}
+
+export function buildGuidesBreadcrumbItems(args: {
+  locale: string;
+  homeLabel: string;
+  guidesLabel: string;
+  guideTitle: string;
+}): BreadcrumbItem[] {
+  const { locale, homeLabel, guidesLabel, guideTitle } = args;
+  // No guides index route exists, so the "Guides" crumb is unlinked.
+  return [
+    { label: homeLabel, href: `/${locale}` },
+    { label: guidesLabel },
+    { label: guideTitle },
+  ];
+}
+
+export function buildDistrictsBreadcrumbItems(args: {
+  locale: string;
+  homeLabel: string;
+  countryLabel: string;
+  countrySlug: string;
+  cityLabel: string;
+  citySlug: string;
+  districtsLabel: string;
+  /** When set, "Districts" links to the hub and the district is the current page. */
+  districtLabel?: string;
+}): BreadcrumbItem[] {
+  const {
+    locale,
+    homeLabel,
+    countryLabel,
+    countrySlug,
+    cityLabel,
+    citySlug,
+    districtsLabel,
+    districtLabel,
+  } = args;
+  const items: BreadcrumbItem[] = [
+    { label: homeLabel, href: `/${locale}` },
+    { label: countryLabel, href: `/${locale}/${encodeURIComponent(countrySlug)}` },
+    {
+      label: cityLabel,
+      href: catalogFilterPath({
+        locale,
+        city: citySlug,
+        country: countrySlug,
+        trustedCityCountrySlug: countrySlug,
+      }),
+    },
+    {
+      label: districtsLabel,
+      href: districtLabel ? districtsHubPath(locale, citySlug, countrySlug) : undefined,
+    },
+  ];
+  if (districtLabel) items.push({ label: districtLabel });
+  return items;
 }
 
 export function buildFavoritesBreadcrumbItems(args: {

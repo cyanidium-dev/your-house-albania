@@ -2,6 +2,7 @@ import type { FaqData } from '@/components/landing/sections/impl/FaqSectionImpl'
 import type { SeoTextData } from '@/components/landing/sections/impl/SeoTextSectionImpl'
 import type { PortableTextBlock } from '@portabletext/types'
 import { resolveLocalizedContent, resolveLocalizedString } from '@/lib/sanity/localized'
+import { isPublicDealQuery } from '@/lib/catalog/publicDealTypes'
 import type { LandingPageDoc, LandingSectionBase } from './types'
 
 export function asSections(doc: LandingPageDoc | null | undefined): LandingSectionBase[] {
@@ -19,6 +20,9 @@ export function heroTabsFromSection(section: LandingSectionBase, locale: string)
       key: (((t.key as string) === 'shortTerm' ? 'short-term' : (t.key as string)) ?? '') as string,
       label: resolveLocalizedString(t.label as never, locale) || undefined,
     }))
+    // Rentals hidden from the public UI regardless of the CMS tab config
+    // (CMS untouched → re-enabling is instant via PUBLIC_DEAL_TYPES).
+    .filter((t) => isPublicDealQuery(t.key))
 }
 
 export function resolveRichTextDataFromContent(

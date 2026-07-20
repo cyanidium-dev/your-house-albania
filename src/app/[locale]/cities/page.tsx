@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
     return buildLandingMetadata(seo as never, siteDefaultSeo as never, locale, {
       pathnameForAlternates: "cities",
+      contentUpdatedAt: (landing as { contentUpdatedAt?: string }).contentUpdatedAt,
     });
   }
   const t = await getTranslations("Cities");

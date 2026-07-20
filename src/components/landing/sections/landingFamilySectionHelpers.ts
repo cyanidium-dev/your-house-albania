@@ -11,6 +11,7 @@ export type LandingCardModel = {
   cardDescription?: { en?: unknown; ru?: unknown; uk?: unknown; sq?: unknown; it?: unknown }
   cardImage?: { asset?: { url?: string }; alt?: string }
   linkedCity?: { slug?: string; countrySlug?: string }
+  linkedDistrict?: { slug?: string; citySlug?: string; countrySlug?: string }
 }
 
 /**

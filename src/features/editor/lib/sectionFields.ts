@@ -117,6 +117,37 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['cta', 'label'], label: 'Primary button', kind: 'text' },
     { path: ['secondaryCta', 'label'], label: 'Secondary button', kind: 'text' },
   ],
+  // Structural arrays (columns/rows/items/sources) are Studio-only by design.
+  priceTableSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+    { path: ['sourceNote'], label: 'Source note', kind: 'text', hint: 'Shown under the table' },
+    { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
+  ],
+  statsBandSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['sourceNote'], label: 'Source note', kind: 'text', hint: 'Shown under the band' },
+  ],
+  sourcesSection: [
+    { path: ['title'], label: 'Title', kind: 'text' },
+    { path: ['intro'], label: 'Intro', kind: 'textarea' },
+  ],
+  // Numeric defaults and presets/items arrays are Studio-only by design.
+  mortgageCalcSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+    { path: ['disclaimer'], label: 'Disclaimer', kind: 'textarea', hint: 'Required to publish' },
+  ],
+  roiCalcSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+    { path: ['disclaimer'], label: 'Disclaimer', kind: 'textarea', hint: 'Required to publish' },
+  ],
+  purchaseCostCalcSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+    { path: ['disclaimer'], label: 'Disclaimer', kind: 'textarea', hint: 'Required to publish' },
+  ],
 };
 
 export function getFieldsForType(type: string): readonly FieldDef[] {

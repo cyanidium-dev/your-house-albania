@@ -15,6 +15,7 @@ type LandingCard = {
   cardDescription?: LocalizedString
   cardImage?: { asset?: { url?: string }; alt?: string }
   linkedCity?: { slug?: string; countrySlug?: string }
+  linkedDistrict?: { slug?: string; citySlug?: string; countrySlug?: string }
 }
 
 function resolveCardTitle(card: LandingCard, locale: string): string {
@@ -84,7 +85,10 @@ export function LandingGridSection({
               slug: c.slug ?? null,
               linkedCitySlug,
               linkedCityCountrySlug: c.linkedCity?.countrySlug ?? null,
+              linkedDistrict: c.linkedDistrict ?? null,
             })
+            // No routable URL (e.g. district landing with a broken ref chain) — skip the card.
+            if (!href) return null
             const unoptimized = imgUrl?.startsWith('http') ?? false
 
             return (

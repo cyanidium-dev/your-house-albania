@@ -56,6 +56,8 @@ export const FILTER_ROUTE_RESERVED_SEGMENTS = new Set([
   "register",
   "sell",
   "for-realtors",
+  "guides",
+  "districts",
   "how-to-publish",
   "appartment",
   "office-spaces",
@@ -126,6 +128,30 @@ export function cityInfoPath(
 ): string {
   const c = normalizeCatalogCountrySlug(country);
   return `/${locale}/${encodeURIComponent(c)}/${encodeURIComponent(citySlug)}/info`;
+}
+
+/**
+ * District hub for a city: `/{locale}/{country}/{city}/districts`
+ */
+export function districtsHubPath(
+  locale: string,
+  citySlug: string,
+  country?: string | null
+): string {
+  const c = normalizeCatalogCountrySlug(country);
+  return `/${locale}/${encodeURIComponent(c)}/${encodeURIComponent(citySlug)}/districts`;
+}
+
+/**
+ * District editorial page: `/{locale}/{country}/{city}/districts/{district}`
+ */
+export function districtInfoPath(
+  locale: string,
+  citySlug: string,
+  districtSlug: string,
+  country?: string | null
+): string {
+  return `${districtsHubPath(locale, citySlug, country)}/${encodeURIComponent(districtSlug)}`;
 }
 
 export function singleFilterPath({

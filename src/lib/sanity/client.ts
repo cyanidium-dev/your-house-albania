@@ -6,6 +6,7 @@ export * from './queries/property';
 export * from './queries/settings';
 export * from './queries/catalog';
 export * from './queries/landing';
+export * from './queries/district';
 export * from './queries/blog';
 export * from './queries/agent';
 export * from './queries/sitemap';

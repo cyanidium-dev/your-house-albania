@@ -7,3 +7,11 @@ export { LandingCollectionCarousel } from "./LandingCollectionCarousel";
 
 export { ArticlesSection } from "./ArticlesSection";
 export { CtaSection } from "./CtaSection";
+
+export { PriceTableSection } from "./PriceTableSection";
+export { StatsBandSection } from "./StatsBandSection";
+export { SourcesSection } from "./SourcesSection";
+
+export { MortgageCalcSection } from "./MortgageCalcSection";
+export { RoiCalcSection } from "./RoiCalcSection";
+export { PurchaseCostCalcSection } from "./PurchaseCostCalcSection";

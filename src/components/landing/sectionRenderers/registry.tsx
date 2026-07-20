@@ -16,6 +16,12 @@ import { landingCollectionSectionHandler } from './handlers/landingCollectionSec
 import { investorLogosSectionHandler } from './handlers/investorLogosSection'
 import { marketingContentSectionHandler } from './handlers/marketingContentSection'
 import { ctaSectionHandler } from './handlers/ctaSection'
+import { priceTableSectionHandler } from './handlers/priceTableSection'
+import { statsBandSectionHandler } from './handlers/statsBandSection'
+import { sourcesSectionHandler } from './handlers/sourcesSection'
+import { mortgageCalcSectionHandler } from './handlers/mortgageCalcSection'
+import { roiCalcSectionHandler } from './handlers/roiCalcSection'
+import { purchaseCostCalcSectionHandler } from './handlers/purchaseCostCalcSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -32,6 +38,12 @@ const registry: Record<string, SectionHandler> = {
   investorLogosSection: investorLogosSectionHandler,
   marketingContentSection: marketingContentSectionHandler,
   ctaSection: ctaSectionHandler,
+  priceTableSection: priceTableSectionHandler,
+  statsBandSection: statsBandSectionHandler,
+  sourcesSection: sourcesSectionHandler,
+  mortgageCalcSection: mortgageCalcSectionHandler,
+  roiCalcSection: roiCalcSectionHandler,
+  purchaseCostCalcSection: purchaseCostCalcSectionHandler,
 }
 
 export async function renderLandingSection(input: {
@@ -40,6 +52,8 @@ export async function renderLandingSection(input: {
   citySlug?: string
   breadcrumb?: React.ReactNode
   propertiesDeal?: PropertiesDealParam
+  /** True only for the first `faqSection` on the page (single FAQPage JSON-LD rule). */
+  isFirstFaqSection?: boolean
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null

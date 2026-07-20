@@ -20,13 +20,15 @@ import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
 import { buildListingUrl } from '@/lib/routes/listingRoutes'
+import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
 const DEFAULT_PAGE_SIZE = 24
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
-const DEAL_TYPE_VALUES = ['sale', 'rent', 'short-term'] as const
+// Public deal filter options: rentals hidden from the UI (direct URLs keep working).
+const DEAL_TYPE_VALUES = PUBLIC_DEAL_TYPES
 
 type CatalogSeoContent = {
   bottomText?: unknown[]

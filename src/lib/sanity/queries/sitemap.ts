@@ -1,5 +1,6 @@
 import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { buildListingPath } from '@/lib/routes/listingRoutes';
+import { isPublicDealQuery, isPublicDealRouteSegment } from '@/lib/catalog/publicDealTypes';
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
 import {
   resolveLandingPathForSitemap,
@@ -230,6 +231,8 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
         cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
       const countrySeg = encodeURIComponent(countryForCity);
       for (const dealSegment of SITEMAP_CITY_DEAL_SEGMENTS) {
+        // Rentals hidden from the public UI → excluded from sitemaps too.
+        if (!isPublicDealRouteSegment(dealSegment)) continue;
         const dealKey = `${citySlug}|${dealSegment}`;
         const lm = dealBest.get(dealKey);
         if (!lm) continue;
@@ -244,6 +247,7 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
       // Keep thin city/deal/type combinations out of sitemap unless they pass index threshold.
       if (value.count <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD) continue;
       const [citySlug, dealSegment, typeSlug] = key.split('|');
+      if (!isPublicDealRouteSegment(dealSegment)) continue;
       const countryForCity =
         cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
       const countrySeg = encodeURIComponent(countryForCity);
@@ -346,6 +350,8 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
     const out: SitemapSimpleEntry[] = [];
 
     for (const dq of NON_GEO_SITEMAP_DEAL_QUERIES) {
+      // Rentals hidden from the public UI → excluded from sitemaps too.
+      if (!isPublicDealQuery(dq)) continue;
       const seg = dq === 'short-term' ? 'short-term-rent' : dq;
       const lm = dealLastMod.get(seg) ?? staticNow;
       out.push({
@@ -359,6 +365,7 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
       const pipe = key.indexOf('|');
       if (pipe < 0) continue;
       const dq = key.slice(0, pipe) as 'sale' | 'rent' | 'short-term';
+      if (!isPublicDealQuery(dq)) continue;
       const typeSlug = key.slice(pipe + 1);
       if (!typeSlug || !['sale', 'rent', 'short-term'].includes(dq)) continue;
       out.push({
@@ -379,6 +386,99 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
     }));
   } catch (err) {
     console.warn('[Sanity] fetchSitemapNonGeoListingEntries failed:', err);
+    return [];
+  }
+}
+
+export type SitemapGuideEntry = { slug: string; lastModified: Date };
+
+/**
+ * Enabled custom landings for `sitemap-landings.xml` → `/{locale}/guides/{slug}`.
+ * `for-realtors` is excluded: it renders on its dedicated route and is already
+ * emitted by `sitemap-static.xml` via `resolveLandingPathForSitemap`.
+ */
+export async function fetchSitemapGuideEntries(): Promise<SitemapGuideEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[
+    _type == "landingPage" &&
+    pageType == "custom" &&
+    enabled != false &&
+    defined(slug.current) &&
+    !(_id in path("drafts.**")) &&
+    (!defined(seo.noIndex) || seo.noIndex != true)
+  ]{
+    "slug": slug.current,
+    _updatedAt
+  }`;
+  try {
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    if (!Array.isArray(rows)) return [];
+    const best = new Map<string, Date>();
+    for (const row of rows) {
+      const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
+      if (!slug || slug === 'for-realtors') continue;
+      const lm = parseSitemapDate(row._updatedAt);
+      const prev = best.get(slug);
+      if (!prev || lm > prev) best.set(slug, lm);
+    }
+    return Array.from(best.entries()).map(([slug, lastModified]) => ({ slug, lastModified }));
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapGuideEntries failed:', err);
+    return [];
+  }
+}
+
+export type SitemapDistrictEntry = {
+  countrySlug: string;
+  citySlug: string;
+  slug: string;
+  lastModified: Date;
+};
+
+/**
+ * Published districts for `sitemap-districts.xml` → `/{locale}/{country}/{city}/districts/{slug}`.
+ * Hub URLs (`…/districts`) are derived from these rows by the route.
+ */
+export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntry[]> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[
+    _type == "district" &&
+    isPublished != false &&
+    defined(slug.current) &&
+    defined(city->slug.current) &&
+    (!defined(seo.noIndex) || seo.noIndex != true)
+  ]{
+    "slug": slug.current,
+    "citySlug": city->slug.current,
+    "countrySlug": city->country->slug.current,
+    _updatedAt
+  }`;
+  try {
+    const rows = await client.fetch<
+      Array<{ slug?: string; citySlug?: string; countrySlug?: string; _updatedAt?: string }>
+    >(query);
+    if (!Array.isArray(rows)) return [];
+    const best = new Map<string, SitemapDistrictEntry>();
+    for (const row of rows) {
+      const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
+      const citySlug = typeof row.citySlug === 'string' ? row.citySlug.trim().toLowerCase() : '';
+      if (!slug || !citySlug) continue;
+      const countrySlug =
+        typeof row.countrySlug === 'string' && row.countrySlug.trim()
+          ? row.countrySlug.trim().toLowerCase()
+          : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      const key = `${countrySlug}|${citySlug}|${slug}`;
+      const lm = parseSitemapDate(row._updatedAt);
+      const prev = best.get(key);
+      if (!prev || lm > prev.lastModified) {
+        best.set(key, { countrySlug, citySlug, slug, lastModified: lm });
+      }
+    }
+    return Array.from(best.values());
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapDistrictEntries failed:', err);
     return [];
   }
 }

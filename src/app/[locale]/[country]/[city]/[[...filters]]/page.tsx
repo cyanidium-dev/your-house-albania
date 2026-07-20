@@ -23,6 +23,7 @@ import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolic
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
+import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 import {
   getGeoListingDistrictNormalizeRedirectUrl,
   getGeoListingDuplicateFacetRedirectUrl,
@@ -167,8 +168,10 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     const totalCount = listing?.totalCount ?? 0;
     noindexByDistrictThreshold = totalCount <= 20;
   }
+  // Rentals hidden from the public UI: rent listing pages stay reachable but noindexed.
+  const hiddenDeal = Boolean(dealForPath) && !isPublicDealRouteSegment(dealForPath);
   const robots =
-    noindexQuery || seoNoIndex || noindexByThreshold || noindexByDistrictThreshold
+    noindexQuery || seoNoIndex || noindexByThreshold || noindexByDistrictThreshold || hiddenDeal
       ? { index: false as const, follow: true as const }
       : undefined;
 

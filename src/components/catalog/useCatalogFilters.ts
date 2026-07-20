@@ -333,6 +333,11 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     value: v,
     label: getDealLabel(v),
   }));
+  // Direct-URL rentals: the hidden deal stays selectable as the CURRENT value so
+  // the page keeps working, but is not offered once the user switches away.
+  if (deal && !dealTypeValues.includes(deal)) {
+    dealTypeOptions.push({ value: deal, label: getDealLabel(deal) });
+  }
   const amenityMultiOptions: FilterMultiOption[] = amenityOptions.map((o) => ({
     value: o.value,
     label: o.label,

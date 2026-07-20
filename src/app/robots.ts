@@ -21,6 +21,8 @@ export default function robots(): MetadataRoute.Robots {
       `${base}/sitemap-non-geo-listings.xml`,
       `${base}/sitemap-properties.xml`,
       `${base}/sitemap-blog.xml`,
+      `${base}/sitemap-landings.xml`,
+      `${base}/sitemap-districts.xml`,
     ],
   };
 }

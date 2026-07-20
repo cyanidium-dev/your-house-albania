@@ -32,5 +32,6 @@ export async function buildDealTypeLandingMetadata(
           : undefined;
   return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale, {
     ...(pathnameForAlternates ? { pathnameForAlternates } : {}),
+    contentUpdatedAt: (landing as { contentUpdatedAt?: string }).contentUpdatedAt,
   });
 }

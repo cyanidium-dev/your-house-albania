@@ -20,6 +20,12 @@ export const ALLOWED_SECTION_TYPES = [
   'investorLogosSection',
   'marketingContentSection',
   'ctaSection',
+  'priceTableSection',
+  'statsBandSection',
+  'sourcesSection',
+  'mortgageCalcSection',
+  'roiCalcSection',
+  'purchaseCostCalcSection',
 ] as const;
 
 export type AllowedSectionType = (typeof ALLOWED_SECTION_TYPES)[number];
@@ -44,6 +50,12 @@ export const SECTION_LABELS: Record<AllowedSectionType, string> = {
   investorLogosSection: 'Investor logos',
   marketingContentSection: 'Marketing content',
   ctaSection: 'CTA',
+  priceTableSection: 'Data table (prices)',
+  statsBandSection: 'Key figures band',
+  sourcesSection: 'Sources & methodology',
+  mortgageCalcSection: 'Mortgage calculator',
+  roiCalcSection: 'Rental ROI calculator',
+  purchaseCostCalcSection: 'Purchase cost calculator',
 };
 
 /**
@@ -82,6 +94,59 @@ export function createSectionDefaults(type: AllowedSectionType): EditorSection {
       return { ...base, title: 'New CTA' };
     case 'heroSection':
       return { ...base, title: 'New hero' };
+    case 'sourcesSection':
+      return { ...base, title: 'Sources' };
+    // Calculators ship with a disclaimer stub (schema requires it to publish)
+    // and, for purchase cost, structural item stubs the editor rewrites.
+    case 'mortgageCalcSection':
+      return {
+        ...base,
+        disclaimer:
+          'Indicative calculation. Rates and limits are decided by the bank individually.',
+      };
+    case 'roiCalcSection':
+      return {
+        ...base,
+        disclaimer:
+          'Conservative estimate. Actual rental income varies by season and property.',
+      };
+    case 'purchaseCostCalcSection':
+      return {
+        ...base,
+        disclaimer:
+          'Typical costs; the exact amounts depend on the deal. Verify with a lawyer and notary.',
+        items: [
+          {
+            _key: generateSectionKey(),
+            _type: 'object',
+            label: 'Notary (~0.35%)',
+            kind: 'percent',
+            value: 0.35,
+            capEur: 1500,
+          },
+          {
+            _key: generateSectionKey(),
+            _type: 'object',
+            label: 'Registration fees (ASHK)',
+            kind: 'fixed',
+            value: 60,
+          },
+          {
+            _key: generateSectionKey(),
+            _type: 'object',
+            label: 'Agent fee (~1%)',
+            kind: 'percent',
+            value: 1,
+          },
+          {
+            _key: generateSectionKey(),
+            _type: 'object',
+            label: 'Legal check',
+            kind: 'fixed',
+            value: 800,
+          },
+        ],
+      };
     default:
       return base;
   }

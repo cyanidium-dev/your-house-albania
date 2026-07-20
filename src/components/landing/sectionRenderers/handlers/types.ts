@@ -10,5 +10,10 @@ export type SectionHandler = (input: {
   breadcrumb?: React.ReactNode
   /** Catalog `deal` query for property-type card links when rendered on deal-specific landings */
   propertiesDeal?: PropertiesDealParam
+  /**
+   * True only for the first `faqSection` on the page — a page may contain at
+   * most one schema.org FAQPage, so only that section emits FAQ JSON-LD.
+   */
+  isFirstFaqSection?: boolean
 }) => Promise<React.ReactNode | null> | React.ReactNode | null
 

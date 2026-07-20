@@ -33,7 +33,10 @@ export function LandingCard({
     slug: card.slug ?? null,
     linkedCitySlug,
     linkedCityCountrySlug: card.linkedCity?.countrySlug ?? null,
+    linkedDistrict: card.linkedDistrict ?? null,
   })
+  // No routable URL (e.g. district landing with a broken ref chain) — skip the card.
+  if (!href) return null
   const unoptimized = imgUrl?.startsWith('http') ?? false
 
   return (

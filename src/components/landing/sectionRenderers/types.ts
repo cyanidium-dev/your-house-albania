@@ -66,6 +66,29 @@ export type LandingSectionBase = {
   groupedImage?: { asset?: { url?: string }; alt?: string }
   /** `marketingContentSection` split + grouped custom media */
   images?: unknown[]
+  /** `priceTableSection`: value column headings (row label column is separate) */
+  columns?: unknown[]
+  /** `priceTableSection`: show per-row confidence column */
+  confidenceEnabled?: boolean
+  /** `priceTableSection` / `statsBandSection` / `sourcesSection` */
+  sourceNote?: unknown
+  lastUpdated?: string
+  /** `sourcesSection` */
+  sources?: unknown[]
+  methodologyNote?: unknown
+  intro?: unknown
+  /** `mortgageCalcSection` */
+  defaultRatePct?: number
+  minRatePct?: number
+  maxRatePct?: number
+  maxLtvPct?: number
+  defaultTermYears?: number
+  maxTermYears?: number
+  /** calculator sections: mandatory localized disclaimer */
+  disclaimer?: unknown
+  /** `roiCalcSection` */
+  presets?: unknown[]
+  taxRatePct?: number
 }
 
 export type LandingPageDoc = {

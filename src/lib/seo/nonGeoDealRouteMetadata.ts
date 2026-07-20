@@ -14,6 +14,7 @@ import {
   shouldNoindexNonGeoDealTypeCombo,
 } from "@/lib/seo/catalogListingMetadata";
 import { canonicalNonGeoDealListingPath } from "@/lib/routes/listingRouteResolver";
+import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
 
 type DealQuery = "sale" | "rent" | "short-term";
 
@@ -43,13 +44,17 @@ export async function generateNonGeoDealRouteMetadata(input: {
 
   const hasQuery = listingUrlHasQueryParams(search);
   const seoNo = catalogSeo?.noIndex ?? false;
+  // Rentals hidden from the public UI: direct URLs stay reachable but noindexed.
+  const hiddenDeal = !isPublicDealQuery(dealQuery);
   let thinType = false;
-  if (typeSeg && !hasQuery && !seoNo) {
+  if (typeSeg && !hasQuery && !seoNo && !hiddenDeal) {
     thinType = await shouldNoindexNonGeoDealTypeCombo(dealQuery, typeSeg);
   }
 
   const robots =
-    hasQuery || seoNo || thinType ? { index: false as const, follow: true as const } : undefined;
+    hasQuery || seoNo || thinType || hiddenDeal
+      ? { index: false as const, follow: true as const }
+      : undefined;
 
   return {
     title,

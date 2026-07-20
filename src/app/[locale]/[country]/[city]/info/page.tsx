@@ -62,6 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     itemDescription,
     itemOgImageUrl,
     pathnameForAlternates: pathAfterLocale,
+    contentUpdatedAt: (landing as { contentUpdatedAt?: string } | null)?.contentUpdatedAt,
   });
 }
 

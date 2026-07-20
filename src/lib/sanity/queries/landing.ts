@@ -37,6 +37,7 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
       heroImage { asset-> { url } }
     },
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
     seo
   }`;
   try {
@@ -69,6 +70,13 @@ export const landingPageSectionsProjection = `{
     answer,
     tag,
     cta,
+    value,
+    sublabel,
+    trend,
+    confidence,
+    kind,
+    capEur,
+    note,
     image {
       asset-> { url },
       alt
@@ -97,6 +105,22 @@ export const landingPageSectionsProjection = `{
   },
   headings,
   rows,
+  columns,
+  confidenceEnabled,
+  sourceNote,
+  lastUpdated,
+  sources,
+  methodologyNote,
+  intro,
+  defaultRatePct,
+  minRatePct,
+  maxRatePct,
+  maxLtvPct,
+  defaultTermYears,
+  maxTermYears,
+  disclaimer,
+  presets,
+  taxRatePct,
   closingText,
   description,
   variant,
@@ -224,7 +248,12 @@ export const landingPageSectionsProjection = `{
       cardTitle,
       cardDescription,
       cardImage { asset-> { url }, alt },
-      "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current }
+      "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current },
+      "linkedDistrict": linkedDistrict-> {
+        "slug": slug.current,
+        "citySlug": city->slug.current,
+        "countrySlug": city->country->slug.current
+      }
     },
     (coalesce(landings, manualItems))[] {
       _id,
@@ -264,6 +293,7 @@ export async function fetchCitiesIndexLanding(): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
     seo
   }`;
   try {
@@ -301,6 +331,7 @@ export async function fetchHomeLanding(): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
     seo
   }`;
   try {
@@ -337,6 +368,7 @@ export async function fetchDealTypeLanding(deal: PropertiesDealParam): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
     seo
   }`;
       try {
@@ -378,6 +410,7 @@ export async function fetchLandingPageBySlug(slug: string): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
     seo
   }`;
       try {
@@ -388,6 +421,60 @@ export async function fetchLandingPageBySlug(slug: string): Promise<{
       }
     },
     ['sanity-landing-by-slug', trimmed],
+    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+  );
+
+  return cached();
+}
+
+/**
+ * Fetch an enabled `landingPage` with `pageType == "custom"` for the universal
+ * `/[locale]/guides/[slug]` route. `enabled != false` (not `== true`) so legacy
+ * documents created before the field existed keep working.
+ */
+export async function fetchGuideLandingBySlug(slug: string): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  slug?: string;
+  title?: unknown;
+  cardDescription?: unknown;
+  cardImage?: { asset?: { url?: string } };
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const trimmed = typeof slug === 'string' ? slug.trim() : '';
+  if (!trimmed) return null;
+
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[
+    _type == "landingPage" &&
+    pageType == "custom" &&
+    enabled != false &&
+    slug.current == $slug
+  ][0] {
+    _id,
+    _type,
+    pageType,
+    "slug": slug.current,
+    title,
+    cardDescription,
+    cardImage { asset-> { url } },
+    "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
+    seo
+  }`;
+      try {
+        return await client.fetch(query, { slug: trimmed });
+      } catch (err) {
+        console.warn('[Sanity] fetchGuideLandingBySlug failed:', err);
+        return null;
+      }
+    },
+    ['sanity-guide-landing-by-slug', trimmed],
     { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
   );
 

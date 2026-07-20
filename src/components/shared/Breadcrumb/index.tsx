@@ -44,7 +44,7 @@ export function Breadcrumb({ items, separator = "/", overHero = false }: Props) 
             ) : (
               <span
                 className="text-dark dark:text-white font-medium"
-                aria-current="page"
+                aria-current={idx === items.length - 1 ? "page" : undefined}
               >
                 {item.label}
               </span>

@@ -20,6 +20,8 @@ export async function GET() {
     "/sitemap-non-geo-listings.xml",
     "/sitemap-properties.xml",
     "/sitemap-blog.xml",
+    "/sitemap-landings.xml",
+    "/sitemap-districts.xml",
   ];
   const xml = buildSitemapIndexXml(paths.map((p) => `${base}${p}`));
   return new NextResponse(xml, {
