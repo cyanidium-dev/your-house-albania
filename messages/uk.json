@@ -310,6 +310,31 @@
     "onTopOfPrice": "Понад ціну об’єкта",
     "capped": "за стелею"
   },
+  "Trackers": {
+    "statusOnTrack": "За планом",
+    "statusDelayed": "Затримка",
+    "statusBlocked": "Заблоковано",
+    "statusDone": "Завершено",
+    "checkedAt": "Перевірено: {date}",
+    "showAllEvents": "Показати всі події ({count})",
+    "faqTitle": "Часті запитання",
+    "sourcesTitle": "Джерела"
+  },
+  "Developers": {
+    "tierGreen": "Зелений рівень",
+    "tierYellow": "Жовтий рівень",
+    "tierRed": "Червоний рівень",
+    "reviewedAt": "Перевірено: {date}",
+    "staleNote": "Дані могли застаріти",
+    "disclaimerShort": "Редакційна оцінка на основі відкритих джерел. Згадка у справі — не вирок.",
+    "about": "Про забудовника",
+    "keyProjects": "Ключові проєкти",
+    "riskNotes": "Відомі ризики",
+    "sourcesTitle": "Джерела",
+    "founded": "Заснований: {year}",
+    "developerLabel": "Забудовник",
+    "details": "Детальніше"
+  },
   "Catalog": {
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "agentTitle": "Об'єкти від {name}",

@@ -89,6 +89,13 @@ export type LandingSectionBase = {
   /** `roiCalcSection` */
   presets?: unknown[]
   taxRatePct?: number
+  /** `trackerSection`: raw ref + display mode */
+  tracker?: { _ref?: string } | null
+  displayMode?: 'full' | 'compact' | string
+  /** `developerCardSection` / `developersRatingSection`: raw refs + tier filter */
+  developer?: { _ref?: string } | null
+  developers?: Array<{ _ref?: string }>
+  showTiers?: unknown[]
 }
 
 export type LandingPageDoc = {

@@ -6,7 +6,7 @@ import { portableTextToPlainText } from '@/lib/sanity/portableTextPlain'
 import { resolveFaqDataFromSection } from '../helpers'
 import type { SectionHandler } from './types'
 
-export const faqSectionHandler: SectionHandler = ({ locale, section, isFirstFaqSection }) => {
+export const faqSectionHandler: SectionHandler = ({ locale, section, faqJsonLd }) => {
   const faqData = resolveFaqDataFromSection(section, locale)
 
   if (process.env.NODE_ENV === 'development') {
@@ -28,9 +28,9 @@ export const faqSectionHandler: SectionHandler = ({ locale, section, isFirstFaqS
   }
 
   // FAQPage JSON-LD: same indexing gate as the rest of the SEO signals, and only
-  // for the FIRST faqSection on the page — two FAQPage entities per page are invalid.
+  // ONE FAQPage per page — claimed via the shared render-pass marker.
   let jsonLd: React.ReactNode = null
-  if (isFirstFaqSection && isIndexingEnabled() && faqData?.items?.length) {
+  if (faqJsonLd && !faqJsonLd.emitted && isIndexingEnabled() && faqData?.items?.length) {
     const items: FaqJsonLdItem[] = faqData.items.map((item) => ({
       question: item.question,
       answer:
@@ -39,6 +39,7 @@ export const faqSectionHandler: SectionHandler = ({ locale, section, isFirstFaqS
           : portableTextToPlainText(item.answer),
     }))
     jsonLd = <FaqJsonLd items={items} />
+    faqJsonLd.emitted = true
   }
 
   return (

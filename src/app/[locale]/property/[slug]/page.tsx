@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
+import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
@@ -188,6 +189,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             <Icon icon="ph:map-pin" width={24} height={24} className="text-dark/50 dark:text-white/50" />
                             <p className='text-dark/50 dark:text-white/50 text-xm'>{location}</p>
                         </div>
+                        <PropertyDeveloperBadge
+                          locale={locale}
+                          developer={(sanityProperty as { developer?: PropertyDeveloperRef }).developer ?? null}
+                        />
                     </div>
                     <div className="lg:col-span-4 col-span-12">
                         <div className='flex'>

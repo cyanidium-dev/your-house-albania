@@ -26,6 +26,9 @@ export const ALLOWED_SECTION_TYPES = [
   'mortgageCalcSection',
   'roiCalcSection',
   'purchaseCostCalcSection',
+  'trackerSection',
+  'developersRatingSection',
+  'developerCardSection',
 ] as const;
 
 export type AllowedSectionType = (typeof ALLOWED_SECTION_TYPES)[number];
@@ -56,6 +59,9 @@ export const SECTION_LABELS: Record<AllowedSectionType, string> = {
   mortgageCalcSection: 'Mortgage calculator',
   roiCalcSection: 'Rental ROI calculator',
   purchaseCostCalcSection: 'Purchase cost calculator',
+  trackerSection: 'Status tracker',
+  developersRatingSection: 'Developers rating',
+  developerCardSection: 'Developer card',
 };
 
 /**
@@ -109,6 +115,13 @@ export function createSectionDefaults(type: AllowedSectionType): EditorSection {
         ...base,
         disclaimer:
           'Conservative estimate. Actual rental income varies by season and property.',
+      };
+    case 'developersRatingSection':
+      return {
+        ...base,
+        mode: 'all',
+        disclaimer:
+          'Editorial assessment based on public sources. A mention in a legal case is not a verdict.',
       };
     case 'purchaseCostCalcSection':
       return {

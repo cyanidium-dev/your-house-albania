@@ -11,9 +11,11 @@ export type SectionHandler = (input: {
   /** Catalog `deal` query for property-type card links when rendered on deal-specific landings */
   propertiesDeal?: PropertiesDealParam
   /**
-   * True only for the first `faqSection` on the page — a page may contain at
-   * most one schema.org FAQPage, so only that section emits FAQ JSON-LD.
+   * Shared per-render marker: a page may contain at most ONE schema.org
+   * FAQPage. Sections are rendered sequentially (awaited in order), so the
+   * first FAQ-capable section (`faqSection` or `trackerSection` with FAQ)
+   * that actually has items sets `emitted = true`; later ones skip JSON-LD.
    */
-  isFirstFaqSection?: boolean
+  faqJsonLd?: { emitted: boolean }
 }) => Promise<React.ReactNode | null> | React.ReactNode | null
 

@@ -310,6 +310,31 @@
     "onTopOfPrice": "Сверх цены объекта",
     "capped": "по потолку"
   },
+  "Trackers": {
+    "statusOnTrack": "По плану",
+    "statusDelayed": "Задержка",
+    "statusBlocked": "Заблокировано",
+    "statusDone": "Завершено",
+    "checkedAt": "Проверено: {date}",
+    "showAllEvents": "Показать все события ({count})",
+    "faqTitle": "Часто задаваемые вопросы",
+    "sourcesTitle": "Источники"
+  },
+  "Developers": {
+    "tierGreen": "Зелёный уровень",
+    "tierYellow": "Жёлтый уровень",
+    "tierRed": "Красный уровень",
+    "reviewedAt": "Проверено: {date}",
+    "staleNote": "Данные могли устареть",
+    "disclaimerShort": "Редакционная оценка на основе открытых источников. Упоминание в деле — не приговор.",
+    "about": "О застройщике",
+    "keyProjects": "Ключевые проекты",
+    "riskNotes": "Известные риски",
+    "sourcesTitle": "Источники",
+    "founded": "Основан: {year}",
+    "developerLabel": "Застройщик",
+    "details": "Подробнее"
+  },
   "Catalog": {
     "heroIntroFallback": "Просмотрите нашу подборку объектов.",
     "agentTitle": "Объекты от {name}",

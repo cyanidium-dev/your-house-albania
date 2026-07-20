@@ -310,6 +310,31 @@
     "onTopOfPrice": "Oltre al prezzo",
     "capped": "con tetto"
   },
+  "Trackers": {
+    "statusOnTrack": "In linea",
+    "statusDelayed": "In ritardo",
+    "statusBlocked": "Bloccato",
+    "statusDone": "Completato",
+    "checkedAt": "Verificato: {date}",
+    "showAllEvents": "Mostra tutti gli eventi ({count})",
+    "faqTitle": "Domande frequenti",
+    "sourcesTitle": "Fonti"
+  },
+  "Developers": {
+    "tierGreen": "Livello verde",
+    "tierYellow": "Livello giallo",
+    "tierRed": "Livello rosso",
+    "reviewedAt": "Verificato: {date}",
+    "staleNote": "I dati potrebbero non essere aggiornati",
+    "disclaimerShort": "Valutazione editoriale basata su fonti pubbliche. Una menzione in un procedimento non è un verdetto.",
+    "about": "Chi è",
+    "keyProjects": "Progetti principali",
+    "riskNotes": "Rischi noti",
+    "sourcesTitle": "Fonti",
+    "founded": "Fondato: {year}",
+    "developerLabel": "Costruttore",
+    "details": "Dettagli"
+  },
   "Catalog": {
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",

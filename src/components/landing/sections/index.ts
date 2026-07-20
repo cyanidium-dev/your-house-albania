@@ -15,3 +15,7 @@ export { SourcesSection } from "./SourcesSection";
 export { MortgageCalcSection } from "./MortgageCalcSection";
 export { RoiCalcSection } from "./RoiCalcSection";
 export { PurchaseCostCalcSection } from "./PurchaseCostCalcSection";
+
+export { TrackerSection } from "./TrackerSection";
+export { DevelopersRatingSection } from "./DevelopersRatingSection";
+export { DeveloperCardSection } from "./DeveloperCardSection";

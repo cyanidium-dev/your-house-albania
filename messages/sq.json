@@ -309,6 +309,31 @@
     "onTopOfPrice": "Mbi çmimin e pronës",
     "capped": "me tavan"
   },
+  "Trackers": {
+    "statusOnTrack": "Sipas planit",
+    "statusDelayed": "Me vonesë",
+    "statusBlocked": "I bllokuar",
+    "statusDone": "I përfunduar",
+    "checkedAt": "Verifikuar: {date}",
+    "showAllEvents": "Shfaq të gjitha ngjarjet ({count})",
+    "faqTitle": "Pyetjet më të shpeshta",
+    "sourcesTitle": "Burimet"
+  },
+  "Developers": {
+    "tierGreen": "Niveli i gjelbër",
+    "tierYellow": "Niveli i verdhë",
+    "tierRed": "Niveli i kuq",
+    "reviewedAt": "Rishikuar: {date}",
+    "staleNote": "Të dhënat mund të jenë të vjetruara",
+    "disclaimerShort": "Vlerësim editorial bazuar në burime publike. Përmendja në një çështje ligjore nuk është verdikt.",
+    "about": "Rreth ndërtuesit",
+    "keyProjects": "Projektet kryesore",
+    "riskNotes": "Rreziqe të njohura",
+    "sourcesTitle": "Burimet",
+    "founded": "Themeluar: {year}",
+    "developerLabel": "Ndërtuesi",
+    "details": "Më shumë"
+  },
   "Catalog": {
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
     "agentTitle": "Pronat nga {name}",

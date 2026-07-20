@@ -28,6 +28,8 @@ const TYPE_TO_TAGS: Record<string, SanityTag[]> = {
   country: [SANITY_TAGS.country],
   catalogSeoPage: [SANITY_TAGS.catalogSeoPage],
   siteSettings: [SANITY_TAGS.siteSettings],
+  tracker: [SANITY_TAGS.tracker],
+  developer: [SANITY_TAGS.developer],
 };
 
 /**

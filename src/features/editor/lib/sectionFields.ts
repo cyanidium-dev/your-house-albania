@@ -148,6 +148,14 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
     { path: ['disclaimer'], label: 'Disclaimer', kind: 'textarea', hint: 'Required to publish' },
   ],
+  // References (tracker/developer docs) are picked in Studio, not inline.
+  trackerSection: [{ path: ['title'], label: 'Title override', kind: 'textarea' }],
+  developersRatingSection: [
+    { path: ['title'], label: 'Title', kind: 'textarea' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+    { path: ['disclaimer'], label: 'Disclaimer', kind: 'textarea', hint: 'Required to publish' },
+  ],
+  developerCardSection: [{ path: ['title'], label: 'Title override', kind: 'textarea' }],
 };
 
 export function getFieldsForType(type: string): readonly FieldDef[] {

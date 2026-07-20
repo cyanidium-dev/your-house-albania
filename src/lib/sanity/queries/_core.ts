@@ -42,6 +42,8 @@ export const SANITY_TAGS = {
   country: 'sanity:country',
   catalogSeoPage: 'sanity:catalogSeoPage',
   siteSettings: 'sanity:siteSettings',
+  tracker: 'sanity:tracker',
+  developer: 'sanity:developer',
 } as const;
 
 export type SanityTag = (typeof SANITY_TAGS)[keyof typeof SANITY_TAGS];

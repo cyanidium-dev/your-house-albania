@@ -59,7 +59,10 @@ export async function LandingRenderer({
     })
   }
 
-  const firstFaqIndex = sections.findIndex((s) => s?._type === 'faqSection')
+  // Single-FAQPage-per-page marker: the sequential await loop makes it safe for
+  // the first FAQ-capable section (faqSection OR trackerSection with FAQ) to
+  // claim JSON-LD emission; later ones skip it.
+  const faqJsonLd = { emitted: false }
 
   const nodes: React.ReactNode[] = []
 
@@ -72,7 +75,7 @@ export async function LandingRenderer({
       citySlug,
       breadcrumb: isFirstHero ? breadcrumb : undefined,
       propertiesDeal,
-      isFirstFaqSection: i === firstFaqIndex,
+      faqJsonLd,
     })
     if (node) nodes.push(node)
   }

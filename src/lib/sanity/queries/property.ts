@@ -39,6 +39,12 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       title,
       "slug": slug.current
     },
+    "developer": developer-> {
+      name,
+      tier,
+      tierNote,
+      "linkedGuide": linkedGuide-> { "slug": slug.current, enabled, pageType }
+    },
     gallery[] {
       asset-> { _id, url, metadata },
       crop,

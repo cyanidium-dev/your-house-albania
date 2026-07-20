@@ -310,6 +310,31 @@
     "onTopOfPrice": "On top of the price",
     "capped": "capped"
   },
+  "Trackers": {
+    "statusOnTrack": "On track",
+    "statusDelayed": "Delayed",
+    "statusBlocked": "Blocked",
+    "statusDone": "Completed",
+    "checkedAt": "Checked: {date}",
+    "showAllEvents": "Show all events ({count})",
+    "faqTitle": "Frequently asked questions",
+    "sourcesTitle": "Sources"
+  },
+  "Developers": {
+    "tierGreen": "Green tier",
+    "tierYellow": "Yellow tier",
+    "tierRed": "Red tier",
+    "reviewedAt": "Reviewed: {date}",
+    "staleNote": "Data may be outdated",
+    "disclaimerShort": "Editorial assessment based on public sources. A mention in a legal case is not a verdict.",
+    "about": "About",
+    "keyProjects": "Key projects",
+    "riskNotes": "Risk notes",
+    "sourcesTitle": "Sources",
+    "founded": "Founded: {year}",
+    "developerLabel": "Developer",
+    "details": "Details"
+  },
   "Catalog": {
     "heroIntroFallback": "Browse our selection of properties.",
     "agentTitle": "Properties by {name}",

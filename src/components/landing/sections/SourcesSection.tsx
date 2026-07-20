@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
-import { formatBlogDate } from '@/lib/date/formatLocale'
+import { SourcesList, type SourcesListItem } from '@/components/landing/sections/impl/SourcesList'
 import {
   Accordion,
   AccordionContent,
@@ -9,13 +9,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 
-type SourceItem = {
-  _key?: string
-  label?: string
-  url?: string
-  publisher?: string
-  date?: string
-}
+type SourceItem = SourcesListItem
 
 type SourcesSectionShape = {
   enabled?: boolean
@@ -23,12 +17,6 @@ type SourcesSectionShape = {
   intro?: unknown
   sources?: unknown[]
   methodologyNote?: unknown
-}
-
-function parseDate(raw: string | undefined): Date | null {
-  if (!raw) return null
-  const d = new Date(raw)
-  return Number.isNaN(d.getTime()) ? null : d
 }
 
 /**
@@ -67,27 +55,9 @@ export function SourcesSection({
           </p>
         ) : null}
 
-        <ol className="mt-5 list-decimal pl-5 flex flex-col gap-1.5 text-sm text-dark/70 dark:text-white/70 marker:text-dark/40 dark:marker:text-white/40">
-          {sources.map((s, i) => {
-            const date = parseDate(s.date)
-            const meta = [s.publisher?.trim(), date ? formatBlogDate(date, locale) : null]
-              .filter(Boolean)
-              .join(', ')
-            return (
-              <li key={s._key ?? i} className="pl-1">
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="nofollow noopener"
-                  className="text-dark/80 dark:text-white/80 underline decoration-dark/20 dark:decoration-white/20 underline-offset-2 hover:text-primary hover:decoration-primary transition-colors"
-                >
-                  {s.label}
-                </a>
-                {meta ? <span className="text-dark/50 dark:text-white/50"> — {meta}</span> : null}
-              </li>
-            )
-          })}
-        </ol>
+        <div className="mt-5">
+          <SourcesList items={sources} locale={locale} />
+        </div>
 
         {methodologyNote ? (
           <Accordion type="single" collapsible className="mt-6 max-w-3xl">
