@@ -268,7 +268,12 @@ export const landingPageSectionsProjection = `{
       cardTitle,
       cardDescription,
       cardImage { asset-> { url }, alt },
-      "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current }
+      "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current },
+      "linkedDistrict": linkedDistrict-> {
+        "slug": slug.current,
+        "citySlug": city->slug.current,
+        "countrySlug": city->country->slug.current
+      }
     }
   )
 }`;

@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { CityLandingBreadcrumb } from "@/components/shared/CityLandingBreadcrumb";
+import { CityDistrictsHubLink } from "@/components/city/CityDistrictsHubLink";
 import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { fetchCityLandingByCitySlug } from "@/lib/sanity/client";
+import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { formatBreadcrumbSlug } from "@/lib/routes/breadcrumbs";
 
 type Props = {
   locale: string;
@@ -20,14 +23,24 @@ export async function CityLandingPageBody({ locale, citySlug }: Props) {
   const sections = asSections(landing as never);
   const hasDedicatedHero = sections[0]?._type === "heroSection";
 
+  const cityTitle = (landing as { linkedCity?: { title?: unknown } }).linkedCity?.title;
+  const cityLabel =
+    resolveLocalizedString(cityTitle as never, locale) || formatBreadcrumbSlug(citySlug);
+  const districtsHubLink = (
+    <CityDistrictsHubLink locale={locale} citySlug={citySlug} cityLabel={cityLabel} />
+  );
+
   if (hasDedicatedHero) {
     return (
-      <LandingRenderer
-        locale={locale}
-        landing={landing as never}
-        citySlug={citySlug}
-        breadcrumb={<CityLandingBreadcrumb locale={locale} city={citySlug} overHero />}
-      />
+      <>
+        <LandingRenderer
+          locale={locale}
+          landing={landing as never}
+          citySlug={citySlug}
+          breadcrumb={<CityLandingBreadcrumb locale={locale} city={citySlug} overHero />}
+        />
+        {districtsHubLink}
+      </>
     );
   }
 
@@ -39,6 +52,7 @@ export async function CityLandingPageBody({ locale, citySlug }: Props) {
         </div>
       </section>
       <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} />
+      {districtsHubLink}
     </>
   );
 }

@@ -263,7 +263,8 @@
     "exploreTitle": "Продовжити знайомство",
     "propertiesInDistrict": "Нерухомість у районі {district}",
     "aboutCity": "Детальніше про місто {city}",
-    "otherDistricts": "Інші райони міста {city}"
+    "otherDistricts": "Інші райони міста {city}",
+    "viewAllDistricts": "Переглянути всі райони міста {city}"
   },
   "Landing": {
     "updatedAt": "Оновлено: {date}",

@@ -10,12 +10,30 @@ import { resolveLocalizedString } from "@/lib/sanity/localized";
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 /**
- * Custom landings whose canonical URL is a dedicated route, not `/guides/{slug}`.
- * The guides URL 301s to the canonical one so the same document never answers
- * 200 on two paths. Extend when another custom landing gets a hardcoded route.
+ * Reserved slugs whose canonical URL is a dedicated route, not `/guides/{slug}`.
+ * The guides URL 301s to the canonical one so the same document (or a CMS doc
+ * created with a colliding slug) never answers 200 on two paths. Every value
+ * must be a routable path segment under `/[locale]/`. Extend when another
+ * custom landing gets a hardcoded route.
  */
 const GUIDES_CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
   "for-realtors": "for-realtors",
+  contacts: "contacts",
+  contactus: "contactus",
+  register: "register",
+  "how-to-publish": "how-to-publish",
+  favorites: "favorites",
+  cities: "cities",
+  blog: "blog",
+  catalog: "catalog",
+  agent: "agent",
+  sale: "sale",
+  rent: "rent",
+  "short-term-rent": "short-term-rent",
+  appartment: "appartment",
+  "luxury-villa": "luxury-villa",
+  "office-spaces": "office-spaces",
+  "residential-homes": "residential-homes",
 };
 
 function normalizeSlug(value?: string): string {

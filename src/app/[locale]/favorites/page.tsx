@@ -2,14 +2,41 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { FavoritesContent } from "@/components/favorites/FavoritesContent";
 import { FavoritesBreadcrumb } from "@/components/shared/FavoritesBreadcrumb";
+import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations("Favorites");
+  const title = t("title");
+  const description = t("description");
+
+  if (!isIndexingEnabled()) {
+    return {
+      title,
+      description,
+      robots: indexingDisabledRobots,
+    };
+  }
+
+  const baseUrl = getSiteBaseUrl();
+  const path = "/favorites";
+  const canonical = `${baseUrl}/${locale}${path}`;
+  const href = buildHreflangAlternates(path);
+  /** User-specific saved listings → always noindex; links to shared pages stay crawlable. */
+  const robots = { index: false as const, follow: true as const };
+
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
+    alternates: {
+      canonical,
+      ...(href?.languages ? { languages: href.languages } : {}),
+    },
+    robots,
   };
 }
 

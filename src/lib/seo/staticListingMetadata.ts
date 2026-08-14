@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { buildHreflangAlternates } from "./hreflang";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { isIndexingEnabled, indexingDisabledRobots } from "./envSeo";
+import { indexingDisabledRobots } from "./envSeo";
 
 /**
  * Shared metadata builder for static "Listing" pages (apartments, villas,
  * offices, residential). All copy comes from the existing
  * `Listing.{namespace}.title` / `.description` i18n keys; the helper just
  * wraps them in a complete Next.js `Metadata` object with canonical,
- * hreflang alternates, OpenGraph and Twitter cards, and robots rules.
+ * OpenGraph and Twitter cards, and robots rules.
+ *
+ * These four routes are template leftovers with mock content, so they are
+ * always `noindex, nofollow` (no hreflang signals either) — regardless of the
+ * `NEXT_PUBLIC_ENABLE_INDEXING` env switch.
  */
 export async function buildStaticListingMetadata(opts: {
   locale: string;
@@ -41,19 +44,14 @@ export async function buildStaticListingMetadata(opts: {
     : `/${pathnameAfterLocale}`;
   const canonical = `${base}/${locale}${cleanPath}`;
 
-  const indexing = isIndexingEnabled();
-  const robots: NonNullable<Metadata["robots"]> = indexing
-    ? { index: true, follow: true }
-    : indexingDisabledRobots;
-
-  const hreflang = buildHreflangAlternates(cleanPath);
+  // Mock template pages must never be indexed.
+  const robots: NonNullable<Metadata["robots"]> = indexingDisabledRobots;
 
   return {
     title: titleText,
     description,
     alternates: {
       canonical,
-      ...(hreflang ?? {}),
     },
     openGraph: {
       title: ogFullTitle,

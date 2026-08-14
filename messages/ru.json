@@ -263,7 +263,8 @@
     "exploreTitle": "Продолжить знакомство",
     "propertiesInDistrict": "Недвижимость в районе {district}",
     "aboutCity": "Подробнее о городе {city}",
-    "otherDistricts": "Другие районы города {city}"
+    "otherDistricts": "Другие районы города {city}",
+    "viewAllDistricts": "Смотреть все районы города {city}"
   },
   "Landing": {
     "updatedAt": "Обновлено: {date}",

@@ -263,7 +263,8 @@
     "exploreTitle": "Continua a esplorare",
     "propertiesInDistrict": "Immobili a {district}",
     "aboutCity": "Scopri di più su {city}",
-    "otherDistricts": "Altri quartieri di {city}"
+    "otherDistricts": "Altri quartieri di {city}",
+    "viewAllDistricts": "Vedi tutti i quartieri di {city}"
   },
   "Landing": {
     "updatedAt": "Aggiornato: {date}",

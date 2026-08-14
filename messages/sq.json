@@ -262,7 +262,8 @@
     "exploreTitle": "Vazhdoni eksplorimin",
     "propertiesInDistrict": "Prona në {district}",
     "aboutCity": "Më shumë rreth {city}",
-    "otherDistricts": "Rrethe të tjera të {city}"
+    "otherDistricts": "Rrethe të tjera të {city}",
+    "viewAllDistricts": "Shihni të gjitha rrethet e {city}"
   },
   "Landing": {
     "updatedAt": "Përditësuar: {date}",

@@ -263,7 +263,8 @@
     "exploreTitle": "Keep exploring",
     "propertiesInDistrict": "Properties in {district}",
     "aboutCity": "More about {city}",
-    "otherDistricts": "Other districts of {city}"
+    "otherDistricts": "Other districts of {city}",
+    "viewAllDistricts": "View all districts of {city}"
   },
   "Landing": {
     "updatedAt": "Updated: {date}",
