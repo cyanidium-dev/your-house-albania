@@ -3,12 +3,20 @@ import { getTranslations } from "next-intl/server";
 import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
 import { fetchDealTypeLanding, fetchSiteSettings } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
+import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
 
 export async function buildDealTypeLandingMetadata(
   deal: PropertiesDealParam,
   locale: string,
   options?: { investmentPath?: boolean },
 ): Promise<Metadata> {
+  // Landings for deal types hidden from the public UI (PUBLIC_DEAL_TYPES) stay
+  // reachable via direct URLs but must not be indexed — same policy as the
+  // /rent and /short-term-rent listing routes.
+  const hiddenDealRobots: Metadata["robots"] | undefined = isPublicDealQuery(deal)
+    ? undefined
+    : { index: false, follow: true };
+
   const [landing, siteSettings] = await Promise.all([
     fetchDealTypeLanding(deal),
     fetchSiteSettings(),
@@ -18,6 +26,7 @@ export async function buildDealTypeLandingMetadata(
     return {
       title: t("title"),
       description: t("description"),
+      ...(hiddenDealRobots ? { robots: hiddenDealRobots } : {}),
     };
   }
   const landingSeo = (landing as { seo?: unknown }).seo ?? null;
@@ -30,8 +39,9 @@ export async function buildDealTypeLandingMetadata(
         : deal === "short-term"
           ? options?.investmentPath ? "investment/short-term-rent" : "short-term-rent"
           : undefined;
-  return buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale, {
+  const meta = buildLandingMetadata(landingSeo as never, siteDefaultSeo as never, locale, {
     ...(pathnameForAlternates ? { pathnameForAlternates } : {}),
     contentUpdatedAt: (landing as { contentUpdatedAt?: string }).contentUpdatedAt,
   });
+  return hiddenDealRobots ? { ...meta, robots: hiddenDealRobots } : meta;
 }

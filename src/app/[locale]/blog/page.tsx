@@ -14,6 +14,7 @@ import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { isIndexingEnabled } from "@/lib/seo/envSeo";
 
 const PAGE_SIZE = 12;
 
@@ -62,7 +63,7 @@ export async function generateMetadata({
     ? categories.find((c) => c.slug === validCategory)?.label
     : undefined;
 
-  return buildBlogMetadata(
+  const meta = buildBlogMetadata(
     blogSeo as never,
     siteDefaultSeo as never,
     locale,
@@ -71,6 +72,18 @@ export async function generateMetadata({
     categoryLabel,
     { baseUrl, pathnameForAlternates: "/blog" }
   );
+
+  if (!isIndexingEnabled()) return meta;
+
+  // Same policy as catalog listings: any real query string (?category, ?page>1)
+  // → noindex,follow; canonical always points at the clean /blog path.
+  const pageParam = typeof search.page === "string" ? search.page.trim() : undefined;
+  const hasQuery = Boolean(categoryParam) || Boolean(pageParam && pageParam !== "1");
+  return {
+    ...meta,
+    alternates: { ...meta.alternates, canonical: `${baseUrl}/${locale}/blog` },
+    ...(hasQuery ? { robots: { index: false, follow: true } } : {}),
+  };
 }
 
 export default async function Blog({ params, searchParams }: Props) {
