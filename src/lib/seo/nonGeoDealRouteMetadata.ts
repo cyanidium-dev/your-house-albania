@@ -9,6 +9,7 @@ import { fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/cli
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
+import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import {
   listingUrlHasQueryParams,
   shouldNoindexNonGeoDealTypeCombo,
@@ -31,9 +32,12 @@ export async function generateNonGeoDealRouteMetadata(input: {
   const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const typeSeg = filters[0] ? decodeURIComponent(filters[0]).trim() : "";
-  const title =
+  // stripBrandSuffix: CMS titles often bake in "| Domlivo"; the root template
+  // appends the brand once.
+  const title = stripBrandSuffix(
     catalogSeo?.metaTitle ||
-    `${t("title")} — ${titleFragment}${typeSeg ? ` — ${typeSeg}` : ""}`;
+      `${t("title")} — ${titleFragment}${typeSeg ? ` — ${typeSeg}` : ""}`
+  );
   const description = catalogSeo?.metaDescription || t("description");
   if (!isIndexingEnabled()) return { title, description, robots: indexingDisabledRobots };
 

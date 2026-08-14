@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { buildHreflangAlternates } from '@/lib/seo/hreflang'
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
+import { withBrand } from '@/lib/seo/brandTitle'
 import { resolveLocalizedString } from './localized'
 import {
   buildMetadata,
@@ -105,21 +106,24 @@ export function buildLandingMetadata(
 
   const canonicalFromCms = resolveCanonicalUrl(landingSeo?.canonicalUrl, locale)
   const pathnameAfterLocale = itemContext?.pathnameForAlternates?.trim()
+  // "" is a valid value: the home page passes an empty path and gets `/{locale}`.
   const canonicalFallback =
-    !canonicalFromCms && pathnameAfterLocale
-      ? `${getSiteBaseUrl().replace(/\/$/, '')}/${locale}/${pathnameAfterLocale
-          .split('/')
-          .filter(Boolean)
-          .map((s) => encodeURIComponent(s))
-          .join('/')}`
+    !canonicalFromCms && pathnameAfterLocale != null
+      ? pathnameAfterLocale
+        ? `${getSiteBaseUrl().replace(/\/$/, '')}/${locale}/${pathnameAfterLocale
+            .split('/')
+            .filter(Boolean)
+            .map((s) => encodeURIComponent(s))
+            .join('/')}`
+        : `${getSiteBaseUrl().replace(/\/$/, '')}/${locale}`
       : undefined
   const canonical = canonicalFromCms ?? canonicalFallback
   const noIndex = landingSeo?.noIndex ?? siteDefaultSeo?.noIndex ?? false
   const noFollow = landingSeo?.noFollow ?? siteDefaultSeo?.noFollow ?? false
 
-  // `absolute` short-circuits the root layout's `%s — Brand` template when the
-  // CMS metaTitle already includes the brand. Empty string is safe to pass through.
-  const titleField: Metadata['title'] = title ? { absolute: title } : title
+  // `absolute` short-circuits the root layout's `%s — Brand` template;
+  // `withBrand` strips any CMS-baked brand and appends it exactly once.
+  const titleField: Metadata['title'] = title ? { absolute: withBrand(title) } : title
   const keywords = resolveKeywords(landingSeo?.keywords, locale)
   const modifiedTimeIso = resolveModifiedTimeIso(itemContext?.contentUpdatedAt)
 

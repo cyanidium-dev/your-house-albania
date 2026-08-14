@@ -6,7 +6,7 @@ export type LocalizedField =
   | null
   | undefined;
 
-export const SOCIAL_METADATA_TEMPLATE_TITLE = 'Your House Albania';
+export const SOCIAL_METADATA_TEMPLATE_TITLE = 'Domlivo';
 export const SOCIAL_METADATA_TEMPLATE_DESCRIPTION =
   'Real estate in Albania. Buy, rent, and invest in properties across Albania.';
 

@@ -66,7 +66,7 @@ export async function generateMetadata({
     blogSeo as never,
     siteDefaultSeo as never,
     locale,
-    t("title"),
+    t("metaTitle"),
     t("description"),
     categoryLabel,
     { baseUrl, pathnameForAlternates: "/blog" }

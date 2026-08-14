@@ -85,8 +85,7 @@
       "restroom": "4 Restroom",
       "parkingSpace": "Parking space",
       "price": "$4,750,000",
-      "forSellingPrice": "For selling price"
-      ,
+      "forSellingPrice": "For selling price",
       "search": {
         "tabs": {
           "buy": "Buy",
@@ -239,7 +238,8 @@
     "blogs": {
       "badge": "Blog",
       "title": "Real estate insights.",
-      "description": "Stay ahead in the property market with expert advice and updates."
+      "description": "Stay ahead in the property market with expert advice and updates.",
+      "metaTitle": "Blog"
     }
   },
   "Cities": {
@@ -388,7 +388,7 @@
     }
   },
   "Contacts": {
-    "metaTitle": "Contact us | Your House Albania",
+    "metaTitle": "Contact us",
     "metaDescription": "Send a request and our team will get back to you with options that match your needs.",
     "heroH1": "Haven't found the right home?",
     "heroH2": "Leave a request — we'll offer a tailored selection!",
@@ -430,7 +430,7 @@
     "noDataDescription": "Some favorites may no longer exist."
   },
   "HowToPublish": {
-    "metaTitle": "How to publish on Domlivo | Domlivo",
+    "metaTitle": "How to publish on Domlivo",
     "metaDescription": "Watch the demo and learn how to publish properties on Domlivo and receive enquiries in Telegram.",
     "heroTitle": "How to publish properties on Domlivo",
     "heroSubtitle": "Watch the demo and learn how to get real enquiries",
@@ -444,7 +444,7 @@
     "block2Cta": "Try 7 days free"
   },
   "Register": {
-    "metaTitle": "Register as a realtor | Domlivo",
+    "metaTitle": "Register as a realtor",
     "metaDescription": "Submit a registration request to list on Domlivo and receive real client enquiries.",
     "heroTitle": "Register and start receiving real enquiries",
     "heroSubtitle": "Domlivo brings you clients — you work directly, with no commission",
@@ -481,7 +481,7 @@
     "errorTerms": "Please accept the terms to continue.",
     "errorRequiredName": "Please enter your name.",
     "errorRequiredPhone": "Please enter your phone number.",
-    "thankYouMetaTitle": "Thank you | Domlivo",
+    "thankYouMetaTitle": "Thank you",
     "thankYouMetaDescription": "Your registration request has been received.",
     "thankYouTitle": "Thank you",
     "thankYouDescription": "We have received your request and will contact you shortly.",

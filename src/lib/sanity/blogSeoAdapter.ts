@@ -3,6 +3,7 @@ import { buildHreflangAlternates } from '@/lib/seo/hreflang';
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import { resolveLocalizedString } from './localized';
 import { buildMetadata } from './socialMetadataResolution';
+import { stripBrandSuffix } from '@/lib/seo/brandTitle';
 
 type LocalizedField = { en?: string; uk?: string; ru?: string; sq?: string; it?: string } | null | undefined;
 
@@ -39,11 +40,14 @@ export function buildBlogMetadata(
   categoryLabel?: string,
   articleOptions?: ArticleMetadataOptions
 ): Metadata {
-  let title =
+  // Page-specific fallback ranks above the site default title — otherwise the
+  // blog index inherits the site title and the root template double-brands it.
+  let title = stripBrandSuffix(
     resolveLocalizedString(blogSeo?.metaTitle as never, locale) ||
-    resolveLocalizedString(siteDefaultSeo?.metaTitle as never, locale) ||
-    fallbackTitle ||
-    'Blog';
+      fallbackTitle ||
+      resolveLocalizedString(siteDefaultSeo?.metaTitle as never, locale) ||
+      'Blog'
+  );
 
   let description =
     resolveLocalizedString(blogSeo?.metaDescription as never, locale) ||

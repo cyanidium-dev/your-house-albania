@@ -85,8 +85,7 @@
       "restroom": "4 Bagni",
       "parkingSpace": "Posto auto",
       "price": "$4.750.000",
-      "forSellingPrice": "Prezzo di vendita"
-      ,
+      "forSellingPrice": "Prezzo di vendita",
       "search": {
         "tabs": {
           "buy": "Acquista",
@@ -239,7 +238,8 @@
     "blogs": {
       "badge": "Blog",
       "title": "Approfondimenti sul mercato immobiliare.",
-      "description": "Resta al passo con consigli e aggiornamenti dagli esperti."
+      "description": "Resta al passo con consigli e aggiornamenti dagli esperti.",
+      "metaTitle": "Blog"
     }
   },
   "Cities": {
@@ -388,7 +388,7 @@
     }
   },
   "Contacts": {
-    "metaTitle": "Contattaci | Your House Albania",
+    "metaTitle": "Contattaci",
     "metaDescription": "Invia una richiesta: ti risponderemo con opzioni adatte alle tue esigenze.",
     "heroH1": "Non avete trovato la casa giusta?",
     "heroH2": "Lasciate una richiesta: vi offriremo una selezione su misura!",
@@ -430,7 +430,7 @@
     "noDataDescription": "Alcuni preferiti potrebbero non esistere più."
   },
   "HowToPublish": {
-    "metaTitle": "Come pubblicare su Domlivo | Domlivo",
+    "metaTitle": "Come pubblicare su Domlivo",
     "metaDescription": "Guarda la demo e scopri come pubblicare immobili su Domlivo e ricevere richieste su Telegram.",
     "heroTitle": "Come pubblicare immobili su Domlivo",
     "heroSubtitle": "Guarda la demo e scopri come ricevere richieste reali",
@@ -444,7 +444,7 @@
     "block2Cta": "Prova 7 giorni gratis"
   },
   "Register": {
-    "metaTitle": "Registrazione agente | Domlivo",
+    "metaTitle": "Registrazione agente",
     "metaDescription": "Invia una richiesta di registrazione per pubblicare su Domlivo e ricevere contatti dai clienti.",
     "heroTitle": "Registrati e inizia a ricevere richieste reali",
     "heroSubtitle": "Domlivo ti porta clienti: lavori direttamente, senza commissioni",
@@ -481,7 +481,7 @@
     "errorTerms": "Accetta i termini per continuare.",
     "errorRequiredName": "Inserisci il nome.",
     "errorRequiredPhone": "Inserisci il telefono.",
-    "thankYouMetaTitle": "Grazie | Domlivo",
+    "thankYouMetaTitle": "Grazie",
     "thankYouMetaDescription": "La tua richiesta di registrazione è stata ricevuta.",
     "thankYouTitle": "Grazie",
     "thankYouDescription": "Abbiamo ricevuto la tua richiesta e ti contatteremo a breve.",

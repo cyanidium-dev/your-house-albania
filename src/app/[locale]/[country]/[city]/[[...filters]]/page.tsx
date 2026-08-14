@@ -20,6 +20,7 @@ import {
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
+import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
@@ -108,13 +109,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const localizedTitleFromSeo =
     defaultSeo?.metaTitle &&
     resolveLocalizedString(defaultSeo.metaTitle as never, locale);
-  const title = catalogSeo?.metaTitle
-    ? catalogSeo.metaTitle
-    : cityTitle
-      ? `${listTitle} — ${cityTitle}`
-      : localizedTitleFromSeo
-        ? `${listTitle} | ${localizedTitleFromSeo}`
-        : listTitle;
+  // stripBrandSuffix: CMS titles often bake in "| Domlivo" — the root template
+  // appends the brand, so strip it here to avoid "… | Domlivo — Domlivo".
+  const title = stripBrandSuffix(
+    catalogSeo?.metaTitle
+      ? catalogSeo.metaTitle
+      : cityTitle
+        ? `${listTitle} — ${cityTitle}`
+        : localizedTitleFromSeo
+          ? `${listTitle} | ${localizedTitleFromSeo}`
+          : listTitle
+  );
   const description =
     catalogSeo?.metaDescription ||
     (defaultSeo?.metaDescription
