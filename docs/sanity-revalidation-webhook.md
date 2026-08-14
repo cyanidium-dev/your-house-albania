@@ -32,6 +32,8 @@ Example: editing a `city` document calls `revalidateTag('sanity:city')`, which b
 | `country`        | `sanity:country`       |
 | `catalogSeoPage` | `sanity:catalogSeoPage`|
 | `siteSettings`   | `sanity:siteSettings`  |
+| `tracker`        | `sanity:tracker`       |
+| `developer`      | `sanity:developer`     |
 
 An unrecognized `_type` is acknowledged with HTTP 200 and `revalidated: []` (no retry storm), but nothing is purged.
 
@@ -61,7 +63,7 @@ The route returns **401** if this is unset, so the webhook is disabled by defaul
    _type in [
      "property","propertyType","homePage","landingPage","blogPost",
      "blogCategory","blog-settings","city","district","amenity",
-     "country","catalogSeoPage","siteSettings"
+     "country","catalogSeoPage","siteSettings","tracker","developer"
    ]
    ```
 7. **Projection:** expose the type and id the route reads:

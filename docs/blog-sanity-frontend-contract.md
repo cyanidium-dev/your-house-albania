@@ -25,7 +25,7 @@ It does **not** define frontend rendering behavior, routing implementation, or A
 
 ## 2. Routing / Localization Assumptions
 
-- Frontend uses locale-prefixed routes (e.g. `/[locale]/blogs`, `/[locale]/blogs/[slug]`).
+- Frontend uses locale-prefixed routes (`/[locale]/blog`, `/[locale]/blog/[slug]`).
 - Sanity stores localized content in field-level i18n objects with keys: `en`, `uk`, `ru`, `sq`, `it` (see `lib/languages.ts`).
 - Frontend must resolve the correct locale value from these objects (e.g. `title[locale]` with fallback).
 - Slug is single per post (`slug.current`); URL localization is a frontend concern.
@@ -73,12 +73,12 @@ It does **not** define frontend rendering behavior, routing implementation, or A
 | Callout | `blogCallout` | `variant` (info, tip, important, warning, summary), `title`, `content` |
 | CTA | `blogCtaBlock` | See CTA contract below |
 
-### Blocks NOT part of the editorial contract
+### Blocks implemented on the frontend but not yet enabled in the CMS
 
-- **`blogRelatedPostsBlock`** — Not allowed in the main article body. Editors cannot insert it. Related posts are managed via the dedicated `relatedPosts` field on the blog post document.
-- **`blogPropertyEmbedBlock`** — Not allowed in the main article body. Editors cannot insert it. Related properties are managed via the dedicated `relatedProperties` field on the blog post document.
+- **`blogRelatedPostsBlock`** — Implemented on the frontend (rendered by `src/components/Blog/BlogArticleContent.tsx`, projected in `src/lib/sanity/queries/blog.ts`), but currently **not** in the CMS schema's `localizedBlockContent` allow-list, so editors cannot insert it (pending CMS-side wiring). Until then, related posts are managed via the dedicated `relatedPosts` field on the blog post document.
+- **`blogPropertyEmbedBlock`** — Same situation: rendered by the frontend and projected in the blog queries, but not enabled in the CMS `localizedBlockContent` allow-list (pending CMS-side wiring). Until then, related properties are managed via the dedicated `relatedProperties` field on the blog post document.
 
-**Note:** If historical documents contain these blocks (from before the schema change), they may still exist in stored content. Frontend may render them if desired, but new content will not include them. The Sanity editorial contract is: do not expect these blocks in new content.
+**Note:** If historical documents contain these blocks, the frontend renders them. New content cannot include them until the CMS allow-list is updated.
 
 ---
 

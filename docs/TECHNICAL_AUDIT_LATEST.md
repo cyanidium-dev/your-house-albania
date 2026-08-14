@@ -1,3 +1,5 @@
+> Canonical audit snapshot (2026-05-31). Superseded in part by July 2026 feature work (guides, districts, calculators, trackers, developers, rentals hiding) and the 2026-08-14 workspace audit. Live backlog: workspace docs/engineering/BACKLOG.md.
+
 # Domlyva Technical Audit
 
 > **Audited:** 2026-05-31 · **Scope:** `your-house-albania` (Next.js 15 App Router frontend). Sanity Studio/schemas live in a **separate repo** — the schema boundary here is `src/lib/sanity/*Adapter.ts`.

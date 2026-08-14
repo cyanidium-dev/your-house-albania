@@ -23,9 +23,10 @@ export function getClient() {
  *   string). To purge everything, call `revalidateTag(SANITY_TAGS.all)` — every
  *   cached fetcher carries the `all` tag in addition to its specific tags.
  *
- * Note: no webhook route exists yet; these tags are the stable surface a future
- * `/api/revalidate` handler will target. Until then, entries expire via their
- * `revalidate` window. The editor save route invalidates by path separately.
+ * The webhook route lives at `src/app/api/revalidate/sanity/route.ts`
+ * (`POST /api/revalidate/sanity`); these tags are the surface it targets.
+ * Entries also expire via their `revalidate` window. The editor save route
+ * invalidates by path separately.
  */
 export const SANITY_TAGS = {
   all: 'sanity:all',
