@@ -28,11 +28,8 @@ export default async function EditorLoginPage({
 
         {!configured ? (
           <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-            Editor not configured. Set{' '}
-            <code className="font-mono">EDITOR_PASSWORD</code> and{' '}
-            <code className="font-mono">EDITOR_SESSION_SECRET</code> (or rely on{' '}
-            <code className="font-mono">SANITY_WRITE_TOKEN</code> as a fallback secret) on the
-            server, then reload.
+            {/* Setup details live in .env.example (editor section) — never print env-var names publicly. */}
+            Editor is not available on this deployment.
           </div>
         ) : (
           <EditorLoginForm next={safeNext} />

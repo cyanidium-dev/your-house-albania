@@ -91,6 +91,7 @@ export default function CurrencySwitcher() {
                   type="button"
                   role="option"
                   aria-selected={c.code === currency}
+                  aria-label={t('switchTo', { currency: c.code })}
                   onClick={() => handleSelect(c.code)}
                   className={cn(
                     'flex items-center gap-2 w-full px-3 py-1.5 text-sm cursor-pointer outline-none',
