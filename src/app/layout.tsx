@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import Script from "next/script";
+import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { GTM_ID, CLARITY_ID, analyticsEnabled } from "@/lib/analytics/config";
@@ -49,20 +50,21 @@ export const viewport = {
 
 export default async function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params?: Promise<{ locale?: string }>;
 }>) {
-  const resolved = params ? await params : {};
+  // The root layout renders above the [locale] segment and never receives the
+  // locale param. next-intl middleware stamps the negotiated locale on the
+  // request; fall back to the default for non-middleware routes (/editor).
+  const headerLocale = (await headers()).get("x-next-intl-locale");
   const locale =
-    typeof resolved?.locale === "string" && (routing.locales as readonly string[]).includes(resolved.locale)
-      ? resolved.locale
+    headerLocale && (routing.locales as readonly string[]).includes(headerLocale)
+      ? headerLocale
       : routing.defaultLocale;
   return (
     <html lang={locale}>
       <body
-        className={`${font.className} bg-white dark:bg-black antialiased transition-colors duration-300 ease-out`}
+        className={`${font.className} bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip`}
       >
         {analyticsEnabled && (
           <>

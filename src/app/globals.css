@@ -78,6 +78,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* `dark:bg-black` on <body> is not emitted by the Tailwind scanner (sole
+   candidate in layout.tsx) — set the dark page ground explicitly. */
+.dark body {
+  background-color: #000;
+}
+
 /* iPhone Safari: when gallery modal is open, page background behind translucent
    browser chrome should match the dark modal backdrop for visual blending. */
 html.gallery-open,
