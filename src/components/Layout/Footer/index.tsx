@@ -11,6 +11,8 @@ import type { ResolvedSiteSettings } from "@/lib/sanity/siteSettingsAdapter";
 import { FOOTER_STABLE_NAV_ITEMS } from "@/data/footerNavConfig";
 import { catalogFilterPath } from "@/lib/routes/catalog";
 import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry";
+import { CookieSettingsLink } from "@/lib/cookie-consent";
+import { analyticsEnabled } from "@/lib/analytics/config";
 
 type FooterProps = {
   siteSettings?: ResolvedSiteSettings;
@@ -375,6 +377,13 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
                 >
                   {privacyLink.label}
                 </Link>
+              </>
+            ) : null}
+
+            {analyticsEnabled ? (
+              <>
+                <CreditsDivider />
+                <CookieSettingsLink />
               </>
             ) : null}
 

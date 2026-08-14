@@ -8,6 +8,8 @@ import Footer from "@/components/Layout/Footer";
 import { fetchCatalogCountryDocumentSlugs, fetchSiteSettings } from "@/lib/sanity/client";
 import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
+import { ConsentProvider } from "@/lib/cookie-consent";
+import { analyticsEnabled } from "@/lib/analytics/config";
 
 type Props = {
   children: React.ReactNode;
@@ -45,12 +47,20 @@ export default async function LocaleLayout({ children, params }: Props) {
     });
   }
 
+  // Privacy-policy link for the consent banner: prefer a CMS policy row whose
+  // label suggests privacy, else the first configured policy link.
+  const policyHref =
+    siteSettings.policyLinks.find((p) => /privacy/i.test(p.label))?.href ??
+    siteSettings.policyLinks[0]?.href;
+
   return (
     <NextIntlClientProvider messages={messages}>
       <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
-        <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
-        {children}
-        <Footer siteSettings={siteSettings} countrySlugs={countrySlugs} />
+        <ConsentProvider locale={locale} policyHref={policyHref} active={analyticsEnabled}>
+          <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
+          {children}
+          <Footer siteSettings={siteSettings} countrySlugs={countrySlugs} />
+        </ConsentProvider>
       </Providers>
     </NextIntlClientProvider>
   );

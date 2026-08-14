@@ -7,6 +7,7 @@ import Script from "next/script";
 import { routing } from "@/i18n/routing";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { GTM_ID, CLARITY_ID, analyticsEnabled } from "@/lib/analytics/config";
+import { ConsentBootstrap } from "@/lib/cookie-consent";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"] });
 
@@ -65,11 +66,10 @@ export default async function RootLayout({
       >
         {analyticsEnabled && (
           <>
-            {/* Consent Mode v2 — default state (denied). Must run before GTM. */}
-            <Script id="consent-default" strategy="beforeInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});`}
-            </Script>
+            {/* Consent Mode v2 + Clarity bootstrap: default denied, then
+                synchronously re-applies a returning visitor's stored choice.
+                Must run before GTM and Clarity. */}
+            <ConsentBootstrap />
             {/* Google Tag Manager (noscript) */}
             <noscript>
               <iframe
