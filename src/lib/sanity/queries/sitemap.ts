@@ -101,12 +101,12 @@ export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
   const client = getClient();
   if (!client) return [];
   const query = `{
-    "cities": *[_type == "city" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+    "cities": *[_type == "city" && isPublished != false && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
       "slug": slug.current,
       "countrySlug": country->slug.current,
       _updatedAt
     },
-    "landings": *[_type == "landingPage" && pageType == "city" && defined(linkedCity->slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+    "landings": *[_type == "landingPage" && pageType == "city" && linkedCity->isPublished != false && defined(linkedCity->slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
       "slug": linkedCity->slug.current,
       "countrySlug": linkedCity->country->slug.current,
       _updatedAt
@@ -150,7 +150,7 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
   const client = getClient();
   if (!client) return [];
   const query = `{
-    "cityRows": *[_type == "city" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
+    "cityRows": *[_type == "city" && isPublished != false && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
       "citySlug": slug.current,
       "countrySlug": country->slug.current,
       _updatedAt
@@ -446,6 +446,7 @@ export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntr
   const query = `*[
     _type == "district" &&
     isPublished != false &&
+    city->isPublished != false &&
     defined(slug.current) &&
     defined(city->slug.current) &&
     (!defined(seo.noIndex) || seo.noIndex != true)

@@ -81,6 +81,7 @@ export async function fetchDistrictBySlugs(
       const query = `*[
     _type == "district" &&
     isPublished != false &&
+    city->isPublished != false &&
     slug.current == $district &&
     city->slug.current == $city
   ][0] ${DISTRICT_DOC_PROJECTION}`;
@@ -178,6 +179,7 @@ export async function fetchPublishedDistrictsByCity(citySlug: string): Promise<D
       const query = `*[
     _type == "district" &&
     isPublished != false &&
+    city->isPublished != false &&
     defined(slug.current) &&
     city->slug.current == $city
   ] | order(order asc, title.en asc) {

@@ -1,6 +1,7 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { resolveLocalizedString, resolveLocalizedContent } from '../localized';
 import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter } from '../groq/propertyFilters';
+import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 
@@ -97,6 +98,11 @@ function buildCatalogPredicateParts(
   }
   if (deal) {
     parts.push(`${prefix}status == $deal`);
+  } else {
+    // Default (unfiltered) catalog views honor PUBLIC_DEAL_TYPES — rentals are
+    // hidden from public surfaces (product decision 2026-07); explicit deal
+    // segments (direct /rent URLs) pass `deal` and bypass this.
+    parts.push(`${prefix}status in $publicDealTypes`);
   }
   if (typeof minPrice === 'number' && minPrice > 0) {
     parts.push(`${prefix}price >= $minPrice`);
@@ -145,6 +151,7 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
     beds: filters.beds,
     amenities: filters.amenities,
     excludedPropertyIds,
+    publicDealTypes: PUBLIC_DEAL_TYPES,
   };
 
   return { where, params };
@@ -451,7 +458,7 @@ function getCachedFetchCatalogFilterOptions(
         }
 
         const query = `{
-          "locations": *[_type == "city"] | order(title asc) {
+          "locations": *[_type == "city" && isPublished != false] | order(title asc) {
             "value": slug.current,
             title,
             "countrySlug": country->slug.current
@@ -586,7 +593,7 @@ export async function fetchFooterCitiesByCountry(
     async () => {
       const client = getClient();
       if (!client) return [];
-      const query = `*[_type == "city" && country->slug.current == $country] | order(title asc) {
+      const query = `*[_type == "city" && isPublished != false && country->slug.current == $country] | order(title asc) {
         "slug": slug.current,
         title,
         "countrySlug": country->slug.current
@@ -631,7 +638,7 @@ export async function fetchCityCountrySlugByCitySlug(citySlug: string): Promise<
       if (!client) return null;
       try {
         const slug = await client.fetch<string | null>(
-          `*[_type == "city" && slug.current == $citySlug][0].country->slug.current`,
+          `*[_type == "city" && isPublished != false && slug.current == $citySlug][0].country->slug.current`,
           { citySlug: key }
         );
         if (typeof slug !== 'string' || !slug.trim()) return null;
@@ -656,7 +663,7 @@ export async function fetchCityExistsBySlug(citySlug: string): Promise<boolean> 
       if (!client) return false;
       try {
         const exists = await client.fetch<boolean>(
-          `count(*[_type == "city" && slug.current == $citySlug]) > 0`,
+          `count(*[_type == "city" && isPublished != false && slug.current == $citySlug]) > 0`,
           { citySlug: key }
         );
         return Boolean(exists);
