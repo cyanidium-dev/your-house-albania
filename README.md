@@ -37,7 +37,8 @@ See `.env.example` for the full annotated list. Groups:
 - `/{country}/{city}/districts` and `/districts/[district]` — district index and pages; `/{city}/info` — city info landing
 - `/property/[slug]` — property detail
 - `/blog`, `/blog/[slug]` — blog index and articles
-- `/guides/[slug]` — editorial guides (CMS landing pages)
+- `/guides/[slug]` — editorial guides (CMS landings, route family `custom`)
+- `/<slug>` — unique landings (route family `unique`): final fallback of the top-level single-segment resolver — statics, country, deal, type, and city slugs all take precedence. No index page; wire navigation manually. Contract: workspace `docs/engineering/ROUTING.md`
 - `/sale`, `/rent`, `/short-term-rent` — deal-type routes. **Rentals are currently hidden from the public UI** (product decision 2026-07): `src/lib/catalog/publicDealTypes.ts` exposes only `sale`; rent routes still resolve via direct URL with `noindex`
 - `/contacts`, `/register`, `/for-realtors`, `/how-to-publish`, `/sell`, `/investment`, `/favorites`, `/agent/[agent]` — supporting pages
 - `/editor` — hidden password-protected landing editor (outside the locale tree, never loaded by the public site)
