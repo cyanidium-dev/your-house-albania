@@ -4,7 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
-  buildPropertyDetailBreadcrumbItems,
+  buildCatalogCrumbs,
+  formatBreadcrumbSlug,
   toBreadcrumbJsonLdItems,
   type BreadcrumbLocation,
   type BreadcrumbDistrict,
@@ -36,15 +37,31 @@ export async function PropertyDetailBreadcrumb({
     districts = opts.districts;
   }
 
-  const items = buildPropertyDetailBreadcrumbItems({
+  // A listing is a catalog leaf, so its trail stays on the catalog spine — the
+  // one place a district name legitimately means "listings in that district".
+  const city = citySlug
+    ? {
+        slug: citySlug,
+        label:
+          locations.find((l) => l.value.toLowerCase() === citySlug.toLowerCase())?.label ||
+          formatBreadcrumbSlug(citySlug),
+      }
+    : undefined;
+  const district = districtSlug
+    ? {
+        slug: districtSlug,
+        label:
+          districts.find((d) => d.value.toLowerCase() === districtSlug.toLowerCase())?.label ||
+          formatBreadcrumbSlug(districtSlug),
+      }
+    : undefined;
+
+  const items = buildCatalogCrumbs({
     locale,
-    homeLabel: t("home"),
-    propertiesLabel: t("properties"),
-    propertyTitle,
-    citySlug,
-    districtSlug,
-    locations,
-    districts,
+    labels: {home: t("home"), properties: t("catalog"), agents: t("agents")},
+    city,
+    district,
+    leaf: propertyTitle,
   });
 
   const baseUrl = await getBaseUrl();

@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { fetchSiteSettings } from '@/lib/sanity/client'
 import { mapContactsManagerFromSiteSettings } from '@/lib/sanity/contactsManagerFromSiteSettings'
 import { ContactsHero } from '@/components/contact/ContactsHero'
+import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb"
 import { ContactPageContent } from '@/components/contact/ContactPageContent'
 import { buildHreflangAlternates } from '@/lib/seo/hreflang'
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
@@ -47,6 +48,11 @@ export default async function ContactsPage({ params }: Props) {
 
   return (
     <>
+      <section className="pt-28 md:pt-36">
+        <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+          <FlatBreadcrumb locale={locale} labelKey="contacts" path="contacts" />
+        </div>
+      </section>
       <ContactsHero locale={locale} />
       <ContactPageContent locale={locale} manager={manager} />
     </>

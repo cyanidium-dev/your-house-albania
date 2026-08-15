@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
-  buildCityLandingBreadcrumbItems,
+  buildPlaceCrumbs,
   buildCityLandingCurrentPath,
   formatBreadcrumbSlug,
   toBreadcrumbJsonLdItems,
@@ -29,11 +29,14 @@ export async function CityLandingBreadcrumb({
   );
   const cityLabel = locationMatch?.label || formatBreadcrumbSlug(city);
 
-  const items = buildCityLandingBreadcrumbItems({
+  const items = buildPlaceCrumbs({
     locale,
-    homeLabel: t("home"),
-    citiesLabel: t("cities"),
-    cityLabel,
+    labels: {home: t("home"), cities: t("cities"), districts: t("districts")},
+    city: {
+      slug: city,
+      label: cityLabel,
+      countrySlug: (locationMatch?.countrySlug || "albania").toLowerCase(),
+    },
   });
 
   const baseUrl = await getBaseUrl();

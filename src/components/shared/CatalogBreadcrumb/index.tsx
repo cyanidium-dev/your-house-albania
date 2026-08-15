@@ -4,16 +4,11 @@ import { getTranslations } from "next-intl/server";
 import { fetchCatalogFilterOptions, fetchCityCountrySlugByCitySlug } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
-  agentFilterPath,
-  catalogFilterPath,
-  catalogPath,
   dealRouteSegmentToQueryValue,
-  nonGeoDealListingPath,
   normalizeCatalogCountrySlug,
-  singleFilterPath,
 } from "@/lib/routes/catalog";
 import { buildListingUrl } from "@/lib/routes/listingRoutes";
-import type { BreadcrumbItem } from "../Breadcrumb";
+import { buildCatalogCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcrumbs";
 
 type CatalogBreadcrumbProps = {
   locale: string;
@@ -48,96 +43,41 @@ export async function CatalogBreadcrumb({
   }
   const countrySeg = countryForPath ? normalizeCatalogCountrySlug(countryForPath) : undefined;
   const dealsT = await getTranslations("Catalog.filters");
-  const hasCatalogScope = Boolean(city || dealType || propertyType || country || agentSlug);
-  const items: BreadcrumbItem[] = [{ label: t("home"), href: `/${locale}` }];
-  if (!hasCatalogScope) {
-    items.push({ label: "Catalog" });
-  }
-
   const propertyTypes = options.propertyTypes;
 
-  if (agentSlug) {
-    const agentPath = agentFilterPath({ locale, agentSlug });
-    items.push({ label: "Agents", href: agentPath });
-    items.push({
-      label: agentName || formatSlug(agentSlug),
-      href: city || dealType || propertyType ? agentPath : undefined,
-    });
-  }
+  const dealLabel = (slug: string) =>
+    slug === "sale"
+      ? dealsT("dealSale")
+      : slug === "rent"
+        ? dealsT("dealRent")
+        : slug === "short-term-rent"
+          ? dealsT("dealShortTerm")
+          : formatSlug(slug);
 
-  if (country) {
-    const normalizedCountry = countrySeg!;
-    items.push({ label: "Country", href: `/${locale}/${encodeURIComponent(normalizedCountry)}` });
-    items.push({
-      label: formatSlug(normalizedCountry),
-      href: undefined,
-    });
-  }
-
-  if (city) {
-    const cityLabel =
-      locations.find((l) => l.value.toLowerCase() === city.toLowerCase())
-        ?.label || formatSlug(city);
-    const cityHref = dealType || propertyType
-      ? agentSlug
-        ? agentFilterPath({ locale, agentSlug, country: countrySeg, city })
-        : countryForPath
-          ? catalogFilterPath({ locale, country: countrySeg, city, trustedCityCountrySlug: countrySeg })
-          : singleFilterPath({ locale, city, trustedCityCountrySlug: countrySeg })
-      : undefined;
-    const cityResetHref = agentSlug
-      ? agentFilterPath({ locale, agentSlug })
-      : countryForPath
-        ? `/${locale}/${encodeURIComponent(countrySeg!)}`
-        : catalogPath(locale);
-    items.push({ label: t("cities"), href: cityResetHref });
-    items.push({ label: cityLabel, href: cityHref });
-  }
-
-  if (dealType) {
-    const dealLabel =
-      dealType === "sale"
-        ? dealsT("dealSale")
-        : dealType === "rent"
-          ? dealsT("dealRent")
-          : dealType === "short-term-rent"
-            ? dealsT("dealShortTerm")
-            : formatSlug(dealType);
-    const dealHref = propertyType
-      ? agentSlug
-        ? agentFilterPath({ locale, agentSlug, country: countrySeg, city, dealType })
-        : countryForPath && city
-          ? catalogFilterPath({ locale, country: countrySeg, city, dealType, trustedCityCountrySlug: countrySeg })
-          : dealType
-            ? nonGeoDealListingPath(locale, dealType)
-            : undefined
-      : undefined;
-    items.push({ label: dealsT("dealType") });
-    items.push({ label: dealLabel, href: dealHref });
-  }
-
-  if (propertyType) {
-    const typeLabel =
-      propertyTypes.find((p) => p.value.toLowerCase() === propertyType.toLowerCase())
-        ?.label || formatSlug(propertyType);
-    const propertyTypeResetHref = agentSlug
-      ? agentFilterPath({ locale, agentSlug, country: countrySeg, city, dealType })
-      : countryForPath && city
-        ? catalogFilterPath({
-            locale,
-            country: countrySeg,
-            city,
-            dealType,
-            trustedCityCountrySlug: countrySeg,
-          })
-        : city
-          ? singleFilterPath({ locale, city, trustedCityCountrySlug: countrySeg })
-          : dealType
-            ? nonGeoDealListingPath(locale, dealType)
-            : catalogPath(locale);
-    items.push({ label: "Property types", href: propertyTypeResetHref });
-    items.push({ label: typeLabel });
-  }
+  // Catalog spine: one crumb per level, each linking to its own level.
+  const items = buildCatalogCrumbs({
+    locale,
+    labels: {home: t("home"), properties: t("catalog"), agents: t("agents")},
+    agent: agentSlug ? {slug: agentSlug, name: agentName} : undefined,
+    country: countrySeg ? {slug: countrySeg, label: formatSlug(countrySeg)} : undefined,
+    city: city
+      ? {
+          slug: city,
+          label:
+            locations.find((l) => l.value.toLowerCase() === city.toLowerCase())?.label ||
+            formatSlug(city),
+        }
+      : undefined,
+    deal: dealType ? {slug: dealType, label: dealLabel(dealType)} : undefined,
+    type: propertyType
+      ? {
+          slug: propertyType,
+          label:
+            propertyTypes.find((p) => p.value.toLowerCase() === propertyType.toLowerCase())
+              ?.label || formatSlug(propertyType),
+        }
+      : undefined,
+  });
 
   const baseUrl = await getBaseUrl();
   const currentPath = buildCurrentPath({
@@ -148,10 +88,7 @@ export async function CatalogBreadcrumb({
     dealType,
     propertyType,
   });
-  const jsonLdItems = items.map((it, i) => ({
-    name: it.label,
-    url: it.href ?? (i === items.length - 1 ? currentPath : undefined),
-  }));
+  const jsonLdItems = toBreadcrumbJsonLdItems(items, currentPath);
 
   return (
     <>

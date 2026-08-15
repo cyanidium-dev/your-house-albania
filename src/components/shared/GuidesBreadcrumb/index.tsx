@@ -3,7 +3,7 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
-  buildGuidesBreadcrumbItems,
+  buildGuideCrumbs,
   toBreadcrumbJsonLdItems,
 } from "@/lib/routes/breadcrumbs";
 
@@ -22,10 +22,9 @@ export async function GuidesBreadcrumb({
   overHero,
 }: GuidesBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
-  const items = buildGuidesBreadcrumbItems({
+  const items = buildGuideCrumbs({
     locale,
-    homeLabel: t("home"),
-    guidesLabel: t("guides"),
+    labels: {home: t("home"), guides: t("guides")},
     guideTitle,
   });
 

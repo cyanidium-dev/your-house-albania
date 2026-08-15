@@ -3,7 +3,7 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
-  buildCitiesBreadcrumbItems,
+  buildPlaceCrumbs,
   toBreadcrumbJsonLdItems,
 } from "@/lib/routes/breadcrumbs";
 
@@ -15,10 +15,9 @@ type CitiesBreadcrumbProps = {
 
 export async function CitiesBreadcrumb({ locale, overHero }: CitiesBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
-  const items = buildCitiesBreadcrumbItems({
+  const items = buildPlaceCrumbs({
     locale,
-    homeLabel: t("home"),
-    citiesLabel: t("cities"),
+    labels: {home: t("home"), cities: t("cities"), districts: t("districts")},
   });
 
   const baseUrl = await getBaseUrl();

@@ -254,7 +254,15 @@
     "cities": "Города",
     "blog": "Блог",
     "guides": "Путеводители",
-    "districts": "Районы"
+    "districts": "Районы",
+    "catalog": "Объекты",
+    "agents": "Агенты",
+    "propertyTypes": "Типы недвижимости",
+    "contacts": "Контакты",
+    "forRealtors": "Риелторам",
+    "howToPublish": "Как разместить",
+    "register": "Регистрация",
+    "investment": "Инвестиции"
   },
   "Districts": {
     "hubTitle": "Районы города {city}",
@@ -508,5 +516,11 @@
     "thankYouDescription": "Мы получили вашу заявку и свяжемся с вами в ближайшее время.",
     "thankYouCta": "На главную",
     "thankYouImageAlt": "Фото интерьера"
+  },
+  "Guides": {
+    "title": "Гайды",
+    "description": "Обзоры рынка, сравнения и советы по покупке в Албании.",
+    "empty": "Гайдов пока нет.",
+    "breadcrumbHome": "Главная"
   }
 }

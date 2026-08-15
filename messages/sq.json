@@ -254,7 +254,15 @@
     "cities": "Qytetet",
     "blog": "Blog",
     "guides": "Udhëzues",
-    "districts": "Rrethet"
+    "districts": "Rrethet",
+    "catalog": "Pronat",
+    "agents": "Agjentët",
+    "propertyTypes": "Llojet e pronave",
+    "contacts": "Kontakte",
+    "forRealtors": "Për agjentët",
+    "howToPublish": "Si të publikoni",
+    "register": "Regjistrohu",
+    "investment": "Investime"
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",
@@ -508,5 +516,11 @@
     "thankYouDescription": "Kemi marrë kërkesën tuaj dhe do t’ju kontaktojmë së shpejti.",
     "thankYouCta": "Kthehu në faqen kryesore",
     "thankYouImageAlt": "Foto e brendshme"
+  },
+  "Guides": {
+    "title": "Udhëzues",
+    "description": "Udhëzues tregu, krahasime dhe këshilla blerjeje për Shqipërinë.",
+    "empty": "Ende nuk ka udhëzues të publikuar.",
+    "breadcrumbHome": "Kryefaqja"
   }
 }

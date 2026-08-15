@@ -3,7 +3,7 @@ import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
-  buildBlogBreadcrumbItems,
+  buildBlogCrumbs,
   buildBlogBreadcrumbCurrentPath,
   toBreadcrumbJsonLdItems,
 } from "@/lib/routes/breadcrumbs";
@@ -25,10 +25,9 @@ export async function BlogBreadcrumb({
 }: BlogBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
 
-  const items = buildBlogBreadcrumbItems({
+  const items = buildBlogCrumbs({
     locale,
-    homeLabel: t("home"),
-    blogLabel: t("blog"),
+    labels: {home: t("home"), blog: t("blog")},
     categorySlug,
     categoryLabel,
     postTitle,

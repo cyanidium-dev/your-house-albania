@@ -254,7 +254,15 @@
     "cities": "Cities",
     "blog": "Blog",
     "guides": "Guides",
-    "districts": "Districts"
+    "districts": "Districts",
+    "catalog": "Properties",
+    "agents": "Agents",
+    "propertyTypes": "Property types",
+    "contacts": "Contacts",
+    "forRealtors": "For realtors",
+    "howToPublish": "How to publish",
+    "register": "Register",
+    "investment": "Investment"
   },
   "Districts": {
     "hubTitle": "Districts of {city}",
@@ -508,5 +516,11 @@
     "thankYouDescription": "We have received your request and will contact you shortly.",
     "thankYouCta": "Back to home",
     "thankYouImageAlt": "Interior photo"
+  },
+  "Guides": {
+    "title": "Guides",
+    "description": "Market guides, comparisons and buying advice for Albania.",
+    "empty": "No guides published yet.",
+    "breadcrumbHome": "Home"
   }
 }

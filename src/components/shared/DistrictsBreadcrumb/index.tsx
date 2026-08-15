@@ -5,7 +5,7 @@ import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { districtInfoPath, districtsHubPath } from "@/lib/routes/catalog";
 import {
-  buildDistrictsBreadcrumbItems,
+  buildPlaceCrumbs,
   formatBreadcrumbSlug,
   toBreadcrumbJsonLdItems,
 } from "@/lib/routes/breadcrumbs";
@@ -36,15 +36,15 @@ export async function DistrictsBreadcrumb({
   const cityLabel = locationMatch?.label || formatBreadcrumbSlug(city);
   const countrySlug = (locationMatch?.countrySlug || country).toLowerCase();
 
-  const items = buildDistrictsBreadcrumbItems({
+  // Places spine: the city crumb opens the city's article, not a catalog filter.
+  const items = buildPlaceCrumbs({
     locale,
-    homeLabel: t("home"),
-    countryLabel: formatBreadcrumbSlug(countrySlug),
-    countrySlug,
-    cityLabel,
-    citySlug: city,
-    districtsLabel: t("districts"),
-    districtLabel: district ? districtLabel || formatBreadcrumbSlug(district) : undefined,
+    labels: {home: t("home"), cities: t("cities"), districts: t("districts")},
+    city: {slug: city, label: cityLabel, countrySlug},
+    districts: true,
+    district: district
+      ? {slug: district, label: districtLabel || formatBreadcrumbSlug(district)}
+      : undefined,
   });
 
   const baseUrl = await getBaseUrl();

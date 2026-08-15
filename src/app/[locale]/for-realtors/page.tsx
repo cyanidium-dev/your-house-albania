@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb";
 import { fetchLandingPageBySlug, fetchSiteSettings } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 
@@ -32,5 +33,11 @@ export default async function ForRealtorsPage({ params }: Props) {
   if (!landing) {
     notFound();
   }
-  return <LandingRenderer locale={locale} landing={landing as never} />;
+  return (
+    <LandingRenderer
+      locale={locale}
+      landing={landing as never}
+      breadcrumb={<FlatBreadcrumb locale={locale} labelKey="forRealtors" path="for-realtors" overHero />}
+    />
+  );
 }
