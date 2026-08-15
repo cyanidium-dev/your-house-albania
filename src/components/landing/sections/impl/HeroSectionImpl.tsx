@@ -73,8 +73,17 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 unoptimized={bgImageUrl.startsWith('http')}
               />
             </div>
+            {/* Scrim. A photo can be any brightness, so the text needs its own
+                ground rather than relying on the image being dark enough:
+                a flat wash for the whole frame, then a stronger gradient where
+                the copy sits — vertical on mobile, from the left on desktop. */}
+            <div className="pointer-events-none absolute inset-0 z-10 bg-dark/45" aria-hidden />
             <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-black dark:via-black/50"
+              className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-dark/80 via-dark/30 to-transparent md:bg-gradient-to-r md:from-dark/85 md:via-dark/45 md:to-transparent"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-t from-white/90 to-transparent dark:from-black/90"
               aria-hidden
             />
           </>
@@ -99,15 +108,31 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
         )}
         <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
           {breadcrumb ? (
-            <div className="relative z-20 text-left mb-4">{breadcrumb}</div>
+            <div
+              className={`relative z-20 text-left mb-6 ${
+                bgImageUrl ? '[&_*]:!text-white/85 [&_a:hover]:!text-white' : ''
+              }`}
+            >
+              {breadcrumb}
+            </div>
           ) : null}
-          <div className='relative text-white dark:text-dark text-center md:text-start z-20'>
-            <p className='text-inherit text-xm font-medium'>{shortLine}</p>
-            <h1 className='text-inherit text-3xl md:text-4xl lg:text-5xl leading-[1.25] font-semibold -tracking-wider md:max-w-45p mt-4 mb-6'>
+          {/* Over a photo the copy sits on the scrim, so it is white in both
+              themes. Without one it follows the theme as before. */}
+          <div
+            className={`relative text-center md:text-start z-20 ${
+              bgImageUrl ? 'text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]' : 'text-white dark:text-dark'
+            }`}
+          >
+            <p className='text-inherit text-sm md:text-base font-semibold uppercase tracking-[0.14em] opacity-90'>
+              {shortLine}
+            </p>
+            <h1 className='font-display text-inherit text-[2.25rem] leading-[1.08] md:text-5xl lg:text-6xl lg:leading-[1.05] font-bold tracking-[-0.03em] md:max-w-[55%] mt-4 mb-5 text-balance'>
               {title}
             </h1>
             {subtitle ? (
-              <p className='text-inherit text-lg mb-6 whitespace-pre-line'>{subtitle}</p>
+              <p className='text-inherit text-lg md:text-xl leading-relaxed opacity-95 md:max-w-[46%] mb-7 whitespace-pre-line'>
+                {subtitle}
+              </p>
             ) : null}
             {hasPrimaryCta || hasSecondaryCta ? (
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start">

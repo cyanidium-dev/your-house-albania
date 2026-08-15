@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
@@ -10,7 +10,20 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { GTM_ID, CLARITY_ID, analyticsEnabled } from "@/lib/analytics/config";
 import { ConsentBootstrap } from "@/lib/cookie-consent";
 
-const font = Bricolage_Grotesque({ subsets: ["latin"] });
+// Display face for headings, text face for everything else. The research pages
+// carry real paragraphs now, and Bricolage set as body copy is tiring to read.
+const display = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
+const sans = Inter({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 const SITE_NAME = "Domlivo";
 const DEFAULT_DESCRIPTION =
@@ -64,7 +77,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${font.className} bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip`}
+        className={`${display.variable} ${sans.variable} font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip`}
       >
         {analyticsEnabled && (
           <>

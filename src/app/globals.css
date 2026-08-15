@@ -15,6 +15,10 @@
   --shadow-auth: 0 20px 25px -5px #0000001a;
   --shadow-dark-auth: rgba(255, 255, 255, 0.1) 0px 12px 28px 0px, rgba(255, 255, 255, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 
+  /* Typefaces: Bricolage Grotesque for headings, Inter for text. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
   /* font size */
   --text-xm: 1.125rem;
   --text-9xl: 6.5rem;
@@ -89,6 +93,13 @@ html {
 html.gallery-open,
 html.gallery-open body {
   background-color: #000 !important;
+}
+
+/* Headings take the display face; body copy stays on the text face. */
+h1, h2, h3, h4,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
