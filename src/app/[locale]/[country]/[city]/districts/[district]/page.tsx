@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
@@ -23,11 +23,26 @@ function normalizeSegment(value?: string): string {
   return decodeURIComponent(value).trim().toLowerCase();
 }
 
+/**
+ * District slugs renamed on 2026-08-15 to match the research KB and the state
+ * reference-price map (docs/engineering/PLAN-align-taxonomy-2026-08-15.md),
+ * plus the `livadhi` duplicate removed in the same pass. Keep these entries —
+ * old URLs stay live as 301s.
+ */
+const DISTRICT_CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
+  "beachfront-durres": "plazh",
+  dajti: "fresku",
+  livadhi: "livadh",
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, country, city, district } = await params;
   const countrySlug = normalizeSegment(country);
   const citySlug = normalizeSegment(city);
   const districtSlug = normalizeSegment(district);
+  if (DISTRICT_CANONICAL_SLUG_REDIRECTS[districtSlug]) {
+    return {};
+  }
   const cmsCountry = await fetchCityCountrySlugByCitySlug(citySlug);
   if (!cmsCountry || cmsCountry !== countrySlug) {
     return {};
@@ -71,6 +86,13 @@ export default async function DistrictInfoPage({ params }: Props) {
   const citySlug = normalizeSegment(city);
   const districtSlug = normalizeSegment(district);
   if (!citySlug || !districtSlug) notFound();
+
+  const canonicalDistrictSlug = DISTRICT_CANONICAL_SLUG_REDIRECTS[districtSlug];
+  if (canonicalDistrictSlug) {
+    permanentRedirect(
+      `/${locale}/${countrySlug}/${citySlug}/districts/${canonicalDistrictSlug}`,
+    );
+  }
 
   const cmsCountry = await fetchCityCountrySlugByCitySlug(citySlug);
   if (!cmsCountry || cmsCountry !== countrySlug) {
