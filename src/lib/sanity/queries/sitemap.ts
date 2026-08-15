@@ -61,6 +61,7 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
   if (!client) return [];
   const query = `*[
     _type == "landingPage" &&
+    enabled != false &&
     defined(slug.current) &&
     !(_id in path("drafts.**"))
   ]{

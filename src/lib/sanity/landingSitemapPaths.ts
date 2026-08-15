@@ -54,5 +54,16 @@ export function resolveLandingPathForSitemap(doc: LandingPageSitemapRow): string
   // Slug matches a dedicated route that loads this document via `fetchLandingPageBySlug`.
   if (slug === "for-realtors") return "for-realtors";
 
+  // Guides: universal /guides/<slug> route ("for-realtors" already returned
+  // above as its static path; other reserved slugs can't exist per validation).
+  if (doc.pageType === "custom") {
+    return `guides/${slug}`;
+  }
+
+  // Unique landings: top-level /<slug> via the [country] single-segment resolver.
+  if (doc.pageType === "unique") {
+    return slug;
+  }
+
   return null;
 }

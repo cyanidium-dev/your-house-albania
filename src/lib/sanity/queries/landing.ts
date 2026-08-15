@@ -491,6 +491,60 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
   return cached();
 }
 
+/**
+ * Fetch an enabled `landingPage` with `pageType == "unique"` for the top-level
+ * `/[locale]/<slug>` surface (rendered by the [country] single-segment resolver
+ * as its final fallback — geo/deal/type segments win; see ROUTING.md).
+ */
+export async function fetchUniqueLandingBySlug(slug: string): Promise<{
+  _id?: string;
+  _type?: string;
+  pageType?: string;
+  slug?: string;
+  title?: unknown;
+  cardDescription?: unknown;
+  cardImage?: { asset?: { url?: string } };
+  pageSections?: unknown[];
+  seo?: unknown;
+} | null> {
+  const trimmed = typeof slug === 'string' ? slug.trim() : '';
+  if (!trimmed) return null;
+
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[
+    _type == "landingPage" &&
+    pageType == "unique" &&
+    enabled != false &&
+    slug.current == $slug
+  ][0] {
+    _id,
+    _type,
+    pageType,
+    "slug": slug.current,
+    title,
+    cardDescription,
+    cardImage { asset-> { url } },
+    "pageSections": pageSections[]${landingPageSectionsProjection},
+    contentUpdatedAt,
+    seo
+  }`;
+      try {
+        return await client.fetch(query, { slug: trimmed });
+      } catch (err) {
+        console.warn('[Sanity] fetchUniqueLandingBySlug failed:', err);
+        return null;
+      }
+    },
+    ['sanity-unique-landing-by-slug', trimmed],
+    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+  );
+
+  return cached();
+}
+
 export type CityLandingNavItem = { slug: string; label: string; countrySlug?: string };
 
 /**

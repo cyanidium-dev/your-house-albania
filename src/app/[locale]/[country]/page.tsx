@@ -9,8 +9,11 @@ import {
   fetchCatalogSeoPageRoot,
   fetchCityCountrySlugByCitySlug,
   fetchSiteSettings,
+  fetchUniqueLandingBySlug,
   resolveCatalogSeoPage,
 } from "@/lib/sanity/client";
+import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import {
@@ -112,10 +115,38 @@ async function buildListingMetadata(
   };
 }
 
+/** Normalize the raw segment the same way the landing slug is stored. */
+function normalizeSegmentForLanding(value: string): string {
+  return decodeURIComponent(value ?? "").trim().toLowerCase();
+}
+
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const [{ locale, country }, search] = await Promise.all([params, searchParams]);
   const resolved = await resolveTopLevelListingSegment(locale, country);
-  if (!resolved) return {};
+  if (!resolved) {
+    // Final fallback of the single-segment resolver: unique landings at /<slug>
+    // (route family "unique"; statics + geo/deal/type segments win — ROUTING.md).
+    const landing = await fetchUniqueLandingBySlug(normalizeSegmentForLanding(country));
+    if (!landing) return {};
+    const siteSettings = await fetchSiteSettings();
+    const meta = buildLandingMetadata(
+      (landing as { seo?: unknown }).seo as never,
+      (siteSettings as { defaultSeo?: unknown })?.defaultSeo as never,
+      locale,
+      {
+        itemTitle: resolveLocalizedString(landing.title as never, locale) || landing.slug,
+        itemOgImageUrl: landing.cardImage?.asset?.url,
+        pathnameForAlternates: landing.slug ?? "",
+        contentUpdatedAt: (landing as { contentUpdatedAt?: string }).contentUpdatedAt,
+      },
+    );
+    // Landings take no query params — same policy as listings/blog: any query
+    // string → noindex,follow (canonical already points at the clean path).
+    if (Object.keys(search).length > 0) {
+      return { ...meta, robots: { index: false, follow: true } };
+    }
+    return meta;
+  }
   if (resolved.kind === "ambiguous") {
     const t = await getTranslations("Listing.properties");
     return { title: t("title"), description: t("description"), robots: { index: false, follow: true } };
@@ -127,7 +158,11 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 export default async function TopLevelSingleFilterPage({ params, searchParams }: Props) {
   const [{ locale, country }, search] = await Promise.all([params, searchParams]);
   const resolved = await resolveTopLevelListingSegment(locale, country);
-  if (!resolved) notFound();
+  if (!resolved) {
+    const landing = await fetchUniqueLandingBySlug(normalizeSegmentForLanding(country));
+    if (!landing) notFound();
+    return <LandingRenderer locale={locale} landing={landing as never} />;
+  }
   const mergedSearch = resolved.kind === "ambiguous" ? search : mergeTopLevelSearch(search, resolved);
 
   const t = await getTranslations("Listing.properties");
