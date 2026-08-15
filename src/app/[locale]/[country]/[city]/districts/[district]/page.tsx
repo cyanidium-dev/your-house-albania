@@ -40,6 +40,10 @@ const DISTRICT_CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
   // `Bregdeti` ("the coast") was a descriptor; the Saranda market names this
   // strip `Buzë Shetitores` (by the promenade) on listings. Merged 2026-08-15.
   "seafront-sarande": "buze-shetitores",
+  // `Bregdeti` again, this time in Himarë — a descriptor carrying the same
+  // seed description as `livadh`, and Himarë's beach *is* Livadh/Potami.
+  // Merged into the toponym 2026-08-15.
+  "seaside-himare": "livadh",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
