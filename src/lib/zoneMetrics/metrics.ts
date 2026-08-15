@@ -51,9 +51,19 @@ function shapeFor(record: ZoneMetricsDoc, key: MetricKey): Shape {
     case 'strOccupancy':
       return { median: record.strOccupancyPct, digits: 1 };
     case 'yieldLtr':
-      return { median: record.grossYieldLtrPct, digits: 1 };
+      return {
+        min: record.grossYieldLtrPctMin,
+        max: record.grossYieldLtrPctMax,
+        median: record.grossYieldLtrPct,
+        digits: 1,
+      };
     case 'yieldStr':
-      return { median: record.grossYieldStrPct, digits: 1 };
+      return {
+        min: record.grossYieldStrPctMin,
+        max: record.grossYieldStrPctMax,
+        median: record.grossYieldStrPct,
+        digits: 1,
+      };
     case 'referencePrice':
       return {
         min: record.referencePriceMin,

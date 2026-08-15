@@ -33,7 +33,11 @@ export type ZoneMetricsDoc = {
   strAdr?: number;
   strOccupancyPct?: number;
   grossYieldLtrPct?: number;
+  grossYieldLtrPctMin?: number;
+  grossYieldLtrPctMax?: number;
   grossYieldStrPct?: number;
+  grossYieldStrPctMin?: number;
+  grossYieldStrPctMax?: number;
 
   referencePrice?: number;
   referencePriceMin?: number;
@@ -65,7 +69,9 @@ const ZONE_METRICS_PROJECTION = `{
   priceResaleMin, priceResaleMax, priceResaleMedian,
   priceAllMin, priceAllMax, priceAllMedian,
   rentLtr1brMin, rentLtr1brMax, rentLtr2brMin, rentLtr2brMax,
-  strAdr, strOccupancyPct, grossYieldLtrPct, grossYieldStrPct,
+  strAdr, strOccupancyPct,
+  grossYieldLtrPct, grossYieldLtrPctMin, grossYieldLtrPctMax,
+  grossYieldStrPct, grossYieldStrPctMin, grossYieldStrPctMax,
   referencePrice, referencePriceMin, referencePriceMax, referencePriceEdition,
   ratingOverall,
   "sources": sources[] { _key, label, url, publisher, date },
