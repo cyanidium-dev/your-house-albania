@@ -273,6 +273,27 @@
     "confidenceLow": "Besueshmëri e ulët",
     "methodology": "Metodologjia"
   },
+  "ZoneMetrics": {
+    "priceNew": "Ndërtim i ri, €/m²",
+    "priceResale": "Të përdorura, €/m²",
+    "priceAll": "I gjithë fondi, €/m²",
+    "rent1br": "Qira 1+1, €/muaj",
+    "rent2br": "Qira 2+1, €/muaj",
+    "strAdr": "Tarifa për natë, €",
+    "strOccupancy": "Shfrytëzimi, %",
+    "yieldLtr": "Rendiment bruto, afatgjatë",
+    "yieldStr": "Rendiment bruto, afatshkurtër",
+    "referencePrice": "Çmimi i referencës, lekë/m²",
+    "rating": "Vlerësimi DomLivo",
+    "zone": "Zona",
+    "sample": "{n} shpallje",
+    "basisAsking": "çmime të kërkuara",
+    "basisTransaction": "transaksione",
+    "basisOfficial": "listë zyrtare",
+    "basisCalculated": "shifër e nxjerrë",
+    "basisMixed": "burime të përziera",
+    "referenceEdition": "Edicioni i referencës: {edition}"
+  },
   "Calculators": {
     "propertyPrice": "Çmimi i pronës",
     "enterPrice": "Vendosni çmimin e pronës për të parë rezultatet",

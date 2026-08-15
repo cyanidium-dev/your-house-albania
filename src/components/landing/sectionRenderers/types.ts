@@ -96,6 +96,17 @@ export type LandingSectionBase = {
   developer?: { _ref?: string } | null
   developers?: Array<{ _ref?: string }>
   showTiers?: unknown[]
+  /** `zoneStatsAutoSection`: which zone to read, and which figures to show */
+  zoneMode?: 'auto' | 'manual' | string
+  zone?: { _ref?: string } | null
+  metrics?: unknown[]
+  /** `zonePriceTableAutoSection`: city districts vs chosen zones */
+  city?: { _ref?: string } | null
+  zones?: Array<{ _ref?: string }>
+  sortBy?: 'price' | 'rating' | 'manual' | string
+  linkRows?: boolean
+  /** both zone auto blocks: render the record's sources underneath */
+  showSources?: boolean
 }
 
 export type LandingPageDoc = {

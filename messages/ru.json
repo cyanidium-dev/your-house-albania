@@ -273,6 +273,27 @@
     "confidenceLow": "Низкая достоверность",
     "methodology": "Методология"
   },
+  "ZoneMetrics": {
+    "priceNew": "Новостройка, €/м²",
+    "priceResale": "Вторичка, €/м²",
+    "priceAll": "Весь фонд, €/м²",
+    "rent1br": "Аренда 1+1, €/мес",
+    "rent2br": "Аренда 2+1, €/мес",
+    "strAdr": "Ставка за ночь, €",
+    "strOccupancy": "Загрузка, %",
+    "yieldLtr": "Валовая доходность, долгосрочная",
+    "yieldStr": "Валовая доходность, краткосрочная",
+    "referencePrice": "Государственный референс, лек/м²",
+    "rating": "Оценка DomLivo",
+    "zone": "Зона",
+    "sample": "объявлений: {n}",
+    "basisAsking": "цены предложения",
+    "basisTransaction": "сделки",
+    "basisOfficial": "официальная карта",
+    "basisCalculated": "расчётная оценка",
+    "basisMixed": "смешанные источники",
+    "referenceEdition": "Редакция референса: {edition}"
+  },
   "Calculators": {
     "propertyPrice": "Цена объекта",
     "enterPrice": "Введите цену объекта, чтобы увидеть расчёт",

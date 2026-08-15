@@ -36,6 +36,8 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
       shortDescription,
       heroImage { asset-> { url } }
     },
+    "linkedZoneId": linkedCity._ref,
+    "linkedZoneType": "city",
     "pageSections": pageSections[]${landingPageSectionsProjection},
     contentUpdatedAt,
     seo
@@ -124,6 +126,14 @@ export const landingPageSectionsProjection = `{
   tracker,
   developer,
   developers,
+  zoneMode,
+  zone,
+  zones,
+  city,
+  metrics,
+  showSources,
+  sortBy,
+  linkRows,
   displayMode,
   showTiers,
   closingText,

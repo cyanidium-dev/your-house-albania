@@ -273,6 +273,27 @@
     "confidenceLow": "Низька достовірність",
     "methodology": "Методологія"
   },
+  "ZoneMetrics": {
+    "priceNew": "Новобудова, €/м²",
+    "priceResale": "Вторинка, €/м²",
+    "priceAll": "Весь фонд, €/м²",
+    "rent1br": "Оренда 1+1, €/міс",
+    "rent2br": "Оренда 2+1, €/міс",
+    "strAdr": "Ставка за ніч, €",
+    "strOccupancy": "Завантаження, %",
+    "yieldLtr": "Валова дохідність, довгострокова",
+    "yieldStr": "Валова дохідність, короткострокова",
+    "referencePrice": "Державний референс, лек/м²",
+    "rating": "Оцінка DomLivo",
+    "zone": "Зона",
+    "sample": "оголошень: {n}",
+    "basisAsking": "ціни пропозиції",
+    "basisTransaction": "угоди",
+    "basisOfficial": "офіційна карта",
+    "basisCalculated": "розрахункова оцінка",
+    "basisMixed": "змішані джерела",
+    "referenceEdition": "Редакція референсу: {edition}"
+  },
   "Calculators": {
     "propertyPrice": "Ціна об’єкта",
     "enterPrice": "Введіть ціну об’єкта, щоб побачити розрахунок",

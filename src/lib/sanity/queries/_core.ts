@@ -45,6 +45,7 @@ export const SANITY_TAGS = {
   siteSettings: 'sanity:siteSettings',
   tracker: 'sanity:tracker',
   developer: 'sanity:developer',
+  zoneMetrics: 'sanity:zoneMetrics',
 } as const;
 
 export type SanityTag = (typeof SANITY_TAGS)[keyof typeof SANITY_TAGS];

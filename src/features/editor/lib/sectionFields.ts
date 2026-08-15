@@ -132,6 +132,13 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['title'], label: 'Title', kind: 'text' },
     { path: ['intro'], label: 'Intro', kind: 'textarea' },
   ],
+  // Only the heading is editable inline: the figures come from `zoneMetrics`,
+  // and a number edited on the page would drift from the record.
+  zoneStatsAutoSection: [{ path: ['title'], label: 'Title', kind: 'text' }],
+  zonePriceTableAutoSection: [
+    { path: ['title'], label: 'Title', kind: 'text' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+  ],
   // Numeric defaults and presets/items arrays are Studio-only by design.
   mortgageCalcSection: [
     { path: ['title'], label: 'Title', kind: 'textarea' },

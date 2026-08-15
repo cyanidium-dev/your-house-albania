@@ -18,6 +18,21 @@ export type LandingPageDoc = {
   seo?: unknown
   /** Editorial freshness date → "Updated: {date}" badge under the hero/H1. */
   contentUpdatedAt?: string
+  /**
+   * Zone this landing is about, flattened by the landing queries
+   * (`linkedDistrict` on district landings, `linkedCity` on city ones).
+   * Feeds the zoneMetrics auto blocks in `auto` mode.
+   */
+  linkedZoneId?: string | null
+  linkedZoneType?: 'district' | 'city' | string | null
+}
+
+function resolveLinkedZone(
+  landing: LandingPageDoc | null,
+): { type: 'district' | 'city'; id: string } | undefined {
+  const id = landing?.linkedZoneId
+  if (!id) return undefined
+  return { type: landing?.linkedZoneType === 'district' ? 'district' : 'city', id }
 }
 
 function parseContentUpdatedAt(raw: string | undefined): Date | null {
@@ -63,6 +78,7 @@ export async function LandingRenderer({
   // the first FAQ-capable section (faqSection OR trackerSection with FAQ) to
   // claim JSON-LD emission; later ones skip it.
   const faqJsonLd = { emitted: false }
+  const linkedZone = resolveLinkedZone(landing)
 
   const nodes: React.ReactNode[] = []
 
@@ -75,6 +91,7 @@ export async function LandingRenderer({
       citySlug,
       breadcrumb: isFirstHero ? breadcrumb : undefined,
       propertiesDeal,
+      linkedZone,
       faqJsonLd,
     })
     if (node) nodes.push(node)

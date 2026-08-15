@@ -273,6 +273,27 @@
     "confidenceLow": "Low confidence",
     "methodology": "Methodology"
   },
+  "ZoneMetrics": {
+    "priceNew": "New build, €/m²",
+    "priceResale": "Resale, €/m²",
+    "priceAll": "All stock, €/m²",
+    "rent1br": "Rent 1+1, €/month",
+    "rent2br": "Rent 2+1, €/month",
+    "strAdr": "Nightly rate, €",
+    "strOccupancy": "Occupancy, %",
+    "yieldLtr": "Gross yield, long-term",
+    "yieldStr": "Gross yield, short-term",
+    "referencePrice": "State reference, lek/m²",
+    "rating": "DomLivo rating",
+    "zone": "Zone",
+    "sample": "{n} listings",
+    "basisAsking": "asking prices",
+    "basisTransaction": "transactions",
+    "basisOfficial": "official schedule",
+    "basisCalculated": "derived figure",
+    "basisMixed": "mixed sources",
+    "referenceEdition": "Reference schedule: {edition}"
+  },
   "Calculators": {
     "propertyPrice": "Property price",
     "enterPrice": "Enter a property price to see the results",

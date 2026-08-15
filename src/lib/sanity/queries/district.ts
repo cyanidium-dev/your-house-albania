@@ -137,6 +137,8 @@ export async function fetchDistrictLandingBySlugs(
     "slug": slug.current,
     title,
     cardDescription,
+    "linkedZoneId": linkedDistrict._ref,
+    "linkedZoneType": "district",
     "pageSections": pageSections[]${landingPageSectionsProjection},
     contentUpdatedAt,
     seo

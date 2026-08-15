@@ -25,6 +25,8 @@ import { purchaseCostCalcSectionHandler } from './handlers/purchaseCostCalcSecti
 import { trackerSectionHandler } from './handlers/trackerSection'
 import { developersRatingSectionHandler } from './handlers/developersRatingSection'
 import { developerCardSectionHandler } from './handlers/developerCardSection'
+import { zoneStatsAutoSectionHandler } from './handlers/zoneStatsAutoSection'
+import { zonePriceTableAutoSectionHandler } from './handlers/zonePriceTableAutoSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -50,6 +52,8 @@ const registry: Record<string, SectionHandler> = {
   trackerSection: trackerSectionHandler,
   developersRatingSection: developersRatingSectionHandler,
   developerCardSection: developerCardSectionHandler,
+  zoneStatsAutoSection: zoneStatsAutoSectionHandler,
+  zonePriceTableAutoSection: zonePriceTableAutoSectionHandler,
 }
 
 export async function renderLandingSection(input: {
@@ -58,6 +62,8 @@ export async function renderLandingSection(input: {
   citySlug?: string
   breadcrumb?: React.ReactNode
   propertiesDeal?: PropertiesDealParam
+  /** The landing's own zone, read by the zoneMetrics auto blocks (see handler types). */
+  linkedZone?: { type: 'district' | 'city'; id: string }
   /** Shared per-render marker for the single-FAQPage-per-page rule (see handler types). */
   faqJsonLd?: { emitted: boolean }
 }): Promise<React.ReactNode | null> {

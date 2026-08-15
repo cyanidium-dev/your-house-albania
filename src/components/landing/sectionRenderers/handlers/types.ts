@@ -11,6 +11,12 @@ export type SectionHandler = (input: {
   /** Catalog `deal` query for property-type card links when rendered on deal-specific landings */
   propertiesDeal?: PropertiesDealParam
   /**
+   * The landing's own zone: `linkedDistrict` when present, else `linkedCity`.
+   * Only the zoneMetrics auto blocks read it — it lets a generated district
+   * page pull its own figures without a reference set on every section.
+   */
+  linkedZone?: { type: 'district' | 'city'; id: string }
+  /**
    * Shared per-render marker: a page may contain at most ONE schema.org
    * FAQPage. Sections are rendered sequentially (awaited in order), so the
    * first FAQ-capable section (`faqSection` or `trackerSection` with FAQ)

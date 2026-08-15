@@ -29,6 +29,8 @@ export const ALLOWED_SECTION_TYPES = [
   'trackerSection',
   'developersRatingSection',
   'developerCardSection',
+  'zoneStatsAutoSection',
+  'zonePriceTableAutoSection',
 ] as const;
 
 export type AllowedSectionType = (typeof ALLOWED_SECTION_TYPES)[number];
@@ -62,6 +64,8 @@ export const SECTION_LABELS: Record<AllowedSectionType, string> = {
   trackerSection: 'Status tracker',
   developersRatingSection: 'Developers rating',
   developerCardSection: 'Developer card',
+  zoneStatsAutoSection: 'Zone stats (automatic)',
+  zonePriceTableAutoSection: 'Zone price table (automatic)',
 };
 
 /**
@@ -102,6 +106,13 @@ export function createSectionDefaults(type: AllowedSectionType): EditorSection {
       return { ...base, title: 'New hero' };
     case 'sourcesSection':
       return { ...base, title: 'Sources' };
+    // Zone blocks read their numbers from `zoneMetrics`; the defaults only pick
+    // where to read from. `auto` means "this page's zone", so a new block on a
+    // district or city landing already shows the right figures.
+    case 'zoneStatsAutoSection':
+      return { ...base, zoneMode: 'auto', showSources: true };
+    case 'zonePriceTableAutoSection':
+      return { ...base, mode: 'cityDistricts', sortBy: 'price', linkRows: true, showSources: true };
     // Calculators ship with a disclaimer stub (schema requires it to publish)
     // and, for purchase cost, structural item stubs the editor rewrites.
     case 'mortgageCalcSection':

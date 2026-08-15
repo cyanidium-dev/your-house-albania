@@ -12,6 +12,9 @@ export { PriceTableSection } from "./PriceTableSection";
 export { StatsBandSection } from "./StatsBandSection";
 export { SourcesSection } from "./SourcesSection";
 
+export { ZoneStatsAutoSection } from "./ZoneStatsAutoSection";
+export { ZonePriceTableAutoSection } from "./ZonePriceTableAutoSection";
+
 export { MortgageCalcSection } from "./MortgageCalcSection";
 export { RoiCalcSection } from "./RoiCalcSection";
 export { PurchaseCostCalcSection } from "./PurchaseCostCalcSection";

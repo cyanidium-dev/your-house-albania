@@ -30,6 +30,7 @@ const TYPE_TO_TAGS: Record<string, SanityTag[]> = {
   siteSettings: [SANITY_TAGS.siteSettings],
   tracker: [SANITY_TAGS.tracker],
   developer: [SANITY_TAGS.developer],
+  zoneMetrics: [SANITY_TAGS.zoneMetrics],
 };
 
 /**

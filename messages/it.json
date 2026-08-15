@@ -273,6 +273,27 @@
     "confidenceLow": "Affidabilità bassa",
     "methodology": "Metodologia"
   },
+  "ZoneMetrics": {
+    "priceNew": "Nuovo, €/m²",
+    "priceResale": "Usato, €/m²",
+    "priceAll": "Tutto il patrimonio, €/m²",
+    "rent1br": "Affitto 1+1, €/mese",
+    "rent2br": "Affitto 2+1, €/mese",
+    "strAdr": "Tariffa per notte, €",
+    "strOccupancy": "Occupazione, %",
+    "yieldLtr": "Rendimento lordo, lungo termine",
+    "yieldStr": "Rendimento lordo, breve termine",
+    "referencePrice": "Riferimento statale, lek/m²",
+    "rating": "Valutazione DomLivo",
+    "zone": "Zona",
+    "sample": "{n} annunci",
+    "basisAsking": "prezzi richiesti",
+    "basisTransaction": "transazioni",
+    "basisOfficial": "listino ufficiale",
+    "basisCalculated": "cifra derivata",
+    "basisMixed": "fonti miste",
+    "referenceEdition": "Edizione di riferimento: {edition}"
+  },
   "Calculators": {
     "propertyPrice": "Prezzo dell'immobile",
     "enterPrice": "Inserisci il prezzo dell'immobile per vedere i risultati",
