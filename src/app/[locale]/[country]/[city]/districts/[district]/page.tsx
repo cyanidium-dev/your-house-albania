@@ -33,6 +33,10 @@ const DISTRICT_CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
   "beachfront-durres": "plazh",
   dajti: "fresku",
   livadhi: "livadh",
+  // `kodra` was a descriptor ("hillside with views"), not a place — no listing
+  // ever carried it. Its price band is the set-back city stock, so it folds
+  // into city-center-sarande. Removed 2026-08-15.
+  kodra: "city-center-sarande",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
