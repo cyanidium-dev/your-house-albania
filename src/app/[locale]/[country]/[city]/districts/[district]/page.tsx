@@ -37,6 +37,9 @@ const DISTRICT_CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
   // ever carried it. Its price band is the set-back city stock, so it folds
   // into city-center-sarande. Removed 2026-08-15.
   kodra: "city-center-sarande",
+  // `Bregdeti` ("the coast") was a descriptor; the Saranda market names this
+  // strip `Buzë Shetitores` (by the promenade) on listings. Merged 2026-08-15.
+  "seafront-sarande": "buze-shetitores",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
