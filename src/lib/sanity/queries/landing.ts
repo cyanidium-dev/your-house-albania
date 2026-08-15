@@ -38,6 +38,8 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     },
     "linkedZoneId": linkedCity._ref,
     "linkedZoneType": "city",
+    "linkedZoneSlug": linkedCity->slug.current,
+    "linkedZoneCitySlug": linkedCity->slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
     contentUpdatedAt,
     seo
@@ -130,6 +132,13 @@ export const landingPageSectionsProjection = `{
   zone,
   zones,
   city,
+  "filters": filters {
+    "city": city->slug.current,
+    "district": district->slug.current,
+    "propertyType": propertyType->slug.current,
+    deal
+  },
+  autoMode,
   metrics,
   showSources,
   sortBy,

@@ -10,6 +10,7 @@ import type { SectionHandler } from './types'
 import { catalogFilterPath, cityInfoPath } from '@/lib/routes/catalog'
 
 export const locationCarouselSectionHandler: SectionHandler = ({ locale, section }) => {
+  if (section.enabled === false) return null
   const linkTargetTypeRaw = section.linkTargetType
   const linkTargetType: 'catalog' | 'landing' | undefined =
     linkTargetTypeRaw === 'catalog' || linkTargetTypeRaw === 'landing'

@@ -7,6 +7,7 @@ import { resolveFaqDataFromSection } from '../helpers'
 import type { SectionHandler } from './types'
 
 export const faqSectionHandler: SectionHandler = ({ locale, section, faqJsonLd }) => {
+  if (section.enabled === false) return null
   const faqData = resolveFaqDataFromSection(section, locale)
 
   if (process.env.NODE_ENV === 'development') {

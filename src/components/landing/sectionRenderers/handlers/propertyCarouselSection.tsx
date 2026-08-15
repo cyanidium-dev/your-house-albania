@@ -11,18 +11,59 @@ import {
 import { mapCatalogPropertyToCard, mapSanityPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import type { SectionHandler } from './types'
 
-export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, section, citySlug }) => {
+type CarouselScope = { city?: string; district?: string; type?: string; deal?: string }
+
+/**
+ * Catalog scope for auto mode, most specific first: filters set on the section
+ * win, otherwise the carousel follows the page — and on a district landing that
+ * means the district, not its whole city. Without this a district page shows
+ * other districts' properties, which is worse than showing none.
+ */
+function resolveScope(
+  filters: { city?: string; district?: string; propertyType?: string; deal?: string } | undefined,
+  linkedZone: { type: 'district' | 'city'; slug?: string; citySlug?: string } | undefined,
+  citySlug: string | undefined,
+): CarouselScope | null {
+  const f = filters ?? {}
+  const base: CarouselScope = {}
+  if (f.propertyType) base.type = f.propertyType
+  if (f.deal) base.deal = f.deal
+
+  if (f.district) return { ...base, district: f.district, city: f.city }
+  if (f.city) return { ...base, city: f.city }
+  if (base.type || base.deal) {
+    // A type/deal filter with no place still scopes to the page's own place.
+    const city = linkedZone?.citySlug ?? citySlug
+    if (linkedZone?.type === 'district' && linkedZone.slug) {
+      return { ...base, district: linkedZone.slug, city }
+    }
+    return city ? { ...base, city } : base
+  }
+
+  if (linkedZone?.type === 'district' && linkedZone.slug) {
+    return { district: linkedZone.slug, city: linkedZone.citySlug ?? citySlug }
+  }
+  const city = linkedZone?.citySlug ?? citySlug
+  return city ? { city } : null
+}
+
+export const propertyCarouselSectionHandler: SectionHandler = async ({
+  locale,
+  section,
+  citySlug,
+  linkedZone,
+}) => {
+  if (section.enabled === false) return null
+
   const debug = process.env.NODE_ENV === 'development'
   if (debug) {
-    const enabled = (section as { enabled?: unknown } | null)?.enabled
-    // Note: enabled is not currently used as a guard for this section.
     console.log('[Landing][propertyCarouselSection] start', {
       locale,
       key: section?._key,
-      enabled,
       mode: section?.mode ?? 'auto',
       hasSelectedProps: Array.isArray(section?.properties) ? section.properties.length : 0,
       citySlug: citySlug ?? null,
+      linkedZone: linkedZone ?? null,
     })
   }
 
@@ -33,12 +74,18 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
   }
 
   const mode = section.mode ?? 'auto'
-  const requestedLimitRaw = Number((section as { limit?: unknown } | null)?.limit)
+  // `autoMode` overrides exist in the schema and were previously never read.
+  const autoMode = (section as { autoMode?: { limit?: unknown; sort?: unknown } }).autoMode
+  const requestedLimitRaw = Number(
+    (mode !== 'selected' && autoMode?.limit) ?? (section as { limit?: unknown } | null)?.limit,
+  )
   const requestedLimit =
     Number.isFinite(requestedLimitRaw) && requestedLimitRaw > 0
       ? Math.min(Math.floor(requestedLimitRaw), 48)
       : 24
-  const requestedSortRaw = String((section as { sort?: unknown } | null)?.sort ?? 'newest')
+  const requestedSortRaw = String(
+    (mode !== 'selected' && autoMode?.sort) ?? (section as { sort?: unknown } | null)?.sort ?? 'newest',
+  )
   const sortAsGroup =
     requestedSortRaw === 'popular' || requestedSortRaw === 'new' || requestedSortRaw === 'highDemand'
       ? requestedSortRaw
@@ -78,15 +125,22 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({ locale, s
       })
     }
   } else {
-    if (citySlug) {
-      if (debug) console.log('[Landing][propertyCarouselSection] auto branch: city-scoped fetch', citySlug)
+    const scope = resolveScope(
+      (section as { filters?: { city?: string; district?: string; propertyType?: string; deal?: string } })
+        .filters,
+      linkedZone,
+      citySlug,
+    )
+
+    if (scope) {
+      if (debug) console.log('[Landing][propertyCarouselSection] auto branch: scoped fetch', scope)
       const catalogSort =
         requestedSort === 'priceAsc' || requestedSort === 'priceDesc' ||
         requestedSort === 'areaAsc' || requestedSort === 'areaDesc'
           ? requestedSort
           : 'newest'
       const result = await fetchCatalogProperties({
-        city: citySlug,
+        ...scope,
         pageSize: requestedLimit,
         sort: catalogSort,
         page: 1,

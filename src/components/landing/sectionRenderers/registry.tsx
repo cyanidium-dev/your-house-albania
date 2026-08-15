@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
 import type { LandingSectionBase } from './types'
-import type { SectionHandler } from './handlers/types'
+import type { SectionHandler, LinkedZone } from './handlers/types'
 import { heroSectionHandler } from './handlers/heroSection'
 import { propertyCarouselSectionHandler } from './handlers/propertyCarouselSection'
 import { locationCarouselSectionHandler } from './handlers/locationCarouselSection'
@@ -62,8 +62,8 @@ export async function renderLandingSection(input: {
   citySlug?: string
   breadcrumb?: React.ReactNode
   propertiesDeal?: PropertiesDealParam
-  /** The landing's own zone, read by the zoneMetrics auto blocks (see handler types). */
-  linkedZone?: { type: 'district' | 'city'; id: string }
+  /** The landing's own zone, read by the zoneMetrics blocks and the carousel (see handler types). */
+  linkedZone?: LinkedZone
   /** Shared per-render marker for the single-FAQPage-per-page rule (see handler types). */
   faqJsonLd?: { emitted: boolean }
 }): Promise<React.ReactNode | null> {

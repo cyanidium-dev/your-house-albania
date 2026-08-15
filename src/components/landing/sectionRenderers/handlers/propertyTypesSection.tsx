@@ -10,6 +10,7 @@ export const propertyTypesSectionHandler: SectionHandler = async ({
   section,
   propertiesDeal,
 }) => {
+  if (section.enabled === false) return null
   let rawTypes = Array.isArray(section.propertyTypes) ? section.propertyTypes : []
   if (rawTypes.length === 0) {
     const enriched = await fetchActivePropertyTypes(8)

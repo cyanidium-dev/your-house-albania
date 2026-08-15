@@ -5,6 +5,7 @@ import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { SectionHandler } from './types'
 
 export const seoTextSectionHandler: SectionHandler = ({ locale, section }) => {
+  if (section.enabled === false) return null
   const s = section as {
     content?: unknown
     body?: unknown

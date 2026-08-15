@@ -7,6 +7,7 @@ import {
 import { formatBlogDate } from '@/lib/date/formatLocale'
 import { asSections } from './sectionRenderers/helpers'
 import { renderLandingSection } from './sectionRenderers/registry'
+import type { LinkedZone } from './sectionRenderers/handlers/types'
 
 export type LandingPageDoc = {
   _id?: string
@@ -25,14 +26,19 @@ export type LandingPageDoc = {
    */
   linkedZoneId?: string | null
   linkedZoneType?: 'district' | 'city' | string | null
+  linkedZoneSlug?: string | null
+  linkedZoneCitySlug?: string | null
 }
 
-function resolveLinkedZone(
-  landing: LandingPageDoc | null,
-): { type: 'district' | 'city'; id: string } | undefined {
+function resolveLinkedZone(landing: LandingPageDoc | null): LinkedZone | undefined {
   const id = landing?.linkedZoneId
   if (!id) return undefined
-  return { type: landing?.linkedZoneType === 'district' ? 'district' : 'city', id }
+  return {
+    type: landing?.linkedZoneType === 'district' ? 'district' : 'city',
+    id,
+    slug: landing?.linkedZoneSlug ?? undefined,
+    citySlug: landing?.linkedZoneCitySlug ?? undefined,
+  }
 }
 
 function parseContentUpdatedAt(raw: string | undefined): Date | null {
