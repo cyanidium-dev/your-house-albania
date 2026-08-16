@@ -185,7 +185,15 @@ export async function fetchLatestZoneMetricsByZoneIds(zoneIds: string[]): Promis
     async () => {
       const client = getClient();
       if (!client) return [];
-      const query = `*[_id in $ids] {
+      // Skip zones that are not publicly reachable: a comparison row linking to
+      // an unpublished district is a link to a 404. The generator only picks
+      // published neighbours, but an editor choosing zones in Studio can't see
+      // that constraint.
+      const query = `*[
+        _id in $ids &&
+        isPublished != false &&
+        (_type != "district" || city->isPublished != false)
+      ] {
         "latest": *[_type == "zoneMetrics" && zone._ref == ^._id] | order(periodDate desc)[0] ${ZONE_METRICS_PROJECTION}
       }`;
       try {
@@ -199,7 +207,7 @@ export async function fetchLatestZoneMetricsByZoneIds(zoneIds: string[]): Promis
         return [];
       }
     },
-    ['sanity-zone-metrics-by-ids-v2', ids.slice().sort().join(',')],
+    ['sanity-zone-metrics-by-ids-v3', ids.slice().sort().join(',')],
     { revalidate: 60, tags: TAGS },
   );
   return cached();
