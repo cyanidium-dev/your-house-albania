@@ -68,7 +68,8 @@
     },
     "legal": {
       "brandName": "Domlivo",
-      "createdBy": "Krijuar nga"
+      "createdBy": "Krijuar nga",
+      "imageCredits": "Kreditet e fotove"
     },
     "partners": {
       "codesite": "CodeSite.Art",
@@ -521,6 +522,19 @@
     "title": "Udhëzues",
     "description": "Udhëzues tregu, krahasime dhe këshilla blerjeje për Shqipërinë.",
     "empty": "Ende nuk ka udhëzues të publikuar.",
+    "breadcrumbHome": "Kryefaqja"
+  },
+  "ImageCredits": {
+    "title": "Kreditet e fotove",
+    "description": "Fotografët, licencat dhe burimet për çdo fotografi të përdorur në Domlivo.",
+    "intro": "Çdo fotografi në këtë faqe ka licencë të lirë. Kjo faqe emërton fotografin, licencën dhe burimin e skedarit — kështu plotësohen licencat me atribuim më poshtë.",
+    "attributedHeading": "Fotografi që kërkojnë atribuim",
+    "attributedNote": "Përdoren sipas licencave Creative Commons që kërkojnë kreditimin e fotografit.",
+    "freeHeading": "Domen publik dhe CC0",
+    "freeNote": "Për këto nuk kërkohet atribuim. Renditen që çdo foto e faqes të gjurmohet te burimi.",
+    "standIn": "Zëvendësuese",
+    "source": "Skedari burim",
+    "empty": "Ende nuk ka kredite fotografish.",
     "breadcrumbHome": "Kryefaqja"
   }
 }

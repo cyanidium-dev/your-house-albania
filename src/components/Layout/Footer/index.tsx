@@ -380,6 +380,20 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
               </>
             ) : null}
 
+            {/*
+              Image credits. Not decoration: the CC BY / CC BY-SA photography on
+              this site is licensed on condition that the credit reaches the
+              reader, and this link is how it does. Removing it puts those
+              images in breach — see /image-credits.
+            */}
+            <CreditsDivider />
+            <Link
+              href={`/${locale}/image-credits`}
+              className="min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
+            >
+              {t("legal.imageCredits")}
+            </Link>
+
             {analyticsEnabled ? (
               <>
                 <CreditsDivider />

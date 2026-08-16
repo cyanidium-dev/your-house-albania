@@ -68,7 +68,8 @@
     },
     "legal": {
       "brandName": "Domlivo",
-      "createdBy": "Created by"
+      "createdBy": "Created by",
+      "imageCredits": "Image credits"
     },
     "partners": {
       "codesite": "CodeSite.Art",
@@ -521,6 +522,19 @@
     "title": "Guides",
     "description": "Market guides, comparisons and buying advice for Albania.",
     "empty": "No guides published yet.",
+    "breadcrumbHome": "Home"
+  },
+  "ImageCredits": {
+    "title": "Image credits",
+    "description": "Photographers, licences and sources for every photograph used on Domlivo.",
+    "intro": "Every photograph on this site is freely licensed. This page names the photographer, the licence and where the file came from, which is how the attribution licences below are satisfied.",
+    "attributedHeading": "Photographs requiring attribution",
+    "attributedNote": "Used under Creative Commons licences that require the photographer to be credited.",
+    "freeHeading": "Public domain and CC0 photographs",
+    "freeNote": "No attribution is required for these. They are listed so every image on the site can be traced to its source.",
+    "standIn": "Stand-in",
+    "source": "Source file",
+    "empty": "No image credits have been recorded yet.",
     "breadcrumbHome": "Home"
   }
 }
