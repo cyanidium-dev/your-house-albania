@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
+import { ItemListJsonLd } from "@/components/shared/ItemListJsonLd";
+import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { EntityCard } from "@/components/landing/sections/impl/EntityCard";
 import {
   fetchCatalogFilterOptions,
@@ -69,9 +71,20 @@ export default async function DistrictsHubPage({ params }: Props) {
     getTranslations("Districts"),
   ]);
 
+  const baseUrl = await getBaseUrl();
+  const listItems = districts
+    .filter((d) => d.slug)
+    .map((d) => ({
+      name: resolveLocalizedString(d.title as never, locale) || d.slug!,
+      slug: d.slug!,
+      href: districtInfoPath(locale, citySlug, d.slug!, cmsCountry),
+      image: d.heroImage?.asset?.url ?? null,
+    }));
+
   return (
     <section className="pt-20 md:pt-32 pb-16 md:pb-24">
       <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+        <ItemListJsonLd items={listItems} baseUrl={baseUrl} locale={locale} />
         <DistrictsBreadcrumb locale={locale} country={cmsCountry} city={citySlug} />
         <div className="max-w-3xl">
           <h1 className="lg:text-52 text-40 leading-[1.2] font-medium text-dark dark:text-white">

@@ -3,6 +3,8 @@ import { buildItemListJsonLd } from "@/lib/seo/itemListJsonLd";
 export type ItemListEntry = {
   name: string;
   slug: string;
+  /** Locale-prefixed path, for lists that are not property listings. */
+  href?: string;
   image?: string | null;
 };
 

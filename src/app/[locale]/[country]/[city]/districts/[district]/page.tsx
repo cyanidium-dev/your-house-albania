@@ -5,6 +5,9 @@ import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
 import { DistrictPageBody } from "@/components/district/DistrictPageBody";
 import { DistrictExploreSection } from "@/components/district/DistrictExploreSection";
+import { PlaceJsonLd } from "@/components/shared/PlaceJsonLd";
+import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { cityInfoPath, districtInfoPath } from "@/lib/routes/catalog";
 import {
   fetchCityCountrySlugByCitySlug,
   fetchDistrictBySlugs,
@@ -118,6 +121,22 @@ export default async function DistrictInfoPage({ params }: Props) {
   const cityLabel =
     resolveLocalizedString(districtDoc.city?.title as never, locale) || citySlug;
 
+  // A district is a Place inside its city; the breadcrumb only implied that.
+  const placeJsonLd = (
+    <PlaceJsonLd
+      name={districtLabel}
+      description={
+        resolveLocalizedString(districtDoc.shortDescription as never, locale) ||
+        resolveLocalizedString(districtDoc.heroSubtitle as never, locale) ||
+        undefined
+      }
+      url={districtInfoPath(locale, citySlug, districtSlug, cmsCountry)}
+      imageUrl={districtDoc.heroImage?.asset?.url}
+      containedIn={{ name: cityLabel, url: cityInfoPath(locale, citySlug, cmsCountry) }}
+      baseUrl={await getBaseUrl()}
+    />
+  );
+
   const explore = (
     <DistrictExploreSection
       locale={locale}
@@ -147,6 +166,7 @@ export default async function DistrictInfoPage({ params }: Props) {
     if (hasDedicatedHero) {
       return (
         <>
+          {placeJsonLd}
           <LandingRenderer
             locale={locale}
             landing={landing as never}
@@ -162,6 +182,7 @@ export default async function DistrictInfoPage({ params }: Props) {
         <section className="pt-20 md:pt-32">
           <div className="container mx-auto max-w-8xl px-5 2xl:px-0">{breadcrumb}</div>
         </section>
+        {placeJsonLd}
         <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} />
         {explore}
       </>
@@ -170,6 +191,7 @@ export default async function DistrictInfoPage({ params }: Props) {
 
   return (
     <>
+      {placeJsonLd}
       <DistrictPageBody
         locale={locale}
         countrySlug={cmsCountry}

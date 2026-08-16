@@ -76,11 +76,32 @@ export function pickAbsoluteOgImageUrl(...candidates: (string | undefined | null
 }
 
 /** Standard 1200×630 Open Graph image array, or undefined when no image. */
+/** Social cards want 1200x630; our source photos are whatever shape they are. */
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+
+/**
+ * Ask the Sanity CDN for a real 1200x630 crop. Without this the tags declared
+ * 1200x630 while serving, say, a 1280x960 photo — scrapers that trust the
+ * numbers letterbox or reject it, which is one reason link previews came out
+ * as small square thumbnails.
+ */
+function toOgImageUrl(url: string): string {
+  if (!url.includes('cdn.sanity.io')) return url;
+  const [base, query = ''] = url.split('?');
+  const params = new URLSearchParams(query);
+  params.set('w', String(OG_WIDTH));
+  params.set('h', String(OG_HEIGHT));
+  params.set('fit', 'crop');
+  params.set('auto', 'format');
+  return `${base}?${params.toString()}`;
+}
+
 export function buildOgImageArray(
   url: string | undefined,
   alt: string
 ): NonNullable<Metadata['openGraph']>['images'] | undefined {
-  return url ? [{ url, width: 1200, height: 630, alt }] : undefined;
+  return url ? [{ url: toOgImageUrl(url), width: OG_WIDTH, height: OG_HEIGHT, alt }] : undefined;
 }
 
 export type BuildMetadataInput = {
@@ -96,13 +117,15 @@ export type BuildMetadataInput = {
   ogUrl?: string;
   /** Twitter card type; omit to drop the twitter block entirely. */
   twitterCard?: 'summary' | 'summary_large_image';
+  /**
+   * `article` for editorial pages, which is also what makes the
+   * `article:modified_time` below mean anything. Defaults to `website`.
+   */
+  ogType?: 'website' | 'article';
   canonical?: string;
   hreflangLanguages?: NonNullable<Metadata['alternates']>['languages'];
   robots?: Metadata['robots'];
-  /**
-   * Editorial freshness → `article:modified_time` meta tag. Emitted via `other`
-   * so the current og:type (unset/website) stays untouched.
-   */
+  /** Editorial freshness → `article:modified_time`; pair it with `ogType: 'article'`. */
   modifiedTimeIso?: string;
 };
 
@@ -115,6 +138,7 @@ export function buildMetadata(input: BuildMetadataInput): Metadata {
   const images = buildOgImageArray(input.ogImageUrl, input.ogTitle);
 
   const openGraph: Metadata['openGraph'] = {
+    type: input.ogType ?? 'website',
     title: input.ogTitle,
     description: input.ogDescription,
     ...(images ? { images } : {}),

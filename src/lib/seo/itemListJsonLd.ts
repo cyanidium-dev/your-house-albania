@@ -4,7 +4,10 @@
  */
 export type ItemListEntry = {
   name: string;
+  /** Property slug. Ignored when `href` is set. */
   slug: string;
+  /** Locale-prefixed path, for lists that are not property listings. */
+  href?: string;
   image?: string | null;
 };
 
@@ -16,9 +19,10 @@ export function buildItemListJsonLd(
   const base = baseUrl.replace(/\/$/, "");
 
   const itemListElement = items
-    .filter((item) => item.name && item.slug)
+    .filter((item) => item.name && (item.slug || item.href))
     .map((item, idx) => {
-      const path = `/${locale}/property/${encodeURIComponent(item.slug)}`;
+      // Lists of anything other than properties pass an explicit path.
+      const path = item.href ?? `/${locale}/property/${encodeURIComponent(item.slug)}`;
       const url = base ? `${base}${path}` : path;
       const listItem: Record<string, unknown> = {
         "@type": "ListItem",

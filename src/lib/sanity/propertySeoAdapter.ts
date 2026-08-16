@@ -80,7 +80,7 @@ export function buildPropertyMetadata(
       ogTitle: title,
       ogDescription: description,
       ogImageUrl: ogImageAbsolute,
-      twitterCard: 'summary',
+      twitterCard: ogImageAbsolute ? 'summary_large_image' : 'summary',
       robots: indexingDisabledRobots,
     });
   }
@@ -100,7 +100,7 @@ export function buildPropertyMetadata(
     ogDescription: description,
     ogImageUrl: ogImageAbsolute,
     ogUrl: canonicalFallback,
-    twitterCard: 'summary',
+    twitterCard: ogImageAbsolute ? 'summary_large_image' : 'summary',
     canonical: canonicalFallback,
     hreflangLanguages: hreflang?.languages,
     robots: noIndex ? { index: false, follow: true } : undefined,
