@@ -69,6 +69,9 @@ export const landingPageSectionsProjection = `{
   "items": items[] {
     _key,
     label,
+    // linkedGallerySection captions each slide with its own title field.
+    // Without this the gallery renders images with no captions at all.
+    title,
     href,
     question,
     answer,

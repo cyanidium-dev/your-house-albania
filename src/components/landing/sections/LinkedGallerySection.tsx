@@ -1,9 +1,29 @@
 import * as React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { SectionHeader } from '@/components/landing/sectionPrimitives'
 
-type ImageField = { asset?: { url?: string }; alt?: string } | null | undefined
+/**
+ * `linkedGallerySection` — captioned photographs that link somewhere.
+ *
+ * The component previously read `primaryImage` and `secondaryImage`, which the
+ * Sanity schema does not define and which no document has ever carried. It
+ * returned `null` whenever both were absent, so **every** linked gallery on the
+ * site rendered nothing: the ten-slide "Gallery of Durrës areas" on the Durrës
+ * city landing, the equivalent on Tirana, and the comparison pages added in
+ * ТЗ-12. The schema's shape is `items[]` of `{title, image, href}`, so that is
+ * what this renders.
+ *
+ * The old fields are not kept as a fallback: they exist in no document, and a
+ * dead branch here is what let the mismatch go unnoticed.
+ */
+type GalleryItem = {
+  _key?: string
+  title?: unknown
+  href?: string
+  image?: { asset?: { url?: string }; alt?: string } | null
+}
 
 export function LinkedGallerySection({
   locale,
@@ -12,23 +32,25 @@ export function LinkedGallerySection({
   locale: string
   section: {
     title?: unknown
+    description?: unknown
     subtitle?: unknown
     shortLine?: unknown
-    primaryImage?: ImageField
-    secondaryImage?: ImageField
+    items?: unknown[]
   }
 }) {
   const title = resolveLocalizedString(section.title as never, locale) || ''
-  const subtitle = resolveLocalizedString(section.subtitle as never, locale) || ''
+  // The schema calls it `description`; `subtitle` is accepted because other
+  // section types use that name and editors move copy between them.
+  const subtitle =
+    resolveLocalizedString(section.description as never, locale) ||
+    resolveLocalizedString(section.subtitle as never, locale) ||
+    ''
   const eyebrow = resolveLocalizedString(section.shortLine as never, locale) || ''
-  const primary = section.primaryImage
-  const secondary = section.secondaryImage
-  const primaryUrl = primary?.asset?.url
-  const secondaryUrl = secondary?.asset?.url
 
-  if (!primaryUrl && !secondaryUrl) return null
-
-  const unoptimized = (primaryUrl?.startsWith('http') || secondaryUrl?.startsWith('http')) ?? false
+  const items = ((section.items ?? []) as GalleryItem[]).filter((item) =>
+    Boolean(item?.image?.asset?.url),
+  )
+  if (items.length === 0) return null
 
   const hasHeader = Boolean(title || subtitle || eyebrow)
 
@@ -48,36 +70,44 @@ export function LinkedGallerySection({
           </div>
         ) : null}
 
-        <div className="grid grid-cols-12 gap-4 md:gap-6">
-          {primaryUrl ? (
-            <div className="col-span-12 lg:col-span-8">
+        <ul className="grid grid-cols-12 gap-4 md:gap-6">
+          {items.map((item, index) => {
+            const url = item.image!.asset!.url!
+            const caption = resolveLocalizedString(item.title as never, locale) || ''
+            // A two-slide gallery — the comparison pages — reads best as an
+            // even pair; longer ones tile three across.
+            const span =
+              items.length === 2 ? 'col-span-12 md:col-span-6' : 'col-span-12 sm:col-span-6 lg:col-span-4'
+
+            const media = (
               <div className="group relative rounded-2xl overflow-hidden aspect-[16/10] bg-dark/5 dark:bg-white/5">
                 <Image
-                  src={primaryUrl}
-                  alt={primary?.alt ?? title ?? 'Gallery image'}
+                  src={url}
+                  alt={item.image?.alt ?? caption ?? ''}
                   fill
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                  sizes="(max-width: 1023px) 100vw, 66vw"
-                  unoptimized={unoptimized}
+                  sizes={items.length === 2 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw'}
+                  unoptimized={url.startsWith('http')}
                 />
               </div>
-            </div>
-          ) : null}
-          {secondaryUrl ? (
-            <div className="col-span-12 lg:col-span-4">
-              <div className="group relative rounded-2xl overflow-hidden aspect-[16/10] lg:aspect-[4/5] bg-dark/5 dark:bg-white/5">
-                <Image
-                  src={secondaryUrl}
-                  alt={secondary?.alt ?? title ?? 'Gallery image'}
-                  fill
-                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                  sizes="(max-width: 1023px) 100vw, 33vw"
-                  unoptimized={unoptimized}
-                />
-              </div>
-            </div>
-          ) : null}
-        </div>
+            )
+
+            return (
+              <li key={item._key ?? `${url}-${index}`} className={span}>
+                {item.href ? (
+                  <Link href={item.href.startsWith('/') ? `/${locale}${item.href}` : item.href}>
+                    {media}
+                  </Link>
+                ) : (
+                  media
+                )}
+                {caption ? (
+                  <p className="mt-3 text-base text-dark/70 dark:text-white/70">{caption}</p>
+                ) : null}
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </section>
   )
