@@ -1,4 +1,4 @@
-# DomLivo — Your House Albania (Frontend)
+# DomLivo — Your House Albania (Frontend) 
 
 Public real-estate frontend for **DomLivo / Your House Albania**: multilingual property catalog, city/district landing pages, blog and guides for the Albanian market. Content is served headlessly from Sanity; the companion Studio lives in the `domlivo-admin` repo.
 
