@@ -119,29 +119,25 @@ function PropertyCard({
         isLarge && 'gap-2 mb-3'
       )}
     >
-      {/* price + deal type row */}
+      {/* price + deal type row — €/m² always sits on its own fixed-height line
+          below, so a longer price can never wrap it and shift the card layout */}
       <div
         className={cn(
           'flex items-center justify-between gap-2',
           isList && 'justify-start gap-2 sm:gap-3 flex-wrap'
         )}
       >
-        <div className="min-w-0 flex items-center gap-2 flex-wrap">
+        <div className="min-w-0 flex items-center gap-2">
           {formattedPrice && (
-            <span className={priceClass}>
+            <span className={cn(priceClass, 'whitespace-nowrap')}>
               {formattedPrice}
-            </span>
-          )}
-          {isLarge && formattedPricePerSqm && (
-            <span className="text-xs text-dark/55 dark:text-white/55 font-medium whitespace-nowrap">
-              {formattedPricePerSqm}
             </span>
           )}
         </div>
         {status && (
           <span
             className={cn(
-              'inline-flex items-center rounded-full font-medium',
+              'inline-flex items-center rounded-full font-medium shrink-0',
               isList && 'h-7 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
               isLarge && 'h-8 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
               isSmall && !isList && 'bg-primary text-white text-[11px] px-2 shadow-sm h-5 leading-5 max-w-[7.25rem] min-w-0 overflow-hidden'
@@ -158,6 +154,13 @@ function PropertyCard({
           </span>
         )}
       </div>
+
+      {/* €/m² line — rendered (empty or not) on large cards so heights stay even */}
+      {isLarge && (
+        <p className="min-h-4 text-xs leading-4 text-dark/55 dark:text-white/55 font-medium truncate">
+          {formattedPricePerSqm}
+        </p>
+      )}
 
       {/* property type */}
       {typeLine && (
