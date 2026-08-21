@@ -1,5 +1,5 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
-import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
+import { PUBLISHED_PROPERTY_FILTER, PUBLIC_DEAL_STATUS_FILTER } from '../groq/propertyFilters';
 import type { CatalogProperty } from '@/types/catalog';
 
 const cachedFetchHomePage = sanityCache(
@@ -26,7 +26,7 @@ const cachedFetchHomePage = sanityCache(
       label
     },
     mode,
-    "properties": properties[]->[${PUBLISHED_PROPERTY_FILTER}] {
+    "properties": properties[]->[${PUBLISHED_PROPERTY_FILTER} && ${PUBLIC_DEAL_STATUS_FILTER}] {
       _id,
       title,
       "slug": slug.current,
@@ -209,7 +209,7 @@ export async function fetchHomeTopOffers(
   const client = getClient();
   if (!client) return null;
 
-  let where = `_type == "property" && ${PUBLISHED_PROPERTY_FILTER}`;
+  let where = `_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && ${PUBLIC_DEAL_STATUS_FILTER}`;
   let order = '| order(_createdAt desc)';
 
   if (group === 'popular') {

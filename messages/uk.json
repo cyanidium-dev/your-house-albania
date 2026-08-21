@@ -85,8 +85,7 @@
       "restroom": "4 ванні",
       "parkingSpace": "Паркування",
       "price": "$4,750,000",
-      "forSellingPrice": "Ціна продажу"
-      ,
+      "forSellingPrice": "Ціна продажу",
       "search": {
         "tabs": {
           "buy": "Купити",
@@ -179,7 +178,9 @@
       "dealTypeRent": "Оренда",
       "dealTypeShortTerm": "Краткострокова оренда",
       "dealTypeLongTerm": "Довгострокова оренда",
-      "dealTypePrice": "Ціна"
+      "dealTypePrice": "Ціна",
+      "dealTypeShortTermCompact": "Корот. оренда",
+      "dealTypeLongTermCompact": "Довг. оренда"
     },
     "propertyCard": {
       "bedrooms": "Спальні",
@@ -208,7 +209,10 @@
       "relatedArticles": "Схожі статті",
       "relatedProperties": "Схожі об'єкти"
     },
-    "goBack": "Назад"
+    "goBack": "Назад",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {об'єкт} few {об'єкти} many {об'єктів} other {об'єкта}}"
+    }
   },
   "Listing": {
     "properties": {
@@ -254,7 +258,11 @@
     "cities": "Міста",
     "blog": "Блог",
     "guides": "Путівники",
-    "districts": "Райони"
+    "districts": "Райони",
+    "catalog": "Каталог",
+    "agents": "Агенти",
+    "country": "Країна",
+    "propertyTypes": "Типи нерухомості"
   },
   "Districts": {
     "hubTitle": "Райони міста {city}",

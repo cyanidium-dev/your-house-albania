@@ -51,14 +51,14 @@ export async function CatalogBreadcrumb({
   const hasCatalogScope = Boolean(city || dealType || propertyType || country || agentSlug);
   const items: BreadcrumbItem[] = [{ label: t("home"), href: `/${locale}` }];
   if (!hasCatalogScope) {
-    items.push({ label: "Catalog" });
+    items.push({ label: t("catalog") });
   }
 
   const propertyTypes = options.propertyTypes;
 
   if (agentSlug) {
     const agentPath = agentFilterPath({ locale, agentSlug });
-    items.push({ label: "Agents", href: agentPath });
+    items.push({ label: t("agents"), href: agentPath });
     items.push({
       label: agentName || formatSlug(agentSlug),
       href: city || dealType || propertyType ? agentPath : undefined,
@@ -67,7 +67,7 @@ export async function CatalogBreadcrumb({
 
   if (country) {
     const normalizedCountry = countrySeg!;
-    items.push({ label: "Country", href: `/${locale}/${encodeURIComponent(normalizedCountry)}` });
+    items.push({ label: t("country"), href: `/${locale}/${encodeURIComponent(normalizedCountry)}` });
     items.push({
       label: formatSlug(normalizedCountry),
       href: undefined,
@@ -135,7 +135,7 @@ export async function CatalogBreadcrumb({
           : dealType
             ? nonGeoDealListingPath(locale, dealType)
             : catalogPath(locale);
-    items.push({ label: "Property types", href: propertyTypeResetHref });
+    items.push({ label: t("propertyTypes"), href: propertyTypeResetHref });
     items.push({ label: typeLabel });
   }
 

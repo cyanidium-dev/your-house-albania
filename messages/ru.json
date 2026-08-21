@@ -85,8 +85,7 @@
       "restroom": "4 санузла",
       "parkingSpace": "Парковка",
       "price": "$4,750,000",
-      "forSellingPrice": "Цена продажи"
-      ,
+      "forSellingPrice": "Цена продажи",
       "search": {
         "tabs": {
           "buy": "Купить",
@@ -179,7 +178,9 @@
       "dealTypeRent": "Аренда",
       "dealTypeShortTerm": "Краткосрочная аренда",
       "dealTypeLongTerm": "Долгосрочная аренда",
-      "dealTypePrice": "Цена"
+      "dealTypePrice": "Цена",
+      "dealTypeShortTermCompact": "Кратк. аренда",
+      "dealTypeLongTermCompact": "Долг. аренда"
     },
     "propertyCard": {
       "bedrooms": "Спальни",
@@ -208,7 +209,10 @@
       "relatedArticles": "Похожие статьи",
       "relatedProperties": "Похожие объекты"
     },
-    "goBack": "Назад"
+    "goBack": "Назад",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {объект} few {объекта} many {объектов} other {объекта}}"
+    }
   },
   "Listing": {
     "properties": {
@@ -254,7 +258,11 @@
     "cities": "Города",
     "blog": "Блог",
     "guides": "Путеводители",
-    "districts": "Районы"
+    "districts": "Районы",
+    "catalog": "Каталог",
+    "agents": "Агенты",
+    "country": "Страна",
+    "propertyTypes": "Типы недвижимости"
   },
   "Districts": {
     "hubTitle": "Районы города {city}",

@@ -7,6 +7,7 @@ import { DistrictPageBody } from "@/components/district/DistrictPageBody";
 import { DistrictExploreSection } from "@/components/district/DistrictExploreSection";
 import {
   fetchCityCountrySlugByCitySlug,
+  fetchCityNameForms,
   fetchDistrictBySlugs,
   fetchDistrictLandingBySlugs,
   fetchSiteSettings,
@@ -84,13 +85,16 @@ export default async function DistrictInfoPage({ params }: Props) {
     resolveLocalizedString(districtDoc.title as never, locale) || districtSlug;
   const cityLabel =
     resolveLocalizedString(districtDoc.city?.title as never, locale) || citySlug;
+  // "rreth {city}" / "të {city}" take the genitive in sq (Tiranës).
+  const forms = await fetchCityNameForms(citySlug, locale);
+  const cityGenitive = forms.genitive || cityLabel;
 
   const explore = (
     <DistrictExploreSection
       locale={locale}
       countrySlug={cmsCountry}
       citySlug={citySlug}
-      cityLabel={cityLabel}
+      cityLabel={cityGenitive}
       districtSlug={districtSlug}
       districtLabel={districtLabel}
     />

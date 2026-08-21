@@ -178,7 +178,9 @@
       "dealTypeRent": "Qira",
       "dealTypeShortTerm": "Qira afatshkurtër",
       "dealTypeLongTerm": "Qira afatgjatë",
-      "dealTypePrice": "Çmimi"
+      "dealTypePrice": "Çmimi",
+      "dealTypeShortTermCompact": "Qira e shkurtër",
+      "dealTypeLongTermCompact": "Qira e gjatë"
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
@@ -207,7 +209,10 @@
       "relatedArticles": "Artikuj të ngjashëm",
       "relatedProperties": "Prona të ngjashme"
     },
-    "goBack": "Kthehu"
+    "goBack": "Kthehu",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {pronë} other {prona}}"
+    }
   },
   "Listing": {
     "properties": {
@@ -253,7 +258,11 @@
     "cities": "Qytetet",
     "blog": "Blog",
     "guides": "Udhëzues",
-    "districts": "Rrethet"
+    "districts": "Rrethet",
+    "catalog": "Katalogu",
+    "agents": "Agjentët",
+    "country": "Shteti",
+    "propertyTypes": "Llojet e pronave"
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",

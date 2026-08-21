@@ -88,7 +88,8 @@ export function EntityCard({
               <span className="text-dark dark:text-white/85 font-medium">
                 {numberFmt.format(count!)}
               </span>
-              {countLabel ?? null}
+              {/* wrapped so the flex gap reliably separates it from the number */}
+              {countLabel ? <span>{countLabel}</span> : null}
             </span>
           </div>
         ) : null}

@@ -1,6 +1,6 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { resolveLocalizedString, resolveLocalizedContent } from '../localized';
-import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter } from '../groq/propertyFilters';
+import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter, publicDealStatusFilter } from '../groq/propertyFilters';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 
@@ -97,6 +97,11 @@ function buildCatalogPredicateParts(
   }
   if (deal) {
     parts.push(`${prefix}status == $deal`);
+  } else {
+    // No explicit deal filter → public listings show only publicly promoted
+    // deal types (rentals hidden from the UI; direct `?deal=`/`/rent` URLs
+    // still pass an explicit deal and keep working).
+    parts.push(publicDealStatusFilter(prefix));
   }
   if (typeof minPrice === 'number' && minPrice > 0) {
     parts.push(`${prefix}price >= $minPrice`);

@@ -1,25 +1,19 @@
-export function displayStatusLabel(status?: string | null): string | null {
+/**
+ * Deal badge label = dictionary key under `Shared.propertyDetail` (localized
+ * ×5 locales; English was hardcoded here before — CQ-01 fix).
+ */
+export function dealLabelKey(
+  status?: string | null,
+  opts?: { compact?: boolean },
+): string | null {
   if (!status) return null
   const s = status.toLowerCase().trim()
-  if (s === 'sale') return 'For sale'
-  if (s === 'rent') return 'For rent'
-  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent'
-  if (s === 'long-term' || s === 'longterm') return 'Long-term rent'
-  return status
-}
-
-export function displayStatusShortLabel(status?: string | null): string | null {
-  const full = displayStatusLabel(status)
-  if (!full) return null
-  const s = full.toLowerCase()
-  if (s.includes('short-term')) return 'Short rent'
-  if (s.includes('long-term')) return 'Long rent'
-  if (s === 'for rent') return 'Rent'
-  return full
-}
-
-export function displayDealLabel(status?: string | null, opts?: { compact?: boolean }): string | null {
-  return opts?.compact ? displayStatusShortLabel(status) : displayStatusLabel(status)
+  const compact = opts?.compact === true
+  if (s === 'sale') return 'dealTypeSale'
+  if (s === 'rent') return 'dealTypeRent'
+  if (s === 'short-term' || s === 'shortterm') return compact ? 'dealTypeShortTermCompact' : 'dealTypeShortTerm'
+  if (s === 'long-term' || s === 'longterm') return compact ? 'dealTypeLongTermCompact' : 'dealTypeLongTerm'
+  return null
 }
 
 export function truncateTeaser(text: string, maxChars: number): string {

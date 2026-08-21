@@ -15,6 +15,9 @@ import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry"
 type FooterProps = {
   siteSettings?: ResolvedSiteSettings;
   countrySlugs: string[];
+  /** Server-rendered city list for `initialCountrySlug` (avoids empty-state flash / SSR gap). */
+  initialCities?: FooterCityNavItem[];
+  initialCountrySlug?: string;
 };
 
 function resolveStableHref(href: string, locale: string): string {
@@ -104,7 +107,12 @@ const colLinkClass =
   "text-[17px] leading-snug text-white/55 transition-colors hover:text-white md:text-base md:leading-normal";
 const colBodyClass = "text-[17px] text-white/45 md:text-sm";
 
-export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
+export default function Footer({
+  siteSettings,
+  countrySlugs,
+  initialCities = [],
+  initialCountrySlug,
+}: FooterProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations("Footer");
@@ -115,9 +123,12 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
     [pathname, locale, countrySlugs]
   );
 
-  const [cities, setCities] = useState<FooterCityNavItem[]>([]);
+  const [cities, setCities] = useState<FooterCityNavItem[]>(initialCities);
 
   useEffect(() => {
+    // Server already seeded the default-country list; only re-fetch when the
+    // visitor is on a different country page.
+    if (activeCountry === initialCountrySlug && initialCities.length > 0) return;
     let cancelled = false;
     fetch(
       `/api/footer-cities?locale=${encodeURIComponent(locale)}&country=${encodeURIComponent(activeCountry)}`
@@ -132,7 +143,7 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
     return () => {
       cancelled = true;
     };
-  }, [locale, activeCountry]);
+  }, [locale, activeCountry, initialCountrySlug, initialCities.length]);
 
   const flavour =
     siteSettings?.footerIntro?.trim() ||

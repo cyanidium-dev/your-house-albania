@@ -85,8 +85,7 @@
       "restroom": "4 Restroom",
       "parkingSpace": "Parking space",
       "price": "$4,750,000",
-      "forSellingPrice": "For selling price"
-      ,
+      "forSellingPrice": "For selling price",
       "search": {
         "tabs": {
           "buy": "Buy",
@@ -179,7 +178,9 @@
       "dealTypeRent": "Rent",
       "dealTypeShortTerm": "Short-term rent",
       "dealTypeLongTerm": "Long-term rent",
-      "dealTypePrice": "Price"
+      "dealTypePrice": "Price",
+      "dealTypeShortTermCompact": "Short rent",
+      "dealTypeLongTermCompact": "Long rent"
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
@@ -208,7 +209,10 @@
       "relatedArticles": "Related articles",
       "relatedProperties": "Related properties"
     },
-    "goBack": "Go Back"
+    "goBack": "Go Back",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {property} other {properties}}"
+    }
   },
   "Listing": {
     "properties": {
@@ -254,7 +258,11 @@
     "cities": "Cities",
     "blog": "Blog",
     "guides": "Guides",
-    "districts": "Districts"
+    "districts": "Districts",
+    "catalog": "Catalog",
+    "agents": "Agents",
+    "country": "Country",
+    "propertyTypes": "Property types"
   },
   "Districts": {
     "hubTitle": "Districts of {city}",

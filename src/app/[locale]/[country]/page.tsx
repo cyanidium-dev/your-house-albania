@@ -13,6 +13,7 @@ import {
 } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
@@ -65,7 +66,12 @@ async function buildListingMetadata(
   const description = catalogSeo?.metaDescription || localizedDescriptionFromSeo || listDescription;
 
   if (!isIndexingEnabled()) {
-    return { title, description, robots: indexingDisabledRobots };
+    return {
+      title: listingTitleField(title),
+      description,
+      openGraph: listingOpenGraph(title, description),
+      robots: indexingDisabledRobots,
+    };
   }
 
   let path: string;
@@ -102,8 +108,9 @@ async function buildListingMetadata(
       : undefined;
 
   return {
-    title,
+    title: listingTitleField(title),
     description,
+    openGraph: listingOpenGraph(title, description),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),

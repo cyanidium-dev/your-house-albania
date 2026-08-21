@@ -7,7 +7,8 @@ import type { ViewMode } from '@/lib/catalog/viewMode'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
-import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
+import { useTranslations } from 'next-intl'
+import { dealLabelKey, truncateTeaser } from '@/lib/property/cardFormatters'
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { PropertyCardMeta } from './PropertyCardMeta'
 
@@ -28,6 +29,11 @@ function PropertyCard({
   /** Fill parent height for even card alignment in carousel */
   fillHeight?: boolean
 }) {
+  const tDeal = useTranslations('Shared.propertyDetail')
+  const dealLabel = (st?: string | null, opts?: { compact?: boolean }) => {
+    const key = dealLabelKey(st, opts)
+    return key ? tDeal(key) : null
+  }
   const {
     name,
     location,
@@ -149,11 +155,11 @@ function PropertyCard({
           >
             {isSmall && !isList ? (
               <span className="min-w-0 truncate whitespace-nowrap">
-                <span className="sm:hidden">{displayDealLabel(status, { compact: true })}</span>
-                <span className="hidden sm:inline">{displayDealLabel(status, { compact: false })}</span>
+                <span className="sm:hidden">{dealLabel(status, { compact: true })}</span>
+                <span className="hidden sm:inline">{dealLabel(status, { compact: false })}</span>
               </span>
             ) : (
-              displayDealLabel(status, { compact: false })
+              dealLabel(status, { compact: false })
             )}
           </span>
         )}
@@ -243,8 +249,8 @@ function PropertyCard({
                   {status && (
                     <span className="inline-flex items-center justify-center rounded-full text-xs px-3 h-7 leading-none border border-primary/80 text-primary bg-primary/5">
                       <span className="min-w-0 truncate whitespace-nowrap">
-                        <span className="sm:hidden">{displayDealLabel(status, { compact: true })}</span>
-                        <span className="hidden sm:inline">{displayDealLabel(status, { compact: false })}</span>
+                        <span className="sm:hidden">{dealLabel(status, { compact: true })}</span>
+                        <span className="hidden sm:inline">{dealLabel(status, { compact: false })}</span>
                       </span>
                     </span>
                   )}

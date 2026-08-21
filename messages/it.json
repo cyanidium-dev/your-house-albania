@@ -85,8 +85,7 @@
       "restroom": "4 Bagni",
       "parkingSpace": "Posto auto",
       "price": "$4.750.000",
-      "forSellingPrice": "Prezzo di vendita"
-      ,
+      "forSellingPrice": "Prezzo di vendita",
       "search": {
         "tabs": {
           "buy": "Acquista",
@@ -179,7 +178,9 @@
       "dealTypeRent": "Affitto",
       "dealTypeShortTerm": "Affitto a breve termine",
       "dealTypeLongTerm": "Affitto a lungo termine",
-      "dealTypePrice": "Prezzo"
+      "dealTypePrice": "Prezzo",
+      "dealTypeShortTermCompact": "Affitto breve",
+      "dealTypeLongTermCompact": "Affitto lungo"
     },
     "propertyCard": {
       "bedrooms": "Camere",
@@ -208,7 +209,10 @@
       "relatedArticles": "Articoli correlati",
       "relatedProperties": "Immobili correlati"
     },
-    "goBack": "Indietro"
+    "goBack": "Indietro",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {immobile} other {immobili}}"
+    }
   },
   "Listing": {
     "properties": {
@@ -254,7 +258,11 @@
     "cities": "Città",
     "blog": "Blog",
     "guides": "Guide",
-    "districts": "Quartieri"
+    "districts": "Quartieri",
+    "catalog": "Catalogo",
+    "agents": "Agenti",
+    "country": "Paese",
+    "propertyTypes": "Tipi di immobili"
   },
   "Districts": {
     "hubTitle": "Quartieri di {city}",
