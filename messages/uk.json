@@ -71,9 +71,10 @@
       "createdBy": "Створено",
       "imageCredits": "Авторство зображень"
     },
-    "partners": {
-      "codesite": "CodeSite.Art",
-      "webbond": "WebBond"
+    "developer": {
+      "ownedBy": "Сайт розроблено, ним володіє та підтримує компанія Code Site Art.",
+      "disclaimer": "Code Site Art — розробник сайту і не несе відповідальності за об’єкти, розміщені на сайті.",
+      "contact": "З технічних питань, партнерства, підтримки, розробки сайтів і всього, що не стосується конкретного об’єкта, пишіть:"
     }
   },
   "Home": {
@@ -184,7 +185,9 @@
       "dealTypeRent": "Оренда",
       "dealTypeShortTerm": "Краткострокова оренда",
       "dealTypeLongTerm": "Довгострокова оренда",
-      "dealTypePrice": "Ціна"
+      "dealTypePrice": "Ціна",
+      "dealTypeShortTermCompact": "Корот. оренда",
+      "dealTypeLongTermCompact": "Довг. оренда"
     },
     "propertyCard": {
       "bedrooms": "Спальні",
@@ -213,7 +216,10 @@
       "relatedArticles": "Схожі статті",
       "relatedProperties": "Схожі об'єкти"
     },
-    "goBack": "Назад"
+    "goBack": "Назад",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {об'єкт} few {об'єкти} many {об'єктів} other {об'єкта}}"
+    }
   },
   "Listing": {
     "properties": {

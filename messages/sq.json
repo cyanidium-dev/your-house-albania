@@ -71,9 +71,10 @@
       "createdBy": "Krijuar nga",
       "imageCredits": "Kreditet e fotove"
     },
-    "partners": {
-      "codesite": "CodeSite.Art",
-      "webbond": "WebBond"
+    "developer": {
+      "ownedBy": "Faqja është zhvilluar, zotërohet dhe mirëmbahet nga Code Site Art.",
+      "disclaimer": "Code Site Art është zhvilluesi i faqes dhe nuk mban përgjegjësi për pronat e publikuara në faqe.",
+      "contact": "Për çështje teknike, partneritete, mbështetje ose zhvillim faqesh interneti — për gjithçka që nuk lidhet me një pronë të caktuar — na kontaktoni:"
     }
   },
   "Home": {
@@ -184,7 +185,9 @@
       "dealTypeRent": "Qira",
       "dealTypeShortTerm": "Qira afatshkurtër",
       "dealTypeLongTerm": "Qira afatgjatë",
-      "dealTypePrice": "Çmimi"
+      "dealTypePrice": "Çmimi",
+      "dealTypeShortTermCompact": "Qira e shkurtër",
+      "dealTypeLongTermCompact": "Qira e gjatë"
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
@@ -213,7 +216,10 @@
       "relatedArticles": "Artikuj të ngjashëm",
       "relatedProperties": "Prona të ngjashme"
     },
-    "goBack": "Kthehu"
+    "goBack": "Kthehu",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {pronë} other {prona}}"
+    }
   },
   "Listing": {
     "properties": {

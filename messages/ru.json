@@ -71,9 +71,10 @@
       "createdBy": "Создано",
       "imageCredits": "Авторство изображений"
     },
-    "partners": {
-      "codesite": "CodeSite.Art",
-      "webbond": "WebBond"
+    "developer": {
+      "ownedBy": "Сайт разработан, принадлежит и поддерживается компанией Code Site Art.",
+      "disclaimer": "Code Site Art — разработчик сайта и не несёт ответственности за объекты, размещённые на сайте.",
+      "contact": "По техническим вопросам, партнёрству, поддержке, разработке сайтов и всему, что не касается конкретного объекта, пишите:"
     }
   },
   "Home": {
@@ -184,7 +185,9 @@
       "dealTypeRent": "Аренда",
       "dealTypeShortTerm": "Краткосрочная аренда",
       "dealTypeLongTerm": "Долгосрочная аренда",
-      "dealTypePrice": "Цена"
+      "dealTypePrice": "Цена",
+      "dealTypeShortTermCompact": "Кратк. аренда",
+      "dealTypeLongTermCompact": "Долг. аренда"
     },
     "propertyCard": {
       "bedrooms": "Спальни",
@@ -213,7 +216,10 @@
       "relatedArticles": "Похожие статьи",
       "relatedProperties": "Похожие объекты"
     },
-    "goBack": "Назад"
+    "goBack": "Назад",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {объект} few {объекта} many {объектов} other {объекта}}"
+    }
   },
   "Listing": {
     "properties": {

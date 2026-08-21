@@ -71,9 +71,10 @@
       "createdBy": "Created by",
       "imageCredits": "Image credits"
     },
-    "partners": {
-      "codesite": "CodeSite.Art",
-      "webbond": "WebBond"
+    "developer": {
+      "ownedBy": "This website is developed, owned and maintained by Code Site Art.",
+      "disclaimer": "Code Site Art is the website developer and is not responsible for the properties listed on this site.",
+      "contact": "For technical matters, partnerships, support or website development — anything not related to a specific property — contact us:"
     }
   },
   "Home": {
@@ -184,7 +185,9 @@
       "dealTypeRent": "Rent",
       "dealTypeShortTerm": "Short-term rent",
       "dealTypeLongTerm": "Long-term rent",
-      "dealTypePrice": "Price"
+      "dealTypePrice": "Price",
+      "dealTypeShortTermCompact": "Short rent",
+      "dealTypeLongTermCompact": "Long rent"
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
@@ -213,7 +216,10 @@
       "relatedArticles": "Related articles",
       "relatedProperties": "Related properties"
     },
-    "goBack": "Go Back"
+    "goBack": "Go Back",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {property} other {properties}}"
+    }
   },
   "Listing": {
     "properties": {

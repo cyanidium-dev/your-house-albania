@@ -71,9 +71,10 @@
       "createdBy": "Creato da",
       "imageCredits": "Crediti fotografici"
     },
-    "partners": {
-      "codesite": "CodeSite.Art",
-      "webbond": "WebBond"
+    "developer": {
+      "ownedBy": "Il sito è sviluppato, di proprietà e gestito da Code Site Art.",
+      "disclaimer": "Code Site Art è lo sviluppatore del sito e non è responsabile degli immobili pubblicati sul sito.",
+      "contact": "Per questioni tecniche, partnership, supporto o sviluppo di siti web — per tutto ciò che non riguarda un immobile specifico — contattaci:"
     }
   },
   "Home": {
@@ -184,7 +185,9 @@
       "dealTypeRent": "Affitto",
       "dealTypeShortTerm": "Affitto a breve termine",
       "dealTypeLongTerm": "Affitto a lungo termine",
-      "dealTypePrice": "Prezzo"
+      "dealTypePrice": "Prezzo",
+      "dealTypeShortTermCompact": "Affitto breve",
+      "dealTypeLongTermCompact": "Affitto lungo"
     },
     "propertyCard": {
       "bedrooms": "Camere",
@@ -213,7 +216,10 @@
       "relatedArticles": "Articoli correlati",
       "relatedProperties": "Immobili correlati"
     },
-    "goBack": "Indietro"
+    "goBack": "Indietro",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {immobile} other {immobili}}"
+    }
   },
   "Listing": {
     "properties": {

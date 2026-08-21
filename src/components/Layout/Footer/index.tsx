@@ -13,10 +13,14 @@ import { catalogFilterPath } from "@/lib/routes/catalog";
 import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry";
 import { CookieSettingsLink } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
+import CodeSiteTagIcon from "./CodeSiteTagIcon";
 
 type FooterProps = {
   siteSettings?: ResolvedSiteSettings;
   countrySlugs: string[];
+  /** Server-rendered city list for `initialCountrySlug` (avoids empty-state flash / SSR gap). */
+  initialCities?: FooterCityNavItem[];
+  initialCountrySlug?: string;
 };
 
 function resolveStableHref(href: string, locale: string): string {
@@ -88,25 +92,18 @@ function CreditsDivider() {
   );
 }
 
-/** Sub-block separator between partner links inside “Created by …” (not a major `|` break). */
-function PartnerBraceSeparator() {
-  return (
-    <span
-      className="select-none px-1.5 text-sm font-light leading-none tracking-wide text-white/35 sm:px-2.5 sm:text-base"
-      aria-hidden
-    >
-      {"{}"}
-    </span>
-  );
-}
-
 const colHeadingClass =
   "mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
 const colLinkClass =
   "text-[17px] leading-snug text-white/55 transition-colors hover:text-white md:text-base md:leading-normal";
 const colBodyClass = "text-[17px] text-white/45 md:text-sm";
 
-export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
+export default function Footer({
+  siteSettings,
+  countrySlugs,
+  initialCities = [],
+  initialCountrySlug,
+}: FooterProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations("Footer");
@@ -117,9 +114,12 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
     [pathname, locale, countrySlugs]
   );
 
-  const [cities, setCities] = useState<FooterCityNavItem[]>([]);
+  const [cities, setCities] = useState<FooterCityNavItem[]>(initialCities);
 
   useEffect(() => {
+    // Server already seeded the default-country list; only re-fetch when the
+    // visitor is on a different country page.
+    if (activeCountry === initialCountrySlug && initialCities.length > 0) return;
     let cancelled = false;
     fetch(
       `/api/footer-cities?locale=${encodeURIComponent(locale)}&country=${encodeURIComponent(activeCountry)}`
@@ -134,7 +134,7 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
     return () => {
       cancelled = true;
     };
-  }, [locale, activeCountry]);
+  }, [locale, activeCountry, initialCountrySlug, initialCities.length]);
 
   const flavour =
     siteSettings?.footerIntro?.trim() ||
@@ -154,8 +154,7 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
   const hasMobileStickyBar = pathname.includes("/property/");
 
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
-  const codesiteUrl = siteSettings?.footerCodesiteUrl?.trim();
-  const webbondUrl = siteSettings?.footerWebbondUrl?.trim();
+  const codesiteUrl = siteSettings?.footerCodesiteUrl?.trim() || "https://www.code-site.art";
 
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
@@ -401,37 +400,48 @@ export default function Footer({ siteSettings, countrySlugs }: FooterProps) {
               </>
             ) : null}
 
-            {(codesiteUrl || webbondUrl) && (
-              <>
-                <CreditsDivider />
-                <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:justify-start">
-                  <span className="whitespace-nowrap text-white/50">
-                    {t("legal.createdBy")}
-                  </span>
-                  {codesiteUrl ? (
-                    <a
-                      href={codesiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-                    >
-                      {t("partners.codesite")}
-                    </a>
-                  ) : null}
-                  {codesiteUrl && webbondUrl ? <PartnerBraceSeparator /> : null}
-                  {webbondUrl ? (
-                    <a
-                      href={webbondUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-                    >
-                      {t("partners.webbond")}
-                    </a>
-                  ) : null}
-                </span>
-              </>
-            )}
+            <CreditsDivider />
+            <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:justify-start">
+              <span className="whitespace-nowrap text-white/50">
+                {t("legal.createdBy")}
+              </span>
+              <a
+                href={codesiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium uppercase tracking-wide text-white/60 transition-colors hover:text-primary"
+              >
+                CODE-SITE.ART
+                <CodeSiteTagIcon className="mb-0.5 shrink-0" />
+              </a>
+            </span>
+          </div>
+
+          {/* Developer / ownership note + listings disclaimer */}
+          <div className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/40 sm:text-left md:text-xs">
+            <p>
+              {t("developer.ownedBy")} {t("developer.disclaimer")}
+            </p>
+            <p className="mt-1.5">
+              {t("developer.contact")}{" "}
+              <a
+                href="https://t.me/fedirdev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-nowrap text-white/55 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
+              >
+                Telegram @fedirdev
+              </a>{" "}
+              ·{" "}
+              <a
+                href="https://wa.me/355689286136"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-nowrap text-white/55 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
+              >
+                WhatsApp +355 68 928 6136
+              </a>
+            </p>
           </div>
         </div>
       </div>
