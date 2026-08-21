@@ -6,7 +6,6 @@ import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogP
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
 import { Icon } from '@iconify/react';
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
-import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
@@ -17,6 +16,7 @@ import { getBaseUrl } from '@/lib/seo/baseUrl';
 import { getSiteBaseUrl } from '@/lib/siteUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
+import { PropertyContactButton } from '@/components/property/PropertyContactModal';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
 import { getTranslations } from 'next-intl/server';
@@ -157,6 +157,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
   })();
   const dealTypeLabel = tPropertyDetail(dealTypeKey);
 
+  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string } | null }).agent ?? null;
+
   return (
         <section className="pt-20 md:pt-32 pb-24 lg:pb-20 relative">
             <PropertyJsonLd
@@ -263,9 +265,15 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                             </div>
                             <p className='text-sm text-dark/50 dark:text-white'>{dealTypeLabel}</p>
-                            <Link href="#" className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'>
-                                {tPropertyDetail('getInTouch')}
-                            </Link>
+                            <PropertyContactButton
+                              locale={locale}
+                              propertySlug={slug}
+                              propertyTitle={title}
+                              agentSlug={propertyAgent?.slug ?? null}
+                              agentName={propertyAgent?.name ?? null}
+                              label={tPropertyDetail('getInTouch')}
+                              className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'
+                            />
                             <div className="absolute right-0 top-4 -z-[1]">
                                 <Image src="/images/properties/vector.svg" width={400} height={500} alt="vector" unoptimized={true} />
                             </div>
@@ -300,12 +308,15 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   </h4>
                   <p className="text-sm text-dark/50 dark:text-white/50 truncate">{dealTypeLabel}</p>
                 </div>
-                <Link
-                  href="#"
+                <PropertyContactButton
+                  locale={locale}
+                  propertySlug={slug}
+                  propertyTitle={title}
+                  agentSlug={propertyAgent?.slug ?? null}
+                  agentName={propertyAgent?.name ?? null}
+                  label={tPropertyDetail('getInTouch')}
                   className="shrink-0 py-3 px-6 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
-                >
-                  {tPropertyDetail('getInTouch')}
-                </Link>
+                />
               </div>
             </div>
         </section>

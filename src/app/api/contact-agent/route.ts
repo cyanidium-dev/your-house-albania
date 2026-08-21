@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server'
 import { formatMinMaxLabel } from '@/lib/notifications/agentContact/formatTelegramAgentContact'
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
-import { deliverAgentContactTelegramStub } from '@/lib/notifications/agentContact/telegramStubDelivery'
+import { deliverAgentContactTelegram } from '@/lib/notifications/agentContact/telegramDelivery'
 import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agentContact/types'
+import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 const MAX_MESSAGE = 8000
+const MAX_TITLE = 200
+const SLUG_REGEX = /^[a-z0-9-]+$/
 
 type Body = {
   submissionKind?: 'agent' | 'general'
@@ -24,6 +27,9 @@ type Body = {
   phone?: string
   email?: string
   message?: string
+  /** Property-page context (agent submissions). */
+  propertySlug?: string
+  propertyTitle?: string
 }
 
 function isNonEmptyString(v: unknown): v is string {
@@ -39,8 +45,9 @@ function jsonOk() {
 }
 
 /**
- * Contact requests: general `/contacts` (`submissionKind: 'general'`) or future agent-specific payloads.
- * Validates input, honeypot, then runs Telegram delivery stub.
+ * Contact requests: general `/contacts` (`submissionKind: 'general'`) or the
+ * property-page contact modal (`'agent'`, with property context). Validates
+ * input, honeypot, then delivers via the Telegram Bot API (same chat for both).
  */
 export async function POST(request: Request) {
   console.log('[contact-agent] submission received')
@@ -119,6 +126,23 @@ export async function POST(request: Request) {
     const agentName =
       typeof body.agentName === 'string' && body.agentName.trim() ? body.agentName.trim() : '—'
 
+    let propertySlug: string | undefined
+    if (typeof body.propertySlug === 'string' && body.propertySlug.trim()) {
+      const s = body.propertySlug.trim()
+      if (!SLUG_REGEX.test(s)) {
+        return jsonError(400, 'Invalid property')
+      }
+      propertySlug = s
+    }
+    const propertyTitle =
+      typeof body.propertyTitle === 'string' && body.propertyTitle.trim()
+        ? body.propertyTitle.trim().slice(0, MAX_TITLE)
+        : undefined
+    const urlLocale = /^[a-z]{2}$/.test(locale) ? locale : 'en'
+    const propertyUrl = propertySlug
+      ? `${getSiteBaseUrl()}/${urlLocale}/property/${propertySlug}`
+      : undefined
+
     normalized = {
       submissionKind: 'agent',
       agentSlug: body.agentSlug.trim(),
@@ -141,6 +165,9 @@ export async function POST(request: Request) {
       phone: body.phone.trim(),
       email,
       message: body.message.trim(),
+      ...(propertySlug !== undefined ? { propertySlug } : {}),
+      ...(propertyTitle !== undefined ? { propertyTitle } : {}),
+      ...(propertyUrl !== undefined ? { propertyUrl } : {}),
     }
   }
 
@@ -150,7 +177,7 @@ export async function POST(request: Request) {
   })
 
   const routing = resolveAgentContactTelegramRouting()
-  const delivery = await deliverAgentContactTelegramStub(normalized, routing)
+  const delivery = await deliverAgentContactTelegram(normalized, routing)
 
   if (!delivery.ok) {
     console.error('[contact-agent] delivery failed', delivery.reason)

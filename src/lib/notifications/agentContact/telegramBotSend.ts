@@ -1,4 +1,4 @@
-import type { TelegramStubResult } from './types'
+import type { TelegramSendResult } from './types'
 
 /** Telegram `sendMessage` text limit. */
 const TELEGRAM_MAX_MESSAGE_LENGTH = 4096
@@ -16,7 +16,7 @@ export async function sendTelegramTextMessage(params: {
   botToken: string
   chatId: string
   text: string
-}): Promise<TelegramStubResult> {
+}): Promise<TelegramSendResult> {
   let textOut = params.text
   if (textOut.length > TELEGRAM_MAX_MESSAGE_LENGTH) {
     const suffix = '\n...[truncated for Telegram]'

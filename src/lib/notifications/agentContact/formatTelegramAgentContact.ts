@@ -1,4 +1,4 @@
-import type { NormalizedAgentContactSubmission, TelegramDeliveryTarget } from './types'
+import type { NormalizedAgentContactSubmission } from './types'
 
 /** Human-readable range for logs / Telegram (not locale-specific; delivery layer). */
 export function formatMinMaxLabel(
@@ -51,11 +51,11 @@ function languageLabel(locale: string): string {
 }
 
 /**
- * Builds multi-line text suitable for Telegram `sendMessage` `text` later.
- * Labels are stable English for operator readability.
+ * Builds multi-line text suitable for Telegram `sendMessage` `text`.
+ * Labels are stable English for operator readability. Both kinds are
+ * delivered to the same general chat for now.
  */
 export function formatAgentContactTelegramMessage(
-  target: TelegramDeliveryTarget,
   data: NormalizedAgentContactSubmission
 ): string {
   if (data.submissionKind === 'general') {
@@ -78,26 +78,19 @@ export function formatAgentContactTelegramMessage(
     ].join('\n')
   }
 
-  const header =
-    target === 'general'
-      ? '[target: general] Agent contact request'
-      : '[target: agent] Agent contact request (personal)'
-
   return [
-    header,
-    line('agent_slug', data.agentSlug),
-    line('agent_name', emptyToDash(data.agentName)),
-    line('locale', data.locale),
-    line('location', emptyToDash(data.location)),
-    line('property_type', emptyToDash(data.propertyType)),
-    line('deal_type', emptyToDash(data.dealType)),
-    line('price_range', data.priceRangeLabel),
-    line('area_range', data.areaRangeLabel),
-    line('customer_name', data.customerName),
-    line('customer_phone', data.phone),
-    line('customer_email', data.email),
-    '---',
-    'message:',
+    'New property contact request',
+    '',
+    line('Property', emptyToDash(data.propertyTitle)),
+    ...(data.propertyUrl ? [line('Link', data.propertyUrl)] : []),
+    line('Agent', `${emptyToDash(data.agentName)} (${data.agentSlug})`),
+    `Language: ${languageLabel(data.locale)}`,
+    '',
+    `Name: ${data.customerName}`,
+    `Phone: ${data.phone}`,
+    `Email: ${data.email}`,
+    '',
+    'Message:',
     data.message,
   ].join('\n')
 }

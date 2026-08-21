@@ -1,6 +1,7 @@
 /**
  * Normalized contact submission after validation (server-side).
- * `submissionKind: 'general'` is used by `/contacts`; `'agent'` reserved for future per-agent flows.
+ * `submissionKind: 'general'` is used by `/contacts`; `'agent'` by the
+ * property-page contact modal (carries the property context below).
  */
 export type NormalizedAgentContactSubmission = {
   submissionKind: 'agent' | 'general'
@@ -17,18 +18,22 @@ export type NormalizedAgentContactSubmission = {
   phone: string
   email: string
   message: string
+  /** Property-page context (agent submissions only). */
+  propertySlug?: string
+  propertyTitle?: string
+  /** Absolute link to the property page, built server-side. */
+  propertyUrl?: string
 }
-
-export type TelegramDeliveryTarget = 'general' | 'agent'
 
 /** Resolved routing for Telegram (IDs from env until CMS per-agent mapping exists). */
 export type AgentContactTelegramRouting = {
   generalChatId: string | undefined
   /**
    * Single fallback chat for “agent-personal” delivery until per-agent chat IDs
-   * are provided from Sanity or another backend mapping.
+   * are provided from Sanity or another backend mapping. Currently unused —
+   * every submission goes to the general chat.
    */
   agentChatId: string | undefined
 }
 
-export type TelegramStubResult = { ok: true } | { ok: false; reason: string }
+export type TelegramSendResult = { ok: true } | { ok: false; reason: string }
