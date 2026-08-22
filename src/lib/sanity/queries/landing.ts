@@ -1,6 +1,7 @@
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
 import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
+import { blogListingProjection } from './blog';
 import { resolveLocalizedString } from '../localized';
 
 /**
@@ -96,7 +97,10 @@ export const landingPageSectionsProjection = `{
     secondaryCta,
     secondaryIcon
   },
-  posts,
+  // articlesSection mode "selected": must be dereferenced, otherwise the refs
+  // carry no slug and BlogSmall renders nothing (same projection the property
+  // route uses).
+  "posts": posts[]-> ${blogListingProjection},
   enabled,
   presentation,
   limit,
