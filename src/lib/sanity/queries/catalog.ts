@@ -466,7 +466,7 @@ function getCachedFetchCatalogFilterOptions(
             "value": slug.current,
             title
           },
-          "amenities": *[_type == "amenity" && active == true] | order(order asc, title asc) {
+          "amenities": *[_type == "amenity" && active == true && needsReview != true] | order(order asc, title asc) {
             "value": slug.current,
             title
           },
