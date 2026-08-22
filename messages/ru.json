@@ -71,6 +71,9 @@
       "createdBy": "Создано",
       "imageCredits": "Авторство изображений"
     },
+    "partners": {
+      "webbond": "WebBond"
+    },
     "developer": {
       "ownedBy": "Сайт разработан, принадлежит и поддерживается компанией Code Site Art.",
       "disclaimer": "Code Site Art — разработчик сайта и не несёт ответственности за объекты, размещённые на сайте.",

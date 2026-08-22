@@ -92,6 +92,26 @@ function CreditsDivider() {
   );
 }
 
+/**
+ * Partner credits. The two links have different shapes — Code Site Art is a
+ * branded uppercase link with an inline SVG tag, WebBond is a plain text link —
+ * so they are not modelled as a shared CMS array; both URLs live here.
+ */
+const CODESITE_URL = "https://www.code-site.art";
+const WEBBOND_URL = "https://www.webbond.dk/";
+
+/** Sub-block separator between partner links inside “Created by …”. */
+function PartnerBraceSeparator() {
+  return (
+    <span
+      className="select-none px-1.5 text-sm font-light leading-none tracking-wide text-white/35 sm:px-2.5 sm:text-base"
+      aria-hidden
+    >
+      {"{}"}
+    </span>
+  );
+}
+
 const colHeadingClass =
   "mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
 const colLinkClass =
@@ -154,7 +174,6 @@ export default function Footer({
   const hasMobileStickyBar = pathname.includes("/property/");
 
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
-  const codesiteUrl = siteSettings?.footerCodesiteUrl?.trim() || "https://www.code-site.art";
 
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
@@ -406,13 +425,22 @@ export default function Footer({
                 {t("legal.createdBy")}
               </span>
               <a
-                href={codesiteUrl}
+                href={CODESITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium uppercase tracking-wide text-white/60 transition-colors hover:text-primary"
               >
                 CODE-SITE.ART
                 <CodeSiteTagIcon className="mb-0.5 shrink-0" />
+              </a>
+              <PartnerBraceSeparator />
+              <a
+                href={WEBBOND_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
+              >
+                {t("partners.webbond")}
               </a>
             </span>
           </div>
