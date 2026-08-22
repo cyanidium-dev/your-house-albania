@@ -293,6 +293,8 @@ export function CatalogFilterForm({
                     ? t("amenities")
                     : t("amenitiesSelected", { count })
                 }
+                clearLabel={t("clear")}
+                doneLabel={t("done")}
               />
 
               {/* Sort */}
