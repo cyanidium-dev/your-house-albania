@@ -43,7 +43,6 @@ const blogDetailContentBlockProjection = `{
     title,
     shortDescription,
     price,
-    currency,
     area,
     bedrooms,
     bathrooms,
@@ -52,8 +51,7 @@ const blogDetailContentBlockProjection = `{
     "galleryUrls": gallery[].asset->url,
     "city": city->{_id,title,"slug":slug.current},
     "district": district->{_id,title,"slug":slug.current,"citySlug":city->slug.current},
-    "type": type->{_id,title,"slug":slug.current},
-    "propertyType": propertyType->{_id,title,"slug":slug.current}
+    "type": type->{_id,title,"slug":slug.current}
   }, null),
   asset->{url}
 }`;

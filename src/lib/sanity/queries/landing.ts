@@ -106,7 +106,6 @@ export const landingPageSectionsProjection = `{
   limit,
   sort,
   properties,
-  districts,
   "propertyTypes": propertyTypes[]-> {
     _id,
     title,
@@ -162,7 +161,6 @@ export const landingPageSectionsProjection = `{
   promoMediaType,
   videoUrl,
   groupedMediaMode,
-  groupedImage { asset-> { url }, alt },
   "images": images[] {
     _key,
     asset-> { url },
@@ -213,9 +211,7 @@ export const landingPageSectionsProjection = `{
     label,
     description
   },
-  mediaVideoUrl,
   image { asset-> { url }, alt },
-  mediaVideo { asset-> { url } },
   primaryImage { asset-> { url }, alt },
   secondaryImage { asset-> { url }, alt },
   imageMode,

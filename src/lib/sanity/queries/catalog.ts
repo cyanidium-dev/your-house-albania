@@ -194,7 +194,6 @@ const cachedFetchCatalogProperties = sanityCache(
     title,
     "slug": slug.current,
     price,
-    currency,
     area,
     bedrooms,
     bathrooms,
