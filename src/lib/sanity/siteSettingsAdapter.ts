@@ -19,7 +19,7 @@ export type ResolvedSiteSettings = {
   footerTelegramUrl: string;
   footerWhatsappUrl: string;
   footerApp: ResolvedFooterApp;
-  socialLinks: { platform: string; url: string }[];
+  socialLinks: { platform: string; url: string; channel?: string }[];
   policyLinks: { href: string; label: string }[];
 };
 
@@ -38,7 +38,7 @@ type RawSiteSettings = {
     iosUrl?: string;
     androidUrl?: string;
   };
-  socialLinks?: { _key?: string; platform?: string; url?: string }[];
+  socialLinks?: { _key?: string; platform?: string; url?: string; channel?: string }[];
   policyLinks?: RawPolicyLink[];
 };
 
@@ -109,6 +109,7 @@ export function mapSiteSettingsToResolved(
     .map((s) => ({
       platform: s.platform ?? "Link",
       url: s.url ?? "#",
+      channel: s.channel,
     }));
 
   const policyLinks = normalizePolicyLinks(raw.policyLinks, locale);
