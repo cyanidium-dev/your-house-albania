@@ -113,24 +113,11 @@ function CreditsDivider() {
 }
 
 /**
- * Partner credits. The two links have different shapes — Code Site Art is a
- * branded uppercase link with an inline SVG tag, WebBond is a plain text link —
- * so they are not modelled as a shared CMS array; both URLs live here.
+ * Sole partner credit. WebBond was deliberately dropped in 63b48eb; the
+ * Code Site Art credit is hardcoded here because the CMS field that used to
+ * supply it (footerCodesiteUrl) was removed as unused indirection.
  */
 const CODESITE_URL = "https://www.code-site.art";
-const WEBBOND_URL = "https://www.webbond.dk/";
-
-/** Sub-block separator between partner links inside “Created by …”. */
-function PartnerBraceSeparator() {
-  return (
-    <span
-      className="select-none px-1.5 text-sm font-light leading-none tracking-wide text-white/35 sm:px-2.5 sm:text-base"
-      aria-hidden
-    >
-      {"{}"}
-    </span>
-  );
-}
 
 const colHeadingClass =
   "mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
@@ -444,15 +431,6 @@ export default function Footer({
               >
                 CODE-SITE.ART
                 <CodeSiteTagIcon className="mb-0.5 shrink-0" />
-              </a>
-              <PartnerBraceSeparator />
-              <a
-                href={WEBBOND_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-              >
-                {t("partners.webbond")}
               </a>
             </span>
           </div>
