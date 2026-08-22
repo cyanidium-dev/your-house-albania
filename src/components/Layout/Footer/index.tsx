@@ -13,6 +13,7 @@ import { catalogFilterPath } from "@/lib/routes/catalog";
 import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry";
 import { CookieSettingsLink } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
+import { contactLabelKey, partitionSocialLinks } from "@/lib/footer/socialChannels";
 import CodeSiteTagIcon from "./CodeSiteTagIcon";
 
 type FooterProps = {
@@ -36,10 +37,29 @@ const SOCIAL_ICONS: Record<string, string> = {
   linkedin: "ph:linkedin-logo-bold",
   youtube: "ph:youtube-logo-bold",
   tiktok: "ph:tiktok-logo-bold",
+  // Contact-channel platforms (Contacts column) — same icons as before the
+  // socialLinks consolidation.
+  telegram: "ph:telegram-logo",
+  whatsapp: "ph:whatsapp-logo",
 };
 
 function getSocialIcon(platform: string): string {
   return SOCIAL_ICONS[platform.toLowerCase()] ?? "ph:link";
+}
+
+/**
+ * Contacts-column label. Only platforms with a known translation key go through
+ * `t()` — next-intl throws on a missing message, so anything else falls back to
+ * the platform name from the CMS.
+ */
+const CONTACT_LABEL_KEYS = new Set(["contacts.telegram", "contacts.whatsapp"]);
+
+function contactRowLabel(
+  platform: string,
+  t: (key: string, values?: Record<string, string>) => string
+): string {
+  const key = contactLabelKey(platform);
+  return CONTACT_LABEL_KEYS.has(key) ? t(key) : platform.trim();
 }
 
 /** Localized “Follow us on …” line from CMS `platform` string. */
@@ -91,6 +111,13 @@ function CreditsDivider() {
     </span>
   );
 }
+
+/**
+ * Sole partner credit. WebBond was deliberately dropped in 63b48eb; the
+ * Code Site Art credit is hardcoded here because the CMS field that used to
+ * supply it (footerCodesiteUrl) was removed as unused indirection.
+ */
+const CODESITE_URL = "https://www.code-site.art";
 
 const colHeadingClass =
   "mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
@@ -154,7 +181,11 @@ export default function Footer({
   const hasMobileStickyBar = pathname.includes("/property/");
 
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
-  const codesiteUrl = siteSettings?.footerCodesiteUrl?.trim() || "https://www.code-site.art";
+
+  // Contacts and Social columns come from one source: socialLinks[].channel.
+  const { contact: contactLinks, social: socialColumnLinks } = partitionSocialLinks(
+    siteSettings?.socialLinks
+  );
 
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
@@ -251,52 +282,33 @@ export default function Footer({
                     </a>
                   </li>
                 ) : null}
-                {siteSettings?.footerTelegramUrl ? (
-                  <li>
+                {contactLinks.map((c) => (
+                  <li key={`${c.platform}-${c.url}`}>
                     <a
-                      href={siteSettings.footerTelegramUrl}
+                      href={c.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-flex items-center gap-2 ${colLinkClass}`}
                     >
                       <Icon
-                        icon="ph:telegram-logo"
+                        icon={getSocialIcon(c.platform)}
                         width={20}
                         height={20}
                         className="shrink-0 opacity-80"
                         aria-hidden
                       />
-                      <span>{t("contacts.telegram")}</span>
+                      <span>{contactRowLabel(c.platform, t)}</span>
                     </a>
                   </li>
-                ) : null}
-                {siteSettings?.footerWhatsappUrl ? (
-                  <li>
-                    <a
-                      href={siteSettings.footerWhatsappUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-2 ${colLinkClass}`}
-                    >
-                      <Icon
-                        icon="ph:whatsapp-logo"
-                        width={20}
-                        height={20}
-                        className="shrink-0 opacity-80"
-                        aria-hidden
-                      />
-                      <span>{t("contacts.whatsapp")}</span>
-                    </a>
-                  </li>
-                ) : null}
+                ))}
               </ul>
             </div>
 
             <div>
               <h3 className={colHeadingClass}>{t("columns.socials")}</h3>
-              {(siteSettings?.socialLinks?.length ?? 0) > 0 ? (
+              {socialColumnLinks.length > 0 ? (
                 <ul className="flex flex-col gap-2 md:gap-2.5">
-                  {siteSettings!.socialLinks.map((s, i) => (
+                  {socialColumnLinks.map((s, i) => (
                     <li key={`${s.platform}-${i}`}>
                       <a
                         href={s.url}
@@ -406,7 +418,7 @@ export default function Footer({
                 {t("legal.createdBy")}
               </span>
               <a
-                href={codesiteUrl}
+                href={CODESITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium uppercase tracking-wide text-white/60 transition-colors hover:text-primary"

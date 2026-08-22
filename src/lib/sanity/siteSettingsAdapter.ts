@@ -14,15 +14,10 @@ export type ResolvedSiteSettings = {
   phone: string;
   email: string;
   companyAddress: string;
-  copyrightText: string;
   /** Localized short footer intro; empty if unset in CMS. */
   footerIntro: string;
-  footerTelegramUrl: string;
-  footerWhatsappUrl: string;
   footerApp: ResolvedFooterApp;
-  footerCodesiteUrl: string;
-  footerWebbondUrl: string;
-  socialLinks: { platform: string; url: string }[];
+  socialLinks: { platform: string; url: string; channel?: string }[];
   policyLinks: { href: string; label: string }[];
 };
 
@@ -33,18 +28,13 @@ type RawSiteSettings = {
   contactPhone?: string;
   contactEmail?: string;
   companyAddress?: string;
-  copyrightText?: Record<string, string>;
   footerIntro?: Record<string, string> | string;
-  footerTelegramUrl?: string;
-  footerWhatsappUrl?: string;
   footerApp?: {
     enabled?: boolean;
     iosUrl?: string;
     androidUrl?: string;
   };
-  footerCodesiteUrl?: string;
-  footerWebbondUrl?: string;
-  socialLinks?: { _key?: string; platform?: string; url?: string }[];
+  socialLinks?: { _key?: string; platform?: string; url?: string; channel?: string }[];
   policyLinks?: RawPolicyLink[];
 };
 
@@ -95,13 +85,8 @@ export function mapSiteSettingsToResolved(
       phone: DEFAULT_PHONE,
       email: DEFAULT_EMAIL,
       companyAddress: "",
-      copyrightText: "",
       footerIntro: "",
-      footerTelegramUrl: "",
-      footerWhatsappUrl: "",
       footerApp: { enabled: false, iosUrl: "", androidUrl: "" },
-      footerCodesiteUrl: "",
-      footerWebbondUrl: "",
       socialLinks: [],
       policyLinks: [],
     };
@@ -118,6 +103,7 @@ export function mapSiteSettingsToResolved(
     .map((s) => ({
       platform: s.platform ?? "Link",
       url: s.url ?? "#",
+      channel: s.channel,
     }));
 
   const policyLinks = normalizePolicyLinks(raw.policyLinks, locale);
@@ -129,14 +115,8 @@ export function mapSiteSettingsToResolved(
     phone: raw.contactPhone ?? DEFAULT_PHONE,
     email: raw.contactEmail ?? DEFAULT_EMAIL,
     companyAddress: raw.companyAddress ?? "",
-    copyrightText:
-      resolveLocalizedString(raw.copyrightText as never, locale) || "",
     footerIntro,
-    footerTelegramUrl: trimUrl(raw.footerTelegramUrl),
-    footerWhatsappUrl: trimUrl(raw.footerWhatsappUrl),
     footerApp: mapFooterApp(raw.footerApp),
-    footerCodesiteUrl: trimUrl(raw.footerCodesiteUrl),
-    footerWebbondUrl: trimUrl(raw.footerWebbondUrl),
     socialLinks,
     policyLinks,
   };

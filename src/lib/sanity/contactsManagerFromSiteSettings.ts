@@ -1,6 +1,6 @@
 /**
  * Maps `siteSettings` into the contact block for `/[locale]/contacts`.
- * Uses: `contactsManagerPhoto` (optional; legacy `managerPhoto` fallback), `contactEmail`, `socialLinks`.
+ * Uses: `contactsManagerPhoto` (optional), `contactEmail`, `socialLinks`.
  */
 
 export type ContactsManagerBlock = {
@@ -48,7 +48,7 @@ export function mapContactsManagerFromSiteSettings(raw: unknown): ContactsManage
   }
 
   const photo =
-    pickImage(r.contactsManagerPhoto as SanityImageField) ?? pickImage(r.managerPhoto as SanityImageField)
+    pickImage(r.contactsManagerPhoto as SanityImageField)
 
   return {
     photo,

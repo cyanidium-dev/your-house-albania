@@ -43,7 +43,6 @@ const blogDetailContentBlockProjection = `{
     title,
     shortDescription,
     price,
-    currency,
     area,
     bedrooms,
     bathrooms,
@@ -52,8 +51,7 @@ const blogDetailContentBlockProjection = `{
     "galleryUrls": gallery[].asset->url,
     "city": city->{_id,title,"slug":slug.current},
     "district": district->{_id,title,"slug":slug.current,"citySlug":city->slug.current},
-    "type": type->{_id,title,"slug":slug.current},
-    "propertyType": propertyType->{_id,title,"slug":slug.current}
+    "type": type->{_id,title,"slug":slug.current}
   }, null),
   asset->{url}
 }`;
@@ -193,9 +191,15 @@ export async function fetchBlogPostCount(category?: string): Promise<number> {
 export async function fetchBlogSettings(): Promise<unknown | null> {
   const client = getClient();
   if (!client) return null;
-  const query = `*[_type == "blog-settings"][0]{
-    title,
-    intro,
+  // `blogSettings` is the schema type; `blog-settings` is only the document id.
+  // The filter used to match the id as if it were the type, so this always
+  // returned null and `seo` / `relatedPostsSidebarCount` never took effect.
+  // Hero copy is deliberately not consumed by the blog page: it renders its hero
+  // from `messages/*.json` (translated), whereas these CMS fields currently hold
+  // the same English string in all five locales.
+  const query = `*[_type == "blogSettings" && _id == "blog-settings"][0]{
+    heroTitle,
+    heroDescription,
     relatedPostsSidebarCount,
     seo {
       metaTitle,

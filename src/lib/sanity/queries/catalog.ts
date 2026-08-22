@@ -194,7 +194,6 @@ const cachedFetchCatalogProperties = sanityCache(
     title,
     "slug": slug.current,
     price,
-    currency,
     area,
     bedrooms,
     bathrooms,
@@ -650,6 +649,37 @@ export async function fetchCityCountrySlugByCitySlug(citySlug: string): Promise<
     },
     ['sanity-city-country', key],
     { revalidate: 120, tags: [SANITY_TAGS.city, SANITY_TAGS.country] }
+  )();
+}
+
+/**
+ * Localized `country.title` for the country breadcrumb. Returns null when the
+ * document or the locale value is missing, so callers keep their slug fallback.
+ */
+export async function fetchCountryTitleBySlug(
+  countrySlug: string,
+  locale: string
+): Promise<string | null> {
+  const key = countrySlug.trim().toLowerCase();
+  if (!key) return null;
+  return sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      try {
+        const raw = await client.fetch<unknown>(
+          `*[_type == "country" && slug.current == $countrySlug][0].title`,
+          { countrySlug: key }
+        );
+        const title = resolveLocalizedString(raw as never, locale);
+        return typeof title === 'string' && title.trim() ? title.trim() : null;
+      } catch (err) {
+        console.warn('[Sanity] fetchCountryTitleBySlug failed:', err);
+        return null;
+      }
+    },
+    ['sanity-country-title', key, locale],
+    { revalidate: 300, tags: [SANITY_TAGS.country] }
   )();
 }
 

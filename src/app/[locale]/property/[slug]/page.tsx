@@ -112,6 +112,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const beds = sanityFields.beds;
   const baths = sanityFields.baths;
   const area = sanityFields.area;
+  const yearBuilt = (sanityProperty as { yearBuilt?: number } | null)?.yearBuilt;
 
   const sanityWithCoords = sanityProperty as {
     coordinates?: { lat?: number; lng?: number } | null;
@@ -210,7 +211,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                     {t('bathroomsCount', { count: baths })}
                                 </p>
                             </div>
-                            <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
+                            <div className={`flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8${yearBuilt ? ' border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8' : ''}`}>
                                 <Icon
                                     icon={'lineicons:arrow-all-direction'}
                                     width={20}
@@ -220,6 +221,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                     {area}{t('areaUnit')}
                                 </p>
                             </div>
+                            {yearBuilt ? (
+                            <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
+                                <Icon icon={'solar:calendar-linear'} width={20} height={20} />
+                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
+                                    {tPropertyDetail('yearBuilt', { year: yearBuilt })}
+                                </p>
+                            </div>
+                            ) : null}
                         </div>
                     </div>
                 </div>

@@ -42,7 +42,6 @@ export default async function LocaleLayout({ children, params }: Props) {
       countrySlugCount: countrySlugs.length,
       hasSocialLinks: siteSettings.socialLinks.length > 0,
       hasContactEmail: !!siteSettings.email,
-      hasCopyright: !!siteSettings.copyrightText,
       hasPhone: !!siteSettings.phone,
     });
   }
