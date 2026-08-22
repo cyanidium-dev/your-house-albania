@@ -59,7 +59,9 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     coordinatesLat,
     coordinatesLng,
     description,
-    "amenitiesRefs": amenitiesRefs[]-> {
+    // Intake creates amenities on sight, flagged: they are attached to the
+    // listing immediately but must not render until someone approves them.
+    "amenitiesRefs": amenitiesRefs[@->needsReview != true]-> {
       _id,
       title,
       "slug": slug.current,
