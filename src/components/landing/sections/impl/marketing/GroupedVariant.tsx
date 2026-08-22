@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { cn } from "@/lib/utils";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { MarketingContentData, MarketingContentGroup } from "./types";
@@ -200,15 +200,12 @@ export function GroupedVariant({
       </p>
     ) : null;
 
-  const ctaBlock =
-    data.ctaLabel && data.ctaHref ? (
-      <div>
-        <SectionCtaLink
-          href={resolveLocaleHref(data.ctaHref ?? "", locale)}
-          label={data.ctaLabel}
-        />
-      </div>
-    ) : null;
+  const cta = resolveCta(data.ctaLabel, data.ctaHref, locale);
+  const ctaBlock = cta ? (
+    <div>
+      <SectionCtaLink href={cta.href} label={cta.label} />
+    </div>
+  ) : null;
 
   const contentColumn = (
     <div className="flex flex-col gap-8 md:gap-10 min-w-0">

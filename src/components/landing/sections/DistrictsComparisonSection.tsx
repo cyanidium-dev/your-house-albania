@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
+import { resolveCta, resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { catalogFilterPath } from '@/lib/routes/catalog'
 import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'
@@ -98,10 +98,12 @@ export function DistrictsComparisonSection({
   const title = resolveLocalizedString(section.title as never, locale) || ''
   const subtitle = resolveLocalizedString(section.subtitle as never, locale) || ''
   const closingText = resolveLocalizedString(section.closingText as never, locale) || ''
-  const ctaLabel = resolveLocalizedString(section.cta?.label as never, locale) || ''
-  const ctaHref = section.cta?.href
-  const secondaryLabel = resolveLocalizedString(section.secondaryCta?.label as never, locale) || ''
-  const secondaryHref = section.secondaryCta?.href
+  const primaryCta = resolveCta(resolveLocalizedString(section.cta?.label as never, locale), section.cta?.href, locale)
+  const secondaryCta = resolveCta(
+    resolveLocalizedString(section.secondaryCta?.label as never, locale),
+    section.secondaryCta?.href,
+    locale,
+  )
 
   const headings = Array.isArray(section.headings) ? section.headings : []
   const rows = Array.isArray(section.rows) ? section.rows : []
@@ -110,9 +112,7 @@ export function DistrictsComparisonSection({
   const hasTable = headings.length > 0 || rows.length > 0
   const hasDistricts = districts.length > 0
 
-  const showPrimary = Boolean(ctaLabel && ctaHref)
-  const showSecondary = Boolean(secondaryLabel && secondaryHref)
-  const showCtaRow = showPrimary || showSecondary
+  const showCtaRow = Boolean(primaryCta || secondaryCta)
 
   function renderCtas() {
     if (!closingText && !showCtaRow) return null
@@ -123,11 +123,11 @@ export function DistrictsComparisonSection({
         ) : null}
         {showCtaRow ? (
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-            {showPrimary ? (
-              <CtaButton href={ctaHref!} label={ctaLabel} locale={locale} variant="primary" />
+            {primaryCta ? (
+              <CtaButton href={primaryCta.href} label={primaryCta.label} locale={locale} variant="primary" />
             ) : null}
-            {showSecondary ? (
-              <CtaButton href={secondaryHref!} label={secondaryLabel} locale={locale} variant="secondary" />
+            {secondaryCta ? (
+              <CtaButton href={secondaryCta.href} label={secondaryCta.label} locale={locale} variant="secondary" />
             ) : null}
           </div>
         ) : null}

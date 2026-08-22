@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { CityCard, LocationCarouselCard } from "@/lib/sanity/cityAdapter";
-import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { EntityCard } from "./EntityCard";
 import { catalogFilterPath, cityInfoPath } from "@/lib/routes/catalog";
 
@@ -46,9 +46,7 @@ const Cities: React.FC<{
 
   const title = data?.title;
   const description = data?.subtitle ?? data?.shortLine;
-  const ctaLabel = data?.ctaLabel;
-  const ctaHref = data?.ctaHref;
-  const href = ctaHref ? resolveLocaleHref(ctaHref, locale) : null;
+  const cta = resolveCta(data?.ctaLabel, data?.ctaHref, locale);
 
   const cards = data?.locationCards ?? [];
   if (cards.length === 0) return null;
@@ -85,9 +83,9 @@ const Cities: React.FC<{
               titleClassName="text-3xl sm:text-4xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white break-words min-w-0"
               subtitleClassName="text-lg lg:max-w-full leading-[1.3] md:max-w-3/4 min-w-0"
             />
-            {ctaLabel && href ? (
+            {cta ? (
               <div className="mt-8">
-                <SectionCtaLink href={href} label={ctaLabel} />
+                <SectionCtaLink href={cta.href} label={cta.label} />
               </div>
             ) : null}
           </div>
