@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
+import { isHomePathname } from '@/i18n/isHomePathname'
 
 export type HeaderVisualStateProps = {
   sticky: boolean
@@ -42,7 +43,7 @@ export default function HeaderVisualState({ children }: HeaderVisualStateCompone
     return () => observer.disconnect()
   }, [pathname])
 
-  const isHomepage = pathname === '/' || /^\/(en|uk|ru|al|it)\/?$/.test(pathname)
+  const isHomepage = isHomePathname(pathname)
 
   return <>{children({ sticky, isHomepage, isCatalog })}</>
 }
