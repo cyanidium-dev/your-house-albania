@@ -3,11 +3,9 @@
  *
  * Direct-contact channels (Telegram, WhatsApp) used to live in their own
  * `siteSettings` string fields while everything else lived in `socialLinks[]`.
- * They are now entries in `socialLinks[]` carrying `channel: 'contact'`.
- *
- * The legacy fields are still read as a fallback so the footer renders
- * identically before the data migration runs; once it has, they can be deleted
- * from the schema and this fallback removed.
+ * They are entries in `socialLinks[]` now, carrying `channel: 'contact'`; the
+ * legacy fields were migrated and removed on 2026-08-22
+ * (`cms/scripts/migrateAuditRound1.ts`).
  */
 
 export type SocialLinkInput = {
@@ -19,11 +17,6 @@ export type SocialLinkInput = {
 export type FooterSocialLink = {
   platform: string;
   url: string;
-};
-
-export type LegacyContactUrls = {
-  telegramUrl?: string;
-  whatsappUrl?: string;
 };
 
 const CONTACT = "contact";
@@ -38,35 +31,23 @@ function clean(list: SocialLinkInput[] | undefined): SocialLinkInput[] {
 /**
  * Splits links into the footer's two columns.
  *
- * `channel === 'contact'` → Contacts column; anything else (including a missing
- * channel, which is the pre-migration state) → Social column.
- *
- * When no entry is marked as a contact channel, the legacy Telegram/WhatsApp
- * URLs are synthesised into the contacts list so the rendered output is
- * unchanged for a dataset that has not been migrated yet.
+ * `channel === 'contact'` → Contacts column; anything else, including a missing
+ * channel, → Social column. Treating a missing channel as social matches the
+ * schema default, so a link added without touching the field lands where an
+ * editor would expect.
  */
 export function partitionSocialLinks(
   links: SocialLinkInput[] | undefined,
-  legacy: LegacyContactUrls = {},
 ): { contact: FooterSocialLink[]; social: FooterSocialLink[] } {
   const all = clean(links);
-
-  const contact: FooterSocialLink[] = all
-    .filter((l) => l.channel === CONTACT)
-    .map((l) => ({ platform: l.platform.trim(), url: l.url.trim() }));
-
-  const social: FooterSocialLink[] = all
-    .filter((l) => l.channel !== CONTACT)
-    .map((l) => ({ platform: l.platform.trim(), url: l.url.trim() }));
-
-  if (contact.length === 0) {
-    const telegram = legacy.telegramUrl?.trim();
-    const whatsapp = legacy.whatsappUrl?.trim();
-    if (telegram) contact.push({ platform: "Telegram", url: telegram });
-    if (whatsapp) contact.push({ platform: "WhatsApp", url: whatsapp });
-  }
-
-  return { contact, social };
+  const map = (l: SocialLinkInput): FooterSocialLink => ({
+    platform: l.platform.trim(),
+    url: l.url.trim(),
+  });
+  return {
+    contact: all.filter((l) => l.channel === CONTACT).map(map),
+    social: all.filter((l) => l.channel !== CONTACT).map(map),
+  };
 }
 
 /** Translation key for a contact-channel row, e.g. `Telegram` → `contacts.telegram`. */

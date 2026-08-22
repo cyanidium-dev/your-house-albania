@@ -183,14 +183,8 @@ export default function Footer({
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
 
   // Contacts and Social columns come from one source: socialLinks[].channel.
-  // The legacy footerTelegramUrl / footerWhatsappUrl fields are still honoured
-  // until the data migration runs, so the rendered output is unchanged.
   const { contact: contactLinks, social: socialColumnLinks } = partitionSocialLinks(
-    siteSettings?.socialLinks,
-    {
-      telegramUrl: siteSettings?.footerTelegramUrl,
-      whatsappUrl: siteSettings?.footerWhatsappUrl,
-    }
+    siteSettings?.socialLinks
   );
 
   return (

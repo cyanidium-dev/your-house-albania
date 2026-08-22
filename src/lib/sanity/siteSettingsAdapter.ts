@@ -16,8 +16,6 @@ export type ResolvedSiteSettings = {
   companyAddress: string;
   /** Localized short footer intro; empty if unset in CMS. */
   footerIntro: string;
-  footerTelegramUrl: string;
-  footerWhatsappUrl: string;
   footerApp: ResolvedFooterApp;
   socialLinks: { platform: string; url: string; channel?: string }[];
   policyLinks: { href: string; label: string }[];
@@ -31,8 +29,6 @@ type RawSiteSettings = {
   contactEmail?: string;
   companyAddress?: string;
   footerIntro?: Record<string, string> | string;
-  footerTelegramUrl?: string;
-  footerWhatsappUrl?: string;
   footerApp?: {
     enabled?: boolean;
     iosUrl?: string;
@@ -90,8 +86,6 @@ export function mapSiteSettingsToResolved(
       email: DEFAULT_EMAIL,
       companyAddress: "",
       footerIntro: "",
-      footerTelegramUrl: "",
-      footerWhatsappUrl: "",
       footerApp: { enabled: false, iosUrl: "", androidUrl: "" },
       socialLinks: [],
       policyLinks: [],
@@ -122,8 +116,6 @@ export function mapSiteSettingsToResolved(
     email: raw.contactEmail ?? DEFAULT_EMAIL,
     companyAddress: raw.companyAddress ?? "",
     footerIntro,
-    footerTelegramUrl: trimUrl(raw.footerTelegramUrl),
-    footerWhatsappUrl: trimUrl(raw.footerWhatsappUrl),
     footerApp: mapFooterApp(raw.footerApp),
     socialLinks,
     policyLinks,

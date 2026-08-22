@@ -15,8 +15,6 @@ const cachedFetchSiteSettings = sanityCache(
       contactsManagerPhoto { alt, asset-> { url } },
       companyAddress,
       footerIntro,
-      footerTelegramUrl,
-      footerWhatsappUrl,
       // Schema stores appStoreUrl / googlePlayUrl; the frontend has always read
       // iosUrl / androidUrl, so alias them here rather than rename either side.
       footerApp {

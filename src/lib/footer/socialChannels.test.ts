@@ -7,19 +7,7 @@ const SOCIALS = [
 ]
 
 describe('partitionSocialLinks', () => {
-  it('reproduces the pre-migration footer from legacy fields alone', () => {
-    const { contact, social } = partitionSocialLinks(SOCIALS, {
-      telegramUrl: 'https://t.me/domlivobot',
-      whatsappUrl: 'https://wa.me/domlivobot',
-    })
-    expect(contact).toEqual([
-      { platform: 'Telegram', url: 'https://t.me/domlivobot' },
-      { platform: 'WhatsApp', url: 'https://wa.me/domlivobot' },
-    ])
-    expect(social).toEqual(SOCIALS)
-  })
-
-  it('produces the same rows from migrated data, with no legacy input', () => {
+  it('splits contact and social channels', () => {
     const { contact, social } = partitionSocialLinks([
       ...SOCIALS.map((s) => ({ ...s, channel: 'social' })),
       { platform: 'Telegram', url: 'https://t.me/domlivobot', channel: 'contact' },
@@ -32,15 +20,7 @@ describe('partitionSocialLinks', () => {
     expect(social).toEqual(SOCIALS)
   })
 
-  it('ignores legacy values once contact entries exist (no duplicates mid-migration)', () => {
-    const { contact } = partitionSocialLinks(
-      [{ platform: 'Telegram', url: 'https://t.me/new', channel: 'contact' }],
-      { telegramUrl: 'https://t.me/old', whatsappUrl: 'https://wa.me/old' },
-    )
-    expect(contact).toEqual([{ platform: 'Telegram', url: 'https://t.me/new' }])
-  })
-
-  it('treats a missing channel as social (pre-migration default)', () => {
+  it('treats a missing channel as social (schema default)', () => {
     const { contact, social } = partitionSocialLinks([{ platform: 'Youtube', url: 'https://youtube.com' }])
     expect(contact).toEqual([])
     expect(social).toEqual([{ platform: 'Youtube', url: 'https://youtube.com' }])
