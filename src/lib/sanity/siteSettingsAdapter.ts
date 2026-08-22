@@ -1,3 +1,4 @@
+import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { resolveLocalizedString } from "./localized";
 
 export type ResolvedFooterApp = {
@@ -44,12 +45,23 @@ type RawSiteSettings = {
   footerCodesiteUrl?: string;
   footerWebbondUrl?: string;
   socialLinks?: { _key?: string; platform?: string; url?: string }[];
-  policyLinks?: {
-    _key?: string;
-    href?: string;
-    label?: Record<string, string>;
-  }[];
+  policyLinks?: RawPolicyLink[];
 };
+
+export type RawPolicyLink = { _key?: string; href?: string; label?: Record<string, string> };
+
+/** Trim + locale-resolve CMS policy links; drop any with empty href or label. */
+export function normalizePolicyLinks(
+  raw: RawPolicyLink[] | null | undefined,
+  locale: string,
+): { href: string; label: string }[] {
+  return (raw ?? []).flatMap((p) => {
+    const href = typeof p?.href === "string" ? p.href.trim() : "";
+    const label = resolveLocalizedString(p?.label as never, locale)?.trim() || "";
+    if (!href || !label) return [];
+    return [{ href: resolveLocaleHref(href, locale), label }];
+  });
+}
 
 const DEFAULT_PHONE = "";
 const DEFAULT_EMAIL = "";
@@ -108,13 +120,7 @@ export function mapSiteSettingsToResolved(
       url: s.url ?? "#",
     }));
 
-  const policyLinks = (raw.policyLinks ?? [])
-    .filter((p) => p?.href)
-    .map((p) => ({
-      href: p.href ?? "",
-      label: resolveLocalizedString(p.label as never, locale) || "",
-    }))
-    .filter((p) => p.href && p.label);
+  const policyLinks = normalizePolicyLinks(raw.policyLinks, locale);
 
   return {
     logoUrl: (raw.logo as { asset?: { url?: string } })?.asset?.url ?? "",

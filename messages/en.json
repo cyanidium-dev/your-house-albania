@@ -416,6 +416,8 @@
       "anyDistrict": "Any district",
       "amenities": "Amenities",
       "amenitiesSelected": "{count} selected",
+      "clear": "Clear",
+      "done": "Done",
       "sortBy": "Sort by",
       "sortNewest": "Newest",
       "sortPriceAsc": "Price (low to high)",

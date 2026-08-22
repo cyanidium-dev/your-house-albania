@@ -416,6 +416,8 @@
       "anyDistrict": "Любой район",
       "amenities": "Удобства",
       "amenitiesSelected": "{count} выбрано",
+      "clear": "Очистить",
+      "done": "Готово",
       "sortBy": "Сортировать",
       "sortNewest": "Сначала новые",
       "sortPriceAsc": "Цена (по возрастанию)",

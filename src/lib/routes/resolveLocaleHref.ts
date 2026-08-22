@@ -25,3 +25,19 @@ export function resolveLocaleHref(href: string, locale: string): string {
   }
   return `/${locale}/${h}`
 }
+
+/**
+ * One rule for every CMS-sourced CTA: trim label and href; if either is empty
+ * render nothing; otherwise resolve the href with `resolveLocaleHref`.
+ * Returns `null` when the CTA should not render.
+ */
+export function resolveCta(
+  label: unknown,
+  href: unknown,
+  locale: string,
+): { label: string; href: string } | null {
+  const l = typeof label === 'string' ? label.trim() : ''
+  const h = typeof href === 'string' ? href.trim() : ''
+  if (!l || !h) return null
+  return { label: l, href: resolveLocaleHref(h, locale) }
+}

@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { MarketingBenefitItem, MarketingHighlightCard } from "./types";
 import {
@@ -50,7 +50,7 @@ export function MarketingIntro({
   theme,
   align = "start",
 }: IntroProps) {
-  const href = resolveLocaleHref(ctaHref ?? "", locale);
+  const primaryCta = resolveCta(ctaLabel, ctaHref, locale);
   const isDark = theme === "dark";
   const textAlign = align === "center" ? "text-center" : "";
   const flexAlign = align === "center" ? "items-center" : "";
@@ -64,8 +64,7 @@ export function MarketingIntro({
   const useRichBullets = !useCards && rich.length > 0;
   const showBullets = !useCards && !useRichBullets && bullets.length > 0;
 
-  const showSecondaryCta = Boolean(secondaryCtaLabel?.trim() && secondaryCtaHref?.trim());
-  const secondaryHref = showSecondaryCta ? resolveLocaleHref(secondaryCtaHref!, locale) : "";
+  const secondaryCta = resolveCta(secondaryCtaLabel, secondaryCtaHref, locale);
   const showTrustStrip = Boolean(trustStripText?.trim());
 
   return (
@@ -144,16 +143,16 @@ export function MarketingIntro({
           {supportingText}
         </p>
       ) : null}
-      {ctaLabel && ctaHref ? (
+      {primaryCta ? (
         <div className={`flex flex-wrap items-center gap-3 ${align === "center" ? "justify-center" : ""}`}>
           <SectionCtaLink
-            href={href}
-            label={ctaLabel}
+            href={primaryCta.href}
+            label={primaryCta.label}
             variant={isDark ? "light" : "primary"}
           />
-          {showSecondaryCta ? (
+          {secondaryCta ? (
             <a
-              href={secondaryHref}
+              href={secondaryCta.href}
               className={
                 "inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold transition-colors " +
                 (isDark
@@ -161,7 +160,7 @@ export function MarketingIntro({
                   : "text-dark/70 hover:text-dark dark:text-white/80 dark:hover:text-white")
               }
             >
-              {secondaryCtaLabel}
+              {secondaryCta.label}
               <Icon icon="ph:arrow-right" width={14} height={14} aria-hidden />
             </a>
           ) : null}
