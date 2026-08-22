@@ -5,7 +5,6 @@ import type { SectionHandler, LinkedZone } from './handlers/types'
 import { heroSectionHandler } from './handlers/heroSection'
 import { propertyCarouselSectionHandler } from './handlers/propertyCarouselSection'
 import { locationCarouselSectionHandler } from './handlers/locationCarouselSection'
-import { landingCarouselSectionHandler } from './handlers/landingCarouselSection'
 import { propertyTypesSectionHandler } from './handlers/propertyTypesSection'
 import { seoTextSectionHandler } from './handlers/seoTextSection'
 import { faqSectionHandler } from './handlers/faqSection'
@@ -32,7 +31,6 @@ const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
   propertyCarouselSection: propertyCarouselSectionHandler,
   locationCarouselSection: locationCarouselSectionHandler,
-  landingCarouselSection: landingCarouselSectionHandler,
   propertyTypesSection: propertyTypesSectionHandler,
   seoTextSection: seoTextSectionHandler,
   faqSection: faqSectionHandler,

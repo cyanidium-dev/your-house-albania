@@ -35,7 +35,6 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
     { path: ['cta', 'label'], label: 'Primary button', kind: 'text' },
     { path: ['secondaryCta', 'label'], label: 'Secondary button', kind: 'text' },
-    { path: ['seoTextUnderCta'], label: 'Line under buttons', kind: 'text' },
   ],
   propertyCarouselSection: [
     { path: ['shortLine'], label: 'Eyebrow', kind: 'text' },
@@ -44,11 +43,6 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
   ],
   locationCarouselSection: [
-    { path: ['title'], label: 'Title', kind: 'textarea' },
-    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
-    { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
-  ],
-  landingCarouselSection: [
     { path: ['title'], label: 'Title', kind: 'textarea' },
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
     { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
