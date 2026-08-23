@@ -76,6 +76,8 @@ export type PropertyDetailsFields = {
   location: string;
   rate: string;
   beds: number;
+  /** Total rooms — null on listings that predate the field, so the tile is simply absent. */
+  rooms: number | null;
   baths: number;
   area: number;
   description: string;
@@ -88,6 +90,7 @@ type SanityPropertyForDetails = {
   currency?: string;
   area?: number;
   bedrooms?: number;
+  rooms?: number;
   bathrooms?: number;
   city?: { title?: unknown };
   district?: { title?: unknown };
@@ -128,7 +131,17 @@ export function mapSanityPropertyToDetailsFields(
   locale: string
 ): PropertyDetailsFields {
   if (!p) {
-    return { title: '', location: '', rate: '', beds: 0, baths: 0, area: 0, description: '', dealTypeLabel: 'Price' };
+    return {
+      title: '',
+      location: '',
+      rate: '',
+      beds: 0,
+      rooms: null,
+      baths: 0,
+      area: 0,
+      description: '',
+      dealTypeLabel: 'Price',
+    };
   }
   const cityTitle = resolveLocalizedString(p.city?.title as never, locale);
   const districtTitle = resolveLocalizedString(p.district?.title as never, locale);
@@ -143,6 +156,9 @@ export function mapSanityPropertyToDetailsFields(
     location,
     rate,
     beds: p.bedrooms ?? 0,
+    // Null, not 0: most of the catalogue predates the field, and the fact row
+    // leaves the tile out rather than claiming a flat has no rooms.
+    rooms: p.rooms ?? null,
     baths: p.bathrooms ?? 0,
     area: p.area ?? 0,
     description: desc || '',
@@ -295,6 +311,7 @@ type SanityProperty = {
   currency?: string;
   area?: number;
   bedrooms?: number;
+  rooms?: number;
   bathrooms?: number;
   status?: string;
   promoted?: boolean;
@@ -407,6 +424,7 @@ export function mapCatalogPropertyToCard(
       currency: p.currency,
       area: p.area,
       bedrooms: p.bedrooms,
+      rooms: p.rooms,
       bathrooms: p.bathrooms,
       status: p.status,
       promoted: p.promoted,

@@ -193,6 +193,8 @@
     "propertyCard": {
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
+      "roomsCount": "{count, plural, one {# Locale} other {# Locali}}",
+
       "bedroomsCount": "{count, plural, one {# Camera} other {# Camere}}",
       "bathroomsCount": "{count, plural, one {# Bagno} other {# Bagni}}",
       "areaUnit": "m²",
