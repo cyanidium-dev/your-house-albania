@@ -194,7 +194,6 @@
       "bedrooms": "Спальні",
       "bathrooms": "Ванні",
       "roomsCount": "{count, plural, one {# кімната} few {# кімнати} many {# кімнат} other {# кімнат}}",
-
       "bedroomsCount": "{count, plural, one {# спальня} few {# спальні} many {# спалень} other {# спалень}}",
       "bathroomsCount": "{count, plural, one {# ванна} few {# ванни} many {# ванних} other {# ванних}}",
       "areaUnit": "м²",
@@ -552,5 +551,15 @@
     "source": "Файл-джерело",
     "empty": "Авторство зображень ще не внесено.",
     "breadcrumbHome": "Головна"
+  },
+  "Blog": {
+    "tableOfContents": "Зміст",
+    "keyFacts": "Коротко",
+    "faqTitle": "Часті запитання",
+    "sourcesTitle": "Джерела",
+    "zoneStatsTitle": "Дані по ринку",
+    "trackerLastChecked": "Перевірено",
+    "authorPostsTitle": "Статті цього автора",
+    "authorNoPosts": "Опублікованих статей поки немає."
   }
 }

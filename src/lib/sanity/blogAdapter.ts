@@ -42,6 +42,14 @@ export type BlogDetailData = {
   contentBlocks: unknown[];
   relatedPosts: BlogRelatedPost[];
   properties: PropertyHomes[];
+  /** ТЗ-13. Raw localized arrays — the components resolve their own locale. */
+  keyFacts: unknown[];
+  faq: unknown[];
+  sources: unknown[];
+  /** Slug of the linked blogAuthor, when the post has a reference rather than
+   *  the legacy inline author fields. Drives the byline link and author.url. */
+  authorSlug: string | null;
+  updatedAt: string | null;
 };
 
 /** Raw Sanity blog post shape for listing. */
@@ -249,5 +257,13 @@ export function mapSanityBlogPostToDetail(
     contentBlocks,
     relatedPosts,
     properties,
+    keyFacts: Array.isArray((post as {keyFacts?: unknown[]}).keyFacts) ? (post as {keyFacts: unknown[]}).keyFacts : [],
+    faq: Array.isArray((post as {faq?: unknown[]}).faq) ? (post as {faq: unknown[]}).faq : [],
+    sources: Array.isArray((post as {sources?: unknown[]}).sources) ? (post as {sources: unknown[]}).sources : [],
+    authorSlug:
+      typeof (post as {author?: {slug?: unknown}}).author?.slug === 'string'
+        ? ((post as {author: {slug: string}}).author.slug)
+        : null,
+    updatedAt: typeof (post as {_updatedAt?: unknown})._updatedAt === 'string' ? (post as {_updatedAt: string})._updatedAt : null,
   };
 }

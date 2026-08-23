@@ -53,6 +53,19 @@ const blogDetailContentBlockProjection = `{
     "district": district->{_id,title,"slug":slug.current,"citySlug":city->slug.current},
     "type": type->{_id,title,"slug":slug.current}
   }, null),
+  "zone": select(_type == "zoneStatsEmbed" => zone->{
+    title,
+    "slug": slug.current,
+    isPublished,
+    "citySlug": coalesce(city->slug.current, slug.current),
+    "countrySlug": coalesce(country->slug.current, city->country->slug.current),
+    "metrics": *[_type == "zoneMetrics" && references(^._id)] | order(coalesce(period, "") desc)[0]{
+      priceNewMin, priceNewMax, priceResaleMin, priceResaleMax, grossYield, period
+    }
+  }, null),
+  "tracker": select(_type == "trackerEmbed" => tracker->{
+    title, statusLabel, statusSummary, currentStatus, lastCheckedAt, isPublished
+  }, null),
   asset->{url}
 }`;
 
@@ -246,6 +259,10 @@ export async function fetchBlogPostBySlug(slug: string): Promise<unknown | null>
       asset->{url}
     },
     seo,
+    _updatedAt,
+    keyFacts,
+    faq,
+    sources,
     "relatedPosts": relatedPosts[]->{
       _id,
       "slug": slug.current,

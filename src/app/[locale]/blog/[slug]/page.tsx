@@ -19,6 +19,10 @@ import {
 } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { BlogArticleContent } from "@/components/Blog/BlogArticleContent";
+import { BlogTableOfContents } from "@/components/Blog/BlogTableOfContents";
+import { BlogKeyFacts } from "@/components/Blog/BlogKeyFacts";
+import { BlogFaq } from "@/components/Blog/BlogFaq";
+import { BlogSources } from "@/components/Blog/BlogSources";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
 import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
@@ -276,7 +280,11 @@ export default async function Post({ params }: Props) {
             }
           >
             <div className="min-w-0">
+              <BlogTableOfContents content={detail.contentBlocks} />
+              <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
+              <BlogFaq faq={detail.faq} locale={locale} />
+              <BlogSources sources={detail.sources} locale={locale} />
             </div>
             {(finalRelatedPosts.length > 0 || detail.properties.length > 0) && (
               <aside className="space-y-10">

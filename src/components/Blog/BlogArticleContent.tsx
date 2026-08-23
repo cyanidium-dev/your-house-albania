@@ -8,6 +8,9 @@ import PropertyCard from "@/components/shared/property/PropertyCard";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { mapBlogPropertyEmbedToCard } from "@/lib/sanity/blogAdapter";
 import { resolveLocalizedString, resolveLocalizedContent } from "@/lib/sanity/localized";
+import { nextHeadingId } from "@/lib/blog/headingAnchors";
+import { ZoneStatsEmbed, type ZoneStatsEmbedValue } from "./blocks/ZoneStatsEmbed";
+import { TrackerEmbed, type TrackerEmbedValue } from "./blocks/TrackerEmbed";
 import {
   Accordion,
   AccordionContent,
@@ -90,23 +93,49 @@ function createSharedPortableTextComponents(
   };
 }
 
+function blockPlainText(value: unknown): string {
+  const children = (value as { children?: unknown } | null)?.children;
+  if (!Array.isArray(children)) return "";
+  return children
+    .map((c) => (typeof (c as { text?: unknown })?.text === "string" ? (c as { text: string }).text : ""))
+    .join("")
+    .trim();
+}
+
 function createBlogComponents(
   locale: string,
   learnMoreFallback: string
 ): PortableTextComponents {
+  /**
+   * Heading ids must match the anchors `collectHeadings` produced for the
+   * table of contents, including the -2/-3 suffixes on repeated headings. Both
+   * sides count through the blocks in document order using the same helper, so
+   * a duplicate heading cannot make the two disagree.
+   *
+   * Note the levels shift down by one: the page's <h1> is the article title,
+   * so Portable Text h2 renders as <h3>.
+   */
+  const seenHeadings = new Map<string, number>();
+
   const blockComponents: PortableTextComponents["block"] = {
     h1: ({ children }) => (
       <h2 className="text-dark dark:text-white text-2xl font-semibold mt-10 first:mt-0">
         {children}
       </h2>
     ),
-    h2: ({ children }) => (
-      <h3 className="text-dark dark:text-white text-xl font-medium mt-8 first:mt-0">
+    h2: ({ children, value }) => (
+      <h3
+        id={nextHeadingId(blockPlainText(value), seenHeadings) || undefined}
+        className="text-dark dark:text-white text-xl font-medium mt-8 first:mt-0 scroll-mt-28"
+      >
         {children}
       </h3>
     ),
-    h3: ({ children }) => (
-      <h4 className="text-dark dark:text-white text-lg font-medium mt-6 first:mt-0">
+    h3: ({ children, value }) => (
+      <h4
+        id={nextHeadingId(blockPlainText(value), seenHeadings) || undefined}
+        className="text-dark dark:text-white text-lg font-medium mt-6 first:mt-0 scroll-mt-28"
+      >
         {children}
       </h4>
     ),
@@ -251,6 +280,12 @@ function createBlogComponents(
           </div>
         );
       },
+      zoneStatsEmbed: ({ value }) => (
+        <ZoneStatsEmbed value={value as ZoneStatsEmbedValue} locale={locale} />
+      ),
+      trackerEmbed: ({ value }) => (
+        <TrackerEmbed value={value as TrackerEmbedValue} locale={locale} />
+      ),
       blogFaqBlock: ({ value }) => {
         const v = value as {
           items?: Array<{

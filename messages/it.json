@@ -194,7 +194,6 @@
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
       "roomsCount": "{count, plural, one {# Locale} other {# Locali}}",
-
       "bedroomsCount": "{count, plural, one {# Camera} other {# Camere}}",
       "bathroomsCount": "{count, plural, one {# Bagno} other {# Bagni}}",
       "areaUnit": "m²",
@@ -552,5 +551,15 @@
     "source": "File originale",
     "empty": "Nessun credito fotografico registrato.",
     "breadcrumbHome": "Home"
+  },
+  "Blog": {
+    "tableOfContents": "Indice",
+    "keyFacts": "In breve",
+    "faqTitle": "Domande frequenti",
+    "sourcesTitle": "Fonti",
+    "zoneStatsTitle": "Dati di mercato",
+    "trackerLastChecked": "Verificato",
+    "authorPostsTitle": "Articoli di questo autore",
+    "authorNoPosts": "Nessun articolo pubblicato al momento."
   }
 }

@@ -194,7 +194,6 @@
       "bedrooms": "Спальни",
       "bathrooms": "Санузлы",
       "roomsCount": "{count, plural, one {# комната} few {# комнаты} many {# комнат} other {# комнат}}",
-
       "bedroomsCount": "{count, plural, one {# спальня} few {# спальни} many {# спален} other {# спален}}",
       "bathroomsCount": "{count, plural, one {# ванная} few {# ванные} many {# ванных} other {# ванных}}",
       "areaUnit": "м²",
@@ -552,5 +551,15 @@
     "source": "Файл-источник",
     "empty": "Авторство изображений пока не внесено.",
     "breadcrumbHome": "Главная"
+  },
+  "Blog": {
+    "tableOfContents": "Содержание",
+    "keyFacts": "Коротко",
+    "faqTitle": "Частые вопросы",
+    "sourcesTitle": "Источники",
+    "zoneStatsTitle": "Данные по рынку",
+    "trackerLastChecked": "Проверено",
+    "authorPostsTitle": "Статьи этого автора",
+    "authorNoPosts": "Опубликованных статей пока нет."
   }
 }
