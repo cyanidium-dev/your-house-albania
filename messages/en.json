@@ -565,5 +565,9 @@
     "zoneStatsNew": "New build",
     "zoneStatsResale": "Resale",
     "zoneStatsYield": "Gross yield"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "month"
   }
 }

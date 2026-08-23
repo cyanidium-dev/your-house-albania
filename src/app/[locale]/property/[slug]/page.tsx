@@ -14,6 +14,8 @@ import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
+import { composePropertyMetaTitle, truncateMetaDescription } from '@/lib/seo/propertyMeta';
+import { resolveLocalizedString } from '@/lib/sanity/localized';
 import { getSiteBaseUrl } from '@/lib/siteUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
@@ -57,7 +59,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     | undefined;
 
   const itemTitle = fields.title || slug;
-  const itemDescription = fields.description?.trim() || undefined;
+  // Cut on a word boundary rather than letting Google truncate mid-word: 29 of
+  // 35 descriptions run past the SERP limit.
+  const itemDescription = truncateMetaDescription(fields.description) || undefined;
+
+  // Composed from the property's own fields, never stored — see propertyMeta.
+  const raw = sanityProperty as {
+    price?: number;
+    area?: number;
+    status?: string;
+    type?: { title?: unknown };
+    city?: { title?: unknown };
+    district?: { title?: unknown };
+  };
+  const tMeta = await getTranslations({ locale, namespace: 'PropertyMeta' });
+  const composedTitle = composePropertyMetaTitle({
+    typeLabel: resolveLocalizedString(raw?.type?.title as never, locale) || undefined,
+    area: raw?.area,
+    district: resolveLocalizedString(raw?.district?.title as never, locale) || undefined,
+    city: resolveLocalizedString(raw?.city?.title as never, locale) || undefined,
+    price: raw?.price,
+    status: raw?.status,
+    locale,
+    areaUnit: tMeta('areaUnit'),
+    perMonth: tMeta('perMonth'),
+  });
 
   const coverImageUrl = (sanityProperty as { gallery?: Array<{ asset?: { url?: string } }> })?.gallery?.[0]?.asset?.url;
 
@@ -69,6 +95,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     {
       itemTitle,
+      composedTitle,
       itemDescription,
       coverImageUrl: coverImageUrl ?? undefined,
       propertyPath: { baseUrl, locale, slug },

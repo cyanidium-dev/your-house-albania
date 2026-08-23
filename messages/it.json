@@ -565,5 +565,9 @@
     "zoneStatsNew": "Nuove costruzioni",
     "zoneStatsResale": "Rivendita",
     "zoneStatsYield": "Rendimento lordo"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "mese"
   }
 }
