@@ -565,5 +565,9 @@
     "zoneStatsNew": "Новостройки",
     "zoneStatsResale": "Вторичка",
     "zoneStatsYield": "Валовая доходность"
+  },
+  "PropertyMeta": {
+    "areaUnit": "м²",
+    "perMonth": "мес."
   }
 }

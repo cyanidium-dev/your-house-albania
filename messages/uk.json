@@ -565,5 +565,9 @@
     "zoneStatsNew": "Новобудови",
     "zoneStatsResale": "Вторинний ринок",
     "zoneStatsYield": "Валова дохідність"
+  },
+  "PropertyMeta": {
+    "areaUnit": "м²",
+    "perMonth": "міс."
   }
 }

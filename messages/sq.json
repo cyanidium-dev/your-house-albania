@@ -565,5 +565,9 @@
     "zoneStatsNew": "Ndërtim i ri",
     "zoneStatsResale": "Rishitje",
     "zoneStatsYield": "Yield bruto"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "muaj"
   }
 }

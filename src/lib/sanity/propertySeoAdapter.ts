@@ -27,6 +27,13 @@ type SiteDefaultSeo = {
 export type PropertyMetadataOptions = {
   /** Localized property title (maps to `title` field). */
   itemTitle: string;
+  /**
+   * Composed from the property's own fields — type, size, place, price.
+   * Sits between `seo.metaTitle` and `itemTitle`: a hand-written metaTitle
+   * still wins, but the composed value beats a title that names no location,
+   * which 22 of 35 listings did.
+   */
+  composedTitle?: string | null;
   /** Localized property body description; omit if empty. */
   itemDescription?: string;
   coverImageUrl?: string;
@@ -49,12 +56,12 @@ export function buildPropertyMetadata(
   locale: string,
   options: PropertyMetadataOptions
 ): Metadata {
-  const { itemTitle, itemDescription, coverImageUrl, propertyPath } = options;
+  const { itemTitle, composedTitle, itemDescription, coverImageUrl, propertyPath } = options;
 
   const title = resolveChainedTitle(locale, {
     ogTitle: propertySeo?.ogTitle,
     metaTitle: propertySeo?.metaTitle,
-    itemTitle,
+    itemTitle: composedTitle || itemTitle,
     siteMetaTitle: siteDefaultSeo?.metaTitle,
   });
 
