@@ -424,7 +424,6 @@ export function mapCatalogPropertyToCard(
       currency: p.currency,
       area: p.area,
       bedrooms: p.bedrooms,
-      rooms: p.rooms,
       bathrooms: p.bathrooms,
       status: p.status,
       promoted: p.promoted,

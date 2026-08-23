@@ -38,7 +38,6 @@ export type CatalogProperty = {
   currency?: string;
   area?: number;
   bedrooms?: number;
-  rooms?: number;
   bathrooms?: number;
   status?: string;
   promoted?: boolean;
