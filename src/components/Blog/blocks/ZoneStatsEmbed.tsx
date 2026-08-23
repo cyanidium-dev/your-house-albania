@@ -10,43 +10,57 @@ export type ZoneStatsEmbedValue = {
     citySlug?: string;
     countrySlug?: string;
     metrics?: {
-      priceNewMin?: number;
-      priceNewMax?: number;
-      priceResaleMin?: number;
-      priceResaleMax?: number;
-      grossYield?: number;
-      period?: string;
+      priceAllMin?: number | null;
+      priceAllMax?: number | null;
+      priceNewMin?: number | null;
+      priceNewMax?: number | null;
+      priceResaleMin?: number | null;
+      priceResaleMax?: number | null;
+      grossYieldLtrPct?: number | null;
+      periodLabel?: string | null;
+      basis?: string | null;
+      confidence?: string | null;
     } | null;
   } | null;
 };
 
-function band(min?: number, max?: number): string | null {
+function band(min?: number | null, max?: number | null): string | null {
   if (typeof min !== "number" || typeof max !== "number") return null;
   return `€${min.toLocaleString("en-US")}–${max.toLocaleString("en-US")}/m²`;
 }
 
 /**
- * Inline card showing a zone's price band and yield, read from `zoneMetrics`
- * at render time rather than copied into the article.
+ * Inline card showing a zone's price bands, read from `zoneMetrics` at render
+ * time rather than copied into the article. A tracker of numbers that can move
+ * has no business being restated in prose.
  *
  * Renders nothing when the reference is missing, the zone is unpublished, or
- * there are no metrics — a dangling reference must never reach a reader as an
- * error, and an empty card is worse than no card.
+ * the record has no band at all — a dangling reference must never reach a
+ * reader as an error, and an empty card is worse than no card.
+ *
+ * Field coverage across the 60 live records, measured 2026-08-23: `priceAll`
+ * 36, `priceNew` 18, `priceResale` 14, `grossYieldLtrPct` **0**. The yield row
+ * is kept because the field exists and will fill, but nothing depends on it.
  */
 export function ZoneStatsEmbed({ value, locale }: { value: ZoneStatsEmbedValue; locale: string }) {
   const t = useTranslations("Blog");
   const zone = value?.zone;
   if (!zone || zone.isPublished === false) return null;
 
-  const metrics = zone.metrics;
-  if (!metrics) return null;
+  const m = zone.metrics;
+  if (!m) return null;
 
-  const rows = [
-    band(metrics.priceNewMin, metrics.priceNewMax),
-    band(metrics.priceResaleMin, metrics.priceResaleMax),
-  ].filter((r): r is string => Boolean(r));
-  const yieldPct = typeof metrics.grossYield === "number" ? `${metrics.grossYield}%` : null;
-  if (rows.length === 0 && !yieldPct) return null;
+  const rows: Array<{ label: string; value: string }> = [];
+  const all = band(m.priceAllMin, m.priceAllMax);
+  const fresh = band(m.priceNewMin, m.priceNewMax);
+  const resale = band(m.priceResaleMin, m.priceResaleMax);
+  if (all) rows.push({ label: t("zoneStatsAll"), value: all });
+  if (fresh) rows.push({ label: t("zoneStatsNew"), value: fresh });
+  if (resale) rows.push({ label: t("zoneStatsResale"), value: resale });
+  if (typeof m.grossYieldLtrPct === "number") {
+    rows.push({ label: t("zoneStatsYield"), value: `${m.grossYieldLtrPct}%` });
+  }
+  if (rows.length === 0) return null;
 
   const name = resolveLocalizedString(zone.title as never, locale) || zone.slug || "";
   const href =
@@ -54,12 +68,16 @@ export function ZoneStatsEmbed({ value, locale }: { value: ZoneStatsEmbedValue; 
       ? `/${locale}/${zone.countrySlug}/${zone.citySlug}/districts/${zone.slug}`
       : null;
 
+  // The AEO formula asks for the confidence level beside the number: an
+  // assistant quoting a range should be able to say how firm it is.
+  const footnote = [m.periodLabel, m.basis, m.confidence].filter(Boolean).join(" · ");
+
   return (
     <aside className="border border-dark/10 dark:border-white/20 rounded-lg p-5 my-8">
       <p className="text-dark/60 dark:text-white/60 text-xs uppercase tracking-wide mb-1">
         {t("zoneStatsTitle")}
       </p>
-      <p className="text-dark dark:text-white font-semibold mb-3">
+      <p className="text-dark dark:text-white font-semibold mb-4">
         {href ? (
           <Link href={href} className="hover:text-primary">
             {name}
@@ -68,20 +86,16 @@ export function ZoneStatsEmbed({ value, locale }: { value: ZoneStatsEmbedValue; 
           name
         )}
       </p>
-      <dl className="flex flex-wrap gap-x-8 gap-y-2">
-        {rows.map((r, i) => (
-          <div key={i}>
-            <dd className="text-dark dark:text-white text-base">{r}</dd>
+      <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+        {rows.map((r) => (
+          <div key={r.label}>
+            <dt className="text-dark/60 dark:text-white/60 text-xs">{r.label}</dt>
+            <dd className="text-dark dark:text-white text-base font-medium">{r.value}</dd>
           </div>
         ))}
-        {yieldPct && (
-          <div>
-            <dd className="text-dark dark:text-white text-base">{yieldPct}</dd>
-          </div>
-        )}
       </dl>
-      {metrics.period && (
-        <p className="text-dark/50 dark:text-white/50 text-xs mt-3">{metrics.period}</p>
+      {footnote && (
+        <p className="text-dark/50 dark:text-white/50 text-xs mt-4">{footnote}</p>
       )}
     </aside>
   );

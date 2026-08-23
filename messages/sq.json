@@ -560,6 +560,10 @@
     "zoneStatsTitle": "Të dhëna tregu",
     "trackerLastChecked": "Kontrolluar",
     "authorPostsTitle": "Artikuj nga ky autor",
-    "authorNoPosts": "Ende asnjë artikull i publikuar."
+    "authorNoPosts": "Ende asnjë artikull i publikuar.",
+    "zoneStatsAll": "Të gjitha",
+    "zoneStatsNew": "Ndërtim i ri",
+    "zoneStatsResale": "Rishitje",
+    "zoneStatsYield": "Yield bruto"
   }
 }

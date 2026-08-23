@@ -560,6 +560,10 @@
     "zoneStatsTitle": "Dati di mercato",
     "trackerLastChecked": "Verificato",
     "authorPostsTitle": "Articoli di questo autore",
-    "authorNoPosts": "Nessun articolo pubblicato al momento."
+    "authorNoPosts": "Nessun articolo pubblicato al momento.",
+    "zoneStatsAll": "Tutti gli immobili",
+    "zoneStatsNew": "Nuove costruzioni",
+    "zoneStatsResale": "Rivendita",
+    "zoneStatsYield": "Rendimento lordo"
   }
 }

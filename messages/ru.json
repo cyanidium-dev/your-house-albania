@@ -560,6 +560,10 @@
     "zoneStatsTitle": "Данные по рынку",
     "trackerLastChecked": "Проверено",
     "authorPostsTitle": "Статьи этого автора",
-    "authorNoPosts": "Опубликованных статей пока нет."
+    "authorNoPosts": "Опубликованных статей пока нет.",
+    "zoneStatsAll": "Вся недвижимость",
+    "zoneStatsNew": "Новостройки",
+    "zoneStatsResale": "Вторичка",
+    "zoneStatsYield": "Валовая доходность"
   }
 }

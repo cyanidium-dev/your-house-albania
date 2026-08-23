@@ -560,6 +560,10 @@
     "zoneStatsTitle": "Market data",
     "trackerLastChecked": "Checked",
     "authorPostsTitle": "Articles by this author",
-    "authorNoPosts": "No published articles yet."
+    "authorNoPosts": "No published articles yet.",
+    "zoneStatsAll": "All property",
+    "zoneStatsNew": "New build",
+    "zoneStatsResale": "Resale",
+    "zoneStatsYield": "Gross yield"
   }
 }

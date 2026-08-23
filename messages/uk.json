@@ -560,6 +560,10 @@
     "zoneStatsTitle": "Дані по ринку",
     "trackerLastChecked": "Перевірено",
     "authorPostsTitle": "Статті цього автора",
-    "authorNoPosts": "Опублікованих статей поки немає."
+    "authorNoPosts": "Опублікованих статей поки немає.",
+    "zoneStatsAll": "Уся нерухомість",
+    "zoneStatsNew": "Новобудови",
+    "zoneStatsResale": "Вторинний ринок",
+    "zoneStatsYield": "Валова дохідність"
   }
 }

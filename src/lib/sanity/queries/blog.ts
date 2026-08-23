@@ -59,8 +59,12 @@ const blogDetailContentBlockProjection = `{
     isPublished,
     "citySlug": coalesce(city->slug.current, slug.current),
     "countrySlug": coalesce(country->slug.current, city->country->slug.current),
-    "metrics": *[_type == "zoneMetrics" && references(^._id)] | order(coalesce(period, "") desc)[0]{
-      priceNewMin, priceNewMax, priceResaleMin, priceResaleMax, grossYield, period
+    "metrics": *[_type == "zoneMetrics" && references(^._id)] | order(coalesce(periodDate, "") desc)[0]{
+      priceAllMin, priceAllMax,
+      priceNewMin, priceNewMax,
+      priceResaleMin, priceResaleMax,
+      grossYieldLtrPct,
+      periodLabel, basis, confidence
     }
   }, null),
   "tracker": select(_type == "trackerEmbed" => tracker->{
