@@ -4,6 +4,7 @@ import { resolveLocalizedString } from "@/lib/sanity/localized";
 
 export type ZoneStatsEmbedValue = {
   zone?: {
+    _type?: string;
     title?: unknown;
     slug?: string;
     isPublished?: boolean;
@@ -63,10 +64,15 @@ export function ZoneStatsEmbed({ value, locale }: { value: ZoneStatsEmbedValue; 
   if (rows.length === 0) return null;
 
   const name = resolveLocalizedString(zone.title as never, locale) || zone.slug || "";
-  const href =
-    zone.countrySlug && zone.citySlug && zone.slug
-      ? `/${locale}/${zone.countrySlug}/${zone.citySlug}/districts/${zone.slug}`
-      : null;
+  // A city links to its own info page; a district sits under its city. Getting
+  // this wrong builds /albania/vlore/districts/vlore, which 404s.
+  const href = !zone.countrySlug || !zone.slug
+    ? null
+    : zone._type === "city"
+      ? `/${locale}/${zone.countrySlug}/${zone.slug}/info`
+      : zone.citySlug
+        ? `/${locale}/${zone.countrySlug}/${zone.citySlug}/districts/${zone.slug}`
+        : null;
 
   // The AEO formula asks for the confidence level beside the number: an
   // assistant quoting a range should be able to say how firm it is.

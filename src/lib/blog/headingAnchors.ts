@@ -16,7 +16,7 @@ export function anchorSlug(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export type Heading = { id: string; text: string; level: 2 | 3 };
+export type Heading = { id: string; text: string; level: 2 | 3; blockKey: string };
 
 function blockText(block: unknown): string {
   const children = (block as { children?: unknown } | null)?.children;
@@ -48,25 +48,18 @@ export function collectHeadings(blocks: unknown[]): Heading[] {
     const text = blockText(block);
     const base = anchorSlug(text);
     if (!base) continue;
+    // Without a _key the renderer has nothing to look the id up by, so the
+    // anchor would point at a heading that never carries it.
+    const blockKey = (block as { _key?: unknown } | null)?._key;
+    if (typeof blockKey !== "string" || !blockKey) continue;
     const n = (seen.get(base) ?? 0) + 1;
     seen.set(base, n);
     out.push({
       id: n === 1 ? base : `${base}-${n}`,
       text,
       level: style === "h2" ? 2 : 3,
+      blockKey,
     });
   }
   return out;
-}
-
-/**
- * The id for one heading, resolved against the same counter the TOC used.
- * The serializer calls this per block as it renders, passing the running map.
- */
-export function nextHeadingId(text: string, seen: Map<string, number>): string {
-  const base = anchorSlug(text);
-  if (!base) return "";
-  const n = (seen.get(base) ?? 0) + 1;
-  seen.set(base, n);
-  return n === 1 ? base : `${base}-${n}`;
 }

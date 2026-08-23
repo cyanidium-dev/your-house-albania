@@ -46,8 +46,8 @@ describe("collectHeadings", () => {
       h("h1", "Also skip"),
     ]);
     expect(out).toEqual([
-      { id: "one", text: "One", level: 2 },
-      { id: "two", text: "Two", level: 3 },
+      { id: "one", text: "One", level: 2, blockKey: "One" },
+      { id: "two", text: "Two", level: 3, blockKey: "Two" },
     ]);
   });
 
@@ -70,7 +70,15 @@ describe("collectHeadings", () => {
         { _type: "span", text: "spans", marks: [] },
       ],
     };
-    expect(collectHeadings([block])[0]).toEqual({ id: "two-spans", text: "Two spans", level: 2 });
+    expect(collectHeadings([block])[0]).toEqual({ id: "two-spans", text: "Two spans", level: 2, blockKey: "k" });
+  });
+
+  // Without a _key the renderer cannot look the id up, so the anchor would
+  // point at a heading that never carries it.
+  it("drops a heading with no _key", () => {
+    expect(
+      collectHeadings([{ _type: "block", style: "h2", children: [{ _type: "span", text: "No key", marks: [] }] }])
+    ).toEqual([]);
   });
 
   it("survives an empty or malformed list", () => {

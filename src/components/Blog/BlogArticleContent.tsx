@@ -8,7 +8,7 @@ import PropertyCard from "@/components/shared/property/PropertyCard";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { mapBlogPropertyEmbedToCard } from "@/lib/sanity/blogAdapter";
 import { resolveLocalizedString, resolveLocalizedContent } from "@/lib/sanity/localized";
-import { nextHeadingId } from "@/lib/blog/headingAnchors";
+import { collectHeadings } from "@/lib/blog/headingAnchors";
 import { ZoneStatsEmbed, type ZoneStatsEmbedValue } from "./blocks/ZoneStatsEmbed";
 import { TrackerEmbed, type TrackerEmbedValue } from "./blocks/TrackerEmbed";
 import {
@@ -93,30 +93,23 @@ function createSharedPortableTextComponents(
   };
 }
 
-function blockPlainText(value: unknown): string {
-  const children = (value as { children?: unknown } | null)?.children;
-  if (!Array.isArray(children)) return "";
-  return children
-    .map((c) => (typeof (c as { text?: unknown })?.text === "string" ? (c as { text: string }).text : ""))
-    .join("")
-    .trim();
-}
-
 function createBlogComponents(
   locale: string,
-  learnMoreFallback: string
-): PortableTextComponents {
+  learnMoreFallback: string,
   /**
-   * Heading ids must match the anchors `collectHeadings` produced for the
-   * table of contents, including the -2/-3 suffixes on repeated headings. Both
-   * sides count through the blocks in document order using the same helper, so
-   * a duplicate heading cannot make the two disagree.
+   * Heading id per block `_key`, precomputed by `collectHeadings` so the
+   * anchors here and in the table of contents cannot disagree — including the
+   * -2/-3 suffixes on repeated headings.
+   *
+   * A lookup rather than a running counter on purpose: a counter mutated
+   * during render depends on each block being rendered exactly once, in order,
+   * which is a promise React does not make.
    *
    * Note the levels shift down by one: the page's <h1> is the article title,
    * so Portable Text h2 renders as <h3>.
    */
-  const seenHeadings = new Map<string, number>();
-
+  headingIds: Map<string, string>
+): PortableTextComponents {
   const blockComponents: PortableTextComponents["block"] = {
     h1: ({ children }) => (
       <h2 className="text-dark dark:text-white text-2xl font-semibold mt-10 first:mt-0">
@@ -125,7 +118,7 @@ function createBlogComponents(
     ),
     h2: ({ children, value }) => (
       <h3
-        id={nextHeadingId(blockPlainText(value), seenHeadings) || undefined}
+        id={headingIds.get(String((value as { _key?: unknown })?._key ?? "")) || undefined}
         className="text-dark dark:text-white text-xl font-medium mt-8 first:mt-0 scroll-mt-28"
       >
         {children}
@@ -133,7 +126,7 @@ function createBlogComponents(
     ),
     h3: ({ children, value }) => (
       <h4
-        id={nextHeadingId(blockPlainText(value), seenHeadings) || undefined}
+        id={headingIds.get(String((value as { _key?: unknown })?._key ?? "")) || undefined}
         className="text-dark dark:text-white text-lg font-medium mt-6 first:mt-0 scroll-mt-28"
       >
         {children}
@@ -392,7 +385,10 @@ function createBlogComponents(
 export function BlogArticleContent({ content, locale }: BlogArticleContentProps) {
   const t = useTranslations("Shared.blogCta");
   if (!Array.isArray(content) || content.length === 0) return null;
-  const components = createBlogComponents(locale, t("learnMore"));
+  const headingIds = new Map(
+    collectHeadings(content).map((h) => [h.blockKey, h.id] as const)
+  );
+  const components = createBlogComponents(locale, t("learnMore"), headingIds);
   return (
     <div className="blog-details">
       <PortableText value={content as PortableTextBlock[]} components={components} />

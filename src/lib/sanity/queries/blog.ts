@@ -54,10 +54,13 @@ const blogDetailContentBlockProjection = `{
     "type": type->{_id,title,"slug":slug.current}
   }, null),
   "zone": select(_type == "zoneStatsEmbed" => zone->{
+    _type,
     title,
     "slug": slug.current,
     isPublished,
-    "citySlug": coalesce(city->slug.current, slug.current),
+    // A city document has no city field. Coalescing to its own slug would
+    // have built a district URL for it: /albania/vlore/districts/vlore.
+    "citySlug": city->slug.current,
     "countrySlug": coalesce(country->slug.current, city->country->slug.current),
     "metrics": *[_type == "zoneMetrics" && references(^._id)] | order(coalesce(periodDate, "") desc)[0]{
       priceAllMin, priceAllMax,
