@@ -193,6 +193,8 @@
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",
+      "roomsCount": "{count, plural, one {# dhomë} other {# dhoma}}",
+
       "bedroomsCount": "{count, plural, one {# dhomë gjumi} other {# dhoma gjumi}}",
       "bathroomsCount": "{count, plural, one {# banjë} other {# banja}}",
       "areaUnit": "m²",

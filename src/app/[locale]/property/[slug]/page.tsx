@@ -8,6 +8,7 @@ import { Icon } from '@iconify/react';
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
+import { PropertyFactRow } from '@/components/property/PropertyFactRow';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
 import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
@@ -110,6 +111,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const title = sanityFields.title;
   const location = sanityFields.location;
   const beds = sanityFields.beds;
+  const rooms = sanityFields.rooms;
   const baths = sanityFields.baths;
   const area = sanityFields.area;
   const yearBuilt = (sanityProperty as { yearBuilt?: number } | null)?.yearBuilt;
@@ -198,38 +200,15 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         />
                     </div>
                     <div className="lg:col-span-4 col-span-12">
-                        <div className='flex'>
-                            <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8'>
-                                <Icon icon={'solar:bed-linear'} width={20} height={20} />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {t('bedroomsCount', { count: beds })}
-                                </p>
-                            </div>
-                            <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 px-2 xs:px-4 mobile:px-8'>
-                                <Icon icon={'solar:bath-linear'} width={20} height={20} />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {t('bathroomsCount', { count: baths })}
-                                </p>
-                            </div>
-                            <div className={`flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8${yearBuilt ? ' border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8' : ''}`}>
-                                <Icon
-                                    icon={'lineicons:arrow-all-direction'}
-                                    width={20}
-                                    height={20}
-                                />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {area}{t('areaUnit')}
-                                </p>
-                            </div>
-                            {yearBuilt ? (
-                            <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
-                                <Icon icon={'solar:calendar-linear'} width={20} height={20} />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {tPropertyDetail('yearBuilt', { year: yearBuilt })}
-                                </p>
-                            </div>
-                            ) : null}
-                        </div>
+                        <PropertyFactRow
+                            facts={[
+                                ...(rooms ? [{ key: 'rooms', icon: 'solar:home-2-linear', label: t('roomsCount', { count: rooms }) }] : []),
+                                { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
+                                { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
+                                { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
+                                ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
+                            ]}
+                        />
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />
