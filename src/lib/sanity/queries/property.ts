@@ -20,6 +20,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     bathrooms,
     yearBuilt,
     status,
+    lifecycleStatus,
+    createdAt,
     promoted,
     promotionType,
     featuredOrder,
@@ -28,7 +30,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     "city": city-> {
       _id,
       title,
-      "slug": slug.current
+      "slug": slug.current,
+      "countryCode": country->code
     },
     "district": district-> {
       _id,
