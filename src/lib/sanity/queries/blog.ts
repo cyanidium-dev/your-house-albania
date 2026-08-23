@@ -53,6 +53,26 @@ const blogDetailContentBlockProjection = `{
     "district": district->{_id,title,"slug":slug.current,"citySlug":city->slug.current},
     "type": type->{_id,title,"slug":slug.current}
   }, null),
+  "zone": select(_type == "zoneStatsEmbed" => zone->{
+    _type,
+    title,
+    "slug": slug.current,
+    isPublished,
+    // A city document has no city field. Coalescing to its own slug would
+    // have built a district URL for it: /albania/vlore/districts/vlore.
+    "citySlug": city->slug.current,
+    "countrySlug": coalesce(country->slug.current, city->country->slug.current),
+    "metrics": *[_type == "zoneMetrics" && references(^._id)] | order(coalesce(periodDate, "") desc)[0]{
+      priceAllMin, priceAllMax,
+      priceNewMin, priceNewMax,
+      priceResaleMin, priceResaleMax,
+      grossYieldLtrPct,
+      periodLabel, basis, confidence
+    }
+  }, null),
+  "tracker": select(_type == "trackerEmbed" => tracker->{
+    title, statusLabel, statusSummary, currentStatus, lastCheckedAt, isPublished
+  }, null),
   asset->{url}
 }`;
 
@@ -246,6 +266,10 @@ export async function fetchBlogPostBySlug(slug: string): Promise<unknown | null>
       asset->{url}
     },
     seo,
+    _updatedAt,
+    keyFacts,
+    faq,
+    sources,
     "relatedPosts": relatedPosts[]->{
       _id,
       "slug": slug.current,
@@ -314,3 +338,68 @@ export async function fetchBlogCategories(): Promise<unknown[] | null> {
   }
 }
 
+
+// --- ТЗ-13: author pages ---
+
+/**
+ * One author plus the posts published under their byline.
+ * Returns null for an unknown slug so the route can 404 rather than render an
+ * empty page.
+ */
+export async function fetchBlogAuthorBySlug(slug: string): Promise<unknown | null> {
+  const client = getClient();
+  if (!client) return null;
+  const query = `*[_type == "blogAuthor" && slug.current == $slug][0]{
+    _id,
+    name,
+    "slug": slug.current,
+    active,
+    role,
+    bio,
+    "photo": photo{alt, asset->{url}},
+    socialLinks,
+    seo,
+    "posts": *[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() && author._ref == ^._id]
+      | order(publishedAt desc){
+      _id,
+      "slug": slug.current,
+      title,
+      excerpt,
+      publishedAt,
+      coverImage{alt,caption,asset->{url}},
+      "categories": categories[]->{_id,"slug":slug.current,title},
+      "author": author->{_id,name,"photo":photo{alt,asset->{url}}},
+      authorName,
+      authorRole,
+      authorImage{asset->{url}}
+    }
+  }`;
+  try {
+    return (await client.fetch(query, { slug })) ?? null;
+  } catch (err) {
+    console.warn('[Sanity] fetchBlogAuthorBySlug failed:', err);
+    return null;
+  }
+}
+
+/**
+ * Authors worth advertising in the sitemap: active, and with at least one
+ * published post. An author page with no articles is a thin page.
+ */
+export async function fetchSitemapBlogAuthors(): Promise<Array<{ slug: string; updatedAt?: string }>> {
+  const client = getClient();
+  if (!client) return [];
+  const query = `*[_type == "blogAuthor" && active == true
+    && count(*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() && author._ref == ^._id]) > 0]{
+    "slug": slug.current,
+    "updatedAt": _updatedAt
+  }`;
+  try {
+    const rows = await client.fetch<Array<{ slug?: string; updatedAt?: string }>>(query);
+    return (Array.isArray(rows) ? rows : [])
+      .filter((r): r is { slug: string; updatedAt?: string } => typeof r.slug === 'string' && !!r.slug);
+  } catch (err) {
+    console.warn('[Sanity] fetchSitemapBlogAuthors failed:', err);
+    return [];
+  }
+}

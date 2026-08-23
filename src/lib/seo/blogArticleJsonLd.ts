@@ -14,6 +14,12 @@ export type BlogArticleJsonLdInput = {
   publisherName: string;
   publisherUrl: string;
   publisherLogoUrl?: string;
+  /** From the document's _updatedAt. Falls back to datePublished. */
+  dateModified?: string;
+  /** Slug of the linked blogAuthor. Absent for the legacy inline authors,
+   *  which have no page to point at. */
+  authorSlug?: string | null;
+  locale?: string;
 };
 
 function isAbsoluteUrl(url: string): boolean {
@@ -39,6 +45,9 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
     publisherName,
     publisherUrl,
     publisherLogoUrl,
+    dateModified,
+    authorSlug,
+    locale,
   } = input;
 
   const baseUrl = publisherUrl.replace(/\/$/, "");
@@ -53,6 +62,11 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
   if (authorImageUrl) {
     const abs = toAbsoluteUrl(authorImageUrl, baseUrl);
     if (abs) author.image = abs;
+  }
+  // Only a post with a blogAuthor reference has an author page to point at.
+  // The 12 posts still on the legacy inline fields keep a bare Person node.
+  if (authorSlug && locale) {
+    author.url = `${baseUrl}/${locale}/blog/author/${authorSlug}`;
   }
 
   const publisher: Record<string, unknown> = {
@@ -75,6 +89,7 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
     "@type": "Article",
     headline: headline || "Article",
     datePublished: datePublished || new Date().toISOString(),
+    dateModified: dateModified || datePublished || new Date().toISOString(),
     url: articleUrl,
     author,
     publisher,

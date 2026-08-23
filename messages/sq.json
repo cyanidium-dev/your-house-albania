@@ -194,7 +194,6 @@
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",
       "roomsCount": "{count, plural, one {# dhomë} other {# dhoma}}",
-
       "bedroomsCount": "{count, plural, one {# dhomë gjumi} other {# dhoma gjumi}}",
       "bathroomsCount": "{count, plural, one {# banjë} other {# banja}}",
       "areaUnit": "m²",
@@ -552,5 +551,19 @@
     "source": "Skedari burim",
     "empty": "Ende nuk ka kredite fotografish.",
     "breadcrumbHome": "Kryefaqja"
+  },
+  "Blog": {
+    "tableOfContents": "Përmbajtja",
+    "keyFacts": "Shkurtimisht",
+    "faqTitle": "Pyetje të shpeshta",
+    "sourcesTitle": "Burimet",
+    "zoneStatsTitle": "Të dhëna tregu",
+    "trackerLastChecked": "Kontrolluar",
+    "authorPostsTitle": "Artikuj nga ky autor",
+    "authorNoPosts": "Ende asnjë artikull i publikuar.",
+    "zoneStatsAll": "Të gjitha",
+    "zoneStatsNew": "Ndërtim i ri",
+    "zoneStatsResale": "Rishitje",
+    "zoneStatsYield": "Yield bruto"
   }
 }
