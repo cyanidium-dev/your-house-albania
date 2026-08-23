@@ -195,9 +195,21 @@ export default async function Post({ params }: Props) {
             unoptimized={detail.authorImageUrl?.startsWith("http") ?? true}
           />
           <div>
-            <span className="text-xm text-dark dark:text-white">
-              {detail.authorName || "—"}
-            </span>
+            {/* Only a post with a blogAuthor reference has a page to link to.
+                The 12 posts still on the legacy inline fields render exactly
+                as before, unlinked. */}
+            {detail.authorSlug ? (
+              <Link
+                href={`/${locale}/blog/author/${detail.authorSlug}`}
+                className="text-xm text-dark dark:text-white hover:text-primary transition-colors"
+              >
+                {detail.authorName || "—"}
+              </Link>
+            ) : (
+              <span className="text-xm text-dark dark:text-white">
+                {detail.authorName || "—"}
+              </span>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3 sm:gap-7">
