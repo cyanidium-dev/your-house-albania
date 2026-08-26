@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from 'next-intl'
 import { PropertyHomes } from '@/types/propertyHomes'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -10,6 +11,18 @@ import { convertFromBaseEur } from '@/lib/currency/convert'
 import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { PropertyCardMeta } from './PropertyCardMeta'
+
+const MARKET_POSITION_LABEL_KEY: Record<'below' | 'in' | 'above', 'labelBelow' | 'labelIn' | 'labelAbove'> = {
+  below: 'labelBelow',
+  in: 'labelIn',
+  above: 'labelAbove',
+}
+
+const MARKET_POSITION_BADGE_CLASS: Record<'below' | 'in' | 'above', string> = {
+  below: 'bg-emerald-600/10 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400',
+  in: 'bg-dark/10 text-dark/70 dark:bg-white/10 dark:text-white/70',
+  above: 'bg-amber-600/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
+}
 
 function PropertyCard({
   item,
@@ -43,10 +56,12 @@ function PropertyCard({
     teaser,
     promotionType,
     discountPercent,
+    marketPosition,
   } = item
 
   const isPremium = promotionType === 'premium'
   const { currency: activeCurrency, rates } = useCurrency()
+  const tMarketPosition = useTranslations('PropertyMarketPosition')
   const href = item._href ?? `/${locale}/property/${slug}`
 
   const isList = view === 'list'
@@ -157,8 +172,19 @@ function PropertyCard({
 
       {/* €/m² line — rendered (empty or not) on large cards so heights stay even */}
       {isLarge && (
-        <p className="min-h-4 text-xs leading-4 text-dark/55 dark:text-white/55 font-medium truncate">
+        <p className="min-h-4 flex items-center gap-1.5 text-xs leading-4 text-dark/55 dark:text-white/55 font-medium truncate">
           {formattedPricePerSqm}
+          {marketPosition && (
+            <span
+              className={cn(
+                'shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none',
+                MARKET_POSITION_BADGE_CLASS[marketPosition.label]
+              )}
+              title={tMarketPosition('disclaimer')}
+            >
+              {tMarketPosition(MARKET_POSITION_LABEL_KEY[marketPosition.label])}
+            </span>
+          )}
         </p>
       )}
 
