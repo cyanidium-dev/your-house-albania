@@ -6,6 +6,7 @@ import {
   resolveLandingPathForSitemap,
   type LandingPageSitemapRow,
 } from '../landingSitemapPaths';
+import { RESERVED_GUIDE_SLUGS } from './guides';
 import { AGENT_SLUG_REGEX } from './agent';
 import { getClient } from './_core';
 import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
@@ -395,8 +396,9 @@ export type SitemapGuideEntry = { slug: string; lastModified: Date };
 
 /**
  * Enabled custom landings for `sitemap-landings.xml` → `/{locale}/guides/{slug}`.
- * `for-realtors` is excluded: it renders on its dedicated route and is already
- * emitted by `sitemap-static.xml` via `resolveLandingPathForSitemap`.
+ * Reserved slugs (dedicated routes that 301 away from `/guides/*`, incl.
+ * `for-realtors`, which `sitemap-static.xml` emits) are excluded with the same
+ * list the guides index uses — ТЗ-17 replaced the lone special case.
  */
 export async function fetchSitemapGuideEntries(): Promise<SitemapGuideEntry[]> {
   const client = getClient();
@@ -406,6 +408,7 @@ export async function fetchSitemapGuideEntries(): Promise<SitemapGuideEntry[]> {
     pageType == "custom" &&
     enabled != false &&
     defined(slug.current) &&
+    !(slug.current in $reserved) &&
     !(_id in path("drafts.**")) &&
     (!defined(seo.noIndex) || seo.noIndex != true)
   ]{
@@ -413,12 +416,14 @@ export async function fetchSitemapGuideEntries(): Promise<SitemapGuideEntry[]> {
     _updatedAt
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query, {
+      reserved: RESERVED_GUIDE_SLUGS,
+    });
     if (!Array.isArray(rows)) return [];
     const best = new Map<string, Date>();
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
-      if (!slug || slug === 'for-realtors') continue;
+      if (!slug) continue;
       const lm = parseSitemapDate(row._updatedAt);
       const prev = best.get(slug);
       if (!prev || lm > prev) best.set(slug, lm);
