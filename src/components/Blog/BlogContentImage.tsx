@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { ImageLightbox } from "@/components/shared/ImageLightbox";
 
 type ImageValue = {
@@ -16,6 +17,7 @@ type Props = {
 
 export function BlogContentImage({ value }: Props) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const t = useTranslations("Shared.lightbox");
   const url = value?.asset?.url;
   const alt = value?.alt ?? "";
   const caption = value?.caption;
@@ -30,7 +32,7 @@ export function BlogContentImage({ value }: Props) {
         type="button"
         onClick={() => setLightboxOpen(true)}
         className="block w-full text-left overflow-hidden rounded-2xl cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-primary/50"
-        aria-label="View image fullscreen"
+        aria-label={t("viewImageFullscreen")}
       >
         <Image
           src={url}
