@@ -25,7 +25,7 @@ type Body = {
   revalidate?: unknown;
 };
 
-const ALLOWED_LOCALES = new Set(['en', 'ru', 'sq', 'it', 'uk']);
+const ALLOWED_LOCALES = new Set(['en', 'ru', 'sq', 'it', 'uk', 'pl']);
 const PATH_SEGMENT_RE = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
 function isAllowed(t: unknown): t is AllowedSectionType {
