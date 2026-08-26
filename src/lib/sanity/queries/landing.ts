@@ -42,6 +42,7 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     "linkedZoneSlug": linkedCity->slug.current,
     "linkedZoneCitySlug": linkedCity->slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;
@@ -147,6 +148,11 @@ export const landingPageSectionsProjection = `{
   autoMode,
   metrics,
   showSources,
+  // relatedPagesAutoSection (TZ-16): section-level tag filter + alias slugs for
+  // the explicit city/zone escape hatches (the raw city/zone refs are above).
+  topicTags,
+  "relatedCitySlug": city->slug.current,
+  "relatedZone": zone->{"slug": slug.current, "type": _type, "citySlug": select(_type == "district" => city->slug.current, slug.current)},
   sortBy,
   linkRows,
   displayMode,
@@ -325,6 +331,7 @@ export async function fetchCitiesIndexLanding(): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;
@@ -363,6 +370,7 @@ export async function fetchHomeLanding(): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;
@@ -400,6 +408,7 @@ export async function fetchDealTypeLanding(deal: PropertiesDealParam): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;
@@ -442,6 +451,7 @@ export async function fetchLandingPageBySlug(slug: string): Promise<{
     pageType,
     "slug": slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;
@@ -496,6 +506,7 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
     cardDescription,
     cardImage { asset-> { url } },
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;
@@ -550,6 +561,7 @@ export async function fetchUniqueLandingBySlug(slug: string): Promise<{
     cardDescription,
     cardImage { asset-> { url } },
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;

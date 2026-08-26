@@ -34,5 +34,11 @@ export type SectionHandler = (input: {
    * that actually has items sets `emitted = true`; later ones skip JSON-LD.
    */
   faqJsonLd?: { emitted: boolean }
+  /**
+   * The landing document hosting this section (ТЗ-16): its id for
+   * self-exclusion and its own `topicTags` as the last-resort context for the
+   * related-pages auto modes on pages with no linked zone (comparisons, hubs).
+   */
+  landingCtx?: { id?: string; topicTags?: string[] }
 }) => Promise<React.ReactNode | null> | React.ReactNode | null
 
