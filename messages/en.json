@@ -379,6 +379,16 @@
     "developerLabel": "Developer",
     "details": "Details"
   },
+  "PropertyMarketPosition": {
+    "title": "Market in this district",
+    "labelBelow": "Below market",
+    "labelIn": "In market range",
+    "labelAbove": "Above market",
+    "referencePrice": "Reference price",
+    "districtYield": "District yield: {pct}%",
+    "viewDistrict": "View district page",
+    "disclaimer": "Estimate based on district-wide price ranges, not a valuation of this specific property."
+  },
   "Catalog": {
     "heroIntroFallback": "Browse our selection of properties.",
     "agentTitle": "Properties by {name}",

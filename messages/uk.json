@@ -379,6 +379,16 @@
     "developerLabel": "Забудовник",
     "details": "Детальніше"
   },
+  "PropertyMarketPosition": {
+    "title": "Ринок у цьому районі",
+    "labelBelow": "Нижче ринку",
+    "labelIn": "У межах ринку",
+    "labelAbove": "Вище ринку",
+    "referencePrice": "Референс-ціна",
+    "districtYield": "Дохідність району: {pct}%",
+    "viewDistrict": "Переглянути сторінку району",
+    "disclaimer": "Оцінка на основі цінових діапазонів району, не оцінка конкретного об'єкта."
+  },
   "Catalog": {
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "agentTitle": "Об'єкти від {name}",

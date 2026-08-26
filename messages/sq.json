@@ -379,6 +379,16 @@
     "developerLabel": "Ndërtuesi",
     "details": "Më shumë"
   },
+  "PropertyMarketPosition": {
+    "title": "Tregu në këtë zonë",
+    "labelBelow": "Nën treg",
+    "labelIn": "Në nivelin e tregut",
+    "labelAbove": "Mbi treg",
+    "referencePrice": "Çmimi referencë",
+    "districtYield": "Rendimenti i zonës: {pct}%",
+    "viewDistrict": "Shiko faqen e zonës",
+    "disclaimer": "Vlerësim bazuar në intervalet e çmimeve të zonës, jo një vlerësim i këtij prone specifike."
+  },
   "Catalog": {
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
     "agentTitle": "Pronat nga {name}",
