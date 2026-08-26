@@ -81,7 +81,6 @@ export type PropertyDetailsFields = {
   baths: number;
   area: number;
   description: string;
-  dealTypeLabel: string;
 };
 
 type SanityPropertyForDetails = {
@@ -114,17 +113,6 @@ export function mapSanityPropertyGallery(
     }));
 }
 
-/** Maps Sanity status to deal type label. Fallback: "Price". */
-export function mapStatusToDealTypeLabel(status: string | null | undefined): string {
-  if (!status || typeof status !== 'string') return 'Price';
-  const s = status.toLowerCase();
-  if (s === 'sale') return 'Sale';
-  if (s === 'rent') return 'Rent';
-  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent';
-  if (s === 'long-term' || s === 'longterm') return 'Long-term rent';
-  return status; // fallback: show raw value
-}
-
 /** Maps Sanity property to fields for property details page. Uses empty strings/0 for missing. */
 export function mapSanityPropertyToDetailsFields(
   p: SanityPropertyForDetails | null | undefined,
@@ -140,7 +128,6 @@ export function mapSanityPropertyToDetailsFields(
       baths: 0,
       area: 0,
       description: '',
-      dealTypeLabel: 'Price',
     };
   }
   const cityTitle = resolveLocalizedString(p.city?.title as never, locale);
@@ -162,7 +149,6 @@ export function mapSanityPropertyToDetailsFields(
     baths: p.bathrooms ?? 0,
     area: p.area ?? 0,
     description: desc || '',
-    dealTypeLabel: mapStatusToDealTypeLabel(p.status),
   };
 }
 
