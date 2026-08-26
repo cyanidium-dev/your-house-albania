@@ -2,12 +2,13 @@
 
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
+  const t = useTranslations("Header");
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -30,7 +31,7 @@ export default function LanguageSwitcher() {
         type="button"
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300 ease-out cursor-pointer transition-colors"
-        aria-label="Select language"
+        aria-label={t("selectLanguage")}
         aria-expanded={open}
       >
         <span>{locale.toUpperCase()}</span>

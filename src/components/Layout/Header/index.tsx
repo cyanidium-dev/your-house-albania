@@ -35,6 +35,12 @@ export default async function Header({ siteSettings, locale, countrySlugs }: Hea
     nav: Object.fromEntries(
       NAV_TRANSLATION_KEYS.map((key) => [key, t(`nav.${key}`)]),
     ),
+    toggleMobileMenu: t('toggleMobileMenu'),
+    switchToLightMode: t('switchToLightMode'),
+    switchToDarkMode: t('switchToDarkMode'),
+    selectLanguage: t('selectLanguage'),
+    closeMobileMenu: t('closeMobileMenu'),
+    mainNavigation: t('mainNavigation'),
   }
 
   return (

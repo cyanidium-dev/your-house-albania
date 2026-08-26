@@ -7,6 +7,7 @@ type HeaderBurgerButtonProps = {
   isHomepage: boolean
   sticky: boolean
   menuLabel: string
+  ariaLabel: string
 }
 
 export default function HeaderBurgerButton({
@@ -14,6 +15,7 @@ export default function HeaderBurgerButton({
   isHomepage,
   sticky,
   menuLabel,
+  ariaLabel,
 }: HeaderBurgerButtonProps) {
   return (
     <button
@@ -24,7 +26,7 @@ export default function HeaderBurgerButton({
           : 'text-dark bg-white dark:text-dark hover:bg-transparent hover:text-white border-white'
         : 'bg-dark text-white hover:bg-transparent hover:text-dark dark:bg-white dark:text-dark dark:hover:bg-transparent dark:hover:text-white duration-300'
         }`}
-      aria-label='Toggle mobile menu'
+      aria-label={ariaLabel}
     >
       <span>
         <Icon icon={'ph:list'} width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
