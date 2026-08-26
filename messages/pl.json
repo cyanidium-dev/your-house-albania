@@ -22,7 +22,14 @@
     },
     "cta": {
       "viewProperties": "Zobacz nieruchomości"
-    }
+    },
+    "toggleMobileMenu": "Przełącz menu mobilne",
+    "switchToLightMode": "Przełącz na jasny motyw",
+    "switchToDarkMode": "Przełącz na ciemny motyw",
+    "favoritesCount": "Ulubione ({count})",
+    "selectLanguage": "Wybierz język",
+    "closeMobileMenu": "Zamknij menu mobilne",
+    "mainNavigation": "Nawigacja główna"
   },
   "Currency": {
     "switchTo": "Przełącz walutę na {currency}"
@@ -167,7 +174,8 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "Treść SEO jest niedostępna."
+      "contentMissing": "Treść SEO jest niedostępna.",
+      "videoTitle": "Wideo"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",
@@ -188,7 +196,16 @@
       "dealTypeLongTerm": "Wynajem długoterminowy",
       "dealTypePrice": "Cena",
       "dealTypeShortTermCompact": "Wynajem krótki",
-      "dealTypeLongTermCompact": "Wynajem długi"
+      "dealTypeLongTermCompact": "Wynajem długi",
+      "close": "Zamknij",
+      "imageGallery": "Galeria zdjęć",
+      "openImage": "Otwórz zdjęcie {n}",
+      "propertyImageAlt": "Zdjęcie nieruchomości {n}",
+      "imageAlt": "Zdjęcie {n}",
+      "thumbnailAlt": "Miniatura {n}",
+      "goToImage": "Przejdź do zdjęcia {n}",
+      "hideThumbnails": "Ukryj miniatury",
+      "showThumbnails": "Pokaż miniatury"
     },
     "propertyCard": {
       "bedrooms": "Sypialnie",
@@ -203,7 +220,9 @@
       "premium": "Premium",
       "top": "Top",
       "sale": "Sprzedaż",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Nieruchomość",
+      "closePreview": "Zamknij podgląd"
     },
     "blogCard": {
       "imageAlt": "Zdjęcie artykułu na blogu",
@@ -221,6 +240,11 @@
     "goBack": "Wróć",
     "entityCard": {
       "propertiesCountLabel": "{count, plural, one {nieruchomość} few {nieruchomości} many {nieruchomości} other {nieruchomości}}"
+    },
+    "lightbox": {
+      "close": "Zamknij",
+      "imageFullscreenView": "Pełnoekranny podgląd zdjęcia",
+      "viewImageFullscreen": "Zobacz zdjęcie na pełnym ekranie"
     }
   },
   "Listing": {
@@ -262,6 +286,7 @@
     "cityDescription": "Nieruchomości w mieście {city}."
   },
   "Breadcrumbs": {
+    "navLabel": "Ścieżka nawigacji",
     "home": "Strona główna",
     "properties": "Nieruchomości",
     "favorites": "Ulubione",
@@ -390,6 +415,11 @@
     "disclaimer": "Szacunek oparty na przedziałach cenowych dzielnicy, a nie wycena konkretnej nieruchomości."
   },
   "Catalog": {
+    "pagination": {
+      "pagination": "Paginacja",
+      "previousPage": "Poprzednia strona",
+      "nextPage": "Następna strona"
+    },
     "heroIntroFallback": "Przeglądaj naszą ofertę nieruchomości.",
     "agentTitle": "Nieruchomości agenta {name}",
     "agentIntroFallback": "Oferty tego agenta",
