@@ -62,6 +62,7 @@ function PropertyCard({
   const isPremium = promotionType === 'premium'
   const { currency: activeCurrency, rates } = useCurrency()
   const tMarketPosition = useTranslations('PropertyMarketPosition')
+  const tDealType = useTranslations('Shared.propertyDetail')
   const href = item._href ?? `/${locale}/property/${slug}`
 
   const isList = view === 'list'
@@ -160,11 +161,11 @@ function PropertyCard({
           >
             {isSmall && !isList ? (
               <span className="min-w-0 truncate whitespace-nowrap">
-                <span className="sm:hidden">{displayDealLabel(status, { compact: true })}</span>
-                <span className="hidden sm:inline">{displayDealLabel(status, { compact: false })}</span>
+                <span className="sm:hidden">{displayDealLabel(status, tDealType, { compact: true })}</span>
+                <span className="hidden sm:inline">{displayDealLabel(status, tDealType, { compact: false })}</span>
               </span>
             ) : (
-              displayDealLabel(status, { compact: false })
+              displayDealLabel(status, tDealType, { compact: false })
             )}
           </span>
         )}
@@ -272,8 +273,8 @@ function PropertyCard({
                   {status && (
                     <span className="inline-flex items-center justify-center rounded-full text-xs px-3 h-7 leading-none border border-primary/80 text-primary bg-primary/5">
                       <span className="min-w-0 truncate whitespace-nowrap">
-                        <span className="sm:hidden">{displayDealLabel(status, { compact: true })}</span>
-                        <span className="hidden sm:inline">{displayDealLabel(status, { compact: false })}</span>
+                        <span className="sm:hidden">{displayDealLabel(status, tDealType, { compact: true })}</span>
+                        <span className="hidden sm:inline">{displayDealLabel(status, tDealType, { compact: false })}</span>
                       </span>
                     </span>
                   )}

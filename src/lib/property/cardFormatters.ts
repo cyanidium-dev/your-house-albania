@@ -1,25 +1,33 @@
-export function displayStatusLabel(status?: string | null): string | null {
+/**
+ * Reads the same `Shared.propertyDetail.dealType*` keys the property detail
+ * page already translates into all 6 locales — pass `useTranslations('Shared.propertyDetail')`.
+ */
+export type DealTypeTranslate = (key: string) => string
+
+export function displayStatusLabel(status: string | null | undefined, t: DealTypeTranslate): string | null {
   if (!status) return null
   const s = status.toLowerCase().trim()
-  if (s === 'sale') return 'For sale'
-  if (s === 'rent') return 'For rent'
-  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent'
-  if (s === 'long-term' || s === 'longterm') return 'Long-term rent'
+  if (s === 'sale') return t('dealTypeSale')
+  if (s === 'rent') return t('dealTypeRent')
+  if (s === 'short-term' || s === 'shortterm') return t('dealTypeShortTerm')
+  if (s === 'long-term' || s === 'longterm') return t('dealTypeLongTerm')
   return status
 }
 
-export function displayStatusShortLabel(status?: string | null): string | null {
-  const full = displayStatusLabel(status)
-  if (!full) return null
-  const s = full.toLowerCase()
-  if (s.includes('short-term')) return 'Short rent'
-  if (s.includes('long-term')) return 'Long rent'
-  if (s === 'for rent') return 'Rent'
-  return full
+export function displayStatusShortLabel(status: string | null | undefined, t: DealTypeTranslate): string | null {
+  if (!status) return null
+  const s = status.toLowerCase().trim()
+  if (s === 'short-term' || s === 'shortterm') return t('dealTypeShortTermCompact')
+  if (s === 'long-term' || s === 'longterm') return t('dealTypeLongTermCompact')
+  return displayStatusLabel(status, t)
 }
 
-export function displayDealLabel(status?: string | null, opts?: { compact?: boolean }): string | null {
-  return opts?.compact ? displayStatusShortLabel(status) : displayStatusLabel(status)
+export function displayDealLabel(
+  status: string | null | undefined,
+  t: DealTypeTranslate,
+  opts?: { compact?: boolean }
+): string | null {
+  return opts?.compact ? displayStatusShortLabel(status, t) : displayStatusLabel(status, t)
 }
 
 export function truncateTeaser(text: string, maxChars: number): string {
