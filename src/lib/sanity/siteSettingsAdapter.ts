@@ -19,6 +19,8 @@ export type ResolvedSiteSettings = {
   footerApp: ResolvedFooterApp;
   socialLinks: { platform: string; url: string; channel?: string }[];
   policyLinks: { href: string; label: string }[];
+  /** Footer "Guides" column (ТЗ-16); empty hides the column. */
+  footerGuideLinks: { href: string; label: string }[];
 };
 
 type RawSiteSettings = {
@@ -36,6 +38,7 @@ type RawSiteSettings = {
   };
   socialLinks?: { _key?: string; platform?: string; url?: string; channel?: string }[];
   policyLinks?: RawPolicyLink[];
+  footerGuideLinks?: RawPolicyLink[];
 };
 
 export type RawPolicyLink = { _key?: string; href?: string; label?: Record<string, string> };
@@ -89,6 +92,7 @@ export function mapSiteSettingsToResolved(
       footerApp: { enabled: false, iosUrl: "", androidUrl: "" },
       socialLinks: [],
       policyLinks: [],
+      footerGuideLinks: [],
     };
   }
 
@@ -107,6 +111,8 @@ export function mapSiteSettingsToResolved(
     }));
 
   const policyLinks = normalizePolicyLinks(raw.policyLinks, locale);
+  // Same shape and rules as policy links — the normalizer is generic.
+  const footerGuideLinks = normalizePolicyLinks(raw.footerGuideLinks, locale);
 
   return {
     logoUrl: (raw.logo as { asset?: { url?: string } })?.asset?.url ?? "",
@@ -119,5 +125,6 @@ export function mapSiteSettingsToResolved(
     footerApp: mapFooterApp(raw.footerApp),
     socialLinks,
     policyLinks,
+    footerGuideLinks,
   };
 }

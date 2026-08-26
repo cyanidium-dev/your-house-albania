@@ -36,6 +36,7 @@
   },
   "Footer": {
     "columns": {
+      "guides": "Udhëzues",
       "navigation": "Navigimi",
       "cities": "Qytetet",
       "contacts": "Kontakte",

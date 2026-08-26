@@ -187,6 +187,13 @@ export default function Footer({
     siteSettings?.socialLinks
   );
 
+  // ТЗ-16 Guides column: 4 base columns + optional Guides + optional App.
+  const guideLinks = siteSettings?.footerGuideLinks ?? [];
+  const showGuidesColumn = guideLinks.length > 0;
+  const extraCols = (showGuidesColumn ? 1 : 0) + (showAppColumn ? 1 : 0);
+  const lgColsClass =
+    extraCols === 2 ? "lg:grid-cols-6" : extraCols === 1 ? "lg:grid-cols-5" : "lg:grid-cols-4";
+
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
       <div
@@ -220,11 +227,7 @@ export default function Footer({
         {/* Column grid (full width below branding) */}
         <div className="min-w-0 w-full">
           <div
-            className={`grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 md:gap-5 lg:gap-4 ${
-              showAppColumn
-                ? "lg:grid-cols-5 xl:gap-4 2xl:gap-5"
-                : "lg:grid-cols-4 xl:gap-4 2xl:gap-5"
-            }`}
+            className={`grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 md:gap-5 lg:gap-4 ${lgColsClass} xl:gap-4 2xl:gap-5`}
           >
             <nav aria-label={t("columns.navigation")}>
               <h3 className={colHeadingClass}>{t("columns.navigation")}</h3>
@@ -241,6 +244,21 @@ export default function Footer({
                 ))}
               </ul>
             </nav>
+
+            {showGuidesColumn ? (
+              <nav aria-label={t("columns.guides")}>
+                <h3 className={colHeadingClass}>{t("columns.guides")}</h3>
+                <ul className="flex flex-col gap-2 md:gap-2.5">
+                  {guideLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className={colLinkClass}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ) : null}
 
             <nav aria-label={t("columns.cities")}>
               <h3 className={colHeadingClass}>{t("columns.cities")}</h3>

@@ -36,6 +36,7 @@
   },
   "Footer": {
     "columns": {
+      "guides": "Гайды",
       "navigation": "Навигация",
       "cities": "Города",
       "contacts": "Контакты",

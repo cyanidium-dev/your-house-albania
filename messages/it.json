@@ -36,6 +36,7 @@
   },
   "Footer": {
     "columns": {
+      "guides": "Guide",
       "navigation": "Navigazione",
       "cities": "Città",
       "contacts": "Contatti",
