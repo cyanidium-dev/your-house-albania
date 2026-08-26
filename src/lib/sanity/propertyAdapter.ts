@@ -313,6 +313,7 @@ type SanityProperty = {
   bedrooms?: number;
   rooms?: number;
   bathrooms?: number;
+  yearBuilt?: number;
   status?: string;
   promoted?: boolean;
   promotionType?: 'premium' | 'top' | 'sale';
@@ -326,6 +327,7 @@ type SanityProperty = {
     slug?: string;
   };
   district?: {
+    _id?: string;
     title?: unknown;
     slug?: string;
     citySlug?: string;
@@ -394,6 +396,8 @@ export function mapSanityPropertyToCard(
     citySlug: p.city?.slug,
     district: districtTitle || undefined,
     districtSlug: p.district?.slug,
+    districtId: p.district?._id,
+    yearBuilt: typeof p.yearBuilt === 'number' && Number.isFinite(p.yearBuilt) ? p.yearBuilt : undefined,
     teaser: localizedDescription || undefined,
     coordinates: lat !== undefined || lng !== undefined ? { lat, lng } : undefined,
   };
@@ -425,6 +429,7 @@ export function mapCatalogPropertyToCard(
       area: p.area,
       bedrooms: p.bedrooms,
       bathrooms: p.bathrooms,
+      yearBuilt: p.yearBuilt,
       status: p.status,
       promoted: p.promoted,
       promotionType: p.promotionType,
