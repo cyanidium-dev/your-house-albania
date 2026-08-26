@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
 
 type Props = {
@@ -29,6 +30,7 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations("Catalog.pagination");
 
   // Always render pagination so it's visible even for mocked/static results.
   const safeTotalPages = Math.max(1, totalPages);
@@ -53,13 +55,13 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
 
   return (
     <div className="mt-10 flex justify-center">
-      <nav className="inline-flex items-center gap-2" aria-label="Pagination">
+      <nav className="inline-flex items-center gap-2" aria-label={t('pagination')}>
         <button
           type="button"
           disabled={safeCurrentPage === 1}
           onClick={() => setPage(safeCurrentPage - 1)}
           className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white cursor-pointer hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 dark:disabled:hover:border-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
-          aria-label="Previous page"
+          aria-label={t('previousPage')}
         >
           <Icon icon="ph:caret-left" width={20} height={20} />
         </button>
@@ -97,7 +99,7 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
           disabled={safeCurrentPage === safeTotalPages}
           onClick={() => setPage(safeCurrentPage + 1)}
           className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white cursor-pointer hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 dark:disabled:hover:border-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
-          aria-label="Next page"
+          aria-label={t('nextPage')}
         >
           <Icon icon="ph:caret-right" width={20} height={20} />
         </button>
