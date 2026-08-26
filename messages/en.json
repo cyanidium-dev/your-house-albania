@@ -105,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Categories",
-      "title": "Explore best properties with expert services.",
-      "description": "Discover a diverse range of premium properties, from luxurious apartments to spacious villas, tailored to your needs",
-      "viewProperties": "View properties",
-      "residentialHomes": "Residential Homes",
-      "luxuryVillas": "Luxury villas",
-      "appartment": "Appartment",
-      "officeSpaces": "Office Spaces",
-      "categoryDescription": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
-    },
     "properties": {
       "badge": "Properties",
       "title": "Discover inspiring designed homes.",
@@ -258,26 +247,6 @@
     "properties": {
       "badge": "Properties",
       "title": "Discover inspiring designed homes.",
-      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
-    },
-    "residentialHomes": {
-      "badge": "Properties",
-      "title": "Residential Homes.",
-      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
-    },
-    "luxuryVilla": {
-      "badge": "Properties",
-      "title": "Luxury Villas.",
-      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
-    },
-    "appartment": {
-      "badge": "Properties",
-      "title": "Apartments.",
-      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
-    },
-    "officeSpaces": {
-      "badge": "Properties",
-      "title": "Office Spaces.",
       "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
     },
     "blogs": {

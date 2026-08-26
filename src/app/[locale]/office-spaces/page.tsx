@@ -1,32 +1,7 @@
-import HeroSub from "@/components/shared/HeroSub";
-import OfficeSpace from "@/components/Properties/OfficeSpaces";
-import React from "react";
-import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { buildStaticListingMetadata } from "@/lib/seo/staticListingMetadata";
+import { permanentRedirect } from "next/navigation";
 
-type Props = { params: Promise<{ locale: string }> };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+/** ТЗ-17: legacy mock page retired — 308 to the sale deal landing (no office guide exists; zero office inventory). The folder stays so the slug stays filesystem-reserved (ROUTING.md). */
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return buildStaticListingMetadata({
-    locale,
-    pathnameAfterLocale: "/office-spaces",
-    i18nNamespace: "Listing.officeSpaces",
-  });
-}
-
-export default async function page({ params }: Props) {
-  const { locale } = await params;
-  const t = await getTranslations("Listing.officeSpaces");
-  return (
-    <>
-      <HeroSub
-        title={t("title")}
-        description={t("description")}
-        badge={t("badge")}
-      />
-      <OfficeSpace locale={locale} />
-    </>
-  );
+  permanentRedirect(`/${locale}/sale`);
 }
