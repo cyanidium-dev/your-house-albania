@@ -96,7 +96,7 @@ function youtubeEmbedFromUrl(url: string): string | null {
   return null;
 }
 
-function SeoTextVideo({ url }: { url: string }) {
+function SeoTextVideo({ url, title }: { url: string; title: string }) {
   const safe = safeHttpUrl(url);
   if (!safe) return null;
   const yt = youtubeEmbedFromUrl(safe);
@@ -105,7 +105,7 @@ function SeoTextVideo({ url }: { url: string }) {
       <div className="relative my-10 w-full aspect-video overflow-hidden rounded-2xl border border-dark/10 dark:border-white/15">
         <iframe
           src={yt}
-          title="Video"
+          title={title}
           className="absolute inset-0 h-full w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
@@ -368,7 +368,7 @@ const SeoText: React.FC<{
         ) : null}
 
         {/* Video (when set) */}
-        {showVideo ? <SeoTextVideo url={videoUrl!} /> : null}
+        {showVideo ? <SeoTextVideo url={videoUrl!} title={t('videoTitle')} /> : null}
 
         {/* Body */}
         <article
