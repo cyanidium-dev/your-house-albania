@@ -137,6 +137,9 @@ export default async function DistrictInfoPage({ params }: Props) {
     />
   );
 
+  // ТЗ-16 full replacement: district landings carry relatedPagesAutoSection
+  // blocks (siblings + comparisons), so this hardcoded block only covers
+  // districts WITHOUT a landing doc (the 3 Himarë districts as of 2026-08-26).
   const explore = (
     <DistrictExploreSection
       locale={locale}
@@ -173,7 +176,6 @@ export default async function DistrictInfoPage({ params }: Props) {
             citySlug={citySlug}
             breadcrumb={breadcrumb}
           />
-          {explore}
         </>
       );
     }
@@ -184,7 +186,6 @@ export default async function DistrictInfoPage({ params }: Props) {
         </section>
         {placeJsonLd}
         <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} />
-        {explore}
       </>
     );
   }
