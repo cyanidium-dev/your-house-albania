@@ -9,7 +9,7 @@ import { formatTelegramRegistrationRequestMessage } from '@/lib/notifications/re
 // docs/registration-request-sanity-frontend-contract.md
 // import { createRegistrationRequest } from '@/lib/sanity/writeClient'
 
-const ALLOWED_LANGUAGES = new Set(['en', 'uk', 'ru', 'sq', 'it'])
+const ALLOWED_LANGUAGES = new Set(['en', 'uk', 'ru', 'sq', 'it', 'pl'])
 const ALLOWED_REALTOR_OR_AGENCY = new Set(['realtor', 'agency'])
 
 const MAX_LEN = 500
