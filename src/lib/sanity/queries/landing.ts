@@ -579,6 +579,138 @@ export async function fetchUniqueLandingBySlug(slug: string): Promise<{
   return cached();
 }
 
+// ---------------------------------------------------------------------------
+// relatedPagesAutoSection (TZ-16) card fetchers
+// ---------------------------------------------------------------------------
+
+/**
+ * Card projection for the related-pages block: `LandingCardModel` fields plus
+ * `zoneHeroImage`, the linked district's own photo — generated district
+ * landings carry no `cardImage`, and without the fallback sibling cards would
+ * render imageless where the old hardcoded block showed district photos.
+ */
+const RELATED_CARD_PROJECTION = `{
+  _id,
+  pageType,
+  "slug": slug.current,
+  title,
+  cardTitle,
+  cardDescription,
+  cardImage { asset-> { url }, alt },
+  "zoneHeroImage": linkedDistrict->heroImage { asset-> { url }, alt },
+  "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current },
+  "linkedDistrict": linkedDistrict-> {
+    "slug": slug.current,
+    "citySlug": city->slug.current,
+    "countrySlug": city->country->slug.current
+  }
+}`;
+
+/** `isPublished != false` (not `== true`) keeps legacy docs, same as fetchDistrictBySlugs. */
+const RELATED_BASE_FILTER = `_type == "landingPage" && enabled != false &&
+  !(_id in path("drafts.**")) && _id != $excludeId &&
+  (!defined(seo.noIndex) || seo.noIndex != true)`;
+
+export type RelatedLandingCard = {
+  _id?: string;
+  pageType?: string;
+  slug?: string;
+  title?: unknown;
+  cardTitle?: unknown;
+  cardDescription?: unknown;
+  cardImage?: { asset?: { url?: string }; alt?: string };
+  zoneHeroImage?: { asset?: { url?: string }; alt?: string };
+  linkedCity?: { slug?: string; countrySlug?: string };
+  linkedDistrict?: { slug?: string; citySlug?: string; countrySlug?: string };
+};
+
+/** District landings of a city (mode `cityDistricts`) — publishable districts only. */
+export async function fetchRelatedDistrictLandingCards(
+  citySlug: string,
+  excludeId: string | undefined,
+  limit: number,
+): Promise<RelatedLandingCard[]> {
+  const city = typeof citySlug === 'string' ? citySlug.trim().toLowerCase() : '';
+  if (!city) return [];
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return [];
+      const query = `*[${RELATED_BASE_FILTER} &&
+        pageType == "district" &&
+        linkedDistrict->city->slug.current == $citySlug &&
+        linkedDistrict->isPublished != false &&
+        linkedDistrict->city->isPublished != false
+      ] | order(title.en asc) [0...$limit] ${RELATED_CARD_PROJECTION}`;
+      try {
+        return await client.fetch<RelatedLandingCard[]>(query, {
+          citySlug: city,
+          excludeId: excludeId ?? '',
+          limit,
+        });
+      } catch (err) {
+        console.warn('[Sanity] fetchRelatedDistrictLandingCards failed:', err);
+        return [];
+      }
+    },
+    ['related-district-cards-v1', city, excludeId ?? '', String(limit)],
+    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+  );
+  return cached();
+}
+
+/** Custom (guide) landings sharing any of the given topic tags, freshest first. */
+async function fetchCustomLandingCardsByTags(
+  tags: string[],
+  excludeId: string | undefined,
+  limit: number,
+  cacheKeyPrefix: string,
+): Promise<RelatedLandingCard[]> {
+  const cleaned = (tags ?? []).map((t) => (typeof t === 'string' ? t.trim() : '')).filter(Boolean);
+  if (!cleaned.length) return [];
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return [];
+      const query = `*[${RELATED_BASE_FILTER} &&
+        pageType == "custom" &&
+        count(topicTags[@ in $tags]) > 0
+      ] | order(coalesce(contentUpdatedAt, _updatedAt) desc) [0...$limit] ${RELATED_CARD_PROJECTION}`;
+      try {
+        return await client.fetch<RelatedLandingCard[]>(query, {
+          tags: cleaned,
+          excludeId: excludeId ?? '',
+          limit,
+        });
+      } catch (err) {
+        console.warn(`[Sanity] ${cacheKeyPrefix} failed:`, err);
+        return [];
+      }
+    },
+    [cacheKeyPrefix, [...cleaned].sort().join(','), excludeId ?? '', String(limit)],
+    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+  );
+  return cached();
+}
+
+/** Comparisons (and any zone-tagged guides) involving the given zones (mode `zoneComparisons`). */
+export async function fetchRelatedComparisonCards(
+  zoneTags: string[],
+  excludeId: string | undefined,
+  limit: number,
+): Promise<RelatedLandingCard[]> {
+  return fetchCustomLandingCardsByTags(zoneTags, excludeId, limit, 'related-comparison-cards-v1');
+}
+
+/** Guides sharing any of the given topic tags (mode `topicGuides`). */
+export async function fetchRelatedGuideCards(
+  tags: string[],
+  excludeId: string | undefined,
+  limit: number,
+): Promise<RelatedLandingCard[]> {
+  return fetchCustomLandingCardsByTags(tags, excludeId, limit, 'related-guide-cards-v1');
+}
+
 export type CityLandingNavItem = { slug: string; label: string; countrySlug?: string };
 
 /**
