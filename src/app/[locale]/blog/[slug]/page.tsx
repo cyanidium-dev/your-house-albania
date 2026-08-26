@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
@@ -63,8 +63,25 @@ type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+/**
+ * Blog slugs renamed in place, oldest first. Keep these entries — old URLs
+ * stay live as 301s (see DISTRICT_CANONICAL_SLUG_REDIRECTS for the same
+ * pattern on the district route).
+ *
+ * `market-outlook-2025` renamed 2026-08-25: the article was rewritten around
+ * "is 2026 the right time to buy", but the slug still named 2025 — flagged
+ * as debt in ТЗ-13 §12 and left unrenamed at the time because a content
+ * rewrite alone doesn't carry a redirect.
+ */
+const BLOG_SLUG_REDIRECTS: Record<string, string> = {
+  "market-outlook-2025": "market-outlook-2026",
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
+  if (BLOG_SLUG_REDIRECTS[slug]) {
+    return {};
+  }
   const post = await fetchBlogPostBySlug(slug);
   if (!post) {
     return { title: "Not Found", description: "No blog article has been found" };
@@ -106,6 +123,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Post({ params }: Props) {
   const { locale, slug } = await params;
+  const canonicalSlug = BLOG_SLUG_REDIRECTS[slug];
+  if (canonicalSlug) {
+    permanentRedirect(`/${locale}/blog/${canonicalSlug}`);
+  }
   const [post, siteSettings, baseUrl, blogSettings] = await Promise.all([
     fetchBlogPostBySlug(slug),
     fetchSiteSettings(),
