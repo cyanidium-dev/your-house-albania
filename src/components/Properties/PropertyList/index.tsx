@@ -16,6 +16,7 @@ import {
   type CatalogSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
+import { attachMarketPositionToCards } from '@/lib/property/marketPosition'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
@@ -196,9 +197,10 @@ async function PropertiesListing({
     redirect(url)
   }
 
-  const pageItems: PropertyHomes[] = Array.isArray(filteredForDisplay)
+  const pageItemsBase: PropertyHomes[] = Array.isArray(filteredForDisplay)
     ? filteredForDisplay.map((item) => mapCatalogPropertyToCard(item, locale))
     : []
+  const pageItems = await attachMarketPositionToCards(pageItemsBase)
 
   const baseUrl = await getBaseUrl()
   const itemListEntries = pageItems.map((item) => ({
