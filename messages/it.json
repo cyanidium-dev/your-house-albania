@@ -22,7 +22,14 @@
     },
     "cta": {
       "viewProperties": "Vedi immobili"
-    }
+    },
+    "toggleMobileMenu": "Attiva/disattiva il menu mobile",
+    "switchToLightMode": "Passa alla modalità chiara",
+    "switchToDarkMode": "Passa alla modalità scura",
+    "favoritesCount": "Preferiti ({count})",
+    "selectLanguage": "Seleziona lingua",
+    "closeMobileMenu": "Chiudi il menu mobile",
+    "mainNavigation": "Navigazione principale"
   },
   "Currency": {
     "switchTo": "Cambia valuta in {currency}"
@@ -167,7 +174,13 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "Il contenuto SEO non è disponibile."
+      "contentMissing": "Il contenuto SEO non è disponibile.",
+      "videoTitle": "Video"
+    },
+    "lightbox": {
+      "close": "Chiudi",
+      "imageFullscreenView": "Visualizzazione immagine a schermo intero",
+      "viewImageFullscreen": "Visualizza immagine a schermo intero"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",
@@ -188,7 +201,16 @@
       "dealTypeLongTerm": "Affitto a lungo termine",
       "dealTypePrice": "Prezzo",
       "dealTypeShortTermCompact": "Affitto breve",
-      "dealTypeLongTermCompact": "Affitto lungo"
+      "dealTypeLongTermCompact": "Affitto lungo",
+      "close": "Chiudi",
+      "imageGallery": "Galleria immagini",
+      "openImage": "Apri immagine {n}",
+      "propertyImageAlt": "Immagine dell'immobile {n}",
+      "imageAlt": "Immagine {n}",
+      "thumbnailAlt": "Miniatura {n}",
+      "goToImage": "Vai all'immagine {n}",
+      "hideThumbnails": "Nascondi miniature",
+      "showThumbnails": "Mostra miniature"
     },
     "propertyCard": {
       "bedrooms": "Camere",
@@ -203,7 +225,9 @@
       "premium": "Premium",
       "top": "Top",
       "sale": "Offerta",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Immobile",
+      "closePreview": "Chiudi anteprima"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
@@ -276,7 +300,8 @@
     "forRealtors": "Per gli agenti",
     "howToPublish": "Come pubblicare",
     "register": "Registrati",
-    "investment": "Investimenti"
+    "investment": "Investimenti",
+    "navLabel": "Breadcrumb"
   },
   "Districts": {
     "hubTitle": "Quartieri di {city}",
@@ -390,6 +415,11 @@
     "disclaimer": "Stima basata sugli intervalli di prezzo della zona, non una valutazione di questo immobile specifico."
   },
   "Catalog": {
+    "pagination": {
+      "pagination": "Paginazione",
+      "previousPage": "Pagina precedente",
+      "nextPage": "Pagina successiva"
+    },
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",
     "agentIntroFallback": "Mostra gli annunci di questo agente",

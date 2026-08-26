@@ -22,7 +22,14 @@
     },
     "cta": {
       "viewProperties": "View properties"
-    }
+    },
+    "toggleMobileMenu": "Toggle mobile menu",
+    "switchToLightMode": "Switch to light mode",
+    "switchToDarkMode": "Switch to dark mode",
+    "favoritesCount": "Favorites ({count})",
+    "selectLanguage": "Select language",
+    "closeMobileMenu": "Close mobile menu",
+    "mainNavigation": "Main navigation"
   },
   "Currency": {
     "switchTo": "Switch currency to {currency}"
@@ -167,7 +174,13 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "SEO content is not available."
+      "contentMissing": "SEO content is not available.",
+      "videoTitle": "Video"
+    },
+    "lightbox": {
+      "close": "Close",
+      "imageFullscreenView": "Image fullscreen view",
+      "viewImageFullscreen": "View image fullscreen"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",
@@ -188,7 +201,16 @@
       "dealTypeLongTerm": "Long-term rent",
       "dealTypePrice": "Price",
       "dealTypeShortTermCompact": "Short rent",
-      "dealTypeLongTermCompact": "Long rent"
+      "dealTypeLongTermCompact": "Long rent",
+      "close": "Close",
+      "imageGallery": "Image gallery",
+      "openImage": "Open image {n}",
+      "propertyImageAlt": "Property image {n}",
+      "imageAlt": "Image {n}",
+      "thumbnailAlt": "Thumbnail {n}",
+      "goToImage": "Go to image {n}",
+      "hideThumbnails": "Hide thumbnails",
+      "showThumbnails": "Show thumbnails"
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
@@ -203,7 +225,9 @@
       "premium": "Premium",
       "top": "Top",
       "sale": "Sale",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Property",
+      "closePreview": "Close preview"
     },
     "blogCard": {
       "imageAlt": "Blog post image",
@@ -276,7 +300,8 @@
     "forRealtors": "For realtors",
     "howToPublish": "How to publish",
     "register": "Register",
-    "investment": "Investment"
+    "investment": "Investment",
+    "navLabel": "Breadcrumb"
   },
   "Districts": {
     "hubTitle": "Districts of {city}",
@@ -390,6 +415,11 @@
     "disclaimer": "Estimate based on district-wide price ranges, not a valuation of this specific property."
   },
   "Catalog": {
+    "pagination": {
+      "pagination": "Pagination",
+      "previousPage": "Previous page",
+      "nextPage": "Next page"
+    },
     "heroIntroFallback": "Browse our selection of properties.",
     "agentTitle": "Properties by {name}",
     "agentIntroFallback": "Showing listings from this agent",

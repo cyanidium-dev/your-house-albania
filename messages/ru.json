@@ -22,7 +22,14 @@
     },
     "cta": {
       "viewProperties": "Смотреть объекты"
-    }
+    },
+    "toggleMobileMenu": "Открыть мобильное меню",
+    "switchToLightMode": "Включить светлую тему",
+    "switchToDarkMode": "Включить тёмную тему",
+    "favoritesCount": "Избранное ({count})",
+    "selectLanguage": "Выбрать язык",
+    "closeMobileMenu": "Закрыть мобильное меню",
+    "mainNavigation": "Основная навигация"
   },
   "Currency": {
     "switchTo": "Сменить валюту на {currency}"
@@ -167,7 +174,13 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "SEO-текст недоступен."
+      "contentMissing": "SEO-текст недоступен.",
+      "videoTitle": "Видео"
+    },
+    "lightbox": {
+      "close": "Закрыть",
+      "imageFullscreenView": "Полноэкранный просмотр изображения",
+      "viewImageFullscreen": "Открыть изображение на весь экран"
     },
     "propertyDetail": {
       "propertyDetails": "Детали объекта",
@@ -188,7 +201,16 @@
       "dealTypeLongTerm": "Долгосрочная аренда",
       "dealTypePrice": "Цена",
       "dealTypeShortTermCompact": "Кратк. аренда",
-      "dealTypeLongTermCompact": "Долг. аренда"
+      "dealTypeLongTermCompact": "Долг. аренда",
+      "close": "Закрыть",
+      "imageGallery": "Галерея изображений",
+      "openImage": "Открыть фото {n}",
+      "propertyImageAlt": "Фото объекта {n}",
+      "imageAlt": "Изображение {n}",
+      "thumbnailAlt": "Миниатюра {n}",
+      "goToImage": "Перейти к фото {n}",
+      "hideThumbnails": "Скрыть миниатюры",
+      "showThumbnails": "Показать миниатюры"
     },
     "propertyCard": {
       "bedrooms": "Спальни",
@@ -203,7 +225,9 @@
       "premium": "Премиум",
       "top": "Топ",
       "sale": "Скидка",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Объект",
+      "closePreview": "Закрыть превью"
     },
     "blogCard": {
       "imageAlt": "Изображение статьи блога",
@@ -276,7 +300,8 @@
     "forRealtors": "Риелторам",
     "howToPublish": "Как разместить",
     "register": "Регистрация",
-    "investment": "Инвестиции"
+    "investment": "Инвестиции",
+    "navLabel": "Хлебные крошки"
   },
   "Districts": {
     "hubTitle": "Районы города {city}",
@@ -390,6 +415,11 @@
     "disclaimer": "Оценка на основе диапазонов цен по району, не оценка конкретного объекта."
   },
   "Catalog": {
+    "pagination": {
+      "pagination": "Пагинация",
+      "previousPage": "Предыдущая страница",
+      "nextPage": "Следующая страница"
+    },
     "heroIntroFallback": "Просмотрите нашу подборку объектов.",
     "agentTitle": "Объекты от {name}",
     "agentIntroFallback": "Показываем объявления этого агента",
