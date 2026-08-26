@@ -24,6 +24,7 @@ const READ_LABEL_BY_LOCALE: Record<string, string> = {
   ru: 'мин чтения',
   sq: 'min lexim',
   it: 'min di lettura',
+  pl: 'min czytania',
 };
 
 const portableComponents: PortableTextComponents = {
