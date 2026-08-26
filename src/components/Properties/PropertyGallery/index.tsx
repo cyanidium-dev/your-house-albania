@@ -148,11 +148,11 @@ export function PropertyGallery({ images }: Props) {
               type="button"
               onClick={() => openLightbox(0)}
               className="block w-full text-left rounded-2xl overflow-hidden relative h-[280px] xs:h-[340px] mobile:h-[400px] bg-dark/5 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
-              aria-label="Open image"
+              aria-label={t('openImage', { n: 1 })}
             >
               <Image
                 src={galleryImages[0].url}
-                alt={imgAlt(galleryImages[0], 'Property image')}
+                alt={imgAlt(galleryImages[0], t('propertyImageAlt', { n: 1 }))}
                 fill
                 className="object-cover object-center"
                 sizes="100vw"
@@ -174,11 +174,11 @@ export function PropertyGallery({ images }: Props) {
                     type="button"
                     onClick={() => openLightbox(idx)}
                     className="snap-start shrink-0 w-full min-w-full h-[280px] xs:h-[340px] mobile:h-[400px] relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
-                    aria-label={`Open image ${idx + 1}`}
+                    aria-label={t('openImage', { n: idx + 1 })}
                   >
                     <Image
                       src={img.url}
-                      alt={imgAlt(img, `Property image ${idx + 1}`)}
+                      alt={imgAlt(img, t('propertyImageAlt', { n: idx + 1 }))}
                       fill
                       className="object-cover object-center"
                       sizes="100vw"
@@ -245,7 +245,7 @@ export function PropertyGallery({ images }: Props) {
                 previewImages[0],
                 0,
                 'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                'Open image'
+                t('openImage', { n: 1 })
               )}
             </div>
           )}
@@ -257,7 +257,7 @@ export function PropertyGallery({ images }: Props) {
                   previewImages[0],
                   0,
                   'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                  'Open image 1'
+                  t('openImage', { n: 1 })
                 )}
               </div>
               <div className="col-span-4 row-span-2 rounded-2xl overflow-hidden relative min-h-[250px] bg-dark/5 dark:bg-white/5">
@@ -265,7 +265,7 @@ export function PropertyGallery({ images }: Props) {
                   previewImages[1],
                   1,
                   'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                  'Open image 2'
+                  t('openImage', { n: 2 })
                 )}
               </div>
             </>
@@ -278,7 +278,7 @@ export function PropertyGallery({ images }: Props) {
                   previewImages[0],
                   0,
                   'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                  'Open image 1'
+                  t('openImage', { n: 1 })
                 )}
               </div>
               <div className="col-span-4 row-span-2 flex flex-col gap-2">
@@ -287,7 +287,7 @@ export function PropertyGallery({ images }: Props) {
                     previewImages[1],
                     1,
                     'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                    'Open image 2'
+                    t('openImage', { n: 2 })
                   )}
                 </div>
                 <div className="flex-1 min-h-0 rounded-2xl overflow-hidden relative bg-dark/5 dark:bg-white/5">
@@ -295,7 +295,7 @@ export function PropertyGallery({ images }: Props) {
                     previewImages[2],
                     2,
                     'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                    'Open image 3'
+                    t('openImage', { n: 3 })
                   )}
                 </div>
               </div>
@@ -309,7 +309,7 @@ export function PropertyGallery({ images }: Props) {
                   previewImages[0],
                   0,
                   'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                  'Open image 1'
+                  t('openImage', { n: 1 })
                 )}
               </div>
               <div className="col-span-4 row-span-2 grid grid-rows-[1fr_1fr] gap-2">
@@ -318,7 +318,7 @@ export function PropertyGallery({ images }: Props) {
                     previewImages[1],
                     1,
                     'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                    'Open image 2'
+                    t('openImage', { n: 2 })
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -327,7 +327,7 @@ export function PropertyGallery({ images }: Props) {
                       previewImages[2],
                       2,
                       'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                      'Open image 3'
+                      t('openImage', { n: 3 })
                     )}
                   </div>
                   <div className="min-h-0 rounded-2xl overflow-hidden relative bg-dark/5 dark:bg-white/5">
@@ -335,7 +335,7 @@ export function PropertyGallery({ images }: Props) {
                       previewImages[3],
                       3,
                       'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                      'Open image 4'
+                      t('openImage', { n: 4 })
                     )}
                   </div>
                 </div>
@@ -350,7 +350,7 @@ export function PropertyGallery({ images }: Props) {
                   previewImages[0],
                   0,
                   'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                  'Open image 1'
+                  t('openImage', { n: 1 })
                 )}
               </div>
               <div className="col-span-4 row-span-2 grid grid-cols-2 grid-rows-2 gap-2">
@@ -360,7 +360,7 @@ export function PropertyGallery({ images }: Props) {
                       previewImages[idx],
                       idx,
                       'block w-full h-full text-left rounded-2xl overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer',
-                      `Open image ${idx + 1}`
+                      t('openImage', { n: idx + 1 })
                     )}
                   </div>
                 ))}
@@ -385,7 +385,7 @@ export function PropertyGallery({ images }: Props) {
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 group"
           role="dialog"
           aria-modal="true"
-          aria-label="Image gallery"
+          aria-label={t('imageGallery')}
         >
           {/* Safari chrome blend: fixed tint bars so translucent top/bottom browser UI blends with modal backdrop */}
           <div
@@ -400,7 +400,7 @@ export function PropertyGallery({ images }: Props) {
             type="button"
             onClick={closeLightbox}
             className="absolute inset-0 z-0"
-            aria-label="Close"
+            aria-label={t('close')}
           />
 
           {/* Top control bar: counter left, close right; mobile always visible, desktop hover-reveal */}
@@ -412,7 +412,7 @@ export function PropertyGallery({ images }: Props) {
               type="button"
               onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
               className="p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
-              aria-label="Close"
+              aria-label={t('close')}
             >
               <Icon icon="ph:x" width={28} height={28} />
             </button>
@@ -424,7 +424,7 @@ export function PropertyGallery({ images }: Props) {
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goPrev(); }}
                 className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
-                aria-label="Previous image"
+                aria-label={tCard('previousImage')}
               >
                 <Icon icon="ph:caret-left" width={32} height={32} />
               </button>
@@ -432,7 +432,7 @@ export function PropertyGallery({ images }: Props) {
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goNext(); }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
-                aria-label="Next image"
+                aria-label={tCard('nextImage')}
               >
                 <Icon icon="ph:caret-right" width={32} height={32} />
               </button>
@@ -448,7 +448,7 @@ export function PropertyGallery({ images }: Props) {
           >
             <Image
               src={galleryImages[currentIndex]?.url ?? galleryImages[0].url}
-              alt={imgAlt(galleryImages[currentIndex] ?? galleryImages[0], `Image ${currentIndex + 1}`)}
+              alt={imgAlt(galleryImages[currentIndex] ?? galleryImages[0], t('imageAlt', { n: currentIndex + 1 }))}
               fill
               className="object-contain object-center"
               sizes="100vw"
@@ -464,7 +464,7 @@ export function PropertyGallery({ images }: Props) {
                 type="button"
                 onClick={(e) => { e.stopPropagation(); setShowThumbs((s) => !s); }}
                 className="absolute bottom-8 right-8 sm:bottom-10 sm:right-10 z-30 p-2.5 rounded-full bg-black/60 text-white/90 hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-white transition-colors duration-200"
-                aria-label={showThumbs ? 'Hide thumbnails' : 'Show thumbnails'}
+                aria-label={showThumbs ? t('hideThumbnails') : t('showThumbnails')}
               >
                 <Icon
                   icon="ph:caret-down"
@@ -505,11 +505,11 @@ export function PropertyGallery({ images }: Props) {
                             ? 'ring-2 ring-white ring-offset-2 ring-offset-black/60'
                             : 'opacity-70 hover:opacity-100'
                         )}
-                        aria-label={`Go to image ${idx + 1}`}
+                        aria-label={t('goToImage', { n: idx + 1 })}
                       >
                         <Image
                           src={img.url}
-                          alt={imgAlt(img, `Thumbnail ${idx + 1}`)}
+                          alt={imgAlt(img, t('thumbnailAlt', { n: idx + 1 }))}
                           fill
                           className="object-cover"
                           sizes="(max-width: 1023px) 64px, 96px"
