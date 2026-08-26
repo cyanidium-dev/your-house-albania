@@ -1,6 +1,6 @@
 /**
  * Resolves localized field from Sanity by project locale.
- * Sanity: en, uk, ru, sq, it. Project: en, uk, ru, al, it (al = sq).
+ * Sanity: en, uk, ru, sq, it, pl. Project: en, uk, ru, al, it, pl (al = sq).
  */
 const LOCALE_MAP: Record<string, string> = {
   en: 'en',
@@ -9,10 +9,11 @@ const LOCALE_MAP: Record<string, string> = {
   sq: 'sq',
   al: 'sq',
   it: 'it',
+  pl: 'pl',
 };
 
 export function resolveLocalizedString(
-  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string } | null | undefined,
+  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string; pl?: string } | null | undefined,
   locale: string
 ): string {
   if (!field) return '';
@@ -23,7 +24,7 @@ export function resolveLocalizedString(
 /** Resolves localized portable text (content) by locale. Returns block array. */
 export function resolveLocalizedContent(
   field:
-    | { en?: unknown[]; uk?: unknown[]; ru?: unknown[]; sq?: unknown[]; it?: unknown[] }
+    | { en?: unknown[]; uk?: unknown[]; ru?: unknown[]; sq?: unknown[]; it?: unknown[]; pl?: unknown[] }
     | unknown[]
     | null
     | undefined,

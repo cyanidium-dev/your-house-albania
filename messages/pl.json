@@ -1,0 +1,584 @@
+{
+  "Header": {
+    "menu": "Menu",
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "contact": "Kontakt",
+    "nav": {
+      "home": "Strona główna",
+      "buy": "Kup",
+      "rent": "Wynajem",
+      "shortTermRent": "Wynajem krótkoterminowy",
+      "cities": "Miasta",
+      "realtors": "Dla agentów",
+      "realtorsAbout": "Jak publikować",
+      "realtorsRegister": "Zarejestruj się",
+      "expandRealtors": "Rozwiń sekcję Dla agentów",
+      "collapseRealtors": "Zwiń sekcję Dla agentów",
+      "blog": "Blog",
+      "contacts": "Kontakty",
+      "expandCities": "Rozwiń listę miast",
+      "collapseCities": "Zwiń listę miast"
+    },
+    "cta": {
+      "viewProperties": "Zobacz nieruchomości"
+    }
+  },
+  "Currency": {
+    "switchTo": "Przełącz walutę na {currency}"
+  },
+  "Footer": {
+    "columns": {
+      "navigation": "Nawigacja",
+      "cities": "Miasta",
+      "contacts": "Kontakty",
+      "socials": "Social media",
+      "app": "Aplikacja"
+    },
+    "nav": {
+      "home": "Strona główna",
+      "buy": "Kup",
+      "rent": "Wynajem",
+      "shortTermRent": "Wynajem krótkoterminowy",
+      "cities": "Miasta",
+      "realtors": "Dla agentów",
+      "blog": "Blog"
+    },
+    "cities": {
+      "empty": "Brak miast do wyświetlenia."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Obserwuj nas na Instagramie",
+      "followFacebook": "Obserwuj nas na Facebooku",
+      "followLinkedin": "Obserwuj nas na LinkedIn",
+      "followX": "Obserwuj nas na X",
+      "followTwitter": "Obserwuj nas na Twitterze",
+      "followYoutube": "Obserwuj nas na YouTube",
+      "followTiktok": "Obserwuj nas na TikToku",
+      "followGeneric": "Obserwuj nas na {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Stworzone przez",
+      "imageCredits": "Źródła zdjęć"
+    },
+    "developer": {
+      "ownedBy": "Ta strona jest tworzona, prowadzona i utrzymywana przez Code Site Art.",
+      "disclaimer": "Code Site Art jest twórcą strony i nie ponosi odpowiedzialności za nieruchomości prezentowane w serwisie.",
+      "contact": "W sprawach technicznych, partnerstwa, wsparcia lub rozwoju strony — niezwiązanych z konkretną nieruchomością — skontaktuj się z nami:"
+    }
+  },
+  "Home": {
+    "hero": {
+      "location": "Palm Springs, Kalifornia",
+      "title": "Futurystyczna oaza",
+      "getInTouch": "Skontaktuj się",
+      "viewDetails": "Zobacz szczegóły",
+      "bedrooms": "4 sypialnie",
+      "restroom": "4 łazienki",
+      "parkingSpace": "Miejsce parkingowe",
+      "price": "$4,750,000",
+      "forSellingPrice": "Cena sprzedaży",
+      "search": {
+        "tabs": {
+          "buy": "Kup",
+          "sale": "Sprzedaż",
+          "rent": "Wynajem",
+          "shortTerm": "Krótkoterminowo"
+        }
+      }
+    },
+    "services": {
+      "categories": "Kategorie",
+      "title": "Odkryj najlepsze nieruchomości z profesjonalną obsługą.",
+      "description": "Odkryj szeroki wybór nieruchomości premium — od luksusowych apartamentów po przestronne wille, dopasowane do Twoich potrzeb",
+      "viewProperties": "Zobacz nieruchomości",
+      "residentialHomes": "Domy mieszkalne",
+      "luxuryVillas": "Luksusowe wille",
+      "appartment": "Apartamenty",
+      "officeSpaces": "Powierzchnie biurowe",
+      "categoryDescription": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
+    },
+    "properties": {
+      "badge": "Nieruchomości",
+      "title": "Odkryj inspirujące projekty domów.",
+      "description": "Wyselekcjonowane domy łączące elegancję, styl i komfort."
+    },
+    "topOffers": {
+      "title": "Najlepsze oferty",
+      "description": "Popularne, nowe i najbardziej poszukiwane oferty w jednym miejscu.",
+      "tabs": {
+        "popular": "Popularne",
+        "new": "Nowe",
+        "highDemand": "Wysoki popyt"
+      },
+      "ctaAll": "Zobacz wszystkie nieruchomości",
+      "prev": "Poprzednie",
+      "next": "Następne"
+    },
+    "featured": {
+      "badge": "Wyróżniona nieruchomość",
+      "title": "Nowoczesna luksusowa willa",
+      "address": "20 S Aurora Ave, Miami",
+      "description": "Doświadcz luksusowego życia w nowoczesnej willi przy 20 S Aurora Ave w Miami. Wyceniona na $1,650,500, ten inteligentny dom o powierzchni 560 ft² oferuje 4 sypialnie, 3 łazienki i przestronne strefy dzienne. Energooszczędność, naturalne światło, systemy bezpieczeństwa, przestrzenie zewnętrzne i 2 strefy barowe — idealne dla 8 i więcej gości. Wybudowana w 2025 roku.",
+      "bedrooms": "4 sypialnie",
+      "bathrooms": "3 łazienki",
+      "parkingSpace": "Miejsce parkingowe",
+      "barAreas": "2 strefy barowe",
+      "getInTouch": "Skontaktuj się",
+      "price": "$1,650,500",
+      "discountedPrice": "Cena po rabacie"
+    },
+    "faq": {
+      "badge": "FAQ",
+      "title": "Wszystko o domach Domlivo",
+      "description": "Wiemy, że zakup, sprzedaż lub inwestowanie w nieruchomości może być przytłaczające. Oto odpowiedzi na najczęstsze pytania, które pomogą Ci przejść przez cały proces",
+      "q1": "1. Czy mogę spersonalizować swój dom Domlivo?",
+      "q2": "2. Gdzie mogę znaleźć domy Domlivo?",
+      "q3": "3. Jakie są kroki, aby kupić nieruchomość Domlivo?",
+      "answer": "Odkryj szeroki wybór nieruchomości premium — od luksusowych apartamentów po przestronne wille, dopasowane do Twoich potrzeb."
+    },
+    "contact": {
+      "title": "Wejdź do przestrzeni, w której wyrafinowany design spotyka się z ponadczasowym luksusem.",
+      "getInTouch": "Skontaktuj się",
+      "marquee1": "BEZPŁATNA WYCENA NIERUCHOMOŚCI — SPRZEDAJ SWÓJ DOM Z PEWNOŚCIĄ!",
+      "marquee2": "PRZEGLĄDAJ TYSIĄCE OFERT W NAJLEPSZYCH LOKALIZACJACH W ŚWIETNYCH CENACH!"
+    },
+    "blog": {
+      "badge": "Blog",
+      "title": "Wiedza o rynku nieruchomości",
+      "description": "Bądź na bieżąco z rynkiem nieruchomości dzięki poradom i aktualnościom od ekspertów",
+      "readAllArticles": "Czytaj wszystkie artykuły"
+    },
+    "testimonial": {
+      "badge": "Opinie",
+      "title": "Co mówią nasi klienci",
+      "goToSlide": "Przejdź do slajdu {num}"
+    }
+  },
+  "Shared": {
+    "seoText": {
+      "contentMissing": "Treść SEO jest niedostępna."
+    },
+    "propertyDetail": {
+      "propertyDetails": "Szczegóły nieruchomości",
+      "checkAllAmenities": "Zobacz wszystkie udogodnienia",
+      "whatThisPropertyOffers": "Co oferuje ta nieruchomość",
+      "similarProperties": "Podobne nieruchomości",
+      "yearBuilt": "Rok budowy {year}",
+      "checkAllPhotos": "Zobacz wszystkie zdjęcia",
+      "getInTouch": "Skontaktuj się",
+      "contactHeading": "Zainteresowany tą nieruchomością?",
+      "contactIntro": "Zostaw swoje dane, a skontaktujemy się z Tobą w sprawie tej oferty.",
+      "contactSuccessTitle": "Zgłoszenie wysłane!",
+      "contactSuccessBody": "Otrzymaliśmy Twoją wiadomość i wkrótce się z Tobą skontaktujemy.",
+      "contactClose": "Zamknij",
+      "dealTypeSale": "Sprzedaż",
+      "dealTypeRent": "Wynajem",
+      "dealTypeShortTerm": "Wynajem krótkoterminowy",
+      "dealTypeLongTerm": "Wynajem długoterminowy",
+      "dealTypePrice": "Cena",
+      "dealTypeShortTermCompact": "Wynajem krótki",
+      "dealTypeLongTermCompact": "Wynajem długi"
+    },
+    "propertyCard": {
+      "bedrooms": "Sypialnie",
+      "bathrooms": "Łazienki",
+      "roomsCount": "{count, plural, one {# pokój} few {# pokoje} many {# pokoi} other {# pokoju}}",
+      "bedroomsCount": "{count, plural, one {# sypialnia} few {# sypialnie} many {# sypialni} other {# sypialni}}",
+      "bathroomsCount": "{count, plural, one {# łazienka} few {# łazienki} many {# łazienek} other {# łazienki}}",
+      "areaUnit": "m²",
+      "pricePrefix": "$",
+      "previousImage": "Poprzednie zdjęcie",
+      "nextImage": "Następne zdjęcie",
+      "premium": "Premium",
+      "top": "Top",
+      "sale": "Sprzedaż",
+      "discount": "-{value}%"
+    },
+    "blogCard": {
+      "imageAlt": "Zdjęcie artykułu na blogu",
+      "ariaLabel": "Zobacz artykuł na blogu",
+      "readMore": "Czytaj więcej",
+      "minRead": "{count} min czytania"
+    },
+    "blogCta": {
+      "learnMore": "Dowiedz się więcej"
+    },
+    "blog": {
+      "relatedArticles": "Powiązane artykuły",
+      "relatedProperties": "Powiązane nieruchomości"
+    },
+    "goBack": "Wróć",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {nieruchomość} few {nieruchomości} many {nieruchomości} other {nieruchomości}}"
+    }
+  },
+  "Listing": {
+    "properties": {
+      "badge": "Nieruchomości",
+      "title": "Odkryj inspirujące projekty domów.",
+      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
+    },
+    "residentialHomes": {
+      "badge": "Nieruchomości",
+      "title": "Domy mieszkalne.",
+      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
+    },
+    "luxuryVilla": {
+      "badge": "Nieruchomości",
+      "title": "Luksusowe wille.",
+      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
+    },
+    "appartment": {
+      "badge": "Nieruchomości",
+      "title": "Apartamenty.",
+      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
+    },
+    "officeSpaces": {
+      "badge": "Nieruchomości",
+      "title": "Powierzchnie biurowe.",
+      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
+    },
+    "blogs": {
+      "badge": "Blog",
+      "title": "Wiedza o rynku nieruchomości.",
+      "description": "Bądź na bieżąco z rynkiem nieruchomości dzięki poradom i aktualnościom od ekspertów.",
+      "metaTitle": "Blog"
+    }
+  },
+  "Cities": {
+    "title": "Miasta",
+    "description": "Przeglądaj nieruchomości według miasta.",
+    "cityDescription": "Nieruchomości w mieście {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Strona główna",
+    "properties": "Nieruchomości",
+    "favorites": "Ulubione",
+    "cities": "Miasta",
+    "blog": "Blog",
+    "guides": "Poradniki",
+    "districts": "Dzielnice",
+    "catalog": "Nieruchomości",
+    "agents": "Agenci",
+    "propertyTypes": "Typy nieruchomości",
+    "contacts": "Kontakty",
+    "forRealtors": "Dla agentów",
+    "howToPublish": "Jak publikować",
+    "register": "Rejestracja",
+    "investment": "Inwestycje"
+  },
+  "Districts": {
+    "hubTitle": "Dzielnice miasta {city}",
+    "hubDescription": "Poznaj dzielnice miasta {city} i wybierz odpowiednią okolicę dla swojego kolejnego domu.",
+    "faqTitle": "Najczęściej zadawane pytania",
+    "exploreTitle": "Zobacz więcej",
+    "propertiesInDistrict": "Nieruchomości w dzielnicy {district}",
+    "aboutCity": "Więcej o mieście {city}",
+    "otherDistricts": "Inne dzielnice miasta {city}",
+    "viewAllDistricts": "Zobacz wszystkie dzielnice miasta {city}"
+  },
+  "Landing": {
+    "updatedAt": "Aktualizacja: {date}",
+    "confidenceHigh": "Wysoka wiarygodność",
+    "confidenceMedium": "Średnia wiarygodność",
+    "confidenceLow": "Niska wiarygodność",
+    "methodology": "Metodologia"
+  },
+  "ZoneMetrics": {
+    "priceNew": "Nowe budownictwo, €/m²",
+    "priceResale": "Rynek wtórny, €/m²",
+    "priceAll": "Cała podaż, €/m²",
+    "rent1br": "Wynajem 1+1, €/miesiąc",
+    "rent2br": "Wynajem 2+1, €/miesiąc",
+    "strAdr": "Cena za dobę, €",
+    "strOccupancy": "Obłożenie, %",
+    "yieldLtr": "Rentowność brutto, długoterminowo",
+    "yieldStr": "Rentowność brutto, krótkoterminowo",
+    "referencePrice": "Cena referencyjna państwa, lek/m²",
+    "rating": "Ocena DomLivo",
+    "zone": "Strefa",
+    "sample": "{n} ofert",
+    "basisAsking": "ceny ofertowe",
+    "basisTransaction": "transakcje",
+    "basisOfficial": "urzędowy cennik",
+    "basisCalculated": "wartość wyliczona",
+    "basisMixed": "źródła mieszane",
+    "referenceEdition": "Cennik referencyjny: {edition}"
+  },
+  "Calculators": {
+    "propertyPrice": "Cena nieruchomości",
+    "enterPrice": "Wpisz cenę nieruchomości, aby zobaczyć wyniki",
+    "downPayment": "Wkład własny",
+    "interestRate": "Oprocentowanie",
+    "loanTerm": "Okres kredytowania",
+    "years": "lat",
+    "monthlyPayment": "Rata miesięczna",
+    "loanAmount": "Kwota kredytu",
+    "totalInterest": "Suma odsetek",
+    "ltvLabel": "LTV",
+    "ltvOk": "W granicach limitu LTV",
+    "ltvExceeded": "Przekracza limit LTV wynoszący {limit}% — banki mogą wymagać wyższego wkładu własnego",
+    "presetLabel": "Domyślne wartości strefy",
+    "manualMode": "Wprowadzanie ręczne",
+    "rentalType": "Rodzaj najmu",
+    "ltr": "Długoterminowy",
+    "str": "Krótkoterminowy",
+    "monthlyRent": "Czynsz miesięczny",
+    "adr": "Średnia cena za dobę (ADR)",
+    "occupancy": "Obłożenie",
+    "nightsCap": "Sezonowy limit nocy",
+    "mgmtFee": "Opłata za zarządzanie",
+    "taxRate": "Podatek od dochodu z najmu",
+    "grossYield": "Rentowność brutto",
+    "netYield": "Rentowność netto",
+    "netIncomePerYear": "Dochód netto / rok",
+    "breakdown": "Szczegóły obliczeń",
+    "grossIncome": "Roczny dochód brutto",
+    "nightsUsed": "Wynajęte noce rocznie",
+    "managementCost": "Zarządzanie",
+    "taxCost": "Podatek",
+    "netIncome": "Roczny dochód netto",
+    "transactionCosts": "Koszty transakcyjne",
+    "totalPurchaseCost": "Całkowity koszt zakupu",
+    "onTopOfPrice": "Dodatkowo do ceny",
+    "capped": "ograniczone"
+  },
+  "Trackers": {
+    "statusOnTrack": "Zgodnie z planem",
+    "statusDelayed": "Opóźnione",
+    "statusBlocked": "Zablokowane",
+    "statusDone": "Zakończone",
+    "checkedAt": "Sprawdzono: {date}",
+    "showAllEvents": "Pokaż wszystkie wydarzenia ({count})",
+    "faqTitle": "Najczęściej zadawane pytania",
+    "sourcesTitle": "Źródła"
+  },
+  "Developers": {
+    "tierGreen": "Poziom zielony",
+    "tierYellow": "Poziom żółty",
+    "tierRed": "Poziom czerwony",
+    "reviewedAt": "Sprawdzono: {date}",
+    "staleNote": "Dane mogą być nieaktualne",
+    "disclaimerShort": "Ocena redakcyjna oparta na źródłach publicznych. Wzmianka w sprawie sądowej nie jest wyrokiem.",
+    "about": "O deweloperze",
+    "keyProjects": "Kluczowe projekty",
+    "riskNotes": "Znane ryzyka",
+    "sourcesTitle": "Źródła",
+    "founded": "Założona: {year}",
+    "developerLabel": "Deweloper",
+    "details": "Szczegóły"
+  },
+  "PropertyMarketPosition": {
+    "title": "Rynek w tej dzielnicy",
+    "labelBelow": "Poniżej rynku",
+    "labelIn": "W granicach rynku",
+    "labelAbove": "Powyżej rynku",
+    "referencePrice": "Cena referencyjna",
+    "districtYield": "Rentowność dzielnicy: {pct}%",
+    "viewDistrict": "Zobacz stronę dzielnicy",
+    "disclaimer": "Szacunek oparty na przedziałach cenowych dzielnicy, a nie wycena konkretnej nieruchomości."
+  },
+  "Catalog": {
+    "heroIntroFallback": "Przeglądaj naszą ofertę nieruchomości.",
+    "agentTitle": "Nieruchomości agenta {name}",
+    "agentIntroFallback": "Oferty tego agenta",
+    "empty": {
+      "title": "Nie znaleziono nieruchomości",
+      "description": "Spróbuj dostosować lub zresetować filtry.",
+      "reset": "Resetuj filtry"
+    },
+    "filters": {
+      "location": "Lokalizacja",
+      "propertyType": "Typ nieruchomości",
+      "dealType": "Rodzaj transakcji",
+      "dealSale": "Sprzedaż",
+      "dealRent": "Wynajem",
+      "dealShortTerm": "Wynajem krótkoterminowy",
+      "dealAll": "Wszystkie",
+      "priceRange": "Przedział cenowy",
+      "area": "Powierzchnia",
+      "areaFrom": "Od",
+      "areaTo": "Do",
+      "areaUnit": "m²",
+      "advancedFilters": "Filtry zaawansowane",
+      "filtersShort": "Filtry",
+      "mobileSearchOpen": "Szukaj",
+      "closeModal": "Zamknij",
+      "resetFilters": "Resetuj filtry",
+      "search": "Szukaj",
+      "anyLocation": "Dowolna lokalizacja",
+      "anyType": "Dowolny typ",
+      "any": "Dowolny",
+      "priceFrom": "Od",
+      "priceTo": "Do",
+      "bedrooms": "Sypialnie",
+      "bedsAtLeast": "{count}+",
+      "district": "Dzielnica",
+      "anyDistrict": "Dowolna dzielnica",
+      "amenities": "Udogodnienia",
+      "amenitiesSelected": "Wybrano: {count}",
+      "clear": "Wyczyść",
+      "done": "Gotowe",
+      "sortBy": "Sortuj według",
+      "sortNewest": "Najnowsze",
+      "sortPriceAsc": "Cena (rosnąco)",
+      "sortPriceDesc": "Cena (malejąco)",
+      "sortAreaDesc": "Powierzchnia (od największej)",
+      "resultsPerPage": "Wyników na stronę",
+      "viewLabel": "Widok",
+      "viewLarge": "Duże karty",
+      "viewSmall": "Małe karty",
+      "viewList": "Widok listy"
+    }
+  },
+  "Contacts": {
+    "metaTitle": "Kontakt",
+    "metaDescription": "Wyślij zapytanie, a nasz zespół skontaktuje się z Tobą z ofertami dopasowanymi do Twoich potrzeb.",
+    "heroH1": "Nie znalazłeś odpowiedniego domu?",
+    "heroH2": "Zostaw zapytanie — przygotujemy dopasowaną ofertę!",
+    "heroDescription": "Wypełnij poniższy formularz, a nasz opiekun skontaktuje się z Tobą z ofertami dopasowanymi do Twoich potrzeb. Szybko, prosto i bez zbędnych formalności.",
+    "heroImageAlt": "Skontaktuj się z nami",
+    "managerPhotoAlt": "Nasz opiekun",
+    "managerEmailLabel": "Email",
+    "follow": "Obserwuj",
+    "formHeading": "Wyślij zapytanie",
+    "formIntro": "Podaj sposób kontaktu i czego szukasz.",
+    "formName": "Imię",
+    "formPhone": "Numer telefonu",
+    "formEmail": "Adres email",
+    "formMessage": "Twoja wiadomość",
+    "formSubmit": "Wyślij wiadomość",
+    "formSubmitting": "Wysyłanie…",
+    "errorSubmit": "Coś poszło nie tak. Spróbuj ponownie."
+  },
+  "ContactThankYou": {
+    "metaTitle": "Dziękujemy",
+    "metaDescription": "Twoje zapytanie zostało odebrane. Nasz zespół wkrótce się z Tobą skontaktuje.",
+    "title": "Dziękujemy! Twoje zapytanie zostało wysłane",
+    "description": "Nasz opiekun wkrótce skontaktuje się z Tobą z ofertami dopasowanymi do Twojego zapytania.",
+    "cta": "Przeglądaj nieruchomości",
+    "imageAlt": "Zdjęcie wnętrza"
+  },
+  "Favorites": {
+    "title": "Ulubione",
+    "description": "Nieruchomości dodane do ulubionych.",
+    "clearFavorites": "Wyczyść ulubione",
+    "clearModalTitle": "Wyczyścić wszystkie ulubione?",
+    "clearModalDescription": "To usunie wszystkie nieruchomości z ulubionych. Możesz dodać je ponownie w każdej chwili.",
+    "clearModalConfirm": "Wyczyść wszystko",
+    "clearModalCancel": "Anuluj",
+    "emptyTitle": "Brak ulubionych",
+    "emptyDescription": "Przeglądaj nieruchomości i dotknij serca, aby dodać je tutaj.",
+    "browseProperties": "Przeglądaj nieruchomości",
+    "noDataTitle": "Nie znaleziono danych nieruchomości",
+    "noDataDescription": "Niektóre ulubione mogą już nie istnieć."
+  },
+  "HowToPublish": {
+    "metaTitle": "Jak publikować na Domlivo",
+    "metaDescription": "Obejrzyj demo i dowiedz się, jak publikować nieruchomości na Domlivo i otrzymywać zapytania na Telegramie.",
+    "heroTitle": "Jak publikować nieruchomości na Domlivo",
+    "heroSubtitle": "Obejrzyj demo i dowiedz się, jak otrzymywać realne zapytania",
+    "heroBody": "Wszystko jest proste — dodaj swoją nieruchomość i zacznij otrzymywać klientów bezpośrednio.",
+    "heroCta": "Obejrzyj demo",
+    "block2Title": "Jak działa platforma Domlivo",
+    "block2Body": "Rejestrujesz się, dodajesz nieruchomości i otrzymujesz zapytania od klientów bezpośrednio na Telegramie. Wszystko jest proste, bez pośredników.",
+    "step1": "Rejestracja",
+    "step2": "Dodawanie nieruchomości",
+    "step3": "Otrzymywanie zapytań",
+    "block2Cta": "Wypróbuj 7 dni za darmo"
+  },
+  "Register": {
+    "metaTitle": "Zarejestruj się jako agent",
+    "metaDescription": "Wyślij zgłoszenie rejestracyjne, aby publikować oferty na Domlivo i otrzymywać realne zapytania od klientów.",
+    "heroTitle": "Zarejestruj się i zacznij otrzymywać realne zapytania",
+    "heroSubtitle": "Domlivo dostarcza Ci klientów — pracujesz bezpośrednio, bez prowizji",
+    "blockLeftTitle": "Cennik i warunki",
+    "benefit1": "7 dni za darmo",
+    "benefit2": "80 €/miesiąc",
+    "benefit3": "Bez prowizji",
+    "benefit4": "Bezpośrednie zapytania na Telegramie",
+    "benefit5": "Panel osobisty",
+    "benefit6": "Pełne zarządzanie nieruchomościami z telefonu",
+    "benefit7": "Ruch z Google i AI",
+    "blockLeftFooter": "Rejestracja zajmuje 1 minutę",
+    "imageAlt": "Zdjęcie wnętrza",
+    "formHeading": "Wypełnij formularz, aby zacząć",
+    "fieldName": "Imię",
+    "fieldPhone": "Telefon",
+    "fieldEmail": "Email",
+    "fieldProfileType": "Typ profilu",
+    "fieldTypeHint": "Opcjonalnie. Wybierz, czy pracujesz jako agent, czy reprezentujesz agencję.",
+    "typeNotSpecified": "Nie określono",
+    "typeRealtor": "Agent",
+    "typeAgency": "Agencja",
+    "fieldLanguage": "Język komunikacji",
+    "langSq": "Albański",
+    "langEn": "Angielski",
+    "langRu": "Rosyjski",
+    "langUk": "Ukraiński",
+    "langIt": "Włoski",
+    "langPl": "Polski",
+    "terms": "Zgadzam się z <link>zasadami przetwarzania danych osobowych</link>",
+    "submit": "Zacznij teraz",
+    "submitting": "Wysyłanie…",
+    "footnote": "Skontaktujemy się z Tobą wkrótce",
+    "errorSubmit": "Coś poszło nie tak. Spróbuj ponownie.",
+    "errorTerms": "Zaakceptuj warunki, aby kontynuować.",
+    "errorRequiredName": "Podaj swoje imię.",
+    "errorRequiredPhone": "Podaj swój numer telefonu.",
+    "thankYouMetaTitle": "Dziękujemy",
+    "thankYouMetaDescription": "Twoje zgłoszenie rejestracyjne zostało odebrane.",
+    "thankYouTitle": "Dziękujemy",
+    "thankYouDescription": "Otrzymaliśmy Twoje zgłoszenie i wkrótce się z Tobą skontaktujemy.",
+    "thankYouCta": "Powrót do strony głównej",
+    "thankYouImageAlt": "Zdjęcie wnętrza"
+  },
+  "Guides": {
+    "title": "Poradniki",
+    "description": "Poradniki rynkowe, porównania i wskazówki zakupowe dla Albanii.",
+    "empty": "Nie opublikowano jeszcze żadnych poradników.",
+    "breadcrumbHome": "Strona główna"
+  },
+  "ImageCredits": {
+    "title": "Źródła zdjęć",
+    "description": "Fotografowie, licencje i źródła każdego zdjęcia użytego na Domlivo.",
+    "intro": "Każde zdjęcie na tej stronie jest udostępnione na wolnej licencji. Ta strona podaje fotografa, licencję i źródło pliku, co spełnia wymogi licencji wymagających podania autorstwa.",
+    "attributedHeading": "Zdjęcia wymagające podania autorstwa",
+    "attributedNote": "Wykorzystane na licencjach Creative Commons wymagających podania autora zdjęcia.",
+    "freeHeading": "Zdjęcia w domenie publicznej i CC0",
+    "freeNote": "Podanie autorstwa nie jest wymagane. Są tu wymienione, aby każde zdjęcie na stronie można było prześledzić do źródła.",
+    "standIn": "Zdjęcie zastępcze",
+    "source": "Plik źródłowy",
+    "empty": "Nie zapisano jeszcze żadnych źródeł zdjęć.",
+    "breadcrumbHome": "Strona główna"
+  },
+  "Blog": {
+    "tableOfContents": "Spis treści",
+    "keyFacts": "W skrócie",
+    "faqTitle": "Najczęściej zadawane pytania",
+    "sourcesTitle": "Źródła",
+    "zoneStatsTitle": "Dane rynkowe",
+    "trackerLastChecked": "Sprawdzono",
+    "authorPostsTitle": "Artykuły tego autora",
+    "authorNoPosts": "Brak opublikowanych artykułów.",
+    "zoneStatsAll": "Cała nieruchomość",
+    "zoneStatsNew": "Nowe budownictwo",
+    "zoneStatsResale": "Rynek wtórny",
+    "zoneStatsYield": "Rentowność brutto"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "miesiąc"
+  }
+}

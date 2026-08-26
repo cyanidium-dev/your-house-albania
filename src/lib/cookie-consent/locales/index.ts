@@ -5,6 +5,7 @@ import { consentCopyUk } from "./uk/consent";
 import { consentCopyRu } from "./ru/consent";
 import { consentCopySq } from "./sq/consent";
 import { consentCopyIt } from "./it/consent";
+import { consentCopyPl } from "./pl/consent";
 
 export type { ConsentCopy };
 
@@ -16,6 +17,7 @@ const COPY: Record<Locale, ConsentCopy> = {
   ru: consentCopyRu,
   sq: consentCopySq,
   it: consentCopyIt,
+  pl: consentCopyPl,
 };
 
 /** Locale → copy; default-locale copy for unknown locale strings. */

@@ -5,7 +5,7 @@
  * the editor module does not depend on `next-intl` internals beyond message
  * loading.
  */
-export const EDITOR_LOCALES = ['en', 'ru', 'sq', 'it', 'uk'] as const;
+export const EDITOR_LOCALES = ['en', 'ru', 'sq', 'it', 'uk', 'pl'] as const;
 export type Locale = (typeof EDITOR_LOCALES)[number];
 
 export function isLocale(value: unknown): value is Locale {
