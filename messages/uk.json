@@ -177,6 +177,12 @@
       "contentMissing": "SEO-текст недоступний.",
       "videoTitle": "Відео"
     },
+    "relatedPages": {
+      "districtsOfCity": "Досліджуйте райони",
+      "comparisons": "Схожі порівняння",
+      "guides": "Схожі гайди",
+      "related": "Схожі сторінки"
+    },
     "lightbox": {
       "close": "Закрити",
       "imageFullscreenView": "Повноекранний перегляд зображення",

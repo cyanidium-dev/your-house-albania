@@ -177,6 +177,12 @@
       "contentMissing": "SEO-текст недоступен.",
       "videoTitle": "Видео"
     },
+    "relatedPages": {
+      "districtsOfCity": "Изучите районы",
+      "comparisons": "Похожие сравнения",
+      "guides": "Похожие гайды",
+      "related": "Похожие страницы"
+    },
     "lightbox": {
       "close": "Закрыть",
       "imageFullscreenView": "Полноэкранный просмотр изображения",

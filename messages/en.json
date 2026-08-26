@@ -177,6 +177,12 @@
       "contentMissing": "SEO content is not available.",
       "videoTitle": "Video"
     },
+    "relatedPages": {
+      "districtsOfCity": "Explore the districts",
+      "comparisons": "Related comparisons",
+      "guides": "Related guides",
+      "related": "Related pages"
+    },
     "lightbox": {
       "close": "Close",
       "imageFullscreenView": "Image fullscreen view",

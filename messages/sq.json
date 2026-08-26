@@ -177,6 +177,12 @@
       "contentMissing": "Përmbajtja SEO nuk është e disponueshme.",
       "videoTitle": "Video"
     },
+    "relatedPages": {
+      "districtsOfCity": "Eksploroni lagjet",
+      "comparisons": "Krahasime të ngjashme",
+      "guides": "Udhëzues të ngjashëm",
+      "related": "Faqe të ngjashme"
+    },
     "lightbox": {
       "close": "Mbyll",
       "imageFullscreenView": "Pamje e plotë e fotos",

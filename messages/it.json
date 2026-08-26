@@ -177,6 +177,12 @@
       "contentMissing": "Il contenuto SEO non è disponibile.",
       "videoTitle": "Video"
     },
+    "relatedPages": {
+      "districtsOfCity": "Esplora i quartieri",
+      "comparisons": "Confronti correlati",
+      "guides": "Guide correlate",
+      "related": "Pagine correlate"
+    },
     "lightbox": {
       "close": "Chiudi",
       "imageFullscreenView": "Visualizzazione immagine a schermo intero",

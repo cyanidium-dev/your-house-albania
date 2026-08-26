@@ -26,6 +26,7 @@ import { developersRatingSectionHandler } from './handlers/developersRatingSecti
 import { developerCardSectionHandler } from './handlers/developerCardSection'
 import { zoneStatsAutoSectionHandler } from './handlers/zoneStatsAutoSection'
 import { zonePriceTableAutoSectionHandler } from './handlers/zonePriceTableAutoSection'
+import { relatedPagesAutoSectionHandler } from './handlers/relatedPagesAutoSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -52,6 +53,7 @@ const registry: Record<string, SectionHandler> = {
   developerCardSection: developerCardSectionHandler,
   zoneStatsAutoSection: zoneStatsAutoSectionHandler,
   zonePriceTableAutoSection: zonePriceTableAutoSectionHandler,
+  relatedPagesAutoSection: relatedPagesAutoSectionHandler,
 }
 
 export async function renderLandingSection(input: {
