@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { normalizePolicyLinks } from './siteSettingsAdapter'
+import { mapSiteSettingsToResolved, normalizePolicyLinks } from './siteSettingsAdapter'
 
 describe('normalizePolicyLinks', () => {
   it('trims and locale-resolves relative hrefs', () => {
@@ -17,5 +17,19 @@ describe('normalizePolicyLinks', () => {
     expect(normalizePolicyLinks([{ href: '/p', label: { en: '' } }], 'en')).toEqual([])
     expect(normalizePolicyLinks([{ href: '/p' }], 'en')).toEqual([])
     expect(normalizePolicyLinks(undefined, 'en')).toEqual([])
+  })
+})
+
+describe('mapSiteSettingsToResolved — footerGuideLinks (ТЗ-16)', () => {
+  it('normalizes guide links exactly like policy links', () => {
+    const resolved = mapSiteSettingsToResolved(
+      { footerGuideLinks: [{ href: '/guides/buying', label: { en: 'Buying guides' } }] } as never,
+      'en',
+    )
+    expect(resolved.footerGuideLinks).toEqual([{ href: '/en/guides/buying', label: 'Buying guides' }])
+  })
+  it('yields [] when the field is absent or the whole settings object is null', () => {
+    expect(mapSiteSettingsToResolved({} as never, 'en').footerGuideLinks).toEqual([])
+    expect(mapSiteSettingsToResolved(null, 'en').footerGuideLinks).toEqual([])
   })
 })

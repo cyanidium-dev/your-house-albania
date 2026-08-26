@@ -36,6 +36,7 @@
   },
   "Footer": {
     "columns": {
+      "guides": "Гайды",
       "navigation": "Навигация",
       "cities": "Города",
       "contacts": "Контакты",
@@ -176,6 +177,12 @@
     "seoText": {
       "contentMissing": "SEO-текст недоступен.",
       "videoTitle": "Видео"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Изучите районы",
+      "comparisons": "Похожие сравнения",
+      "guides": "Похожие гайды",
+      "related": "Похожие страницы"
     },
     "lightbox": {
       "close": "Закрыть",

@@ -36,6 +36,7 @@
   },
   "Footer": {
     "columns": {
+      "guides": "Przewodniki",
       "navigation": "Nawigacja",
       "cities": "Miasta",
       "contacts": "Kontakty",
@@ -240,6 +241,12 @@
     "goBack": "Wróć",
     "entityCard": {
       "propertiesCountLabel": "{count, plural, one {nieruchomość} few {nieruchomości} many {nieruchomości} other {nieruchomości}}"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Poznaj dzielnice",
+      "comparisons": "Podobne porównania",
+      "guides": "Powiązane przewodniki",
+      "related": "Powiązane strony"
     },
     "lightbox": {
       "close": "Zamknij",

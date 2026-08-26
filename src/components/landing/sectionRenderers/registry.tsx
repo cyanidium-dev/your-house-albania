@@ -26,6 +26,7 @@ import { developersRatingSectionHandler } from './handlers/developersRatingSecti
 import { developerCardSectionHandler } from './handlers/developerCardSection'
 import { zoneStatsAutoSectionHandler } from './handlers/zoneStatsAutoSection'
 import { zonePriceTableAutoSectionHandler } from './handlers/zonePriceTableAutoSection'
+import { relatedPagesAutoSectionHandler } from './handlers/relatedPagesAutoSection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -52,6 +53,7 @@ const registry: Record<string, SectionHandler> = {
   developerCardSection: developerCardSectionHandler,
   zoneStatsAutoSection: zoneStatsAutoSectionHandler,
   zonePriceTableAutoSection: zonePriceTableAutoSectionHandler,
+  relatedPagesAutoSection: relatedPagesAutoSectionHandler,
 }
 
 export async function renderLandingSection(input: {
@@ -64,6 +66,8 @@ export async function renderLandingSection(input: {
   linkedZone?: LinkedZone
   /** Shared per-render marker for the single-FAQPage-per-page rule (see handler types). */
   faqJsonLd?: { emitted: boolean }
+  /** Host landing context for the related-pages auto modes (see handler types). */
+  landingCtx?: { id?: string; topicTags?: string[] }
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null

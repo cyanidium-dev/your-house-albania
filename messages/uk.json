@@ -36,6 +36,7 @@
   },
   "Footer": {
     "columns": {
+      "guides": "Гайди",
       "navigation": "Навігація",
       "cities": "Міста",
       "contacts": "Контакти",
@@ -176,6 +177,12 @@
     "seoText": {
       "contentMissing": "SEO-текст недоступний.",
       "videoTitle": "Відео"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Досліджуйте райони",
+      "comparisons": "Схожі порівняння",
+      "guides": "Схожі гайди",
+      "related": "Схожі сторінки"
     },
     "lightbox": {
       "close": "Закрити",

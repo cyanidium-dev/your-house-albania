@@ -33,6 +33,11 @@ const cachedFetchSiteSettings = sanityCache(
         href,
         label
       },
+      footerGuideLinks[] {
+        _key,
+        href,
+        label
+      },
       defaultSeo {
         metaTitle,
         metaDescription,
