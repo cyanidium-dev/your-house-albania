@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+import { useTranslations } from "next-intl";
 
 type Props = {
   url: string;
@@ -13,6 +14,8 @@ type Props = {
 };
 
 export function ImageLightbox({ url, alt = "", isOpen, onClose, unoptimized }: Props) {
+  const t = useTranslations("Shared.lightbox");
+
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
@@ -33,13 +36,13 @@ export function ImageLightbox({ url, alt = "", isOpen, onClose, unoptimized }: P
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
       role="dialog"
       aria-modal="true"
-      aria-label="Image fullscreen view"
+      aria-label={t("imageFullscreenView")}
     >
       <button
         type="button"
         onClick={onClose}
         className="absolute inset-0 z-0"
-        aria-label="Close"
+        aria-label={t("close")}
       />
       <button
         type="button"
@@ -48,7 +51,7 @@ export function ImageLightbox({ url, alt = "", isOpen, onClose, unoptimized }: P
           onClose();
         }}
         className="absolute top-4 right-4 z-20 p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
-        aria-label="Close"
+        aria-label={t("close")}
       >
         <Icon icon="ph:x" width={28} height={28} />
       </button>

@@ -6,11 +6,15 @@ import { useTheme } from 'next-themes'
 type HeaderThemeToggleProps = {
   isHomepage: boolean
   sticky: boolean
+  lightModeLabel: string
+  darkModeLabel: string
 }
 
 export default function HeaderThemeToggle({
   isHomepage,
   sticky,
+  lightModeLabel,
+  darkModeLabel,
 }: HeaderThemeToggleProps) {
   const { theme, setTheme } = useTheme()
 
@@ -18,7 +22,7 @@ export default function HeaderThemeToggle({
     <button
       className='hover:cursor-pointer transition-colors duration-300 ease-out p-1 md:p-0'
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={theme === 'dark' ? lightModeLabel : darkModeLabel}
     >
       <Icon
         icon={'solar:sun-bold'}

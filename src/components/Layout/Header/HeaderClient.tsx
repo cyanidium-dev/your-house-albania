@@ -21,6 +21,12 @@ export type HeaderTranslations = {
   menu: string
   cta: { viewProperties: string }
   nav: Record<string, string>
+  toggleMobileMenu: string
+  switchToLightMode: string
+  switchToDarkMode: string
+  selectLanguage: string
+  closeMobileMenu: string
+  mainNavigation: string
 }
 
 type HeaderClientProps = {
@@ -101,7 +107,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     <div className='flex items-center gap-1 sm:gap-4 min-w-0 shrink-0'>
                       <LanguageSwitcher />
                       <CurrencySwitcher />
-                      <HeaderThemeToggle isHomepage={isHomepage} sticky={sticky} />
+                      <HeaderThemeToggle isHomepage={isHomepage} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
                       <HeaderFavoritesLink locale={locale} isHomepage={isHomepage} sticky={sticky} />
                       <div className="hidden md:block">
                         <Link
@@ -124,6 +130,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                           isHomepage={isHomepage}
                           sticky={sticky}
                           menuLabel={t.menu}
+                          ariaLabel={t.toggleMobileMenu}
                         />
                       </div>
                     </div>
@@ -137,7 +144,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     <div className="flex w-full items-center justify-end py-4 md:py-5">
                       <button
                         onClick={onClose}
-                        aria-label="Close mobile menu"
+                        aria-label={t.closeMobileMenu}
                         className="rounded-full bg-white p-3 hover:cursor-pointer"
                         type="button"
                       >
@@ -167,7 +174,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       drawerExpanded ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden',
                     )}
                   >
-                    <nav className="flex min-h-0 flex-1 flex-col items-start gap-2 sm:gap-2.5" aria-label="Main">
+                    <nav className="flex min-h-0 flex-1 flex-col items-start gap-2 sm:gap-2.5" aria-label={t.mainNavigation}>
                       <DrawerNavList
                         items={DRAWER_NAV_ITEMS}
                         countrySlugs={countrySlugs}

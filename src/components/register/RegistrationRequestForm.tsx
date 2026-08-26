@@ -192,6 +192,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
           onValueChange={onLanguageChange}
           options={languageOptions}
           includeAnyOption={false}
+          anyLabel=""
           radius="full"
           className="rounded-full border-black/10 px-6 py-3.5 h-auto min-h-[48px]"
         />

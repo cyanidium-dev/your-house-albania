@@ -107,7 +107,7 @@ export function SectionHeader({
             <Icon
               icon="ph:house-simple-fill"
               className="text-2xl text-primary"
-              aria-label="Home icon"
+              aria-hidden
             />
             {e}
           </p>

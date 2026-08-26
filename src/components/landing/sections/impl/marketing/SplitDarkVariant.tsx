@@ -62,7 +62,7 @@ export function SplitDarkVariant({
                 loop
                 muted
                 playsInline
-                aria-label="Marketing video"
+                aria-hidden
               >
                 <source src={vidUrl} />
               </video>

@@ -22,7 +22,14 @@
     },
     "cta": {
       "viewProperties": "Переглянути об'єкти"
-    }
+    },
+    "toggleMobileMenu": "Відкрити мобільне меню",
+    "switchToLightMode": "Увімкнути світлу тему",
+    "switchToDarkMode": "Увімкнути темну тему",
+    "favoritesCount": "Обране ({count})",
+    "selectLanguage": "Обрати мову",
+    "closeMobileMenu": "Закрити мобільне меню",
+    "mainNavigation": "Основна навігація"
   },
   "Currency": {
     "switchTo": "Змінити валюту на {currency}"
@@ -167,7 +174,13 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "SEO-текст недоступний."
+      "contentMissing": "SEO-текст недоступний.",
+      "videoTitle": "Відео"
+    },
+    "lightbox": {
+      "close": "Закрити",
+      "imageFullscreenView": "Повноекранний перегляд зображення",
+      "viewImageFullscreen": "Відкрити зображення на весь екран"
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",
@@ -188,7 +201,16 @@
       "dealTypeLongTerm": "Довгострокова оренда",
       "dealTypePrice": "Ціна",
       "dealTypeShortTermCompact": "Корот. оренда",
-      "dealTypeLongTermCompact": "Довг. оренда"
+      "dealTypeLongTermCompact": "Довг. оренда",
+      "close": "Закрити",
+      "imageGallery": "Галерея зображень",
+      "openImage": "Відкрити фото {n}",
+      "propertyImageAlt": "Фото об'єкта {n}",
+      "imageAlt": "Зображення {n}",
+      "thumbnailAlt": "Мініатюра {n}",
+      "goToImage": "Перейти до фото {n}",
+      "hideThumbnails": "Сховати мініатюри",
+      "showThumbnails": "Показати мініатюри"
     },
     "propertyCard": {
       "bedrooms": "Спальні",
@@ -203,7 +225,9 @@
       "premium": "Преміум",
       "top": "Топ",
       "sale": "Знижка",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Об'єкт",
+      "closePreview": "Закрити перегляд"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",
@@ -276,7 +300,8 @@
     "forRealtors": "Ріелторам",
     "howToPublish": "Як розмістити",
     "register": "Реєстрація",
-    "investment": "Інвестиції"
+    "investment": "Інвестиції",
+    "navLabel": "Хлібні крихти"
   },
   "Districts": {
     "hubTitle": "Райони міста {city}",
@@ -390,6 +415,11 @@
     "disclaimer": "Оцінка на основі цінових діапазонів району, не оцінка конкретного об'єкта."
   },
   "Catalog": {
+    "pagination": {
+      "pagination": "Пагінація",
+      "previousPage": "Попередня сторінка",
+      "nextPage": "Наступна сторінка"
+    },
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "agentTitle": "Об'єкти від {name}",
     "agentIntroFallback": "Показуємо оголошення цього агента",

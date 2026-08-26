@@ -43,7 +43,7 @@ type Props = {
   hint?: string;
   /** When false, only `options` are shown (no “any / all” row). Default true. */
   includeAnyOption?: boolean;
-  anyLabel?: string;
+  anyLabel: string;
   anyValue?: string;
   disabled?: boolean;
   className?: string;
@@ -58,7 +58,7 @@ export function FilterSelect({
   placeholder,
   hint,
   includeAnyOption = true,
-  anyLabel = "Any",
+  anyLabel,
   anyValue = "any",
   disabled,
   className,
