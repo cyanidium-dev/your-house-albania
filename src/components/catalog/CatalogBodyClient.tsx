@@ -467,7 +467,7 @@ export function CatalogBodyClient({
                           "absolute z-30 w-7 h-7 rounded-full bg-white/95 dark:bg-black/85 border border-dark/15 dark:border-white/25 text-dark dark:text-white text-sm cursor-pointer shadow-md",
                           isSmallMode ? "-top-2 -right-2" : "top-2 right-2"
                         )}
-                        aria-label="Close preview"
+                        aria-label={tCard('closePreview')}
                       >
                         ×
                       </button>
@@ -478,7 +478,7 @@ export function CatalogBodyClient({
                               {previewItem.images?.[0]?.src ? (
                                 <img
                                   src={previewItem.images[0].src}
-                                  alt={previewItem.name || "Property"}
+                                  alt={previewItem.name || tCard('propertyFallback')}
                                   className="w-full h-full object-cover"
                                 />
                               ) : null}
@@ -486,7 +486,7 @@ export function CatalogBodyClient({
                             <div className="min-w-0 flex-1 flex flex-col justify-between">
                               <div className="min-w-0">
                                 <p className="text-[11px] text-dark/60 dark:text-white/60 truncate">
-                                  {previewItem.propertyType || previewItem.status || "Property"}
+                                  {previewItem.propertyType || previewItem.status || tCard('propertyFallback')}
                                 </p>
                                 <p className="text-sm font-semibold text-dark dark:text-white truncate">
                                   {previewItem.price != null && Number.isFinite(previewItem.price)
@@ -511,7 +511,7 @@ export function CatalogBodyClient({
                               {previewItem.images?.[0]?.src ? (
                                 <img
                                   src={previewItem.images[0].src}
-                                  alt={previewItem.name || "Property"}
+                                  alt={previewItem.name || tCard('propertyFallback')}
                                   className="w-full h-full object-cover"
                                 />
                               ) : null}
