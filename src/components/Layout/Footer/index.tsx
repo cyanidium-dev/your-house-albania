@@ -14,6 +14,7 @@ import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry"
 import { CookieSettingsLink } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
 import { contactLabelKey, partitionSocialLinks } from "@/lib/footer/socialChannels";
+import { footerLgColsClass } from "@/lib/footer/columns";
 import CodeSiteTagIcon from "./CodeSiteTagIcon";
 
 type FooterProps = {
@@ -190,9 +191,7 @@ export default function Footer({
   // ТЗ-16 Guides column: 4 base columns + optional Guides + optional App.
   const guideLinks = siteSettings?.footerGuideLinks ?? [];
   const showGuidesColumn = guideLinks.length > 0;
-  const extraCols = (showGuidesColumn ? 1 : 0) + (showAppColumn ? 1 : 0);
-  const lgColsClass =
-    extraCols === 2 ? "lg:grid-cols-6" : extraCols === 1 ? "lg:grid-cols-5" : "lg:grid-cols-4";
+  const lgColsClass = footerLgColsClass(showGuidesColumn, showAppColumn);
 
   return (
     <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
@@ -250,7 +249,7 @@ export default function Footer({
                 <h3 className={colHeadingClass}>{t("columns.guides")}</h3>
                 <ul className="flex flex-col gap-2 md:gap-2.5">
                   {guideLinks.map((link) => (
-                    <li key={link.href}>
+                    <li key={link._key ?? link.href}>
                       <Link href={link.href} className={colLinkClass}>
                         {link.label}
                       </Link>

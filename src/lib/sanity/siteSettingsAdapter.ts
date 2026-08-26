@@ -18,9 +18,9 @@ export type ResolvedSiteSettings = {
   footerIntro: string;
   footerApp: ResolvedFooterApp;
   socialLinks: { platform: string; url: string; channel?: string }[];
-  policyLinks: { href: string; label: string }[];
+  policyLinks: { _key?: string; href: string; label: string }[];
   /** Footer "Guides" column (ТЗ-16); empty hides the column. */
-  footerGuideLinks: { href: string; label: string }[];
+  footerGuideLinks: { _key?: string; href: string; label: string }[];
 };
 
 type RawSiteSettings = {
@@ -47,12 +47,14 @@ export type RawPolicyLink = { _key?: string; href?: string; label?: Record<strin
 export function normalizePolicyLinks(
   raw: RawPolicyLink[] | null | undefined,
   locale: string,
-): { href: string; label: string }[] {
+): { _key?: string; href: string; label: string }[] {
   return (raw ?? []).flatMap((p) => {
     const href = typeof p?.href === "string" ? p.href.trim() : "";
     const label = resolveLocalizedString(p?.label as never, locale)?.trim() || "";
     if (!href || !label) return [];
-    return [{ href: resolveLocaleHref(href, locale), label }];
+    // `_key` (F-6): stable React key for CMS rows — an editor can create two
+    // rows with the same href, and validation only caps the list length.
+    return [{ _key: p._key, href: resolveLocaleHref(href, locale), label }];
   });
 }
 
