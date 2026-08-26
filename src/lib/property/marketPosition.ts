@@ -1,4 +1,6 @@
+import { fetchLatestZoneMetricsByZoneIds } from '@/lib/sanity/queries/zoneMetrics';
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics';
+import type { PropertyHomes } from '@/types/propertyHomes';
 
 export type MarketPositionLabel = 'below' | 'in' | 'above';
 export type MarketPositionRangeBasis = 'new' | 'resale' | 'all';
@@ -92,4 +94,41 @@ export function computeMarketPosition(
     referencePrice,
     grossYieldPct,
   };
+}
+
+/**
+ * Computes `marketPosition` for a list of cards with one batched zone-metrics
+ * fetch (not one per card) — the acceptance bar is "catalog not noticeably
+ * slower". `fetchZoneMetrics` defaults to the real Sanity fetch but is a
+ * parameter so tests can supply a fake and assert call count/args without a
+ * mocking framework — this codebase's test suite doesn't use `vi.mock`.
+ */
+export async function attachMarketPositionToCards(
+  items: PropertyHomes[],
+  fetchZoneMetrics: (zoneIds: string[]) => Promise<ZoneMetricsDoc[]> = fetchLatestZoneMetricsByZoneIds,
+): Promise<PropertyHomes[]> {
+  const districtIds = Array.from(
+    new Set(
+      items
+        .map((item) => item.districtId)
+        .filter((id): id is string => typeof id === 'string' && id.length > 0),
+    ),
+  );
+  if (districtIds.length === 0) return items;
+
+  const metricsList = await fetchZoneMetrics(districtIds);
+  const metricsByDistrictId = new Map<string, ZoneMetricsDoc>();
+  for (const m of metricsList) {
+    if (typeof m.zone?._id === 'string') metricsByDistrictId.set(m.zone._id, m);
+  }
+
+  return items.map((item) => {
+    if (!item.districtId) return item;
+    const metrics = metricsByDistrictId.get(item.districtId) ?? null;
+    const marketPosition = computeMarketPosition(
+      { price: item.price, area: item.area, yearBuilt: item.yearBuilt },
+      metrics,
+    );
+    return { ...item, marketPosition };
+  });
 }

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { computeMarketPosition } from '../marketPosition';
+import { computeMarketPosition, attachMarketPositionToCards } from '../marketPosition';
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics';
+import type { PropertyHomes } from '@/types/propertyHomes';
 
 function metrics(overrides: Partial<ZoneMetricsDoc> = {}): ZoneMetricsDoc {
   return { zone: { _id: 'zone-1' }, ...overrides };
@@ -89,5 +90,68 @@ describe('computeMarketPosition', () => {
     expect(computeMarketPosition({ price: 100000, area: 100 }, withMinOnly)?.grossYieldPct).toBe(5);
     const withNeither = metrics({ priceAllMin: 1000, priceAllMax: 1500 });
     expect(computeMarketPosition({ price: 100000, area: 100 }, withNeither)?.grossYieldPct).toBeUndefined();
+  });
+});
+
+function card(overrides: Partial<PropertyHomes> = {}): PropertyHomes {
+  return {
+    name: 'Test',
+    slug: 'test',
+    location: '',
+    rate: '0',
+    beds: 1,
+    baths: 1,
+    area: 100,
+    images: [],
+    price: 150000,
+    ...overrides,
+  };
+}
+
+describe('attachMarketPositionToCards', () => {
+  it('returns the same array unchanged, without fetching, when no card has a districtId', async () => {
+    let calls = 0;
+    const fake = async () => {
+      calls++;
+      return [];
+    };
+    const items = [card(), card()];
+    const result = await attachMarketPositionToCards(items, fake);
+    expect(result).toBe(items);
+    expect(calls).toBe(0);
+  });
+
+  it('returns an empty array unchanged', async () => {
+    const result = await attachMarketPositionToCards([], async () => []);
+    expect(result).toEqual([]);
+  });
+
+  it('does one batched fetch for cards sharing a district, not one per card', async () => {
+    let calls = 0;
+    let receivedIds: string[] = [];
+    const fake = async (ids: string[]) => {
+      calls++;
+      receivedIds = ids;
+      return [{ zone: { _id: 'district-1' }, priceAllMin: 1000, priceAllMax: 1500 } as ZoneMetricsDoc];
+    };
+    const items = [card({ districtId: 'district-1' }), card({ districtId: 'district-1' })];
+    const result = await attachMarketPositionToCards(items, fake);
+    expect(calls).toBe(1);
+    expect(receivedIds).toEqual(['district-1']);
+    expect(result[0].marketPosition?.label).toBe('in');
+    expect(result[1].marketPosition?.label).toBe('in');
+  });
+
+  it('leaves marketPosition null for a card whose district has no metrics record', async () => {
+    const items = [card({ districtId: 'district-no-metrics' })];
+    const result = await attachMarketPositionToCards(items, async () => []);
+    expect(result[0].marketPosition).toBeNull();
+  });
+
+  it('passes through a card without a districtId unchanged', async () => {
+    const fake = async () => [{ zone: { _id: 'district-1' }, priceAllMin: 1000, priceAllMax: 1500 } as ZoneMetricsDoc];
+    const items = [card()];
+    const result = await attachMarketPositionToCards(items, fake);
+    expect(result[0]).toEqual(items[0]);
   });
 });
