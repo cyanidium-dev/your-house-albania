@@ -30,6 +30,7 @@ export const ALLOWED_SECTION_TYPES = [
   'developerCardSection',
   'zoneStatsAutoSection',
   'zonePriceTableAutoSection',
+  'relatedPagesAutoSection',
 ] as const;
 
 export type AllowedSectionType = (typeof ALLOWED_SECTION_TYPES)[number];
@@ -64,6 +65,7 @@ export const SECTION_LABELS: Record<AllowedSectionType, string> = {
   developerCardSection: 'Developer card',
   zoneStatsAutoSection: 'Zone stats (automatic)',
   zonePriceTableAutoSection: 'Zone price table (automatic)',
+  relatedPagesAutoSection: 'Related pages (automatic)',
 };
 
 /**
@@ -111,6 +113,10 @@ export function createSectionDefaults(type: AllowedSectionType): EditorSection {
       return { ...base, zoneMode: 'auto', showSources: true };
     case 'zonePriceTableAutoSection':
       return { ...base, mode: 'cityDistricts', sortBy: 'price', linkRows: true, showSources: true };
+    // Related pages resolve from data at render time; the default mode already
+    // works on a city or district landing with zero configuration.
+    case 'relatedPagesAutoSection':
+      return { ...base, mode: 'cityDistricts', limit: 6 };
     // Calculators ship with a disclaimer stub (schema requires it to publish)
     // and, for purchase cost, structural item stubs the editor rewrites.
     case 'mortgageCalcSection':

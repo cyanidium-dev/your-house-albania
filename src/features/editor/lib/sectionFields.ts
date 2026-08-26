@@ -133,6 +133,12 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['title'], label: 'Title', kind: 'text' },
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
   ],
+  // Items are data-resolved (ТЗ-16) — Studio-only beyond the heading, same
+  // doctrine as the zone blocks.
+  relatedPagesAutoSection: [
+    { path: ['title'], label: 'Title', kind: 'text' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+  ],
   // Numeric defaults and presets/items arrays are Studio-only by design.
   mortgageCalcSection: [
     { path: ['title'], label: 'Title', kind: 'textarea' },
