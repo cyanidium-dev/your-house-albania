@@ -105,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Kategoritë",
-      "title": "Eksploroni pronat më të mira me shërbime ekspertësh.",
-      "description": "Zgjedhje e gjerë objektesh premium: nga apartamentet luksoze deri te vilat të mëdha, të përshtatura me nevojat tuaja.",
-      "viewProperties": "Shiko pronat",
-      "residentialHomes": "Shtëpi banimi",
-      "luxuryVillas": "Vila luksoze",
-      "appartment": "Apartamente",
-      "officeSpaces": "Hapësira zyrash",
-      "categoryDescription": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
     "properties": {
       "badge": "Prona",
       "title": "Zbuloni shtëpi me dizajn frymëzues.",
@@ -258,26 +247,6 @@
     "properties": {
       "badge": "Prona",
       "title": "Zbuloni shtëpi me dizajn frymëzues.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "residentialHomes": {
-      "badge": "Prona",
-      "title": "Shtëpi banimi.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "luxuryVilla": {
-      "badge": "Prona",
-      "title": "Vila luksoze.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "appartment": {
-      "badge": "Prona",
-      "title": "Apartamente.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "officeSpaces": {
-      "badge": "Prona",
-      "title": "Hapësira zyrash.",
       "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
     },
     "blogs": {

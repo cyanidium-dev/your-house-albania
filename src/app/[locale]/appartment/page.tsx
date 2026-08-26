@@ -1,32 +1,7 @@
-import HeroSub from "@/components/shared/HeroSub";
-import Appartment from "@/components/Properties/Appartment";
-import React from "react";
-import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { buildStaticListingMetadata } from "@/lib/seo/staticListingMetadata";
+import { permanentRedirect } from "next/navigation";
 
-type Props = { params: Promise<{ locale: string }> };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+/** ТЗ-17: legacy mock page retired — 308 to its type×city guide. The folder stays so the slug stays filesystem-reserved (ROUTING.md). */
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return buildStaticListingMetadata({
-    locale,
-    pathnameAfterLocale: "/appartment",
-    i18nNamespace: "Listing.appartment",
-  });
-}
-
-export default async function page({ params }: Props) {
-  const { locale } = await params;
-  const t = await getTranslations("Listing.appartment");
-  return (
-    <>
-      <HeroSub
-        title={t("title")}
-        description={t("description")}
-        badge={t("badge")}
-      />
-      <Appartment locale={locale} />
-    </>
-  );
+  permanentRedirect(`/${locale}/guides/apartment-tirana`);
 }

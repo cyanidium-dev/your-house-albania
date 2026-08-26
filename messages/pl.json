@@ -105,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Kategorie",
-      "title": "Odkryj najlepsze nieruchomości z profesjonalną obsługą.",
-      "description": "Odkryj szeroki wybór nieruchomości premium — od luksusowych apartamentów po przestronne wille, dopasowane do Twoich potrzeb",
-      "viewProperties": "Zobacz nieruchomości",
-      "residentialHomes": "Domy mieszkalne",
-      "luxuryVillas": "Luksusowe wille",
-      "appartment": "Apartamenty",
-      "officeSpaces": "Powierzchnie biurowe",
-      "categoryDescription": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
-    },
     "properties": {
       "badge": "Nieruchomości",
       "title": "Odkryj inspirujące projekty domów.",
@@ -258,26 +247,6 @@
     "properties": {
       "badge": "Nieruchomości",
       "title": "Odkryj inspirujące projekty domów.",
-      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
-    },
-    "residentialHomes": {
-      "badge": "Nieruchomości",
-      "title": "Domy mieszkalne.",
-      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
-    },
-    "luxuryVilla": {
-      "badge": "Nieruchomości",
-      "title": "Luksusowe wille.",
-      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
-    },
-    "appartment": {
-      "badge": "Nieruchomości",
-      "title": "Apartamenty.",
-      "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
-    },
-    "officeSpaces": {
-      "badge": "Nieruchomości",
-      "title": "Powierzchnie biurowe.",
       "description": "Elegancja i komfort w naszych ekskluzywnych willach, stworzonych dla wyrafinowanego stylu życia."
     },
     "blogs": {
