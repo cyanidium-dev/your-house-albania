@@ -11,6 +11,9 @@ import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 import { PropertyFactRow } from '@/components/property/PropertyFactRow';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
 import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
+import { PropertyMarketPositionSection } from '@/components/shared/property/PropertyMarketPositionSection';
+import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/property/marketPosition';
+import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
@@ -125,12 +128,18 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const similarCount = getSimilarCount(siteSettings);
   const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
-  const similarCandidates = await fetchSimilarPropertyCandidates(
-    (sanityProperty as { _id: string })._id,
-    citySlug ?? null,
-    similarCount
+  const districtId = (sanityProperty as { district?: { _id?: string } })?.district?._id;
+  const [similarCandidates, zoneMetrics] = await Promise.all([
+    fetchSimilarPropertyCandidates(
+      (sanityProperty as { _id: string })._id,
+      citySlug ?? null,
+      similarCount
+    ),
+    districtId ? fetchLatestZoneMetricsByZoneId(districtId) : Promise.resolve(null),
+  ]);
+  const similarItems = await attachMarketPositionToCards(
+    similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale))
   );
-  const similarItems = similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale));
 
   const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
   const galleryImages = mapSanityPropertyGallery(sanityProperty as never);
@@ -167,6 +176,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
     currency?: string;
     status?: string;
   };
+  const marketPosition = computeMarketPosition(
+    { price: rawProperty.price, area, yearBuilt },
+    zoneMetrics,
+  );
   const baseUrl = await getBaseUrl();
   const imageUrls = galleryImages.map((img) => img.url);
 
@@ -275,6 +288,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             </div>
                         </div>
                         )}
+                        <PropertyMarketPositionSection
+                          locale={locale}
+                          marketPosition={marketPosition}
+                          citySlug={citySlug}
+                          districtSlug={districtSlug}
+                        />
                     </div>
                     <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
                         <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
