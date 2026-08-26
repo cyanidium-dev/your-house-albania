@@ -46,6 +46,7 @@ const cachedFetchHomePage = sanityCache(
       area,
       bedrooms,
       bathrooms,
+      yearBuilt,
       "city": city-> {
         _id,
         title,
@@ -242,6 +243,7 @@ export async function fetchHomeTopOffers(
     area,
     bedrooms,
     bathrooms,
+    yearBuilt,
     status,
     promoted,
     promotionType,
