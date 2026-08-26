@@ -264,6 +264,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           amenities={amenities}
                           sectionTitle={tPropertyDetail('propertyDetails')}
                           checkAllLabel={tPropertyDetail('checkAllAmenities')}
+                          closeLabel={tPropertyDetail('close')}
                         />
                         )}
                         {sanityFields.description ? (
