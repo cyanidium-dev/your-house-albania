@@ -126,6 +126,7 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
     price,
     area,
     bedrooms,
+    yearBuilt,
 
     rooms,
     bathrooms,
@@ -186,6 +187,7 @@ export async function fetchSimilarPropertyCandidates(
     price,
     area,
     bedrooms,
+    yearBuilt,
 
     rooms,
     bathrooms,

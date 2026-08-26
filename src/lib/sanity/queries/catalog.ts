@@ -197,6 +197,7 @@ const cachedFetchCatalogProperties = sanityCache(
     area,
     bedrooms,
     bathrooms,
+    yearBuilt,
     status,
     promoted,
     promotionType,

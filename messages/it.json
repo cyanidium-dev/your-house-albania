@@ -379,6 +379,16 @@
     "developerLabel": "Costruttore",
     "details": "Dettagli"
   },
+  "PropertyMarketPosition": {
+    "title": "Il mercato in questa zona",
+    "labelBelow": "Sotto il mercato",
+    "labelIn": "In linea con il mercato",
+    "labelAbove": "Sopra il mercato",
+    "referencePrice": "Prezzo di riferimento",
+    "districtYield": "Rendimento della zona: {pct}%",
+    "viewDistrict": "Vedi la pagina della zona",
+    "disclaimer": "Stima basata sugli intervalli di prezzo della zona, non una valutazione di questo immobile specifico."
+  },
   "Catalog": {
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",
