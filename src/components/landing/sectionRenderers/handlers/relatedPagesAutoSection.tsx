@@ -52,6 +52,15 @@ export const relatedPagesAutoSectionHandler: SectionHandler = async ({
     cards = await fetchRelatedDistrictLandingCards(query.citySlug, excludeId, limit)
   } else if (query.kind === 'zoneComparisons') {
     cards = await fetchRelatedComparisonCards(query.zoneTags, excludeId, limit)
+    if (cards.length === 0) {
+      // 5 of 15 comparisons feature zones no other comparison shares, so the
+      // strict zone match leaves their related block empty — a regression vs
+      // the retired curated graph (found in post-rollout verification,
+      // 2026-08-26). Fall back to the comparison cluster so every page keeps
+      // its interlinking; the default heading stays the generic
+      // "Related comparisons".
+      cards = await fetchRelatedGuideCards(['theme:comparison'], excludeId, limit)
+    }
   } else {
     cards = await fetchRelatedGuideCards(query.tags, excludeId, limit)
   }
