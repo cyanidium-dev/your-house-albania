@@ -1,6 +1,6 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { blogListingProjection } from './blog';
-import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
+import { PUBLISHED_PROPERTY_FILTER, PUBLIC_DEAL_STATUS_FILTER } from '../groq/propertyFilters';
 import type { CatalogProperty } from '@/types/catalog';
 
 /** Fetch single property by slug. Returns null if not found or client not configured. */
@@ -172,7 +172,7 @@ export async function fetchSimilarPropertyCandidates(
     ? `order((city->slug.current == $citySlug) desc, _createdAt desc)`
     : 'order(_createdAt desc)';
 
-  const query = `*[_type == "property" && _id != $excludeId && ${PUBLISHED_PROPERTY_FILTER}] | ${orderClause}[0...$limit] {
+  const query = `*[_type == "property" && _id != $excludeId && ${PUBLISHED_PROPERTY_FILTER} && ${PUBLIC_DEAL_STATUS_FILTER}] | ${orderClause}[0...$limit] {
     _id,
     _type,
     title,

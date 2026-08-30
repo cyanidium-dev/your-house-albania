@@ -3,6 +3,7 @@ import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimi
 import type { CityCard, LocationCarouselCard } from "@/lib/sanity/cityAdapter";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { EntityCard } from "./EntityCard";
+import { getTranslations } from "next-intl/server";
 import { catalogFilterPath, cityInfoPath } from "@/lib/routes/catalog";
 
 export type CitiesData = {
@@ -30,6 +31,7 @@ const Cities: React.FC<{
   citiesData?: CitiesData;
   locationData?: LocationData;
 }> = async ({ locale, citiesData, locationData }) => {
+  const tCard = await getTranslations("Shared.entityCard");
   const data = locationData ?? (citiesData ? {
     title: citiesData.title,
     subtitle: citiesData.subtitle,
@@ -101,7 +103,7 @@ const Cities: React.FC<{
                 shortDescription={card.shortDescription}
                 tag={card.vibe}
                 count={card.propertiesCount}
-                countLabel="properties"
+                countLabel={tCard("propertiesCountLabel", { count: card.propertiesCount ?? 0 })}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               />
             ))}

@@ -10,6 +10,7 @@ import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { cityInfoPath, districtInfoPath } from "@/lib/routes/catalog";
 import {
   fetchCityCountrySlugByCitySlug,
+  fetchCityNameForms,
   fetchDistrictBySlugs,
   fetchDistrictLandingBySlugs,
   fetchSiteSettings,
@@ -120,6 +121,9 @@ export default async function DistrictInfoPage({ params }: Props) {
     resolveLocalizedString(districtDoc.title as never, locale) || districtSlug;
   const cityLabel =
     resolveLocalizedString(districtDoc.city?.title as never, locale) || citySlug;
+  // "rreth {city}" / "të {city}" take the genitive in sq (Tiranës).
+  const forms = await fetchCityNameForms(citySlug, locale);
+  const cityGenitive = forms.genitive || cityLabel;
 
   // A district is a Place inside its city; the breadcrumb only implied that.
   const placeJsonLd = (
@@ -142,7 +146,7 @@ export default async function DistrictInfoPage({ params }: Props) {
       locale={locale}
       countrySlug={cmsCountry}
       citySlug={citySlug}
-      cityLabel={cityLabel}
+      cityLabel={cityGenitive}
       districtSlug={districtSlug}
       districtLabel={districtLabel}
     />

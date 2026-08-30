@@ -16,6 +16,7 @@ import {
 } from "@/lib/seo/catalogListingMetadata";
 import { canonicalNonGeoDealListingPath } from "@/lib/routes/listingRouteResolver";
 import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
+import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 
 type DealQuery = "sale" | "rent" | "short-term";
 
@@ -39,7 +40,14 @@ export async function generateNonGeoDealRouteMetadata(input: {
       `${t("title")} — ${titleFragment}${typeSeg ? ` — ${typeSeg}` : ""}`
   );
   const description = catalogSeo?.metaDescription || t("description");
-  if (!isIndexingEnabled()) return { title, description, robots: indexingDisabledRobots };
+  if (!isIndexingEnabled()) {
+    return {
+      title: listingTitleField(title),
+      description,
+      openGraph: listingOpenGraph(title, description),
+      robots: indexingDisabledRobots,
+    };
+  }
 
   const purePath = canonicalNonGeoDealListingPath(locale, dealQuery, typeSeg || undefined).split("?")[0];
   const base = getSiteBaseUrl();
@@ -61,8 +69,9 @@ export async function generateNonGeoDealRouteMetadata(input: {
       : undefined;
 
   return {
-    title,
+    title: listingTitleField(title),
     description,
+    openGraph: listingOpenGraph(title, description),
     alternates: {
       canonical: `${base}${purePath}`,
       ...(href?.languages ? { languages: href.languages } : {}),

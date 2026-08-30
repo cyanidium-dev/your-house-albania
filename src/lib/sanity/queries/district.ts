@@ -1,5 +1,6 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { landingPageSectionsProjection } from './landing';
+import { resolveLocalizedString } from '@/lib/sanity/localized';
 
 type LocalizedField = Record<string, string> | null | undefined;
 
@@ -167,6 +168,50 @@ export type DistrictCardItem = {
   heroImage?: SanityImage;
   propertiesCount?: number;
 };
+
+export type CityNameForms = {
+  /** Base localized name (nominative). */
+  base: string;
+  /** Albanian locative form (after "në"), sq only; empty otherwise. */
+  locative: string;
+  /** Albanian genitive form (after "e/i/rreth"), sq only; empty otherwise. */
+  genitive: string;
+};
+
+/**
+ * City name in the grammatical form a heading needs. For `sq`, prefers the
+ * editor-provided `sqDeclension` forms; for every locale falls back to the
+ * localized title. Fixes "Rrethet e Tirana" → "Rrethet e Tiranës".
+ */
+export async function fetchCityNameForms(citySlug: string, locale: string): Promise<CityNameForms> {
+  const slug = typeof citySlug === 'string' ? citySlug.trim().toLowerCase() : '';
+  const empty: CityNameForms = { base: slug, locative: '', genitive: '' };
+  if (!slug) return empty;
+
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return empty;
+      const query = `*[_type == "city" && slug.current == $slug][0]{ title, sqDeclension }`;
+      try {
+        const row = await client.fetch<{ title?: unknown; sqDeclension?: { locative?: string; genitive?: string } } | null>(
+          query,
+          { slug },
+        );
+        const base = resolveLocalizedString(row?.title as never, locale) || slug;
+        const locative = locale === 'sq' ? (row?.sqDeclension?.locative || '').trim() : '';
+        const genitive = locale === 'sq' ? (row?.sqDeclension?.genitive || '').trim() : '';
+        return { base, locative, genitive };
+      } catch (err) {
+        console.warn('[Sanity] fetchCityNameForms failed:', err);
+        return empty;
+      }
+    },
+    ['sanity-city-name-forms-v1', slug, locale],
+    { revalidate: 300, tags: [SANITY_TAGS.city] },
+  );
+  return cached();
+}
 
 /**
  * Published districts of a city for the districts hub grid and interlinking blocks.

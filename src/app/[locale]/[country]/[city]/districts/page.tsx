@@ -6,15 +6,14 @@ import { ItemListJsonLd } from "@/components/shared/ItemListJsonLd";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { EntityCard } from "@/components/landing/sections/impl/EntityCard";
 import {
-  fetchCatalogFilterOptions,
   fetchCityCountrySlugByCitySlug,
+  fetchCityNameForms,
   fetchPublishedDistrictsByCity,
   fetchSiteSettings,
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { districtInfoPath } from "@/lib/routes/catalog";
-import { formatBreadcrumbSlug } from "@/lib/routes/breadcrumbs";
 
 type Props = {
   params: Promise<{ locale: string; country: string; city: string }>;
@@ -25,12 +24,6 @@ function normalizeSegment(value?: string): string {
   return decodeURIComponent(value).trim().toLowerCase();
 }
 
-async function resolveCityLabel(locale: string, citySlug: string): Promise<string> {
-  const { locations } = await fetchCatalogFilterOptions(locale);
-  const match = locations.find((l) => l.value.toLowerCase() === citySlug);
-  return match?.label || formatBreadcrumbSlug(citySlug);
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, country, city } = await params;
   const countrySlug = normalizeSegment(country);
@@ -39,15 +32,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cmsCountry || cmsCountry !== countrySlug) {
     return {};
   }
-  const [siteSettings, cityLabel, t] = await Promise.all([
+  const [siteSettings, forms, t] = await Promise.all([
     fetchSiteSettings(),
-    resolveCityLabel(locale, citySlug),
+    fetchCityNameForms(citySlug, locale),
     getTranslations("Districts"),
   ]);
+  // "Rrethet e {city}" / "rreth {city}" take the genitive in sq (Tiranës).
+  const cityGenitive = forms.genitive || forms.base;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
   return buildLandingMetadata(null, siteDefaultSeo as never, locale, {
-    itemTitle: t("hubTitle", { city: cityLabel }),
-    itemDescription: t("hubDescription", { city: cityLabel }),
+    itemTitle: t("hubTitle", { city: cityGenitive }),
+    itemDescription: t("hubDescription", { city: cityGenitive }),
     pathnameForAlternates: `${cmsCountry}/${citySlug}/districts`,
   });
 }
@@ -66,10 +61,11 @@ export default async function DistrictsHubPage({ params }: Props) {
   const districts = await fetchPublishedDistrictsByCity(citySlug);
   if (districts.length === 0) notFound();
 
-  const [cityLabel, t] = await Promise.all([
-    resolveCityLabel(locale, citySlug),
+  const [forms, t] = await Promise.all([
+    fetchCityNameForms(citySlug, locale),
     getTranslations("Districts"),
   ]);
+  const cityGenitive = forms.genitive || forms.base;
 
   const baseUrl = await getBaseUrl();
   const listItems = districts
@@ -88,10 +84,10 @@ export default async function DistrictsHubPage({ params }: Props) {
         <DistrictsBreadcrumb locale={locale} country={cmsCountry} city={citySlug} />
         <div className="max-w-3xl">
           <h1 className="lg:text-52 text-40 leading-[1.2] font-medium text-dark dark:text-white">
-            {t("hubTitle", { city: cityLabel })}
+            {t("hubTitle", { city: cityGenitive })}
           </h1>
           <p className="mt-4 text-lg leading-snug text-dark/50 dark:text-white/50">
-            {t("hubDescription", { city: cityLabel })}
+            {t("hubDescription", { city: cityGenitive })}
           </p>
         </div>
         <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

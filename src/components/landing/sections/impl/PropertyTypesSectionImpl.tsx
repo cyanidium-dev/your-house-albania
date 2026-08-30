@@ -2,6 +2,8 @@ import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLandin
 import type { PropertyTypeCard } from "@/lib/sanity/propertyTypeAdapter";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { canonicalCatalogUrl } from "@/lib/routes/catalog";
+import { dealRouteSegmentToQueryValue } from "@/lib/routes/catalogPathPrimitives";
+import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
 import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import { EntityCard } from "./EntityCard";
 
@@ -41,9 +43,14 @@ const PropertyTypes: React.FC<{
   const trimmedCta = typeof ctaHref === "string" ? ctaHref.trim() : "";
   const href = trimmedCta ? resolveLocaleHref(trimmedCta, locale) : null;
 
-  const types = Array.isArray(propertyTypesData?.propertyTypes)
-    ? propertyTypesData.propertyTypes
-    : [];
+  const types = (
+    Array.isArray(propertyTypesData?.propertyTypes) ? propertyTypesData.propertyTypes : []
+  ).filter((type) => {
+    // Some "property types" are really rental deals (slug === a deal route
+    // segment, e.g. `short-term-rent`). Drop those while rentals are hidden.
+    const dealQuery = dealRouteSegmentToQueryValue(type.slug || undefined);
+    return dealQuery === "" || isPublicDealQuery(dealQuery);
+  });
 
   if (types.length === 0) return null;
 

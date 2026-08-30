@@ -22,6 +22,7 @@ import {
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
 import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
@@ -127,7 +128,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       : listDescription);
 
   if (!isIndexingEnabled()) {
-    return { title, description, robots: indexingDisabledRobots };
+    return {
+      title: listingTitleField(title),
+      description,
+      openGraph: listingOpenGraph(title, description),
+      robots: indexingDisabledRobots,
+    };
   }
 
   const dealForPath = dealType;
@@ -181,8 +187,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       : undefined;
 
   return {
-    title,
+    title: listingTitleField(title),
     description,
+    openGraph: listingOpenGraph(title, description),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),
