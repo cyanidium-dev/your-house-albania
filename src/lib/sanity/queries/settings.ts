@@ -7,32 +7,33 @@ const cachedFetchSiteSettings = sanityCache(
     const query = `*[_type == "siteSettings" && _id == "siteSettings"][0] {
       _id,
       _type,
-      similarPropertiesCount,
       logo { asset-> { _id, url } },
       siteName,
       siteTagline,
       contactPhone,
       contactEmail,
       contactsManagerPhoto { alt, asset-> { url } },
-      managerPhoto { alt, asset-> { url } },
       companyAddress,
-      copyrightText,
       footerIntro,
-      footerTelegramUrl,
-      footerWhatsappUrl,
+      // Schema stores appStoreUrl / googlePlayUrl; the frontend has always read
+      // iosUrl / androidUrl, so alias them here rather than rename either side.
       footerApp {
         enabled,
-        iosUrl,
-        androidUrl
+        "iosUrl": appStoreUrl,
+        "androidUrl": googlePlayUrl
       },
-      footerCodesiteUrl,
-      footerWebbondUrl,
       socialLinks[] {
         _key,
         platform,
-        url
+        url,
+        channel
       },
       policyLinks[] {
+        _key,
+        href,
+        label
+      },
+      footerGuideLinks[] {
         _key,
         href,
         label
@@ -41,16 +42,15 @@ const cachedFetchSiteSettings = sanityCache(
         metaTitle,
         metaDescription,
         noIndex,
+        noFollow,
         ogImage { asset-> { url } }
       },
-      priceRange {
-        from,
-        to
-      },
-      areaRange {
-        from,
-        to
-      },
+      // Catalog defaults live under propertySettings.catalogDefaults in the
+      // schema; they were previously read from the document root and so were
+      // always undefined. Aliased back to the flat names the consumers expect.
+      "similarPropertiesCount": propertySettings.catalogDefaults.similarPropertiesCount,
+      "priceRange": propertySettings.catalogDefaults.priceRange { from, to },
+      "areaRange": propertySettings.catalogDefaults.areaRange { from, to },
       "currencyRates": currencyRates[code in ^.displayCurrencies]{
         code,
         rate,
@@ -68,7 +68,6 @@ const cachedFetchSiteSettings = sanityCache(
         console.log('[Sanity] fetchSiteSettings OK:', {
           hasSocialLinks: sl > 0,
           hasContactEmail: !!s?.contactEmail,
-          hasCopyright: !!s?.copyrightText,
           hasPhone: !!s?.contactPhone,
           hasFooterIntro: !!s?.footerIntro,
         });

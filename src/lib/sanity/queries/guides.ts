@@ -15,7 +15,7 @@ export type GuideIndexEntry = {
  * advertise pages that immediately redirect away.
  * Keep in sync with GUIDES_CANONICAL_SLUG_REDIRECTS in the guides route.
  */
-const RESERVED_GUIDE_SLUGS = [
+export const RESERVED_GUIDE_SLUGS = [
   'for-realtors',
   'contacts',
   'contactus',
@@ -29,10 +29,6 @@ const RESERVED_GUIDE_SLUGS = [
   'sale',
   'rent',
   'short-term-rent',
-  'appartment',
-  'luxury-villa',
-  'office-spaces',
-  'residential-homes',
 ];
 
 /** Enabled custom landings that actually live under `/guides/{slug}`. */

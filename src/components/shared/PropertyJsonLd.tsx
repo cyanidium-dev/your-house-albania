@@ -1,20 +1,9 @@
-import { buildPropertyJsonLd } from "@/lib/seo/propertyJsonLd";
+import { buildPropertyJsonLd, type PropertyJsonLdInput } from "@/lib/seo/propertyJsonLd";
 
-export type PropertyJsonLdInput = {
-  name: string;
-  slug: string;
-  description?: string | null;
-  location?: string | null;
-  price?: number | null;
-  currency?: string | null;
-  status?: string | null;
-  beds?: number;
-  baths?: number;
-  area?: number;
-  imageUrls: string[];
-  baseUrl: string;
-  locale: string;
-};
+// Re-exported rather than re-declared: the local copy of this type is how the
+// component drifted from the builder in the first place, carrying a `currency`
+// field the schema had already dropped.
+export type { PropertyJsonLdInput };
 
 type Props = PropertyJsonLdInput;
 

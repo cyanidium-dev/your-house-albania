@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 
 export type BreadcrumbItem = {
@@ -13,12 +14,13 @@ type Props = {
   overHero?: boolean;
 };
 
-export function Breadcrumb({ items, separator = "/", overHero = false }: Props) {
+export async function Breadcrumb({ items, separator = "/", overHero = false }: Props) {
   if (items.length === 0) return null;
+  const t = await getTranslations("Breadcrumbs");
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label={t("navLabel")}
       className={cn(
         "flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm mb-4",
         overHero

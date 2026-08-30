@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { FilterSelect, type FilterOption } from '@/components/catalog/FilterSelect'
 import { cn } from '@/lib/utils'
 
-const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it'] as const
+const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl'] as const
 
 function normalizeLocale(locale: string): (typeof ROUTING_LOCALES)[number] {
   return ROUTING_LOCALES.includes(locale as (typeof ROUTING_LOCALES)[number])
@@ -60,6 +60,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
       { value: 'ru', label: t('langRu') },
       { value: 'uk', label: t('langUk') },
       { value: 'it', label: t('langIt') },
+      { value: 'pl', label: t('langPl') },
     ],
     [t]
   )
@@ -191,6 +192,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
           onValueChange={onLanguageChange}
           options={languageOptions}
           includeAnyOption={false}
+          anyLabel=""
           radius="full"
           className="rounded-full border-black/10 px-6 py-3.5 h-auto min-h-[48px]"
         />

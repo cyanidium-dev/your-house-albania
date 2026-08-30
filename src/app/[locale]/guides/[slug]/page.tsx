@@ -30,10 +30,12 @@ const GUIDES_CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
   sale: "sale",
   rent: "rent",
   "short-term-rent": "short-term-rent",
-  appartment: "appartment",
-  "luxury-villa": "luxury-villa",
-  "office-spaces": "office-spaces",
-  "residential-homes": "residential-homes",
+  // ТЗ-17: the four legacy mock slugs 308 straight to their type×city guides
+  // (via their retired static routes would add a needless second hop).
+  appartment: "guides/apartment-tirana",
+  "luxury-villa": "guides/villa-sarande",
+  "office-spaces": "sale",
+  "residential-homes": "guides/house-durres",
 };
 
 function normalizeSlug(value?: string): string {

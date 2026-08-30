@@ -52,7 +52,6 @@ export default async function LocaleLayout({ children, params }: Props) {
       countrySlugCount: countrySlugs.length,
       hasSocialLinks: siteSettings.socialLinks.length > 0,
       hasContactEmail: !!siteSettings.email,
-      hasCopyright: !!siteSettings.copyrightText,
       hasPhone: !!siteSettings.phone,
     });
   }
@@ -78,8 +77,6 @@ export default async function LocaleLayout({ children, params }: Props) {
           <QuickContact
             locale={locale}
             channels={{
-              telegramUrl: siteSettings.footerTelegramUrl,
-              whatsappUrl: siteSettings.footerWhatsappUrl,
               phone: siteSettings.phone,
               email: siteSettings.email,
               socialLinks: siteSettings.socialLinks,

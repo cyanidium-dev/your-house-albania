@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import { displayStatusLabel } from "@/lib/property/cardFormatters";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import PropertyCard from "@/components/shared/property/PropertyCard";
@@ -163,6 +164,7 @@ export function CatalogBodyClient({
   const { viewMode, getCurrentView } = useCatalogView();
   const { formatFromEur } = useCurrency();
   const tCard = useTranslations("Shared.propertyCard");
+  const tDealType = useTranslations("Shared.propertyDetail");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
   const [layoutTier, setLayoutTier] = React.useState<LayoutTier>("mobile");
@@ -467,7 +469,7 @@ export function CatalogBodyClient({
                           "absolute z-30 w-7 h-7 rounded-full bg-white/95 dark:bg-black/85 border border-dark/15 dark:border-white/25 text-dark dark:text-white text-sm cursor-pointer shadow-md",
                           isSmallMode ? "-top-2 -right-2" : "top-2 right-2"
                         )}
-                        aria-label="Close preview"
+                        aria-label={tCard('closePreview')}
                       >
                         ×
                       </button>
@@ -478,7 +480,7 @@ export function CatalogBodyClient({
                               {previewItem.images?.[0]?.src ? (
                                 <img
                                   src={previewItem.images[0].src}
-                                  alt={previewItem.name || "Property"}
+                                  alt={previewItem.name || tCard('propertyFallback')}
                                   className="w-full h-full object-cover"
                                 />
                               ) : null}
@@ -486,7 +488,7 @@ export function CatalogBodyClient({
                             <div className="min-w-0 flex-1 flex flex-col justify-between">
                               <div className="min-w-0">
                                 <p className="text-[11px] text-dark/60 dark:text-white/60 truncate">
-                                  {previewItem.propertyType || previewItem.status || "Property"}
+                                  {previewItem.propertyType || displayStatusLabel(previewItem.status, tDealType) || tCard('propertyFallback')}
                                 </p>
                                 <p className="text-sm font-semibold text-dark dark:text-white truncate">
                                   {previewItem.price != null && Number.isFinite(previewItem.price)
@@ -511,14 +513,14 @@ export function CatalogBodyClient({
                               {previewItem.images?.[0]?.src ? (
                                 <img
                                   src={previewItem.images[0].src}
-                                  alt={previewItem.name || "Property"}
+                                  alt={previewItem.name || tCard('propertyFallback')}
                                   className="w-full h-full object-cover"
                                 />
                               ) : null}
                             </div>
                             <div className="min-w-0">
                               <p className="text-xs text-dark/60 dark:text-white/60 truncate">
-                                {previewItem.propertyType || previewItem.status || "Property"}
+                                {previewItem.propertyType || displayStatusLabel(previewItem.status, tDealType) || tCard('propertyFallback')}
                               </p>
                               <p className="text-sm font-semibold text-dark dark:text-white truncate">
                                 {previewItem.price != null && Number.isFinite(previewItem.price)

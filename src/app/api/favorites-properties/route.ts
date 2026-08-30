@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { fetchPropertiesBySlugs } from "@/lib/sanity/client";
 import { mapCatalogPropertyToCard } from "@/lib/sanity/propertyAdapter";
+import { attachMarketPositionToCards } from "@/lib/property/marketPosition";
 
 const MAX_SLUGS = 50;
 
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
   }
 
   const sanityItems = await fetchPropertiesBySlugs(slugs);
-  const items = sanityItems.map((p) => mapCatalogPropertyToCard(p, locale));
+  const items = await attachMarketPositionToCards(sanityItems.map((p) => mapCatalogPropertyToCard(p, locale)));
 
   return Response.json({ items });
 }

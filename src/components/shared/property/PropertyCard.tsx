@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from 'next-intl'
 import { PropertyHomes } from '@/types/propertyHomes'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -7,10 +8,21 @@ import type { ViewMode } from '@/lib/catalog/viewMode'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
-import { useTranslations } from 'next-intl'
-import { dealLabelKey, truncateTeaser } from '@/lib/property/cardFormatters'
+import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { PropertyCardMeta } from './PropertyCardMeta'
+
+const MARKET_POSITION_LABEL_KEY: Record<'below' | 'in' | 'above', 'labelBelow' | 'labelIn' | 'labelAbove'> = {
+  below: 'labelBelow',
+  in: 'labelIn',
+  above: 'labelAbove',
+}
+
+const MARKET_POSITION_BADGE_CLASS: Record<'below' | 'in' | 'above', string> = {
+  below: 'bg-emerald-600/10 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400',
+  in: 'bg-dark/10 text-dark/70 dark:bg-white/10 dark:text-white/70',
+  above: 'bg-amber-600/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
+}
 
 function PropertyCard({
   item,
@@ -29,11 +41,6 @@ function PropertyCard({
   /** Fill parent height for even card alignment in carousel */
   fillHeight?: boolean
 }) {
-  const tDeal = useTranslations('Shared.propertyDetail')
-  const dealLabel = (st?: string | null, opts?: { compact?: boolean }) => {
-    const key = dealLabelKey(st, opts)
-    return key ? tDeal(key) : null
-  }
   const {
     name,
     location,
@@ -49,10 +56,13 @@ function PropertyCard({
     teaser,
     promotionType,
     discountPercent,
+    marketPosition,
   } = item
 
   const isPremium = promotionType === 'premium'
   const { currency: activeCurrency, rates } = useCurrency()
+  const tMarketPosition = useTranslations('PropertyMarketPosition')
+  const tDealType = useTranslations('Shared.propertyDetail')
   const href = item._href ?? `/${locale}/property/${slug}`
 
   const isList = view === 'list'
@@ -125,29 +135,25 @@ function PropertyCard({
         isLarge && 'gap-2 mb-3'
       )}
     >
-      {/* price + deal type row */}
+      {/* price + deal type row — €/m² always sits on its own fixed-height line
+          below, so a longer price can never wrap it and shift the card layout */}
       <div
         className={cn(
           'flex items-center justify-between gap-2',
           isList && 'justify-start gap-2 sm:gap-3 flex-wrap'
         )}
       >
-        <div className="min-w-0 flex items-center gap-2 flex-wrap">
+        <div className="min-w-0 flex items-center gap-2">
           {formattedPrice && (
-            <span className={priceClass}>
+            <span className={cn(priceClass, 'whitespace-nowrap')}>
               {formattedPrice}
-            </span>
-          )}
-          {isLarge && formattedPricePerSqm && (
-            <span className="text-xs text-dark/55 dark:text-white/55 font-medium whitespace-nowrap">
-              {formattedPricePerSqm}
             </span>
           )}
         </div>
         {status && (
           <span
             className={cn(
-              'inline-flex items-center rounded-full font-medium',
+              'inline-flex items-center rounded-full font-medium shrink-0',
               isList && 'h-7 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
               isLarge && 'h-8 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
               isSmall && !isList && 'bg-primary text-white text-[11px] px-2 shadow-sm h-5 leading-5 max-w-[7.25rem] min-w-0 overflow-hidden'
@@ -155,15 +161,33 @@ function PropertyCard({
           >
             {isSmall && !isList ? (
               <span className="min-w-0 truncate whitespace-nowrap">
-                <span className="sm:hidden">{dealLabel(status, { compact: true })}</span>
-                <span className="hidden sm:inline">{dealLabel(status, { compact: false })}</span>
+                <span className="sm:hidden">{displayDealLabel(status, tDealType, { compact: true })}</span>
+                <span className="hidden sm:inline">{displayDealLabel(status, tDealType, { compact: false })}</span>
               </span>
             ) : (
-              dealLabel(status, { compact: false })
+              displayDealLabel(status, tDealType, { compact: false })
             )}
           </span>
         )}
       </div>
+
+      {/* €/m² line — rendered (empty or not) on large cards so heights stay even */}
+      {isLarge && (
+        <p className="min-h-4 flex items-center gap-1.5 text-xs leading-4 text-dark/55 dark:text-white/55 font-medium truncate">
+          {formattedPricePerSqm}
+          {marketPosition && (
+            <span
+              className={cn(
+                'shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none',
+                MARKET_POSITION_BADGE_CLASS[marketPosition.label]
+              )}
+              title={tMarketPosition('disclaimer')}
+            >
+              {tMarketPosition(MARKET_POSITION_LABEL_KEY[marketPosition.label])}
+            </span>
+          )}
+        </p>
+      )}
 
       {/* property type */}
       {typeLine && (
@@ -249,8 +273,8 @@ function PropertyCard({
                   {status && (
                     <span className="inline-flex items-center justify-center rounded-full text-xs px-3 h-7 leading-none border border-primary/80 text-primary bg-primary/5">
                       <span className="min-w-0 truncate whitespace-nowrap">
-                        <span className="sm:hidden">{dealLabel(status, { compact: true })}</span>
-                        <span className="hidden sm:inline">{dealLabel(status, { compact: false })}</span>
+                        <span className="sm:hidden">{displayDealLabel(status, tDealType, { compact: true })}</span>
+                        <span className="hidden sm:inline">{displayDealLabel(status, tDealType, { compact: false })}</span>
                       </span>
                     </span>
                   )}

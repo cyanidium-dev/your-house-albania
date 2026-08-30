@@ -35,7 +35,6 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
     { path: ['cta', 'label'], label: 'Primary button', kind: 'text' },
     { path: ['secondaryCta', 'label'], label: 'Secondary button', kind: 'text' },
-    { path: ['seoTextUnderCta'], label: 'Line under buttons', kind: 'text' },
   ],
   propertyCarouselSection: [
     { path: ['shortLine'], label: 'Eyebrow', kind: 'text' },
@@ -44,11 +43,6 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
     { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
   ],
   locationCarouselSection: [
-    { path: ['title'], label: 'Title', kind: 'textarea' },
-    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
-    { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
-  ],
-  landingCarouselSection: [
     { path: ['title'], label: 'Title', kind: 'textarea' },
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
     { path: ['cta', 'label'], label: 'Button label', kind: 'text' },
@@ -136,6 +130,12 @@ export const SECTION_FIELDS: Partial<Record<AllowedSectionType, readonly FieldDe
   // and a number edited on the page would drift from the record.
   zoneStatsAutoSection: [{ path: ['title'], label: 'Title', kind: 'text' }],
   zonePriceTableAutoSection: [
+    { path: ['title'], label: 'Title', kind: 'text' },
+    { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
+  ],
+  // Items are data-resolved (ТЗ-16) — Studio-only beyond the heading, same
+  // doctrine as the zone blocks.
+  relatedPagesAutoSection: [
     { path: ['title'], label: 'Title', kind: 'text' },
     { path: ['subtitle'], label: 'Subtitle', kind: 'textarea' },
   ],

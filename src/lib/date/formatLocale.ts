@@ -8,6 +8,7 @@ import { uk } from "date-fns/locale/uk";
 import { ru } from "date-fns/locale/ru";
 import { sq } from "date-fns/locale/sq";
 import { it } from "date-fns/locale/it";
+import { pl } from "date-fns/locale/pl";
 
 const LOCALE_MAP: Record<string, Locale> = {
   en: enUS,
@@ -16,6 +17,7 @@ const LOCALE_MAP: Record<string, Locale> = {
   sq,
   al: sq,
   it,
+  pl,
 };
 
 type Locale = typeof enUS;
@@ -44,6 +46,7 @@ const BLOG_DATE_FORMAT: Record<string, string> = {
   sq: "d MMM yyyy",
   al: "d MMM yyyy",
   it: "d MMM yyyy",
+  pl: "d MMM yyyy",
 };
 
 /** Format a date for blog UI using locale-appropriate format. */

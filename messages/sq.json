@@ -22,13 +22,21 @@
     },
     "cta": {
       "viewProperties": "Shiko pronat"
-    }
+    },
+    "toggleMobileMenu": "Shfaq/fshih menynë celulare",
+    "switchToLightMode": "Kalo në modalitetin e ndritshëm",
+    "switchToDarkMode": "Kalo në modalitetin e errët",
+    "favoritesCount": "Të preferuarat ({count})",
+    "selectLanguage": "Zgjidh gjuhën",
+    "closeMobileMenu": "Mbyll menynë celulare",
+    "mainNavigation": "Navigimi kryesor"
   },
   "Currency": {
     "switchTo": "Ndrysho monedhën në {currency}"
   },
   "Footer": {
     "columns": {
+      "guides": "Udhëzues",
       "navigation": "Navigimi",
       "cities": "Qytetet",
       "contacts": "Kontakte",
@@ -97,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Kategoritë",
-      "title": "Eksploroni pronat më të mira me shërbime ekspertësh.",
-      "description": "Zgjedhje e gjerë objektesh premium: nga apartamentet luksoze deri te vilat të mëdha, të përshtatura me nevojat tuaja.",
-      "viewProperties": "Shiko pronat",
-      "residentialHomes": "Shtëpi banimi",
-      "luxuryVillas": "Vila luksoze",
-      "appartment": "Apartamente",
-      "officeSpaces": "Hapësira zyrash",
-      "categoryDescription": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
     "properties": {
       "badge": "Prona",
       "title": "Zbuloni shtëpi me dizajn frymëzues.",
@@ -167,13 +164,26 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "Përmbajtja SEO nuk është e disponueshme."
+      "contentMissing": "Përmbajtja SEO nuk është e disponueshme.",
+      "videoTitle": "Video"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Eksploroni lagjet",
+      "comparisons": "Krahasime të ngjashme",
+      "guides": "Udhëzues të ngjashëm",
+      "related": "Faqe të ngjashme"
+    },
+    "lightbox": {
+      "close": "Mbyll",
+      "imageFullscreenView": "Pamje e plotë e fotos",
+      "viewImageFullscreen": "Shiko foton në ekran të plotë"
     },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",
       "checkAllAmenities": "Shiko të gjitha pajisjet",
       "whatThisPropertyOffers": "Çfarë ofron kjo pronë",
       "similarProperties": "Prona të ngjashme",
+      "yearBuilt": "Ndërtuar {year}",
       "checkAllPhotos": "Shiko të gjitha fotot",
       "getInTouch": "Na kontaktoni",
       "contactHeading": "Ju intereson kjo pronë?",
@@ -187,11 +197,21 @@
       "dealTypeLongTerm": "Qira afatgjatë",
       "dealTypePrice": "Çmimi",
       "dealTypeShortTermCompact": "Qira e shkurtër",
-      "dealTypeLongTermCompact": "Qira e gjatë"
+      "dealTypeLongTermCompact": "Qira e gjatë",
+      "close": "Mbyll",
+      "imageGallery": "Galeria e fotove",
+      "openImage": "Hap foton {n}",
+      "propertyImageAlt": "Foto e pronës {n}",
+      "imageAlt": "Foto {n}",
+      "thumbnailAlt": "Miniaturë {n}",
+      "goToImage": "Shko te foto {n}",
+      "hideThumbnails": "Fsheh miniaturat",
+      "showThumbnails": "Shfaq miniaturat"
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
       "bathrooms": "Banjo",
+      "roomsCount": "{count, plural, one {# dhomë} other {# dhoma}}",
       "bedroomsCount": "{count, plural, one {# dhomë gjumi} other {# dhoma gjumi}}",
       "bathroomsCount": "{count, plural, one {# banjë} other {# banja}}",
       "areaUnit": "m²",
@@ -201,7 +221,9 @@
       "premium": "Premium",
       "top": "Top",
       "sale": "Ulje çmimi",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Pronë",
+      "closePreview": "Mbyll pamjen paraprake"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
@@ -225,26 +247,6 @@
     "properties": {
       "badge": "Prona",
       "title": "Zbuloni shtëpi me dizajn frymëzues.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "residentialHomes": {
-      "badge": "Prona",
-      "title": "Shtëpi banimi.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "luxuryVilla": {
-      "badge": "Prona",
-      "title": "Vila luksoze.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "appartment": {
-      "badge": "Prona",
-      "title": "Apartamente.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
-    },
-    "officeSpaces": {
-      "badge": "Prona",
-      "title": "Hapësira zyrash.",
       "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
     },
     "blogs": {
@@ -274,7 +276,8 @@
     "forRealtors": "Për agjentët",
     "howToPublish": "Si të publikoni",
     "register": "Regjistrohu",
-    "investment": "Investime"
+    "investment": "Investime",
+    "navLabel": "Shtegu i lundrimit"
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",
@@ -377,7 +380,22 @@
     "developerLabel": "Ndërtuesi",
     "details": "Më shumë"
   },
+  "PropertyMarketPosition": {
+    "title": "Tregu në këtë zonë",
+    "labelBelow": "Nën treg",
+    "labelIn": "Në nivelin e tregut",
+    "labelAbove": "Mbi treg",
+    "referencePrice": "Çmimi referencë",
+    "districtYield": "Rendimenti i zonës: {pct}%",
+    "viewDistrict": "Shiko faqen e zonës",
+    "disclaimer": "Vlerësim bazuar në intervalet e çmimeve të zonës, jo një vlerësim i këtij prone specifike."
+  },
   "Catalog": {
+    "pagination": {
+      "pagination": "Faqosja",
+      "previousPage": "Faqja e mëparshme",
+      "nextPage": "Faqja tjetër"
+    },
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
     "agentTitle": "Pronat nga {name}",
     "agentIntroFallback": "Po shfaqen listimet nga ky agjent",
@@ -416,6 +434,8 @@
       "anyDistrict": "Çdo rreth",
       "amenities": "Lehtësitë",
       "amenitiesSelected": "{count} të zgjedhura",
+      "clear": "Pastro",
+      "done": "Gati",
       "sortBy": "Rendit sipas",
       "sortNewest": "Më të rejat",
       "sortPriceAsc": "Çmimi (nga më i ulëti)",
@@ -514,6 +534,7 @@
     "langRu": "Rusisht",
     "langUk": "Ukrainisht",
     "langIt": "Italiano",
+    "langPl": "Polake",
     "terms": "Jam dakord me <link>rregullat e përpunimit të të dhënave personale</link>",
     "submit": "Filloni tani",
     "submitting": "Duke dërguar…",
@@ -547,6 +568,24 @@
     "source": "Skedari burim",
     "empty": "Ende nuk ka kredite fotografish.",
     "breadcrumbHome": "Kryefaqja"
+  },
+  "Blog": {
+    "tableOfContents": "Përmbajtja",
+    "keyFacts": "Shkurtimisht",
+    "faqTitle": "Pyetje të shpeshta",
+    "sourcesTitle": "Burimet",
+    "zoneStatsTitle": "Të dhëna tregu",
+    "trackerLastChecked": "Kontrolluar",
+    "authorPostsTitle": "Artikuj nga ky autor",
+    "authorNoPosts": "Ende asnjë artikull i publikuar.",
+    "zoneStatsAll": "Të gjitha",
+    "zoneStatsNew": "Ndërtim i ri",
+    "zoneStatsResale": "Rishitje",
+    "zoneStatsYield": "Yield bruto"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "muaj"
   },
   "QuickLead": {
     "badge": "Falas · pa asnjë detyrim",

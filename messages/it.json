@@ -22,13 +22,21 @@
     },
     "cta": {
       "viewProperties": "Vedi immobili"
-    }
+    },
+    "toggleMobileMenu": "Attiva/disattiva il menu mobile",
+    "switchToLightMode": "Passa alla modalità chiara",
+    "switchToDarkMode": "Passa alla modalità scura",
+    "favoritesCount": "Preferiti ({count})",
+    "selectLanguage": "Seleziona lingua",
+    "closeMobileMenu": "Chiudi il menu mobile",
+    "mainNavigation": "Navigazione principale"
   },
   "Currency": {
     "switchTo": "Cambia valuta in {currency}"
   },
   "Footer": {
     "columns": {
+      "guides": "Guide",
       "navigation": "Navigazione",
       "cities": "Città",
       "contacts": "Contatti",
@@ -97,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Categorie",
-      "title": "Esplora le migliori proprietà con servizi esperti.",
-      "description": "Scopri una vasta gamma di proprietà di lusso, da appartamenti eleganti a ville spaziose, su misura per te",
-      "viewProperties": "Vedi proprietà",
-      "residentialHomes": "Abitazioni",
-      "luxuryVillas": "Ville di lusso",
-      "appartment": "Appartamenti",
-      "officeSpaces": "Spazi ufficio",
-      "categoryDescription": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
-    },
     "properties": {
       "badge": "Immobili",
       "title": "Scopri case dal design ispiratore.",
@@ -167,13 +164,26 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "Il contenuto SEO non è disponibile."
+      "contentMissing": "Il contenuto SEO non è disponibile.",
+      "videoTitle": "Video"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Esplora i quartieri",
+      "comparisons": "Confronti correlati",
+      "guides": "Guide correlate",
+      "related": "Pagine correlate"
+    },
+    "lightbox": {
+      "close": "Chiudi",
+      "imageFullscreenView": "Visualizzazione immagine a schermo intero",
+      "viewImageFullscreen": "Visualizza immagine a schermo intero"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",
       "checkAllAmenities": "Vedi tutte le caratteristiche",
       "whatThisPropertyOffers": "Cosa offre questa proprietà",
       "similarProperties": "Proprietà simili",
+      "yearBuilt": "Costruito nel {year}",
       "checkAllPhotos": "Vedi tutte le foto",
       "getInTouch": "Contattaci",
       "contactHeading": "Ti interessa questo immobile?",
@@ -187,11 +197,21 @@
       "dealTypeLongTerm": "Affitto a lungo termine",
       "dealTypePrice": "Prezzo",
       "dealTypeShortTermCompact": "Affitto breve",
-      "dealTypeLongTermCompact": "Affitto lungo"
+      "dealTypeLongTermCompact": "Affitto lungo",
+      "close": "Chiudi",
+      "imageGallery": "Galleria immagini",
+      "openImage": "Apri immagine {n}",
+      "propertyImageAlt": "Immagine dell'immobile {n}",
+      "imageAlt": "Immagine {n}",
+      "thumbnailAlt": "Miniatura {n}",
+      "goToImage": "Vai all'immagine {n}",
+      "hideThumbnails": "Nascondi miniature",
+      "showThumbnails": "Mostra miniature"
     },
     "propertyCard": {
       "bedrooms": "Camere",
       "bathrooms": "Bagni",
+      "roomsCount": "{count, plural, one {# Locale} other {# Locali}}",
       "bedroomsCount": "{count, plural, one {# Camera} other {# Camere}}",
       "bathroomsCount": "{count, plural, one {# Bagno} other {# Bagni}}",
       "areaUnit": "m²",
@@ -201,7 +221,9 @@
       "premium": "Premium",
       "top": "Top",
       "sale": "Offerta",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Immobile",
+      "closePreview": "Chiudi anteprima"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
@@ -225,26 +247,6 @@
     "properties": {
       "badge": "Immobili",
       "title": "Scopri case dal design ispiratore.",
-      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
-    },
-    "residentialHomes": {
-      "badge": "Immobili",
-      "title": "Abitazioni.",
-      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
-    },
-    "luxuryVilla": {
-      "badge": "Immobili",
-      "title": "Ville di lusso.",
-      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
-    },
-    "appartment": {
-      "badge": "Immobili",
-      "title": "Appartamenti.",
-      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
-    },
-    "officeSpaces": {
-      "badge": "Immobili",
-      "title": "Spazi ufficio.",
       "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
     },
     "blogs": {
@@ -274,7 +276,8 @@
     "forRealtors": "Per gli agenti",
     "howToPublish": "Come pubblicare",
     "register": "Registrati",
-    "investment": "Investimenti"
+    "investment": "Investimenti",
+    "navLabel": "Breadcrumb"
   },
   "Districts": {
     "hubTitle": "Quartieri di {city}",
@@ -377,7 +380,22 @@
     "developerLabel": "Costruttore",
     "details": "Dettagli"
   },
+  "PropertyMarketPosition": {
+    "title": "Il mercato in questa zona",
+    "labelBelow": "Sotto il mercato",
+    "labelIn": "In linea con il mercato",
+    "labelAbove": "Sopra il mercato",
+    "referencePrice": "Prezzo di riferimento",
+    "districtYield": "Rendimento della zona: {pct}%",
+    "viewDistrict": "Vedi la pagina della zona",
+    "disclaimer": "Stima basata sugli intervalli di prezzo della zona, non una valutazione di questo immobile specifico."
+  },
   "Catalog": {
+    "pagination": {
+      "pagination": "Paginazione",
+      "previousPage": "Pagina precedente",
+      "nextPage": "Pagina successiva"
+    },
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",
     "agentIntroFallback": "Mostra gli annunci di questo agente",
@@ -416,6 +434,8 @@
       "anyDistrict": "Qualsiasi quartiere",
       "amenities": "Servizi",
       "amenitiesSelected": "{count} selezionati",
+      "clear": "Cancella",
+      "done": "Fatto",
       "sortBy": "Ordina per",
       "sortNewest": "Più recenti",
       "sortPriceAsc": "Prezzo (dal più basso)",
@@ -514,6 +534,7 @@
     "langRu": "Russo",
     "langUk": "Ucraino",
     "langIt": "Italiano",
+    "langPl": "Polacco",
     "terms": "Accetto le <link>regole per il trattamento dei dati personali</link>",
     "submit": "Inizia ora",
     "submitting": "Invio in corso…",
@@ -547,6 +568,24 @@
     "source": "File originale",
     "empty": "Nessun credito fotografico registrato.",
     "breadcrumbHome": "Home"
+  },
+  "Blog": {
+    "tableOfContents": "Indice",
+    "keyFacts": "In breve",
+    "faqTitle": "Domande frequenti",
+    "sourcesTitle": "Fonti",
+    "zoneStatsTitle": "Dati di mercato",
+    "trackerLastChecked": "Verificato",
+    "authorPostsTitle": "Articoli di questo autore",
+    "authorNoPosts": "Nessun articolo pubblicato al momento.",
+    "zoneStatsAll": "Tutti gli immobili",
+    "zoneStatsNew": "Nuove costruzioni",
+    "zoneStatsResale": "Rivendita",
+    "zoneStatsYield": "Rendimento lordo"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "mese"
   },
   "QuickLead": {
     "badge": "Gratis · senza impegno",

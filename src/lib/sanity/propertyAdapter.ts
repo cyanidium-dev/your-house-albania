@@ -76,10 +76,11 @@ export type PropertyDetailsFields = {
   location: string;
   rate: string;
   beds: number;
+  /** Total rooms — null on listings that predate the field, so the tile is simply absent. */
+  rooms: number | null;
   baths: number;
   area: number;
   description: string;
-  dealTypeLabel: string;
 };
 
 type SanityPropertyForDetails = {
@@ -88,6 +89,7 @@ type SanityPropertyForDetails = {
   currency?: string;
   area?: number;
   bedrooms?: number;
+  rooms?: number;
   bathrooms?: number;
   city?: { title?: unknown };
   district?: { title?: unknown };
@@ -111,24 +113,22 @@ export function mapSanityPropertyGallery(
     }));
 }
 
-/** Maps Sanity status to deal type label. Fallback: "Price". */
-export function mapStatusToDealTypeLabel(status: string | null | undefined): string {
-  if (!status || typeof status !== 'string') return 'Price';
-  const s = status.toLowerCase();
-  if (s === 'sale') return 'Sale';
-  if (s === 'rent') return 'Rent';
-  if (s === 'short-term' || s === 'shortterm') return 'Short-term rent';
-  if (s === 'long-term' || s === 'longterm') return 'Long-term rent';
-  return status; // fallback: show raw value
-}
-
 /** Maps Sanity property to fields for property details page. Uses empty strings/0 for missing. */
 export function mapSanityPropertyToDetailsFields(
   p: SanityPropertyForDetails | null | undefined,
   locale: string
 ): PropertyDetailsFields {
   if (!p) {
-    return { title: '', location: '', rate: '', beds: 0, baths: 0, area: 0, description: '', dealTypeLabel: 'Price' };
+    return {
+      title: '',
+      location: '',
+      rate: '',
+      beds: 0,
+      rooms: null,
+      baths: 0,
+      area: 0,
+      description: '',
+    };
   }
   const cityTitle = resolveLocalizedString(p.city?.title as never, locale);
   const districtTitle = resolveLocalizedString(p.district?.title as never, locale);
@@ -143,10 +143,12 @@ export function mapSanityPropertyToDetailsFields(
     location,
     rate,
     beds: p.bedrooms ?? 0,
+    // Null, not 0: most of the catalogue predates the field, and the fact row
+    // leaves the tile out rather than claiming a flat has no rooms.
+    rooms: p.rooms ?? null,
     baths: p.bathrooms ?? 0,
     area: p.area ?? 0,
     description: desc || '',
-    dealTypeLabel: mapStatusToDealTypeLabel(p.status),
   };
 }
 
@@ -295,7 +297,9 @@ type SanityProperty = {
   currency?: string;
   area?: number;
   bedrooms?: number;
+  rooms?: number;
   bathrooms?: number;
+  yearBuilt?: number;
   status?: string;
   promoted?: boolean;
   promotionType?: 'premium' | 'top' | 'sale';
@@ -309,6 +313,7 @@ type SanityProperty = {
     slug?: string;
   };
   district?: {
+    _id?: string;
     title?: unknown;
     slug?: string;
     citySlug?: string;
@@ -377,6 +382,8 @@ export function mapSanityPropertyToCard(
     citySlug: p.city?.slug,
     district: districtTitle || undefined,
     districtSlug: p.district?.slug,
+    districtId: p.district?._id,
+    yearBuilt: typeof p.yearBuilt === 'number' && Number.isFinite(p.yearBuilt) ? p.yearBuilt : undefined,
     teaser: localizedDescription || undefined,
     coordinates: lat !== undefined || lng !== undefined ? { lat, lng } : undefined,
   };
@@ -408,6 +415,7 @@ export function mapCatalogPropertyToCard(
       area: p.area,
       bedrooms: p.bedrooms,
       bathrooms: p.bathrooms,
+      yearBuilt: p.yearBuilt,
       status: p.status,
       promoted: p.promoted,
       promotionType: p.promotionType,

@@ -2,6 +2,7 @@
 
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useFavorites } from '@/hooks/useFavorites'
 
 type HeaderFavoritesLinkProps = {
@@ -16,11 +17,12 @@ export default function HeaderFavoritesLink({
   sticky,
 }: HeaderFavoritesLinkProps) {
   const { favorites } = useFavorites()
+  const t = useTranslations('Header')
 
   return (
     <Link
       href={`/${locale}/favorites`}
-      aria-label={`Favorites (${favorites.length})`}
+      aria-label={t('favoritesCount', { count: favorites.length })}
       data-favorites-target="true"
       className={`relative flex items-center justify-center transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary p-0.5 md:p-0 ${isHomepage
         ? sticky

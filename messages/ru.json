@@ -22,13 +22,21 @@
     },
     "cta": {
       "viewProperties": "Смотреть объекты"
-    }
+    },
+    "toggleMobileMenu": "Открыть мобильное меню",
+    "switchToLightMode": "Включить светлую тему",
+    "switchToDarkMode": "Включить тёмную тему",
+    "favoritesCount": "Избранное ({count})",
+    "selectLanguage": "Выбрать язык",
+    "closeMobileMenu": "Закрыть мобильное меню",
+    "mainNavigation": "Основная навигация"
   },
   "Currency": {
     "switchTo": "Сменить валюту на {currency}"
   },
   "Footer": {
     "columns": {
+      "guides": "Гайды",
       "navigation": "Навигация",
       "cities": "Города",
       "contacts": "Контакты",
@@ -97,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Категории",
-      "title": "Лучшая недвижимость с экспертным сервисом.",
-      "description": "Широкий выбор премиум-объектов: от роскошных квартир до просторных вилл под ваши нужды.",
-      "viewProperties": "Смотреть объекты",
-      "residentialHomes": "Жилые дома",
-      "luxuryVillas": "Люксовые виллы",
-      "appartment": "Квартиры",
-      "officeSpaces": "Офисные помещения",
-      "categoryDescription": "Элегантность и комфорт в наших эксклюзивных виллах для изысканной жизни."
-    },
     "properties": {
       "badge": "Объекты",
       "title": "Вдохновляющие дизайнерские дома.",
@@ -167,13 +164,26 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "SEO-текст недоступен."
+      "contentMissing": "SEO-текст недоступен.",
+      "videoTitle": "Видео"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Изучите районы",
+      "comparisons": "Похожие сравнения",
+      "guides": "Похожие гайды",
+      "related": "Похожие страницы"
+    },
+    "lightbox": {
+      "close": "Закрыть",
+      "imageFullscreenView": "Полноэкранный просмотр изображения",
+      "viewImageFullscreen": "Открыть изображение на весь экран"
     },
     "propertyDetail": {
       "propertyDetails": "Детали объекта",
       "checkAllAmenities": "Все удобства",
       "whatThisPropertyOffers": "Что предлагает этот объект",
       "similarProperties": "Похожие объекты",
+      "yearBuilt": "Построен в {year}",
       "checkAllPhotos": "Все фотографии",
       "getInTouch": "Связаться",
       "contactHeading": "Заинтересовал этот объект?",
@@ -187,11 +197,21 @@
       "dealTypeLongTerm": "Долгосрочная аренда",
       "dealTypePrice": "Цена",
       "dealTypeShortTermCompact": "Кратк. аренда",
-      "dealTypeLongTermCompact": "Долг. аренда"
+      "dealTypeLongTermCompact": "Долг. аренда",
+      "close": "Закрыть",
+      "imageGallery": "Галерея изображений",
+      "openImage": "Открыть фото {n}",
+      "propertyImageAlt": "Фото объекта {n}",
+      "imageAlt": "Изображение {n}",
+      "thumbnailAlt": "Миниатюра {n}",
+      "goToImage": "Перейти к фото {n}",
+      "hideThumbnails": "Скрыть миниатюры",
+      "showThumbnails": "Показать миниатюры"
     },
     "propertyCard": {
       "bedrooms": "Спальни",
       "bathrooms": "Санузлы",
+      "roomsCount": "{count, plural, one {# комната} few {# комнаты} many {# комнат} other {# комнат}}",
       "bedroomsCount": "{count, plural, one {# спальня} few {# спальни} many {# спален} other {# спален}}",
       "bathroomsCount": "{count, plural, one {# ванная} few {# ванные} many {# ванных} other {# ванных}}",
       "areaUnit": "м²",
@@ -201,7 +221,9 @@
       "premium": "Премиум",
       "top": "Топ",
       "sale": "Скидка",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Объект",
+      "closePreview": "Закрыть превью"
     },
     "blogCard": {
       "imageAlt": "Изображение статьи блога",
@@ -225,26 +247,6 @@
     "properties": {
       "badge": "Объекты",
       "title": "Вдохновляющие дизайнерские дома.",
-      "description": "Элегантность и комфорт в наших эксклюзивных виллах для изысканной жизни."
-    },
-    "residentialHomes": {
-      "badge": "Объекты",
-      "title": "Жилые дома.",
-      "description": "Элегантность и комфорт в наших эксклюзивных виллах для изысканной жизни."
-    },
-    "luxuryVilla": {
-      "badge": "Объекты",
-      "title": "Люксовые виллы.",
-      "description": "Элегантность и комфорт в наших эксклюзивных виллах для изысканной жизни."
-    },
-    "appartment": {
-      "badge": "Объекты",
-      "title": "Квартиры.",
-      "description": "Элегантность и комфорт в наших эксклюзивных виллах для изысканной жизни."
-    },
-    "officeSpaces": {
-      "badge": "Объекты",
-      "title": "Офисные помещения.",
       "description": "Элегантность и комфорт в наших эксклюзивных виллах для изысканной жизни."
     },
     "blogs": {
@@ -274,7 +276,8 @@
     "forRealtors": "Риелторам",
     "howToPublish": "Как разместить",
     "register": "Регистрация",
-    "investment": "Инвестиции"
+    "investment": "Инвестиции",
+    "navLabel": "Хлебные крошки"
   },
   "Districts": {
     "hubTitle": "Районы города {city}",
@@ -377,7 +380,22 @@
     "developerLabel": "Застройщик",
     "details": "Подробнее"
   },
+  "PropertyMarketPosition": {
+    "title": "Рынок в этом районе",
+    "labelBelow": "Ниже рынка",
+    "labelIn": "В рынке",
+    "labelAbove": "Выше рынка",
+    "referencePrice": "Референс-цена",
+    "districtYield": "Доходность района: {pct}%",
+    "viewDistrict": "Смотреть страницу района",
+    "disclaimer": "Оценка на основе диапазонов цен по району, не оценка конкретного объекта."
+  },
   "Catalog": {
+    "pagination": {
+      "pagination": "Пагинация",
+      "previousPage": "Предыдущая страница",
+      "nextPage": "Следующая страница"
+    },
     "heroIntroFallback": "Просмотрите нашу подборку объектов.",
     "agentTitle": "Объекты от {name}",
     "agentIntroFallback": "Показываем объявления этого агента",
@@ -416,6 +434,8 @@
       "anyDistrict": "Любой район",
       "amenities": "Удобства",
       "amenitiesSelected": "{count} выбрано",
+      "clear": "Очистить",
+      "done": "Готово",
       "sortBy": "Сортировать",
       "sortNewest": "Сначала новые",
       "sortPriceAsc": "Цена (по возрастанию)",
@@ -514,6 +534,7 @@
     "langRu": "Русский",
     "langUk": "Украинский",
     "langIt": "Итальянский",
+    "langPl": "Польский",
     "terms": "Я соглашаюсь с <link>правилами обработки персональных данных</link>",
     "submit": "Начать",
     "submitting": "Отправка…",
@@ -547,6 +568,24 @@
     "source": "Файл-источник",
     "empty": "Авторство изображений пока не внесено.",
     "breadcrumbHome": "Главная"
+  },
+  "Blog": {
+    "tableOfContents": "Содержание",
+    "keyFacts": "Коротко",
+    "faqTitle": "Частые вопросы",
+    "sourcesTitle": "Источники",
+    "zoneStatsTitle": "Данные по рынку",
+    "trackerLastChecked": "Проверено",
+    "authorPostsTitle": "Статьи этого автора",
+    "authorNoPosts": "Опубликованных статей пока нет.",
+    "zoneStatsAll": "Вся недвижимость",
+    "zoneStatsNew": "Новостройки",
+    "zoneStatsResale": "Вторичка",
+    "zoneStatsYield": "Валовая доходность"
+  },
+  "PropertyMeta": {
+    "areaUnit": "м²",
+    "perMonth": "мес."
   },
   "QuickLead": {
     "badge": "Бесплатно · ни к чему не обязывает",

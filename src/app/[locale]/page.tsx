@@ -42,6 +42,18 @@ export default async function Home({ params }: Props) {
   const siteLogoUrl =
     (siteSettings as { logo?: { asset?: { url?: string } } } | null)?.logo?.asset?.url ||
     undefined;
+  // Organization contact + sameAs come from the CMS; both were modelled but
+  // never passed, so contactPhone/companyAddress had no consumer at all.
+  const rawSettings = siteSettings as {
+    contactEmail?: string;
+    contactPhone?: string;
+    socialLinks?: { url?: string }[];
+  } | null;
+  const sameAs = (rawSettings?.socialLinks ?? [])
+    .map((s) => s?.url?.trim())
+    .filter((u): u is string => Boolean(u));
+  const contactEmail = rawSettings?.contactEmail?.trim();
+  const contactPhone = rawSettings?.contactPhone?.trim();
   const siteJsonLd = (
     <SiteJsonLd
       baseUrl={baseUrl}
@@ -49,6 +61,12 @@ export default async function Home({ params }: Props) {
       brandName="Domlivo"
       legalName="Domlivo — Real estate in Albania"
       logoUrl={siteLogoUrl}
+      sameAs={sameAs.length > 0 ? sameAs : undefined}
+      contactPoint={
+        contactEmail || contactPhone
+          ? { email: contactEmail, telephone: contactPhone, contactType: 'customer support' }
+          : undefined
+      }
       searchUrlTemplate="/catalog?q={search_term_string}"
     />
   );

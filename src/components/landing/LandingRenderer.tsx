@@ -28,6 +28,8 @@ export type LandingPageDoc = {
   linkedZoneType?: 'district' | 'city' | string | null
   linkedZoneSlug?: string | null
   linkedZoneCitySlug?: string | null
+  /** Plain interlinking keys (ТЗ-16) — context for the related-pages auto block. */
+  topicTags?: string[]
 }
 
 function resolveLinkedZone(landing: LandingPageDoc | null): LinkedZone | undefined {
@@ -99,6 +101,7 @@ export async function LandingRenderer({
       propertiesDeal,
       linkedZone,
       faqJsonLd,
+      landingCtx: { id: landing?._id, topicTags: landing?.topicTags },
     })
     if (node) nodes.push(node)
   }

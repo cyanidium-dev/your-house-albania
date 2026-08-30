@@ -1,3 +1,5 @@
+import type { MarketPosition } from '@/lib/property/marketPosition'
+
 export type PropertyHomes = {
   // existing fields (backwards compatible)
   name: string
@@ -25,6 +27,12 @@ export type PropertyHomes = {
   citySlug?: string
   district?: string
   districtSlug?: string
+  /** Sanity district document id — the join key for zoneMetrics lookups. */
+  districtId?: string
+  /** Construction year, used to pick the new-vs-resale price range for market position. */
+  yearBuilt?: number
+  /** Computed server-side (see lib/property/marketPosition.ts); null when there isn't enough data to compare. */
+  marketPosition?: MarketPosition | null
   /** Short teaser/description text for list view. */
   teaser?: string
 

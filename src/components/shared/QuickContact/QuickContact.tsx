@@ -4,14 +4,17 @@ import * as React from 'react'
 import { Icon } from '@iconify/react'
 import { useTranslations } from 'next-intl'
 import { QuickLeadForm } from '@/components/shared/QuickLead/QuickLeadForm'
+import { partitionSocialLinks, type SocialLinkInput } from '@/lib/footer/socialChannels'
 
 export type QuickContactChannels = {
-  telegramUrl: string
-  whatsappUrl: string
   phone: string
   email: string
-  /** Fallback source: some datasets carry the messengers here instead of the dedicated fields. */
-  socialLinks?: { platform: string; url: string }[]
+  /**
+   * Telegram and WhatsApp live here, as `socialLinks[]` entries carrying
+   * `channel: 'contact'` — the dedicated CMS string fields were migrated away
+   * on 2026-08-22. See `@/lib/footer/socialChannels`.
+   */
+  socialLinks?: SocialLinkInput[]
 }
 
 type Props = {
@@ -34,22 +37,20 @@ function telHref(phone: string): string {
 }
 
 /**
- * Picks a messenger URL from `socialLinks` when the dedicated CMS field is
- * empty — the two datasets disagree about where these live, and an operator
- * filling either one should get a working button.
+ * Finds a messenger among the site's links. Contact-channel entries win, but a
+ * link left on the default channel still counts — an editor who adds Telegram
+ * without touching the channel field should still get a button.
  */
-function socialUrl(
-  links: { platform: string; url: string }[] | undefined,
+function messengerUrl(
+  links: SocialLinkInput[] | undefined,
   platform: string,
   hostPattern: RegExp
 ): string {
-  if (!Array.isArray(links)) return ''
-  const match = links.find((l) => {
-    const p = typeof l?.platform === 'string' ? l.platform.toLowerCase() : ''
-    const u = typeof l?.url === 'string' ? l.url : ''
-    return u.startsWith('http') && (p.includes(platform) || hostPattern.test(u))
-  })
-  return match?.url ?? ''
+  const { contact, social } = partitionSocialLinks(links)
+  const matches = (l: { platform: string; url: string }) =>
+    l.url.startsWith('http') &&
+    (l.platform.toLowerCase().includes(platform) || hostPattern.test(l.url))
+  return (contact.find(matches) ?? social.find(matches))?.url ?? ''
 }
 
 /**
@@ -67,10 +68,8 @@ export function QuickContact({ locale, channels }: Props) {
 
   const actions = React.useMemo<Action[]>(() => {
     const list: Action[] = []
-    const telegram =
-      channels.telegramUrl || socialUrl(channels.socialLinks, 'telegram', /(^|\/\/)([\w.]*\.)?t\.me\//i)
-    const whatsapp =
-      channels.whatsappUrl || socialUrl(channels.socialLinks, 'whatsapp', /(^|\/\/)([\w.]*\.)?wa\.me\//i)
+    const telegram = messengerUrl(channels.socialLinks, 'telegram', /(^|\/\/)([\w.]*\.)?t\.me\//i)
+    const whatsapp = messengerUrl(channels.socialLinks, 'whatsapp', /(^|\/\/)([\w.]*\.)?wa\.me\//i)
     if (telegram) {
       list.push({ key: 'telegram', href: telegram, icon: 'ph:telegram-logo-fill', color: '#229ED9' })
     }

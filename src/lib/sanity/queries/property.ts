@@ -13,11 +13,15 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     title,
     "slug": slug.current,
     price,
-    currency,
     area,
     bedrooms,
+
+    rooms,
     bathrooms,
+    yearBuilt,
     status,
+    lifecycleStatus,
+    createdAt,
     promoted,
     promotionType,
     featuredOrder,
@@ -26,7 +30,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     "city": city-> {
       _id,
       title,
-      "slug": slug.current
+      "slug": slug.current,
+      "countryCode": country->code
     },
     "district": district-> {
       _id,
@@ -56,12 +61,12 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       alt,
       label
     },
-    coordinates,
     coordinatesLat,
     coordinatesLng,
     description,
-    content,
-    "amenitiesRefs": amenitiesRefs[]-> {
+    // Intake creates amenities on sight, flagged: they are attached to the
+    // listing immediately but must not render until someone approves them.
+    "amenitiesRefs": amenitiesRefs[@->needsReview != true]-> {
       _id,
       title,
       "slug": slug.current,
@@ -119,9 +124,11 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
     title,
     "slug": slug.current,
     price,
-    currency,
     area,
     bedrooms,
+    yearBuilt,
+
+    rooms,
     bathrooms,
     status,
     promoted,
@@ -178,9 +185,11 @@ export async function fetchSimilarPropertyCandidates(
     title,
     "slug": slug.current,
     price,
-    currency,
     area,
     bedrooms,
+    yearBuilt,
+
+    rooms,
     bathrooms,
     status,
     promoted,

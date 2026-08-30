@@ -9,6 +9,7 @@ import {
   type HomeTopOffersSort,
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard, mapSanityPropertyToCard } from '@/lib/sanity/propertyAdapter'
+import { attachMarketPositionToCards } from '@/lib/property/marketPosition'
 import type { SectionHandler } from './types'
 
 type CarouselScope = { city?: string; district?: string; type?: string; deal?: string }
@@ -194,6 +195,18 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
         })
       }
     }
+  }
+
+  if (topOffersGroups) {
+    const [popular, newGroup, highDemand] = await Promise.all([
+      attachMarketPositionToCards(topOffersGroups.popular),
+      attachMarketPositionToCards(topOffersGroups.new),
+      attachMarketPositionToCards(topOffersGroups.highDemand),
+    ])
+    topOffersGroups = { popular, new: newGroup, highDemand }
+    propertyItems = topOffersGroups.popular
+  } else if (propertyItems) {
+    propertyItems = await attachMarketPositionToCards(propertyItems)
   }
 
   if (debug) {

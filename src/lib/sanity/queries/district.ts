@@ -143,6 +143,7 @@ export async function fetchDistrictLandingBySlugs(
     "linkedZoneSlug": linkedDistrict->slug.current,
     "linkedZoneCitySlug": linkedDistrict->city->slug.current,
     "pageSections": pageSections[]${landingPageSectionsProjection},
+    topicTags,
     contentUpdatedAt,
     seo
   }`;

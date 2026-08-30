@@ -1,19 +1,33 @@
 /**
- * Deal badge label = dictionary key under `Shared.propertyDetail` (localized
- * ×5 locales; English was hardcoded here before — CQ-01 fix).
+ * Reads the same `Shared.propertyDetail.dealType*` keys the property detail
+ * page already translates into all 6 locales — pass `useTranslations('Shared.propertyDetail')`.
  */
-export function dealLabelKey(
-  status?: string | null,
-  opts?: { compact?: boolean },
-): string | null {
+export type DealTypeTranslate = (key: string) => string
+
+export function displayStatusLabel(status: string | null | undefined, t: DealTypeTranslate): string | null {
   if (!status) return null
   const s = status.toLowerCase().trim()
-  const compact = opts?.compact === true
-  if (s === 'sale') return 'dealTypeSale'
-  if (s === 'rent') return 'dealTypeRent'
-  if (s === 'short-term' || s === 'shortterm') return compact ? 'dealTypeShortTermCompact' : 'dealTypeShortTerm'
-  if (s === 'long-term' || s === 'longterm') return compact ? 'dealTypeLongTermCompact' : 'dealTypeLongTerm'
-  return null
+  if (s === 'sale') return t('dealTypeSale')
+  if (s === 'rent') return t('dealTypeRent')
+  if (s === 'short-term' || s === 'shortterm') return t('dealTypeShortTerm')
+  if (s === 'long-term' || s === 'longterm') return t('dealTypeLongTerm')
+  return status
+}
+
+export function displayStatusShortLabel(status: string | null | undefined, t: DealTypeTranslate): string | null {
+  if (!status) return null
+  const s = status.toLowerCase().trim()
+  if (s === 'short-term' || s === 'shortterm') return t('dealTypeShortTermCompact')
+  if (s === 'long-term' || s === 'longterm') return t('dealTypeLongTermCompact')
+  return displayStatusLabel(status, t)
+}
+
+export function displayDealLabel(
+  status: string | null | undefined,
+  t: DealTypeTranslate,
+  opts?: { compact?: boolean }
+): string | null {
+  return opts?.compact ? displayStatusShortLabel(status, t) : displayStatusLabel(status, t)
 }
 
 export function truncateTeaser(text: string, maxChars: number): string {

@@ -8,11 +8,17 @@ import { Icon } from '@iconify/react';
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
+import { PropertyFactRow } from '@/components/property/PropertyFactRow';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
 import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
+import { PropertyMarketPositionSection } from '@/components/shared/property/PropertyMarketPositionSection';
+import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/property/marketPosition';
+import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
+import { composePropertyMetaTitle, truncateMetaDescription } from '@/lib/seo/propertyMeta';
+import { resolveLocalizedString } from '@/lib/sanity/localized';
 import { getSiteBaseUrl } from '@/lib/siteUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
@@ -56,7 +62,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     | undefined;
 
   const itemTitle = fields.title || slug;
-  const itemDescription = fields.description?.trim() || undefined;
+  // Cut on a word boundary rather than letting Google truncate mid-word: 29 of
+  // 35 descriptions run past the SERP limit.
+  const itemDescription = truncateMetaDescription(fields.description) || undefined;
+
+  // Composed from the property's own fields, never stored — see propertyMeta.
+  const raw = sanityProperty as {
+    price?: number;
+    area?: number;
+    status?: string;
+    type?: { title?: unknown };
+    city?: { title?: unknown };
+    district?: { title?: unknown };
+  };
+  const tMeta = await getTranslations({ locale, namespace: 'PropertyMeta' });
+  const composedTitle = composePropertyMetaTitle({
+    typeLabel: resolveLocalizedString(raw?.type?.title as never, locale) || undefined,
+    area: raw?.area,
+    district: resolveLocalizedString(raw?.district?.title as never, locale) || undefined,
+    city: resolveLocalizedString(raw?.city?.title as never, locale) || undefined,
+    price: raw?.price,
+    status: raw?.status,
+    locale,
+    areaUnit: tMeta('areaUnit'),
+    perMonth: tMeta('perMonth'),
+  });
 
   const coverImageUrl = (sanityProperty as { gallery?: Array<{ asset?: { url?: string } }> })?.gallery?.[0]?.asset?.url;
 
@@ -68,6 +98,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     {
       itemTitle,
+      composedTitle,
       itemDescription,
       coverImageUrl: coverImageUrl ?? undefined,
       propertyPath: { baseUrl, locale, slug },
@@ -97,12 +128,18 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const similarCount = getSimilarCount(siteSettings);
   const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
-  const similarCandidates = await fetchSimilarPropertyCandidates(
-    (sanityProperty as { _id: string })._id,
-    citySlug ?? null,
-    similarCount
+  const districtId = (sanityProperty as { district?: { _id?: string } })?.district?._id;
+  const [similarCandidates, zoneMetrics] = await Promise.all([
+    fetchSimilarPropertyCandidates(
+      (sanityProperty as { _id: string })._id,
+      citySlug ?? null,
+      similarCount
+    ),
+    districtId ? fetchLatestZoneMetricsByZoneId(districtId) : Promise.resolve(null),
+  ]);
+  const similarItems = await attachMarketPositionToCards(
+    similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale))
   );
-  const similarItems = similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale));
 
   const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
   const galleryImages = mapSanityPropertyGallery(sanityProperty as never);
@@ -110,8 +147,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const title = sanityFields.title;
   const location = sanityFields.location;
   const beds = sanityFields.beds;
+  const rooms = sanityFields.rooms;
   const baths = sanityFields.baths;
   const area = sanityFields.area;
+  const yearBuilt = (sanityProperty as { yearBuilt?: number } | null)?.yearBuilt;
 
   const sanityWithCoords = sanityProperty as {
     coordinates?: { lat?: number; lng?: number } | null;
@@ -137,6 +176,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
     currency?: string;
     status?: string;
   };
+  const marketPosition = computeMarketPosition(
+    { price: rawProperty.price, area, yearBuilt },
+    zoneMetrics,
+  );
   const baseUrl = await getBaseUrl();
   const imageUrls = galleryImages.map((img) => img.url);
 
@@ -166,12 +209,17 @@ export default async function PropertyDetailsPage({ params }: Props) {
               slug={slug}
               description={sanityFields.description || null}
               location={location || null}
+              countryCode={(sanityProperty as { city?: { countryCode?: string } })?.city?.countryCode ?? null}
               price={rawProperty.price ?? null}
-              currency={rawProperty.currency ?? null}
               status={rawProperty.status ?? null}
+              lifecycleStatus={(sanityProperty as { lifecycleStatus?: string })?.lifecycleStatus ?? null}
+              propertyTypeSlug={(sanityProperty as { type?: { slug?: string } })?.type?.slug ?? null}
+              rooms={rooms ?? undefined}
               beds={beds}
               baths={baths}
               area={area}
+              yearBuilt={yearBuilt}
+              datePosted={(sanityProperty as { createdAt?: string })?.createdAt ?? null}
               imageUrls={imageUrls}
               baseUrl={baseUrl}
               locale={locale}
@@ -197,30 +245,15 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         />
                     </div>
                     <div className="lg:col-span-4 col-span-12">
-                        <div className='flex'>
-                            <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 pr-2 xs:pr-4 mobile:pr-8'>
-                                <Icon icon={'solar:bed-linear'} width={20} height={20} />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {t('bedroomsCount', { count: beds })}
-                                </p>
-                            </div>
-                            <div className='flex flex-col gap-2 border-e border-black/10 dark:border-white/20 px-2 xs:px-4 mobile:px-8'>
-                                <Icon icon={'solar:bath-linear'} width={20} height={20} />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {t('bathroomsCount', { count: baths })}
-                                </p>
-                            </div>
-                            <div className='flex flex-col gap-2 pl-2 xs:pl-4 mobile:pl-8'>
-                                <Icon
-                                    icon={'lineicons:arrow-all-direction'}
-                                    width={20}
-                                    height={20}
-                                />
-                                <p className='text-sm mobile:text-base font-normal text-black dark:text-white'>
-                                    {area}{t('areaUnit')}
-                                </p>
-                            </div>
-                        </div>
+                        <PropertyFactRow
+                            facts={[
+                                ...(rooms ? [{ key: 'rooms', icon: 'solar:home-2-linear', label: t('roomsCount', { count: rooms }) }] : []),
+                                { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
+                                { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
+                                { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
+                                ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
+                            ]}
+                        />
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />
@@ -231,6 +264,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           amenities={amenities}
                           sectionTitle={tPropertyDetail('propertyDetails')}
                           checkAllLabel={tPropertyDetail('checkAllAmenities')}
+                          closeLabel={tPropertyDetail('close')}
                         />
                         )}
                         {sanityFields.description ? (
@@ -255,6 +289,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             </div>
                         </div>
                         )}
+                        <PropertyMarketPositionSection
+                          locale={locale}
+                          marketPosition={marketPosition}
+                          citySlug={citySlug}
+                          districtSlug={districtSlug}
+                        />
                     </div>
                     <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
                         <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">

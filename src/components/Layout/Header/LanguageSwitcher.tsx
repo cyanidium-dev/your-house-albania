@@ -1,26 +1,20 @@
 "use client";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
+import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 
-const LOCALE_LABELS: Record<string, string> = {
-  en: "EN",
-  uk: "UK",
-  ru: "RU",
-  sq: "SQ",
-  it: "IT",
-};
-
 export default function LanguageSwitcher() {
   const locale = useLocale();
+  const t = useTranslations("Header");
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const locales = ["en", "uk", "ru", "sq", "it"];
+  const locales = routing.locales;
 
   const handleSelect = (newLocale: string) => {
     if (newLocale === locale) {
@@ -37,10 +31,10 @@ export default function LanguageSwitcher() {
         type="button"
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300 ease-out cursor-pointer transition-colors"
-        aria-label="Select language"
+        aria-label={t("selectLanguage")}
         aria-expanded={open}
       >
-        <span>{LOCALE_LABELS[locale] ?? locale.toUpperCase()}</span>
+        <span>{locale.toUpperCase()}</span>
         <Icon
           icon="ph:caret-down"
           width={16}
@@ -70,7 +64,7 @@ export default function LanguageSwitcher() {
                   loc === locale ? "text-primary font-semibold" : ""
                 }`}
               >
-                {LOCALE_LABELS[loc]}
+                {loc.toUpperCase()}
               </button>
             ))}
           </div>

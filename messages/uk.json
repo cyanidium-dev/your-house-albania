@@ -22,13 +22,21 @@
     },
     "cta": {
       "viewProperties": "Переглянути об'єкти"
-    }
+    },
+    "toggleMobileMenu": "Відкрити мобільне меню",
+    "switchToLightMode": "Увімкнути світлу тему",
+    "switchToDarkMode": "Увімкнути темну тему",
+    "favoritesCount": "Обране ({count})",
+    "selectLanguage": "Обрати мову",
+    "closeMobileMenu": "Закрити мобільне меню",
+    "mainNavigation": "Основна навігація"
   },
   "Currency": {
     "switchTo": "Змінити валюту на {currency}"
   },
   "Footer": {
     "columns": {
+      "guides": "Гайди",
       "navigation": "Навігація",
       "cities": "Міста",
       "contacts": "Контакти",
@@ -97,17 +105,6 @@
         }
       }
     },
-    "services": {
-      "categories": "Категорії",
-      "title": "Відкрийте найкращу нерухомість з експертним обслуговуванням.",
-      "description": "Широкий вибір преміум-об'єктів: від розкішних квартир до просторих віл, підлаштованих під ваші потреби.",
-      "viewProperties": "Переглянути об'єкти",
-      "residentialHomes": "Житлові будинки",
-      "luxuryVillas": "Розкішні вілли",
-      "appartment": "Квартири",
-      "officeSpaces": "Офісні приміщення",
-      "categoryDescription": "Елегантність та комфорт у наших ексклюзивних віллах для витонченого життя."
-    },
     "properties": {
       "badge": "Нерухомість",
       "title": "Відкрийте натхненні дизайнерські будинки.",
@@ -167,13 +164,26 @@
   },
   "Shared": {
     "seoText": {
-      "contentMissing": "SEO-текст недоступний."
+      "contentMissing": "SEO-текст недоступний.",
+      "videoTitle": "Відео"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Досліджуйте райони",
+      "comparisons": "Схожі порівняння",
+      "guides": "Схожі гайди",
+      "related": "Схожі сторінки"
+    },
+    "lightbox": {
+      "close": "Закрити",
+      "imageFullscreenView": "Повноекранний перегляд зображення",
+      "viewImageFullscreen": "Відкрити зображення на весь екран"
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",
       "checkAllAmenities": "Всі зручності",
       "whatThisPropertyOffers": "Що пропонує цей об'єкт",
       "similarProperties": "Схожі об'єкти",
+      "yearBuilt": "Збудовано {year}",
       "checkAllPhotos": "Всі фото",
       "getInTouch": "Зв'язатися",
       "contactHeading": "Зацікавив цей об'єкт?",
@@ -183,16 +193,26 @@
       "contactClose": "Закрити",
       "dealTypeSale": "Продаж",
       "dealTypeRent": "Оренда",
-      "dealTypeShortTerm": "Краткострокова оренда",
+      "dealTypeShortTerm": "Короткострокова оренда",
       "dealTypeLongTerm": "Довгострокова оренда",
       "dealTypePrice": "Ціна",
       "dealTypeShortTermCompact": "Корот. оренда",
-      "dealTypeLongTermCompact": "Довг. оренда"
+      "dealTypeLongTermCompact": "Довг. оренда",
+      "close": "Закрити",
+      "imageGallery": "Галерея зображень",
+      "openImage": "Відкрити фото {n}",
+      "propertyImageAlt": "Фото об'єкта {n}",
+      "imageAlt": "Зображення {n}",
+      "thumbnailAlt": "Мініатюра {n}",
+      "goToImage": "Перейти до фото {n}",
+      "hideThumbnails": "Сховати мініатюри",
+      "showThumbnails": "Показати мініатюри"
     },
     "propertyCard": {
       "bedrooms": "Спальні",
       "bathrooms": "Ванні",
-      "bedroomsCount": "{count, plural, one {# спальня} few {# спальні} many {# спальень} other {# спальень}}",
+      "roomsCount": "{count, plural, one {# кімната} few {# кімнати} many {# кімнат} other {# кімнат}}",
+      "bedroomsCount": "{count, plural, one {# спальня} few {# спальні} many {# спалень} other {# спалень}}",
       "bathroomsCount": "{count, plural, one {# ванна} few {# ванни} many {# ванних} other {# ванних}}",
       "areaUnit": "м²",
       "pricePrefix": "$",
@@ -201,7 +221,9 @@
       "premium": "Преміум",
       "top": "Топ",
       "sale": "Знижка",
-      "discount": "-{value}%"
+      "discount": "-{value}%",
+      "propertyFallback": "Об'єкт",
+      "closePreview": "Закрити перегляд"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",
@@ -225,26 +247,6 @@
     "properties": {
       "badge": "Нерухомість",
       "title": "Відкрийте натхненні дизайнерські будинки.",
-      "description": "Елегантність та комфорт у наших ексклюзивних віллах для витонченого життя."
-    },
-    "residentialHomes": {
-      "badge": "Нерухомість",
-      "title": "Житлові будинки.",
-      "description": "Елегантність та комфорт у наших ексклюзивних віллах для витонченого життя."
-    },
-    "luxuryVilla": {
-      "badge": "Нерухомість",
-      "title": "Розкішні вілли.",
-      "description": "Елегантність та комфорт у наших ексклюзивних віллах для витонченого життя."
-    },
-    "appartment": {
-      "badge": "Нерухомість",
-      "title": "Квартири.",
-      "description": "Елегантність та комфорт у наших ексклюзивних віллах для витонченого життя."
-    },
-    "officeSpaces": {
-      "badge": "Нерухомість",
-      "title": "Офісні приміщення.",
       "description": "Елегантність та комфорт у наших ексклюзивних віллах для витонченого життя."
     },
     "blogs": {
@@ -274,7 +276,8 @@
     "forRealtors": "Ріелторам",
     "howToPublish": "Як розмістити",
     "register": "Реєстрація",
-    "investment": "Інвестиції"
+    "investment": "Інвестиції",
+    "navLabel": "Хлібні крихти"
   },
   "Districts": {
     "hubTitle": "Райони міста {city}",
@@ -377,7 +380,22 @@
     "developerLabel": "Забудовник",
     "details": "Детальніше"
   },
+  "PropertyMarketPosition": {
+    "title": "Ринок у цьому районі",
+    "labelBelow": "Нижче ринку",
+    "labelIn": "У межах ринку",
+    "labelAbove": "Вище ринку",
+    "referencePrice": "Референс-ціна",
+    "districtYield": "Дохідність району: {pct}%",
+    "viewDistrict": "Переглянути сторінку району",
+    "disclaimer": "Оцінка на основі цінових діапазонів району, не оцінка конкретного об'єкта."
+  },
   "Catalog": {
+    "pagination": {
+      "pagination": "Пагінація",
+      "previousPage": "Попередня сторінка",
+      "nextPage": "Наступна сторінка"
+    },
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "agentTitle": "Об'єкти від {name}",
     "agentIntroFallback": "Показуємо оголошення цього агента",
@@ -416,6 +434,8 @@
       "anyDistrict": "Будь-який район",
       "amenities": "Зручності",
       "amenitiesSelected": "{count} обрано",
+      "clear": "Очистити",
+      "done": "Готово",
       "sortBy": "Сортувати",
       "sortNewest": "Найновіші",
       "sortPriceAsc": "Ціна (від низької)",
@@ -514,6 +534,7 @@
     "langRu": "Російська",
     "langUk": "Українська",
     "langIt": "Італійська",
+    "langPl": "Польська",
     "terms": "Я погоджуюся з <link>правилами обробки персональних даних</link>",
     "submit": "Почати",
     "submitting": "Надсилання…",
@@ -547,6 +568,24 @@
     "source": "Файл-джерело",
     "empty": "Авторство зображень ще не внесено.",
     "breadcrumbHome": "Головна"
+  },
+  "Blog": {
+    "tableOfContents": "Зміст",
+    "keyFacts": "Коротко",
+    "faqTitle": "Часті запитання",
+    "sourcesTitle": "Джерела",
+    "zoneStatsTitle": "Дані по ринку",
+    "trackerLastChecked": "Перевірено",
+    "authorPostsTitle": "Статті цього автора",
+    "authorNoPosts": "Опублікованих статей поки немає.",
+    "zoneStatsAll": "Уся нерухомість",
+    "zoneStatsNew": "Новобудови",
+    "zoneStatsResale": "Вторинний ринок",
+    "zoneStatsYield": "Валова дохідність"
+  },
+  "PropertyMeta": {
+    "areaUnit": "м²",
+    "perMonth": "міс."
   },
   "QuickLead": {
     "badge": "Безкоштовно · ні до чого не зобовʼязує",

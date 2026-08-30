@@ -119,7 +119,7 @@ const BlogSmall: React.FC<{
             <Link
               href={ctaHref}
               className="bg-dark dark:bg-white text-white dark:text-dark py-4 px-8 rounded-full hover:bg-primary duration-300"
-              aria-label="Read all blog articles"
+              aria-label={ctaLabel}
             >
               {ctaLabel}
             </Link>

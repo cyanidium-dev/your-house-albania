@@ -1,3 +1,4 @@
+import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { resolveLocalizedString } from "./localized";
 
 export type ResolvedFooterApp = {
@@ -13,16 +14,13 @@ export type ResolvedSiteSettings = {
   phone: string;
   email: string;
   companyAddress: string;
-  copyrightText: string;
   /** Localized short footer intro; empty if unset in CMS. */
   footerIntro: string;
-  footerTelegramUrl: string;
-  footerWhatsappUrl: string;
   footerApp: ResolvedFooterApp;
-  footerCodesiteUrl: string;
-  footerWebbondUrl: string;
-  socialLinks: { platform: string; url: string }[];
-  policyLinks: { href: string; label: string }[];
+  socialLinks: { platform: string; url: string; channel?: string }[];
+  policyLinks: { _key?: string; href: string; label: string }[];
+  /** Footer "Guides" column (ТЗ-16); empty hides the column. */
+  footerGuideLinks: { _key?: string; href: string; label: string }[];
 };
 
 type RawSiteSettings = {
@@ -32,24 +30,33 @@ type RawSiteSettings = {
   contactPhone?: string;
   contactEmail?: string;
   companyAddress?: string;
-  copyrightText?: Record<string, string>;
   footerIntro?: Record<string, string> | string;
-  footerTelegramUrl?: string;
-  footerWhatsappUrl?: string;
   footerApp?: {
     enabled?: boolean;
     iosUrl?: string;
     androidUrl?: string;
   };
-  footerCodesiteUrl?: string;
-  footerWebbondUrl?: string;
-  socialLinks?: { _key?: string; platform?: string; url?: string }[];
-  policyLinks?: {
-    _key?: string;
-    href?: string;
-    label?: Record<string, string>;
-  }[];
+  socialLinks?: { _key?: string; platform?: string; url?: string; channel?: string }[];
+  policyLinks?: RawPolicyLink[];
+  footerGuideLinks?: RawPolicyLink[];
 };
+
+export type RawPolicyLink = { _key?: string; href?: string; label?: Record<string, string> };
+
+/** Trim + locale-resolve CMS policy links; drop any with empty href or label. */
+export function normalizePolicyLinks(
+  raw: RawPolicyLink[] | null | undefined,
+  locale: string,
+): { _key?: string; href: string; label: string }[] {
+  return (raw ?? []).flatMap((p) => {
+    const href = typeof p?.href === "string" ? p.href.trim() : "";
+    const label = resolveLocalizedString(p?.label as never, locale)?.trim() || "";
+    if (!href || !label) return [];
+    // `_key` (F-6): stable React key for CMS rows — an editor can create two
+    // rows with the same href, and validation only caps the list length.
+    return [{ _key: p._key, href: resolveLocaleHref(href, locale), label }];
+  });
+}
 
 const DEFAULT_PHONE = "";
 const DEFAULT_EMAIL = "";
@@ -83,15 +90,11 @@ export function mapSiteSettingsToResolved(
       phone: DEFAULT_PHONE,
       email: DEFAULT_EMAIL,
       companyAddress: "",
-      copyrightText: "",
       footerIntro: "",
-      footerTelegramUrl: "",
-      footerWhatsappUrl: "",
       footerApp: { enabled: false, iosUrl: "", androidUrl: "" },
-      footerCodesiteUrl: "",
-      footerWebbondUrl: "",
       socialLinks: [],
       policyLinks: [],
+      footerGuideLinks: [],
     };
   }
 
@@ -106,15 +109,12 @@ export function mapSiteSettingsToResolved(
     .map((s) => ({
       platform: s.platform ?? "Link",
       url: s.url ?? "#",
+      channel: s.channel,
     }));
 
-  const policyLinks = (raw.policyLinks ?? [])
-    .filter((p) => p?.href)
-    .map((p) => ({
-      href: p.href ?? "",
-      label: resolveLocalizedString(p.label as never, locale) || "",
-    }))
-    .filter((p) => p.href && p.label);
+  const policyLinks = normalizePolicyLinks(raw.policyLinks, locale);
+  // Same shape and rules as policy links — the normalizer is generic.
+  const footerGuideLinks = normalizePolicyLinks(raw.footerGuideLinks, locale);
 
   return {
     logoUrl: (raw.logo as { asset?: { url?: string } })?.asset?.url ?? "",
@@ -123,15 +123,10 @@ export function mapSiteSettingsToResolved(
     phone: raw.contactPhone ?? DEFAULT_PHONE,
     email: raw.contactEmail ?? DEFAULT_EMAIL,
     companyAddress: raw.companyAddress ?? "",
-    copyrightText:
-      resolveLocalizedString(raw.copyrightText as never, locale) || "",
     footerIntro,
-    footerTelegramUrl: trimUrl(raw.footerTelegramUrl),
-    footerWhatsappUrl: trimUrl(raw.footerWhatsappUrl),
     footerApp: mapFooterApp(raw.footerApp),
-    footerCodesiteUrl: trimUrl(raw.footerCodesiteUrl),
-    footerWebbondUrl: trimUrl(raw.footerWebbondUrl),
     socialLinks,
     policyLinks,
+    footerGuideLinks,
   };
 }

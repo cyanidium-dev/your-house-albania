@@ -52,9 +52,10 @@ type Props = {
   amenities: PropertyAmenityItem[];
   sectionTitle: string;
   checkAllLabel: string;
+  closeLabel: string;
 };
 
-export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabel }: Props) {
+export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabel, closeLabel }: Props) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const displayCount = 3;
   const hasMore = amenities.length > displayCount;
@@ -123,7 +124,7 @@ export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabe
                 type="button"
                 onClick={() => setModalOpen(false)}
                 className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-dark/5 dark:hover:bg-white/10 transition-colors"
-                aria-label="Close"
+                aria-label={closeLabel}
               >
                 <Icon
                   icon="ph:arrow-left"

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
@@ -19,6 +19,10 @@ import {
 } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { BlogArticleContent } from "@/components/Blog/BlogArticleContent";
+import { BlogTableOfContents } from "@/components/Blog/BlogTableOfContents";
+import { BlogKeyFacts } from "@/components/Blog/BlogKeyFacts";
+import { BlogFaq } from "@/components/Blog/BlogFaq";
+import { BlogSources } from "@/components/Blog/BlogSources";
 import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
 import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
@@ -60,8 +64,25 @@ type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+/**
+ * Blog slugs renamed in place, oldest first. Keep these entries — old URLs
+ * stay live as 301s (see DISTRICT_CANONICAL_SLUG_REDIRECTS for the same
+ * pattern on the district route).
+ *
+ * `market-outlook-2025` renamed 2026-08-25: the article was rewritten around
+ * "is 2026 the right time to buy", but the slug still named 2025 — flagged
+ * as debt in ТЗ-13 §12 and left unrenamed at the time because a content
+ * rewrite alone doesn't carry a redirect.
+ */
+const BLOG_SLUG_REDIRECTS: Record<string, string> = {
+  "market-outlook-2025": "market-outlook-2026",
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
+  if (BLOG_SLUG_REDIRECTS[slug]) {
+    return {};
+  }
   const post = await fetchBlogPostBySlug(slug);
   if (!post) {
     return { title: "Not Found", description: "No blog article has been found" };
@@ -103,6 +124,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Post({ params }: Props) {
   const { locale, slug } = await params;
+  const canonicalSlug = BLOG_SLUG_REDIRECTS[slug];
+  if (canonicalSlug) {
+    permanentRedirect(`/${locale}/blog/${canonicalSlug}`);
+  }
   const [post, siteSettings, baseUrl, blogSettings] = await Promise.all([
     fetchBlogPostBySlug(slug),
     fetchSiteSettings(),
@@ -192,9 +217,21 @@ export default async function Post({ params }: Props) {
             unoptimized={detail.authorImageUrl?.startsWith("http") ?? true}
           />
           <div>
-            <span className="text-xm text-dark dark:text-white">
-              {detail.authorName || "—"}
-            </span>
+            {/* Only a post with a blogAuthor reference has a page to link to.
+                The 12 posts still on the legacy inline fields render exactly
+                as before, unlinked. */}
+            {detail.authorSlug ? (
+              <Link
+                href={`/${locale}/blog/author/${detail.authorSlug}`}
+                className="text-xm text-dark dark:text-white hover:text-primary transition-colors"
+              >
+                {detail.authorName || "—"}
+              </Link>
+            ) : (
+              <span className="text-xm text-dark dark:text-white">
+                {detail.authorName || "—"}
+              </span>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3 sm:gap-7">
@@ -277,9 +314,13 @@ export default async function Post({ params }: Props) {
             }
           >
             <div className="min-w-0">
+              <BlogTableOfContents content={detail.contentBlocks} />
+              <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
-              {/* Every article ends with the callback offer. Editors can also place
-                  `blogQuoteCtaBlock` mid-article; that copy stays independent. */}
+              <BlogFaq faq={detail.faq} locale={locale} />
+              <BlogSources sources={detail.sources} locale={locale} />
+              {/* Last thing in the article, after the sources. Editors can also
+                  place `blogQuoteCtaBlock` mid-article; that copy is independent. */}
               <BlogQuoteCta locale={locale} sourceLabel={detail.slug} />
             </div>
             {(finalRelatedPosts.length > 0 || detail.properties.length > 0) && (

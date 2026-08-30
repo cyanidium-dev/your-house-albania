@@ -36,6 +36,12 @@ export function BlogArticleSchema({
     publisherName: siteName || "Site",
     publisherUrl,
     publisherLogoUrl: siteLogoUrl,
+    dateModified:
+      detail.updatedAt && !Number.isNaN(new Date(detail.updatedAt).getTime())
+        ? new Date(detail.updatedAt).toISOString()
+        : undefined,
+    authorSlug: detail.authorSlug,
+    locale,
   });
 
   return (

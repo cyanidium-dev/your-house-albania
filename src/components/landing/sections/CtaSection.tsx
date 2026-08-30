@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
-import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
+import { resolveCta, resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'
 
 export type CtaSectionProps = {
@@ -68,9 +68,9 @@ export function CtaSection({
   secondaryLabel,
   secondaryHref,
 }: CtaSectionProps) {
-  const showPrimary = Boolean(primaryLabel?.trim() && primaryHref)
-  const showSecondary = Boolean(secondaryLabel?.trim() && secondaryHref)
-  const showCtas = showPrimary || showSecondary
+  const primary = resolveCta(primaryLabel, primaryHref, locale)
+  const secondary = resolveCta(secondaryLabel, secondaryHref, locale)
+  const showCtas = Boolean(primary || secondary)
 
   if (!eyebrow && !title?.trim() && !description?.trim() && !showCtas) return null
 
@@ -94,11 +94,11 @@ export function CtaSection({
           ) : null}
           {showCtas ? (
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center w-full mt-2">
-              {showPrimary ? (
-                <CtaButton href={primaryHref!} label={primaryLabel!} locale={locale} variant="primary" />
+              {primary ? (
+                <CtaButton href={primary.href} label={primary.label} locale={locale} variant="primary" />
               ) : null}
-              {showSecondary ? (
-                <CtaButton href={secondaryHref!} label={secondaryLabel!} locale={locale} variant="secondary" />
+              {secondary ? (
+                <CtaButton href={secondary.href} label={secondary.label} locale={locale} variant="secondary" />
               ) : null}
             </div>
           ) : null}

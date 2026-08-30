@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { fetchCatalogFilterOptions, fetchSiteSettings } from '@/lib/sanity/client'
 import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
+import { resolveCta } from '@/lib/routes/resolveLocaleHref'
 
 export type HeroData = {
   shortLine?: string;
@@ -30,12 +31,8 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
   const bgImageUrl = heroData?.backgroundImageUrl
   const bgImageAlt = heroData?.backgroundImageAlt || title || 'Hero background'
   const searchEnabled = heroData?.searchEnabled === true
-  const hasPrimaryCta = Boolean(heroData?.ctaLabel && heroData?.ctaHref)
-  const hasSecondaryCta = Boolean(heroData?.secondaryCtaLabel && heroData?.secondaryCtaHref)
-  const primaryCtaHref = heroData?.ctaHref
-  const primaryCtaLabel = heroData?.ctaLabel
-  const secondaryCtaHref = heroData?.secondaryCtaHref
-  const secondaryCtaLabel = heroData?.secondaryCtaLabel
+  const primaryCta = resolveCta(heroData?.ctaLabel, heroData?.ctaHref, locale)
+  const secondaryCta = resolveCta(heroData?.secondaryCtaLabel, heroData?.secondaryCtaHref, locale)
   const cmsTabs = Array.isArray(heroData?.searchTabs)
     ? heroData.searchTabs
         .map((tab) => {
@@ -134,30 +131,22 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 {subtitle}
               </p>
             ) : null}
-            {hasPrimaryCta || hasSecondaryCta ? (
+            {primaryCta || secondaryCta ? (
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start">
-                {hasPrimaryCta ? (
+                {primaryCta ? (
                   <Link
-                    href={
-                      primaryCtaHref!.startsWith('/')
-                        ? `/${locale}${primaryCtaHref}`
-                        : primaryCtaHref!
-                    }
+                    href={primaryCta.href}
                     className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
                   >
-                    {primaryCtaLabel}
+                    {primaryCta.label}
                   </Link>
                 ) : null}
-                {hasSecondaryCta ? (
+                {secondaryCta ? (
                   <Link
-                    href={
-                      secondaryCtaHref!.startsWith('/')
-                        ? `/${locale}${secondaryCtaHref}`
-                        : secondaryCtaHref!
-                    }
+                    href={secondaryCta.href}
                     className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold border-2 border-white text-white hover:bg-white/15 transition-colors duration-200 ease-out"
                   >
-                    {secondaryCtaLabel}
+                    {secondaryCta.label}
                   </Link>
                 ) : null}
               </div>

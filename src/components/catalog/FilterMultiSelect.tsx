@@ -43,7 +43,9 @@ type Props = {
   value: string[];
   onValueChange: (next: string[]) => void;
   options: FilterMultiOption[];
-  summaryLabel?: (count: number) => string;
+  summaryLabel: (count: number) => string;
+  clearLabel: string;
+  doneLabel: string;
   className?: string;
   panelClassName?: string;
 };
@@ -54,6 +56,8 @@ export function FilterMultiSelect({
   onValueChange,
   options,
   summaryLabel,
+  clearLabel,
+  doneLabel,
   className,
   panelClassName,
   radius,
@@ -111,14 +115,7 @@ export function FilterMultiSelect({
   }, [close]);
 
   const count = value.length;
-  const summary =
-    typeof summaryLabel === "function"
-      ? summaryLabel(count)
-      : count === 0
-        ? "Amenities"
-        : count === 1
-          ? "1 selected"
-          : `${count} selected`;
+  const summary = summaryLabel(count);
 
   return (
     <div className="relative min-w-0">
@@ -224,14 +221,14 @@ export function FilterMultiSelect({
                       className="text-sm text-dark/70 dark:text-white/80 hover:text-primary transition-colors"
                       onClick={() => onValueChange([])}
                     >
-                      Clear
+                      {clearLabel}
                     </button>
                     <button
                       type="button"
                       className="px-4 py-1.5 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
                       onClick={close}
                     >
-                      Done
+                      {doneLabel}
                     </button>
                   </div>
                 </div>
@@ -289,14 +286,14 @@ export function FilterMultiSelect({
                       className="text-xs text-dark/70 dark:text-white/80 hover:text-primary transition-colors"
                       onClick={() => onValueChange([])}
                     >
-                      Clear
+                      {clearLabel}
                     </button>
                     <button
                       type="button"
                       className="text-xs text-dark/70 dark:text-white/80 hover:text-primary transition-colors"
                       onClick={close}
                     >
-                      Done
+                      {doneLabel}
                     </button>
                   </div>
                 </div>

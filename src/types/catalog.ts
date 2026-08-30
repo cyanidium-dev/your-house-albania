@@ -39,6 +39,8 @@ export type CatalogProperty = {
   area?: number;
   bedrooms?: number;
   bathrooms?: number;
+  /** Construction year; used to pick new-vs-resale price range for market position. */
+  yearBuilt?: number;
   status?: string;
   promoted?: boolean;
   promotionType?: 'premium' | 'top' | 'sale';
