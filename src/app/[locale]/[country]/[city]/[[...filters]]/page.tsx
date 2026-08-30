@@ -19,7 +19,11 @@ import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
-import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
+import {
+  LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
+  LISTING_DISTRICT_NOINDEX_THRESHOLD,
+  shouldNoindexEmptyCityListing,
+} from "@/lib/seo/listingIndexPolicy";
 import { buildCityListingSeo } from "@/lib/seo/listingSeoCopy";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
@@ -185,12 +189,33 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       pageSize: 1,
     });
     const totalCount = listing?.totalCount ?? 0;
-    noindexByDistrictThreshold = totalCount <= 20;
+    noindexByDistrictThreshold = totalCount <= LISTING_DISTRICT_NOINDEX_THRESHOLD;
+  }
+
+  // Bare city listing (no deal, type or district): an empty one answers nothing
+  // and should not be in the index. Counted with the same fetch the page uses,
+  // so robots can never disagree with what the visitor sees. Comes back on its
+  // own as soon as the city has inventory.
+  let noindexEmptyCity = false;
+  const isBareCityListing =
+    !dealForPath && !typeSlug && !(typeof search.district === "string" && search.district.trim());
+  if (!noindexQuery && !seoNoIndex && isBareCityListing && geo.listingCitySlug) {
+    const listing = await fetchCatalogProperties({
+      city: geo.listingCitySlug,
+      page: 1,
+      pageSize: 1,
+    });
+    noindexEmptyCity = shouldNoindexEmptyCityListing(listing?.totalCount ?? 0);
   }
   // Rentals hidden from the public UI: rent listing pages stay reachable but noindexed.
   const hiddenDeal = Boolean(dealForPath) && !isPublicDealRouteSegment(dealForPath);
   const robots =
-    noindexQuery || seoNoIndex || noindexByThreshold || noindexByDistrictThreshold || hiddenDeal
+    noindexQuery ||
+    seoNoIndex ||
+    noindexByThreshold ||
+    noindexByDistrictThreshold ||
+    noindexEmptyCity ||
+    hiddenDeal
       ? { index: false as const, follow: true as const }
       : undefined;
 

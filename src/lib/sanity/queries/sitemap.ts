@@ -112,18 +112,32 @@ export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
       "slug": linkedCity->slug.current,
       "countrySlug": linkedCity->country->slug.current,
       _updatedAt
+    },
+    "propertyCitySlugs": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(city->slug.current)]{
+      "citySlug": city->slug.current
     }
   }`;
   try {
     const result = await client.fetch<{
       cities?: Array<{ slug?: string; countrySlug?: string; _updatedAt?: string }>;
       landings?: Array<{ slug?: string; countrySlug?: string; _updatedAt?: string }>;
+      propertyCitySlugs?: Array<{ citySlug?: string }>;
     }>(query);
+    // A city page whose listing is empty is noindexed by the route, so it has
+    // no business in the sitemap either — a sitemap should only advertise URLs
+    // we actually want indexed. Cities return here on their own once they have
+    // inventory, since this query reruns on the sitemap's revalidate window.
+    const citiesWithProperties = new Set(
+      (result?.propertyCitySlugs ?? [])
+        .map((r) => (typeof r.citySlug === 'string' ? r.citySlug.trim().toLowerCase() : ''))
+        .filter(Boolean)
+    );
     const best = new Map<string, { lastModified: Date; countrySlug?: string }>();
     const rows = [...(result?.cities ?? []), ...(result?.landings ?? [])];
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
       if (!slug) continue;
+      if (!citiesWithProperties.has(slug)) continue;
       const lm = parseSitemapDate(row._updatedAt);
       const countrySlug =
         typeof row.countrySlug === 'string' && row.countrySlug.trim()
