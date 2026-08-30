@@ -19,6 +19,7 @@ import {
 } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { BlogArticleContent } from "@/components/Blog/BlogArticleContent";
+import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
 import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
@@ -277,6 +278,9 @@ export default async function Post({ params }: Props) {
           >
             <div className="min-w-0">
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
+              {/* Every article ends with the callback offer. Editors can also place
+                  `blogQuoteCtaBlock` mid-article; that copy stays independent. */}
+              <BlogQuoteCta locale={locale} sourceLabel={detail.slug} />
             </div>
             {(finalRelatedPosts.length > 0 || detail.properties.length > 0) && (
               <aside className="space-y-10">

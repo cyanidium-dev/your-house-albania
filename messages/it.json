@@ -547,5 +547,31 @@
     "source": "File originale",
     "empty": "Nessun credito fotografico registrato.",
     "breadcrumbHome": "Home"
+  },
+  "QuickLead": {
+    "badge": "Gratis · senza impegno",
+    "heading": "Ricevi una proposta su misura entro 1 ora",
+    "body": "Lascia il tuo numero: ti richiamiamo con una selezione adatta al tuo budget, con prezzi reali e disponibilità effettiva.",
+    "phonePlaceholder": "Il tuo numero di telefono",
+    "namePlaceholder": "Nome (facoltativo)",
+    "submit": "Ricevi la proposta",
+    "submitting": "Invio in corso…",
+    "successTitle": "Richiesta ricevuta",
+    "successBody": "Ti richiamiamo entro un’ora durante l’orario di lavoro.",
+    "error": "Invio non riuscito. Riprova o scrivici su Telegram.",
+    "consent": "Inviando il modulo acconsenti a essere contattato per la tua richiesta."
+  },
+  "QuickContact": {
+    "open": "Contattaci",
+    "close": "Chiudi contatti",
+    "callbackAction": "Richiedi una chiamata",
+    "formHeading": "Proposta entro 1 ora",
+    "formBody": "Lascia il numero: ti richiamiamo.",
+    "channel": {
+      "telegram": "Scrivici su Telegram",
+      "whatsapp": "Scrivici su WhatsApp",
+      "phone": "Chiamaci",
+      "email": "Scrivici una email"
+    }
   }
 }

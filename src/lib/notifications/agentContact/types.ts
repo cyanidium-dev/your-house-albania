@@ -1,10 +1,13 @@
 /**
  * Normalized contact submission after validation (server-side).
  * `submissionKind: 'general'` is used by `/contacts`; `'agent'` by the
- * property-page contact modal (carries the property context below).
+ * property-page contact modal (carries the property context below);
+ * `'quote'` by the one-field callback widgets (blog CTA and the floating
+ * QuickContact), where only a phone number is asked for — every other
+ * customer field arrives as an em dash.
  */
 export type NormalizedAgentContactSubmission = {
-  submissionKind: 'agent' | 'general'
+  submissionKind: 'agent' | 'general' | 'quote'
   agentSlug: string
   /** Display name for notifications; may later be verified server-side. */
   agentName: string
@@ -23,6 +26,10 @@ export type NormalizedAgentContactSubmission = {
   propertyTitle?: string
   /** Absolute link to the property page, built server-side. */
   propertyUrl?: string
+  /** Quote submissions: where the widget was placed, so the operator can call back in context. */
+  sourceLabel?: string
+  /** Quote submissions: absolute URL of the page the request came from. */
+  sourceUrl?: string
 }
 
 /** Resolved routing for Telegram (IDs from env until CMS per-agent mapping exists). */

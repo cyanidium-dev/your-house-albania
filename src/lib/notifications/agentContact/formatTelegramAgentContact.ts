@@ -58,6 +58,20 @@ function languageLabel(locale: string): string {
 export function formatAgentContactTelegramMessage(
   data: NormalizedAgentContactSubmission
 ): string {
+  if (data.submissionKind === 'quote') {
+    // Callback request: the operator promised a quote within an hour, so the
+    // phone number and the originating page lead the message.
+    return [
+      '⏱ Quote request (call back within 1h)',
+      '',
+      `Phone: ${data.phone}`,
+      `Name: ${emptyToDash(data.customerName)}`,
+      `Language: ${languageLabel(data.locale)}`,
+      `Placement: ${emptyToDash(data.sourceLabel)}`,
+      `Page: ${emptyToDash(data.sourceUrl)}`,
+    ].join('\n')
+  }
+
   if (data.submissionKind === 'general') {
     return [
       'New contact request',

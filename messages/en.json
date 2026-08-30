@@ -547,5 +547,31 @@
     "source": "Source file",
     "empty": "No image credits have been recorded yet.",
     "breadcrumbHome": "Home"
+  },
+  "QuickLead": {
+    "badge": "Free · no obligation",
+    "heading": "Get a tailored offer within 1 hour",
+    "body": "Leave your phone number and we will call back with a shortlist that matches your budget, with real prices and availability.",
+    "phonePlaceholder": "Your phone number",
+    "namePlaceholder": "Name (optional)",
+    "submit": "Get the offer",
+    "submitting": "Sending…",
+    "successTitle": "Request received",
+    "successBody": "We will call you back within an hour during working hours.",
+    "error": "Could not send. Please try again or write to us on Telegram.",
+    "consent": "By submitting you agree to be contacted about your request."
+  },
+  "QuickContact": {
+    "open": "Contact us",
+    "close": "Close contacts",
+    "callbackAction": "Request a call",
+    "formHeading": "Get an offer within 1 hour",
+    "formBody": "Leave your number — we will call you back.",
+    "channel": {
+      "telegram": "Write on Telegram",
+      "whatsapp": "Write on WhatsApp",
+      "phone": "Call us",
+      "email": "Send an email"
+    }
   }
 }

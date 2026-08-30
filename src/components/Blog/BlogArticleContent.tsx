@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BlogCardClient } from "./BlogCardClient";
 import { BlogContentImage } from "./BlogContentImage";
+import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { mapBlogPropertyEmbedToCard } from "@/lib/sanity/blogAdapter";
@@ -37,6 +38,45 @@ function resolveCtaHref(
   if (s.startsWith("tel:")) return s;
   if (s.startsWith("#")) return s;
   return s.startsWith("/") ? `/${locale}${s}` : `/${locale}/${s}`;
+}
+
+/**
+ * Wording of the retired "calculate the cost" CTA across the six site locales,
+ * plus the calculator paths those buttons pointed at. Matched case-insensitively
+ * so legacy CMS entries switch to the callback card without a content release.
+ */
+const CALCULATE_COST_CTA = [
+  "розрахув", // uk — розрахувати / розрахуйте / розрахунок
+  "обчисл",
+  "рассчит", // ru — рассчитать / рассчитайте
+  "расчет",
+  "расчёт",
+  "посчит",
+  "calculate",
+  "calculator",
+  "oblicz", // pl — oblicz / kalkulator
+  "kalkulator",
+  "calcola", // it
+  "llogarit", // sq
+];
+
+const CALCULATOR_HREF = ["calculator", "calc", "kalkulator", "rozrahunok", "raschet"];
+
+function isCalculateCostCta(
+  label: Record<string, string> | string | undefined,
+  href: string | undefined
+): boolean {
+  const labelText =
+    typeof label === "string"
+      ? label
+      : label && typeof label === "object"
+        ? Object.values(label).join(" ")
+        : "";
+  const haystack = labelText.toLowerCase();
+  if (CALCULATE_COST_CTA.some((needle) => haystack.includes(needle))) return true;
+
+  const hrefText = typeof href === "string" ? href.toLowerCase() : "";
+  return hrefText.length > 0 && CALCULATOR_HREF.some((needle) => hrefText.includes(needle));
 }
 
 function createSharedPortableTextComponents(
@@ -125,6 +165,19 @@ function createBlogComponents(
     types: {
       ...sharedPortable.types,
       image: ({ value }) => <BlogContentImage value={value as { asset?: { url?: string }; alt?: string; caption?: string }} />,
+      blogQuoteCtaBlock: ({ value }) => {
+        const v = value as {
+          heading?: Record<string, string>;
+          body?: Record<string, string>;
+        };
+        return (
+          <BlogQuoteCta
+            locale={locale}
+            heading={resolveLocalizedString(v?.heading as never, locale)}
+            body={resolveLocalizedString(v?.body as never, locale)}
+          />
+        );
+      },
       blogCtaBlock: ({ value }) => {
         const v = value as {
           href?: string;
@@ -139,6 +192,14 @@ function createBlogComponents(
           (typeof labelObj === "string" ? labelObj : "") ||
           learnMoreFallback;
         const variant = (v as { variant?: string })?.variant ?? "primary";
+
+        // "Calculate the cost" CTAs asked the reader to do the work and led
+        // away from the article. They now render an inline callback card
+        // instead. Existing CMS entries are matched by label/href until the
+        // content migration converts them to `blogQuoteCtaBlock`.
+        if (variant === "quote" || isCalculateCostCta(labelObj, rawHref)) {
+          return <BlogQuoteCta locale={locale} />;
+        }
         const baseClass =
           "inline-flex items-center justify-center rounded-full font-semibold transition-colors py-3 px-6";
         const variantClass =

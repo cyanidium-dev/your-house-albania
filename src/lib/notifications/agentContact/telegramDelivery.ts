@@ -9,9 +9,9 @@ import type {
 
 /**
  * Optional failure injection for manual testing
- * (e.g. TELEGRAM_DEBUG_STUB_FAIL=general | agent | both).
+ * (e.g. TELEGRAM_DEBUG_STUB_FAIL=general | agent | quote | both).
  */
-function debugShouldFail(kind: 'general' | 'agent'): boolean {
+function debugShouldFail(kind: NormalizedAgentContactSubmission['submissionKind']): boolean {
   const v = process.env.TELEGRAM_DEBUG_STUB_FAIL?.trim().toLowerCase()
   if (!v || v === 'false' || v === '0' || v === 'no') return false
   return v === kind || v === 'both'

@@ -10,7 +10,7 @@ const MAX_TITLE = 200
 const SLUG_REGEX = /^[a-z0-9-]+$/
 
 type Body = {
-  submissionKind?: 'agent' | 'general'
+  submissionKind?: 'agent' | 'general' | 'quote'
   agentSlug?: string
   agentName?: string
   locale?: string
@@ -30,6 +30,9 @@ type Body = {
   /** Property-page context (agent submissions). */
   propertySlug?: string
   propertyTitle?: string
+  /** Quote submissions: same-site path the widget was on, and a short placement label. */
+  sourcePath?: string
+  sourceLabel?: string
 }
 
 function isNonEmptyString(v: unknown): v is string {
@@ -45,9 +48,11 @@ function jsonOk() {
 }
 
 /**
- * Contact requests: general `/contacts` (`submissionKind: 'general'`) or the
- * property-page contact modal (`'agent'`, with property context). Validates
- * input, honeypot, then delivers via the Telegram Bot API (same chat for both).
+ * Contact requests: general `/contacts` (`submissionKind: 'general'`), the
+ * property-page contact modal (`'agent'`, with property context), or a
+ * one-field callback from the blog CTA / floating QuickContact (`'quote'`,
+ * phone only plus the page it came from). Validates input, honeypot, then
+ * delivers via the Telegram Bot API (same chat for all three).
  */
 export async function POST(request: Request) {
   console.log('[contact-agent] submission received')
@@ -67,26 +72,39 @@ export async function POST(request: Request) {
   }
 
   const isGeneral = body.submissionKind === 'general'
+  const isQuote = body.submissionKind === 'quote'
 
-  if (!isNonEmptyString(body.name)) {
-    return jsonError(400, 'Missing name')
-  }
+  // Callback widgets ask for a phone number and nothing else, so they skip the
+  // name/email/message requirements the two full forms enforce below.
   if (!isNonEmptyString(body.phone)) {
     return jsonError(400, 'Missing phone')
   }
-  if (!isNonEmptyString(body.email)) {
-    return jsonError(400, 'Missing email')
-  }
-  if (!isNonEmptyString(body.message)) {
-    return jsonError(400, 'Missing message')
-  }
-  if (body.message.length > MAX_MESSAGE) {
-    return jsonError(400, 'Message too long')
-  }
 
-  const email = body.email.trim()
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return jsonError(400, 'Invalid email')
+  let email = ''
+  let customerName = ''
+  let messageText = ''
+
+  if (!isQuote) {
+    if (!isNonEmptyString(body.name)) {
+      return jsonError(400, 'Missing name')
+    }
+    if (!isNonEmptyString(body.email)) {
+      return jsonError(400, 'Missing email')
+    }
+    if (!isNonEmptyString(body.message)) {
+      return jsonError(400, 'Missing message')
+    }
+    if (body.message.length > MAX_MESSAGE) {
+      return jsonError(400, 'Message too long')
+    }
+
+    email = body.email.trim()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return jsonError(400, 'Invalid email')
+    }
+
+    customerName = body.name.trim()
+    messageText = body.message.trim()
   }
 
   const locale =
@@ -94,7 +112,32 @@ export async function POST(request: Request) {
 
   let normalized: NormalizedAgentContactSubmission
 
-  if (isGeneral) {
+  if (isQuote) {
+    const urlLocale = /^[a-z]{2}$/.test(locale) ? locale : 'en'
+    const rawPath = typeof body.sourcePath === 'string' ? body.sourcePath.trim() : ''
+    // Only same-site paths — never echo an attacker-supplied absolute URL.
+    const safePath = rawPath.startsWith('/') && !rawPath.startsWith('//') ? rawPath : `/${urlLocale}`
+
+    normalized = {
+      submissionKind: 'quote',
+      agentSlug: '—',
+      agentName: '—',
+      locale,
+      location: undefined,
+      propertyType: undefined,
+      dealType: undefined,
+      priceRangeLabel: '—',
+      areaRangeLabel: '—',
+      customerName: isNonEmptyString(body.name) ? body.name.trim().slice(0, MAX_TITLE) : '—',
+      phone: body.phone.trim(),
+      email: '—',
+      message: '',
+      sourceLabel: isNonEmptyString(body.sourceLabel)
+        ? body.sourceLabel.trim().slice(0, MAX_TITLE)
+        : undefined,
+      sourceUrl: `${getSiteBaseUrl()}${safePath}`,
+    }
+  } else if (isGeneral) {
     normalized = {
       submissionKind: 'general',
       agentSlug: '—',
@@ -113,10 +156,10 @@ export async function POST(request: Request) {
         typeof body.maxArea === 'number' && Number.isFinite(body.maxArea) ? body.maxArea : undefined,
         ' m²'
       ),
-      customerName: body.name.trim(),
+      customerName,
       phone: body.phone.trim(),
       email,
-      message: body.message.trim(),
+      message: messageText,
     }
   } else {
     if (!isNonEmptyString(body.agentSlug)) {
@@ -161,10 +204,10 @@ export async function POST(request: Request) {
         typeof body.maxArea === 'number' && Number.isFinite(body.maxArea) ? body.maxArea : undefined,
         ' m²'
       ),
-      customerName: body.name.trim(),
+      customerName,
       phone: body.phone.trim(),
       email,
-      message: body.message.trim(),
+      message: messageText,
       ...(propertySlug !== undefined ? { propertySlug } : {}),
       ...(propertyTitle !== undefined ? { propertyTitle } : {}),
       ...(propertyUrl !== undefined ? { propertyUrl } : {}),

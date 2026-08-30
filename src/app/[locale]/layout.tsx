@@ -5,11 +5,17 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
-import { fetchCatalogCountryDocumentSlugs, fetchSiteSettings } from "@/lib/sanity/client";
+import {
+  fetchCatalogCountryDocumentSlugs,
+  fetchFooterCitiesByCountry,
+  fetchSiteSettings,
+} from "@/lib/sanity/client";
+import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from "@/lib/routes/catalogPathPrimitives";
 import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
+import { QuickContact } from "@/components/shared/QuickContact/QuickContact";
 
 type Props = {
   children: React.ReactNode;
@@ -23,10 +29,14 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const [messages, rawSiteSettings, countrySlugs] = await Promise.all([
+  const [messages, rawSiteSettings, countrySlugs, footerCities] = await Promise.all([
     getMessages(),
     fetchSiteSettings(),
     fetchCatalogCountryDocumentSlugs(),
+    // Seed footer cities server-side for the default country so the SSR HTML
+    // never ships the "no cities" empty state (the client re-fetches only when
+    // the visitor is on a different-country page).
+    fetchFooterCitiesByCountry(locale, LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG),
   ]);
 
   const siteSettings = mapSiteSettingsToResolved(rawSiteSettings as never, locale);
@@ -59,7 +69,22 @@ export default async function LocaleLayout({ children, params }: Props) {
         <ConsentProvider locale={locale} policyHref={policyHref} active={analyticsEnabled}>
           <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
           {children}
-          <Footer siteSettings={siteSettings} countrySlugs={countrySlugs} />
+          <Footer
+            siteSettings={siteSettings}
+            countrySlugs={countrySlugs}
+            initialCities={footerCities}
+            initialCountrySlug={LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG}
+          />
+          <QuickContact
+            locale={locale}
+            channels={{
+              telegramUrl: siteSettings.footerTelegramUrl,
+              whatsappUrl: siteSettings.footerWhatsappUrl,
+              phone: siteSettings.phone,
+              email: siteSettings.email,
+              socialLinks: siteSettings.socialLinks,
+            }}
+          />
         </ConsentProvider>
       </Providers>
     </NextIntlClientProvider>

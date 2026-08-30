@@ -547,5 +547,31 @@
     "source": "Skedari burim",
     "empty": "Ende nuk ka kredite fotografish.",
     "breadcrumbHome": "Kryefaqja"
+  },
+  "QuickLead": {
+    "badge": "Falas · pa asnjë detyrim",
+    "heading": "Merrni një ofertë të personalizuar brenda 1 ore",
+    "body": "Lini numrin tuaj — ju kthejmë përgjigje me një përzgjedhje sipas buxhetit tuaj, me çmime reale dhe çfarë është vërtet e lirë.",
+    "phonePlaceholder": "Numri juaj i telefonit",
+    "namePlaceholder": "Emri (opsional)",
+    "submit": "Merr ofertën",
+    "submitting": "Po dërgohet…",
+    "successTitle": "Kërkesa u pranua",
+    "successBody": "Ju kontaktojmë brenda një ore gjatë orarit të punës.",
+    "error": "Dërgimi dështoi. Provoni sërish ose na shkruani në Telegram.",
+    "consent": "Duke dërguar formularin, pranoni të kontaktoheni për kërkesën tuaj."
+  },
+  "QuickContact": {
+    "open": "Na kontaktoni",
+    "close": "Mbyll kontaktet",
+    "callbackAction": "Kërko telefonatë",
+    "formHeading": "Ofertë brenda 1 ore",
+    "formBody": "Lini numrin — ju kthejmë telefonatë.",
+    "channel": {
+      "telegram": "Na shkruani në Telegram",
+      "whatsapp": "Na shkruani në WhatsApp",
+      "phone": "Na telefononi",
+      "email": "Na dërgoni email"
+    }
   }
 }
