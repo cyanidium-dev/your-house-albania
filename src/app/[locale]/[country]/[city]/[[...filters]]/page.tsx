@@ -20,6 +20,7 @@ import {
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
+import { buildCityListingSeo } from "@/lib/seo/listingSeoCopy";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
@@ -106,22 +107,29 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const t = await getTranslations("Listing.properties");
   const listTitle = t("title");
   const listDescription = t("description");
-  const cityTitle = geo.listingCitySlug ? geo.listingCitySlug.replace(/-/g, " ") : "";
   const localizedTitleFromSeo =
     defaultSeo?.metaTitle &&
     resolveLocalizedString(defaultSeo.metaTitle as never, locale);
+  // Keyword-driven fallback. Without it the page inherited
+  // `Listing.properties.title` — a marketing line with no target keyword —
+  // joined to a raw lowercase slug ("… — shengjin").
+  const generated = geo.listingCitySlug
+    ? await buildCityListingSeo(geo.listingCitySlug, locale)
+    : null;
   // stripBrandSuffix: CMS titles often bake in "| Domlivo" — the root template
   // appends the brand, so strip it here to avoid "… | Domlivo — Domlivo".
+  // Order matters: a CMS title written in this locale wins, then the generated
+  // localized template, and only then the CMS value that fell back to English —
+  // an English title on a Polish page costs more than a templated Polish one.
   const title = stripBrandSuffix(
-    catalogSeo?.metaTitle
-      ? catalogSeo.metaTitle
-      : cityTitle
-        ? `${listTitle} — ${cityTitle}`
-        : localizedTitleFromSeo
-          ? `${listTitle} | ${localizedTitleFromSeo}`
-          : listTitle
+    catalogSeo?.metaTitleInLocale ||
+      generated?.title ||
+      catalogSeo?.metaTitle ||
+      (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle)
   );
   const description =
+    catalogSeo?.metaDescriptionInLocale ||
+    generated?.description ||
     catalogSeo?.metaDescription ||
     (defaultSeo?.metaDescription
       ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription

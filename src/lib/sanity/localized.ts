@@ -21,6 +21,24 @@ export function resolveLocalizedString(
   return (field as Record<string, string>)[key] ?? field.en ?? '';
 }
 
+/**
+ * Same lookup, but without the English fallback: returns '' when the field has
+ * no value for this exact locale.
+ *
+ * Use where an English string would be worse than a generated localized one —
+ * a Polish visitor reading an English <title> is a lost click, and the loose
+ * resolver cannot tell "authored in English" from "fell back to English".
+ */
+export function resolveLocalizedStringStrict(
+  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string; pl?: string } | null | undefined,
+  locale: string
+): string {
+  if (!field) return '';
+  const key = LOCALE_MAP[locale] ?? 'en';
+  const value = (field as Record<string, string>)[key];
+  return typeof value === 'string' ? value.trim() : '';
+}
+
 /** Resolves localized portable text (content) by locale. Returns block array. */
 export function resolveLocalizedContent(
   field:

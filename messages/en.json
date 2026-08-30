@@ -612,5 +612,15 @@
       "phone": "Call us",
       "email": "Send an email"
     }
+  },
+  "Seo": {
+    "listing": {
+      "cityTitle": "Property for Sale in {city}, Albania — Apartments & Houses",
+      "cityDescription": "Verified property for sale in {city}, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies, no commission.",
+      "countryTitle": "Albania Real Estate — Property for Sale",
+      "countryDescription": "Buy property in Albania: apartments, houses and beachfront villas in Tirana, Durres, Vlore and Saranda. Verified listings with real prices.",
+      "catalogTitle": "Property for Sale in Albania — Full Catalogue",
+      "catalogDescription": "Browse every property for sale in Albania: apartments, houses, villas and land. Filter by city, price, area and number of bedrooms."
+    }
   }
 }

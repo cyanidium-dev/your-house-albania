@@ -1,5 +1,9 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
-import { resolveLocalizedString, resolveLocalizedContent } from '../localized';
+import {
+  resolveLocalizedString,
+  resolveLocalizedStringStrict,
+  resolveLocalizedContent,
+} from '../localized';
 import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter } from '../groq/propertyFilters';
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
@@ -714,6 +718,14 @@ export type CatalogSeoPageResolved = {
   bottomText: unknown[];
   metaTitle: string;
   metaDescription: string;
+  /**
+   * Meta fields authored in *this* locale, empty when the editor has not
+   * translated them. `metaTitle`/`metaDescription` above silently fall back to
+   * English, which would hand a Polish visitor an English title; metadata
+   * builders prefer these and only then a generated localized template.
+   */
+  metaTitleInLocale: string;
+  metaDescriptionInLocale: string;
   noIndex: boolean;
 };
 
@@ -822,6 +834,12 @@ export function resolveCatalogSeoPage(
     bottomText: Array.isArray(bottomText) ? bottomText : [],
     metaTitle,
     metaDescription,
+    metaTitleInLocale: seo?.metaTitle
+      ? resolveLocalizedStringStrict(seo.metaTitle as never, locale)
+      : '',
+    metaDescriptionInLocale: seo?.metaDescription
+      ? resolveLocalizedStringStrict(seo.metaDescription as never, locale)
+      : '',
     noIndex,
   };
 }

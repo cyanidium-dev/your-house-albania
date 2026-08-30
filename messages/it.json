@@ -612,5 +612,15 @@
       "phone": "Chiamaci",
       "email": "Scrivici una email"
     }
+  },
+  "Seo": {
+    "listing": {
+      "cityTitle": "Case in vendita a {city}, Albania — appartamenti e ville",
+      "cityDescription": "Immobili verificati in vendita a {city}: appartamenti, case e ville con prezzi aggiornati. Direttamente da proprietari e agenzie affidabili.",
+      "countryTitle": "Case in vendita in Albania — immobili fronte mare",
+      "countryDescription": "Comprare casa in Albania: appartamenti fronte mare, case e ville a Tirana, Durazzo, Valona e Saranda. Immobili verificati con prezzi reali.",
+      "catalogTitle": "Immobili in vendita in Albania — catalogo completo",
+      "catalogDescription": "Tutti gli immobili in vendita in Albania: appartamenti, case, ville e terreni. Filtra per città, prezzo, superficie e numero di camere."
+    }
   }
 }

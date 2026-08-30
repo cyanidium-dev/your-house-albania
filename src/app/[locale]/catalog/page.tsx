@@ -5,6 +5,8 @@ import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import React from "react";
 import { getTranslations } from "next-intl/server";
+import { buildCatalogListingSeo } from "@/lib/seo/listingSeoCopy";
+import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
@@ -45,13 +47,22 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const listTitle = t("title");
   const listDescription = t("description");
 
-  const title = catalogSeo?.metaTitle
-    ? catalogSeo.metaTitle
-    : localizedTitleFromSeo
-      ? `${listTitle} | ${localizedTitleFromSeo}`
-      : listTitle;
+  // Keyword-driven fallback; see @/lib/seo/listingSeoCopy for why the previous
+  // `Listing.properties` fallback was unusable as a title.
+  const generated = await buildCatalogListingSeo();
+
+  // stripBrandSuffix: the CMS title already ends with "| Domlivo" and the root
+  // template appends the brand again — this page shipped "… | Domlivo — Domlivo".
+  const title = stripBrandSuffix(
+    catalogSeo?.metaTitleInLocale ||
+      generated.title ||
+      catalogSeo?.metaTitle ||
+      (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle)
+  );
 
   const description =
+    catalogSeo?.metaDescriptionInLocale ||
+    generated.description ||
     catalogSeo?.metaDescription ||
     localizedDescriptionFromSeo ||
     listDescription;

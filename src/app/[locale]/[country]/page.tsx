@@ -17,6 +17,8 @@ import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
+import { buildCityListingSeo, buildCountryListingSeo } from "@/lib/seo/listingSeoCopy";
+import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
@@ -62,11 +64,29 @@ async function buildListingMetadata(
     resolveLocalizedString(defaultSeo.metaDescription as never, locale);
 
   const humanSlug = slug.replace(/-/g, " ");
-  const title =
-    catalogSeo?.metaTitle ||
-    (kind === "country" ? listTitle : `${listTitle} — ${humanSlug}`) ||
-    (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle);
-  const description = catalogSeo?.metaDescription || localizedDescriptionFromSeo || listDescription;
+  // Keyword-driven fallback for the geo kinds; deal and type routes keep the
+  // previous shape until they get templates of their own.
+  const generated =
+    kind === "city"
+      ? await buildCityListingSeo(slug, locale)
+      : kind === "country"
+        ? await buildCountryListingSeo()
+        : null;
+  // stripBrandSuffix: CMS titles often bake in "| Domlivo" and the root template
+  // appends the brand again — without this the tab reads "… | Domlivo — Domlivo".
+  const title = stripBrandSuffix(
+    catalogSeo?.metaTitleInLocale ||
+      generated?.title ||
+      catalogSeo?.metaTitle ||
+      (kind === "country" ? listTitle : `${listTitle} — ${humanSlug}`) ||
+      (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle)
+  );
+  const description =
+    catalogSeo?.metaDescriptionInLocale ||
+    generated?.description ||
+    catalogSeo?.metaDescription ||
+    localizedDescriptionFromSeo ||
+    listDescription;
 
   if (!isIndexingEnabled()) {
     return {
