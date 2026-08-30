@@ -9,7 +9,7 @@
 - `.../DomLivo Research Department/10-seo/seo-map.md` — кластерная архитектура и приоритет локалей.
 - `.../DomLivo Research Department/PAGES-ROADMAP.md` — ТЗ-1…ТЗ-18 (Phase A сдана 19.07.2026).
 
-> ⚠️ **Перед стартом:** локальная копия репо отставала от `origin/main` на 47 коммитов (проверено 30.08.2026) и содержала незакоммиченные изменения. Сделайте `git status` → закоммитьте/спрячьте своё → `git pull` до начала любой задачи ниже.
+> ✅ **Расхождение закрыто 30.08.2026.** Отставание на 47 коммитов и незакоммиченная работа сведены в ветке `feat/quick-contact-and-blog-quote` (см. SEO-00). Дальше работайте от неё или от `origin/main` после её мержа.
 
 ---
 
@@ -79,7 +79,7 @@
 **KPI на конец Q1:** первые 100+ ранжируемых ключей в Ahrefs, DR ≥ 5, ≥ 300 органических визитов/мес.
 
 ### SEO-00 🤖 Свести ветки и вернуть гейт content-qa
-- [ ] **Сделано**
+- [x] **Сделано** (ветка `feat/quick-contact-and-blog-quote`, мерж `95e35d6`): `origin/main` влит, в `package.json` оставлены оба скрипта, `scripts/content-qa.ts` закоммичен, 116 тестов и сборка проходят.
 
 Блокер для всего остального: локальная копия отстаёт от `origin/main` на 47 коммитов, `package.json` разошёлся в обе стороны (локально появился `content-qa`, но пропал `test`), а `scripts/content-qa.ts` вообще не в гите.
 
@@ -101,7 +101,7 @@
 ---
 
 ### SEO-02 🤖 Переписать шаблоны title и description для всех типов страниц
-- [ ] **Сделано**
+- [x] **Код сделан** (ветка `feat/quick-contact-and-blog-quote`, коммит `ce2e141`) — [ ] **контент в CMS остаётся**
 
 Это самая дорогая ошибка на сайте прямо сейчас.
 
@@ -135,6 +135,14 @@
 for u in sq/albania/vlore en/albania/tirana pl/albania/sarande it/albania/durres ru/albania/vlore sq; do echo "--- $u"; curl -sL "https://www.domlivo.com/$u" | grep -o "<title>[^<]*</title>"; done
 ```
 Ни в одном заголовке бренд не встречается дважды; в каждом есть ключ рынка.
+
+**Что уже сделано в коде (ce2e141):**
+- Новый неймспейс `Seo.listing` с ключевыми шаблонами на 6 локалей + хелпер `src/lib/seo/listingSeoCopy.ts`; название города берётся из `fetchCityNameForms`, для албанского — в локативе (`në Tiranë`).
+- Убран филлер `Listing.properties.title` («Discover inspiring designed homes. — shengjin») из метаданных; как заголовок на странице он остался.
+- `stripBrandSuffix` добавлен на `/catalog` и на хаб страны — дубль «| Domlivo — Domlivo» устранён.
+- `resolveLocalizedStringStrict`: непереведённый CMS-заголовок больше не подсовывает английский текст польской выдаче. Приоритет: CMS на этой локали → сгенерированный шаблон → CMS по-английски.
+
+**Что осталось (контент, не код):** сами CMS-заголовки в `catalogSeoPage` тонкие — «Tirana — Pasuri», «Влёра — Недвижимость», «Durres — Immobiliare». Их переписывание — миграция в `domlivo-admin` идемпотентным скриптом с dry-run (требование CONTENT-OPS.md). Целевые формулировки — в таблице шаблонов выше и в `scripts/add-listing-seo-i18n.js`.
 
 ---
 
