@@ -29,6 +29,12 @@ function titleCaseSlug(slug: string): string {
  * City name in the form the templates expect. Albanian templates end in "në",
  * which governs the locative ("në Tiranë", not "në Tirana"), so prefer that
  * form when an editor has supplied it.
+ *
+ * The other declining languages — ru, uk, pl — get no case form here, because
+ * the CMS stores none for them. Their templates are written to lead with the
+ * bare city name instead of following a preposition, so the nominative is
+ * always correct: "Saranda: nieruchomości…", never "w Sarande" for
+ * "w Sarandzie".
  */
 export async function resolveCityDisplayName(citySlug: string, locale: string): Promise<string> {
   const slug = typeof citySlug === "string" ? citySlug.trim().toLowerCase() : "";

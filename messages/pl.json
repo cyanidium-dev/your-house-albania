@@ -615,8 +615,8 @@
   },
   "Seo": {
     "listing": {
-      "cityTitle": "Nieruchomości w {city}, Albania — mieszkania i domy",
-      "cityDescription": "Sprawdzone nieruchomości na sprzedaż w {city}: mieszkania, domy i wille z aktualnymi cenami. Bezpośrednio od właścicieli i zaufanych agencji.",
+      "cityTitle": "{city}: nieruchomości w Albanii — mieszkania i domy",
+      "cityDescription": "{city}, Albania: mieszkania, domy i wille z aktualnymi cenami. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
       "countryTitle": "Nieruchomości w Albanii — mieszkania i domy na sprzedaż",
       "countryDescription": "Kup nieruchomość w Albanii: mieszkania nad morzem, domy i wille w Tiranie, Durres, Wlorze i Sarandzie. Sprawdzone oferty z realnymi cenami.",
       "catalogTitle": "Nieruchomości w Albanii na sprzedaż — pełny katalog",
