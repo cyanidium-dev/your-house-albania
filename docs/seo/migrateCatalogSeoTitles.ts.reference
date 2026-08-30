@@ -1,0 +1,343 @@
+/**
+ * Domlivo CMS — rewrite catalogSeoPage meta titles and descriptions.
+ *
+ * Why: `seedCatalogSeoPages.ts` filled every catalog page with a template that
+ * carries no search demand — "Tirana — Real Estate | Domlivo",
+ * "Влёра — Недвижимость | Domlivo". Ahrefs (see the frontend repo,
+ * seo-ahrefs-research.md) shows what these markets actually search for, and
+ * this script replaces the seeded copy with that wording.
+ *
+ * Safety rules, in order of importance:
+ * - Only documents whose current value still matches the seeded pattern are
+ *   touched. Anything an editor rewrote by hand is reported and skipped.
+ * - Only `seo.metaTitle` and `seo.metaDescription` are patched. Titles, intros,
+ *   bottom text and every other field are left alone.
+ * - Idempotent: a second run reports "already migrated" and writes nothing.
+ * - Nothing is ever deleted.
+ *
+ * The brand suffix is deliberately dropped. The frontend appends " — Domlivo"
+ * itself and strips a trailing brand first, so "| Domlivo" in the CMS only
+ * risks a doubled brand.
+ *
+ * Polish is absent on purpose: `localizedString` has no `pl` field, so the CMS
+ * cannot store Polish at all. Polish pages fall back to the frontend templates
+ * in `src/lib/seo/listingSeoCopy.ts`. Giving the CMS a `pl` field is a separate
+ * schema change.
+ *
+ * Run:
+ *   npm run migrate:catalog-seo-titles:dry
+ *   npm run migrate:catalog-seo-titles
+ */
+
+import path from 'path'
+import {config as loadDotenv} from 'dotenv'
+import {createClient} from '@sanity/client'
+
+loadDotenv({path: path.resolve(process.cwd(), '.env')})
+
+const ENV = {
+  projectId: (process.env.SANITY_PROJECT_ID || 'g4aqp6ex').trim(),
+  dataset: (process.env.SANITY_DATASET || 'production').trim(),
+  apiVersion: (process.env.SANITY_API_VERSION || '2024-01-01').trim(),
+  token: process.env.SANITY_API_TOKEN?.trim() || null,
+}
+
+const isDry = process.argv.includes('--dry')
+const isExecute = process.argv.includes('--execute')
+
+if (!ENV.token) {
+  console.error('Error: SANITY_API_TOKEN required. Add it to .env')
+  process.exit(1)
+}
+if (!isDry && !isExecute) {
+  console.error('Use --dry to preview or --execute to write.')
+  process.exit(1)
+}
+
+const client = createClient({
+  projectId: ENV.projectId,
+  dataset: ENV.dataset,
+  apiVersion: ENV.apiVersion,
+  useCdn: false,
+  token: ENV.token,
+})
+
+/** The five locales `localizedString` actually has fields for. */
+type Li = {en: string; uk: string; ru: string; sq: string; it: string}
+const LOCALES = ['en', 'uk', 'ru', 'sq', 'it'] as const
+type Locale = (typeof LOCALES)[number]
+
+/** Google truncates around here; longer is a warning, not an error. */
+const TITLE_SOFT_LIMIT = 60
+const DESCRIPTION_SOFT_LIMIT = 160
+
+type LocalizedDoc = Partial<Record<Locale, string>> | null | undefined
+
+type CatalogSeoDoc = {
+  _id: string
+  pageScope: 'propertiesRoot' | 'city' | 'district'
+  active?: boolean
+  seo?: {metaTitle?: LocalizedDoc; metaDescription?: LocalizedDoc}
+  city?: {slug?: string; title?: LocalizedDoc; sqLocative?: string} | null
+  district?: {slug?: string; title?: LocalizedDoc} | null
+}
+
+// ——— Target copy ———————————————————————————————————————————————————————
+
+const ROOT_TITLE: Li = {
+  en: 'Albania Real Estate — Property for Sale',
+  uk: 'Нерухомість в Албанії — купити квартиру чи будинок',
+  ru: 'Недвижимость в Албании — купить квартиру, дом или виллу',
+  sq: 'Pasuri të paluajtshme në shitje në Shqipëri',
+  it: 'Case in vendita in Albania — immobili fronte mare',
+}
+
+const ROOT_DESCRIPTION: Li = {
+  en: 'Buy property in Albania: apartments, houses and beachfront villas in Tirana, Durres, Vlore and Saranda. Verified listings with real prices.',
+  uk: 'Купити нерухомість в Албанії: квартири біля моря, будинки та вілли в Тирані, Дурресі, Влері та Саранді. Перевірені обʼєкти з реальними цінами.',
+  ru: 'Купить недвижимость в Албании: квартиры у моря, дома и виллы в Тиране, Дурресе, Влёре и Саранде. Проверенные объекты с реальными ценами.',
+  sq: 'Apartamente, shtëpi dhe vila në shitje në Tiranë, Durrës, Vlorë dhe Sarandë. Prona të verifikuara me çmime aktuale, pa komision.',
+  it: 'Comprare casa in Albania: appartamenti fronte mare, case e ville a Tirana, Durazzo, Valona e Saranda. Immobili verificati con prezzi reali.',
+}
+
+/**
+ * `sq` gets the locative form, because the template ends in "në" —
+ * "në Tiranë", not "në Tirana". Editors supply it on `city.sqDeclension`.
+ *
+ * `ru` and `uk` deliberately avoid a preposition before the city. Slavic
+ * declension would demand "в Дурресе" / "в Дурресі", and the CMS stores no
+ * case forms for those languages — only `sqDeclension`. Leading with the bare
+ * nominative and a colon keeps every city grammatical without inventing data,
+ * and still puts the city first, where a searcher scans.
+ */
+function cityTitle(city: Li): Li {
+  return {
+    en: `Property for Sale in ${city.en}, Albania — Apartments & Houses`,
+    uk: `${city.uk}: нерухомість в Албанії — купити квартиру`,
+    ru: `${city.ru}: недвижимость в Албании — купить квартиру`,
+    sq: `Shtëpi dhe apartamente në shitje në ${city.sq}`,
+    it: `Case in vendita a ${city.it}, Albania — appartamenti e ville`,
+  }
+}
+
+function cityDescription(city: Li): Li {
+  return {
+    en: `Verified property for sale in ${city.en}, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.`,
+    uk: `${city.uk}, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.`,
+    ru: `${city.ru}, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.`,
+    sq: `Prona të verifikuara në shitje në ${city.sq}: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.`,
+    it: `Immobili verificati in vendita a ${city.it}: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.`,
+  }
+}
+
+/**
+ * District titles carry two proper nouns already, so they drop the trailing
+ * qualifier the city titles use — with it, names like "Lungomare 2nd line,
+ * Vlore" ran past 70 characters and Google truncated the part that matters.
+ */
+function districtTitle(d: Li, city: Li): Li {
+  return {
+    en: `Property for Sale in ${d.en}, ${city.en}`,
+    uk: `${d.uk}, ${city.uk}: нерухомість та квартири`,
+    ru: `${d.ru}, ${city.ru}: недвижимость и квартиры`,
+    sq: `Shtëpi dhe apartamente në ${d.sq}, ${city.sq}`,
+    it: `Case in vendita a ${d.it}, ${city.it}`,
+  }
+}
+
+function districtDescription(d: Li, city: Li): Li {
+  return {
+    en: `Property for sale in ${d.en}, ${city.en}: apartments, houses and villas with current prices and honest area guidance.`,
+    uk: `Обʼєкти в районі ${d.uk}, ${city.uk}: квартири, будинки та вілли з актуальними цінами та чесним описом району.`,
+    ru: `Объекты в районе ${d.ru}, ${city.ru}: квартиры, дома и виллы с актуальными ценами и честным описанием района.`,
+    sq: `Prona në shitje në ${d.sq}, ${city.sq}: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.`,
+    it: `Immobili in vendita a ${d.it}, ${city.it}: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.`,
+  }
+}
+
+// ——— Seeded-pattern detection —————————————————————————————————————————
+
+/**
+ * True when the value still looks like `seedCatalogSeoPages.ts` output, i.e.
+ * "<name> — <noun> | Domlivo" or one of the root strings, and therefore was
+ * never touched by a human. Anything else is left alone.
+ */
+const SEEDED_TITLE = /^.+ — (Real Estate|Нерухомість|Недвижимость|Pasuri|Immobiliare)\s*\|\s*Domlivo$/i
+const SEEDED_ROOT_TITLE =
+  /^(Real Estate in Albania|Нерухомість в Албанії|Недвижимость в Албании|Pasuri në Shqipëri|Immobiliare in Albania)\s*\|\s*Domlivo$/i
+const SEEDED_DESCRIPTION =
+  /(Купівля та оренда|Покупка и аренда|Blerje dhe qira|Sale and rent|Vendita e affitto|Купівля, оренда|Покупка, аренда|Blerje, qira)/i
+
+function looksSeeded(
+  scope: CatalogSeoDoc['pageScope'],
+  field: 'title' | 'description',
+  value: string,
+): boolean {
+  const v = value.trim()
+  if (!v) return true // empty: nothing of anyone's to lose
+  if (field === 'description') return SEEDED_DESCRIPTION.test(v)
+  return scope === 'propertiesRoot' ? SEEDED_ROOT_TITLE.test(v) : SEEDED_TITLE.test(v)
+}
+
+// ——— Helpers ——————————————————————————————————————————————————————————
+
+function liFrom(doc: LocalizedDoc, sqOverride?: string): Li {
+  const en = (doc?.en || '').trim()
+  const pick = (k: Locale) => (doc?.[k] || '').trim() || en
+  return {
+    en,
+    uk: pick('uk'),
+    ru: pick('ru'),
+    sq: (sqOverride || '').trim() || pick('sq'),
+    it: pick('it'),
+  }
+}
+
+function isComplete(li: Li): boolean {
+  return LOCALES.every((l) => li[l].length > 0)
+}
+
+type Change = {
+  id: string
+  scope: string
+  label: string
+  field: 'metaTitle' | 'metaDescription'
+  before: Partial<Record<Locale, string>>
+  after: Li
+}
+
+const changes: Change[] = []
+const skippedManual: string[] = []
+const skippedMissingName: string[] = []
+const alreadyDone: string[] = []
+const overLimit: string[] = []
+
+function planField(
+  doc: CatalogSeoDoc,
+  label: string,
+  field: 'metaTitle' | 'metaDescription',
+  target: Li,
+  limit: number,
+) {
+  const current = (field === 'metaTitle' ? doc.seo?.metaTitle : doc.seo?.metaDescription) || {}
+  const kind = field === 'metaTitle' ? 'title' : 'description'
+
+  const identical = LOCALES.every((l) => (current[l] || '').trim() === target[l])
+  if (identical) {
+    alreadyDone.push(`${label} · ${field}`)
+    return
+  }
+
+  // A single hand-written locale protects the whole field: partially
+  // overwriting an editor's set would be worse than leaving it as it was.
+  const manual = LOCALES.filter((l) => {
+    const v = (current[l] || '').trim()
+    return v && !looksSeeded(doc.pageScope, kind, v) && v !== target[l]
+  })
+  if (manual.length) {
+    skippedManual.push(`${label} · ${field} · hand-written in: ${manual.join(', ')}`)
+    return
+  }
+
+  for (const l of LOCALES) {
+    if (target[l].length > limit) {
+      overLimit.push(`${label} · ${field} · ${l} · ${target[l].length} chars`)
+    }
+  }
+
+  changes.push({id: doc._id, scope: doc.pageScope, label, field, before: current, after: target})
+}
+
+async function run() {
+  const docs = await client.fetch<CatalogSeoDoc[]>(
+    `*[_type == "catalogSeoPage"]{
+      _id,
+      pageScope,
+      active,
+      seo{metaTitle, metaDescription},
+      "city": city->{"slug": slug.current, title, "sqLocative": sqDeclension.locative},
+      "district": district->{"slug": slug.current, title}
+    } | order(pageScope asc, city.slug asc, district.slug asc)`,
+  )
+
+  console.log(`\nDataset ${ENV.projectId}/${ENV.dataset} — ${docs.length} catalogSeoPage documents\n`)
+
+  for (const doc of docs) {
+    if (doc.pageScope === 'propertiesRoot') {
+      planField(doc, 'catalog root', 'metaTitle', ROOT_TITLE, TITLE_SOFT_LIMIT)
+      planField(doc, 'catalog root', 'metaDescription', ROOT_DESCRIPTION, DESCRIPTION_SOFT_LIMIT)
+      continue
+    }
+
+    const city = liFrom(doc.city?.title, doc.city?.sqLocative)
+    if (!isComplete(city)) {
+      skippedMissingName.push(`${doc._id} · city name missing a locale: ${JSON.stringify(city)}`)
+      continue
+    }
+
+    if (doc.pageScope === 'city') {
+      const label = `city:${doc.city?.slug ?? '?'}`
+      planField(doc, label, 'metaTitle', cityTitle(city), TITLE_SOFT_LIMIT)
+      planField(doc, label, 'metaDescription', cityDescription(city), DESCRIPTION_SOFT_LIMIT)
+      continue
+    }
+
+    const district = liFrom(doc.district?.title)
+    if (!isComplete(district)) {
+      skippedMissingName.push(`${doc._id} · district name missing a locale`)
+      continue
+    }
+    const label = `district:${doc.city?.slug ?? '?'}/${doc.district?.slug ?? '?'}`
+    planField(doc, label, 'metaTitle', districtTitle(district, city), TITLE_SOFT_LIMIT)
+    planField(doc, label, 'metaDescription', districtDescription(district, city), DESCRIPTION_SOFT_LIMIT)
+  }
+
+  // ——— Report ———
+  console.log(`Planned changes: ${changes.length}`)
+  for (const c of changes) {
+    console.log(`\n  [${c.label}] ${c.field}`)
+    for (const l of LOCALES) {
+      const before = (c.before[l] || '').trim() || '(empty)'
+      if (before === c.after[l]) continue
+      console.log(`    ${l}  - ${before}`)
+      console.log(`       + ${c.after[l]}`)
+    }
+  }
+
+  const section = (name: string, rows: string[]) => {
+    if (!rows.length) return
+    console.log(`\n${name} (${rows.length}):`)
+    rows.forEach((r) => console.log(`  - ${r}`))
+  }
+  section('Already migrated, untouched', alreadyDone)
+  section('Skipped — hand-written by an editor', skippedManual)
+  section('Skipped — referenced name incomplete', skippedMissingName)
+  section('Warning: over the soft length limit', overLimit)
+
+  console.log('\nNote: Polish is not written — localizedString has no `pl` field, so /pl pages')
+  console.log('use the frontend templates in src/lib/seo/listingSeoCopy.ts instead.')
+
+  if (isDry) {
+    console.log('\n(dry run — nothing written)')
+    return
+  }
+
+  if (!changes.length) {
+    console.log('\nNothing to write.')
+    return
+  }
+
+  let tx = client.transaction()
+  for (const c of changes) {
+    tx = tx.patch(c.id, (p) => p.set({[`seo.${c.field}`]: c.after}))
+  }
+  await tx.commit()
+  console.log(
+    `\nWrote ${changes.length} field(s) across ${new Set(changes.map((c) => c.id)).size} document(s).`,
+  )
+}
+
+run().catch((err) => {
+  console.error('Migration failed:', err)
+  process.exit(1)
+})
