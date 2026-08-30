@@ -1,0 +1,949 @@
+
+> domlivo-admin@1.0.0 migrate:catalog-seo-titles:dry
+> tsx scripts/migrateCatalogSeoTitles.ts --dry
+
+
+Dataset g4aqp6ex/production — 39 catalogSeoPage documents
+
+Planned changes: 78
+
+  [city:durres] metaTitle
+    en  - Durres — Real Estate | Domlivo
+       + Property for Sale in Durres, Albania — Apartments & Houses
+    uk  - Дуррес — Нерухомість | Domlivo
+       + Дуррес: нерухомість в Албанії — купити квартиру
+    ru  - Дуррес — Недвижимость | Domlivo
+       + Дуррес: недвижимость в Албании — купить квартиру
+    sq  - Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Durrës
+    it  - Durres — Immobiliare | Domlivo
+       + Case in vendita a Durazzo, Albania — appartamenti e ville
+
+  [city:durres] metaDescription
+    en  - Apartments and houses in Durres. Sale and rent. Verified listings.
+       + Verified property for sale in Durres, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Дуррес. Купівля та оренда. Перевірені оголошення.
+       + Дуррес, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Дуррес. Покупка и аренда. Проверенные объявления.
+       + Дуррес, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Durrësi. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Durrës: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Durres. Vendita e affitto.
+       + Immobili verificati in vendita a Durazzo: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [city:himare] metaTitle
+    en  - Himare — Real Estate | Domlivo
+       + Property for Sale in Himare, Albania — Apartments & Houses
+    uk  - Хімара — Нерухомість | Domlivo
+       + Хімара: нерухомість в Албанії — купити квартиру
+    ru  - Химара — Недвижимость | Domlivo
+       + Химара: недвижимость в Албании — купить квартиру
+    sq  - Himara — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Himarë
+    it  - Himare — Immobiliare | Domlivo
+       + Case in vendita a Himara, Albania — appartamenti e ville
+
+  [city:himare] metaDescription
+    en  - Apartments and houses in Himare. Sale and rent. Verified listings.
+       + Verified property for sale in Himare, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Хімара. Купівля та оренда. Перевірені оголошення.
+       + Хімара, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Химара. Покупка и аренда. Проверенные объявления.
+       + Химара, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Himara. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Himarë: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Himare. Vendita e affitto.
+       + Immobili verificati in vendita a Himara: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [city:sarande] metaTitle
+    en  - Sarande — Real Estate | Domlivo
+       + Property for Sale in Sarande, Albania — Apartments & Houses
+    uk  - Саранда — Нерухомість | Domlivo
+       + Саранда: нерухомість в Албанії — купити квартиру
+    ru  - Саранда — Недвижимость | Domlivo
+       + Саранда: недвижимость в Албании — купить квартиру
+    sq  - Saranda — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Sarandë
+    it  - Sarande — Immobiliare | Domlivo
+       + Case in vendita a Saranda, Albania — appartamenti e ville
+
+  [city:sarande] metaDescription
+    en  - Apartments and houses in Sarande. Sale and rent. Verified listings.
+       + Verified property for sale in Sarande, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Саранда. Купівля та оренда. Перевірені оголошення.
+       + Саранда, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Саранда. Покупка и аренда. Проверенные объявления.
+       + Саранда, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Saranda. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Sarandë: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Sarande. Vendita e affitto.
+       + Immobili verificati in vendita a Saranda: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [city:shengjin] metaTitle
+    en  - Shëngjin — Real Estate | Domlivo
+       + Property for Sale in Shëngjin, Albania — Apartments & Houses
+    uk  - Шенджін — Нерухомість | Domlivo
+       + Шенджін: нерухомість в Албанії — купити квартиру
+    ru  - Шенджин — Недвижимость | Domlivo
+       + Шенджин: недвижимость в Албании — купить квартиру
+    sq  - Shëngjini — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Shëngjin
+    it  - Shëngjin — Immobiliare | Domlivo
+       + Case in vendita a Shëngjin, Albania — appartamenti e ville
+
+  [city:shengjin] metaDescription
+    en  - Apartments and houses in Shëngjin. Sale and rent. Verified listings.
+       + Verified property for sale in Shëngjin, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Шенджін. Купівля та оренда. Перевірені оголошення.
+       + Шенджін, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Шенджин. Покупка и аренда. Проверенные объявления.
+       + Шенджин, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Shëngjini. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Shëngjin: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Shëngjin. Vendita e affitto.
+       + Immobili verificati in vendita a Shëngjin: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [city:shkoder] metaTitle
+    en  - Shkoder — Real Estate | Domlivo
+       + Property for Sale in Shkoder, Albania — Apartments & Houses
+    uk  - Шкодер — Нерухомість | Domlivo
+       + Шкодер: нерухомість в Албанії — купити квартиру
+    ru  - Шкодер — Недвижимость | Domlivo
+       + Шкодер: недвижимость в Албании — купить квартиру
+    sq  - Shkodra — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Shkodra
+    it  - Scutari — Immobiliare | Domlivo
+       + Case in vendita a Scutari, Albania — appartamenti e ville
+
+  [city:shkoder] metaDescription
+    en  - Apartments and houses in Shkoder. Sale and rent. Verified listings.
+       + Verified property for sale in Shkoder, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Шкодер. Купівля та оренда. Перевірені оголошення.
+       + Шкодер, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Шкодер. Покупка и аренда. Проверенные объявления.
+       + Шкодер, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Shkodra. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Shkodra: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Scutari. Vendita e affitto.
+       + Immobili verificati in vendita a Scutari: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [city:tirana] metaTitle
+    en  - Tirana — Real Estate | Domlivo
+       + Property for Sale in Tirana, Albania — Apartments & Houses
+    uk  - Тірана — Нерухомість | Domlivo
+       + Тірана: нерухомість в Албанії — купити квартиру
+    ru  - Тирана — Недвижимость | Domlivo
+       + Тирана: недвижимость в Албании — купить квартиру
+    sq  - Tirana — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Tiranë
+    it  - Tirana — Immobiliare | Domlivo
+       + Case in vendita a Tirana, Albania — appartamenti e ville
+
+  [city:tirana] metaDescription
+    en  - Apartments and houses in Tirana. Sale and rent. Verified listings.
+       + Verified property for sale in Tirana, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Тірана. Купівля та оренда. Перевірені оголошення.
+       + Тірана, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Тирана. Покупка и аренда. Проверенные объявления.
+       + Тирана, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Tirana. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Tiranë: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Tirana. Vendita e affitto.
+       + Immobili verificati in vendita a Tirana: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [city:vlore] metaTitle
+    en  - Vlore — Real Estate | Domlivo
+       + Property for Sale in Vlore, Albania — Apartments & Houses
+    uk  - Вльора — Нерухомість | Domlivo
+       + Вльора: нерухомість в Албанії — купити квартиру
+    ru  - Влёра — Недвижимость | Domlivo
+       + Влёра: недвижимость в Албании — купить квартиру
+    sq  - Vlora — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në shitje në Vlorë
+    it  - Vlore — Immobiliare | Domlivo
+       + Case in vendita a Valona, Albania — appartamenti e ville
+
+  [city:vlore] metaDescription
+    en  - Apartments and houses in Vlore. Sale and rent. Verified listings.
+       + Verified property for sale in Vlore, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies.
+    uk  - Квартири та будинки в Вльора. Купівля та оренда. Перевірені оголошення.
+       + Вльора, Албанія: квартири, будинки та вілли з актуальними цінами. Напряму від власників і перевірених агентств, без комісії.
+    ru  - Квартиры и дома в Влёра. Покупка и аренда. Проверенные объявления.
+       + Влёра, Албания: квартиры, дома и виллы с актуальными ценами. Напрямую от собственников и проверенных агентств, без комиссии.
+    sq  - Apartamente dhe shtëpi në Vlora. Blerje dhe qira.
+       + Prona të verifikuara në shitje në Vlorë: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, pa komision.
+    it  - Appartamenti e case a Vlore. Vendita e affitto.
+       + Immobili verificati in vendita a Valona: appartamenti, case e ville con prezzi aggiornati. Da proprietari e agenzie affidabili.
+
+  [district:durres/city-center-durres] metaTitle
+    en  - City Center, Durres — Real Estate | Domlivo
+       + Property for Sale in City Center, Durres
+    uk  - Центр, Дуррес — Нерухомість | Domlivo
+       + Центр, Дуррес: нерухомість та квартири
+    ru  - Центр, Дуррес — Недвижимость | Domlivo
+       + Центр, Дуррес: недвижимость и квартиры
+    sq  - Qendra, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Durrës
+    it  - Centro città, Durres — Immobiliare | Domlivo
+       + Case in vendita a Centro città, Durazzo
+
+  [district:durres/city-center-durres] metaDescription
+    en  - Apartments and houses in City Center, Durres. Sale and rent.
+       + Property for sale in City Center, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Центр, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Дуррес. Покупка и аренда.
+       + Объекты в районе Центр, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Qendra, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro città, Durres. Vendita e affitto.
+       + Immobili in vendita a Centro città, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/golem-1st-line] metaTitle
+    en  - Golem 1st Line, Durres — Real Estate | Domlivo
+       + Property for Sale in Golem 1st Line, Durres
+    uk  - Голем, перша лінія, Дуррес — Нерухомість | Domlivo
+       + Голем, перша лінія, Дуррес: нерухомість та квартири
+    ru  - Голем, первая линия, Дуррес — Недвижимость | Domlivo
+       + Голем, первая линия, Дуррес: недвижимость и квартиры
+    sq  - Golemi, vija e parë, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Golemi, vija e parë, Durrës
+    it  - Golem, prima linea, Durres — Immobiliare | Domlivo
+       + Case in vendita a Golem, prima linea, Durazzo
+
+  [district:durres/golem-1st-line] metaDescription
+    en  - Apartments and houses in Golem 1st Line, Durres. Sale and rent.
+       + Property for sale in Golem 1st Line, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Голем, перша лінія, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Голем, перша лінія, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Голем, первая линия, Дуррес. Покупка и аренда.
+       + Объекты в районе Голем, первая линия, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Golemi, vija e parë, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Golemi, vija e parë, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Golem, prima linea, Durres. Vendita e affitto.
+       + Immobili in vendita a Golem, prima linea, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/golem-durres] metaTitle
+    en  - Golem, Durres — Real Estate | Domlivo
+       + Property for Sale in Golem, Durres
+    uk  - Голем, Дуррес — Нерухомість | Domlivo
+       + Голем, Дуррес: нерухомість та квартири
+    ru  - Голем, Дуррес — Недвижимость | Domlivo
+       + Голем, Дуррес: недвижимость и квартиры
+    sq  - Golemi, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Golemi, Durrës
+    it  - Golem, Durres — Immobiliare | Domlivo
+       + Case in vendita a Golem, Durazzo
+
+  [district:durres/golem-durres] metaDescription
+    en  - Apartments and houses in Golem, Durres. Sale and rent.
+       + Property for sale in Golem, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Голем, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Голем, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Голем, Дуррес. Покупка и аренда.
+       + Объекты в районе Голем, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Golemi, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Golemi, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Golem, Durres. Vendita e affitto.
+       + Immobili in vendita a Golem, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/plazh] metaTitle
+    en  - Plazh, Durres — Real Estate | Domlivo
+       + Property for Sale in Plazh, Durres
+    uk  - Плаж, Дуррес — Нерухомість | Domlivo
+       + Плаж, Дуррес: нерухомість та квартири
+    ru  - Плаж, Дуррес — Недвижимость | Domlivo
+       + Плаж, Дуррес: недвижимость и квартиры
+    sq  - Plazhi, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Plazhi, Durrës
+    it  - Plazh, Durres — Immobiliare | Domlivo
+       + Case in vendita a Plazh, Durazzo
+
+  [district:durres/plazh] metaDescription
+    en  - Apartments and houses in Plazh, Durres. Sale and rent.
+       + Property for sale in Plazh, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Плаж, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Плаж, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Плаж, Дуррес. Покупка и аренда.
+       + Объекты в районе Плаж, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Plazhi, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Plazhi, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Plazh, Durres. Vendita e affitto.
+       + Immobili in vendita a Plazh, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/plepa-durres] metaTitle
+    en  - Plepa, Durres — Real Estate | Domlivo
+       + Property for Sale in Plepa, Durres
+    uk  - Плепа, Дуррес — Нерухомість | Domlivo
+       + Плепа, Дуррес: нерухомість та квартири
+    ru  - Плепа, Дуррес — Недвижимость | Domlivo
+       + Плепа, Дуррес: недвижимость и квартиры
+    sq  - Plepa, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Plepa, Durrës
+    it  - Plepa, Durres — Immobiliare | Domlivo
+       + Case in vendita a Plepa, Durazzo
+
+  [district:durres/plepa-durres] metaDescription
+    en  - Apartments and houses in Plepa, Durres. Sale and rent.
+       + Property for sale in Plepa, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Плепа, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Плепа, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Плепа, Дуррес. Покупка и аренда.
+       + Объекты в районе Плепа, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Plepa, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Plepa, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Plepa, Durres. Vendita e affitto.
+       + Immobili in vendita a Plepa, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/porto-romano] metaTitle
+    en  - Porto Romano, Durres — Real Estate | Domlivo
+       + Property for Sale in Porto Romano, Durres
+    uk  - Порто Романо, Дуррес — Нерухомість | Domlivo
+       + Порто Романо, Дуррес: нерухомість та квартири
+    ru  - Порто Романо, Дуррес — Недвижимость | Domlivo
+       + Порто Романо, Дуррес: недвижимость и квартиры
+    sq  - Porto Romano, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Porto Romano, Durrës
+    it  - Porto Romano, Durres — Immobiliare | Domlivo
+       + Case in vendita a Porto Romano, Durazzo
+
+  [district:durres/porto-romano] metaDescription
+    en  - Apartments and houses in Porto Romano, Durres. Sale and rent.
+       + Property for sale in Porto Romano, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Порто Романо, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Порто Романо, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Порто Романо, Дуррес. Покупка и аренда.
+       + Объекты в районе Порто Романо, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Porto Romano, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Porto Romano, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Porto Romano, Durres. Vendita e affitto.
+       + Immobili in vendita a Porto Romano, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/shkembi-durres] metaTitle
+    en  - Shkëmbi, Durres — Real Estate | Domlivo
+       + Property for Sale in Shkëmbi, Durres
+    uk  - Шкембі, Дуррес — Нерухомість | Domlivo
+       + Шкембі, Дуррес: нерухомість та квартири
+    ru  - Шкемби, Дуррес — Недвижимость | Domlivo
+       + Шкемби, Дуррес: недвижимость и квартиры
+    sq  - Shkëmbi, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Shkëmbi, Durrës
+    it  - Shkëmbi, Durres — Immobiliare | Domlivo
+       + Case in vendita a Shkëmbi, Durazzo
+
+  [district:durres/shkembi-durres] metaDescription
+    en  - Apartments and houses in Shkëmbi, Durres. Sale and rent.
+       + Property for sale in Shkëmbi, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Шкембі, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Шкембі, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Шкемби, Дуррес. Покупка и аренда.
+       + Объекты в районе Шкемби, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Shkëmbi, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Shkëmbi, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Shkëmbi, Durres. Vendita e affitto.
+       + Immobili in vendita a Shkëmbi, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:durres/shkozet] metaTitle
+    en  - Shkozet, Durres — Real Estate | Domlivo
+       + Property for Sale in Shkozet, Durres
+    uk  - Шкозет, Дуррес — Нерухомість | Domlivo
+       + Шкозет, Дуррес: нерухомість та квартири
+    ru  - Шкозет, Дуррес — Недвижимость | Domlivo
+       + Шкозет, Дуррес: недвижимость и квартиры
+    sq  - Shkozeti, Durrësi — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Shkozeti, Durrës
+    it  - Shkozet, Durres — Immobiliare | Domlivo
+       + Case in vendita a Shkozet, Durazzo
+
+  [district:durres/shkozet] metaDescription
+    en  - Apartments and houses in Shkozet, Durres. Sale and rent.
+       + Property for sale in Shkozet, Durres: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Шкозет, Дуррес. Купівля та оренда.
+       + Обʼєкти в районі Шкозет, Дуррес: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Шкозет, Дуррес. Покупка и аренда.
+       + Объекты в районе Шкозет, Дуррес: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Shkozeti, Durrësi. Blerje dhe qira.
+       + Prona në shitje në Shkozeti, Durrës: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Shkozet, Durres. Vendita e affitto.
+       + Immobili in vendita a Shkozet, Durazzo: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:himare/center-himare] metaTitle
+    en  - Center, Himare — Real Estate | Domlivo
+       + Property for Sale in Center, Himare
+    uk  - Центр, Хімара — Нерухомість | Domlivo
+       + Центр, Хімара: нерухомість та квартири
+    ru  - Центр, Химара — Недвижимость | Domlivo
+       + Центр, Химара: недвижимость и квартиры
+    sq  - Qendra, Himara — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Himarë
+    it  - Centro, Himare — Immobiliare | Domlivo
+       + Case in vendita a Centro, Himara
+
+  [district:himare/center-himare] metaDescription
+    en  - Apartments and houses in Center, Himare. Sale and rent.
+       + Property for sale in Center, Himare: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Хімара. Купівля та оренда.
+       + Обʼєкти в районі Центр, Хімара: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Химара. Покупка и аренда.
+       + Объекты в районе Центр, Химара: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Himara. Blerje dhe qira.
+       + Prona në shitje në Qendra, Himarë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro, Himare. Vendita e affitto.
+       + Immobili in vendita a Centro, Himara: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:himare/livadh] metaTitle
+    en  - Livadh, Himare — Real Estate | Domlivo
+       + Property for Sale in Livadh, Himare
+    uk  - Ліваді, Хімара — Нерухомість | Domlivo
+       + Ліваді, Хімара: нерухомість та квартири
+    ru  - Ливади, Химара — Недвижимость | Domlivo
+       + Ливади, Химара: недвижимость и квартиры
+    sq  - Livadhi, Himara — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Livadhi, Himarë
+    it  - Livadh, Himare — Immobiliare | Domlivo
+       + Case in vendita a Livadh, Himara
+
+  [district:himare/livadh] metaDescription
+    en  - Apartments and houses in Livadh, Himare. Sale and rent.
+       + Property for sale in Livadh, Himare: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Ліваді, Хімара. Купівля та оренда.
+       + Обʼєкти в районі Ліваді, Хімара: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Ливади, Химара. Покупка и аренда.
+       + Объекты в районе Ливади, Химара: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Livadhi, Himara. Blerje dhe qira.
+       + Prona në shitje në Livadhi, Himarë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Livadh, Himare. Vendita e affitto.
+       + Immobili in vendita a Livadh, Himara: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:himare/lukove] metaTitle
+    en  - Lukove, Himare — Real Estate | Domlivo
+       + Property for Sale in Lukove, Himare
+    uk  - Лукове, Хімара — Нерухомість | Domlivo
+       + Лукове, Хімара: нерухомість та квартири
+    ru  - Лукове, Химара — Недвижимость | Domlivo
+       + Лукове, Химара: недвижимость и квартиры
+    sq  - Lukova, Himara — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Lukova, Himarë
+    it  - Lukove, Himare — Immobiliare | Domlivo
+       + Case in vendita a Lukove, Himara
+
+  [district:himare/lukove] metaDescription
+    en  - Apartments and houses in Lukove, Himare. Sale and rent.
+       + Property for sale in Lukove, Himare: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Лукове, Хімара. Купівля та оренда.
+       + Обʼєкти в районі Лукове, Хімара: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Лукове, Химара. Покупка и аренда.
+       + Объекты в районе Лукове, Химара: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Lukova, Himara. Blerje dhe qira.
+       + Prona në shitje në Lukova, Himarë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Lukove, Himare. Vendita e affitto.
+       + Immobili in vendita a Lukove, Himara: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:himare/old-town-himare] metaTitle
+    en  - Old Town, Himare — Real Estate | Domlivo
+       + Property for Sale in Old Town, Himare
+    uk  - Старе місто, Хімара — Нерухомість | Domlivo
+       + Старе місто, Хімара: нерухомість та квартири
+    ru  - Старый город, Химара — Недвижимость | Domlivo
+       + Старый город, Химара: недвижимость и квартиры
+    sq  - Qyteti i Vjetër, Himara — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qyteti i Vjetër, Himarë
+    it  - Città vecchia, Himare — Immobiliare | Domlivo
+       + Case in vendita a Città vecchia, Himara
+
+  [district:himare/old-town-himare] metaDescription
+    en  - Apartments and houses in Old Town, Himare. Sale and rent.
+       + Property for sale in Old Town, Himare: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Старе місто, Хімара. Купівля та оренда.
+       + Обʼєкти в районі Старе місто, Хімара: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Старый город, Химара. Покупка и аренда.
+       + Объекты в районе Старый город, Химара: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qyteti i Vjetër, Himara. Blerje dhe qira.
+       + Prona në shitje në Qyteti i Vjetër, Himarë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Città vecchia, Himare. Vendita e affitto.
+       + Immobili in vendita a Città vecchia, Himara: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:sarande/buze-shetitores] metaTitle
+    en  - Promenade, Sarande — Real Estate | Domlivo
+       + Property for Sale in Promenade, Sarande
+    uk  - Набережна, Саранда — Нерухомість | Domlivo
+       + Набережна, Саранда: нерухомість та квартири
+    ru  - Набережная, Саранда — Недвижимость | Domlivo
+       + Набережная, Саранда: недвижимость и квартиры
+    sq  - Buzë Shetitores, Saranda — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Buzë Shetitores, Sarandë
+    it  - Lungomare, Sarande — Immobiliare | Domlivo
+       + Case in vendita a Lungomare, Saranda
+
+  [district:sarande/buze-shetitores] metaDescription
+    en  - Apartments and houses in Promenade, Sarande. Sale and rent.
+       + Property for sale in Promenade, Sarande: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Набережна, Саранда. Купівля та оренда.
+       + Обʼєкти в районі Набережна, Саранда: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Набережная, Саранда. Покупка и аренда.
+       + Объекты в районе Набережная, Саранда: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Buzë Shetitores, Saranda. Blerje dhe qira.
+       + Prona në shitje në Buzë Shetitores, Sarandë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Lungomare, Sarande. Vendita e affitto.
+       + Immobili in vendita a Lungomare, Saranda: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:sarande/city-center-sarande] metaTitle
+    en  - City Center, Sarande — Real Estate | Domlivo
+       + Property for Sale in City Center, Sarande
+    uk  - Центр, Саранда — Нерухомість | Domlivo
+       + Центр, Саранда: нерухомість та квартири
+    ru  - Центр, Саранда — Недвижимость | Domlivo
+       + Центр, Саранда: недвижимость и квартиры
+    sq  - Qendra, Saranda — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Sarandë
+    it  - Centro città, Sarande — Immobiliare | Domlivo
+       + Case in vendita a Centro città, Saranda
+
+  [district:sarande/city-center-sarande] metaDescription
+    en  - Apartments and houses in City Center, Sarande. Sale and rent.
+       + Property for sale in City Center, Sarande: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Саранда. Купівля та оренда.
+       + Обʼєкти в районі Центр, Саранда: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Саранда. Покупка и аренда.
+       + Объекты в районе Центр, Саранда: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Saranda. Blerje dhe qira.
+       + Prona në shitje në Qendra, Sarandë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro città, Sarande. Vendita e affitto.
+       + Immobili in vendita a Centro città, Saranda: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:sarande/ksamil] metaTitle
+    en  - Ksamil, Sarande — Real Estate | Domlivo
+       + Property for Sale in Ksamil, Sarande
+    uk  - Ксаміл, Саранда — Нерухомість | Domlivo
+       + Ксаміл, Саранда: нерухомість та квартири
+    ru  - Ксамил, Саранда — Недвижимость | Domlivo
+       + Ксамил, Саранда: недвижимость и квартиры
+    sq  - Ksamil, Saranda — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Ksamil, Sarandë
+    it  - Ksamil, Sarande — Immobiliare | Domlivo
+       + Case in vendita a Ksamil, Saranda
+
+  [district:sarande/ksamil] metaDescription
+    en  - Apartments and houses in Ksamil, Sarande. Sale and rent.
+       + Property for sale in Ksamil, Sarande: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Ксаміл, Саранда. Купівля та оренда.
+       + Обʼєкти в районі Ксаміл, Саранда: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Ксамил, Саранда. Покупка и аренда.
+       + Объекты в районе Ксамил, Саранда: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Ksamil, Saranda. Blerje dhe qira.
+       + Prona në shitje në Ksamil, Sarandë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Ksamil, Sarande. Vendita e affitto.
+       + Immobili in vendita a Ksamil, Saranda: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:sarande/zona-e-portit] metaTitle
+    en  - Port Zone, Sarande — Real Estate | Domlivo
+       + Property for Sale in Port Zone, Sarande
+    uk  - Портова зона, Саранда — Нерухомість | Domlivo
+       + Портова зона, Саранда: нерухомість та квартири
+    ru  - Портовая зона, Саранда — Недвижимость | Domlivo
+       + Портовая зона, Саранда: недвижимость и квартиры
+    sq  - Zona e Portit, Saranda — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Zona e Portit, Sarandë
+    it  - Zona del porto, Sarande — Immobiliare | Domlivo
+       + Case in vendita a Zona del porto, Saranda
+
+  [district:sarande/zona-e-portit] metaDescription
+    en  - Apartments and houses in Port Zone, Sarande. Sale and rent.
+       + Property for sale in Port Zone, Sarande: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Портова зона, Саранда. Купівля та оренда.
+       + Обʼєкти в районі Портова зона, Саранда: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Портовая зона, Саранда. Покупка и аренда.
+       + Объекты в районе Портовая зона, Саранда: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Zona e Portit, Saranda. Blerje dhe qira.
+       + Prona në shitje në Zona e Portit, Sarandë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Zona del porto, Sarande. Vendita e affitto.
+       + Immobili in vendita a Zona del porto, Saranda: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:shengjin/center-shengjin] metaTitle
+    en  - City Center, Shëngjin — Real Estate | Domlivo
+       + Property for Sale in City Center, Shëngjin
+    uk  - Центр, Шенджін — Нерухомість | Domlivo
+       + Центр, Шенджін: нерухомість та квартири
+    ru  - Центр, Шенджин — Недвижимость | Domlivo
+       + Центр, Шенджин: недвижимость и квартиры
+    sq  - Qendra, Shëngjini — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Shëngjin
+    it  - Centro città, Shëngjin — Immobiliare | Domlivo
+       + Case in vendita a Centro città, Shëngjin
+
+  [district:shengjin/center-shengjin] metaDescription
+    en  - Apartments and houses in City Center, Shëngjin. Sale and rent.
+       + Property for sale in City Center, Shëngjin: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Шенджін. Купівля та оренда.
+       + Обʼєкти в районі Центр, Шенджін: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Шенджин. Покупка и аренда.
+       + Объекты в районе Центр, Шенджин: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Shëngjini. Blerje dhe qira.
+       + Prona në shitje në Qendra, Shëngjin: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro città, Shëngjin. Vendita e affitto.
+       + Immobili in vendita a Centro città, Shëngjin: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:shkoder/dobrac] metaTitle
+    en  - Dobrac, Shkoder — Real Estate | Domlivo
+       + Property for Sale in Dobraç, Shkoder
+    uk  - Добрач, Шкодер — Нерухомість | Domlivo
+       + Добрач, Шкодер: нерухомість та квартири
+    ru  - Добрач, Шкодер — Недвижимость | Domlivo
+       + Добрач, Шкодер: недвижимость и квартиры
+    sq  - Dobraç, Shkodra — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Dobraç, Shkodra
+    it  - Dobrac, Scutari — Immobiliare | Domlivo
+       + Case in vendita a Dobraç, Scutari
+
+  [district:shkoder/dobrac] metaDescription
+    en  - Apartments and houses in Dobrac, Shkoder. Sale and rent.
+       + Property for sale in Dobraç, Shkoder: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Добрач, Шкодер. Купівля та оренда.
+       + Обʼєкти в районі Добрач, Шкодер: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Добрач, Шкодер. Покупка и аренда.
+       + Объекты в районе Добрач, Шкодер: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Dobraç, Shkodra. Blerje dhe qira.
+       + Prona në shitje në Dobraç, Shkodra: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Dobrac, Scutari. Vendita e affitto.
+       + Immobili in vendita a Dobraç, Scutari: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:shkoder/gjuhadol] metaTitle
+    en  - Gjuhadol, Shkoder — Real Estate | Domlivo
+       + Property for Sale in Gjuhadol, Shkoder
+    uk  - Гьюхадол, Шкодер — Нерухомість | Domlivo
+       + Гьюхадол, Шкодер: нерухомість та квартири
+    ru  - Гьюхадол, Шкодер — Недвижимость | Domlivo
+       + Гьюхадол, Шкодер: недвижимость и квартиры
+    sq  - Gjuhadoli, Shkodra — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Gjuhadoli, Shkodra
+    it  - Gjuhadol, Scutari — Immobiliare | Domlivo
+       + Case in vendita a Gjuhadol, Scutari
+
+  [district:shkoder/gjuhadol] metaDescription
+    en  - Apartments and houses in Gjuhadol, Shkoder. Sale and rent.
+       + Property for sale in Gjuhadol, Shkoder: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Гьюхадол, Шкодер. Купівля та оренда.
+       + Обʼєкти в районі Гьюхадол, Шкодер: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Гьюхадол, Шкодер. Покупка и аренда.
+       + Объекты в районе Гьюхадол, Шкодер: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Gjuhadoli, Shkodra. Blerje dhe qira.
+       + Prona në shitje në Gjuhadoli, Shkodra: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Gjuhadol, Scutari. Vendita e affitto.
+       + Immobili in vendita a Gjuhadol, Scutari: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:shkoder/parruce] metaTitle
+    en  - Parruce, Shkoder — Real Estate | Domlivo
+       + Property for Sale in Parrucë, Shkoder
+    uk  - Парруче, Шкодер — Нерухомість | Domlivo
+       + Парруче, Шкодер: нерухомість та квартири
+    ru  - Парруче, Шкодер — Недвижимость | Domlivo
+       + Парруче, Шкодер: недвижимость и квартиры
+    sq  - Parruca, Shkodra — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Parruca, Shkodra
+    it  - Parruce, Scutari — Immobiliare | Domlivo
+       + Case in vendita a Parrucë, Scutari
+
+  [district:shkoder/parruce] metaDescription
+    en  - Apartments and houses in Parruce, Shkoder. Sale and rent.
+       + Property for sale in Parrucë, Shkoder: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Парруче, Шкодер. Купівля та оренда.
+       + Обʼєкти в районі Парруче, Шкодер: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Парруче, Шкодер. Покупка и аренда.
+       + Объекты в районе Парруче, Шкодер: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Parruca, Shkodra. Blerje dhe qira.
+       + Prona në shitje në Parruca, Shkodra: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Parruce, Scutari. Vendita e affitto.
+       + Immobili in vendita a Parrucë, Scutari: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:shkoder/qender-shkoder] metaTitle
+    en  - City Center, Shkoder — Real Estate | Domlivo
+       + Property for Sale in City Center, Shkoder
+    uk  - Центр, Шкодер — Нерухомість | Domlivo
+       + Центр, Шкодер: нерухомість та квартири
+    ru  - Центр, Шкодер — Недвижимость | Domlivo
+       + Центр, Шкодер: недвижимость и квартиры
+    sq  - Qendra, Shkodra — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Shkodra
+    it  - Centro città, Scutari — Immobiliare | Domlivo
+       + Case in vendita a Centro città, Scutari
+
+  [district:shkoder/qender-shkoder] metaDescription
+    en  - Apartments and houses in City Center, Shkoder. Sale and rent.
+       + Property for sale in City Center, Shkoder: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Шкодер. Купівля та оренда.
+       + Обʼєкти в районі Центр, Шкодер: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Шкодер. Покупка и аренда.
+       + Объекты в районе Центр, Шкодер: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Shkodra. Blerje dhe qira.
+       + Prona në shitje në Qendra, Shkodra: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro città, Scutari. Vendita e affitto.
+       + Immobili in vendita a Centro città, Scutari: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:tirana/blloku] metaTitle
+    en  - Blloku, Tirana — Real Estate | Domlivo
+       + Property for Sale in Blloku, Tirana
+    uk  - Блоку, Тірана — Нерухомість | Domlivo
+       + Блоку, Тірана: нерухомість та квартири
+    ru  - Блоку, Тирана — Недвижимость | Domlivo
+       + Блоку, Тирана: недвижимость и квартиры
+    sq  - Blloku, Tirana — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Blloku, Tiranë
+    it  - Blloku, Tirana — Immobiliare | Domlivo
+       + Case in vendita a Blloku, Tirana
+
+  [district:tirana/blloku] metaDescription
+    en  - Apartments and houses in Blloku, Tirana. Sale and rent.
+       + Property for sale in Blloku, Tirana: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Блоку, Тірана. Купівля та оренда.
+       + Обʼєкти в районі Блоку, Тірана: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Блоку, Тирана. Покупка и аренда.
+       + Объекты в районе Блоку, Тирана: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Blloku, Tirana. Blerje dhe qira.
+       + Prona në shitje në Blloku, Tiranë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Blloku, Tirana. Vendita e affitto.
+       + Immobili in vendita a Blloku, Tirana: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:tirana/fresku] metaTitle
+    en  - Fresku, Tirana — Real Estate | Domlivo
+       + Property for Sale in Fresku, Tirana
+    uk  - Фреску, Тірана — Нерухомість | Domlivo
+       + Фреску, Тірана: нерухомість та квартири
+    ru  - Фреску, Тирана — Недвижимость | Domlivo
+       + Фреску, Тирана: недвижимость и квартиры
+    sq  - Fresku, Tirana — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Fresku, Tiranë
+    it  - Fresku, Tirana — Immobiliare | Domlivo
+       + Case in vendita a Fresku, Tirana
+
+  [district:tirana/fresku] metaDescription
+    en  - Apartments and houses in Fresku, Tirana. Sale and rent.
+       + Property for sale in Fresku, Tirana: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Фреску, Тірана. Купівля та оренда.
+       + Обʼєкти в районі Фреску, Тірана: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Фреску, Тирана. Покупка и аренда.
+       + Объекты в районе Фреску, Тирана: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Fresku, Tirana. Blerje dhe qira.
+       + Prona në shitje në Fresku, Tiranë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Fresku, Tirana. Vendita e affitto.
+       + Immobili in vendita a Fresku, Tirana: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:tirana/komuna-e-parisit] metaTitle
+    en  - Komuna e Parisit, Tirana — Real Estate | Domlivo
+       + Property for Sale in Komuna e Parisit, Tirana
+    uk  - Комуна Паризит, Тірана — Нерухомість | Domlivo
+       + Комуна Паризит, Тірана: нерухомість та квартири
+    ru  - Коммуна Паризит, Тирана — Недвижимость | Domlivo
+       + Коммуна Паризит, Тирана: недвижимость и квартиры
+    sq  - Komuna e Parisit, Tirana — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Komuna e Parisit, Tiranë
+    it  - Komuna e Parisit, Tirana — Immobiliare | Domlivo
+       + Case in vendita a Komuna e Parisit, Tirana
+
+  [district:tirana/komuna-e-parisit] metaDescription
+    en  - Apartments and houses in Komuna e Parisit, Tirana. Sale and rent.
+       + Property for sale in Komuna e Parisit, Tirana: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Комуна Паризит, Тірана. Купівля та оренда.
+       + Обʼєкти в районі Комуна Паризит, Тірана: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Коммуна Паризит, Тирана. Покупка и аренда.
+       + Объекты в районе Коммуна Паризит, Тирана: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Komuna e Parisit, Tirana. Blerje dhe qira.
+       + Prona në shitje në Komuna e Parisit, Tiranë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Komuna e Parisit, Tirana. Vendita e affitto.
+       + Immobili in vendita a Komuna e Parisit, Tirana: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:tirana/pazari-i-ri] metaTitle
+    en  - Pazari i Ri, Tirana — Real Estate | Domlivo
+       + Property for Sale in Pazari i Ri, Tirana
+    uk  - Пазарі і Рі, Тірана — Нерухомість | Domlivo
+       + Пазарі і Рі, Тірана: нерухомість та квартири
+    ru  - Пазари и Ри, Тирана — Недвижимость | Domlivo
+       + Пазари и Ри, Тирана: недвижимость и квартиры
+    sq  - Pazari i Ri, Tirana — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Pazari i Ri, Tiranë
+    it  - Pazari i Ri, Tirana — Immobiliare | Domlivo
+       + Case in vendita a Pazari i Ri, Tirana
+
+  [district:tirana/pazari-i-ri] metaDescription
+    en  - Apartments and houses in Pazari i Ri, Tirana. Sale and rent.
+       + Property for sale in Pazari i Ri, Tirana: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Пазарі і Рі, Тірана. Купівля та оренда.
+       + Обʼєкти в районі Пазарі і Рі, Тірана: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Пазари и Ри, Тирана. Покупка и аренда.
+       + Объекты в районе Пазари и Ри, Тирана: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Pazari i Ri, Tirana. Blerje dhe qira.
+       + Prona në shitje në Pazari i Ri, Tiranë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Pazari i Ri, Tirana. Vendita e affitto.
+       + Immobili in vendita a Pazari i Ri, Tirana: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:tirana/qender-tirana] metaTitle
+    en  - City Center, Tirana — Real Estate | Domlivo
+       + Property for Sale in City Center, Tirana
+    uk  - Центр, Тірана — Нерухомість | Domlivo
+       + Центр, Тірана: нерухомість та квартири
+    ru  - Центр, Тирана — Недвижимость | Domlivo
+       + Центр, Тирана: недвижимость и квартиры
+    sq  - Qendra, Tirana — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Tiranë
+    it  - Centro città, Tirana — Immobiliare | Domlivo
+       + Case in vendita a Centro città, Tirana
+
+  [district:tirana/qender-tirana] metaDescription
+    en  - Apartments and houses in City Center, Tirana. Sale and rent.
+       + Property for sale in City Center, Tirana: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Тірана. Купівля та оренда.
+       + Обʼєкти в районі Центр, Тірана: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Тирана. Покупка и аренда.
+       + Объекты в районе Центр, Тирана: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Tirana. Blerje dhe qira.
+       + Prona në shitje në Qendra, Tiranë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro città, Tirana. Vendita e affitto.
+       + Immobili in vendita a Centro città, Tirana: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:vlore/city-center-vlore] metaTitle
+    en  - City Center, Vlore — Real Estate | Domlivo
+       + Property for Sale in City Center, Vlore
+    uk  - Центр, Вльора — Нерухомість | Domlivo
+       + Центр, Вльора: нерухомість та квартири
+    ru  - Центр, Влёра — Недвижимость | Domlivo
+       + Центр, Влёра: недвижимость и квартиры
+    sq  - Qendra, Vlora — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Qendra, Vlorë
+    it  - Centro città, Vlore — Immobiliare | Domlivo
+       + Case in vendita a Centro città, Valona
+
+  [district:vlore/city-center-vlore] metaDescription
+    en  - Apartments and houses in City Center, Vlore. Sale and rent.
+       + Property for sale in City Center, Vlore: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Центр, Вльора. Купівля та оренда.
+       + Обʼєкти в районі Центр, Вльора: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Центр, Влёра. Покупка и аренда.
+       + Объекты в районе Центр, Влёра: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Qendra, Vlora. Blerje dhe qira.
+       + Prona në shitje në Qendra, Vlorë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Centro città, Vlore. Vendita e affitto.
+       + Immobili in vendita a Centro città, Valona: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:vlore/lungomare] metaTitle
+    en  - Lungomare, Vlore — Real Estate | Domlivo
+       + Property for Sale in Lungomare, Vlore
+    uk  - Лунгомаре, Вльора — Нерухомість | Domlivo
+       + Лунгомаре, Вльора: нерухомість та квартири
+    ru  - Лунгомаре, Влёра — Недвижимость | Domlivo
+       + Лунгомаре, Влёра: недвижимость и квартиры
+    sq  - Lungomare, Vlora — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Lungomare, Vlorë
+    it  - Lungomare, Vlore — Immobiliare | Domlivo
+       + Case in vendita a Lungomare, Valona
+
+  [district:vlore/lungomare] metaDescription
+    en  - Apartments and houses in Lungomare, Vlore. Sale and rent.
+       + Property for sale in Lungomare, Vlore: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Лунгомаре, Вльора. Купівля та оренда.
+       + Обʼєкти в районі Лунгомаре, Вльора: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Лунгомаре, Влёра. Покупка и аренда.
+       + Объекты в районе Лунгомаре, Влёра: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Lungomare, Vlora. Blerje dhe qira.
+       + Prona në shitje në Lungomare, Vlorë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Lungomare, Vlore. Vendita e affitto.
+       + Immobili in vendita a Lungomare, Valona: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:vlore/lungomare-2nd-line] metaTitle
+    en  - Lungomare 2nd Line, Vlore — Real Estate | Domlivo
+       + Property for Sale in Lungomare 2nd Line, Vlore
+    uk  - Лунгомаре, друга лінія, Вльора — Нерухомість | Domlivo
+       + Лунгомаре, друга лінія, Вльора: нерухомість та квартири
+    ru  - Лунгомаре, вторая линия, Влёра — Недвижимость | Domlivo
+       + Лунгомаре, вторая линия, Влёра: недвижимость и квартиры
+    sq  - Lungomare, vija e dytë, Vlora — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Lungomare, vija e dytë, Vlorë
+    it  - Lungomare, seconda linea, Vlore — Immobiliare | Domlivo
+       + Case in vendita a Lungomare, seconda linea, Valona
+
+  [district:vlore/lungomare-2nd-line] metaDescription
+    en  - Apartments and houses in Lungomare 2nd Line, Vlore. Sale and rent.
+       + Property for sale in Lungomare 2nd Line, Vlore: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Лунгомаре, друга лінія, Вльора. Купівля та оренда.
+       + Обʼєкти в районі Лунгомаре, друга лінія, Вльора: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Лунгомаре, вторая линия, Влёра. Покупка и аренда.
+       + Объекты в районе Лунгомаре, вторая линия, Влёра: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Lungomare, vija e dytë, Vlora. Blerje dhe qira.
+       + Prona në shitje në Lungomare, vija e dytë, Vlorë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Lungomare, seconda linea, Vlore. Vendita e affitto.
+       + Immobili in vendita a Lungomare, seconda linea, Valona: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:vlore/orikum] metaTitle
+    en  - Orikum, Vlore — Real Estate | Domlivo
+       + Property for Sale in Orikum, Vlore
+    uk  - Орикум, Вльора — Нерухомість | Domlivo
+       + Орикум, Вльора: нерухомість та квартири
+    ru  - Орикум, Влёра — Недвижимость | Domlivo
+       + Орикум, Влёра: недвижимость и квартиры
+    sq  - Orikumi, Vlora — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Orikumi, Vlorë
+    it  - Orikum, Vlore — Immobiliare | Domlivo
+       + Case in vendita a Orikum, Valona
+
+  [district:vlore/orikum] metaDescription
+    en  - Apartments and houses in Orikum, Vlore. Sale and rent.
+       + Property for sale in Orikum, Vlore: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Орикум, Вльора. Купівля та оренда.
+       + Обʼєкти в районі Орикум, Вльора: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Орикум, Влёра. Покупка и аренда.
+       + Объекты в районе Орикум, Влёра: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Orikumi, Vlora. Blerje dhe qira.
+       + Prona në shitje në Orikumi, Vlorë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Orikum, Vlore. Vendita e affitto.
+       + Immobili in vendita a Orikum, Valona: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [district:vlore/uji-i-ftohte] metaTitle
+    en  - Uji i Ftohte, Vlore — Real Estate | Domlivo
+       + Property for Sale in Uji i Ftohtë, Vlore
+    uk  - Уйи і Фтохте, Вльора — Нерухомість | Domlivo
+       + Уйи і Фтохте, Вльора: нерухомість та квартири
+    ru  - Уйи и Фтохте, Влёра — Недвижимость | Domlivo
+       + Уйи и Фтохте, Влёра: недвижимость и квартиры
+    sq  - Uji i Ftohtë, Vlora — Pasuri | Domlivo
+       + Shtëpi dhe apartamente në Uji i Ftohtë, Vlorë
+    it  - Uji i Ftohte, Vlore — Immobiliare | Domlivo
+       + Case in vendita a Uji i Ftohtë, Valona
+
+  [district:vlore/uji-i-ftohte] metaDescription
+    en  - Apartments and houses in Uji i Ftohte, Vlore. Sale and rent.
+       + Property for sale in Uji i Ftohtë, Vlore: apartments, houses and villas with current prices and honest area guidance.
+    uk  - Квартири та будинки в районі Уйи і Фтохте, Вльора. Купівля та оренда.
+       + Обʼєкти в районі Уйи і Фтохте, Вльора: квартири, будинки та вілли з актуальними цінами та чесним описом району.
+    ru  - Квартиры и дома в районе Уйи и Фтохте, Влёра. Покупка и аренда.
+       + Объекты в районе Уйи и Фтохте, Влёра: квартиры, дома и виллы с актуальными ценами и честным описанием района.
+    sq  - Apartamente dhe shtëpi në Uji i Ftohtë, Vlora. Blerje dhe qira.
+       + Prona në shitje në Uji i Ftohtë, Vlorë: apartamente, shtëpi dhe vila me çmime aktuale dhe përshkrim të ndershëm të zonës.
+    it  - Appartamenti e case a Uji i Ftohte, Vlore. Vendita e affitto.
+       + Immobili in vendita a Uji i Ftohtë, Valona: appartamenti, case e ville con prezzi aggiornati e una guida onesta alla zona.
+
+  [catalog root] metaTitle
+    en  - Real Estate in Albania | Domlivo
+       + Albania Real Estate — Property for Sale
+    uk  - Нерухомість в Албанії | Domlivo
+       + Нерухомість в Албанії — купити квартиру чи будинок
+    ru  - Недвижимость в Албании | Domlivo
+       + Недвижимость в Албании — купить квартиру, дом или виллу
+    sq  - Pasuri në Shqipëri | Domlivo
+       + Pasuri të paluajtshme në shitje në Shqipëri
+    it  - Immobiliare in Albania | Domlivo
+       + Case in vendita in Albania — immobili fronte mare
+
+  [catalog root] metaDescription
+    en  - Apartments, houses and villas in Tirana, Durres and across Albania. Sale and rent. Up-to-date listings.
+       + Buy property in Albania: apartments, houses and beachfront villas in Tirana, Durres, Vlore and Saranda. Verified listings with real prices.
+    uk  - Квартири, будинки та вілли в Тирані, Дурресі та по всій Албанії. Купівля, оренда. Актуальні оголошення.
+       + Купити нерухомість в Албанії: квартири біля моря, будинки та вілли в Тирані, Дурресі, Влері та Саранді. Перевірені обʼєкти з реальними цінами.
+    ru  - Квартиры, дома и виллы в Тиране, Дурресе и по всей Албании. Покупка, аренда. Актуальные объявления.
+       + Купить недвижимость в Албании: квартиры у моря, дома и виллы в Тиране, Дурресе, Влёре и Саранде. Проверенные объекты с реальными ценами.
+    sq  - Apartamente, shtëpi dhe vila në Tiranë, Durrës dhe në të gjithë Shqipërinë. Blerje, qira.
+       + Apartamente, shtëpi dhe vila në shitje në Tiranë, Durrës, Vlorë dhe Sarandë. Prona të verifikuara me çmime aktuale, pa komision.
+    it  - Appartamenti, case e ville a Tirana, Durazzo e in tutta l'Albania. Vendita e affitto.
+       + Comprare casa in Albania: appartamenti fronte mare, case e ville a Tirana, Durazzo, Valona e Saranda. Immobili verificati con prezzi reali.
+
+Note: Polish is not written — localizedString has no `pl` field, so /pl pages
+use the frontend templates in src/lib/seo/listingSeoCopy.ts instead.
+
+(dry run — nothing written)
