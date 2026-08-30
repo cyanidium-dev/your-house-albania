@@ -4,6 +4,8 @@ import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { GuidesBreadcrumb } from "@/components/shared/GuidesBreadcrumb";
 import { fetchGuideLandingBySlug, fetchSiteSettings } from "@/lib/sanity/client";
+import { buildGuideArticleJsonLd } from "@/lib/seo/guideArticleJsonLd";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 
@@ -85,20 +87,59 @@ export default async function GuideLandingPage({ params }: Props) {
   const sections = asSections(landing as never);
   const hasDedicatedHero = sections[0]?._type === "heroSection";
 
+  // Guides are the pages AI engines quote, so they say what they are, who
+  // stands behind them and when they were last reviewed. FAQPage already comes
+  // from LandingRenderer — this adds Article next to it, never a second FAQ.
+  const siteSettings = await fetchSiteSettings();
+  const rawSite = siteSettings as
+    | { siteName?: unknown; logo?: { asset?: { url?: string } } }
+    | null;
+  const siteName =
+    resolveLocalizedString(rawSite?.siteName as never, locale) ||
+    (typeof rawSite?.siteName === "string" ? rawSite.siteName : "") ||
+    "Domlivo";
+  const baseUrl = getSiteBaseUrl();
+  const articleJsonLd = buildGuideArticleJsonLd({
+    headline: guideTitle,
+    description:
+      resolveLocalizedString(landing.cardDescription as never, locale) || undefined,
+    articleUrl: `${baseUrl}/${locale}/guides/${guideSlug}`,
+    imageUrl: landing.cardImage?.asset?.url,
+    contentUpdatedAt: landing.contentUpdatedAt ?? null,
+    documentUpdatedAt: landing._updatedAt ?? null,
+    publisherName: siteName,
+    publisherUrl: baseUrl,
+    publisherLogoUrl: rawSite?.logo?.asset?.url,
+    locale,
+  });
+
+  // No visible date is added here on purpose: LandingRenderer already renders a
+  // freshness badge from `contentUpdatedAt`, and a second one read as a bug.
+  const structuredData = articleJsonLd ? (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+    />
+  ) : null;
+
   if (hasDedicatedHero) {
     return (
-      <LandingRenderer
-        locale={locale}
-        landing={landing as never}
-        breadcrumb={
-          <GuidesBreadcrumb locale={locale} slug={guideSlug} guideTitle={guideTitle} overHero />
-        }
-      />
+      <>
+        {structuredData}
+        <LandingRenderer
+          locale={locale}
+          landing={landing as never}
+          breadcrumb={
+            <GuidesBreadcrumb locale={locale} slug={guideSlug} guideTitle={guideTitle} overHero />
+          }
+        />
+      </>
     );
   }
 
   return (
     <>
+      {structuredData}
       <section className="pt-20 md:pt-32">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <GuidesBreadcrumb locale={locale} slug={guideSlug} guideTitle={guideTitle} />

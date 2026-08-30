@@ -477,12 +477,17 @@ export async function fetchLandingPageBySlug(slug: string): Promise<{
 export async function fetchGuideLandingBySlug(slug: string): Promise<{
   _id?: string;
   _type?: string;
+  /** Sanity's own modification timestamp; feeds Article `dateModified`. */
+  _updatedAt?: string;
   pageType?: string;
   slug?: string;
   title?: unknown;
   cardDescription?: unknown;
   cardImage?: { asset?: { url?: string } };
   pageSections?: unknown[];
+  topicTags?: unknown;
+  /** Editor-set review date; feeds Article `datePublished`. */
+  contentUpdatedAt?: string;
   seo?: unknown;
 } | null> {
   const trimmed = typeof slug === 'string' ? slug.trim() : '';
@@ -500,6 +505,7 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
   ][0] {
     _id,
     _type,
+    _updatedAt,
     pageType,
     "slug": slug.current,
     title,

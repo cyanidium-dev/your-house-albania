@@ -211,7 +211,7 @@ for u in sq/albania/vlore en/albania/tirana pl/albania/sarande it/albania/durres
 ---
 
 ### SEO-06 🤖 AEO-блоки: попасть в ответы ИИ
-- [ ] **Сделано**
+- [x] **Шаг 1 сделан** — `Article`-разметка на гайдах (ТЗ: `docs/seo/TZ-SEO-06a-guide-article-schema.md`). — [ ] **остальные пункты формулы**
 
 Сейчас у domlivo **0 цитирований** во всех ИИ-платформах, у century21albania — 78 страниц. Формула из `10-seo/seo-map.md` (§ AEO, реверс-инжиниринг Investropa) уже описана — применить её.
 
