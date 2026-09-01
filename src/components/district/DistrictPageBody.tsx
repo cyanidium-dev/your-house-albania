@@ -11,6 +11,7 @@ import {
 import type { DistrictDoc } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { photoForCity } from "@/lib/media/albaniaPhotos";
 
 type Props = {
   locale: string;
@@ -26,6 +27,7 @@ type Props = {
  */
 export async function DistrictPageBody({ locale, countrySlug, citySlug, district }: Props) {
   const t = await getTranslations("Districts");
+  const tPhoto = await getTranslations("AlbaniaPhotos");
 
   const title =
     resolveLocalizedString(district.heroTitle as never, locale) ||
@@ -39,6 +41,11 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
     resolveLocalizedString(district.shortDescription as never, locale);
   const shortLine = resolveLocalizedString(district.heroShortLine as never, locale);
   const heroImageUrl = district.heroImage?.asset?.url;
+  // Roughly a fifth of the districts have no photograph in the CMS. Showing
+  // the parent city instead of an empty hero is honest as long as the alt
+  // text says what the picture is, which it does — it comes from the photo,
+  // not from the district name.
+  const fallbackPhoto = heroImageUrl ? null : photoForCity(citySlug);
   const heroCtaLabel = resolveLocalizedString(district.heroCta?.label as never, locale);
   const heroCtaHref = district.heroCta?.href?.trim()
     ? resolveLocaleHref(district.heroCta.href.trim(), locale)
@@ -92,16 +99,20 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
               </a>
             ) : null}
           </div>
-          {heroImageUrl ? (
+          {heroImageUrl || fallbackPhoto ? (
             <div className="mt-10 relative rounded-2xl overflow-hidden aspect-[16/9] md:aspect-[21/9] bg-dark/5 dark:bg-white/5">
               <Image
-                src={heroImageUrl}
-                alt={district.heroImage?.alt || title}
+                src={heroImageUrl ?? fallbackPhoto!.src}
+                alt={
+                  heroImageUrl
+                    ? district.heroImage?.alt || title
+                    : tPhoto(fallbackPhoto!.key)
+                }
                 fill
                 priority
                 className="object-cover object-center"
                 sizes="(max-width: 1023px) 100vw, 1280px"
-                unoptimized={heroImageUrl.startsWith("http")}
+                unoptimized={Boolean(heroImageUrl?.startsWith("http"))}
               />
             </div>
           ) : null}

@@ -18,6 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 
 type BlogArticleContentProps = {
   content: unknown[];
@@ -25,22 +26,17 @@ type BlogArticleContentProps = {
 };
 
 /**
- * Resolves CTA href for blogCtaBlock.
- * Preserves as-is: http(s)://, mailto:, tel:, #anchor.
- * Prefixes internal paths with locale: /properties -> /{locale}/properties.
- * Empty/invalid -> "#".
+ * Href for a CTA block or an inline link inside an article.
+ *
+ * Delegates to the shared resolver rather than re-prefixing here: articles are
+ * full of links an editor pasted from the live site (`/en/blog/...`), and the
+ * local version turned those into `/ru/en/blog/...` on every other locale.
  */
 function resolveCtaHref(
   raw: string | null | undefined,
   locale: string
 ): string {
-  const s = typeof raw === "string" ? raw.trim() : "";
-  if (!s) return "#";
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  if (s.startsWith("mailto:")) return s;
-  if (s.startsWith("tel:")) return s;
-  if (s.startsWith("#")) return s;
-  return s.startsWith("/") ? `/${locale}${s}` : `/${locale}/${s}`;
+  return resolveLocaleHref(typeof raw === "string" ? raw : "", locale);
 }
 
 /**

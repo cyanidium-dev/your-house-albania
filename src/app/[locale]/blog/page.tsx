@@ -147,6 +147,7 @@ export default async function Blog({ params, searchParams }: Props) {
         title={t("title")}
         description={t("description")}
         badge={t("badge")}
+        photoKey="tirana"
       />
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0 mb-4">
         <BlogBreadcrumb

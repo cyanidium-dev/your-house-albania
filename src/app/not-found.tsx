@@ -1,45 +1,44 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Metadata } from "next";
-import { Icon } from "@iconify/react/dist/iconify.js"
 
 export const metadata: Metadata = {
-  title: "404 Page | Property ",
+  title: "404",
+  robots: { index: false, follow: false },
 };
 
+/**
+ * Last-resort 404: paths that never reached the `[locale]` segment, so there is
+ * no dictionary, no header and no footer to render. Localised 404s are handled
+ * by `[locale]/not-found.tsx`, which has all three.
+ *
+ * `/` is the one safe destination from here — the middleware negotiates the
+ * visitor's locale and redirects.
+ */
 const ErrorPage = () => {
   return (
-    <>
-      <section className="flex justify-center pb-0!">
-        <Image
-          src="/images/404.png"
-          alt="404"
-          width={490}
-          height={450}
-          unoptimized={true}
-        />
-      </section>
-      <section className="text-center bg-cover relative overflow-x-hidden" >
-        <div className='flex gap-2.5 items-center justify-center'>
-          <span>
-            <Icon
-              icon={'ph:house-simple-fill'}
-              width={20}
-              height={20}
-              className='text-primary'
-            />
-          </span>
-          <p className='text-base font-semibold text-dark/75 dark:text-white/75'>
-            Error 404
-          </p>
-        </div>
-        <h2 className="text-dark text-52 relative font-bold dark:text-white " >
-          Lost? Let’s Help You Find Home.
-        </h2>
-        <p className="text-lg text-dark/50 dark:text-white/50 font-normal w-full mx-auto">
-          Looks like you’ve hit a dead end — but don’t worry, we’ll help you get back on track
-        </p>
-      </section>
-    </>
+    <main className="min-h-screen flex flex-col items-center justify-center gap-6 px-5 py-20 text-center">
+      <Image
+        src="/images/404.png"
+        alt=""
+        width={420}
+        height={386}
+        unoptimized
+        className="h-auto w-full max-w-[320px]"
+      />
+      <h1 className="font-display text-3xl md:text-5xl font-bold text-dark dark:text-white">
+        This page does not exist
+      </h1>
+      <p className="text-lg text-dark/60 dark:text-white/60">
+        The link may be out of date, or the page has moved.
+      </p>
+      <Link
+        href="/"
+        className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-8 font-semibold text-white transition-colors duration-200 ease-out hover:bg-dark"
+      >
+        Go to the homepage
+      </Link>
+    </main>
   );
 };
 

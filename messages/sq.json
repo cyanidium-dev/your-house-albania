@@ -206,7 +206,8 @@
       "thumbnailAlt": "Miniaturë {n}",
       "goToImage": "Shko te foto {n}",
       "hideThumbnails": "Fsheh miniaturat",
-      "showThumbnails": "Shfaq miniaturat"
+      "showThumbnails": "Shfaq miniaturat",
+      "approximateLocation": "Vendndodhje e përafërt — shenja tregon lagjen, jo ndërtesën e saktë."
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
@@ -242,6 +243,14 @@
     "entityCard": {
       "propertiesCountLabel": "{count, plural, one {pronë} other {prona}}"
     }
+  },
+  "NotFound": {
+    "badge": "Gabim 404",
+    "title": "Kjo faqe nuk ekziston",
+    "description": "Lidhja mund të jetë e vjetruar ose faqja është zhvendosur. Ja ku mund të ktheheni.",
+    "backHome": "Kthehu në faqen kryesore",
+    "browseListings": "Shiko pronat",
+    "readBlog": "Lexo blogun"
   },
   "Listing": {
     "properties": {
@@ -568,6 +577,21 @@
     "source": "Skedari burim",
     "empty": "Ende nuk ka kredite fotografish.",
     "breadcrumbHome": "Kryefaqja"
+  },
+  "AlbaniaPhotos": {
+    "tirana": "Tirana parë nga lart",
+    "durres": "Plazhi në Durrës",
+    "vlore": "Gjiri i Ujit të Ftohtë në Vlorë",
+    "sarande": "Gjiri dhe qyteti i Sarandës",
+    "shkoder": "Panorama e Shkodrës",
+    "shengjin": "Shëngjini parë nga ajri",
+    "himare": "Plazhi i Dhërmiut në bregdetin e Himarës",
+    "ksamil": "Gjiri dhe ishujt e Ksamilit",
+    "coast": "Plazhi i Gjipesë në Rivierën Shqiptare",
+    "apartments": "Pallate të reja banimi në Tiranë",
+    "houses": "Shtëpi banimi në bregdet pranë Durrësit",
+    "villas": "Një shtëpi mbi det në Vuno, në Rivierën Shqiptare",
+    "offices": "Kulla zyrash në sheshin Skënderbej në Tiranë"
   },
   "Blog": {
     "tableOfContents": "Përmbajtja",

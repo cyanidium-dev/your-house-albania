@@ -38,7 +38,9 @@ export type SectionHandler = (input: {
    * The landing document hosting this section (ТЗ-16): its id for
    * self-exclusion and its own `topicTags` as the last-resort context for the
    * related-pages auto modes on pages with no linked zone (comparisons, hubs).
+   * `slug` additionally tells the hero which photograph fits a page that has
+   * no linked zone at all (`apartment-tirana`, `short-term-rent`, …).
    */
-  landingCtx?: { id?: string; topicTags?: string[] }
+  landingCtx?: { id?: string; slug?: string; topicTags?: string[] }
 }) => Promise<React.ReactNode | null> | React.ReactNode | null
 

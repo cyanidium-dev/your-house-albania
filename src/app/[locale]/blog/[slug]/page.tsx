@@ -21,6 +21,7 @@ import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
 import { BlogArticleContent } from "@/components/Blog/BlogArticleContent";
 import { BlogTableOfContents } from "@/components/Blog/BlogTableOfContents";
 import { BlogKeyFacts } from "@/components/Blog/BlogKeyFacts";
+import { AuthorAvatar } from "@/components/Blog/AuthorAvatar";
 import { BlogFaq } from "@/components/Blog/BlogFaq";
 import { BlogSources } from "@/components/Blog/BlogSources";
 import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
@@ -207,14 +208,10 @@ export default async function Post({ params }: Props) {
       )}
       <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 sm:mt-0 pt-6 shrink-0">
         <div className="flex items-center gap-4">
-          <Image
-            src={detail.authorImageUrl || "/images/placeholder.jpg"}
-            alt=""
-            className="bg-no-repeat bg-contain inline-block rounded-full !w-12 !h-12 object-cover"
-            width={48}
-            height={48}
-            quality={100}
-            unoptimized={detail.authorImageUrl?.startsWith("http") ?? true}
+          <AuthorAvatar
+            imageUrl={detail.authorImageUrl}
+            name={detail.authorName}
+            size={48}
           />
           <div>
             {/* Only a post with a blogAuthor reference has a page to link to.

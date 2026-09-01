@@ -48,12 +48,17 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
 
   return (
     <HeaderVisualState>
-      {({ sticky, isHomepage, isCatalog }) => {
+      {({ sticky, overHero, isCatalog }) => {
         // Airbnb-style: on catalog/listing routes the header condenses while scrolled.
         const shrink = sticky && isCatalog
         const logoSizeClass = shrink
           ? "md:h-12 md:w-[105px]"
           : "md:h-[68px] md:w-[150px]"
+        // Floating over the hero photograph, before the bar gets its own
+        // background. The CMS logo is dark artwork, so it has to be knocked out
+        // to white in BOTH themes here — `dark:` alone left it black-on-black
+        // over a photo in the light theme.
+        const logoOnPhoto = overHero && !sticky
         return (
         <HeaderMobileController>
           {({ open: navbarOpen, onClose, onToggle }) => (
@@ -71,15 +76,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={siteSettings.logoUrl.startsWith('http')}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
-                            />
-                            <Image
-                              src={siteSettings.logoUrl}
-                              alt={siteSettings?.siteName || 'logo'}
-                              width={150}
-                              height={68}
-                              unoptimized={siteSettings.logoUrl.startsWith('http')}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} dark:brightness-0 dark:invert ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
                             />
                           </>
                         ) : (
@@ -90,7 +87,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={true}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${isHomepage ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                             />
                             <Image
                               src={'/images/header/logo.svg'}
@@ -98,7 +95,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               width={150}
                               height={68}
                               unoptimized={true}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${isHomepage ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                             />
                           </>
                         )}
@@ -107,8 +104,8 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     <div className='flex items-center gap-1 sm:gap-4 min-w-0 shrink-0'>
                       <LanguageSwitcher />
                       <CurrencySwitcher />
-                      <HeaderThemeToggle isHomepage={isHomepage} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
-                      <HeaderFavoritesLink locale={locale} isHomepage={isHomepage} sticky={sticky} />
+                      <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
+                      <HeaderFavoritesLink locale={locale} overHero={overHero} sticky={sticky} />
                       <div className="hidden md:block">
                         <Link
                           href={catalogPath(locale)}
@@ -127,7 +124,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       <div>
                         <HeaderBurgerButton
                           onClick={onToggle}
-                          isHomepage={isHomepage}
+                          overHero={overHero}
                           sticky={sticky}
                           menuLabel={t.menu}
                           ariaLabel={t.toggleMobileMenu}

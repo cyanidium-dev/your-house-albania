@@ -47,9 +47,12 @@ export function BlogTableOfContents({ content }: Props) {
         </nav>
       </details>
 
+      {/* Desktop: a block at the head of the article, not a sticky rail. It
+          lives in the article column, and sticking a transparent panel there
+          left the body text scrolling straight through it. */}
       <nav
         aria-label={t("tableOfContents")}
-        className="hidden lg:block lg:sticky lg:top-24 border border-dark/10 dark:border-white/20 rounded-lg p-5"
+        className="hidden lg:block border border-dark/10 dark:border-white/20 rounded-lg p-5 mb-8"
       >
         <p className="text-dark dark:text-white font-medium mb-3">
           {t("tableOfContents")}

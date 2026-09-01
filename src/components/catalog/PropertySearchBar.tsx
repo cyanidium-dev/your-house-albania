@@ -39,28 +39,45 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
           "border border-white/40 shadow-lg shadow-dark/5 ring-1 ring-inset ring-white/30 dark:border-white/15 dark:ring-white/10"
         )}
       >
-        <div
-          className="flex min-w-0 flex-1 items-stretch gap-0.5"
-          role="group"
-          aria-label={t("dealType")}
-        >
-          {dealTypeValues.map((v) => (
-            <button
-              key={v}
-              type="button"
-              onClick={() => applyCompactDealTab(v)}
-              className={cn(
-                "flex min-w-0 flex-1 items-center justify-center rounded-full px-2 py-1 text-center text-sm font-medium leading-tight transition-colors sm:text-base",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
-                deal === v
-                  ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
-                  : "text-dark/70 hover:bg-white/40 dark:text-white/80 dark:hover:bg-white/[0.08]"
-              )}
-            >
-              <span className="min-w-0 truncate">{getDealLabel(v)}</span>
-            </button>
-          ))}
-        </div>
+        {/* Deal tabs only when there is a choice: with rentals hidden this row
+            was a single "Buy" pill that did nothing. The pill then becomes one
+            wide button that opens the filters. */}
+        {dealTypeValues.length > 1 ? (
+          <div
+            className="flex min-w-0 flex-1 items-stretch gap-0.5"
+            role="group"
+            aria-label={t("dealType")}
+          >
+            {dealTypeValues.map((v) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => applyCompactDealTab(v)}
+                className={cn(
+                  "flex min-w-0 flex-1 items-center justify-center rounded-full px-2 py-1 text-center text-sm font-medium leading-tight transition-colors sm:text-base",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
+                  deal === v
+                    ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
+                    : "text-dark/70 hover:bg-white/40 dark:text-white/80 dark:hover:bg-white/[0.08]"
+                )}
+              >
+                <span className="min-w-0 truncate">{getDealLabel(v)}</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setMobileFilterModalOpen((o) => !o)}
+            className={cn(
+              "flex min-w-0 flex-1 items-center rounded-full px-3 text-left text-sm font-medium leading-tight transition-colors sm:text-base",
+              "text-dark/70 hover:bg-white/40 dark:text-white/80 dark:hover:bg-white/[0.08]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset"
+            )}
+          >
+            <span className="min-w-0 truncate">{t("filtersShort")}</span>
+          </button>
+        )}
         <button
           type="button"
           onClick={() => setMobileFilterModalOpen((o) => !o)}

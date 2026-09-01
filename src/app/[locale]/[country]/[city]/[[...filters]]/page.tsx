@@ -286,6 +286,9 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}
+        citySlug={geo.listingCitySlug}
+        propertyType={typeSlug || undefined}
+        deal={dealType || undefined}
         breadcrumb={
           <CatalogBreadcrumb
             locale={locale}

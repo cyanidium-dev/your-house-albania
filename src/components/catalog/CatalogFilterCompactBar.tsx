@@ -24,10 +24,18 @@ export function CatalogFilterCompactBar({
     f.locationOptions.find((o) => o.value === f.city)?.label ?? t("anyLocation");
   const typeLabel =
     f.propertyTypeOptions.find((o) => o.value === f.type)?.label ?? t("anyType");
+  // Mirrors the expanded form: with a single deal type the segment would read
+  // "Deal type" forever, so it is left out rather than shown as dead text.
   const dealLabel =
-    f.deal && f.deal !== "any" ? f.getDealLabel(f.deal) : t("dealType");
+    f.deal && f.deal !== "any"
+      ? f.getDealLabel(f.deal)
+      : f.showDealFilter
+        ? t("dealType")
+        : null;
 
-  const segments = [locationLabel, typeLabel, dealLabel, f.priceDisplay];
+  const segments = [locationLabel, typeLabel, dealLabel, f.priceDisplay].filter(
+    (seg): seg is string => Boolean(seg),
+  );
 
   return (
     <div

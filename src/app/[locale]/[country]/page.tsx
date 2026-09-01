@@ -207,6 +207,9 @@ export default async function TopLevelSingleFilterPage({ params, searchParams }:
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}
+        citySlug={resolved.kind === "city" ? resolved.slug : undefined}
+        propertyType={resolved.kind === "type" ? resolved.slug : undefined}
+        deal={resolved.kind === "deal" ? resolved.slug : undefined}
         breadcrumb={
           <CatalogBreadcrumb
             locale={locale}

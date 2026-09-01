@@ -206,7 +206,8 @@
       "thumbnailAlt": "Thumbnail {n}",
       "goToImage": "Go to image {n}",
       "hideThumbnails": "Hide thumbnails",
-      "showThumbnails": "Show thumbnails"
+      "showThumbnails": "Show thumbnails",
+      "approximateLocation": "Approximate location — the pin marks the district, not the exact building."
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
@@ -242,6 +243,14 @@
     "entityCard": {
       "propertiesCountLabel": "{count, plural, one {property} other {properties}}"
     }
+  },
+  "NotFound": {
+    "badge": "Error 404",
+    "title": "This page does not exist",
+    "description": "The link may be out of date, or the page has moved. Here is the way back.",
+    "backHome": "Go to the homepage",
+    "browseListings": "Browse listings",
+    "readBlog": "Read the blog"
   },
   "Listing": {
     "properties": {
@@ -568,6 +577,21 @@
     "source": "Source file",
     "empty": "No image credits have been recorded yet.",
     "breadcrumbHome": "Home"
+  },
+  "AlbaniaPhotos": {
+    "tirana": "Tirana seen from above",
+    "durres": "The beach at Durrës",
+    "vlore": "The cove at Uji i Ftohtë in Vlorë",
+    "sarande": "The bay and town of Sarandë",
+    "shkoder": "Panorama of Shkodër",
+    "shengjin": "Shëngjin seen from the air",
+    "himare": "The beach at Dhërmi on the Himarë coast",
+    "ksamil": "The bay and islands at Ksamil",
+    "coast": "Gjipe beach on the Albanian Riviera",
+    "apartments": "New apartment buildings in Tirana",
+    "houses": "Residential houses on the coast near Durrës",
+    "villas": "A house above the sea at Vuno on the Albanian Riviera",
+    "offices": "Office towers on Skanderbeg Square in Tirana"
   },
   "Blog": {
     "tableOfContents": "Contents",

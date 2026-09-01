@@ -96,6 +96,8 @@ export async function NonGeoDealListingPage({
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}
+        propertyType={propertyTypeSegment || undefined}
+        deal={dealRouteSegment}
         breadcrumb={
           <CatalogBreadcrumb
             locale={locale}

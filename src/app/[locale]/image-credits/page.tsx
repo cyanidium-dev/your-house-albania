@@ -11,6 +11,7 @@ import {
 import { buildFlatCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcrumbs";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { ALBANIA_PHOTO_LIST } from "@/lib/media/albaniaPhotos";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -40,7 +41,45 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ImageCreditsPage({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations("ImageCredits");
-  const credits = await fetchImageCredits();
+  // Two sources, one page. The CMS holds the credits for uploaded photography;
+  // the hero fallbacks ship with the frontend and would otherwise be the only
+  // pictures on the site with nowhere to carry their attribution.
+  const cmsCredits = await fetchImageCredits();
+  // Several photographs are both: uploaded for a city card and shipped as a
+  // hero fallback. One credit per photograph, keyed on the source file, so the
+  // page does not list the same Commons image twice.
+  // Compared decoded: the CMS writes `File:Vuno_2012_(12).jpg` where the
+  // frontend registry writes `%2812%29`, and those are the same file.
+  const sourceKey = (url: string | undefined): string => {
+    if (!url) return "";
+    try {
+      return decodeURIComponent(url.trim()).toLowerCase();
+    } catch {
+      return url.trim().toLowerCase();
+    }
+  };
+  const seen = new Set<string>();
+  const credits = [
+    ...cmsCredits,
+    ...ALBANIA_PHOTO_LIST.map((photo) => ({
+      _id: `frontend-${photo.key}`,
+      title: photo.title,
+      author: photo.author,
+      licence: photo.licence,
+      licenceUrl: photo.licenceUrl,
+      sourceUrl: photo.sourceUrl,
+      isStandIn: false,
+      imageUrl: photo.src,
+    })),
+  ].filter((credit) => {
+    const key = sourceKey(credit.sourceUrl);
+    // Credits with no source (rare, older rows) can only be deduplicated by id,
+    // which is already unique, so let them through.
+    if (!key) return true;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 
   const items = buildFlatCrumbs({
     locale,

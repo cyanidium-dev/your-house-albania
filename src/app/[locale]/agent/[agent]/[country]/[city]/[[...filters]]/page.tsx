@@ -182,6 +182,9 @@ export default async function AgentCityCatalogPage({ params, searchParams }: Pro
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}
         agentName={resolved.agentDoc.name}
+        citySlug={resolved.citySlug}
+        propertyType={resolved.propertyType || undefined}
+        deal={resolved.dealType || undefined}
         breadcrumb={
           <CatalogBreadcrumb
             locale={locale}

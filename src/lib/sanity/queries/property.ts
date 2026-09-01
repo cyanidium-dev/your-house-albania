@@ -63,6 +63,7 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     },
     coordinatesLat,
     coordinatesLng,
+    locationPrecision,
     description,
     // Intake creates amenities on sight, flagged: they are attached to the
     // listing immediately but must not render until someone approves them.
@@ -199,6 +200,7 @@ export async function fetchSimilarPropertyCandidates(
     investment,
     coordinatesLat,
     coordinatesLng,
+    locationPrecision,
     "city": city-> {
       _id,
       title,

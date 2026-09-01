@@ -39,3 +39,29 @@ describe('resolveCta', () => {
     expect(resolveCta(42 as unknown, { href: '/x' } as unknown, 'en')).toBeNull()
   })
 })
+
+/**
+ * CMS copy is full of links pasted from the live site, so a Russian article
+ * carries `/en/blog/...`. Prefixing that with the reader's locale produced
+ * `/ru/en/blog/...` — a 404 on every locale but English.
+ */
+describe('resolveLocaleHref (foreign locale prefixes)', () => {
+  it('replaces a foreign locale prefix instead of stacking another one', () => {
+    expect(resolveLocaleHref('/en/blog/buying-apartment-durres-complete-guide', 'ru')).toBe(
+      '/ru/blog/buying-apartment-durres-complete-guide',
+    )
+    expect(resolveLocaleHref('/sq/albania/tirana/districts/blloku', 'it')).toBe(
+      '/it/albania/tirana/districts/blloku',
+    )
+  })
+  it('maps another locale root to this one', () => {
+    expect(resolveLocaleHref('/en', 'pl')).toBe('/pl')
+  })
+  it('does not mistake an ordinary path segment for a locale', () => {
+    expect(resolveLocaleHref('/investment/sale', 'uk')).toBe('/uk/investment/sale')
+    expect(resolveLocaleHref('/entrance', 'ru')).toBe('/ru/entrance')
+  })
+  it('honours an explicit locale list', () => {
+    expect(resolveLocaleHref('/en/contacts', 'ru', ['ru'])).toBe('/ru/en/contacts')
+  })
+})

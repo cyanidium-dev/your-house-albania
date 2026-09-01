@@ -206,7 +206,8 @@
       "thumbnailAlt": "Miniatura {n}",
       "goToImage": "Vai all'immagine {n}",
       "hideThumbnails": "Nascondi miniature",
-      "showThumbnails": "Mostra miniature"
+      "showThumbnails": "Mostra miniature",
+      "approximateLocation": "Posizione approssimativa: il segnaposto indica il quartiere, non l’edificio esatto."
     },
     "propertyCard": {
       "bedrooms": "Camere",
@@ -242,6 +243,14 @@
     "entityCard": {
       "propertiesCountLabel": "{count, plural, one {immobile} other {immobili}}"
     }
+  },
+  "NotFound": {
+    "badge": "Errore 404",
+    "title": "Questa pagina non esiste",
+    "description": "Il link potrebbe essere obsoleto o la pagina è stata spostata. Ecco come tornare indietro.",
+    "backHome": "Vai alla home",
+    "browseListings": "Vedi gli immobili",
+    "readBlog": "Leggi il blog"
   },
   "Listing": {
     "properties": {
@@ -568,6 +577,21 @@
     "source": "File originale",
     "empty": "Nessun credito fotografico registrato.",
     "breadcrumbHome": "Home"
+  },
+  "AlbaniaPhotos": {
+    "tirana": "Tirana vista dall'alto",
+    "durres": "La spiaggia di Durazzo",
+    "vlore": "La baia di Uji i Ftohtë a Valona",
+    "sarande": "La baia e la città di Saranda",
+    "shkoder": "Panorama di Scutari",
+    "shengjin": "Shëngjin visto dall'alto",
+    "himare": "La spiaggia di Dhërmi sulla costa di Himara",
+    "ksamil": "La baia e le isole di Ksamil",
+    "coast": "La spiaggia di Gjipe sulla Riviera albanese",
+    "apartments": "Nuovi edifici residenziali a Tirana",
+    "houses": "Case residenziali sulla costa vicino a Durazzo",
+    "villas": "Una casa sul mare a Vuno, sulla Riviera albanese",
+    "offices": "Torri per uffici in piazza Skanderbeg a Tirana"
   },
   "Blog": {
     "tableOfContents": "Indice",

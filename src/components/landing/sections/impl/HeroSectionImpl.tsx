@@ -5,6 +5,8 @@ import { fetchCatalogFilterOptions, fetchSiteSettings } from '@/lib/sanity/clien
 import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'
 import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveCta } from '@/lib/routes/resolveLocaleHref'
+import { heroPhotoFor } from '@/lib/media/albaniaPhotos'
+import { PhotoHeroFlag } from '@/components/shared/PhotoHeroFlag'
 
 export type HeroData = {
   shortLine?: string;
@@ -19,17 +21,35 @@ export type HeroData = {
   backgroundImageUrl?: string;
   backgroundImageAlt?: string;
   enabled?: boolean;
+  /**
+   * What the page is about, so a landing with no background in the CMS still
+   * gets a photograph of the right place. See `heroPhotoFor`.
+   */
+  photoContext?: {
+    citySlug?: string | null;
+    propertyType?: string | null;
+    deal?: string | null;
+    slug?: string | null;
+  };
 } | null;
 
 const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.ReactNode }> = async ({ locale, heroData, breadcrumb }) => {
   if (heroData?.enabled === false) return null
 
   const t = await getTranslations('Home.hero')
+  const tPhoto = await getTranslations('AlbaniaPhotos')
   const shortLine = heroData?.shortLine ?? t('location')
   const title = heroData?.title ?? t('title')
   const subtitle = heroData?.subtitle
-  const bgImageUrl = heroData?.backgroundImageUrl
-  const bgImageAlt = heroData?.backgroundImageAlt || title || 'Hero background'
+  // No CMS background is the common case — most landings have never had one,
+  // and the theme's stock banner (a rendered villa in a desert) is not a
+  // picture of Albania. Fall back to a real photograph of the place instead.
+  const fallbackPhoto = heroPhotoFor(heroData?.photoContext ?? {})
+  const bgImageUrl = heroData?.backgroundImageUrl || fallbackPhoto.src
+  const bgImageAlt =
+    heroData?.backgroundImageUrl
+      ? heroData.backgroundImageAlt || title || 'Hero background'
+      : tPhoto(fallbackPhoto.key)
   const searchEnabled = heroData?.searchEnabled === true
   const primaryCta = resolveCta(heroData?.ctaLabel, heroData?.ctaHref, locale)
   const secondaryCta = resolveCta(heroData?.secondaryCtaLabel, heroData?.secondaryCtaHref, locale)
@@ -58,68 +78,40 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
   return (
     <section className='relative z-10 !py-0'>
       <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 relative min-h-screen flex'>
-        {bgImageUrl ? (
-          <>
-            <div className="absolute inset-0 z-0">
-              <Image
-                src={bgImageUrl}
-                alt={bgImageAlt}
-                fill
-                className="object-cover object-center"
-                priority={false}
-                unoptimized={bgImageUrl.startsWith('http')}
-              />
-            </div>
-            {/* Scrim. A photo can be any brightness, so the text needs its own
-                ground rather than relying on the image being dark enough:
-                a flat wash for the whole frame, then a stronger gradient where
-                the copy sits — vertical on mobile, from the left on desktop. */}
-            <div className="pointer-events-none absolute inset-0 z-10 bg-dark/45" aria-hidden />
-            <div
-              className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-dark/80 via-dark/30 to-transparent md:bg-gradient-to-r md:from-dark/85 md:via-dark/45 md:to-transparent"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-t from-white/90 to-transparent dark:from-black/90"
-              aria-hidden
-            />
-          </>
-        ) : (
-          <>
-            <div className='hidden md:block absolute bottom-0 -right-68 z-0'>
-              <Image
-                src='/images/hero/heroBanner.png'
-                alt='Hero'
-                width={1082}
-                height={1016}
-                priority={false}
-                unoptimized
-                className="select-none"
-              />
-            </div>
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-black dark:via-black/50"
-              aria-hidden
-            />
-          </>
-        )}
+        <PhotoHeroFlag />
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={bgImageUrl}
+            alt={bgImageAlt}
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            priority={false}
+            unoptimized={bgImageUrl.startsWith('http')}
+          />
+        </div>
+        {/* Scrim. A photo can be any brightness, so the text needs its own
+            ground rather than relying on the image being dark enough:
+            a flat wash for the whole frame, then a stronger gradient where
+            the copy sits — vertical on mobile, from the left on desktop. */}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-dark/45" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-dark/80 via-dark/30 to-transparent md:bg-gradient-to-r md:from-dark/85 md:via-dark/45 md:to-transparent"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-t from-white/90 to-transparent dark:from-black/90"
+          aria-hidden
+        />
         <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
           {breadcrumb ? (
-            <div
-              className={`relative z-20 text-left mb-6 ${
-                bgImageUrl ? '[&_*]:!text-white/85 [&_a:hover]:!text-white' : ''
-              }`}
-            >
+            <div className="relative z-20 text-left mb-6 [&_*]:!text-white/85 [&_a:hover]:!text-white">
               {breadcrumb}
             </div>
           ) : null}
-          {/* Over a photo the copy sits on the scrim, so it is white in both
-              themes. Without one it follows the theme as before. */}
-          <div
-            className={`relative text-center md:text-start z-20 ${
-              bgImageUrl ? 'text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]' : 'text-white dark:text-dark'
-            }`}
-          >
+          {/* The copy always sits on the scrim over a photo now, so it is white
+              in both themes. */}
+          <div className="relative text-center md:text-start z-20 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
             <p className='text-inherit text-sm md:text-base font-semibold uppercase tracking-[0.14em] opacity-90'>
               {shortLine}
             </p>

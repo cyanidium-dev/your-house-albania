@@ -89,6 +89,7 @@ export function CatalogFilterForm({
     deal,
     setDeal,
     dealTypeOptions,
+    showDealFilter,
     priceDisplay,
     currentRange,
     priceValues,
@@ -166,14 +167,16 @@ export function CatalogFilterForm({
             anyLabel={t("anyType")}
           />
 
-          {/* Deal type */}
-          <FilterSelect
-            label={t("dealType")}
-            value={deal || "any"}
-            onValueChange={setDeal}
-            options={dealTypeOptions}
-            anyLabel={t("any")}
-          />
+          {/* Deal type — only when there is more than one to choose from. */}
+          {showDealFilter && (
+            <FilterSelect
+              label={t("dealType")}
+              value={deal || "any"}
+              onValueChange={setDeal}
+              options={dealTypeOptions}
+              anyLabel={t("any")}
+            />
+          )}
 
           {/* Price range */}
           <RangeField

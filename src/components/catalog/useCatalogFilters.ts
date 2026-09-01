@@ -335,9 +335,16 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
   }));
   // Direct-URL rentals: the hidden deal stays selectable as the CURRENT value so
   // the page keeps working, but is not offered once the user switches away.
-  if (deal && !dealTypeValues.includes(deal)) {
+  // `any` is the unset sentinel, not a deal — `FilterSelect` renders it from
+  // `anyLabel`, so adding it here only duplicated the row.
+  if (deal && deal !== "any" && !dealTypeValues.includes(deal)) {
     dealTypeOptions.push({ value: deal, label: getDealLabel(deal) });
   }
+  // Rentals are hidden from the public UI (`PUBLIC_DEAL_TYPES`), which leaves a
+  // deal control offering "Any" and "Buy" — a choice that is not a choice. Hide
+  // it entirely while sale is the only option; a direct rentals URL adds its own
+  // deal above and brings the control back so the visitor can switch away.
+  const showDealFilter = dealTypeOptions.length > 1;
   const amenityMultiOptions: FilterMultiOption[] = amenityOptions.map((o) => ({
     value: o.value,
     label: o.label,
@@ -385,6 +392,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     locationOptions,
     propertyTypeOptions,
     dealTypeOptions,
+    showDealFilter,
     amenityMultiOptions,
     applyCompactDealTab,
     handleSubmit,

@@ -7,13 +7,13 @@ import { useFavorites } from '@/hooks/useFavorites'
 
 type HeaderFavoritesLinkProps = {
   locale: string
-  isHomepage: boolean
+  overHero: boolean
   sticky: boolean
 }
 
 export default function HeaderFavoritesLink({
   locale,
-  isHomepage,
+  overHero,
   sticky,
 }: HeaderFavoritesLinkProps) {
   const { favorites } = useFavorites()
@@ -24,7 +24,7 @@ export default function HeaderFavoritesLink({
       href={`/${locale}/favorites`}
       aria-label={t('favoritesCount', { count: favorites.length })}
       data-favorites-target="true"
-      className={`relative flex items-center justify-center transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary p-0.5 md:p-0 ${isHomepage
+      className={`relative flex items-center justify-center transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary p-0.5 md:p-0 ${overHero
         ? sticky
           ? 'text-dark dark:text-white'
           : 'text-white'

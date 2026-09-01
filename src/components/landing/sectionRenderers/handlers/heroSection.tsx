@@ -5,7 +5,15 @@ import { urlFor } from '@/lib/sanity/imageUrl'
 import { heroTabsFromSection } from '../helpers'
 import type { SectionHandler } from './types'
 
-export const heroSectionHandler: SectionHandler = ({ locale, section, breadcrumb }) => {
+export const heroSectionHandler: SectionHandler = ({
+  locale,
+  section,
+  breadcrumb,
+  citySlug,
+  linkedZone,
+  propertiesDeal,
+  landingCtx,
+}) => {
   const bg = (section as { backgroundImage?: { asset?: { url?: string }; alt?: string } } | null)?.backgroundImage
   const backgroundImageUrl = bg ? urlFor(bg) : undefined
   const secondary = (section as { secondaryCta?: { href?: string; label?: unknown } }).secondaryCta
@@ -22,6 +30,14 @@ export const heroSectionHandler: SectionHandler = ({ locale, section, breadcrumb
     backgroundImageUrl,
     backgroundImageAlt: bg?.alt,
     enabled: (section as { enabled?: boolean }).enabled,
+    // Most landings carry no background in the CMS. Hand the hero everything
+    // the page knows about itself so its fallback photograph is of the right
+    // place rather than a generic one.
+    photoContext: {
+      citySlug: linkedZone?.citySlug ?? citySlug ?? null,
+      deal: propertiesDeal ?? null,
+      slug: landingCtx?.slug ?? landingCtx?.id ?? null,
+    },
   }
   return <HeroSection key={section._key ?? 'hero'} locale={locale} heroData={heroData} breadcrumb={breadcrumb} />
 }

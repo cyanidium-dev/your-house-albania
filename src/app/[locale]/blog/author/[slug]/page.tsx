@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import { AuthorAvatar } from "@/components/Blog/AuthorAvatar";
 import { getTranslations } from "next-intl/server";
 import { fetchBlogAuthorBySlug } from "@/lib/sanity/queries/blog";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
@@ -72,16 +72,12 @@ export default async function BlogAuthorPage({ params }: Props) {
 
       <div className="container max-w-8xl mx-auto px-4 md:px-5 2xl:px-0">
         <header className="flex items-center gap-5 mb-10">
-          {photoUrl && (
-            <Image
-              src={photoUrl}
-              alt={author.photo?.alt || author.name || ""}
-              width={96}
-              height={96}
-              className="rounded-full object-cover w-24 h-24"
-              unoptimized={photoUrl.startsWith("http")}
-            />
-          )}
+          <AuthorAvatar
+            imageUrl={photoUrl}
+            name={author.name}
+            alt={author.photo?.alt}
+            size={96}
+          />
           <div>
             <h1 className="text-dark dark:text-white text-40 font-semibold">{author.name}</h1>
             {role && <p className="text-dark/70 dark:text-white/70 mt-1">{role}</p>}

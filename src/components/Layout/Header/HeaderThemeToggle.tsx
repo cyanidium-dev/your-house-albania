@@ -4,14 +4,14 @@ import { Icon } from '@iconify/react'
 import { useTheme } from 'next-themes'
 
 type HeaderThemeToggleProps = {
-  isHomepage: boolean
+  overHero: boolean
   sticky: boolean
   lightModeLabel: string
   darkModeLabel: string
 }
 
 export default function HeaderThemeToggle({
-  isHomepage,
+  overHero,
   sticky,
   lightModeLabel,
   darkModeLabel,
@@ -28,7 +28,7 @@ export default function HeaderThemeToggle({
         icon={'solar:sun-bold'}
         width={24}
         height={24}
-        className={`dark:hidden block w-6 h-6 md:w-8 md:h-8 ${isHomepage
+        className={`dark:hidden block w-6 h-6 md:w-8 md:h-8 ${overHero
           ? sticky
             ? 'text-dark'
             : 'text-white'

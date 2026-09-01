@@ -195,7 +195,8 @@
       "thumbnailAlt": "Miniatura {n}",
       "goToImage": "Przejdź do zdjęcia {n}",
       "hideThumbnails": "Ukryj miniatury",
-      "showThumbnails": "Pokaż miniatury"
+      "showThumbnails": "Pokaż miniatury",
+      "approximateLocation": "Lokalizacja przybliżona — pinezka wskazuje dzielnicę, a nie konkretny budynek."
     },
     "propertyCard": {
       "bedrooms": "Sypialnie",
@@ -242,6 +243,14 @@
       "imageFullscreenView": "Pełnoekranny podgląd zdjęcia",
       "viewImageFullscreen": "Zobacz zdjęcie na pełnym ekranie"
     }
+  },
+  "NotFound": {
+    "badge": "Błąd 404",
+    "title": "Taka strona nie istnieje",
+    "description": "Link może być nieaktualny albo strona została przeniesiona. Oto droga powrotna.",
+    "backHome": "Strona główna",
+    "browseListings": "Zobacz nieruchomości",
+    "readBlog": "Czytaj blog"
   },
   "Listing": {
     "properties": {
@@ -568,6 +577,21 @@
     "source": "Plik źródłowy",
     "empty": "Nie zapisano jeszcze żadnych źródeł zdjęć.",
     "breadcrumbHome": "Strona główna"
+  },
+  "AlbaniaPhotos": {
+    "tirana": "Tirana widziana z góry",
+    "durres": "Plaża w Durrës",
+    "vlore": "Zatoka Uji i Ftohtë we Wlorze",
+    "sarande": "Zatoka i miasto Sarandë",
+    "shkoder": "Panorama Szkodry",
+    "shengjin": "Shëngjin z lotu ptaka",
+    "himare": "Plaża w Dhërmi na wybrzeżu Himary",
+    "ksamil": "Zatoka i wyspy Ksamilu",
+    "coast": "Plaża Gjipe na Riwierze Albańskiej",
+    "apartments": "Nowe budynki mieszkalne w Tiranie",
+    "houses": "Domy mieszkalne na wybrzeżu pod Durrës",
+    "villas": "Dom nad morzem w Vuno na Riwierze Albańskiej",
+    "offices": "Wieżowce biurowe przy placu Skanderbega w Tiranie"
   },
   "Blog": {
     "tableOfContents": "Spis treści",

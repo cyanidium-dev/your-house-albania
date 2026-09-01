@@ -156,6 +156,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
     coordinates?: { lat?: number; lng?: number } | null;
     coordinatesLat?: number | null;
     coordinatesLng?: number | null;
+    locationPrecision?: string | null;
   };
   const resolvedCoordinates = (() => {
     const coord = sanityWithCoords?.coordinates;
@@ -169,6 +170,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
     }
     return null;
   })();
+  // Most listings arrived without a street address, so their pin is the centre
+  // of the district rather than the building. Say so under the map instead of
+  // letting the marker imply a precision the data does not have.
+  const locationIsApproximate = sanityWithCoords?.locationPrecision === 'approximate';
   const districtSlug = (sanityProperty as { district?: { slug?: string } })?.district?.slug;
 
   const rawProperty = sanityProperty as {
@@ -323,6 +328,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             coordinates={resolvedCoordinates}
                             mapHeightClassName="h-[210px]"
                           />
+                          {resolvedCoordinates && locationIsApproximate ? (
+                            <p className="mt-2 text-xs text-dark/50 dark:text-white/50">
+                              {tPropertyDetail('approximateLocation')}
+                            </p>
+                          ) : null}
                         </div>
                     </div>
                 </div>

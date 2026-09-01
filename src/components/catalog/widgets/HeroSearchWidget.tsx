@@ -137,8 +137,9 @@ export function HeroSearchWidget({
         "p-3 sm:p-4"
       )}
     >
-      {/* Tabs */}
-      {tabs.length > 0 ? (
+      {/* Tabs — only when there is a choice. With rentals hidden this was a
+          lone "Buy" pill; the deal it selects is still applied to the search. */}
+      {tabs.length > 1 ? (
       <div className="flex flex-wrap items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10 min-w-0">
         {tabs.map((tab) => {
           const active = tab.key === deal;
