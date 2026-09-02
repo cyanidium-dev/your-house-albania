@@ -6,6 +6,7 @@ import { getCatalogSnapshot } from '@/lib/ai/catalogSnapshot'
 import { buildSystemBlocks } from '@/lib/ai/prompt'
 import { AI_TOOLS, runShowProperties } from '@/lib/ai/tools'
 import { checkRateLimit, clientKeyFromHeaders } from '@/lib/ai/rateLimit'
+import { addUsage, EMPTY_USAGE, estimateUsd, isBudgetExhausted, recordUsage } from '@/lib/ai/budget'
 import { encodeAiEvent, type AiChatMessage, type AiStreamEvent } from '@/lib/ai/events'
 import {
   AI_MAX_MESSAGE_CHARS,
@@ -90,6 +91,11 @@ export async function POST(req: NextRequest) {
     return errorStream({ type: 'error', code: 'too_many_turns' }, 400)
   }
 
+  // Checked after the cheap validations and before any billable call.
+  if (await isBudgetExhausted()) {
+    return errorStream({ type: 'error', code: 'budget_exhausted' }, 503)
+  }
+
   const snapshot = await getCatalogSnapshot()
   const system = buildSystemBlocks(snapshot, locale)
   const client = createAnthropicClient()
@@ -105,6 +111,10 @@ export async function POST(req: NextRequest) {
       const send = (event: AiStreamEvent) => {
         controller.enqueue(encoder.encode(encodeAiEvent(event)))
       }
+
+      // Accumulated across hops and written once, so a two-hop answer costs one
+      // Sanity write rather than two.
+      let turnUsage = EMPTY_USAGE
 
       try {
         for (let hop = 0; hop <= AI_MAX_TOOL_HOPS; hop += 1) {
@@ -128,6 +138,12 @@ export async function POST(req: NextRequest) {
           // the proof that the catalog prefix is being reused rather than
           // re-sent — the difference between ~$0.001 and ~$0.01 a reply.
           const usage = message.usage
+          turnUsage = addUsage(turnUsage, {
+            inputTokens: usage.input_tokens,
+            outputTokens: usage.output_tokens,
+            cacheReadTokens: usage.cache_read_input_tokens ?? 0,
+            cacheWriteTokens: usage.cache_creation_input_tokens ?? 0,
+          })
           console.log('[ai] usage', {
             hop,
             input: usage.input_tokens,
@@ -190,6 +206,13 @@ export async function POST(req: NextRequest) {
         send({ type: 'error', code: 'failed' })
       } finally {
         controller.close()
+        // After the response is closed: the visitor waits for an answer, not
+        // for bookkeeping. Tokens already spent are recorded even when the turn
+        // ended in an error.
+        if (turnUsage !== EMPTY_USAGE) {
+          console.log('[ai] turn cost', { usd: estimateUsd(turnUsage).toFixed(4) })
+          void recordUsage(turnUsage)
+        }
       }
     },
   })

@@ -680,7 +680,8 @@
       "rate_limited": "Zbyt wiele zapytań. Spróbuj nieco później.",
       "too_long": "Wiadomość jest za długa — spróbuj krócej.",
       "too_many_turns": "Rozmowa zrobiła się długa. Zacznij nową, aby kontynuować.",
-      "failed": "Coś poszło nie tak. Spróbuj wysłać ponownie."
+      "failed": "Coś poszło nie tak. Spróbuj wysłać ponownie.",
+      "budget_exhausted": "Wyszukiwanie AI jest dziś wstrzymane z powodu dużego obciążenia. Pełny katalog działa jak zwykle."
     }
   }
 }

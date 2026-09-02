@@ -680,7 +680,8 @@
       "rate_limited": "Shumë kërkesa. Provoni pak më vonë.",
       "too_long": "Mesazhi është shumë i gjatë — provoni një më të shkurtër.",
       "too_many_turns": "Biseda u zgjat. Filloni një të re për të vazhduar.",
-      "failed": "Diçka shkoi keq. Provoni ta dërgoni sërish."
+      "failed": "Diçka shkoi keq. Provoni ta dërgoni sërish.",
+      "budget_exhausted": "Kërkimi me AI është pezulluar sot për shkak të ngarkesës së lartë. Katalogu i plotë është i hapur si zakonisht."
     }
   }
 }

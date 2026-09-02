@@ -680,7 +680,8 @@
       "rate_limited": "Too many requests. Please try again a little later.",
       "too_long": "That message is too long — try a shorter one.",
       "too_many_turns": "This conversation has got long. Start a new one to continue.",
-      "failed": "Something went wrong. Try sending it again."
+      "failed": "Something went wrong. Try sending it again.",
+      "budget_exhausted": "AI search is paused because of heavy load today. The full catalog is open as usual."
     }
   }
 }

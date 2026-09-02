@@ -24,6 +24,8 @@ export type AiErrorCode =
   | 'rate_limited'
   | 'too_long'
   | 'too_many_turns'
+  /** The month's spend ceiling is reached; the assistant is off until it resets. */
+  | 'budget_exhausted'
   | 'failed'
 
 export type AiStreamEvent =

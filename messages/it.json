@@ -680,7 +680,8 @@
       "rate_limited": "Troppe richieste. Riprovi tra poco.",
       "too_long": "Il messaggio è troppo lungo — ne provi uno più breve.",
       "too_many_turns": "La conversazione si è allungata. Ne inizi una nuova per continuare.",
-      "failed": "Qualcosa è andato storto. Provi a inviare di nuovo."
+      "failed": "Qualcosa è andato storto. Provi a inviare di nuovo.",
+      "budget_exhausted": "La ricerca AI è sospesa oggi per carico elevato. Il catalogo completo è aperto come sempre."
     }
   }
 }
