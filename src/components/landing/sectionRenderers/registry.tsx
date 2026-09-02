@@ -12,7 +12,8 @@ import { articlesSectionHandler } from './handlers/articlesSection'
 import { districtsComparisonSectionHandler } from './handlers/districtsComparisonSection'
 import { linkedGallerySectionHandler } from './handlers/linkedGallerySection'
 import { landingCollectionSectionHandler } from './handlers/landingCollectionSection'
-import { investorLogosSectionHandler } from './handlers/investorLogosSection'
+// Investor logos: off site-wide until there are real logos to show (2026-09).
+// import { investorLogosSectionHandler } from './handlers/investorLogosSection'
 import { marketingContentSectionHandler } from './handlers/marketingContentSection'
 import { ctaSectionHandler } from './handlers/ctaSection'
 import { priceTableSectionHandler } from './handlers/priceTableSection'
@@ -39,7 +40,12 @@ const registry: Record<string, SectionHandler> = {
   districtsComparisonSection: districtsComparisonSectionHandler,
   linkedGallerySection: linkedGallerySectionHandler,
   landingCollectionSection: landingCollectionSectionHandler,
-  investorLogosSection: investorLogosSectionHandler,
+  // No handler means the section renders nothing wherever the CMS still lists
+  // it — the agent documents carry no logo artwork, so the tiles fell back to
+  // generic house glyphs and read as filler. Restore this line (and the import)
+  // once real logos exist; the section itself is untouched and still honours
+  // its own `enabled` flag.
+  // investorLogosSection: investorLogosSectionHandler,
   marketingContentSection: marketingContentSectionHandler,
   ctaSection: ctaSectionHandler,
   priceTableSection: priceTableSectionHandler,
