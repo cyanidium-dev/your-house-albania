@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import HeaderClient from './HeaderClient'
+import { isAiSearchEnabled } from '@/lib/ai/config'
 import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
 import type { HeaderTranslations } from './HeaderClient'
 
@@ -49,6 +50,7 @@ export default async function Header({ siteSettings, locale, countrySlugs }: Hea
       siteSettings={siteSettings}
       countrySlugs={countrySlugs}
       translations={translations}
+      aiSearchEnabled={isAiSearchEnabled()}
     />
   )
 }

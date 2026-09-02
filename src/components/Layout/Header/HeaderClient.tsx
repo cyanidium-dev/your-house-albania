@@ -7,6 +7,7 @@ import { DRAWER_NAV_ITEMS } from '@/data/navConfig'
 import LanguageSwitcher from './LanguageSwitcher'
 import CurrencySwitcher from './CurrencySwitcher'
 import HeaderThemeToggle from './HeaderThemeToggle'
+import HeaderAiSearchLink from './HeaderAiSearchLink'
 import HeaderFavoritesLink from './HeaderFavoritesLink'
 import HeaderBurgerButton from './HeaderBurgerButton'
 import HeaderMobileDrawer from './HeaderMobileDrawer'
@@ -34,6 +35,8 @@ type HeaderClientProps = {
   siteSettings?: ResolvedSiteSettings
   countrySlugs: string[]
   translations: HeaderTranslations
+  /** Hides the assistant entry point when the API key is not configured. */
+  aiSearchEnabled?: boolean
 }
 
 const HeaderClient: React.FC<HeaderClientProps> = ({
@@ -41,6 +44,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
   siteSettings,
   countrySlugs,
   translations: t,
+  aiSearchEnabled = false,
 }) => {
   const [drawerCitiesOpen, setDrawerCitiesOpen] = useState(false)
   const [drawerRealtorsOpen, setDrawerRealtorsOpen] = useState(false)
@@ -105,6 +109,9 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       <LanguageSwitcher />
                       <CurrencySwitcher />
                       <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
+                      {aiSearchEnabled ? (
+                        <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
+                      ) : null}
                       <HeaderFavoritesLink locale={locale} overHero={overHero} sticky={sticky} />
                       <div className="hidden md:block">
                         <Link

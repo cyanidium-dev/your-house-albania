@@ -41,6 +41,6 @@ export type SectionHandler = (input: {
    * `slug` additionally tells the hero which photograph fits a page that has
    * no linked zone at all (`apartment-tirana`, `short-term-rent`, …).
    */
-  landingCtx?: { id?: string; slug?: string; topicTags?: string[] }
+  landingCtx?: { id?: string; slug?: string; pageType?: string; topicTags?: string[] }
 }) => Promise<React.ReactNode | null> | React.ReactNode | null
 

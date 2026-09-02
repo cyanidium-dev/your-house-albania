@@ -646,5 +646,41 @@
       "catalogTitle": "Katalogu i pronave në shitje në Shqipëri",
       "catalogDescription": "Të gjitha pronat në shitje në Shqipëri: apartamente, shtëpi, vila dhe tokë. Filtro sipas qytetit, çmimit dhe numrit të dhomave."
     }
+  },
+  "AiSearch": {
+    "examples": [
+      "Dua një apartament pranë detit deri në 100 mijë",
+      "Një apartament 2+1 në Durrës për ta dhënë me qira",
+      "Diçka në Sarandë me pamje nga deti"
+    ],
+    "inputFallbackPlaceholder": "Përshkruani çfarë kërkoni",
+    "inputLabel": "Përshkruani pronën që kërkoni",
+    "submit": "Kërko",
+    "heroHint": "Pyesni me fjalët tuaja — asistenti kërkon te pronat tona",
+    "headerLink": "Kërkim me AI",
+    "metaTitle": "Kërkim pronash me AI — DomLivo",
+    "metaDescription": "Përshkruani me fjalët tuaja çfarë kërkoni dhe asistenti gjen pronat e përshtatshme në Shqipëri.",
+    "title": "Kërkim me AI",
+    "subtitle": "Përshkruani çfarë kërkoni — asistenti zgjedh nga pronat tona dhe i shfaq këtu.",
+    "goToCatalog": "Shko te katalogu",
+    "intro": {
+      "title": "Çfarë kërkoni?",
+      "body": "Shkruani si t'i thoshit një agjenti: buxheti, qyteti, deti, dhe nëse është për të jetuar apo për ta dhënë me qira."
+    },
+    "status": {
+      "thinking": "Po mendoj…",
+      "searching": "Po shoh pronat…"
+    },
+    "seeAllInCatalog": "Shiko të gjitha në katalog",
+    "chatPlaceholder": "Pyesni çfarëdo për këto prona",
+    "disclaimer": "Asistenti mund të gabojë. Çmimet dhe disponueshmëria konfirmohen nga agjenti.",
+    "restart": "Fillo nga e para",
+    "errors": {
+      "unavailable": "Kërkimi me AI nuk është i disponueshëm tani. Katalogu i plotë është i hapur si zakonisht.",
+      "rate_limited": "Shumë kërkesa. Provoni pak më vonë.",
+      "too_long": "Mesazhi është shumë i gjatë — provoni një më të shkurtër.",
+      "too_many_turns": "Biseda u zgjat. Filloni një të re për të vazhduar.",
+      "failed": "Diçka shkoi keq. Provoni ta dërgoni sërish."
+    }
   }
 }

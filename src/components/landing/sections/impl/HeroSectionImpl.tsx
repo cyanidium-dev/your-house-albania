@@ -7,6 +7,8 @@ import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveCta } from '@/lib/routes/resolveLocaleHref'
 import { heroPhotoFor } from '@/lib/media/albaniaPhotos'
 import { PhotoHeroFlag } from '@/components/shared/PhotoHeroFlag'
+import AiSearchInput from '@/components/ai/AiSearchInput'
+import { isAiSearchEnabled } from '@/lib/ai/config'
 
 export type HeroData = {
   shortLine?: string;
@@ -18,6 +20,8 @@ export type HeroData = {
   secondaryCtaHref?: string;
   searchTabs?: Array<{ key?: string; label?: string }>;
   searchEnabled?: boolean;
+  /** Plain-language assistant field. Homepage only — see the hero section handler. */
+  aiSearchEnabled?: boolean;
   backgroundImageUrl?: string;
   backgroundImageAlt?: string;
   enabled?: boolean;
@@ -51,6 +55,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
       ? heroData.backgroundImageAlt || title || 'Hero background'
       : tPhoto(fallbackPhoto.key)
   const searchEnabled = heroData?.searchEnabled === true
+  const aiSearchVisible = heroData?.aiSearchEnabled === true && isAiSearchEnabled()
   const primaryCta = resolveCta(heroData?.ctaLabel, heroData?.ctaHref, locale)
   const secondaryCta = resolveCta(heroData?.secondaryCtaLabel, heroData?.secondaryCtaHref, locale)
   const cmsTabs = Array.isArray(heroData?.searchTabs)
@@ -141,6 +146,11 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                     {secondaryCta.label}
                   </Link>
                 ) : null}
+              </div>
+            ) : null}
+            {aiSearchVisible ? (
+              <div className="mt-8 flex justify-center md:justify-start">
+                <AiSearchInput locale={locale} />
               </div>
             ) : null}
             {searchEnabled ? (

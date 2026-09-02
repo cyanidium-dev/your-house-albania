@@ -101,7 +101,7 @@ export async function LandingRenderer({
       propertiesDeal,
       linkedZone,
       faqJsonLd,
-      landingCtx: { id: landing?._id, slug: landing?.slug, topicTags: landing?.topicTags },
+      landingCtx: { id: landing?._id, slug: landing?.slug, pageType: landing?.pageType, topicTags: landing?.topicTags },
     })
     if (node) nodes.push(node)
   }

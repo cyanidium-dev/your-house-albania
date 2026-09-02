@@ -646,5 +646,41 @@
       "catalogTitle": "Nieruchomości w Albanii na sprzedaż — pełny katalog",
       "catalogDescription": "Wszystkie nieruchomości na sprzedaż w Albanii: mieszkania, domy, wille i działki. Filtruj według miasta, ceny, metrażu i liczby pokoi."
     }
+  },
+  "AiSearch": {
+    "examples": [
+      "Chcę mieszkanie przy morzu do 100 tys.",
+      "Dwupokojowe w Durrës pod wynajem",
+      "Coś w Sarandzie z widokiem na morze"
+    ],
+    "inputFallbackPlaceholder": "Opisz, czego szukasz",
+    "inputLabel": "Opisz nieruchomość, której szukasz",
+    "submit": "Szukaj",
+    "heroHint": "Zapytaj własnymi słowami — asystent przeszuka nasze oferty",
+    "headerLink": "Wyszukiwanie AI",
+    "metaTitle": "Wyszukiwanie nieruchomości z AI — DomLivo",
+    "metaDescription": "Opisz własnymi słowami, czego szukasz, a asystent znajdzie pasujące oferty w Albanii.",
+    "title": "Wyszukiwanie AI",
+    "subtitle": "Opisz, czego szukasz — asystent wybierze z naszych ofert i pokaże je tutaj.",
+    "goToCatalog": "Przejdź do katalogu",
+    "intro": {
+      "title": "Czego szukasz?",
+      "body": "Napisz tak, jak powiedziałbyś agentowi: budżet, miasto, morze i czy do mieszkania, czy pod wynajem."
+    },
+    "status": {
+      "thinking": "Myślę…",
+      "searching": "Przeglądam oferty…"
+    },
+    "seeAllInCatalog": "Zobacz wszystkie w katalogu",
+    "chatPlaceholder": "Zapytaj o cokolwiek dotyczące tych ofert",
+    "disclaimer": "Asystent może się mylić. Ceny i dostępność potwierdza agent.",
+    "restart": "Zacznij od nowa",
+    "errors": {
+      "unavailable": "Wyszukiwanie AI jest chwilowo niedostępne. Pełny katalog działa jak zwykle.",
+      "rate_limited": "Zbyt wiele zapytań. Spróbuj nieco później.",
+      "too_long": "Wiadomość jest za długa — spróbuj krócej.",
+      "too_many_turns": "Rozmowa zrobiła się długa. Zacznij nową, aby kontynuować.",
+      "failed": "Coś poszło nie tak. Spróbuj wysłać ponownie."
+    }
   }
 }

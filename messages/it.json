@@ -646,5 +646,41 @@
       "catalogTitle": "Immobili in vendita in Albania — catalogo completo",
       "catalogDescription": "Tutti gli immobili in vendita in Albania: appartamenti, case, ville e terreni. Filtra per città, prezzo, superficie e numero di camere."
     }
+  },
+  "AiSearch": {
+    "examples": [
+      "Voglio un appartamento vicino al mare fino a 100k",
+      "Un bilocale a Durazzo da mettere a reddito",
+      "Qualcosa a Saranda con vista mare"
+    ],
+    "inputFallbackPlaceholder": "Descriva cosa sta cercando",
+    "inputLabel": "Descriva l'immobile che sta cercando",
+    "submit": "Cerca",
+    "heroHint": "Chieda con parole sue — l'assistente cerca tra i nostri immobili",
+    "headerLink": "Ricerca AI",
+    "metaTitle": "Ricerca immobili con AI — DomLivo",
+    "metaDescription": "Descriva con parole sue cosa cerca e l'assistente trova gli immobili adatti in Albania.",
+    "title": "Ricerca AI",
+    "subtitle": "Descriva cosa cerca — l'assistente sceglie tra i nostri immobili e li mostra qui.",
+    "goToCatalog": "Vai al catalogo",
+    "intro": {
+      "title": "Cosa sta cercando?",
+      "body": "Scriva come lo direbbe a un agente: budget, città, mare, e se è per viverci o per affittarlo."
+    },
+    "status": {
+      "thinking": "Sto pensando…",
+      "searching": "Sto guardando gli immobili…"
+    },
+    "seeAllInCatalog": "Vedi tutti nel catalogo",
+    "chatPlaceholder": "Chieda qualsiasi cosa su questi immobili",
+    "disclaimer": "L'assistente può sbagliare. Prezzi e disponibilità sono confermati da un agente.",
+    "restart": "Ricomincia",
+    "errors": {
+      "unavailable": "La ricerca AI non è disponibile al momento. Il catalogo completo è aperto come sempre.",
+      "rate_limited": "Troppe richieste. Riprovi tra poco.",
+      "too_long": "Il messaggio è troppo lungo — ne provi uno più breve.",
+      "too_many_turns": "La conversazione si è allungata. Ne inizi una nuova per continuare.",
+      "failed": "Qualcosa è andato storto. Provi a inviare di nuovo."
+    }
   }
 }

@@ -30,6 +30,9 @@ export const heroSectionHandler: SectionHandler = ({
     backgroundImageUrl,
     backgroundImageAlt: bg?.alt,
     enabled: (section as { enabled?: boolean }).enabled,
+    // The plain-language assistant field belongs on the homepage only: it is
+    // the site-wide entry point, not a per-landing search box.
+    aiSearchEnabled: landingCtx?.pageType === 'home',
     // Most landings carry no background in the CMS. Hand the hero everything
     // the page knows about itself so its fallback photograph is of the right
     // place rather than a generic one.

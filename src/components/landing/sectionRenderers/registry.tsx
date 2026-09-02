@@ -67,7 +67,7 @@ export async function renderLandingSection(input: {
   /** Shared per-render marker for the single-FAQPage-per-page rule (see handler types). */
   faqJsonLd?: { emitted: boolean }
   /** Host landing context for the related-pages auto modes (see handler types). */
-  landingCtx?: { id?: string; slug?: string; topicTags?: string[] }
+  landingCtx?: { id?: string; slug?: string; pageType?: string; topicTags?: string[] }
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null

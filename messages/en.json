@@ -646,5 +646,41 @@
       "catalogTitle": "Property for Sale in Albania — Full Catalogue",
       "catalogDescription": "Browse every property for sale in Albania: apartments, houses, villas and land. Filter by city, price, area and number of bedrooms."
     }
+  },
+  "AiSearch": {
+    "examples": [
+      "I want an apartment by the sea for under 100k",
+      "A two-bedroom in Durrës to rent out",
+      "Something in Sarandë with a sea view"
+    ],
+    "inputFallbackPlaceholder": "Describe what you are looking for",
+    "inputLabel": "Describe the property you are looking for",
+    "submit": "Find",
+    "heroHint": "Ask in your own words — the assistant searches our listings",
+    "headerLink": "AI search",
+    "metaTitle": "AI property search — DomLivo",
+    "metaDescription": "Describe what you want in your own words and the assistant finds matching listings in Albania.",
+    "title": "AI search",
+    "subtitle": "Describe what you are looking for — the assistant picks from our listings and shows them right here.",
+    "goToCatalog": "Go to the catalog",
+    "intro": {
+      "title": "What are you looking for?",
+      "body": "Write it the way you would tell an agent: budget, city, sea, and whether it is to live in or to rent out."
+    },
+    "status": {
+      "thinking": "Thinking…",
+      "searching": "Looking through the listings…"
+    },
+    "seeAllInCatalog": "See all in the catalog",
+    "chatPlaceholder": "Ask anything about these listings",
+    "disclaimer": "The assistant can make mistakes. Prices and availability are confirmed by an agent.",
+    "restart": "Start over",
+    "errors": {
+      "unavailable": "AI search is unavailable right now. The full catalog is open as usual.",
+      "rate_limited": "Too many requests. Please try again a little later.",
+      "too_long": "That message is too long — try a shorter one.",
+      "too_many_turns": "This conversation has got long. Start a new one to continue.",
+      "failed": "Something went wrong. Try sending it again."
+    }
   }
 }

@@ -59,6 +59,7 @@ export const FILTER_ROUTE_RESERVED_SEGMENTS = new Set([
   "guides",
   "districts",
   "how-to-publish",
+  "ai-search",
   "appartment",
   "office-spaces",
   "residential-homes",
