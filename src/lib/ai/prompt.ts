@@ -112,7 +112,14 @@ export function buildSystemBlocks(
     {
       type: 'text',
       text: `${facetsBlock(snapshot)}\n\n${snapshot.lines.join('\n')}`,
-      cache_control: { type: 'ephemeral', ttl: '1h' },
+      // Five minutes, not an hour. A cache write costs 1.25x base input at 5m
+      // and 2x at 1h, and the longer window only pays for itself when a second
+      // visitor arrives before it expires. At this traffic (~500 dialogues a
+      // month, well under one an hour) almost every dialogue is alone in its
+      // window, so the hour buys nothing and makes every write 60% dearer.
+      // Replies inside one dialogue are seconds apart and stay inside 5m.
+      // Flip back to '1h' once traffic is reliably several dialogues an hour.
+      cache_control: { type: 'ephemeral', ttl: '5m' },
     },
     { type: 'text', text: `Reply language: ${languageName(locale)}.` },
   ]
