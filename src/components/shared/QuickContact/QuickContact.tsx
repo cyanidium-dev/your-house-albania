@@ -116,9 +116,17 @@ export function QuickContact({ locale, channels }: Props) {
   return (
     <div
       ref={wrapRef}
-      className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3 print:hidden"
+      /**
+       * The collapsed actions keep their layout box — only scale and opacity
+       * change — so this wrapper stays roughly 173x356 even with nothing
+       * visible in it. With pointer events on, that is an invisible tap-blocker
+       * over the whole lower-right of every page, and on a phone it swallowed
+       * taps meant for the page underneath. Events belong to the parts that are
+       * actually visible, so the wrappers opt out and each control opts back in.
+       */
+      className="pointer-events-none fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3 print:hidden"
     >
-      <div className="flex flex-col items-end gap-3">
+      <div className="pointer-events-none flex flex-col items-end gap-3">
         {actions.map((a, i) => {
           const isExternal = a.href.startsWith('http')
           // Items closest to the trigger appear first.
@@ -163,7 +171,7 @@ export function QuickContact({ locale, channels }: Props) {
 
       {formOpen ? (
         <div
-          className="w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-black/10 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-dark"
+          className="pointer-events-auto w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-black/10 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-dark"
           role="dialog"
           aria-label={t('formHeading')}
         >
@@ -184,7 +192,7 @@ export function QuickContact({ locale, channels }: Props) {
         onClick={() => (open ? close() : setOpen(true))}
         aria-expanded={open}
         aria-label={open ? t('close') : t('open')}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform duration-300 hover:scale-105 active:scale-95"
+        className="pointer-events-auto flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform duration-300 hover:scale-105 active:scale-95"
       >
         <Icon
           icon={open ? 'ph:x-bold' : 'ph:chat-circle-dots-fill'}

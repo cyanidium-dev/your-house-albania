@@ -235,7 +235,7 @@ export default function AiSearchChat({
                     type="button"
                     onClick={() => void send(suggestion)}
                     className={cn(
-                      'rounded-full border border-dark/15 px-4 py-2 text-sm text-dark/80',
+                      'cursor-pointer rounded-full border border-dark/15 px-4 py-2 text-sm text-dark/80',
                       'transition-colors duration-200 hover:border-primary hover:text-primary',
                       'dark:border-white/20 dark:text-white/80 dark:hover:border-primary',
                     )}
@@ -321,7 +321,7 @@ export default function AiSearchChat({
             <button
               type="button"
               onClick={restart}
-              className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white"
+              className="cursor-pointer rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white"
             >
               {t('restart')}
             </button>
@@ -339,6 +339,7 @@ export default function AiSearchChat({
               onChange={(e) => setDraft(e.target.value)}
               placeholder={t('chatPlaceholder')}
               autoComplete="off"
+              enterKeyHint="send"
               disabled={busy}
               className={cn(
                 'min-w-0 flex-1 rounded-full border border-dark/15 bg-transparent px-5 py-3 outline-none',
@@ -352,9 +353,9 @@ export default function AiSearchChat({
               disabled={busy || draft.trim().length === 0}
               aria-label={t('submit')}
               className={cn(
-                'inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full',
+                'inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full',
                 'bg-primary text-white transition-colors duration-200',
-                'hover:bg-dark disabled:opacity-50 dark:hover:bg-white dark:hover:text-dark',
+                'hover:bg-dark disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white dark:hover:text-dark',
               )}
             >
               <Icon

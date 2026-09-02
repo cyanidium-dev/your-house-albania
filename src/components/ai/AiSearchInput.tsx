@@ -82,6 +82,7 @@ export default function AiSearchInput({ locale }: { locale: string }) {
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           autoComplete="off"
+          enterKeyHint="search"
           className={cn(
             'min-w-0 flex-1 bg-transparent py-2 text-base outline-none',
             'text-dark dark:text-white placeholder:text-dark/50 dark:placeholder:text-white/50',
@@ -92,7 +93,7 @@ export default function AiSearchInput({ locale }: { locale: string }) {
           type="submit"
           aria-label={t('submit')}
           className={cn(
-            'inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-4 sm:px-5',
+            'inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full px-4 sm:px-5',
             'bg-primary text-white font-semibold text-sm',
             'transition-colors duration-200 hover:bg-dark dark:hover:bg-white dark:hover:text-dark',
           )}
