@@ -1,5 +1,5 @@
 import type Anthropic from '@anthropic-ai/sdk'
-import type { NextRequest } from 'next/server'
+import { after, type NextRequest } from 'next/server'
 import { createAnthropicClient } from '@/lib/ai/client'
 import { routing } from '@/i18n/routing'
 import { getCatalogSnapshot } from '@/lib/ai/catalogSnapshot'
@@ -106,15 +106,16 @@ export async function POST(req: NextRequest) {
   }))
 
   const encoder = new TextEncoder()
+  // Accumulated across hops and written once, so a two-hop answer costs one
+  // Sanity write rather than two. Declared out here so the `after` callback
+  // below closes over the final value.
+  let turnUsage = EMPTY_USAGE
+
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const send = (event: AiStreamEvent) => {
         controller.enqueue(encoder.encode(encodeAiEvent(event)))
       }
-
-      // Accumulated across hops and written once, so a two-hop answer costs one
-      // Sanity write rather than two.
-      let turnUsage = EMPTY_USAGE
 
       try {
         for (let hop = 0; hop <= AI_MAX_TOOL_HOPS; hop += 1) {
@@ -206,15 +207,20 @@ export async function POST(req: NextRequest) {
         send({ type: 'error', code: 'failed' })
       } finally {
         controller.close()
-        // After the response is closed: the visitor waits for an answer, not
-        // for bookkeeping. Tokens already spent are recorded even when the turn
-        // ended in an error.
-        if (turnUsage !== EMPTY_USAGE) {
-          console.log('[ai] turn cost', { usd: estimateUsd(turnUsage).toFixed(4) })
-          void recordUsage(turnUsage)
-        }
       }
     },
+  })
+
+  // Registered during the request, run once the response has finished. A bare
+  // `void recordUsage(...)` after the stream closes does not survive on a
+  // serverless platform: the invocation is frozen the moment the response ends
+  // and the floating promise is dropped, which is why the first production
+  // turns spent tokens without ever reaching the counter. `after` is the
+  // supported way to keep the visitor's answer fast and still do the write.
+  after(async () => {
+    if (turnUsage.inputTokens === 0 && turnUsage.outputTokens === 0) return
+    console.log('[ai] turn cost', { usd: estimateUsd(turnUsage).toFixed(4) })
+    await recordUsage(turnUsage)
   })
 
   return new Response(stream, {
