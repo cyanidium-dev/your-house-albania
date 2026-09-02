@@ -13,7 +13,8 @@ import { catalogFilterPath } from "@/lib/routes/catalog";
 import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry";
 import { CookieSettingsLink } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
-import { contactLabelKey, partitionSocialLinks } from "@/lib/footer/socialChannels";
+// Unused since the Contacts/Socials columns were replaced (2026-09-02):
+// import { contactLabelKey, partitionSocialLinks } from "@/lib/footer/socialChannels";
 import { footerLgColsClass } from "@/lib/footer/columns";
 import CodeSiteTagIcon from "./CodeSiteTagIcon";
 
@@ -30,55 +31,59 @@ function resolveStableHref(href: string, locale: string): string {
   return `/${locale}${href}`;
 }
 
-const SOCIAL_ICONS: Record<string, string> = {
-  twitter: "ph:x-logo-bold",
-  x: "ph:x-logo-bold",
-  facebook: "ph:facebook-logo-bold",
-  instagram: "ph:instagram-logo-bold",
-  linkedin: "ph:linkedin-logo-bold",
-  youtube: "ph:youtube-logo-bold",
-  tiktok: "ph:tiktok-logo-bold",
-  // Contact-channel platforms (Contacts column) — same icons as before the
-  // socialLinks consolidation.
-  telegram: "ph:telegram-logo",
-  whatsapp: "ph:whatsapp-logo",
-};
+// Unused since the Contacts/Socials columns were replaced (2026-09-02):
+// const SOCIAL_ICONS: Record<string, string> = {
+//   twitter: "ph:x-logo-bold",
+//   x: "ph:x-logo-bold",
+//   facebook: "ph:facebook-logo-bold",
+//   instagram: "ph:instagram-logo-bold",
+//   linkedin: "ph:linkedin-logo-bold",
+//   youtube: "ph:youtube-logo-bold",
+//   tiktok: "ph:tiktok-logo-bold",
+//   // Contact-channel platforms (Contacts column) — same icons as before the
+//   // socialLinks consolidation.
+//   telegram: "ph:telegram-logo",
+//   whatsapp: "ph:whatsapp-logo",
+// };
 
-function getSocialIcon(platform: string): string {
-  return SOCIAL_ICONS[platform.toLowerCase()] ?? "ph:link";
-}
+// Unused since the Contacts/Socials columns were replaced (2026-09-02):
+// function getSocialIcon(platform: string): string {
+//   return SOCIAL_ICONS[platform.toLowerCase()] ?? "ph:link";
+// }
 
 /**
  * Contacts-column label. Only platforms with a known translation key go through
  * `t()` — next-intl throws on a missing message, so anything else falls back to
  * the platform name from the CMS.
  */
-const CONTACT_LABEL_KEYS = new Set(["contacts.telegram", "contacts.whatsapp"]);
+// Unused since the Contacts/Socials columns were replaced (2026-09-02):
+// const CONTACT_LABEL_KEYS = new Set(["contacts.telegram", "contacts.whatsapp"]);
+//
+// function contactRowLabel(
+//   platform: string,
+//   t: (key: string, values?: Record<string, string>) => string
+// ): string {
+//   const key = contactLabelKey(platform);
+//   return CONTACT_LABEL_KEYS.has(key) ? t(key) : platform.trim();
+// }
 
-function contactRowLabel(
-  platform: string,
-  t: (key: string, values?: Record<string, string>) => string
-): string {
-  const key = contactLabelKey(platform);
-  return CONTACT_LABEL_KEYS.has(key) ? t(key) : platform.trim();
-}
-
-/** Localized “Follow us on …” line from CMS `platform` string. */
-function socialFollowLabel(
-  platform: string,
-  t: (key: string, values?: Record<string, string>) => string
-): string {
-  const raw = platform.trim();
-  const p = raw.toLowerCase();
-  if (p.includes("instagram")) return t("socials.followInstagram");
-  if (p.includes("facebook")) return t("socials.followFacebook");
-  if (p.includes("linkedin")) return t("socials.followLinkedin");
-  if (p === "x" || /\bx\b/.test(p)) return t("socials.followX");
-  if (p.includes("twitter")) return t("socials.followTwitter");
-  if (p.includes("youtube")) return t("socials.followYoutube");
-  if (p.includes("tiktok")) return t("socials.followTiktok");
-  return t("socials.followGeneric", { platform: raw || "Social" });
-}
+// Unused since the Contacts/Socials columns were replaced (2026-09-02):
+// /** Localized “Follow us on …” line from CMS `platform` string. */
+// function socialFollowLabel(
+//   platform: string,
+//   t: (key: string, values?: Record<string, string>) => string
+// ): string {
+//   const raw = platform.trim();
+//   const p = raw.toLowerCase();
+//   if (p.includes("instagram")) return t("socials.followInstagram");
+//   if (p.includes("facebook")) return t("socials.followFacebook");
+//   if (p.includes("linkedin")) return t("socials.followLinkedin");
+//   if (p === "x" || /\bx\b/.test(p)) return t("socials.followX");
+//   if (p.includes("twitter")) return t("socials.followTwitter");
+//   if (p.includes("youtube")) return t("socials.followYoutube");
+//   if (p.includes("tiktok")) return t("socials.followTiktok");
+//   return t("socials.followGeneric", { platform: raw || "Social" });
+// }
 
 function cityCatalogHref(
   locale: string,
@@ -183,10 +188,12 @@ export default function Footer({
 
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
 
-  // Contacts and Social columns come from one source: socialLinks[].channel.
-  const { contact: contactLinks, social: socialColumnLinks } = partitionSocialLinks(
-    siteSettings?.socialLinks
-  );
+  // Contacts and Social columns came from one source: socialLinks[].channel.
+  // Both columns were replaced by a link to the contact form on 2026-09-02;
+  // uncomment together with the helpers below to bring them back.
+  // const { contact: contactLinks, social: socialColumnLinks } = partitionSocialLinks(
+  //   siteSettings?.socialLinks
+  // );
 
   // ТЗ-16 Guides column: 4 base columns + optional Guides + optional App.
   const guideLinks = siteSettings?.footerGuideLinks ?? [];
@@ -279,77 +286,29 @@ export default function Footer({
               )}
             </nav>
 
+            {/*
+              Contacts and Socials columns hidden 2026-09-02: every link here
+              was a direct mailto:/tel:/messenger jump, so a lead that started
+              in the footer left the site before anything could record it. One
+              column pointing at the contact form replaces both. The social URLs
+              still reach schema.org `sameAs` from siteSettings on the homepage,
+              which is built independently of this footer.
+            */}
             <div>
               <h3 className={colHeadingClass}>{t("columns.contacts")}</h3>
-              <ul className="flex flex-col gap-2 md:gap-2.5">
-                {siteSettings?.email ? (
-                  <li>
-                    <a
-                      href={`mailto:${siteSettings.email}`}
-                      className={`inline-flex items-center gap-2 ${colLinkClass}`}
-                    >
-                      <Icon
-                        icon="ph:envelope-simple"
-                        width={20}
-                        height={20}
-                        className="shrink-0 opacity-80"
-                        aria-hidden
-                      />
-                      <span>{siteSettings.email}</span>
-                    </a>
-                  </li>
-                ) : null}
-                {contactLinks.map((c) => (
-                  <li key={`${c.platform}-${c.url}`}>
-                    <a
-                      href={c.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-2 ${colLinkClass}`}
-                    >
-                      <Icon
-                        icon={getSocialIcon(c.platform)}
-                        width={20}
-                        height={20}
-                        className="shrink-0 opacity-80"
-                        aria-hidden
-                      />
-                      <span>{contactRowLabel(c.platform, t)}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className={colHeadingClass}>{t("columns.socials")}</h3>
-              {socialColumnLinks.length > 0 ? (
-                <ul className="flex flex-col gap-2 md:gap-2.5">
-                  {socialColumnLinks.map((s, i) => (
-                    <li key={`${s.platform}-${i}`}>
-                      <a
-                        href={s.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`inline-flex items-start gap-2.5 ${colLinkClass}`}
-                      >
-                        <Icon
-                          icon={getSocialIcon(s.platform)}
-                          width={20}
-                          height={20}
-                          className="mt-0.5 shrink-0 text-white/70"
-                          aria-hidden
-                        />
-                        <span className="min-w-0 break-words">
-                          {socialFollowLabel(s.platform, t)}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className={colBodyClass}>{t("socials.empty")}</p>
-              )}
+              <Link
+                href={`/${locale}/contacts`}
+                className={`inline-flex items-center gap-2 ${colLinkClass}`}
+              >
+                <Icon
+                  icon="ph:paper-plane-tilt"
+                  width={20}
+                  height={20}
+                  className="shrink-0 opacity-80"
+                  aria-hidden
+                />
+                <span>{t("contactCta")}</span>
+              </Link>
             </div>
 
             {showAppColumn ? (

@@ -15,7 +15,8 @@ import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
-import { QuickContact } from "@/components/shared/QuickContact/QuickContact";
+// Hidden 2026-09-02 together with its mount below.
+// import { QuickContact } from "@/components/shared/QuickContact/QuickContact";
 
 type Props = {
   children: React.ReactNode;
@@ -74,14 +75,20 @@ export default async function LocaleLayout({ children, params }: Props) {
             initialCities={footerCities}
             initialCountrySlug={LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG}
           />
-          <QuickContact
+          {/*
+            Floating contact widget hidden 2026-09-02: its channels are direct
+            `tel:`/`mailto:`/messenger links, so every lead it produced left the
+            site untracked. Restore this block once contact goes through the
+            lead form. The component itself is untouched.
+          */}
+          {/* <QuickContact
             locale={locale}
             channels={{
               phone: siteSettings.phone,
               email: siteSettings.email,
               socialLinks: siteSettings.socialLinks,
             }}
-          />
+          /> */}
         </ConsentProvider>
       </Providers>
     </NextIntlClientProvider>
