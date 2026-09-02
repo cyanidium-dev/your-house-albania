@@ -117,6 +117,10 @@ export function buildGuideArticleJsonLd(
   if (locale && locale.trim()) {
     article.inLanguage = locale.trim();
   }
+  // Anchors the Article entity to its page, the same way the blog builder does.
+  if (articleUrl) {
+    article.mainEntityOfPage = { "@type": "WebPage", "@id": articleUrl };
+  }
 
   return article;
 }

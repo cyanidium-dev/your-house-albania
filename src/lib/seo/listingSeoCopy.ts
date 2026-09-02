@@ -61,6 +61,77 @@ export async function buildCityListingSeo(
   };
 }
 
+/**
+ * Property-type slugs that carry their own SEO copy, matching the `propertyType`
+ * documents in the CMS. Anything outside this set returns null so the caller
+ * keeps the untyped city/country copy rather than printing a raw slug.
+ *
+ * The plural, search-shaped nouns live in `Seo.listing.types` rather than in the
+ * CMS `propertyType.title`, which is singular and — for pl and it — untranslated.
+ */
+const TYPE_SLUGS = new Set([
+  "apartment",
+  "house",
+  "villa",
+  "studio",
+  "penthouse",
+  "land",
+  "office",
+  "commercial-space",
+  "short-term-rent",
+]);
+
+async function resolveTypeLabel(typeSlug: string, locale: string): Promise<string | null> {
+  const slug = typeof typeSlug === "string" ? typeSlug.trim().toLowerCase() : "";
+  if (!slug || !TYPE_SLUGS.has(slug)) return null;
+  const t = await getTranslations({ locale, namespace: "Seo.listing.types" });
+  const label = t(slug).trim();
+  // A missing message makes next-intl echo the key path back. Printing
+  // "Seo.listing.types.villa for Sale in Albania" is worse than dropping the
+  // type and keeping the untyped copy, so treat that shape as absent.
+  if (!label || label.endsWith(`.${slug}`)) return null;
+  return label;
+}
+
+/**
+ * Title and description for a national type listing (`/{locale}/sale/{type}`).
+ *
+ * Returns null for unknown types so the caller falls back to the untyped copy.
+ */
+export async function buildTypeListingSeo(
+  typeSlug: string,
+  locale: string
+): Promise<ListingSeoCopy | null> {
+  const type = await resolveTypeLabel(typeSlug, locale);
+  if (!type) return null;
+  const t = await getTranslations({ locale, namespace: "Seo.listing" });
+  return {
+    title: t("typeTitle", { type }),
+    description: t("typeDescription", { type }),
+  };
+}
+
+/**
+ * Title and description for a city + type listing
+ * (`/{locale}/{country}/{city}/{deal}/{type}`).
+ */
+export async function buildCityTypeListingSeo(
+  citySlug: string,
+  typeSlug: string,
+  locale: string
+): Promise<ListingSeoCopy | null> {
+  const [city, type] = await Promise.all([
+    resolveCityDisplayName(citySlug, locale),
+    resolveTypeLabel(typeSlug, locale),
+  ]);
+  if (!city || !type) return null;
+  const t = await getTranslations({ locale, namespace: "Seo.listing" });
+  return {
+    title: t("cityTypeTitle", { type, city }),
+    description: t("cityTypeDescription", { type, city }),
+  };
+}
+
 /** Title and description for the country-level listing. */
 export async function buildCountryListingSeo(): Promise<ListingSeoCopy> {
   const t = await getTranslations("Seo.listing");

@@ -17,6 +17,7 @@ import {
 import { canonicalNonGeoDealListingPath } from "@/lib/routes/listingRouteResolver";
 import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
+import { buildTypeListingSeo } from "@/lib/seo/listingSeoCopy";
 
 type DealQuery = "sale" | "rent" | "short-term";
 
@@ -33,13 +34,22 @@ export async function generateNonGeoDealRouteMetadata(input: {
   const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const typeSeg = filters[0] ? decodeURIComponent(filters[0]).trim() : "";
+  // The CMS `catalogSeoPage` fetched here is root-scoped — one document for the
+  // whole national catalogue, with no type dimension. Taken as-is it gave
+  // `/sale` and `/sale/apartment` byte-identical titles and descriptions in
+  // every locale, so the type page could never target its own keyword
+  // ("mieszkania w albanii", "albania apartments for sale"). On a type page the
+  // generated type copy therefore wins over the CMS value; untyped pages are
+  // unchanged.
+  const typedSeo = typeSeg ? await buildTypeListingSeo(typeSeg, locale) : null;
   // stripBrandSuffix: CMS titles often bake in "| Domlivo"; the root template
   // appends the brand once.
   const title = stripBrandSuffix(
-    catalogSeo?.metaTitle ||
+    typedSeo?.title ||
+      catalogSeo?.metaTitle ||
       `${t("title")} — ${titleFragment}${typeSeg ? ` — ${typeSeg}` : ""}`
   );
-  const description = catalogSeo?.metaDescription || t("description");
+  const description = typedSeo?.description || catalogSeo?.metaDescription || t("description");
   if (!isIndexingEnabled()) {
     return {
       title: listingTitleField(title),

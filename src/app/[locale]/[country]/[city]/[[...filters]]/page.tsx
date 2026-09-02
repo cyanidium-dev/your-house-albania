@@ -24,7 +24,7 @@ import {
   LISTING_DISTRICT_NOINDEX_THRESHOLD,
   shouldNoindexEmptyCityListing,
 } from "@/lib/seo/listingIndexPolicy";
-import { buildCityListingSeo } from "@/lib/seo/listingSeoCopy";
+import { buildCityListingSeo, buildCityTypeListingSeo } from "@/lib/seo/listingSeoCopy";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
@@ -120,18 +120,28 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const generated = geo.listingCitySlug
     ? await buildCityListingSeo(geo.listingCitySlug, locale)
     : null;
+  // City + type pages share the city's `catalogSeoPage`, which has no type
+  // dimension, so `/durres/sale` and `/durres/sale/apartment` were shipping the
+  // same title and description. Type copy is generated per type and wins on
+  // those URLs; untyped city pages keep the existing order untouched.
+  const generatedType =
+    geo.listingCitySlug && typeSlug
+      ? await buildCityTypeListingSeo(geo.listingCitySlug, typeSlug, locale)
+      : null;
   // stripBrandSuffix: CMS titles often bake in "| Domlivo" — the root template
   // appends the brand, so strip it here to avoid "… | Domlivo — Domlivo".
   // Order matters: a CMS title written in this locale wins, then the generated
   // localized template, and only then the CMS value that fell back to English —
   // an English title on a Polish page costs more than a templated Polish one.
   const title = stripBrandSuffix(
-    catalogSeo?.metaTitleInLocale ||
+    generatedType?.title ||
+      catalogSeo?.metaTitleInLocale ||
       generated?.title ||
       catalogSeo?.metaTitle ||
       (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle)
   );
   const description =
+    generatedType?.description ||
     catalogSeo?.metaDescriptionInLocale ||
     generated?.description ||
     catalogSeo?.metaDescription ||

@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "content-qa": "node scripts/content-qa.ts"
+    "content-qa": "node scripts/content-qa.ts",
+    "internal-links": "node scripts/internal-links.ts"
   },
   "engines": {
     "node": "22.x"

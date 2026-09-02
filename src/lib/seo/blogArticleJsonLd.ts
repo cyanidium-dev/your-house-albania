@@ -100,6 +100,18 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
   if (image) {
     article.image = image;
   }
+  // Six locales publish the same article at six URLs. Without inLanguage an
+  // answer engine has to infer the language from the prose, and the guide
+  // builder already states it — blog posts were the inconsistent half.
+  if (locale && locale.trim()) {
+    article.inLanguage = locale.trim();
+  }
+  // Anchors the Article entity to the page it lives on. Schema.org treats this
+  // as the canonical link between the two, and answer engines use it to decide
+  // which URL to cite for the claim.
+  if (articleUrl) {
+    article.mainEntityOfPage = { "@type": "WebPage", "@id": articleUrl };
+  }
 
   return article;
 }

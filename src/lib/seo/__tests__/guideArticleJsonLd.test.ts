@@ -102,4 +102,8 @@ describe("buildGuideArticleJsonLd", () => {
     expect(a.description).toBe("Which southern resort suits which buyer.");
     expect(a.inLanguage).toBe("pl");
   });
+  it("anchors the guide to its page via mainEntityOfPage", () => {
+    const a = buildGuideArticleJsonLd({ ...base, contentUpdatedAt: "2026-07-19" }) as Article;
+    expect(a.mainEntityOfPage).toEqual({ "@type": "WebPage", "@id": base.articleUrl });
+  });
 });
