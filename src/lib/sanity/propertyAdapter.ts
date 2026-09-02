@@ -306,6 +306,10 @@ type SanityProperty = {
   featuredOrder?: number;
   discountPercent?: number;
   investment?: string | boolean;
+  constructionStage?: 'off-plan' | 'under-construction' | 'completed';
+  handoverYear?: number;
+  handoverQuarter?: number;
+  documentation?: 'certificate' | 'in-process';
   coordinatesLat?: number | null;
   coordinatesLng?: number | null;
   city?: {
@@ -374,6 +378,10 @@ export function mapSanityPropertyToCard(
         ? p.discountPercent
         : undefined,
     investment: p.investment,
+    constructionStage: p.constructionStage,
+    handoverYear: typeof p.handoverYear === 'number' ? p.handoverYear : undefined,
+    handoverQuarter: typeof p.handoverQuarter === 'number' ? p.handoverQuarter : undefined,
+    documentation: p.documentation,
     propertyType: p.type?.title
       ? (resolveLocalizedString(p.type.title as never, locale) || String(p.type.title))
       : undefined,
@@ -422,6 +430,10 @@ export function mapCatalogPropertyToCard(
       featuredOrder: p.featuredOrder,
       discountPercent: p.discountPercent,
       investment: p.investment,
+      constructionStage: p.constructionStage,
+      handoverYear: p.handoverYear,
+      handoverQuarter: p.handoverQuarter,
+      documentation: p.documentation,
       city: p.city as { title?: unknown; slug?: string },
       district: p.district as { title?: unknown; slug?: string; citySlug?: string },
       type: p.type as { title?: unknown; slug?: string },

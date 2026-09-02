@@ -97,6 +97,8 @@ async function PropertiesListing({
   const minAreaFilter = parsedFilters.minArea
   const maxAreaFilter = parsedFilters.maxArea
   const bedsFilter = parsedFilters.beds
+  const stageFilter = parsedFilters.stage
+  const investmentFilter = parsedFilters.investment
   const viewMode = parseViewMode(searchParams.view)
 
   const rawPage = parsedFilters.page
@@ -143,6 +145,8 @@ async function PropertiesListing({
       maxArea: maxAreaFilter || undefined,
       beds: bedsFilter || undefined,
       amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
+      stage: stageFilter || undefined,
+      investment: investmentFilter || undefined,
       sort: sort as CatalogSort,
       page: rawPage,
       pageSize,
@@ -222,6 +226,7 @@ async function PropertiesListing({
     initialCity: cityFilter || '',
     initialType: typeFilter,
     initialDealType: dealFilter,
+    initialStage: stageFilter,
     initialMinPrice: typeof searchParams.minPrice === 'string' ? searchParams.minPrice : '',
     initialMaxPrice: typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : '',
     initialMinArea: typeof searchParams.minArea === 'string' ? searchParams.minArea : '',

@@ -107,6 +107,8 @@ export function CatalogFilterForm({
     amenities,
     setAmenities,
     amenityMultiOptions,
+    stage,
+    setStage,
     sort,
     setSort,
     viewModeFromProps,
@@ -300,6 +302,22 @@ export function CatalogFilterForm({
                 doneLabel={t("done")}
               />
 
+              {/* Construction stage. "Still being built" is the question
+                  people actually ask, so it leads; the two stages behind it
+                  stay available for anyone who wants the distinction. */}
+              <FilterSelect
+                label={t("stage")}
+                value={stage || "any"}
+                onValueChange={setStage}
+                anyLabel={t("stageAny")}
+                options={[
+                  { value: "unfinished", label: t("stageUnfinished") },
+                  { value: "off-plan", label: t("stageOffPlan") },
+                  { value: "under-construction", label: t("stageUnderConstruction") },
+                  { value: "completed", label: t("stageCompleted") },
+                ]}
+              />
+
               {/* Sort */}
               <FilterSelect
                 label={t("sortBy")}
@@ -311,6 +329,7 @@ export function CatalogFilterForm({
                   { value: "priceAsc", label: t("sortPriceAsc") },
                   { value: "priceDesc", label: t("sortPriceDesc") },
                   { value: "areaDesc", label: t("sortAreaDesc") },
+                  { value: "handoverAsc", label: t("sortHandoverAsc") },
                 ]}
               />
 

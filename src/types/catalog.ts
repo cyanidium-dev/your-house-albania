@@ -3,7 +3,17 @@ export type CatalogSort =
   | 'priceAsc'
   | 'priceDesc'
   | 'areaAsc'
-  | 'areaDesc';
+  | 'areaDesc'
+  /** Soonest handover first. Only meaningful alongside an unfinished-stage filter. */
+  | 'handoverAsc';
+
+/**
+ * Where a building is in its life. `unfinished` is not a stored value — it is
+ * the filter a buyer actually asks for, "still being built", and covers both
+ * off-plan and under-construction.
+ */
+export type ConstructionStage = 'off-plan' | 'under-construction' | 'completed';
+export type ConstructionStageFilter = ConstructionStage | 'unfinished';
 
 export type CatalogFilters = {
   agentSlug?: string;
@@ -17,6 +27,10 @@ export type CatalogFilters = {
   maxArea?: number;
   beds?: number;
   amenities?: string[];
+  /** Construction stage; `unfinished` matches off-plan and under-construction. */
+  stage?: ConstructionStageFilter;
+  /** Only listings the editors marked as suiting an investor. */
+  investment?: boolean;
   sort?: CatalogSort;
   page?: number;
   pageSize?: number;
@@ -47,6 +61,11 @@ export type CatalogProperty = {
   featuredOrder?: number;
   discountPercent?: number;
   investment?: string;
+  constructionStage?: ConstructionStage;
+  /** Promised handover; present only while the building is unfinished. */
+  handoverYear?: number;
+  handoverQuarter?: number;
+  documentation?: 'certificate' | 'in-process';
   city?: {
     _id?: string;
     title?: unknown;

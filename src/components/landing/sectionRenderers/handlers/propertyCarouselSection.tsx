@@ -11,8 +11,16 @@ import {
 import { mapCatalogPropertyToCard, mapSanityPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { attachMarketPositionToCards } from '@/lib/property/marketPosition'
 import type { SectionHandler } from './types'
+import type { ConstructionStageFilter } from '@/types/catalog'
 
-type CarouselScope = { city?: string; district?: string; type?: string; deal?: string }
+type CarouselScope = {
+  city?: string
+  district?: string
+  type?: string
+  deal?: string
+  stage?: ConstructionStageFilter
+  investment?: boolean
+}
 
 /**
  * Catalog scope for auto mode, most specific first: filters set on the section
@@ -21,7 +29,7 @@ type CarouselScope = { city?: string; district?: string; type?: string; deal?: s
  * other districts' properties, which is worse than showing none.
  */
 function resolveScope(
-  filters: { city?: string; district?: string; propertyType?: string; deal?: string } | undefined,
+  filters: { city?: string; district?: string; propertyType?: string; deal?: string; stage?: ConstructionStageFilter; investment?: boolean } | undefined,
   linkedZone: { type: 'district' | 'city'; slug?: string; citySlug?: string } | undefined,
   citySlug: string | undefined,
 ): CarouselScope | null {
@@ -29,10 +37,15 @@ function resolveScope(
   const base: CarouselScope = {}
   if (f.propertyType) base.type = f.propertyType
   if (f.deal) base.deal = f.deal
+  // A stage or investment filter is what turns this carousel into a new-builds
+  // block, so it counts as scope on its own — without it the section would
+  // fall through to the unfiltered top-offers branch and show finished flats.
+  if (f.stage) base.stage = f.stage
+  if (f.investment) base.investment = true
 
   if (f.district) return { ...base, district: f.district, city: f.city }
   if (f.city) return { ...base, city: f.city }
-  if (base.type || base.deal) {
+  if (base.type || base.deal || base.stage || base.investment) {
     // A type/deal filter with no place still scopes to the page's own place.
     const city = linkedZone?.citySlug ?? citySlug
     if (linkedZone?.type === 'district' && linkedZone.slug) {
@@ -127,7 +140,7 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
     }
   } else {
     const scope = resolveScope(
-      (section as { filters?: { city?: string; district?: string; propertyType?: string; deal?: string } })
+      (section as { filters?: { city?: string; district?: string; propertyType?: string; deal?: string; stage?: ConstructionStageFilter; investment?: boolean } })
         .filters,
       linkedZone,
       citySlug,

@@ -68,6 +68,8 @@ function buildCatalogPredicateParts(
     | 'maxArea'
     | 'beds'
     | 'amenities'
+    | 'stage'
+    | 'investment'
     | 'excludedPropertyIds'
   >,
 ): string[] {
@@ -83,6 +85,8 @@ function buildCatalogPredicateParts(
     maxArea,
     beds,
     amenities,
+    stage,
+    investment,
     excludedPropertyIds,
   } = filters;
 
@@ -128,6 +132,19 @@ function buildCatalogPredicateParts(
     parts.push(`count(${prefix}amenitiesRefs[@->slug.current in $amenities]) > 0`);
   }
 
+  // "Still being built" is one question a buyer asks, so off-plan and
+  // under-construction answer it together under `unfinished`; the individual
+  // stages stay addressable for the pages that distinguish them.
+  if (stage === 'unfinished') {
+    parts.push(`${prefix}constructionStage in ["off-plan", "under-construction"]`);
+  } else if (stage) {
+    parts.push(`${prefix}constructionStage == $stage`);
+  }
+
+  if (investment) {
+    parts.push(`${prefix}investment == true`);
+  }
+
   if (Array.isArray(excludedPropertyIds) && excludedPropertyIds.length > 0) {
     parts.push(`!(${prefix}_id in $excludedPropertyIds)`);
   }
@@ -154,6 +171,7 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
     maxArea: filters.maxArea,
     beds: filters.beds,
     amenities: filters.amenities,
+    stage: filters.stage,
     excludedPropertyIds,
     publicDealTypes: PUBLIC_DEAL_TYPES,
   };
@@ -186,7 +204,13 @@ const cachedFetchCatalogProperties = sanityCache(
   else if (sort === 'priceDesc') order = `| order(${promotionOrder}, price desc)`;
   else if (sort === 'areaAsc') order = `| order(${promotionOrder}, area asc)`;
   else if (sort === 'areaDesc') order = `| order(${promotionOrder}, area desc)`;
-  else order = `| order(${promotionOrder}, _createdAt desc)`;
+  else if (sort === 'handoverAsc') {
+    // Soonest keys first. Year and quarter fold into one sortable number, and a
+    // missing handover sorts last rather than pretending to be the year 0 —
+    // a finished building has no handover date and belongs at the end here.
+    const handover = 'coalesce(handoverYear, 9999) * 10 + coalesce(handoverQuarter, 0)';
+    order = `| order(${promotionOrder}, ${handover} asc)`;
+  } else order = `| order(${promotionOrder}, _createdAt desc)`;
 
   const baseFilter = `*${where ? `[${where}]` : ''}`;
   const orderedSelector = `${baseFilter} ${order}`;
@@ -208,6 +232,10 @@ const cachedFetchCatalogProperties = sanityCache(
     featuredOrder,
     discountPercent,
     investment,
+    constructionStage,
+    handoverYear,
+    handoverQuarter,
+    documentation,
     coordinatesLat,
     coordinatesLng,
     "city": city-> {

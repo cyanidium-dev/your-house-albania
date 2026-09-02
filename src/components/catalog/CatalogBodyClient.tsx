@@ -42,6 +42,7 @@ export type CatalogFilterProps = {
   initialCity: string;
   initialType: string;
   initialDealType: string;
+  initialStage: string;
   initialMinPrice: string;
   initialMaxPrice: string;
   initialMinArea: string;

@@ -1,4 +1,5 @@
 import type { CatalogSort } from "@/lib/sanity/client";
+import type { ConstructionStageFilter } from "@/types/catalog";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -14,6 +15,8 @@ export type ParsedCatalogFilters = {
   district: string;
   type: string;
   deal: string;
+  stage: ConstructionStageFilter | "";
+  investment: boolean;
   sort: CatalogSort;
   amenities: string[];
   pageSize: number;
@@ -57,9 +60,24 @@ export function parseCatalogFilters(
     sortRaw === "priceDesc" ||
     sortRaw === "areaAsc" ||
     sortRaw === "areaDesc" ||
+    sortRaw === "handoverAsc" ||
     sortRaw === "newest"
       ? sortRaw
       : "newest";
+
+  const stageRaw = pickSearchString(searchParams, "stage", true);
+  const stage: ConstructionStageFilter | "" =
+    stageRaw === "off-plan" ||
+    stageRaw === "under-construction" ||
+    stageRaw === "completed" ||
+    stageRaw === "unfinished"
+      ? stageRaw
+      : "";
+
+  // Any truthy spelling means on; the filter has no "explicitly not an
+  // investment" state, because that is not a question anyone asks.
+  const investmentRaw = pickSearchString(searchParams, "investment", true);
+  const investment = investmentRaw === "1" || investmentRaw === "true" || investmentRaw === "yes";
 
   const amenitiesRaw = pickSearchString(searchParams, "amenities");
   const amenities = amenitiesRaw
@@ -83,6 +101,8 @@ export function parseCatalogFilters(
     district,
     type,
     deal,
+    stage,
+    investment,
     sort,
     amenities,
     pageSize,

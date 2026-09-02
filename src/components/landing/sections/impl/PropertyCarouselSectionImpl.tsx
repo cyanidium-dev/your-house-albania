@@ -75,6 +75,7 @@ const Properties: React.FC<{
           locale={locale}
           groups={groups}
           initialGroup={initialGroup}
+          showTabs={Boolean(topOffersGroups && Object.keys(topOffersGroups).length > 0)}
         />
       </div>
     </section>

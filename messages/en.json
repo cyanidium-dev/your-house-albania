@@ -224,7 +224,11 @@
       "sale": "Sale",
       "discount": "-{value}%",
       "propertyFallback": "Property",
-      "closePreview": "Close preview"
+      "closePreview": "Close preview",
+      "stageOffPlan": "Off-plan",
+      "stageUnderConstruction": "Under construction",
+      "handoverYear": "handover {year}",
+      "handoverQuarter": "handover Q{quarter} {year}"
     },
     "blogCard": {
       "imageAlt": "Blog post image",
@@ -286,7 +290,8 @@
     "howToPublish": "How to publish",
     "register": "Register",
     "investment": "Investment",
-    "navLabel": "Breadcrumb"
+    "navLabel": "Breadcrumb",
+    "newBuilds": "New builds"
   },
   "Districts": {
     "hubTitle": "Districts of {city}",
@@ -454,8 +459,25 @@
       "viewLabel": "Display",
       "viewLarge": "Large cards",
       "viewSmall": "Small cards",
-      "viewList": "List view"
+      "viewList": "List view",
+      "stage": "Construction stage",
+      "stageAny": "Any stage",
+      "stageUnfinished": "Still being built",
+      "stageOffPlan": "Off-plan",
+      "stageUnderConstruction": "Under construction",
+      "stageCompleted": "Completed",
+      "sortHandoverAsc": "Handover (soonest first)"
     }
+  },
+  "NewBuilds": {
+    "title": "New builds and investment property in Albania",
+    "description": "Off-plan and under-construction homes on the Albanian coast, with the handover date and the ownership paperwork stated on every listing.",
+    "badge": "New builds",
+    "heading": "New builds and investment property in Albania",
+    "intro": "Property bought before it is finished is cheaper, and it carries risks a finished flat does not: the handover can slip, and the ownership certificate may still be in process. Every listing here states which stage the building is at and when the keys are promised, so the two are yours to weigh rather than ours to gloss over.",
+    "empty": "No unfinished buildings are listed at the moment. Everything currently on the site is finished and handed over — browse the whole catalogue instead.",
+    "emptyCta": "Browse all property",
+    "breadcrumbHome": "Home"
   },
   "Contacts": {
     "metaTitle": "Contact us",
@@ -644,7 +666,22 @@
       "countryTitle": "Albania Real Estate — Property for Sale",
       "countryDescription": "Buy property in Albania: apartments, houses and beachfront villas in Tirana, Durres, Vlore and Saranda. Verified listings with real prices.",
       "catalogTitle": "Property for Sale in Albania — Full Catalogue",
-      "catalogDescription": "Browse every property for sale in Albania: apartments, houses, villas and land. Filter by city, price, area and number of bedrooms."
+      "catalogDescription": "Browse every property for sale in Albania: apartments, houses, villas and land. Filter by city, price, area and number of bedrooms.",
+      "typeTitle": "{type} for Sale in Albania",
+      "typeDescription": "{type} for sale in Albania with current prices, photos and locations. Direct from owners and trusted agencies — no commission.",
+      "cityTypeTitle": "{type} for Sale in {city}, Albania",
+      "cityTypeDescription": "{type} for sale in {city}, Albania: current prices, photos and locations. Direct from owners and trusted agencies — no commission.",
+      "types": {
+        "apartment": "Apartments",
+        "house": "Houses",
+        "villa": "Villas",
+        "studio": "Studios",
+        "penthouse": "Penthouses",
+        "land": "Land",
+        "office": "Offices",
+        "commercial-space": "Commercial Property",
+        "short-term-rent": "Short-Term Rentals"
+      }
     }
   },
   "AiSearch": {

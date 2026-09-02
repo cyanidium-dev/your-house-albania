@@ -21,6 +21,9 @@ export function PropertyCardGallery({
   imageWrapper,
   imageClass,
   promotionType,
+  constructionStage,
+  handoverYear,
+  handoverQuarter,
   discountPercent,
 }: {
   images: { src: string }[]
@@ -33,6 +36,9 @@ export function PropertyCardGallery({
   imageWrapper: string
   imageClass: string
   promotionType?: 'premium' | 'top' | 'sale'
+  constructionStage?: 'off-plan' | 'under-construction' | 'completed'
+  handoverYear?: number
+  handoverQuarter?: number
   discountPercent?: number
 }) {
   const t = useTranslations('Shared.propertyCard')
@@ -136,7 +142,14 @@ export function PropertyCardGallery({
       onTouchEnd={singleImage ? undefined : handleTouchEnd}
     >
       <div className="property-card-overlay absolute inset-0 z-20 pointer-events-none [&>*]:pointer-events-auto">
-        <PropertyBadges promotionType={promotionType} discountPercent={discountPercent} view={view} />
+        <PropertyBadges
+          promotionType={promotionType}
+          discountPercent={discountPercent}
+          constructionStage={constructionStage}
+          handoverYear={handoverYear}
+          handoverQuarter={handoverQuarter}
+          view={view}
+        />
         <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
           <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
         </div>

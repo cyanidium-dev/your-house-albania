@@ -56,6 +56,9 @@ function PropertyCard({
     teaser,
     promotionType,
     discountPercent,
+    constructionStage,
+    handoverYear,
+    handoverQuarter,
     marketPosition,
   } = item
 
@@ -254,6 +257,9 @@ function PropertyCard({
           imageClass={imageClass}
           promotionType={promotionType}
           discountPercent={discountPercent}
+          constructionStage={constructionStage}
+          handoverYear={handoverYear}
+          handoverQuarter={handoverQuarter}
         />
         <div className={contentPadding}>
           {isList ? (

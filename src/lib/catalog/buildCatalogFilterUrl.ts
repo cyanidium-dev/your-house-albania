@@ -17,6 +17,7 @@ export type CatalogFilterUrlState = {
   areaValues: [number, number];
   defaultAreaRange: { min: number; max: number };
   beds: string;
+  stage: string;
   sort: string;
   amenities: string[];
   pageSize: string;
@@ -38,6 +39,7 @@ export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
     areaValues,
     defaultAreaRange,
     beds,
+    stage,
     sort,
     amenities,
     city,
@@ -81,6 +83,9 @@ export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
 
   if (beds && beds !== "any") params.set("beds", beds);
   else params.delete("beds");
+
+  if (stage && stage !== "any") params.set("stage", stage);
+  else params.delete("stage");
 
   if (sort && sort !== "newest") params.set("sort", sort);
   else params.delete("sort");

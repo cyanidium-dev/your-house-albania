@@ -224,7 +224,11 @@
       "sale": "Ulje çmimi",
       "discount": "-{value}%",
       "propertyFallback": "Pronë",
-      "closePreview": "Mbyll pamjen paraprake"
+      "closePreview": "Mbyll pamjen paraprake",
+      "stageOffPlan": "Në projekt",
+      "stageUnderConstruction": "Në ndërtim",
+      "handoverYear": "dorëzimi {year}",
+      "handoverQuarter": "dorëzimi T{quarter} {year}"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
@@ -286,7 +290,8 @@
     "howToPublish": "Si të publikoni",
     "register": "Regjistrohu",
     "investment": "Investime",
-    "navLabel": "Shtegu i lundrimit"
+    "navLabel": "Shtegu i lundrimit",
+    "newBuilds": "Ndërtime të reja"
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",
@@ -454,8 +459,25 @@
       "viewLabel": "Shfaqja",
       "viewLarge": "Karta të mëdha",
       "viewSmall": "Karta kompakte",
-      "viewList": "Listë"
+      "viewList": "Listë",
+      "stage": "Faza e ndërtimit",
+      "stageAny": "Çdo fazë",
+      "stageUnfinished": "Ende në ndërtim",
+      "stageOffPlan": "Në projekt",
+      "stageUnderConstruction": "Në ndërtim",
+      "stageCompleted": "E përfunduar",
+      "sortHandoverAsc": "Dorëzimi (më të afërtit në fillim)"
     }
+  },
+  "NewBuilds": {
+    "title": "Ndërtime të reja dhe prona për investim në Shqipëri",
+    "description": "Prona në projekt dhe në ndërtim në bregdetin shqiptar, me datën e dorëzimit dhe gjendjen e dokumenteve në çdo shpallje.",
+    "badge": "Ndërtime të reja",
+    "heading": "Ndërtime të reja dhe prona për investim në Shqipëri",
+    "intro": "Një pronë e blerë para se të përfundojë kushton më pak, por mbart rreziqe që një banesë e gatshme nuk i ka: dorëzimi mund të vonohet dhe certifikata e pronësisë mund të jetë ende në proces. Çdo shpallje këtu thotë në ç’fazë është ndërtesa dhe kur premtohen çelësat.",
+    "empty": "Për momentin nuk ka ndërtesa në ndërtim. Gjithçka në faqe është e përfunduar dhe e dorëzuar — shihni katalogun e plotë.",
+    "emptyCta": "Shiko të gjitha pronat",
+    "breadcrumbHome": "Kryefaqja"
   },
   "Contacts": {
     "metaTitle": "Na kontaktoni",
@@ -644,7 +666,22 @@
       "countryTitle": "Pasuri të paluajtshme në shitje në Shqipëri",
       "countryDescription": "Apartamente, shtëpi dhe vila në shitje në Tiranë, Durrës, Vlorë dhe Sarandë. Prona të verifikuara me çmime aktuale, pa komision.",
       "catalogTitle": "Katalogu i pronave në shitje në Shqipëri",
-      "catalogDescription": "Të gjitha pronat në shitje në Shqipëri: apartamente, shtëpi, vila dhe tokë. Filtro sipas qytetit, çmimit dhe numrit të dhomave."
+      "catalogDescription": "Të gjitha pronat në shitje në Shqipëri: apartamente, shtëpi, vila dhe tokë. Filtro sipas qytetit, çmimit dhe numrit të dhomave.",
+      "typeTitle": "{type} në shitje në Shqipëri",
+      "typeDescription": "{type} në shitje në Shqipëri: çmime aktuale, foto dhe vendndodhje. Drejtpërdrejt nga pronarët dhe agjencitë e besuara, pa komision.",
+      "cityTypeTitle": "{type} në shitje në {city}",
+      "cityTypeDescription": "{type} në shitje në {city}: çmime aktuale, foto dhe vendndodhje. Drejtpërdrejt nga pronarët dhe agjencitë e besuara, pa komision.",
+      "types": {
+        "apartment": "Apartamente",
+        "house": "Shtëpi",
+        "villa": "Vila",
+        "studio": "Garsoniere",
+        "penthouse": "Penthouse",
+        "land": "Toka",
+        "office": "Zyra",
+        "commercial-space": "Prona tregtare",
+        "short-term-rent": "Qira afatshkurtër"
+      }
     }
   },
   "AiSearch": {

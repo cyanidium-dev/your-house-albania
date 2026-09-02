@@ -21,6 +21,11 @@ export type PropertyHomes = {
   featuredOrder?: number
   discountPercent?: number
   investment?: string | boolean
+  /** Where the building is in its life; only unfinished stages are shown on the card. */
+  constructionStage?: 'off-plan' | 'under-construction' | 'completed'
+  handoverYear?: number
+  handoverQuarter?: number
+  documentation?: 'certificate' | 'in-process'
   propertyType?: string
   propertyTypeSlug?: string
   city?: string

@@ -18,10 +18,17 @@ export function TopOffersCarouselClient({
   locale,
   groups,
   initialGroup = "popular",
+  showTabs = true,
 }: {
   locale: string;
   groups: Record<TopOffersGroup, PropertyHomes[]>;
   initialGroup?: TopOffersGroup;
+  /**
+   * Off for a carousel that was fetched with one filtered query: its three
+   * groups are the same list, so tabs would promise a different set of
+   * properties and then show the same eight cards.
+   */
+  showTabs?: boolean;
 }) {
   const debug = process.env.NODE_ENV === "development";
   const t = useTranslations("Home.topOffers");
@@ -56,8 +63,18 @@ export function TopOffersCarouselClient({
 
   return (
     <div className="min-w-0">
-      <div className="flex items-center justify-between gap-3 min-w-0">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10">
+      <div
+        className={cn(
+          'flex items-center gap-3 min-w-0',
+          showTabs ? 'justify-between' : 'justify-end'
+        )}
+      >
+        <div
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10',
+            !showTabs && 'hidden'
+          )}
+        >
           {GROUPS.map((g) => {
             const activeTab = g === active;
             const label =

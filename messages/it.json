@@ -224,7 +224,11 @@
       "sale": "Offerta",
       "discount": "-{value}%",
       "propertyFallback": "Immobile",
-      "closePreview": "Chiudi anteprima"
+      "closePreview": "Chiudi anteprima",
+      "stageOffPlan": "Su piano",
+      "stageUnderConstruction": "In costruzione",
+      "handoverYear": "consegna {year}",
+      "handoverQuarter": "consegna T{quarter} {year}"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
@@ -286,7 +290,8 @@
     "howToPublish": "Come pubblicare",
     "register": "Registrati",
     "investment": "Investimenti",
-    "navLabel": "Breadcrumb"
+    "navLabel": "Breadcrumb",
+    "newBuilds": "Nuove costruzioni"
   },
   "Districts": {
     "hubTitle": "Quartieri di {city}",
@@ -454,8 +459,25 @@
       "viewLabel": "Visualizzazione",
       "viewLarge": "Schede grandi",
       "viewSmall": "Schede compatte",
-      "viewList": "Elenco"
+      "viewList": "Elenco",
+      "stage": "Fase di costruzione",
+      "stageAny": "Qualsiasi fase",
+      "stageUnfinished": "Ancora in costruzione",
+      "stageOffPlan": "Su piano",
+      "stageUnderConstruction": "In costruzione",
+      "stageCompleted": "Completato",
+      "sortHandoverAsc": "Consegna (prima le più vicine)"
     }
+  },
+  "NewBuilds": {
+    "title": "Nuove costruzioni e immobili da investimento in Albania",
+    "description": "Immobili su piano e in costruzione sulla costa albanese, con la data di consegna e lo stato dei documenti in ogni annuncio.",
+    "badge": "Nuove costruzioni",
+    "heading": "Nuove costruzioni e immobili da investimento in Albania",
+    "intro": "Un immobile comprato prima della consegna costa meno e porta rischi che una casa finita non ha: la consegna può slittare e il certificato di proprietà può essere ancora in lavorazione. Ogni annuncio qui dichiara a che punto è l’edificio e quando sono promesse le chiavi.",
+    "empty": "Al momento non ci sono edifici in costruzione. Tutto ciò che è sul sito è finito e consegnato — sfoglia il catalogo completo.",
+    "emptyCta": "Tutti gli immobili",
+    "breadcrumbHome": "Home"
   },
   "Contacts": {
     "metaTitle": "Contattaci",
@@ -644,7 +666,22 @@
       "countryTitle": "Case in vendita in Albania — immobili fronte mare",
       "countryDescription": "Comprare casa in Albania: appartamenti fronte mare, case e ville a Tirana, Durazzo, Valona e Saranda. Immobili verificati con prezzi reali.",
       "catalogTitle": "Immobili in vendita in Albania — catalogo completo",
-      "catalogDescription": "Tutti gli immobili in vendita in Albania: appartamenti, case, ville e terreni. Filtra per città, prezzo, superficie e numero di camere."
+      "catalogDescription": "Tutti gli immobili in vendita in Albania: appartamenti, case, ville e terreni. Filtra per città, prezzo, superficie e numero di camere.",
+      "typeTitle": "{type} in vendita in Albania",
+      "typeDescription": "{type} in vendita in Albania: prezzi aggiornati, foto e posizione. Direttamente da proprietari e agenzie affidabili, senza commissioni.",
+      "cityTypeTitle": "{type} in vendita a {city}, Albania",
+      "cityTypeDescription": "{type} in vendita a {city}, Albania: prezzi aggiornati, foto e posizione. Direttamente da proprietari e agenzie affidabili, senza commissioni.",
+      "types": {
+        "apartment": "Appartamenti",
+        "house": "Case",
+        "villa": "Ville",
+        "studio": "Monolocali",
+        "penthouse": "Attici",
+        "land": "Terreni",
+        "office": "Uffici",
+        "commercial-space": "Immobili commerciali",
+        "short-term-rent": "Affitti brevi"
+      }
     }
   },
   "AiSearch": {

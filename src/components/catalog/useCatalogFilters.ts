@@ -46,6 +46,7 @@ export type PropertySearchBarProps = {
   initialCity?: string;
   initialType?: string;
   initialDealType?: string;
+  initialStage?: string;
   initialMinPrice?: string;
   initialMaxPrice?: string;
   initialMinArea?: string;
@@ -74,6 +75,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     initialCity = "",
     initialType = "",
     initialDealType = "",
+    initialStage = "",
     initialMinPrice = "",
     initialMaxPrice = "",
     initialMinArea = "",
@@ -93,6 +95,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
   const [city, setCity] = React.useState(initialCity);
   const [type, setType] = React.useState(initialType);
   const [deal, setDeal] = React.useState(initialDealType || "any");
+  const [stage, setStage] = React.useState(initialStage || "any");
   const [beds, setBeds] = React.useState(initialBeds || "any");
   const [district, setDistrict] = React.useState(initialDistrict || "any");
   const [sort, setSort] = React.useState(initialSort || "newest");
@@ -259,6 +262,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
       areaValues,
       defaultAreaRange,
       beds,
+      stage,
       sort,
       amenities,
       pageSize,
@@ -288,6 +292,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
       router,
       searchParams,
       sort,
+      stage,
       type,
     ]
   );
@@ -364,6 +369,8 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     setBeds,
     district,
     setDistrict,
+    stage,
+    setStage,
     sort,
     setSort,
     pageSize,

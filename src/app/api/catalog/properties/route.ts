@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
     maxArea: parsed.maxArea || undefined,
     beds: parsed.beds || undefined,
     amenities: parsed.amenities.length ? parsed.amenities : undefined,
+    stage: parsed.stage || undefined,
+    investment: parsed.investment || undefined,
     sort: parsed.sort as CatalogSort,
     page: parsed.page,
     pageSize,

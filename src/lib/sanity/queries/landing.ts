@@ -143,7 +143,9 @@ export const landingPageSectionsProjection = `{
     "city": city->slug.current,
     "district": district->slug.current,
     "propertyType": propertyType->slug.current,
-    deal
+    deal,
+    stage,
+    investment
   },
   autoMode,
   metrics,

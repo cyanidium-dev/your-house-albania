@@ -213,7 +213,11 @@
       "sale": "Sprzedaż",
       "discount": "-{value}%",
       "propertyFallback": "Nieruchomość",
-      "closePreview": "Zamknij podgląd"
+      "closePreview": "Zamknij podgląd",
+      "stageOffPlan": "W projekcie",
+      "stageUnderConstruction": "W budowie",
+      "handoverYear": "odbiór {year}",
+      "handoverQuarter": "odbiór Q{quarter} {year}"
     },
     "blogCard": {
       "imageAlt": "Zdjęcie artykułu na blogu",
@@ -286,7 +290,8 @@
     "forRealtors": "Dla agentów",
     "howToPublish": "Jak publikować",
     "register": "Rejestracja",
-    "investment": "Inwestycje"
+    "investment": "Inwestycje",
+    "newBuilds": "Nowe inwestycje"
   },
   "Districts": {
     "hubTitle": "Dzielnice miasta {city}",
@@ -454,8 +459,25 @@
       "viewLabel": "Widok",
       "viewLarge": "Duże karty",
       "viewSmall": "Małe karty",
-      "viewList": "Widok listy"
+      "viewList": "Widok listy",
+      "stage": "Etap budowy",
+      "stageAny": "Dowolny etap",
+      "stageUnfinished": "Jeszcze w budowie",
+      "stageOffPlan": "W projekcie",
+      "stageUnderConstruction": "W budowie",
+      "stageCompleted": "Ukończone",
+      "sortHandoverAsc": "Odbiór (najbliższe najpierw)"
     }
+  },
+  "NewBuilds": {
+    "title": "Nowe inwestycje i nieruchomości inwestycyjne w Albanii",
+    "description": "Nieruchomości w projekcie i w budowie na wybrzeżu Albanii, z terminem odbioru i stanem dokumentów w każdym ogłoszeniu.",
+    "badge": "Nowe inwestycje",
+    "heading": "Nowe inwestycje i nieruchomości inwestycyjne w Albanii",
+    "intro": "Nieruchomość kupiona przed odbiorem kosztuje mniej i niesie ryzyka, których nie ma gotowe mieszkanie: termin może się przesunąć, a akt własności bywa jeszcze w toku. Każde ogłoszenie tutaj podaje, na jakim etapie jest budynek i kiedy obiecano klucze.",
+    "empty": "W tej chwili nie ma budynków w budowie. Wszystko na stronie jest ukończone i odebrane — przejrzyj pełny katalog.",
+    "emptyCta": "Wszystkie nieruchomości",
+    "breadcrumbHome": "Strona główna"
   },
   "Contacts": {
     "metaTitle": "Kontakt",
@@ -644,7 +666,22 @@
       "countryTitle": "Nieruchomości w Albanii — mieszkania i domy na sprzedaż",
       "countryDescription": "Kup nieruchomość w Albanii: mieszkania nad morzem, domy i wille w Tiranie, Durres, Wlorze i Sarandzie. Sprawdzone oferty z realnymi cenami.",
       "catalogTitle": "Nieruchomości w Albanii na sprzedaż — pełny katalog",
-      "catalogDescription": "Wszystkie nieruchomości na sprzedaż w Albanii: mieszkania, domy, wille i działki. Filtruj według miasta, ceny, metrażu i liczby pokoi."
+      "catalogDescription": "Wszystkie nieruchomości na sprzedaż w Albanii: mieszkania, domy, wille i działki. Filtruj według miasta, ceny, metrażu i liczby pokoi.",
+      "typeTitle": "{type} w Albanii na sprzedaż",
+      "typeDescription": "{type} na sprzedaż w Albanii: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
+      "cityTypeTitle": "{type} na sprzedaż — {city}, Albania",
+      "cityTypeDescription": "{type} na sprzedaż — {city}, Albania: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
+      "types": {
+        "apartment": "Mieszkania",
+        "house": "Domy",
+        "villa": "Wille",
+        "studio": "Kawalerki",
+        "penthouse": "Apartamenty penthouse",
+        "land": "Działki",
+        "office": "Biura",
+        "commercial-space": "Lokale użytkowe",
+        "short-term-rent": "Wynajem krótkoterminowy"
+      }
     }
   },
   "AiSearch": {
