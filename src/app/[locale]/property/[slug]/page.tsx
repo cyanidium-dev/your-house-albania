@@ -15,6 +15,7 @@ import { PropertyMarketPositionSection } from '@/components/shared/property/Prop
 import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/property/marketPosition';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import TrackPageView from "@/components/analytics/TrackPageView";
+import MobileStickyBar from "@/components/property/MobileStickyBar";
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
@@ -382,10 +383,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 )}
                 <PropertyArticlesSection locale={locale} section={articlesSection} />
             </div>
-            {/* Mobile-only sticky bottom bar: price + CTA */}
-            <div
-              className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20"
-            >
+            {/* Mobile-only sticky bottom bar: price + CTA. It reserves its own
+                room at the end of the document — see MobileStickyBar. */}
+            <MobileStickyBar>
               <div className='flex items-center justify-between gap-4 px-5 py-4 bg-primary/50'
                 style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))' }}>
                 <div className="min-w-0 flex-1">
@@ -404,7 +404,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   className="shrink-0 py-3 px-6 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
                 />
               </div>
-            </div>
+            </MobileStickyBar>
         </section>
     );
 }
