@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
+import { track } from '@/lib/analytics/track'
 
 type Props = {
   locale: string
@@ -70,6 +71,7 @@ export function QuickLeadForm({
         setError(t('error'))
         return
       }
+      track({ event: 'lead_submit', kind: 'quote', source: sourceLabel })
       setSent(true)
       onSent?.()
     } catch {

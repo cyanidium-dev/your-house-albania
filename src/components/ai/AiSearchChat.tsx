@@ -8,6 +8,7 @@ import PropertyCard from '@/components/shared/property/PropertyCard'
 import { cn } from '@/lib/utils'
 import { parseAiEvent, type AiChatMessage, type AiErrorCode } from '@/lib/ai/events'
 import { AI_MAX_MESSAGE_CHARS, AI_MAX_TURNS } from '@/lib/ai/limits'
+import { track } from '@/lib/analytics/track'
 import type { PropertyHomes } from '@/types/propertyHomes'
 
 type CardGroup = { items: PropertyHomes[]; catalogUrl?: string }
@@ -61,10 +62,13 @@ function settleLastAssistant(turns: Turn[]): Turn[] {
 export default function AiSearchChat({
   locale,
   initialQuery,
+  entry = 'direct',
 }: {
   locale: string
   /** Question carried over from the home hero; sent automatically on mount. */
   initialQuery?: string
+  /** Where the visitor arrived from, for the analytics event on mount. */
+  entry?: 'hero' | 'header' | 'direct'
 }) {
   const t = useTranslations('AiSearch')
   const [turns, setTurns] = useState<Turn[]>([])
@@ -90,6 +94,13 @@ export default function AiSearchChat({
 
   useEffect(() => () => abortRef.current?.abort(), [])
 
+  const openTracked = useRef(false)
+  useEffect(() => {
+    if (openTracked.current) return
+    openTracked.current = true
+    track({ event: 'ai_search_open', entry })
+  }, [entry])
+
   const send = useCallback(
     async (text: string) => {
       const question = text.trim().slice(0, AI_MAX_MESSAGE_CHARS)
@@ -98,6 +109,12 @@ export default function AiSearchChat({
       setErrorCode(null)
       setBusy(true)
       setDraft('')
+      track({
+        event: 'ai_search_query',
+        queryLength: question.length,
+        turn: turns.filter((t) => t.role === 'user').length + 1,
+      })
+      let cardsThisTurn = 0
 
       // The model only needs the prose of the conversation: cards it produced
       // are described by the text around them, and replaying tool blocks would
@@ -171,6 +188,7 @@ export default function AiSearchChat({
                   })),
                 )
               } else if (event.type === 'cards') {
+                cardsThisTurn += event.items.length
                 setTurns((prev) =>
                   patchLastAssistant(prev, (turn) => ({
                     ...turn,
@@ -191,6 +209,9 @@ export default function AiSearchChat({
         abortRef.current = null
         setBusy(false)
         setTurns(settleLastAssistant)
+        // Zero cards is the "nothing in the catalog matches" case, which is the
+        // most useful signal this feature produces.
+        track({ event: 'ai_search_result', cards: cardsThisTurn, hadResults: cardsThisTurn > 0 })
       }
     },
     [busy, locale, turns],
@@ -281,12 +302,19 @@ export default function AiSearchChat({
                 <div key={`c-${index}-${groupIndex}`} className="space-y-4 pl-11">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {group.items.map((item) => (
-                      <PropertyCard key={item.slug} item={item} locale={locale} view="small" />
+                      // The card renders its own link; the click bubbles here.
+                      <div
+                        key={item.slug}
+                        onClick={() => track({ event: 'ai_card_click', slug: item.slug })}
+                      >
+                        <PropertyCard item={item} locale={locale} view="small" />
+                      </div>
                     ))}
                   </div>
                   {group.catalogUrl ? (
                     <Link
                       href={group.catalogUrl}
+                      onClick={() => track({ event: 'ai_catalog_click' })}
                       className={cn(
                         'inline-flex items-center gap-2 rounded-full border border-primary px-5 py-2.5',
                         'text-sm font-semibold text-primary transition-colors duration-200',

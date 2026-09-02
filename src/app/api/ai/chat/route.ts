@@ -87,7 +87,8 @@ export async function POST(req: NextRequest) {
   if (!messages) {
     return errorStream({ type: 'error', code: 'failed' }, 400)
   }
-  if (messages.filter((m) => m.role === 'user').length > AI_MAX_TURNS) {
+  const userTurns = messages.filter((m) => m.role === 'user').length
+  if (userTurns > AI_MAX_TURNS) {
     return errorStream({ type: 'error', code: 'too_many_turns' }, 400)
   }
 
@@ -220,7 +221,7 @@ export async function POST(req: NextRequest) {
   after(async () => {
     if (turnUsage.inputTokens === 0 && turnUsage.outputTokens === 0) return
     console.log('[ai] turn cost', { usd: estimateUsd(turnUsage).toFixed(4) })
-    await recordUsage(turnUsage)
+    await recordUsage(turnUsage, { newDialogue: userTurns === 1 })
   })
 
   return new Response(stream, {

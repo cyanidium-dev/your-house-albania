@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { FilterSelect, type FilterOption } from '@/components/catalog/FilterSelect'
 import { cn } from '@/lib/utils'
+import { track } from '@/lib/analytics/track'
 
 const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl'] as const
 
@@ -107,6 +108,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
         setError(data?.error ?? t('errorSubmit'))
         return
       }
+      track({ event: 'lead_submit', kind: 'registration' })
       router.push(`/${locale}/register/thank-you`)
     } catch {
       setError(t('errorSubmit'))

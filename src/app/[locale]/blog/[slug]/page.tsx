@@ -25,6 +25,7 @@ import { AuthorAvatar } from "@/components/Blog/AuthorAvatar";
 import { BlogFaq } from "@/components/Blog/BlogFaq";
 import { BlogSources } from "@/components/Blog/BlogSources";
 import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
+import TrackPageView from "@/components/analytics/TrackPageView";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
 import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
@@ -277,6 +278,7 @@ export default async function Post({ params }: Props) {
 
   return (
     <>
+      <TrackPageView kind="post" slug={slug} event={{ event: "blog_view", slug }} />
       <BlogArticleSchema
         detail={detail}
         baseUrl={baseUrl}

@@ -24,7 +24,7 @@ export default function HeaderAiSearchLink({
 
   return (
     <Link
-      href={aiSearchPath(locale)}
+      href={`${aiSearchPath(locale)}?from=header`}
       aria-label={t('headerLink')}
       title={t('headerLink')}
       className={`relative flex items-center justify-center p-0.5 transition-colors duration-300 ease-out hover:cursor-pointer hover:text-primary md:p-0 ${

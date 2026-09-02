@@ -14,6 +14,7 @@ import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/
 import { PropertyMarketPositionSection } from '@/components/shared/property/PropertyMarketPositionSection';
 import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/property/marketPosition';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
+import TrackPageView from "@/components/analytics/TrackPageView";
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
@@ -26,6 +27,10 @@ import { PropertyContactButton } from '@/components/property/PropertyContactModa
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
 import { getTranslations } from 'next-intl/server';
+// `catalogPath` already returns a locale-prefixed path, so this uses next/link
+// rather than the i18n Link, which would prefix the locale a second time.
+import Link from 'next/link';
+import { catalogPath } from '@/lib/routes/catalog';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -209,6 +214,18 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   return (
         <section className="pt-20 md:pt-32 pb-24 lg:pb-20 relative">
+            <TrackPageView
+              kind="property"
+              slug={slug}
+              event={{
+                event: "property_view",
+                slug,
+                city: (sanityProperty as { city?: { slug?: string } })?.city?.slug,
+                district: (sanityProperty as { district?: { slug?: string } })?.district?.slug,
+                propertyType: (sanityProperty as { type?: { slug?: string } })?.type?.slug,
+                priceEur: rawProperty.price ?? undefined,
+              }}
+            />
             <PropertyJsonLd
               name={title}
               slug={slug}
@@ -310,6 +327,25 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                             </div>
                             <p className='text-sm text-dark/50 dark:text-white'>{dealTypeLabel}</p>
+                            {propertyAgent?.slug && propertyAgent?.name ? (
+                              // The agent pages carried no inbound link anywhere on the site and
+                              // were reachable only from a sitemap (SEO-08 audit, 02.09.2026).
+                              // Naming who listed the property is also the honest thing to show
+                              // next to the price.
+                              <p className='text-sm text-dark/60 dark:text-white/70 mt-2'>
+                                {tPropertyDetail.rich('listedBy', {
+                                  name: propertyAgent.name,
+                                  link: (chunks) => (
+                                    <Link
+                                      href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
+                                      className='underline underline-offset-2 hover:text-primary duration-300'
+                                    >
+                                      {chunks}
+                                    </Link>
+                                  ),
+                                })}
+                              </p>
+                            ) : null}
                             <PropertyContactButton
                               locale={locale}
                               propertySlug={slug}

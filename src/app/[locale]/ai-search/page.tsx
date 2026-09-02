@@ -42,6 +42,8 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
   const query = await searchParams
   const t = await getTranslations({ locale, namespace: 'AiSearch' })
   const initialQuery = firstParam(query.q)?.trim().slice(0, AI_MAX_MESSAGE_CHARS)
+  // Where the visitor came from, for the analytics event the chat fires on mount.
+  const entry = initialQuery ? 'hero' : firstParam(query.from) === 'header' ? 'header' : 'direct'
 
   return (
     <div className="container max-w-4xl mx-auto px-5 2xl:px-0 pt-24 md:pt-32 pb-14 md:pb-20">
@@ -53,7 +55,7 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
       </div>
 
       {isAiSearchEnabled() ? (
-        <AiSearchChat locale={locale} initialQuery={initialQuery} />
+        <AiSearchChat locale={locale} initialQuery={initialQuery} entry={entry} />
       ) : (
         <div className="rounded-2xl border border-dark/10 bg-white p-6 dark:border-white/10 dark:bg-white/5 sm:p-8">
           <p className="text-dark dark:text-white">{t('errors.unavailable')}</p>

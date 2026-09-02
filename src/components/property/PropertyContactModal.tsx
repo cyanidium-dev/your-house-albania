@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
+import { track } from '@/lib/analytics/track'
 
 type Props = {
   locale: string
@@ -90,6 +91,7 @@ export function PropertyContactButton({
         setError(data?.error ?? t('errorSubmit'))
         return
       }
+      track({ event: 'lead_submit', kind: 'agent', source: propertySlug })
       setSent(true)
     } catch {
       setError(t('errorSubmit'))

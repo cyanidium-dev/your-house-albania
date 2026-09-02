@@ -129,7 +129,11 @@ export async function isBudgetExhausted(now = new Date()): Promise<boolean> {
  * Never throws: a counter that failed to increment is a reporting problem, not
  * a reason to lose an answer the visitor already paid for.
  */
-export async function recordUsage(usage: TurnUsage, now = new Date()): Promise<void> {
+export async function recordUsage(
+  usage: TurnUsage,
+  opts: { newDialogue?: boolean; now?: Date } = {},
+): Promise<void> {
+  const now = opts.now ?? new Date()
   const client = writeClientOrWarn()
   if (!client) return
   const id = usageDocId(now)
@@ -145,6 +149,7 @@ export async function recordUsage(usage: TurnUsage, now = new Date()): Promise<v
         cacheReadTokens: 0,
         cacheWriteTokens: 0,
         turns: 0,
+        dialogues: 0,
         estimatedUsd: 0,
       })
       .inc({
@@ -153,6 +158,9 @@ export async function recordUsage(usage: TurnUsage, now = new Date()): Promise<v
         cacheReadTokens: usage.cacheReadTokens,
         cacheWriteTokens: usage.cacheWriteTokens,
         turns: 1,
+        // A dialogue is counted on its first message, so `turns / dialogues`
+        // reads as "how many questions people ask before they stop".
+        dialogues: opts.newDialogue ? 1 : 0,
         estimatedUsd: estimateUsd(usage),
       })
       .set({ updatedAt: now.toISOString() })
@@ -170,6 +178,7 @@ export async function recordUsage(usage: TurnUsage, now = new Date()): Promise<v
         cacheReadTokens: usage.cacheReadTokens,
         cacheWriteTokens: usage.cacheWriteTokens,
         turns: 1,
+        dialogues: opts.newDialogue ? 1 : 0,
         estimatedUsd: estimateUsd(usage),
         updatedAt: now.toISOString(),
       })
