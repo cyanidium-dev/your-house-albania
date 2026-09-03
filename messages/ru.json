@@ -49,6 +49,7 @@
       "rent": "Аренда",
       "shortTermRent": "Краткосрочная аренда",
       "cities": "Города",
+      "investment": "Инвестиционная недвижимость",
       "realtors": "Риелторам",
       "blog": "Блог"
     },
@@ -187,6 +188,7 @@
       "yearBuilt": "Построен в {year}",
       "checkAllPhotos": "Все фотографии",
       "getInTouch": "Связаться",
+      "listedBy": "Разместил <link>{name}</link>",
       "contactHeading": "Заинтересовал этот объект?",
       "contactIntro": "Оставьте контакты — мы свяжемся с вами по этому объявлению.",
       "contactSuccessTitle": "Запрос отправлен!",

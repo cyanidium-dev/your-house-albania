@@ -28,7 +28,12 @@ export type AgentSitemapEntry = { slug: string; lastModified: Date };
 export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[]> {
   const client = getClient();
   if (!client) return [];
-  const query = `*[_type == "agent" && defined(slug.current)]{
+  // `isPublished != false` rather than `== true`: the flag was added to the
+  // agent schema after these documents existed, so every current agent has it
+  // undefined and must stay visible. Only an explicit uncheck hides one — which
+  // is what the test-agent record needs, since the sitemap used to list every
+  // agent document with no way to exclude it.
+  const query = `*[_type == "agent" && defined(slug.current) && isPublished != false]{
     "slug": slug.current,
     _updatedAt
   }`;

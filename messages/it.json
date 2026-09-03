@@ -49,6 +49,7 @@
       "rent": "Affitto",
       "shortTermRent": "Affitto breve",
       "cities": "Città",
+      "investment": "Immobili da investimento",
       "realtors": "Per agenti",
       "blog": "Blog"
     },
@@ -187,6 +188,7 @@
       "yearBuilt": "Costruito nel {year}",
       "checkAllPhotos": "Vedi tutte le foto",
       "getInTouch": "Contattaci",
+      "listedBy": "Pubblicato da <link>{name}</link>",
       "contactHeading": "Ti interessa questo immobile?",
       "contactIntro": "Lascia i tuoi contatti — ti ricontatteremo per questo annuncio.",
       "contactSuccessTitle": "Richiesta inviata!",

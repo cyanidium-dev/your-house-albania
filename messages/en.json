@@ -49,6 +49,7 @@
       "rent": "Rent",
       "shortTermRent": "Short-term rent",
       "cities": "Cities",
+      "investment": "Investment property",
       "realtors": "For realtors",
       "blog": "Blog"
     },
@@ -187,6 +188,7 @@
       "yearBuilt": "Built {year}",
       "checkAllPhotos": "Check all photos",
       "getInTouch": "Get in touch",
+      "listedBy": "Listed by <link>{name}</link>",
       "contactHeading": "Interested in this property?",
       "contactIntro": "Leave your details and we will get back to you about this listing.",
       "contactSuccessTitle": "Request sent!",

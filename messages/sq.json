@@ -49,6 +49,7 @@
       "rent": "Qira",
       "shortTermRent": "Qira afatshkurtër",
       "cities": "Qytetet",
+      "investment": "Prona për investim",
       "realtors": "Për agjentë",
       "blog": "Blog"
     },
@@ -187,6 +188,7 @@
       "yearBuilt": "Ndërtuar {year}",
       "checkAllPhotos": "Shiko të gjitha fotot",
       "getInTouch": "Na kontaktoni",
+      "listedBy": "Publikuar nga <link>{name}</link>",
       "contactHeading": "Ju intereson kjo pronë?",
       "contactIntro": "Lini kontaktet tuaja — do t'ju kontaktojmë për këtë njoftim.",
       "contactSuccessTitle": "Kërkesa u dërgua!",

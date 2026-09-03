@@ -14,6 +14,12 @@ export type AgentContactPage = {
   facebookUrl: string | null
   instagramUrl: string | null
   youtubeUrl: string | null
+  /**
+   * False only when an editor has explicitly unchecked Published. The field was
+   * added to the schema after these documents existed, so undefined means
+   * visible — the sitemap and the page's robots tag both read it that way.
+   */
+  isPublished: boolean
 }
 
 type SanityImageField = { asset?: { url?: string }; alt?: string } | null | undefined
@@ -32,6 +38,7 @@ export type SanityAgentDocument = {
   facebookUrl?: string
   instagramUrl?: string
   youtubeUrl?: string
+  isPublished?: boolean
 }
 
 function pickImage(img: SanityImageField): { url: string; alt?: string } | null {
@@ -77,6 +84,7 @@ export function mapSanityAgentToContactPage(
     phone: nullableTrimmed(raw.phone),
     photo: pickImage(raw.photo),
     agentLogo: pickImage(raw.agentLogo),
+    isPublished: raw.isPublished !== false,
     telegramUrl: nullableTrimmed(raw.telegramUrl),
     facebookUrl: nullableTrimmed(raw.facebookUrl),
     instagramUrl: nullableTrimmed(raw.instagramUrl),

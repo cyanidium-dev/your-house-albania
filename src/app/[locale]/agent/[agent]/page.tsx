@@ -43,10 +43,14 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const pathOnly = path.split("?")[0];
   const base = getSiteBaseUrl();
   const href = buildHreflangAlternates(pathOnly.replace(`/${locale}`, ""));
+  // An agent unpublished in the CMS drops out of the sitemap; without this the
+  // page would stay indexable, which is the gap that left a test-agent record
+  // in the index with no way to remove it.
   const robots =
     listingUrlHasQueryParams(search) ||
     shouldCatalogListingNoindex(search, { ignoredQueryKeys: ["agent"] }) ||
-    (catalogSeo?.noIndex ?? false)
+    (catalogSeo?.noIndex ?? false) ||
+    (agentDoc ? !agentDoc.isPublished : false)
       ? { index: false as const, follow: true as const }
       : undefined;
   return {

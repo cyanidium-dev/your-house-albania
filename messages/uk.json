@@ -49,6 +49,7 @@
       "rent": "Оренда",
       "shortTermRent": "Короткострокова оренда",
       "cities": "Міста",
+      "investment": "Інвестиційна нерухомість",
       "realtors": "Для ріелторів",
       "blog": "Блог"
     },
@@ -187,6 +188,7 @@
       "yearBuilt": "Збудовано {year}",
       "checkAllPhotos": "Всі фото",
       "getInTouch": "Зв'язатися",
+      "listedBy": "Розміщено <link>{name}</link>",
       "contactHeading": "Зацікавив цей об'єкт?",
       "contactIntro": "Залиште контакти — ми зв'яжемося з вами щодо цього оголошення.",
       "contactSuccessTitle": "Запит надіслано!",

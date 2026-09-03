@@ -49,6 +49,7 @@
       "rent": "Wynajem",
       "shortTermRent": "Wynajem krótkoterminowy",
       "cities": "Miasta",
+      "investment": "Nieruchomości inwestycyjne",
       "realtors": "Dla agentów",
       "blog": "Blog"
     },
@@ -176,6 +177,7 @@
       "yearBuilt": "Rok budowy {year}",
       "checkAllPhotos": "Zobacz wszystkie zdjęcia",
       "getInTouch": "Skontaktuj się",
+      "listedBy": "Wystawione przez <link>{name}</link>",
       "contactHeading": "Zainteresowany tą nieruchomością?",
       "contactIntro": "Zostaw swoje dane, a skontaktujemy się z Tobą w sprawie tej oferty.",
       "contactSuccessTitle": "Zgłoszenie wysłane!",

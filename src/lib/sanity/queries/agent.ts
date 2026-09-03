@@ -25,6 +25,7 @@ export async function fetchAgentBySlug(
     _id,
     name,
     "slug": slug.current,
+    isPublished,
     bio,
     email,
     phone,
