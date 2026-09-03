@@ -720,6 +720,22 @@
       "too_many_turns": "This conversation has got long. Start a new one to continue.",
       "failed": "Something went wrong. Try sending it again.",
       "budget_exhausted": "AI search is paused because of heavy load today. The full catalog is open as usual."
+    },
+    "property": {
+      "heading": "Ask about this property",
+      "subheading": "The assistant knows this listing and its area. Prices and availability are confirmed by an agent.",
+      "openCta": "Ask a question",
+      "chatPlaceholder": "Ask anything about this property",
+      "examples": [
+        "Does this suit investment?",
+        "What is the price per m² here?",
+        "How does it compare with similar listings?",
+        "What is this district like?"
+      ],
+      "intro": {
+        "title": "What would you like to know?",
+        "body": "Ask about the layout, the district, the price against the area, or how it compares with other listings."
+      }
     }
   }
 }

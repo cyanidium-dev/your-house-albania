@@ -720,6 +720,22 @@
       "too_many_turns": "Biseda u zgjat. Filloni një të re për të vazhduar.",
       "failed": "Diçka shkoi keq. Provoni ta dërgoni sërish.",
       "budget_exhausted": "Kërkimi me AI është pezulluar sot për shkak të ngarkesës së lartë. Katalogu i plotë është i hapur si zakonisht."
+    },
+    "property": {
+      "heading": "Pyesni për këtë pronë",
+      "subheading": "Asistenti njeh këtë pronë dhe zonën e saj. Çmimet dhe disponueshmëria konfirmohen nga agjenti.",
+      "openCta": "Bëni një pyetje",
+      "chatPlaceholder": "Pyesni çfarëdo për këtë pronë",
+      "examples": [
+        "A është e përshtatshme për investim?",
+        "Sa është çmimi për m² këtu?",
+        "Si krahasohet me prona të ngjashme?",
+        "Si është kjo lagje?"
+      ],
+      "intro": {
+        "title": "Çfarë doni të dini?",
+        "body": "Pyesni për planimetrinë, lagjen, çmimin krahasuar me tregun ose krahasimin me prona të tjera."
+      }
     }
   }
 }

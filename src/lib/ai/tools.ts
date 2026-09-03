@@ -18,6 +18,8 @@ import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { buildListingUrl } from '@/lib/routes/listingRoutes'
 import type { CatalogProperty } from '@/types/catalog'
 import type { PropertyHomes } from '@/types/propertyHomes'
+import { calculateRoi } from '@/lib/calculators/roi'
+import { calculateMortgage } from '@/lib/calculators/mortgage'
 import { AI_MAX_CARDS } from './limits'
 
 export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
@@ -216,3 +218,98 @@ export async function runShowProperties(
 }
 
 export const __testables = { sanitizeSlugs, buildCatalogUrl }
+
+/* ------------------------------------------------------------------ *
+ * Calculators
+ *
+ * The zone data needed to model a return does not exist yet — yields are
+ * empty across every metrics record — so these deliberately take the numbers
+ * from the visitor instead: "if you rented it for 600 a month, here is the
+ * gross yield". That is an honest calculation on a stated assumption rather
+ * than a market claim, and it is useful today. The arithmetic runs in the
+ * project's tested calculators; the model never does it itself.
+ * ------------------------------------------------------------------ */
+
+export const CALC_ROI_TOOL: Anthropic.Tool = {
+  name: 'calc_roi',
+  description:
+    'Gross and net rental yield for a stated rent. The visitor must supply the rent — never invent ' +
+    'one, and never present the result as what the property will actually earn. State the ' +
+    'assumptions back to them alongside the number.',
+  input_schema: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['priceEur', 'rentalType'],
+    properties: {
+      priceEur: { type: 'number', description: 'Purchase price in EUR' },
+      rentalType: { type: 'string', enum: ['ltr', 'str'], description: 'Long-term or short-term' },
+      monthlyRentEur: { type: 'number', description: 'Long-term only: monthly rent the visitor expects' },
+      adrEur: { type: 'number', description: 'Short-term only: average nightly rate' },
+      occupancyPct: { type: 'number', description: 'Short-term only: occupancy 0-100' },
+      mgmtFeePct: { type: 'number', description: 'Management fee, % of gross. Default 0' },
+      taxRatePct: { type: 'number', description: 'Rental income tax, %. Albania is 15 from 2026' },
+    },
+  },
+}
+
+export const CALC_MORTGAGE_TOOL: Anthropic.Tool = {
+  name: 'calc_mortgage',
+  description:
+    'Monthly payment on an annuity mortgage. All terms come from the visitor; do not assume a rate ' +
+    'they have not mentioned. Not a lending offer, and not advice about whether to borrow.',
+  input_schema: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['priceEur', 'downPaymentPct', 'annualRatePct', 'termYears'],
+    properties: {
+      priceEur: { type: 'number' },
+      downPaymentPct: { type: 'number', description: '0-100' },
+      annualRatePct: { type: 'number' },
+      termYears: { type: 'number' },
+    },
+  },
+}
+
+/** Bank of Albania caps LTV at 85% for a first home and lower elsewhere; 80 is the safe middle. */
+const DEFAULT_MAX_LTV_PCT = 80
+
+export function runCalcRoi(rawInput: unknown): unknown {
+  const input = (rawInput ?? {}) as Record<string, unknown>
+  const rentalType = input.rentalType === 'str' ? 'str' : 'ltr'
+  const result = calculateRoi({
+    priceEur: Number(input.priceEur),
+    rentalType,
+    monthlyRentEur: Number(input.monthlyRentEur) || undefined,
+    adrEur: Number(input.adrEur) || undefined,
+    occupancyPct: Number(input.occupancyPct) || undefined,
+    mgmtFeePct: Number(input.mgmtFeePct) || 0,
+    taxRatePct: Number(input.taxRatePct) || 15,
+  })
+  if (!result) {
+    return { error: 'Not enough input. Ask the visitor for the rent (or nightly rate and occupancy).' }
+  }
+  return {
+    ...result,
+    note: 'Gross yield ignores vacancy, repairs and purchase costs. Net applies only the management fee and tax given.',
+  }
+}
+
+export function runCalcMortgage(rawInput: unknown): unknown {
+  const input = (rawInput ?? {}) as Record<string, unknown>
+  const result = calculateMortgage({
+    priceEur: Number(input.priceEur),
+    downPaymentPct: Number(input.downPaymentPct),
+    annualRatePct: Number(input.annualRatePct),
+    termYears: Number(input.termYears),
+    maxLtvPct: DEFAULT_MAX_LTV_PCT,
+  })
+  if (!result) return { error: 'Not enough input. Ask for price, down payment, rate and term.' }
+  return result
+}
+
+/** Tools for the property conversation: the catalog tool plus the calculators. */
+export const AI_PROPERTY_TOOLS: Anthropic.Tool[] = [
+  SHOW_PROPERTIES_TOOL,
+  CALC_ROI_TOOL,
+  CALC_MORTGAGE_TOOL,
+]

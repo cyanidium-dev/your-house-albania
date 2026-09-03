@@ -63,14 +63,22 @@ export default function AiSearchChat({
   locale,
   initialQuery,
   entry = 'direct',
+  propertySlug,
 }: {
   locale: string
   /** Question carried over from the home hero; sent automatically on mount. */
   initialQuery?: string
   /** Where the visitor arrived from, for the analytics event on mount. */
   entry?: 'hero' | 'header' | 'direct'
+  /**
+   * When set, the conversation is about this one listing: the route loads its
+   * facts and zone figures, and the prompts and suggestions change with it.
+   */
+  propertySlug?: string
 }) {
   const t = useTranslations('AiSearch')
+  const aboutProperty = Boolean(propertySlug)
+  const key = (name: string) => (aboutProperty ? `property.${name}` : name)
   const [turns, setTurns] = useState<Turn[]>([])
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
@@ -84,9 +92,9 @@ export default function AiSearchChat({
   const limitReached = userTurns >= AI_MAX_TURNS
 
   const suggestions = useMemo(() => {
-    const raw = t.raw('examples')
+    const raw = t.raw(aboutProperty ? 'property.examples' : 'examples')
     return Array.isArray(raw) ? raw.filter((e): e is string => typeof e === 'string') : []
-  }, [t])
+  }, [t, aboutProperty])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
@@ -140,7 +148,11 @@ export default function AiSearchChat({
         const response = await fetch('/api/ai/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ locale, messages: [...history, { role: 'user', content: question }] }),
+          body: JSON.stringify({
+            locale,
+            propertySlug,
+            messages: [...history, { role: 'user', content: question }],
+          }),
           signal: controller.signal,
         })
 
@@ -214,7 +226,7 @@ export default function AiSearchChat({
         track({ event: 'ai_search_result', cards: cardsThisTurn, hadResults: cardsThisTurn > 0 })
       }
     },
-    [busy, locale, turns],
+    [busy, locale, propertySlug, turns],
   )
 
   useEffect(() => {
@@ -246,8 +258,8 @@ export default function AiSearchChat({
       <div className="flex-1 space-y-8" aria-live="polite">
         {showIntro ? (
           <div className="rounded-2xl border border-dark/10 bg-white p-6 dark:border-white/10 dark:bg-white/5 sm:p-8">
-            <p className="text-lg font-semibold text-dark dark:text-white">{t('intro.title')}</p>
-            <p className="mt-2 text-dark/70 dark:text-white/70">{t('intro.body')}</p>
+            <p className="text-lg font-semibold text-dark dark:text-white">{t(key('intro.title'))}</p>
+            <p className="mt-2 text-dark/70 dark:text-white/70">{t(key('intro.body'))}</p>
             {suggestions.length > 0 ? (
               <div className="mt-5 flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
@@ -357,7 +369,7 @@ export default function AiSearchChat({
         ) : (
           <form onSubmit={onSubmit} className="flex items-center gap-2">
             <label htmlFor="ai-chat-input" className="sr-only">
-              {t('inputLabel')}
+              {t(key('chatPlaceholder'))}
             </label>
             <input
               id="ai-chat-input"
@@ -365,7 +377,7 @@ export default function AiSearchChat({
               value={draft}
               maxLength={AI_MAX_MESSAGE_CHARS}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder={t('chatPlaceholder')}
+              placeholder={t(key('chatPlaceholder'))}
               autoComplete="off"
               enterKeyHint="send"
               disabled={busy}

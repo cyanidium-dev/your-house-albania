@@ -3,8 +3,15 @@ import { after, type NextRequest } from 'next/server'
 import { createAnthropicClient } from '@/lib/ai/client'
 import { routing } from '@/i18n/routing'
 import { getCatalogSnapshot } from '@/lib/ai/catalogSnapshot'
-import { buildSystemBlocks } from '@/lib/ai/prompt'
-import { AI_TOOLS, runShowProperties } from '@/lib/ai/tools'
+import { buildPropertySystemBlocks, buildSystemBlocks } from '@/lib/ai/prompt'
+import { buildPropertyContext } from '@/lib/ai/propertyContext'
+import {
+  AI_PROPERTY_TOOLS,
+  AI_TOOLS,
+  runCalcMortgage,
+  runCalcRoi,
+  runShowProperties,
+} from '@/lib/ai/tools'
 import { checkRateLimit, clientKeyFromHeaders } from '@/lib/ai/rateLimit'
 import { addUsage, EMPTY_USAGE, estimateUsd, isBudgetExhausted, recordUsage } from '@/lib/ai/budget'
 import { encodeAiEvent, type AiChatMessage, type AiStreamEvent } from '@/lib/ai/events'
@@ -97,8 +104,19 @@ export async function POST(req: NextRequest) {
     return errorStream({ type: 'error', code: 'budget_exhausted' }, 503)
   }
 
+  // A conversation is either about the catalog or about one listing. An
+  // unusable slug falls back to the catalog rather than failing: a broken link
+  // should still get an answer.
+  const rawSlug = (body as { propertySlug?: unknown })?.propertySlug
+  const propertySlug =
+    typeof rawSlug === 'string' && /^[a-z0-9-]{1,120}$/.test(rawSlug) ? rawSlug : ''
+  const propertyContext = propertySlug ? await buildPropertyContext(propertySlug, locale) : null
+
   const snapshot = await getCatalogSnapshot()
-  const system = buildSystemBlocks(snapshot, locale)
+  const system = propertyContext
+    ? buildPropertySystemBlocks(snapshot, propertyContext.text, locale)
+    : buildSystemBlocks(snapshot, locale)
+  const tools = propertyContext ? AI_PROPERTY_TOOLS : AI_TOOLS
   const client = createAnthropicClient()
 
   const conversation: Anthropic.MessageParam[] = messages.map((m) => ({
@@ -128,7 +146,7 @@ export async function POST(req: NextRequest) {
             // reasoning-heavy task, and this surface is latency-sensitive.
             output_config: { effort: 'low' },
             system,
-            tools: AI_TOOLS,
+            tools,
             messages: conversation,
           })
 
@@ -168,17 +186,32 @@ export async function POST(req: NextRequest) {
           for (const toolUse of toolUses) {
             send({ type: 'tool_start', name: toolUse.name })
 
-            if (toolUse.name !== 'show_properties') {
-              results.push({
-                type: 'tool_result',
-                tool_use_id: toolUse.id,
-                is_error: true,
-                content: `Unknown tool: ${toolUse.name}`,
-              })
-              continue
-            }
-
             try {
+              if (toolUse.name === 'calc_roi' || toolUse.name === 'calc_mortgage') {
+                // Pure arithmetic on numbers the visitor supplied — nothing for
+                // the browser to render, so no `cards` event.
+                const output =
+                  toolUse.name === 'calc_roi'
+                    ? runCalcRoi(toolUse.input)
+                    : runCalcMortgage(toolUse.input)
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  content: JSON.stringify(output),
+                })
+                continue
+              }
+
+              if (toolUse.name !== 'show_properties') {
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  is_error: true,
+                  content: `Unknown tool: ${toolUse.name}`,
+                })
+                continue
+              }
+
               const { model, ui } = await runShowProperties(toolUse.input, locale)
               if (ui.items.length > 0) {
                 send({ type: 'cards', items: ui.items, catalogUrl: ui.catalogUrl })

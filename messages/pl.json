@@ -720,6 +720,22 @@
       "too_many_turns": "Rozmowa zrobiła się długa. Zacznij nową, aby kontynuować.",
       "failed": "Coś poszło nie tak. Spróbuj wysłać ponownie.",
       "budget_exhausted": "Wyszukiwanie AI jest dziś wstrzymane z powodu dużego obciążenia. Pełny katalog działa jak zwykle."
+    },
+    "property": {
+      "heading": "Zapytaj o tę nieruchomość",
+      "subheading": "Asystent zna tę ofertę i jej okolicę. Ceny i dostępność potwierdza agent.",
+      "openCta": "Zadaj pytanie",
+      "chatPlaceholder": "Zapytaj o cokolwiek dotyczące tej oferty",
+      "examples": [
+        "Czy nadaje się pod inwestycję?",
+        "Jaka jest tu cena za m²?",
+        "Jak wypada na tle podobnych?",
+        "Co to za dzielnica?"
+      ],
+      "intro": {
+        "title": "Co chcesz wiedzieć?",
+        "body": "Zapytaj o rozkład, dzielnicę, cenę na tle rynku albo porównanie z innymi ofertami."
+      }
     }
   }
 }

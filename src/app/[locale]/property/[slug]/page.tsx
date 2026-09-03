@@ -16,6 +16,8 @@ import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/proper
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import TrackPageView from "@/components/analytics/TrackPageView";
 import MobileStickyBar from "@/components/property/MobileStickyBar";
+import AiPropertyPanel from "@/components/ai/AiPropertyPanel";
+import { isAiSearchEnabled } from "@/lib/ai/config";
 import { PropertyJsonLd } from '@/components/shared/PropertyJsonLd';
 import { FavoriteButton } from '@/components/shared/FavoriteButton';
 import { getBaseUrl } from '@/lib/seo/baseUrl';
@@ -382,6 +384,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   </section>
                 )}
                 <PropertyArticlesSection locale={locale} section={articlesSection} />
+                {isAiSearchEnabled() ? (
+                  <AiPropertyPanel locale={locale} propertySlug={slug} />
+                ) : null}
             </div>
             {/* Mobile-only sticky bottom bar: price + CTA. It reserves its own
                 room at the end of the document — see MobileStickyBar. */}

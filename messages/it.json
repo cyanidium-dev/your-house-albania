@@ -720,6 +720,22 @@
       "too_many_turns": "La conversazione si è allungata. Ne inizi una nuova per continuare.",
       "failed": "Qualcosa è andato storto. Provi a inviare di nuovo.",
       "budget_exhausted": "La ricerca AI è sospesa oggi per carico elevato. Il catalogo completo è aperto come sempre."
+    },
+    "property": {
+      "heading": "Chieda di questo immobile",
+      "subheading": "L'assistente conosce questo immobile e la sua zona. Prezzi e disponibilità sono confermati da un agente.",
+      "openCta": "Faccia una domanda",
+      "chatPlaceholder": "Chieda qualsiasi cosa su questo immobile",
+      "examples": [
+        "È adatto a un investimento?",
+        "Qual è il prezzo al m² qui?",
+        "Come si confronta con immobili simili?",
+        "Com'è questa zona?"
+      ],
+      "intro": {
+        "title": "Cosa desidera sapere?",
+        "body": "Chieda della planimetria, della zona, del prezzo rispetto al mercato o del confronto con altri immobili."
+      }
     }
   }
 }
