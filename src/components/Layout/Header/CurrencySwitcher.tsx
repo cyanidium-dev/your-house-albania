@@ -35,7 +35,7 @@ export default function CurrencySwitcher() {
         className={cn(
           'relative inline-flex h-8 items-center justify-between gap-1.5 rounded-full',
           'bg-dark/5 dark:bg-white/10',
-          'px-2.5 pr-8',
+          'px-2.5 pr-7 sm:pr-8',
           'text-sm font-semibold text-dark/80 dark:text-white/80',
           'cursor-pointer transition-colors hover:bg-dark/10 dark:hover:bg-white/15',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset'
@@ -48,7 +48,9 @@ export default function CurrencySwitcher() {
           {meta.symbol !== meta.code ? (
             <>
               <span className="shrink-0">{meta.symbol}</span>
-              <span className="truncate">{meta.code}</span>
+              {/* The logo and the menu button both need the room on a phone,
+                  and the symbol alone already says which currency this is. */}
+              <span className="hidden truncate sm:inline">{meta.code}</span>
             </>
           ) : (
             <span className="truncate">{meta.code}</span>

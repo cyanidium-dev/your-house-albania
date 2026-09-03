@@ -5,6 +5,7 @@ import { routing } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { Icon } from "@iconify/react";
+import { cn } from "@/lib/utils";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -27,19 +28,33 @@ export default function LanguageSwitcher() {
 
   return (
     <div ref={ref} className="relative flex items-center">
+      {/* Deliberately the same pill, size and type scale as CurrencySwitcher:
+          the two sit side by side, and the old `text-lg font-bold` made this
+          one shout next to it while eating room the logo needed. */}
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-2 py-1 rounded-md hover:rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-lg font-bold duration-300 ease-out cursor-pointer transition-colors"
+        className={cn(
+          'relative inline-flex h-8 items-center justify-between gap-1.5 rounded-full',
+          'bg-dark/5 dark:bg-white/10',
+          'px-2.5 pr-7 sm:pr-8',
+          'text-sm font-semibold text-dark/80 dark:text-white/80',
+          'cursor-pointer transition-colors hover:bg-dark/10 dark:hover:bg-white/15',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset'
+        )}
         aria-label={t("selectLanguage")}
         aria-expanded={open}
+        aria-haspopup="listbox"
       >
         <span>{locale.toUpperCase()}</span>
         <Icon
           icon="ph:caret-down"
-          width={16}
-          height={16}
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
+          width={14}
+          height={14}
+          className={cn(
+            'absolute right-2.5 top-1/2 -translate-y-1/2 text-dark/60 dark:text-white/70 pointer-events-none transition-transform',
+            open && 'rotate-180'
+          )}
         />
       </button>
       {open && (
