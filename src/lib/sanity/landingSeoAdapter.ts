@@ -43,6 +43,8 @@ export type LandingMetadataItemContext = {
   itemOgImageUrl?: string
   /** Path after locale (e.g. `/cities`, `/sale`). Used for hreflang alternates. */
   pathnameForAlternates?: string
+  /** `landingPage.locales` — restrict hreflang alternates to these locales (SEO-04). */
+  alternateLocales?: readonly string[]
   /** `landingPage.contentUpdatedAt` (date string) → `article:modified_time`. */
   contentUpdatedAt?: string
 }
@@ -143,7 +145,8 @@ export function buildLandingMetadata(
   }
 
   const hrefPath = itemContext?.pathnameForAlternates
-  const hreflang = hrefPath !== undefined ? buildHreflangAlternates(hrefPath) : undefined
+  const hreflang =
+    hrefPath !== undefined ? buildHreflangAlternates(hrefPath, itemContext?.alternateLocales) : undefined
 
   return buildMetadata({
     title: titleField,
