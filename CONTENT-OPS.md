@@ -1,5 +1,7 @@
 # Content operations — hard rules
 
+> **How-to lives next to the Studio:** creating each page type, the publish checklist, the translation workflow, the data-refresh cadence and the Studio "Content ops" desk are in `domlivo-admin/CONTENT-OPS.md` (ТЗ-18). This file is the rules; that one is the operations manual.
+
 These rules govern every text and image that goes on domlivo.com. They exist to
 keep the site factual, multilingual and free of machine-filler. The automated
 `npm run content-qa` audit (see README → Content QA) enforces most of them.

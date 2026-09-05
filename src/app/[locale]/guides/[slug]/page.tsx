@@ -8,6 +8,7 @@ import { buildGuideArticleJsonLd } from "@/lib/seo/guideArticleJsonLd";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { isLandingInLocale, landingLocales } from "@/lib/landing/localeScope";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -56,6 +57,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!landing) {
     return {};
   }
+  // A locale-scoped landing (landingPage.locales) 404s outside its locales.
+  if (!isLandingInLocale(landing, locale)) return {};
+  const scopedLocales = landingLocales(landing);
   const landingSeo = (landing as { seo?: unknown }).seo ?? null;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
   const itemTitle = resolveLocalizedString(landing.title as never, locale) || undefined;
@@ -66,6 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     itemDescription,
     itemOgImageUrl: landing.cardImage?.asset?.url,
     pathnameForAlternates: `guides/${guideSlug}`,
+    alternateLocales: scopedLocales.length ? scopedLocales : undefined,
     contentUpdatedAt: (landing as { contentUpdatedAt?: string }).contentUpdatedAt,
   });
 }
@@ -82,6 +87,8 @@ export default async function GuideLandingPage({ params }: Props) {
 
   const landing = await fetchGuideLandingBySlug(guideSlug);
   if (!landing) notFound();
+  // A locale-scoped landing (landingPage.locales) exists only in its locales.
+  if (!isLandingInLocale(landing, locale)) notFound();
 
   const guideTitle = resolveLocalizedString(landing.title as never, locale) || guideSlug;
   const sections = asSections(landing as never);

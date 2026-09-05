@@ -162,7 +162,7 @@ for u in sq/albania/vlore en/albania/tirana pl/albania/sarande it/albania/durres
 ---
 
 ### SEO-04 🤖 Польский кластер — главный приоритет квартала
-- [ ] **Сделано**
+- [x] **Сделано 05.09.2026** — 9 страниц `/pl/guides/*` (хаб, nad morzem, mieszkania, Saranda, tanie, ile kosztuje dom, jak kupić, czy Polak może, czy warto): тело 1 900–2 800 знаков из KB с источниками и пометкой уверенности, таблица цен из `zoneMetrics`, FAQ + `FAQPage`, ≥ 2 ссылки на соседей кластера и ссылка в каталог. Инженерная основа — новое поле `landingPage.locales` (страница только в выбранных локалях: 404 в остальных, hreflang/sitemap/индекс гайдов/related только там), your-house-albania #59 + domlivo-admin #74/#75. Данные и тест качества: `cms/scripts/lib/plCluster.ts`, `npm run seed:pl-cluster`. **PL — pending native review.** Sitemap подхватывает страницы при часовой регенерации.
 
 **Почему первым.** Лидер польской выдачи `albanialokalnie.pl` имеет **DR 0**; в топ-10 сидят сайты с DR 3, 7, 8, 9. CPC в PL в 5–10 раз выше остальных локалей. По KB (`07-buyers`) поляки — сегмент покупателей №1. Совпадение всех трёх сигналов — редкость; входить надо сейчас.
 

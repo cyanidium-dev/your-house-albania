@@ -16,8 +16,12 @@ export async function GET() {
   const base = getSiteBaseUrl();
   const rows = await fetchSitemapGuideEntries();
   const urls: Array<{ loc: string; lastmod?: Date }> = [];
-  for (const locale of routing.locales) {
-    for (const row of rows) {
+  for (const row of rows) {
+    // A locale-scoped landing (landingPage.locales) is listed only where it exists.
+    const scope = row.locales.length
+      ? routing.locales.filter((l) => row.locales.includes(l))
+      : routing.locales;
+    for (const locale of scope) {
       urls.push({
         loc: `${base}/${locale}/guides/${encodeURIComponent(row.slug)}`,
         lastmod: row.lastModified,
