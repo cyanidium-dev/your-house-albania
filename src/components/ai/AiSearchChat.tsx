@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import { parseAiEvent, type AiChatMessage, type AiErrorCode } from '@/lib/ai/events'
 import { AI_MAX_MESSAGE_CHARS, AI_MAX_TURNS } from '@/lib/ai/limits'
 import { track } from '@/lib/analytics/track'
+import { clearChat, loadChat, saveChat, type StoredTurn } from './chatStorage'
 import type { PropertyHomes } from '@/types/propertyHomes'
 
 type CardGroup = { items: PropertyHomes[]; catalogUrl?: string }
@@ -88,6 +89,31 @@ export default function AiSearchChat({
   const abortRef = useRef<AbortController | null>(null)
   const autoSentRef = useRef(false)
   const bottomRef = useRef<HTMLDivElement | null>(null)
+  const restoredRef = useRef(false)
+
+  // Restore before anything else runs, so the `?q=` auto-send below can see
+  // that this conversation already happened and stay quiet.
+  useEffect(() => {
+    if (restoredRef.current) return
+    restoredRef.current = true
+    const stored = loadChat(propertySlug)
+    if (stored.length === 0) return
+    autoSentRef.current = true
+    setTurns(
+      stored.map((turn) =>
+        turn.role === 'user'
+          ? { role: 'user', text: turn.text }
+          : {
+              role: 'assistant',
+              text: turn.text,
+              cards: turn.cards ?? [],
+              pending: false,
+              searching: false,
+              breakBeforeNextText: false,
+            },
+      ),
+    )
+  }, [propertySlug])
 
   const userTurns = useMemo(() => turns.filter((turn) => turn.role === 'user').length, [turns])
   const limitReached = userTurns >= AI_MAX_TURNS
@@ -230,7 +256,16 @@ export default function AiSearchChat({
       } finally {
         abortRef.current = null
         setBusy(false)
-        setTurns(settleLastAssistant)
+        setTurns((prev) => {
+          const settled = settleLastAssistant(prev)
+          const stored: StoredTurn[] = settled.map((turn) =>
+            turn.role === 'user'
+              ? { role: 'user', text: turn.text }
+              : { role: 'assistant', text: turn.text, cards: turn.cards },
+          )
+          saveChat(stored, propertySlug)
+          return settled
+        })
         // Zero cards is the "nothing in the catalog matches" case, which is the
         // most useful signal this feature produces.
         track({ event: 'ai_search_result', cards: cardsThisTurn, hadResults: cardsThisTurn > 0 })
@@ -256,6 +291,7 @@ export default function AiSearchChat({
 
   function restart() {
     abortRef.current?.abort()
+    clearChat(propertySlug)
     setTurns([])
     setDraft('')
     setErrorCode(null)
