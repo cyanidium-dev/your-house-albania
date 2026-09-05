@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { BreadcrumbJsonLd } from "@/components/shared/BreadcrumbJsonLd";
 import { fetchGuideIndexEntries } from "@/lib/sanity/client";
+import { isLandingInLocale } from "@/lib/landing/localeScope";
 import { buildGuideCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcrumbs";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
@@ -18,7 +19,7 @@ export const revalidate = 3600;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations("Guides");
-  const entries = await fetchGuideIndexEntries();
+  const entries = (await fetchGuideIndexEntries()).filter((e) => isLandingInLocale(e, locale));
   // An index with nothing in it should not be advertised to search engines.
   const indexable = isIndexingEnabled() && entries.length > 0;
   return {
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GuidesIndexPage({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations("Guides");
-  const entries = await fetchGuideIndexEntries();
+  const entries = (await fetchGuideIndexEntries()).filter((e) => isLandingInLocale(e, locale));
 
   const items = buildGuideCrumbs({
     locale,

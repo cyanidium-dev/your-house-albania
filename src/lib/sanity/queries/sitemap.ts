@@ -411,7 +411,8 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
   }
 }
 
-export type SitemapGuideEntry = { slug: string; lastModified: Date };
+/** `locales` is `landingPage.locales` (SEO-04): emit the URL only for these; empty = every locale. */
+export type SitemapGuideEntry = { slug: string; lastModified: Date; locales: string[] };
 
 /**
  * Enabled custom landings for `sitemap-landings.xml` → `/{locale}/guides/{slug}`.
@@ -432,22 +433,26 @@ export async function fetchSitemapGuideEntries(): Promise<SitemapGuideEntry[]> {
     (!defined(seo.noIndex) || seo.noIndex != true)
   ]{
     "slug": slug.current,
-    _updatedAt
+    _updatedAt,
+    locales
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query, {
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string; locales?: unknown }>>(query, {
       reserved: RESERVED_GUIDE_SLUGS,
     });
     if (!Array.isArray(rows)) return [];
-    const best = new Map<string, Date>();
+    const best = new Map<string, { lastModified: Date; locales: string[] }>();
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
       if (!slug) continue;
       const lm = parseSitemapDate(row._updatedAt);
+      const locales = Array.isArray(row.locales)
+        ? row.locales.map((l) => (typeof l === 'string' ? l.trim().toLowerCase() : '')).filter(Boolean)
+        : [];
       const prev = best.get(slug);
-      if (!prev || lm > prev) best.set(slug, lm);
+      if (!prev || lm > prev.lastModified) best.set(slug, { lastModified: lm, locales });
     }
-    return Array.from(best.entries()).map(([slug, lastModified]) => ({ slug, lastModified }));
+    return Array.from(best.entries()).map(([slug, v]) => ({ slug, lastModified: v.lastModified, locales: v.locales }));
   } catch (err) {
     console.warn('[Sanity] fetchSitemapGuideEntries failed:', err);
     return [];

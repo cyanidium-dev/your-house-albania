@@ -490,6 +490,8 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
   topicTags?: unknown;
   /** Editor-set review date; feeds Article `datePublished`. */
   contentUpdatedAt?: string;
+  /** `landingPage.locales` — the page exists only in these locales (empty = all). */
+  locales?: string[];
   seo?: unknown;
 } | null> {
   const trimmed = typeof slug === 'string' ? slug.trim() : '';
@@ -516,6 +518,7 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
     "pageSections": pageSections[]${landingPageSectionsProjection},
     topicTags,
     contentUpdatedAt,
+    locales,
     seo
   }`;
       try {
@@ -633,13 +636,22 @@ export type RelatedLandingCard = {
 };
 
 /** District landings of a city (mode `cityDistricts`) — publishable districts only. */
+/**
+ * `landingPage.locales` (SEO-04): a locale-scoped landing is a candidate card
+ * only in the locales it exists in. Empty/undefined = every locale.
+ */
+const RELATED_LOCALE_FILTER = `(!defined(locales) || count(locales) == 0 || $locale in locales)`;
+const normalizeLocale = (locale: string) => (typeof locale === 'string' ? locale.trim().toLowerCase() : '');
+
 export async function fetchRelatedDistrictLandingCards(
   citySlug: string,
   excludeId: string | undefined,
   limit: number,
+  locale: string,
 ): Promise<RelatedLandingCard[]> {
   const city = typeof citySlug === 'string' ? citySlug.trim().toLowerCase() : '';
   if (!city) return [];
+  const loc = normalizeLocale(locale);
   const cached = sanityCache(
     async () => {
       const client = getClient();
@@ -648,20 +660,22 @@ export async function fetchRelatedDistrictLandingCards(
         pageType == "district" &&
         linkedDistrict->city->slug.current == $citySlug &&
         linkedDistrict->isPublished != false &&
-        linkedDistrict->city->isPublished != false
+        linkedDistrict->city->isPublished != false &&
+        ${RELATED_LOCALE_FILTER}
       ] | order(title.en asc) [0...$limit] ${RELATED_CARD_PROJECTION}`;
       try {
         return await client.fetch<RelatedLandingCard[]>(query, {
           citySlug: city,
           excludeId: excludeId ?? '',
           limit,
+          locale: loc,
         });
       } catch (err) {
         console.warn('[Sanity] fetchRelatedDistrictLandingCards failed:', err);
         return [];
       }
     },
-    ['related-district-cards-v1', city, excludeId ?? '', String(limit)],
+    ['related-district-cards-v2', city, excludeId ?? '', String(limit), loc],
     { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();
@@ -672,30 +686,34 @@ async function fetchCustomLandingCardsByTags(
   tags: string[],
   excludeId: string | undefined,
   limit: number,
+  locale: string,
   cacheKeyPrefix: string,
 ): Promise<RelatedLandingCard[]> {
   const cleaned = (tags ?? []).map((t) => (typeof t === 'string' ? t.trim() : '')).filter(Boolean);
   if (!cleaned.length) return [];
+  const loc = normalizeLocale(locale);
   const cached = sanityCache(
     async () => {
       const client = getClient();
       if (!client) return [];
       const query = `*[${RELATED_BASE_FILTER} &&
         pageType == "custom" &&
-        count(topicTags[@ in $tags]) > 0
+        count(topicTags[@ in $tags]) > 0 &&
+        ${RELATED_LOCALE_FILTER}
       ] | order(coalesce(contentUpdatedAt, _updatedAt) desc) [0...$limit] ${RELATED_CARD_PROJECTION}`;
       try {
         return await client.fetch<RelatedLandingCard[]>(query, {
           tags: cleaned,
           excludeId: excludeId ?? '',
           limit,
+          locale: loc,
         });
       } catch (err) {
         console.warn(`[Sanity] ${cacheKeyPrefix} failed:`, err);
         return [];
       }
     },
-    [cacheKeyPrefix, [...cleaned].sort().join(','), excludeId ?? '', String(limit)],
+    [cacheKeyPrefix, [...cleaned].sort().join(','), excludeId ?? '', String(limit), loc],
     { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();
@@ -706,8 +724,9 @@ export async function fetchRelatedComparisonCards(
   zoneTags: string[],
   excludeId: string | undefined,
   limit: number,
+  locale: string,
 ): Promise<RelatedLandingCard[]> {
-  return fetchCustomLandingCardsByTags(zoneTags, excludeId, limit, 'related-comparison-cards-v1');
+  return fetchCustomLandingCardsByTags(zoneTags, excludeId, limit, locale, 'related-comparison-cards-v2');
 }
 
 /** Guides sharing any of the given topic tags (mode `topicGuides`). */
@@ -715,8 +734,9 @@ export async function fetchRelatedGuideCards(
   tags: string[],
   excludeId: string | undefined,
   limit: number,
+  locale: string,
 ): Promise<RelatedLandingCard[]> {
-  return fetchCustomLandingCardsByTags(tags, excludeId, limit, 'related-guide-cards-v1');
+  return fetchCustomLandingCardsByTags(tags, excludeId, limit, locale, 'related-guide-cards-v2');
 }
 
 export type CityLandingNavItem = { slug: string; label: string; countrySlug?: string };

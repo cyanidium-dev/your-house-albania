@@ -7,6 +7,8 @@ export type GuideIndexEntry = {
   cardDescription?: Record<string, string> | null;
   cardImage?: { asset?: { url?: string } } | null;
   _updatedAt?: string;
+  /** `landingPage.locales` — listed only in these locales (empty = all). Filter with `isLandingInLocale`. */
+  locales?: string[] | null;
 };
 
 /**
@@ -50,7 +52,8 @@ export async function fetchGuideIndexEntries(): Promise<GuideIndexEntry[]> {
         title,
         cardDescription,
         cardImage { asset-> { url } },
-        _updatedAt
+        _updatedAt,
+        locales
       }`;
       try {
         return await client.fetch<GuideIndexEntry[]>(query, { reserved: RESERVED_GUIDE_SLUGS });
@@ -59,7 +62,7 @@ export async function fetchGuideIndexEntries(): Promise<GuideIndexEntry[]> {
         return [];
       }
     },
-    ['sanity-guide-index-v1'],
+    ['sanity-guide-index-v2'],
     { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();

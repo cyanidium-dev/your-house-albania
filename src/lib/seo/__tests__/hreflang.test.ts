@@ -8,8 +8,8 @@ import { buildHreflangAlternates } from '../hreflang'
 describe('buildHreflangAlternates', () => {
   it('lists every routing locale plus x-default → en by default', () => {
     const out = buildHreflangAlternates('guides/buying')!
-    expect(Object.keys(out.languages)).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'x-default'])
-    expect(out.languages['x-default']).toBe('https://www.domlivo.com/en/guides/buying')
+    expect(Object.keys(out.languages ?? {})).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'x-default'])
+    expect((out.languages as Record<string, string>)['x-default']).toBe('https://www.domlivo.com/en/guides/buying')
   })
   it('restricts to the given locales and points x-default at the first one when en is absent', () => {
     const out = buildHreflangAlternates('guides/nieruchomosci-w-albanii', ['pl'])!
@@ -20,10 +20,10 @@ describe('buildHreflangAlternates', () => {
   })
   it('keeps x-default on en when en is in the subset', () => {
     const out = buildHreflangAlternates('guides/x', ['pl', 'en'])!
-    expect(out.languages['x-default']).toBe('https://www.domlivo.com/en/guides/x')
+    expect((out.languages as Record<string, string>)['x-default']).toBe('https://www.domlivo.com/en/guides/x')
   })
   it('ignores locales outside routing', () => {
     const out = buildHreflangAlternates('guides/x', ['de', 'pl'])!
-    expect(Object.keys(out.languages)).toEqual(['pl', 'x-default'])
+    expect(Object.keys(out.languages ?? {})).toEqual(['pl', 'x-default'])
   })
 })

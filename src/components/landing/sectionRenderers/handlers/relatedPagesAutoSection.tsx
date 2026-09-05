@@ -49,9 +49,9 @@ export const relatedPagesAutoSectionHandler: SectionHandler = async ({
     // Manual refs are dereferenced into `landings` by the shared GROQ projection.
     cards = resolveLandingItemsFromSection(section as never) as RelatedLandingCard[]
   } else if (query.kind === 'cityDistricts') {
-    cards = await fetchRelatedDistrictLandingCards(query.citySlug, excludeId, limit)
+    cards = await fetchRelatedDistrictLandingCards(query.citySlug, excludeId, limit, locale)
   } else if (query.kind === 'zoneComparisons') {
-    cards = await fetchRelatedComparisonCards(query.zoneTags, excludeId, limit)
+    cards = await fetchRelatedComparisonCards(query.zoneTags, excludeId, limit, locale)
     if (cards.length === 0) {
       // 5 of 15 comparisons feature zones no other comparison shares, so the
       // strict zone match leaves their related block empty — a regression vs
@@ -59,10 +59,10 @@ export const relatedPagesAutoSectionHandler: SectionHandler = async ({
       // 2026-08-26). Fall back to the comparison cluster so every page keeps
       // its interlinking; the default heading stays the generic
       // "Related comparisons".
-      cards = await fetchRelatedGuideCards(['theme:comparison'], excludeId, limit)
+      cards = await fetchRelatedGuideCards(['theme:comparison'], excludeId, limit, locale)
     }
   } else {
-    cards = await fetchRelatedGuideCards(query.tags, excludeId, limit)
+    cards = await fetchRelatedGuideCards(query.tags, excludeId, limit, locale)
   }
 
   const resolvedCards = cards
