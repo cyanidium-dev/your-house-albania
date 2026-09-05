@@ -320,6 +320,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           citySlug={citySlug}
                           districtSlug={districtSlug}
                         />
+                        {/* Straight after the market verdict: the visitor has
+                            just read how this price sits against the district,
+                            and "so is it worth it?" is the next thought. At the
+                            foot of the page it sat below the similar-properties
+                            carousel, 52% of the way down, and went unfound. */}
+                        {isAiSearchEnabled() ? (
+                          <AiPropertyPanel locale={locale} propertySlug={slug} />
+                        ) : null}
                     </div>
                     <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
                         <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
@@ -384,9 +392,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   </section>
                 )}
                 <PropertyArticlesSection locale={locale} section={articlesSection} />
-                {isAiSearchEnabled() ? (
-                  <AiPropertyPanel locale={locale} propertySlug={slug} />
-                ) : null}
             </div>
             {/* Mobile-only sticky bottom bar: price + CTA. It reserves its own
                 room at the end of the document — see MobileStickyBar. */}

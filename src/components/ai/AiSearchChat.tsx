@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import PropertyCard from '@/components/shared/property/PropertyCard'
+import AssistantText from '@/components/ai/AssistantText'
 import { cn } from '@/lib/utils'
 import { parseAiEvent, type AiChatMessage, type AiErrorCode } from '@/lib/ai/events'
 import { AI_MAX_MESSAGE_CHARS, AI_MAX_TURNS } from '@/lib/ai/limits'
@@ -96,9 +97,18 @@ export default function AiSearchChat({
     return Array.isArray(raw) ? raw.filter((e): e is string => typeof e === 'string') : []
   }, [t, aboutProperty])
 
+  /**
+   * Bring the composer into view when the visitor sends a message, and then
+   * leave the page alone. Scrolling on every streamed token dragged the page
+   * down under the reader while they were still reading the answer — on a
+   * property page, away from the listing they were looking at.
+   */
+  const sentCount = useRef(0)
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [turns])
+    if (userTurns === sentCount.current) return
+    sentCount.current = userTurns
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, [userTurns])
 
   useEffect(() => () => abortRef.current?.abort(), [])
 
@@ -298,9 +308,7 @@ export default function AiSearchChat({
                   <Icon icon="ph:sparkle" width={18} height={18} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  {turn.text ? (
-                    <p className="whitespace-pre-wrap text-dark dark:text-white">{turn.text}</p>
-                  ) : null}
+                  {turn.text ? <AssistantText text={turn.text} /> : null}
                   {turn.pending || turn.searching ? (
                     <p className="flex items-center gap-2 text-dark/60 dark:text-white/60">
                       <Icon icon="ph:circle-notch" className="animate-spin" width={16} height={16} aria-hidden />
