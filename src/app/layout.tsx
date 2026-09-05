@@ -37,16 +37,17 @@ export const metadata: Metadata = {
   },
   description: DEFAULT_DESCRIPTION,
   applicationName: SITE_NAME,
+  // No default og/twitter title or description: Next.js merges these into
+  // every page that does not set its own `openGraph`, which put this English
+  // text on 52 non-English URLs (sweep 2026-09-05, F5). Pages that build their
+  // Open Graph (landings, listings, posts) still set both; the rest fall back
+  // to their localized <meta name="description">, which scrapers read.
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Real estate in Albania`,
-    description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Real estate in Albania`,
-    description: DEFAULT_DESCRIPTION,
   },
   formatDetection: {
     email: false,
