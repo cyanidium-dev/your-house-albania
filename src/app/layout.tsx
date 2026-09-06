@@ -75,9 +75,9 @@ export default async function RootLayout({
       ? headerLocale
       : routing.defaultLocale;
   return (
-    <html lang={locale}>
+    <html lang={locale} className={`${display.variable} ${sans.variable}`}>
       <body
-        className={`${display.variable} ${sans.variable} font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip`}
+        className="font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip"
       >
         {analyticsEnabled && (
           <>
@@ -115,7 +115,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             {/* End Microsoft Clarity */}
           </>
         )}
-        <NextTopLoader color="#07be8a" />
+        <NextTopLoader color="#078660" />
         <ThemeProvider
           attribute="class"
           enableSystem={true}

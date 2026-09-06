@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
-import { PhotoHeroFlag } from '@/components/shared/PhotoHeroFlag'
 
 type Props = {
   locale: string
@@ -19,7 +18,6 @@ export async function ContactsHero({ locale }: Props) {
   return (
     <section className="!py-0">
       <div className="relative flex min-h-[min(58vh,38rem)] max-h-[600px] overflow-hidden bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10">
-        <PhotoHeroFlag />
         <div className="absolute inset-0 z-0">
           <Image
             src={bgImageUrl}
