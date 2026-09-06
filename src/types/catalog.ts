@@ -49,6 +49,8 @@ export type CatalogProperty = {
   coordinatesLat?: number | null;
   coordinatesLng?: number | null;
   price?: number;
+  /** Whether `price` is a total or a per-m2 rate. Absent means total. */
+  priceUnit?: 'total' | 'per-sqm';
   currency?: string;
   area?: number;
   bedrooms?: number;

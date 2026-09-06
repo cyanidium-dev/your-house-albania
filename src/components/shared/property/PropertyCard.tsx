@@ -9,6 +9,7 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
 import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
+import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { PropertyCardMeta } from './PropertyCardMeta'
 
@@ -51,6 +52,7 @@ function PropertyCard({
     slug,
     images,
     price,
+    priceUnit,
     status,
     propertyType,
     teaser,
@@ -66,6 +68,7 @@ function PropertyCard({
   const { currency: activeCurrency, rates } = useCurrency()
   const tMarketPosition = useTranslations('PropertyMarketPosition')
   const tDealType = useTranslations('Shared.propertyDetail')
+  const tCard = useTranslations('Shared.propertyCard')
   const href = item._href ?? `/${locale}/property/${slug}`
 
   const isList = view === 'list'
@@ -111,14 +114,23 @@ function PropertyCard({
     typeof price === 'number'
       ? price
       : (typeof rate === 'string' && rate.trim() ? Number(String(rate).replace(/[^\d.-]/g, '')) : NaN)
-  const formattedPrice =
+  // Off-plan units and most land are quoted as a rate, and there is no total
+  // until a unit is chosen. Show the rate as a rate; do not let it read as the
+  // price of the flat, and do not divide it by the area a second time.
+  const isRate = priceUnit === 'per-sqm'
+  const formattedAmount =
     Number.isFinite(basePriceEur)
       ? formatMoney(convertFromBaseEur(basePriceEur as number, activeCurrency, rates), activeCurrency, locale)
       : ''
+  const formattedPrice = formattedAmount
+    ? isRate
+      ? tCard('pricePerSqmFrom', { amount: formattedAmount })
+      : formattedAmount
+    : ''
 
   const numericArea = typeof area === 'number' ? area : NaN
   const pricePerSqm =
-    Number.isFinite(basePriceEur) && Number.isFinite(numericArea) && numericArea > 0
+    !isRate && Number.isFinite(basePriceEur) && Number.isFinite(numericArea) && numericArea > 0
       ? Math.round((basePriceEur as number) / numericArea)
       : null
   const formattedPricePerSqm =
@@ -235,6 +247,31 @@ function PropertyCard({
 
   const metaBlock = <PropertyCardMeta view={view} beds={beds} baths={baths} area={area} />
 
+  /**
+   * Enquiry CTA. `relative z-20` lifts it over the card-wide link overlay
+   * (`z-10`), which otherwise swallows the click and navigates instead.
+   * The modal posts to `/api/contact-agent` with this listing's slug, so the
+   * Telegram message names the property and carries a link straight to it.
+   */
+  const requestBlock = (
+    <div className={cn('relative z-20', isList ? 'mt-2' : 'mt-3')}>
+      <PropertyContactButton
+        locale={locale}
+        propertySlug={slug}
+        propertyTitle={name}
+        agentSlug={null}
+        agentName={null}
+        label={tCard('requestInfo')}
+        className={cn(
+          'inline-flex w-full items-center justify-center rounded-full border border-primary/40 bg-primary/5 font-semibold text-primary',
+          'transition-colors duration-200 hover:bg-primary hover:text-white hover:border-primary cursor-pointer',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+          isSmall && !isList ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
+        )}
+      />
+    </div>
+  )
+
   return (
     <div className={cn('min-w-0 w-full', fillHeight && 'h-full flex flex-col')}>
       <div className={cardWrapper}>
@@ -325,11 +362,13 @@ function PropertyCard({
 
               {/* stats footer */}
               {metaBlock}
+              {requestBlock}
             </div>
           ) : (
             <>
               {topBlock}
               {metaBlock}
+              {requestBlock}
             </>
           )}
         </div>

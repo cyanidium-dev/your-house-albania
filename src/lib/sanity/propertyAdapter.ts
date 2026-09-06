@@ -86,6 +86,7 @@ export type PropertyDetailsFields = {
 type SanityPropertyForDetails = {
   title?: unknown;
   price?: number;
+  priceUnit?: 'total' | 'per-sqm';
   currency?: string;
   area?: number;
   bedrooms?: number;
@@ -294,6 +295,7 @@ type SanityProperty = {
   slug?: string;
   description?: unknown;
   price?: number;
+  priceUnit?: 'total' | 'per-sqm';
   currency?: string;
   area?: number;
   bedrooms?: number;
@@ -364,6 +366,7 @@ export function mapSanityPropertyToCard(
 
     // extended semantic fields
     price: p.price,
+    priceUnit: p.priceUnit,
     currency: p.currency,
     status: p.status,
     promoted: typeof p.promoted === 'boolean' ? p.promoted : undefined,
@@ -419,6 +422,7 @@ export function mapCatalogPropertyToCard(
       coordinatesLat: p.coordinatesLat ?? null,
       coordinatesLng: p.coordinatesLng ?? null,
       price: p.price,
+      priceUnit: p.priceUnit,
       currency: p.currency,
       area: p.area,
       bedrooms: p.bedrooms,

@@ -231,7 +231,9 @@
       "stageOffPlan": "Off-plan",
       "stageUnderConstruction": "Under construction",
       "handoverYear": "handover {year}",
-      "handoverQuarter": "handover Q{quarter} {year}"
+      "handoverQuarter": "handover Q{quarter} {year}",
+      "pricePerSqmFrom": "from {amount} / m²",
+      "requestInfo": "Leave a request"
     },
     "blogCard": {
       "imageAlt": "Blog post image",

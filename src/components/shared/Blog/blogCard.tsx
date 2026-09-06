@@ -75,7 +75,7 @@ async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string 
           <Image
             src={coverImage}
             alt={t("imageAlt")}
-            className="transition-transform duration-700 group-hover:scale-[1.05] object-cover"
+            className="object-cover will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.05]"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             unoptimized={true}

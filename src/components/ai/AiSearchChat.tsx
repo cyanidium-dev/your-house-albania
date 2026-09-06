@@ -398,7 +398,12 @@ export default function AiSearchChat({
         </p>
       ) : null}
 
-      <div className="sticky bottom-0 -mx-4 border-t border-dark/10 bg-white/95 px-4 py-4 backdrop-blur-md dark:border-white/10 dark:bg-black/90 sm:mx-0 sm:rounded-2xl sm:border sm:px-4">
+      {/* z-40 so the composer stays above the property cards it scrolls
+          past: their gallery arrows and favourite button are positioned
+          at z-20/z-30, and a sticky element left at `z-index: auto`
+          paints below any positioned element with a z-index, whatever
+          the document order. Stays under the header, which is z-50. */}
+      <div className="sticky bottom-0 z-40 -mx-4 border-t border-dark/10 bg-white/95 px-4 py-4 backdrop-blur-md dark:border-white/10 dark:bg-black/90 sm:mx-0 sm:rounded-2xl sm:border sm:px-4">
         {limitReached ? (
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-dark/70 dark:text-white/70">{t('errors.too_many_turns')}</p>

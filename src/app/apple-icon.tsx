@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-const PRIMARY = "#07be8a";
+const PRIMARY = "#078660";
 const DARK = "#172023";
 
 export default function AppleIcon() {

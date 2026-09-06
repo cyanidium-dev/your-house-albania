@@ -257,28 +257,70 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   citySlug={citySlug}
                   districtSlug={districtSlug}
                 />
-                <div className="grid grid-cols-12 items-end gap-6">
-                    <div className="lg:col-span-8 col-span-12">
-                        <h1 className='lg:text-52 text-40 font-semibold text-dark dark:text-white'>{title}</h1>
-                        <div className="flex gap-2.5">
-                            <Icon icon="ph:map-pin" width={24} height={24} className="text-dark/50 dark:text-white/50" />
-                            <p className='text-dark/50 dark:text-white/50 text-xm'>{location}</p>
+                {/* Title row answers the buyer's first questions before the
+                    gallery: what and where on the left, how much and what to do
+                    next on the right. The price used to appear only in the
+                    sidebar below the gallery, one full screen down on desktop. */}
+                <div className="grid grid-cols-12 items-start gap-6 lg:gap-10">
+                    <div className="lg:col-span-8 col-span-12 min-w-0">
+                        <h1 className='text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-dark dark:text-white text-balance'>{title}</h1>
+                        <div className="mt-2 flex items-center gap-2">
+                            <Icon icon="ph:map-pin" width={20} height={20} className="shrink-0 text-dark/50 dark:text-white/50" />
+                            <p className='text-dark/60 dark:text-white/60 text-base'>{location}</p>
                         </div>
                         <PropertyDeveloperBadge
                           locale={locale}
                           developer={(sanityProperty as { developer?: PropertyDeveloperRef }).developer ?? null}
                         />
+                        <div className="mt-5">
+                          <PropertyFactRow
+                              facts={[
+                                  ...(rooms ? [{ key: 'rooms', icon: 'solar:home-2-linear', label: t('roomsCount', { count: rooms }) }] : []),
+                                  { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
+                                  { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
+                                  { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
+                                  ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
+                              ]}
+                          />
+                        </div>
                     </div>
-                    <div className="lg:col-span-4 col-span-12">
-                        <PropertyFactRow
-                            facts={[
-                                ...(rooms ? [{ key: 'rooms', icon: 'solar:home-2-linear', label: t('roomsCount', { count: rooms }) }] : []),
-                                { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
-                                { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
-                                { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
-                                ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
-                            ]}
-                        />
+                    <div className="lg:col-span-4 col-span-12 lg:border-l lg:border-dark/10 lg:dark:border-white/10 lg:pl-10">
+                        <div className="flex items-start justify-between gap-4">
+                            <div className="min-w-0">
+                                <p className='text-3xl lg:text-[2rem] font-semibold leading-none tracking-tight text-dark dark:text-white tabular-nums'>
+                                    <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
+                                </p>
+                                <p className='mt-2 text-sm text-dark/60 dark:text-white/60'>{dealTypeLabel}</p>
+                                {propertyAgent?.slug && propertyAgent?.name ? (
+                                  <p className='mt-1 text-sm text-dark/60 dark:text-white/70'>
+                                    {tPropertyDetail.rich('listedBy', {
+                                      name: propertyAgent.name,
+                                      link: (chunks) => (
+                                        <Link
+                                          href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
+                                          className='underline underline-offset-2 hover:text-primary duration-300'
+                                        >
+                                          {chunks}
+                                        </Link>
+                                      ),
+                                    })}
+                                  </p>
+                                ) : null}
+                            </div>
+                            <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
+                        </div>
+                        {/* Phones get the same CTA in the sticky bottom bar. */}
+                        <div className="hidden lg:block">
+                          <PropertyContactButton
+                            locale={locale}
+                            propertySlug={slug}
+                            propertyTitle={title}
+                            agentSlug={propertyAgent?.slug ?? null}
+                            agentName={propertyAgent?.name ?? null}
+                            label={tPropertyDetail('getInTouch')}
+                            className='mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-primary px-8 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark hover:cursor-pointer'
+                          />
+                        </div>
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />

@@ -5,7 +5,9 @@
 
 @theme {
   /* Gradient colors */
-  --color-primary: #07be8a;
+  /* Brand green, darkened from #07be8a so white text on it passes WCAG AA
+     (4.6:1 on white and on black). Keep any new hardcoded copy in sync. */
+  --color-primary: #078660;
   --color-skyblue: #79adff;
   --color-lightskyblue: #9cc2dd;
   --color-dark: #172023;

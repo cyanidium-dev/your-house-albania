@@ -227,8 +227,8 @@ export function PropertiesMap({
       el.style.lineHeight = '1.1'
       el.style.whiteSpace = 'nowrap'
       el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.18)'
-      el.style.border = isSelected ? '1px solid #07be8a' : '1px solid rgba(0,0,0,0.18)'
-      el.style.background = isSelected ? '#07be8a' : '#ffffff'
+      el.style.border = isSelected ? '1px solid #078660' : '1px solid rgba(0,0,0,0.18)'
+      el.style.background = isSelected ? '#078660' : '#ffffff'
       el.style.color = isSelected ? '#ffffff' : '#111111'
       el.style.cursor = 'pointer'
       el.style.userSelect = 'none'
@@ -345,7 +345,7 @@ export function PropertiesMap({
         source: 'properties',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#07be8a',
+          'circle-color': '#078660',
           'circle-opacity': 0.25,
           'circle-radius': [
             'step',
@@ -356,7 +356,7 @@ export function PropertiesMap({
             30,
             22,
           ],
-          'circle-stroke-color': '#07be8a',
+          'circle-stroke-color': '#078660',
           'circle-stroke-width': 2,
         },
       })

@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { FavoriteButton } from '@/components/shared/FavoriteButton'
+import { ImageLightbox } from '@/components/shared/ImageLightbox'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { PropertyBadges } from './PropertyBadges'
@@ -42,6 +44,7 @@ export function PropertyCardGallery({
   discountPercent?: number
 }) {
   const t = useTranslations('Shared.propertyCard')
+  const tLightbox = useTranslations('Shared.lightbox')
 
   const isList = view === 'list'
   const isSmall = view === 'small'
@@ -56,6 +59,21 @@ export function PropertyCardGallery({
   const dragStartX = useRef<number | null>(null)
   const hasMultipleImages = imageList.length > 1 && !singleImage
   const displayImages = singleImage ? imageList.slice(0, 1) : imageList
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  /**
+   * The whole card is a link, and on `fullClickable` cards an invisible anchor
+   * covers it — so opening the photo has to claim the event outright, not just
+   * stop it bubbling to a parent handler.
+   */
+  const openLightbox = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setLightboxOpen(true)
+  }, [])
+  const closeLightbox = useCallback(() => setLightboxOpen(false), [])
 
   const goPrev = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -197,6 +215,31 @@ export function PropertyCardGallery({
             </button>
           </>
         )}
+        {/* Open the photo full screen. Sits above the arrows' tappable third
+            (they span the full height of the right edge) and takes the same
+            glass-pill treatment, so the two read as one control set. */}
+        {displayImages.length > 0 && (
+          <button
+            type="button"
+            onClick={openLightbox}
+            aria-label={tLightbox('viewImageFullscreen')}
+            className={cn(
+              'absolute z-30 inline-flex items-center justify-center rounded-full',
+              'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
+              'transition duration-200 ease-out hover:scale-105 cursor-pointer',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+              view === 'large' && 'bottom-3 right-5 p-2',
+              (view === 'small' || view === 'list') && 'bottom-1.5 right-1.5 p-1.5',
+              isList && 'right-2 bottom-2',
+            )}
+          >
+            <Icon
+              icon="solar:maximize-square-minimalistic-linear"
+              width={view === 'large' ? 18 : 14}
+              height={view === 'large' ? 18 : 14}
+            />
+          </button>
+        )}
         {hasMultipleImages && view === 'large' && (
           <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1 pointer-events-none">
             {imageList.map((_, i) => (
@@ -277,6 +320,21 @@ export function PropertyCardGallery({
         )}
         </Link>
       )}
+      {/* Portalled to the body: the card wrapper clips its overflow, and a card
+          can sit inside a scroller or a future transformed carousel, either of
+          which would trap a fixed-position overlay rendered in place. */}
+      {mounted && lightboxOpen
+        ? createPortal(
+            <ImageLightbox
+              url={imageList[imageIndex]?.src ?? imageList[0]?.src ?? ''}
+              alt={name}
+              isOpen={lightboxOpen}
+              onClose={closeLightbox}
+              unoptimized
+            />,
+            document.body,
+          )
+        : null}
     </div>
   )
 }

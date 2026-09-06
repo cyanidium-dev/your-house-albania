@@ -231,7 +231,9 @@
       "stageOffPlan": "Në projekt",
       "stageUnderConstruction": "Në ndërtim",
       "handoverYear": "dorëzimi {year}",
-      "handoverQuarter": "dorëzimi T{quarter} {year}"
+      "handoverQuarter": "dorëzimi T{quarter} {year}",
+      "pricePerSqmFrom": "nga {amount} / m²",
+      "requestInfo": "Lini një kërkesë"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",

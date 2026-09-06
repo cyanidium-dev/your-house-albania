@@ -4,7 +4,7 @@ export const size = { width: 256, height: 256 };
 export const contentType = "image/png";
 
 // Brand primary green from globals.css
-const PRIMARY = "#07be8a";
+const PRIMARY = "#078660";
 const DARK = "#172023";
 
 export default function Icon() {

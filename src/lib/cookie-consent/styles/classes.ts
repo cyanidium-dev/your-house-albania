@@ -1,6 +1,6 @@
 /**
  * Tailwind class-string constants, remapped to Domlivo's tokens
- * (`primary` #07be8a, `dark` #172023; light-first with `dark:` variants via
+ * (`primary` #078660, `dark` #172023; light-first with `dark:` variants via
  * next-themes). Layout mirrors the source module: mobile stacks the actions,
  * desktop keeps one inline line; Accept and Reject share size and weight —
  * GDPR requires rejecting to be as easy and as prominent as accepting.

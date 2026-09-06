@@ -137,8 +137,15 @@ export function CatalogFilterForm({
     >
       {/*
         BASIC FILTERS — one field per grid cell so nothing ever crams.
-        Fields grid (3 cols on tablet+): location · type · deal / price · area · Search.
-        Secondary actions (Reset · Advanced) sit on their own slim right-aligned row.
+        Fields grid (3 cols on tablet+): location · type · price / area · Search · actions.
+
+        The secondary actions ride in the grid as a final cell rather than on a
+        row of their own. With the five fields the public catalogue shows, that
+        cell is the hole the fields leave at the end of the second row, so the
+        panel closes there instead of carrying a third row under an empty third
+        of the second one. When a deal-type filter is also on show the six
+        fields fill both rows and the actions wrap below, which is the only
+        honest place left for them.
         Mobile (modal) stacks everything to a single column.
       */}
       <div className="flex min-w-0 flex-col gap-4">
@@ -202,7 +209,7 @@ export function CatalogFilterForm({
             onValueChange={setAreaValues}
           />
 
-          {/* Search: one control per cell — fills the 6th cell, aligned to the field baseline */}
+          {/* Search: one control per cell, aligned to the field baseline */}
           <div className="flex items-end">
             <Button
               type="submit"
@@ -211,31 +218,32 @@ export function CatalogFilterForm({
               {t("search")}
             </Button>
           </div>
+
+          {/* Secondary actions: slim, right-aligned, never compete with the fields */}
+          <div className="flex flex-col items-stretch justify-end gap-2 sm:flex-row sm:items-end sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
+              onClick={() => setShowAdvanced((v) => !v)}
+            >
+              <span className="inline-block max-w-full truncate">
+                {t("advancedFilters")}
+              </span>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
+              onClick={resetFilters}
+            >
+              <span className="inline-block max-w-full truncate">
+                {t("resetFilters")}
+              </span>
+            </Button>
+          </div>
         </div>
 
-        {/* Secondary actions: slim, right-aligned, never compete with the fields */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
-            onClick={() => setShowAdvanced((v) => !v)}
-          >
-            <span className="inline-block max-w-full truncate">
-              {t("advancedFilters")}
-            </span>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
-            onClick={resetFilters}
-          >
-            <span className="inline-block max-w-full truncate">
-              {t("resetFilters")}
-            </span>
-          </Button>
-        </div>
       </div>
 
       {/* ADVANCED FILTERS */}

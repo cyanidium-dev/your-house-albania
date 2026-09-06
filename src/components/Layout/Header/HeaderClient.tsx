@@ -106,8 +106,8 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       </Link>
                     </div>
                     <div className='flex items-center gap-1 sm:gap-4 min-w-0 shrink-0'>
-                      <LanguageSwitcher />
-                      <CurrencySwitcher />
+                      <LanguageSwitcher overHero={overHero} sticky={sticky} />
+                      <CurrencySwitcher overHero={overHero} sticky={sticky} />
                       <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
                       {aiSearchEnabled ? (
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />

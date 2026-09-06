@@ -112,11 +112,14 @@ function buildCatalogPredicateParts(
     // segments (direct /rent URLs) pass `deal` and bypass this.
     parts.push(`${prefix}status in $publicDealTypes`);
   }
+  // A per-m2 rate is not comparable with a total, so a price range excludes
+  // those listings rather than ranking a EUR1,300/m2 new build below every
+  // finished flat in the city.
   if (typeof minPrice === 'number' && minPrice > 0) {
-    parts.push(`${prefix}price >= $minPrice`);
+    parts.push(`${prefix}price >= $minPrice && ${prefix}priceUnit != "per-sqm"`);
   }
   if (typeof maxPrice === 'number' && maxPrice > 0) {
-    parts.push(`${prefix}price <= $maxPrice`);
+    parts.push(`${prefix}price <= $maxPrice && ${prefix}priceUnit != "per-sqm"`);
   }
   if (typeof minArea === 'number' && minArea > 0) {
     parts.push(`${prefix}area >= $minArea`);
@@ -222,6 +225,7 @@ const cachedFetchCatalogProperties = sanityCache(
     title,
     "slug": slug.current,
     price,
+    priceUnit,
     area,
     bedrooms,
     bathrooms,

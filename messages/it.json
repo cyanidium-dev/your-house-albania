@@ -231,7 +231,9 @@
       "stageOffPlan": "Su piano",
       "stageUnderConstruction": "In costruzione",
       "handoverYear": "consegna {year}",
-      "handoverQuarter": "consegna T{quarter} {year}"
+      "handoverQuarter": "consegna T{quarter} {year}",
+      "pricePerSqmFrom": "da {amount} / m²",
+      "requestInfo": "Lascia una richiesta"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",

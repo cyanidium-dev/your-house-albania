@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslations } from 'next-intl'
 import { track } from '@/lib/analytics/track'
 
@@ -41,6 +42,8 @@ export function PropertyContactButton({
   /** Honeypot — leave empty; must be submitted for server checks. */
   const [companyWebsite, setCompanyWebsite] = React.useState('')
   const [submitting, setSubmitting] = React.useState(false)
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
   const [error, setError] = React.useState<string | null>(null)
   const [sent, setSent] = React.useState(false)
 
@@ -111,9 +114,14 @@ export function PropertyContactButton({
         {label}
       </button>
 
-      {open ? (
+      {/* Portalled to the body, and above the header's z-50. On a listing card
+          the dialog would otherwise render inside the results container, whose
+          own stacking context traps it under the sticky filter bar however high
+          its z-index climbs. */}
+      {open && mounted ? (
+        createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
           aria-label={tp('contactHeading')}
@@ -220,7 +228,9 @@ export function PropertyContactButton({
               </form>
             )}
           </div>
-        </div>
+        </div>,
+        document.body,
+        )
       ) : null}
     </>
   )

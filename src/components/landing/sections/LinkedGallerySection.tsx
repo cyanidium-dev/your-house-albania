@@ -85,7 +85,7 @@ export function LinkedGallerySection({
                   src={url}
                   alt={item.image?.alt ?? caption ?? ''}
                   fill
-                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                  className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   sizes={items.length === 2 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw'}
                   unoptimized={url.startsWith('http')}
                 />
