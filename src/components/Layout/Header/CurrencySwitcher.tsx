@@ -6,8 +6,22 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { cn } from '@/lib/utils'
 import { getCurrencyMeta } from '@/lib/currency/registry'
+import {
+  headerSwitcherCaretClass,
+  headerSwitcherPillClass,
+} from './headerSwitcherStyles'
 
-export default function CurrencySwitcher() {
+type CurrencySwitcherProps = {
+  /** Header is floating over a photo hero. */
+  overHero?: boolean
+  /** Header has gained its own background on scroll. */
+  sticky?: boolean
+}
+
+export default function CurrencySwitcher({
+  overHero = false,
+  sticky = false,
+}: CurrencySwitcherProps) {
   const t = useTranslations('Currency')
   const locale = useLocale()
   const { currency, setCurrency, displayCurrencies } = useCurrency()
@@ -32,14 +46,7 @@ export default function CurrencySwitcher() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={cn(
-          'relative inline-flex h-8 items-center justify-between gap-1.5 rounded-full',
-          'bg-dark/5 dark:bg-white/10',
-          'px-2.5 pr-7 sm:pr-8',
-          'text-sm font-semibold text-dark/80 dark:text-white/80',
-          'cursor-pointer transition-colors hover:bg-dark/10 dark:hover:bg-white/15',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset'
-        )}
+        className={headerSwitcherPillClass(overHero, sticky)}
         aria-label={t('switchTo', { currency })}
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -60,10 +67,7 @@ export default function CurrencySwitcher() {
           icon="ph:caret-down"
           width={14}
           height={14}
-          className={cn(
-            'absolute right-2.5 top-1/2 -translate-y-1/2 text-dark/60 dark:text-white/70 pointer-events-none transition-transform',
-            open && 'rotate-180'
-          )}
+          className={headerSwitcherCaretClass(overHero, sticky, open)}
         />
       </button>
       {open && (

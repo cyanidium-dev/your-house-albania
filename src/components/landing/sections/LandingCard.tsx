@@ -47,7 +47,7 @@ export function LandingCard({
             src={imgUrl}
             alt={card.cardImage?.alt ?? cardTitle}
             fill
-            className="object-cover object-center transition-transform duration-300 ease-out group-hover:scale-[1.02]"
+            className="object-cover object-center will-change-transform transition-transform duration-300 ease-out group-hover:scale-[1.02]"
             sizes="(max-width: 1023px) 100vw, 33vw"
             unoptimized={unoptimized}
           />

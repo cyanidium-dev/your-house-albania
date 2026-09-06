@@ -58,7 +58,7 @@ export function BlogCardClient({
             <Image
               src={coverImageUrl}
               alt={t("imageAlt")}
-              className="transition group-hover:scale-110 object-cover w-full h-full"
+              className="object-cover w-full h-full will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.05]"
               width={190}
               height={163}
               unoptimized={coverImageUrl.startsWith("http")}

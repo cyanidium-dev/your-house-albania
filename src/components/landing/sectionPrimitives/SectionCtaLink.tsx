@@ -25,8 +25,11 @@ export function SectionCtaLink({
   ariaLabel,
   showArrow = true,
 }: SectionCtaLinkProps) {
+  // `min-h-11` rather than a fixed height, and a label that wraps: the longer
+  // locales (uk/ru/pl) run a good 60px past a 390px phone with `h-11 px-8` and
+  // a non-wrapping label, which pushed the whole page into a horizontal scroll.
   const base =
-    'group/cta inline-flex items-center justify-center gap-2 h-11 px-8 rounded-full text-base font-semibold transition-colors duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent w-fit'
+    'group/cta inline-flex items-center justify-center gap-2 min-h-11 px-6 py-2.5 sm:px-8 rounded-full text-base font-semibold transition-colors duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent w-fit max-w-full'
   const styles: Record<NonNullable<SectionCtaLinkProps['variant']>, string> = {
     primary: 'bg-primary text-white hover:bg-dark focus-visible:ring-primary/50',
     secondary:
@@ -42,7 +45,7 @@ export function SectionCtaLink({
       className={cn(base, styles[variant], className)}
       aria-label={ariaLabel ?? label}
     >
-      <span className="truncate">{label}</span>
+      <span className="min-w-0 text-center">{label}</span>
       {showArrow ? (
         <Icon
           icon="ph:arrow-right"

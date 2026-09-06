@@ -84,7 +84,7 @@ export default async function GuidesIndexPage({ params }: Props) {
                             src={imageUrl}
                             alt={title ?? ""}
                             fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            className="object-cover will-change-transform transition-transform duration-300 ease-out group-hover:scale-105"
                             unoptimized={imageUrl.startsWith("http")}
                           />
                         </span>
