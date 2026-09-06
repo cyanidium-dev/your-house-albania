@@ -13,6 +13,8 @@ export type PropertyHomes = {
 
   // extended semantic fields for richer UI
   price?: number
+  /** Whether `price` is a total or a per-m2 rate. Absent means total. */
+  priceUnit?: 'total' | 'per-sqm'
   currency?: string
   status?: string
   /** CMS promotion flags (Sanity). */

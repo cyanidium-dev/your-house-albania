@@ -231,7 +231,9 @@
       "stageOffPlan": "На стадії проєкту",
       "stageUnderConstruction": "Будується",
       "handoverYear": "здача у {year}",
-      "handoverQuarter": "здача у {quarter} кв. {year}"
+      "handoverQuarter": "здача у {quarter} кв. {year}",
+      "pricePerSqmFrom": "від {amount} / м²",
+      "requestInfo": "Залишити заявку"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",
