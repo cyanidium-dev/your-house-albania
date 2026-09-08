@@ -25,6 +25,8 @@ import {
 } from "@/lib/seo/catalogListingMetadata";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
+import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { catalogFilterPath, singleFilterPath } from "@/lib/routes/catalog";
 import {
   mergeTopLevelSearch,
@@ -87,12 +89,26 @@ async function buildListingMetadata(
     catalogSeo?.metaDescription ||
     localizedDescriptionFromSeo ||
     listDescription;
+  // The social card: title and description over a photograph of the place.
+  const ogImage = landingOgImageUrl({
+    locale,
+    title,
+    subtitle: description,
+    photo: {
+      key: heroPhotoFor({
+        citySlug: kind === "city" ? slug : null,
+        propertyType: kind === "type" ? slug : null,
+        deal: kind === "deal" ? slug : null,
+        slug,
+      }).key,
+    },
+  });
 
   if (!isIndexingEnabled()) {
     return {
       title: listingTitleField(title),
       description,
-      openGraph: listingOpenGraph(title, description),
+      openGraph: listingOpenGraph(title, description, ogImage),
       robots: indexingDisabledRobots,
     };
   }
@@ -133,7 +149,7 @@ async function buildListingMetadata(
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description),
+    openGraph: listingOpenGraph(title, description, ogImage),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),

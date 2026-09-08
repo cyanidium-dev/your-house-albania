@@ -13,6 +13,8 @@ import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBrea
 import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
 import { PropertyMarketPositionSection } from '@/components/shared/property/PropertyMarketPositionSection';
 import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/property/marketPosition';
+import { showsPlotArea } from '@/lib/property/plotArea';
+import { propertyOgImageUrl } from '@/lib/seo/ogImageUrl';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import TrackPageView from "@/components/analytics/TrackPageView";
 import MobileStickyBar from "@/components/property/MobileStickyBar";
@@ -109,6 +111,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       composedTitle,
       itemDescription,
       coverImageUrl: coverImageUrl ?? undefined,
+      // The photo with the price, size and layout drawn over it, in this
+      // locale — see /api/og. Only a hand-picked seo.ogImage beats it.
+      generatedOgImageUrl: coverImageUrl ? propertyOgImageUrl({ locale, slug }) : undefined,
       propertyPath: { baseUrl, locale, slug },
     }
   );
@@ -159,6 +164,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const baths = sanityFields.baths;
   const area = sanityFields.area;
   const yearBuilt = (sanityProperty as { yearBuilt?: number } | null)?.yearBuilt;
+  const propertyTypeSlug = (sanityProperty as { type?: { slug?: string } })?.type?.slug ?? null;
 
   const sanityWithCoords = sanityProperty as {
     coordinates?: { lat?: number; lng?: number } | null;
@@ -186,6 +192,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const rawProperty = sanityProperty as {
     price?: number;
+    priceUnit?: "total" | "per-sqm";
     currency?: string;
     status?: string;
   };
@@ -198,6 +205,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const t = await getTranslations('Shared.propertyCard');
   const tPropertyDetail = await getTranslations('Shared.propertyDetail');
+  // A house is bought with its land, so the tile is always there on a house —
+  // saying "not specified" beats leaving the buyer to wonder whether we forgot.
+  const plotFact = showsPlotArea(propertyTypeSlug)
+    ? sanityFields.plotArea
+      ? tPropertyDetail('plotArea', { value: sanityFields.plotArea })
+      : tPropertyDetail('plotAreaUnknown')
+    : null;
   const amenities = mapPropertyAmenityDisplayItems(sanityProperty as never, locale);
   const propertyOffers = mapSanityPropertyOffers(sanityProperty as never, locale);
 
@@ -243,6 +257,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               beds={beds}
               baths={baths}
               area={area}
+              plotArea={sanityFields.plotArea ?? undefined}
               yearBuilt={yearBuilt}
               datePosted={(sanityProperty as { createdAt?: string })?.createdAt ?? null}
               imageUrls={imageUrls}
@@ -279,6 +294,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                   { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
                                   { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
                                   { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
+                                  ...(plotFact ? [{ key: 'plot', icon: 'solar:map-linear', label: plotFact }] : []),
                                   ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
                               ]}
                           />
@@ -288,7 +304,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         <div className="flex items-start justify-between gap-4">
                             <div className="min-w-0">
                                 <p className='text-3xl lg:text-[2rem] font-semibold leading-none tracking-tight text-dark dark:text-white tabular-nums'>
-                                    <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
+                                    <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                                 </p>
                                 <p className='mt-2 text-sm text-dark/60 dark:text-white/60'>{dealTypeLabel}</p>
                                 {propertyAgent?.slug && propertyAgent?.name ? (
@@ -375,7 +391,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <div className="flex items-center justify-between gap-4 mb-2">
                               <h4 className='text-dark text-3xl font-medium dark:text-white'>
-                                  <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
+                                  <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                               </h4>
                               <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                             </div>
@@ -442,7 +458,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))' }}>
                 <div className="min-w-0 flex-1">
                   <h4 className="text-dark dark:text-white text-xl font-semibold truncate">
-                    <PriceText amountEur={rawProperty.price ?? null} locale={locale} />
+                    <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                   </h4>
                   <p className="text-sm text-dark/50 dark:text-white/50 truncate">{dealTypeLabel}</p>
                 </div>

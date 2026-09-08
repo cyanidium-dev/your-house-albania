@@ -31,6 +31,8 @@ import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
 import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
+import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
+import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import {
   getGeoListingDistrictNormalizeRedirectUrl,
   getGeoListingDuplicateFacetRedirectUrl,
@@ -148,12 +150,21 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     (defaultSeo?.metaDescription
       ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription
       : listDescription);
+  // The social card: title and description over a photograph of the city.
+  const ogImage = landingOgImageUrl({
+    locale,
+    title,
+    subtitle: description,
+    photo: {
+      key: heroPhotoFor({ citySlug: geo.listingCitySlug, propertyType: typeSlug, deal: dealType, slug: citySlug }).key,
+    },
+  });
 
   if (!isIndexingEnabled()) {
     return {
       title: listingTitleField(title),
       description,
-      openGraph: listingOpenGraph(title, description),
+      openGraph: listingOpenGraph(title, description, ogImage),
       robots: indexingDisabledRobots,
     };
   }
@@ -232,7 +243,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description),
+    openGraph: listingOpenGraph(title, description, ogImage),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),

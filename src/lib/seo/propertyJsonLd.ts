@@ -33,6 +33,8 @@ export type PropertyJsonLdInput = {
   beds?: number;
   baths?: number;
   area?: number;
+  /** Land under a house or villa, m². */
+  plotArea?: number;
   yearBuilt?: number;
   datePosted?: string | null;
   imageUrls: string[];
@@ -147,6 +149,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     beds,
     baths,
     area,
+    plotArea,
     yearBuilt,
     datePosted,
     imageUrls,
@@ -175,6 +178,9 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
   }
   if (typeof area === "number" && area > 0) {
     additionalProperty.push({ "@type": "PropertyValue", name: "Floor area (m²)", value: area });
+  }
+  if (typeof plotArea === "number" && plotArea > 0) {
+    additionalProperty.push({ "@type": "PropertyValue", name: "Plot area (m²)", value: plotArea });
   }
 
   const offers = buildOffer({ price, status, lifecycleStatus, url });

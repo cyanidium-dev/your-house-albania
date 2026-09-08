@@ -227,6 +227,7 @@ const cachedFetchCatalogProperties = sanityCache(
     price,
     priceUnit,
     area,
+    plotArea,
     bedrooms,
     bathrooms,
     yearBuilt,

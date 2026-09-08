@@ -53,6 +53,8 @@ export type CatalogProperty = {
   priceUnit?: 'total' | 'per-sqm';
   currency?: string;
   area?: number;
+  /** Land under a house or villa, m²; the floor area stays in `area`. */
+  plotArea?: number;
   bedrooms?: number;
   bathrooms?: number;
   /** Construction year; used to pick new-vs-resale price range for market position. */

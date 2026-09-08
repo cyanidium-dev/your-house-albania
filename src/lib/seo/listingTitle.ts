@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildOgImageArray } from "@/lib/sanity/socialMetadataResolution";
 
 const SITE_BRAND = "Domlivo";
 
@@ -17,10 +18,19 @@ export function listingTitleField(title: string): Metadata["title"] {
  * Localized Open Graph for listing pages. The root layout's `openGraph` is an
  * English default; without this, non-en listing pages leak English og:title /
  * og:description (CQ-07). Mirrors the resolved page title/description.
+ *
+ * `imageUrl` is the card `/api/og` draws for the page (see lib/seo/ogImageUrl);
+ * without it a listing page shared on Telegram or WhatsApp had no picture at all.
  */
-export function listingOpenGraph(title: string, description: string): Metadata["openGraph"] {
+export function listingOpenGraph(
+  title: string,
+  description: string,
+  imageUrl?: string,
+): Metadata["openGraph"] {
+  const images = buildOgImageArray(imageUrl, title);
   return {
     title,
     description,
+    ...(images ? { images } : {}),
   };
 }

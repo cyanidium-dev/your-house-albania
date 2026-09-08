@@ -9,6 +9,7 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
 import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
+import { showsPlotArea } from '@/lib/property/plotArea'
 import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { PropertyCardMeta } from './PropertyCardMeta'
@@ -62,6 +63,8 @@ function PropertyCard({
     handoverYear,
     handoverQuarter,
     marketPosition,
+    plotArea,
+    propertyTypeSlug,
   } = item
 
   const isPremium = promotionType === 'premium'
@@ -245,7 +248,16 @@ function PropertyCard({
     </div>
   )
 
-  const metaBlock = <PropertyCardMeta view={view} beds={beds} baths={baths} area={area} />
+  const metaBlock = (
+    <PropertyCardMeta
+      view={view}
+      beds={beds}
+      baths={baths}
+      area={area}
+      plotArea={plotArea}
+      showPlot={showsPlotArea(propertyTypeSlug)}
+    />
+  )
 
   /**
    * Enquiry CTA. `relative z-20` lifts it over the card-wide link overlay
@@ -297,6 +309,8 @@ function PropertyCard({
           constructionStage={constructionStage}
           handoverYear={handoverYear}
           handoverQuarter={handoverQuarter}
+          locale={locale}
+          contactLabel={tCard('requestInfo')}
         />
         <div className={contentPadding}>
           {isList ? (

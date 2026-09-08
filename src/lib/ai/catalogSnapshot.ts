@@ -28,6 +28,7 @@ type SnapshotRow = {
   description?: unknown
   price?: number
   area?: number
+  plotArea?: number
   bedrooms?: number
   bathrooms?: number
   yearBuilt?: number
@@ -121,6 +122,7 @@ function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
       row.status ?? '—',
       price > 0 ? `${price} EUR` : 'price n/a',
       area > 0 ? `${area}m2` : 'area n/a',
+      typeof row.plotArea === 'number' && row.plotArea > 0 ? `plot ${Math.round(row.plotArea)}m2` : '',
       `${row.bedrooms ?? 0}bd/${row.bathrooms ?? 0}ba`,
       row.yearBuilt ? `built ${row.yearBuilt}` : 'year n/a',
       perM2 > 0 ? `${perM2} EUR/m2` : '',
@@ -178,6 +180,7 @@ async function fetchCatalogSnapshot(): Promise<CatalogSnapshot> {
     description,
     price,
     area,
+    plotArea,
     bedrooms,
     bathrooms,
     yearBuilt,

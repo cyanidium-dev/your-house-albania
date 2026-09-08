@@ -210,7 +210,9 @@
       "goToImage": "Перейти до фото {n}",
       "hideThumbnails": "Сховати мініатюри",
       "showThumbnails": "Показати мініатюри",
-      "approximateLocation": "Розташування приблизне — мітка показує район, а не конкретну будівлю."
+      "approximateLocation": "Розташування приблизне — мітка показує район, а не конкретну будівлю.",
+      "plotArea": "Ділянка {value} м²",
+      "plotAreaUnknown": "Площа ділянки: не вказано"
     },
     "propertyCard": {
       "bedrooms": "Спальні",
@@ -233,7 +235,9 @@
       "handoverYear": "здача у {year}",
       "handoverQuarter": "здача у {quarter} кв. {year}",
       "pricePerSqmFrom": "від {amount} / м²",
-      "requestInfo": "Залишити заявку"
+      "requestInfo": "Залишити заявку",
+      "plotArea": "Ділянка {value} м²",
+      "plotAreaUnknown": "Ділянка: не вказано"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",
@@ -687,6 +691,18 @@
         "commercial-space": "Комерційна нерухомість",
         "short-term-rent": "Подобова оренда"
       }
+    },
+    "og": {
+      "studio": "Студія",
+      "rooms": "{count}+1",
+      "plot": "Ділянка {value} м²",
+      "plotUnknown": "Ділянка: не вказано",
+      "forSale": "Продаж",
+      "forRent": "Оренда",
+      "shortTerm": "Подобова оренда",
+      "priceOnRequest": "Ціна за запитом",
+      "perSqm": "від {amount}/м²",
+      "perMonth": "/міс."
     }
   },
   "AiSearch": {

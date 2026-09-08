@@ -210,7 +210,9 @@
       "goToImage": "Shko te foto {n}",
       "hideThumbnails": "Fsheh miniaturat",
       "showThumbnails": "Shfaq miniaturat",
-      "approximateLocation": "Vendndodhje e përafërt — shenja tregon lagjen, jo ndërtesën e saktë."
+      "approximateLocation": "Vendndodhje e përafërt — shenja tregon lagjen, jo ndërtesën e saktë.",
+      "plotArea": "Truall {value} m²",
+      "plotAreaUnknown": "Sipërfaqja e truallit: nuk është specifikuar"
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
@@ -233,7 +235,9 @@
       "handoverYear": "dorëzimi {year}",
       "handoverQuarter": "dorëzimi T{quarter} {year}",
       "pricePerSqmFrom": "nga {amount} / m²",
-      "requestInfo": "Lini një kërkesë"
+      "requestInfo": "Lini një kërkesë",
+      "plotArea": "Truall {value} m²",
+      "plotAreaUnknown": "Trualli: nuk është specifikuar"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
@@ -687,6 +691,18 @@
         "commercial-space": "Prona tregtare",
         "short-term-rent": "Qira afatshkurtër"
       }
+    },
+    "og": {
+      "studio": "Garsonierë",
+      "rooms": "{count}+1",
+      "plot": "Truall {value} m²",
+      "plotUnknown": "Trualli: nuk është specifikuar",
+      "forSale": "Në shitje",
+      "forRent": "Me qira",
+      "shortTerm": "Qira ditore",
+      "priceOnRequest": "Çmimi sipas kërkesës",
+      "perSqm": "nga {amount}/m²",
+      "perMonth": "/muaj"
     }
   },
   "AiSearch": {

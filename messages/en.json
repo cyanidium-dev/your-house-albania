@@ -210,7 +210,9 @@
       "goToImage": "Go to image {n}",
       "hideThumbnails": "Hide thumbnails",
       "showThumbnails": "Show thumbnails",
-      "approximateLocation": "Approximate location — the pin marks the district, not the exact building."
+      "approximateLocation": "Approximate location — the pin marks the district, not the exact building.",
+      "plotArea": "Plot {value} m²",
+      "plotAreaUnknown": "Plot area: not specified"
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
@@ -233,7 +235,9 @@
       "handoverYear": "handover {year}",
       "handoverQuarter": "handover Q{quarter} {year}",
       "pricePerSqmFrom": "from {amount} / m²",
-      "requestInfo": "Leave a request"
+      "requestInfo": "Leave a request",
+      "plotArea": "Plot {value} m²",
+      "plotAreaUnknown": "Plot: not specified"
     },
     "blogCard": {
       "imageAlt": "Blog post image",
@@ -687,6 +691,18 @@
         "commercial-space": "Commercial Property",
         "short-term-rent": "Short-Term Rentals"
       }
+    },
+    "og": {
+      "studio": "Studio",
+      "rooms": "{count}+1",
+      "plot": "Plot {value} m²",
+      "plotUnknown": "Plot: not specified",
+      "forSale": "For sale",
+      "forRent": "For rent",
+      "shortTerm": "Short-term rent",
+      "priceOnRequest": "Price on request",
+      "perSqm": "from {amount}/m²",
+      "perMonth": "/month"
     }
   },
   "AiSearch": {

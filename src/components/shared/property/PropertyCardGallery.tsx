@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { FavoriteButton } from '@/components/shared/FavoriteButton'
 import { ImageLightbox } from '@/components/shared/ImageLightbox'
+import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { PropertyBadges } from './PropertyBadges'
@@ -27,6 +28,8 @@ export function PropertyCardGallery({
   handoverYear,
   handoverQuarter,
   discountPercent,
+  locale,
+  contactLabel,
 }: {
   images: { src: string }[]
   name: string
@@ -42,6 +45,9 @@ export function PropertyCardGallery({
   handoverYear?: number
   handoverQuarter?: number
   discountPercent?: number
+  /** With `contactLabel`, puts the enquiry button inside the full-screen viewer. */
+  locale?: string
+  contactLabel?: string
 }) {
   const t = useTranslations('Shared.propertyCard')
   const tLightbox = useTranslations('Shared.lightbox')
@@ -326,11 +332,29 @@ export function PropertyCardGallery({
       {mounted && lightboxOpen
         ? createPortal(
             <ImageLightbox
-              url={imageList[imageIndex]?.src ?? imageList[0]?.src ?? ''}
+              images={imageList.map((img) => ({ url: img.src, alt: name }))}
+              initialIndex={imageIndex}
               alt={name}
               isOpen={lightboxOpen}
               onClose={closeLightbox}
               unoptimized
+              action={
+                locale && contactLabel ? (
+                  <PropertyContactButton
+                    locale={locale}
+                    propertySlug={slug}
+                    propertyTitle={name}
+                    agentSlug={null}
+                    agentName={null}
+                    label={contactLabel}
+                    className={cn(
+                      'inline-flex h-10 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-white',
+                      'transition-colors duration-200 hover:bg-primary/90 cursor-pointer',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                    )}
+                  />
+                ) : undefined
+              }
             />,
             document.body,
           )

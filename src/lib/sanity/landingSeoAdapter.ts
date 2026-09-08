@@ -3,6 +3,7 @@ import { buildHreflangAlternates } from '@/lib/seo/hreflang'
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 import { withBrand } from '@/lib/seo/brandTitle'
+import { landingOgImageUrl, type LandingOgPhoto } from '@/lib/seo/ogImageUrl'
 import { resolveLocalizedString } from './localized'
 import {
   buildMetadata,
@@ -39,8 +40,14 @@ export type LandingMetadataItemContext = {
   itemTitle?: string
   /** subtitle, cardDescription, linkedCity.shortDescription, etc. */
   itemDescription?: string
-  /** Hero / linked city image URL */
+  /** Hero / linked city image URL — drawn under the title on the social card. */
   itemOgImageUrl?: string
+  /**
+   * The photograph the social card is drawn on when the page has no image of
+   * its own: a key into the site's Albania photographs, or a Sanity URL.
+   * Wins over `itemOgImageUrl`.
+   */
+  ogPhoto?: LandingOgPhoto
   /** Path after locale (e.g. `/cities`, `/sale`). Used for hreflang alternates. */
   pathnameForAlternates?: string
   /** `landingPage.locales` — restrict hreflang alternates to these locales (SEO-04). */
@@ -77,7 +84,10 @@ function resolveKeywords(raw: LandingSeoObject['keywords'] | null | undefined, l
 /**
  * landingPage.seo → Next Metadata (home, cities index, city detail landings).
  * Title/description: og → meta → item (optional) → site default → template.
- * Images: landing seo.ogImage → item image → site defaultSeo.ogImage
+ * Images: landing seo.ogImage → a card drawn by /api/og (the resolved title
+ * and description over `ogPhoto`, else the item image, else a photograph of
+ * the coast). The site default ogImage is no longer a fallback here: it was
+ * the theme's desert villa, and a drawn card always exists.
  * Twitter: same resolved title/description as metadata / Open Graph (no separate CMS Twitter fields).
  */
 export function buildLandingMetadata(
@@ -100,11 +110,15 @@ export function buildLandingMetadata(
     siteMetaDescription: siteDefaultSeo?.metaDescription,
   })
 
-  const ogImageAbsolute = pickAbsoluteOgImageUrl(
-    landingSeo?.ogImage?.asset?.url,
-    itemContext?.itemOgImageUrl,
-    siteDefaultSeo?.ogImage?.asset?.url,
-  )
+  const generatedOgImage = landingOgImageUrl({
+    locale,
+    title,
+    subtitle: description,
+    photo:
+      itemContext?.ogPhoto ??
+      (itemContext?.itemOgImageUrl ? { url: itemContext.itemOgImageUrl } : undefined),
+  })
+  const ogImageAbsolute = pickAbsoluteOgImageUrl(landingSeo?.ogImage?.asset?.url, generatedOgImage)
 
   const canonicalFromCms = resolveCanonicalUrl(landingSeo?.canonicalUrl, locale)
   const pathnameAfterLocale = itemContext?.pathnameForAlternates?.trim()

@@ -9,6 +9,8 @@ export type PropertyHomes = {
   beds: number
   baths: number
   area: number
+  /** Plot under a house or villa, m². Undefined when the seller gave no figure. */
+  plotArea?: number
   images: PropertyImage[]
 
   // extended semantic fields for richer UI

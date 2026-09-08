@@ -210,7 +210,9 @@
       "goToImage": "Перейти к фото {n}",
       "hideThumbnails": "Скрыть миниатюры",
       "showThumbnails": "Показать миниатюры",
-      "approximateLocation": "Расположение примерное — метка показывает район, а не конкретное здание."
+      "approximateLocation": "Расположение примерное — метка показывает район, а не конкретное здание.",
+      "plotArea": "Участок {value} м²",
+      "plotAreaUnknown": "Площадь участка: не указано"
     },
     "propertyCard": {
       "bedrooms": "Спальни",
@@ -233,7 +235,9 @@
       "handoverYear": "сдача в {year}",
       "handoverQuarter": "сдача в {quarter} кв. {year}",
       "pricePerSqmFrom": "от {amount} / м²",
-      "requestInfo": "Оставить заявку"
+      "requestInfo": "Оставить заявку",
+      "plotArea": "Участок {value} м²",
+      "plotAreaUnknown": "Участок: не указано"
     },
     "blogCard": {
       "imageAlt": "Изображение статьи блога",
@@ -687,6 +691,18 @@
         "commercial-space": "Коммерческая недвижимость",
         "short-term-rent": "Посуточная аренда"
       }
+    },
+    "og": {
+      "studio": "Студия",
+      "rooms": "{count}+1",
+      "plot": "Участок {value} м²",
+      "plotUnknown": "Участок: не указано",
+      "forSale": "Продажа",
+      "forRent": "Аренда",
+      "shortTerm": "Посуточная аренда",
+      "priceOnRequest": "Цена по запросу",
+      "perSqm": "от {amount}/м²",
+      "perMonth": "/мес."
     }
   },
   "AiSearch": {

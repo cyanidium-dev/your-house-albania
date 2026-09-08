@@ -13,7 +13,9 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     title,
     "slug": slug.current,
     price,
+    priceUnit,
     area,
+    plotArea,
     bedrooms,
 
     rooms,
@@ -125,7 +127,9 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
     title,
     "slug": slug.current,
     price,
+    priceUnit,
     area,
+    plotArea,
     bedrooms,
     yearBuilt,
 
@@ -186,7 +190,9 @@ export async function fetchSimilarPropertyCandidates(
     title,
     "slug": slug.current,
     price,
+    priceUnit,
     area,
+    plotArea,
     bedrooms,
     yearBuilt,
 

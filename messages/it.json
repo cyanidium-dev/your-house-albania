@@ -210,7 +210,9 @@
       "goToImage": "Vai all'immagine {n}",
       "hideThumbnails": "Nascondi miniature",
       "showThumbnails": "Mostra miniature",
-      "approximateLocation": "Posizione approssimativa: il segnaposto indica il quartiere, non l’edificio esatto."
+      "approximateLocation": "Posizione approssimativa: il segnaposto indica il quartiere, non l’edificio esatto.",
+      "plotArea": "Terreno {value} m²",
+      "plotAreaUnknown": "Superficie del terreno: non specificata"
     },
     "propertyCard": {
       "bedrooms": "Camere",
@@ -233,7 +235,9 @@
       "handoverYear": "consegna {year}",
       "handoverQuarter": "consegna T{quarter} {year}",
       "pricePerSqmFrom": "da {amount} / m²",
-      "requestInfo": "Lascia una richiesta"
+      "requestInfo": "Lascia una richiesta",
+      "plotArea": "Terreno {value} m²",
+      "plotAreaUnknown": "Terreno: non specificato"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
@@ -687,6 +691,18 @@
         "commercial-space": "Immobili commerciali",
         "short-term-rent": "Affitti brevi"
       }
+    },
+    "og": {
+      "studio": "Monolocale",
+      "rooms": "{count}+1",
+      "plot": "Terreno {value} m²",
+      "plotUnknown": "Terreno: non specificato",
+      "forSale": "In vendita",
+      "forRent": "In affitto",
+      "shortTerm": "Affitto breve",
+      "priceOnRequest": "Prezzo su richiesta",
+      "perSqm": "da {amount}/m²",
+      "perMonth": "/mese"
     }
   },
   "AiSearch": {

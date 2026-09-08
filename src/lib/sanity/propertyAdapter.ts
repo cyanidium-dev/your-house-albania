@@ -1,5 +1,6 @@
 import type { PropertyHomes } from '@/types/propertyHomes';
 import type { CatalogProperty } from './client';
+import { normalizePlotArea } from '@/lib/property/plotArea';
 import { resolveLocalizedString } from './localized';
 
 /** Fallback Iconify ID when iconKey is unknown or unresolved. */
@@ -80,6 +81,8 @@ export type PropertyDetailsFields = {
   rooms: number | null;
   baths: number;
   area: number;
+  /** Plot under a house or villa — null when the seller gave no figure, and the page says so. */
+  plotArea: number | null;
   description: string;
 };
 
@@ -89,6 +92,7 @@ type SanityPropertyForDetails = {
   priceUnit?: 'total' | 'per-sqm';
   currency?: string;
   area?: number;
+  plotArea?: number;
   bedrooms?: number;
   rooms?: number;
   bathrooms?: number;
@@ -128,6 +132,7 @@ export function mapSanityPropertyToDetailsFields(
       rooms: null,
       baths: 0,
       area: 0,
+      plotArea: null,
       description: '',
     };
   }
@@ -149,6 +154,7 @@ export function mapSanityPropertyToDetailsFields(
     rooms: p.rooms ?? null,
     baths: p.bathrooms ?? 0,
     area: p.area ?? 0,
+    plotArea: normalizePlotArea(p.plotArea),
     description: desc || '',
   };
 }
@@ -298,6 +304,7 @@ type SanityProperty = {
   priceUnit?: 'total' | 'per-sqm';
   currency?: string;
   area?: number;
+  plotArea?: number;
   bedrooms?: number;
   rooms?: number;
   bathrooms?: number;
@@ -395,6 +402,7 @@ export function mapSanityPropertyToCard(
     districtSlug: p.district?.slug,
     districtId: p.district?._id,
     yearBuilt: typeof p.yearBuilt === 'number' && Number.isFinite(p.yearBuilt) ? p.yearBuilt : undefined,
+    plotArea: normalizePlotArea(p.plotArea) ?? undefined,
     teaser: localizedDescription || undefined,
     coordinates: lat !== undefined || lng !== undefined ? { lat, lng } : undefined,
   };

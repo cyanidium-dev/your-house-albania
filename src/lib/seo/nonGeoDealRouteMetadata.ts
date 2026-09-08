@@ -17,6 +17,8 @@ import {
 import { canonicalNonGeoDealListingPath } from "@/lib/routes/listingRouteResolver";
 import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
+import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
+import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { buildTypeListingSeo } from "@/lib/seo/listingSeoCopy";
 
 type DealQuery = "sale" | "rent" | "short-term";
@@ -50,11 +52,18 @@ export async function generateNonGeoDealRouteMetadata(input: {
       `${t("title")} — ${titleFragment}${typeSeg ? ` — ${typeSeg}` : ""}`
   );
   const description = typedSeo?.description || catalogSeo?.metaDescription || t("description");
+  // The social card: title and description over a photograph that fits the deal or type.
+  const ogImage = landingOgImageUrl({
+    locale,
+    title,
+    subtitle: description,
+    photo: { key: heroPhotoFor({ propertyType: typeSeg || null, deal: dealQuery }).key },
+  });
   if (!isIndexingEnabled()) {
     return {
       title: listingTitleField(title),
       description,
-      openGraph: listingOpenGraph(title, description),
+      openGraph: listingOpenGraph(title, description, ogImage),
       robots: indexingDisabledRobots,
     };
   }
@@ -81,7 +90,7 @@ export async function generateNonGeoDealRouteMetadata(input: {
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description),
+    openGraph: listingOpenGraph(title, description, ogImage),
     alternates: {
       canonical: `${base}${purePath}`,
       ...(href?.languages ? { languages: href.languages } : {}),

@@ -199,7 +199,9 @@
       "goToImage": "Przejdź do zdjęcia {n}",
       "hideThumbnails": "Ukryj miniatury",
       "showThumbnails": "Pokaż miniatury",
-      "approximateLocation": "Lokalizacja przybliżona — pinezka wskazuje dzielnicę, a nie konkretny budynek."
+      "approximateLocation": "Lokalizacja przybliżona — pinezka wskazuje dzielnicę, a nie konkretny budynek.",
+      "plotArea": "Działka {value} m²",
+      "plotAreaUnknown": "Powierzchnia działki: nie podano"
     },
     "propertyCard": {
       "bedrooms": "Sypialnie",
@@ -222,7 +224,9 @@
       "handoverYear": "odbiór {year}",
       "handoverQuarter": "odbiór Q{quarter} {year}",
       "pricePerSqmFrom": "od {amount} / m²",
-      "requestInfo": "Zostaw zgłoszenie"
+      "requestInfo": "Zostaw zgłoszenie",
+      "plotArea": "Działka {value} m²",
+      "plotAreaUnknown": "Działka: nie podano"
     },
     "blogCard": {
       "imageAlt": "Zdjęcie artykułu na blogu",
@@ -687,6 +691,18 @@
         "commercial-space": "Lokale użytkowe",
         "short-term-rent": "Wynajem krótkoterminowy"
       }
+    },
+    "og": {
+      "studio": "Kawalerka",
+      "rooms": "{count}+1",
+      "plot": "Działka {value} m²",
+      "plotUnknown": "Działka: nie podano",
+      "forSale": "Na sprzedaż",
+      "forRent": "Wynajem",
+      "shortTerm": "Wynajem krótkoterminowy",
+      "priceOnRequest": "Cena na zapytanie",
+      "perSqm": "od {amount}/m²",
+      "perMonth": "/mies."
     }
   },
   "AiSearch": {

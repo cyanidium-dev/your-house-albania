@@ -8,11 +8,17 @@ export function PropertyCardMeta({
   beds,
   baths,
   area,
+  plotArea,
+  showPlot = false,
 }: {
   view: ViewMode
   beds: number
   baths: number
   area: number
+  /** Land under a house or villa, m². */
+  plotArea?: number | null
+  /** Houses and villas get a fourth tile, which reads "not specified" when the seller gave no figure. */
+  showPlot?: boolean
 }) {
   const t = useTranslations('Shared.propertyCard')
   const isList = view === 'list'
@@ -30,7 +36,8 @@ export function PropertyCardMeta({
   return (
     <div
       className={cn(
-        'grid grid-cols-3 w-full min-w-0',
+        'grid w-full min-w-0',
+        showPlot ? 'grid-cols-4' : 'grid-cols-3',
         isList && 'mt-1 pt-1.5 border-t border-black/5 dark:border-white/10'
       )}
     >
@@ -63,6 +70,7 @@ export function PropertyCardMeta({
       <div
         className={cn(
           'flex items-center min-w-0',
+          showPlot && 'border-e border-black/10 dark:border-white/20',
           isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
           isList && 'gap-0.5 py-0.5 justify-start',
           metaItemClass
@@ -73,6 +81,22 @@ export function PropertyCardMeta({
           {area}{t('areaUnit')}
         </span>
       </div>
+      {showPlot && (
+        <div
+          className={cn(
+            'flex items-center min-w-0',
+            isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
+            isList && 'gap-0.5 py-0.5 justify-start',
+            metaItemClass
+          )}
+          title={plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
+        >
+          <Icon icon="solar:map-linear" width={iconSize} height={iconSize} className="shrink-0" />
+          <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
+            {plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

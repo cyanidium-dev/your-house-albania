@@ -38,6 +38,12 @@ export type PropertyMetadataOptions = {
   itemDescription?: string;
   coverImageUrl?: string;
   /**
+   * The card `/api/og` draws for this listing — the cover photo with the
+   * price, area and layout written over it in the link's language. Beats the
+   * bare cover photo, loses only to a hand-picked `seo.ogImage`.
+   */
+  generatedOgImageUrl?: string;
+  /**
    * When set, adds canonical (unless overridden later) and hreflang for `/property/[slug]`.
    */
   propertyPath?: { baseUrl: string; locale: string; slug: string };
@@ -56,7 +62,7 @@ export function buildPropertyMetadata(
   locale: string,
   options: PropertyMetadataOptions
 ): Metadata {
-  const { itemTitle, composedTitle, itemDescription, coverImageUrl, propertyPath } = options;
+  const { itemTitle, composedTitle, itemDescription, coverImageUrl, generatedOgImageUrl, propertyPath } = options;
 
   const title = resolveChainedTitle(locale, {
     ogTitle: propertySeo?.ogTitle,
@@ -74,6 +80,7 @@ export function buildPropertyMetadata(
 
   const ogImageAbsolute = pickAbsoluteOgImageUrl(
     propertySeo?.ogImage?.asset?.url,
+    generatedOgImageUrl,
     coverImageUrl,
     siteDefaultSeo?.ogImage?.asset?.url
   );
