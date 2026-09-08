@@ -237,7 +237,8 @@
       "pricePerSqmFrom": "da {amount} / m²",
       "requestInfo": "Lascia una richiesta",
       "plotArea": "Terreno {value} m²",
-      "plotAreaUnknown": "Terreno: non specificato"
+      "plotAreaUnknown": "Terreno: non specificato",
+      "priceOnRequest": "Prezzo su richiesta"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",

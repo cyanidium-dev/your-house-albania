@@ -237,7 +237,8 @@
       "pricePerSqmFrom": "от {amount} / м²",
       "requestInfo": "Оставить заявку",
       "plotArea": "Участок {value} м²",
-      "plotAreaUnknown": "Участок: не указано"
+      "plotAreaUnknown": "Участок: не указано",
+      "priceOnRequest": "Цена по запросу"
     },
     "blogCard": {
       "imageAlt": "Изображение статьи блога",

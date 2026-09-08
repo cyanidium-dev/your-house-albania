@@ -237,7 +237,8 @@
       "pricePerSqmFrom": "from {amount} / m²",
       "requestInfo": "Leave a request",
       "plotArea": "Plot {value} m²",
-      "plotAreaUnknown": "Plot: not specified"
+      "plotAreaUnknown": "Plot: not specified",
+      "priceOnRequest": "Price on request"
     },
     "blogCard": {
       "imageAlt": "Blog post image",

@@ -297,7 +297,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                         { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
                                       ]
                                     : []),
-                                  { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
+                                  ...(area > 0 ? [{ key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` }] : []),
                                   ...(plotFact ? [{ key: 'plot', icon: 'solar:map-linear', label: plotFact }] : []),
                                   ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
                               ]}

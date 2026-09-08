@@ -26,7 +26,10 @@ export function PropertyCardMeta({
   const t = useTranslations('Shared.propertyCard')
   const isList = view === 'list'
   const isSmall = view === 'small'
-  const columns = (showRooms ? 2 : 0) + 1 + (showPlot ? 1 : 0)
+  // No area on record → no "0 m²" tile; the row simply has one cell fewer.
+  const showArea = typeof area === 'number' && area > 0
+  const columns = (showRooms ? 2 : 0) + (showArea ? 1 : 0) + (showPlot ? 1 : 0)
+  if (columns === 0) return null
 
   const iconSize = isList ? 18 : isSmall ? 16 : 20
 
@@ -75,20 +78,22 @@ export function PropertyCardMeta({
           </div>
         </>
       )}
-      <div
-        className={cn(
-          'flex items-center min-w-0',
-          showPlot && 'border-e border-black/10 dark:border-white/20',
-          isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-          isList && 'gap-0.5 py-0.5 justify-start',
-          metaItemClass
-        )}
-      >
-        <Icon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
-        <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
-          {area}{t('areaUnit')}
-        </span>
-      </div>
+      {showArea && (
+        <div
+          className={cn(
+            'flex items-center min-w-0',
+            showPlot && 'border-e border-black/10 dark:border-white/20',
+            isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
+            isList && 'gap-0.5 py-0.5 justify-start',
+            metaItemClass
+          )}
+        >
+          <Icon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
+          <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
+            {area}{t('areaUnit')}
+          </span>
+        </div>
+      )}
       {showPlot && (
         <div
           className={cn(

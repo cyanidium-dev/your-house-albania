@@ -226,7 +226,8 @@
       "pricePerSqmFrom": "od {amount} / m²",
       "requestInfo": "Zostaw zgłoszenie",
       "plotArea": "Działka {value} m²",
-      "plotAreaUnknown": "Działka: nie podano"
+      "plotAreaUnknown": "Działka: nie podano",
+      "priceOnRequest": "Cena na zapytanie"
     },
     "blogCard": {
       "imageAlt": "Zdjęcie artykułu na blogu",

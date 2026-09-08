@@ -237,7 +237,8 @@
       "pricePerSqmFrom": "nga {amount} / m²",
       "requestInfo": "Lini një kërkesë",
       "plotArea": "Truall {value} m²",
-      "plotAreaUnknown": "Trualli: nuk është specifikuar"
+      "plotAreaUnknown": "Trualli: nuk është specifikuar",
+      "priceOnRequest": "Çmimi sipas kërkesës"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",

@@ -237,7 +237,8 @@
       "pricePerSqmFrom": "від {amount} / м²",
       "requestInfo": "Залишити заявку",
       "plotArea": "Ділянка {value} м²",
-      "plotAreaUnknown": "Ділянка: не вказано"
+      "plotAreaUnknown": "Ділянка: не вказано",
+      "priceOnRequest": "Ціна за запитом"
     },
     "blogCard": {
       "imageAlt": "Зображення статті блогу",

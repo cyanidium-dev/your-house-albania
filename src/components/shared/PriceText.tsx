@@ -21,6 +21,8 @@ export function PriceText({
   const { currency, rates } = useCurrency()
   const t = useTranslations('Shared.propertyCard')
   if (typeof amountEur !== 'number' || !Number.isFinite(amountEur)) return null
+  // Zero is "the seller has not named a price", never a price of nothing.
+  if (amountEur <= 0) return <span className={className}>{t('priceOnRequest')}</span>
   const converted = convertFromBaseEur(amountEur, currency, rates)
   const amount = formatMoney(converted, currency, locale)
   return (

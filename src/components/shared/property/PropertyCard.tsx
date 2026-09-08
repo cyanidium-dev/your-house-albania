@@ -125,11 +125,15 @@ function PropertyCard({
     Number.isFinite(basePriceEur)
       ? formatMoney(convertFromBaseEur(basePriceEur as number, activeCurrency, rates), activeCurrency, locale)
       : ''
-  const formattedPrice = formattedAmount
-    ? isRate
-      ? tCard('pricePerSqmFrom', { amount: formattedAmount })
+  // Zero is "the seller has not named a price", never a price of nothing.
+  const formattedPrice =
+    Number.isFinite(basePriceEur) && (basePriceEur as number) <= 0
+      ? tCard('priceOnRequest')
       : formattedAmount
-    : ''
+        ? isRate
+          ? tCard('pricePerSqmFrom', { amount: formattedAmount })
+          : formattedAmount
+        : ''
 
   const numericArea = typeof area === 'number' ? area : NaN
   const pricePerSqm =
