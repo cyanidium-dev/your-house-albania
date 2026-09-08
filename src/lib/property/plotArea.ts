@@ -13,6 +13,17 @@ export function showsPlotArea(typeSlug: string | null | undefined): boolean {
   return typeof typeSlug === 'string' && PLOT_TYPE_SLUGS.has(typeSlug.trim().toLowerCase())
 }
 
+/**
+ * Types that have no bedrooms or bathrooms to count. A plot of land and a
+ * warehouse were printing "0 bedrooms · 0 bathrooms", which reads as a
+ * data error rather than as the nature of the thing.
+ */
+const ROOMLESS_TYPE_SLUGS = new Set(['land', 'commercial-space', 'office'])
+
+export function showsRooms(typeSlug: string | null | undefined): boolean {
+  return !(typeof typeSlug === 'string' && ROOMLESS_TYPE_SLUGS.has(typeSlug.trim().toLowerCase()))
+}
+
 /** A positive, finite number or null — Sanity leaves the field undefined, never 0, when nobody filled it. */
 export function normalizePlotArea(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : null

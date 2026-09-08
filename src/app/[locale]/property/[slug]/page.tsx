@@ -13,7 +13,7 @@ import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBrea
 import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
 import { PropertyMarketPositionSection } from '@/components/shared/property/PropertyMarketPositionSection';
 import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/property/marketPosition';
-import { showsPlotArea } from '@/lib/property/plotArea';
+import { showsPlotArea, showsRooms } from '@/lib/property/plotArea';
 import { propertyOgImageUrl } from '@/lib/seo/ogImageUrl';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import TrackPageView from "@/components/analytics/TrackPageView";
@@ -291,8 +291,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           <PropertyFactRow
                               facts={[
                                   ...(rooms ? [{ key: 'rooms', icon: 'solar:home-2-linear', label: t('roomsCount', { count: rooms }) }] : []),
-                                  { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
-                                  { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
+                                  ...(showsRooms(propertyTypeSlug)
+                                    ? [
+                                        { key: 'beds', icon: 'solar:bed-linear', label: t('bedroomsCount', { count: beds }) },
+                                        { key: 'baths', icon: 'solar:bath-linear', label: t('bathroomsCount', { count: baths }) },
+                                      ]
+                                    : []),
                                   { key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` },
                                   ...(plotFact ? [{ key: 'plot', icon: 'solar:map-linear', label: plotFact }] : []),
                                   ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),

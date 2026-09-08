@@ -9,7 +9,7 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
 import { convertFromBaseEur } from '@/lib/currency/convert'
 import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
-import { showsPlotArea } from '@/lib/property/plotArea'
+import { showsPlotArea, showsRooms } from '@/lib/property/plotArea'
 import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { PropertyCardMeta } from './PropertyCardMeta'
@@ -256,6 +256,7 @@ function PropertyCard({
       area={area}
       plotArea={plotArea}
       showPlot={showsPlotArea(propertyTypeSlug)}
+      showRooms={showsRooms(propertyTypeSlug)}
     />
   )
 
