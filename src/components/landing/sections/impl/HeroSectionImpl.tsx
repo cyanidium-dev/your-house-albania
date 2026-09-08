@@ -117,14 +117,17 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
           {/* The copy always sits on the scrim over a photo now, so it is white
               in both themes. */}
           <div className="relative text-center md:text-start z-20 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
-            <p className='text-inherit text-sm md:text-base font-semibold uppercase tracking-[0.14em] opacity-90'>
+            <p className='text-inherit text-xs md:text-base font-semibold uppercase tracking-[0.12em] md:tracking-[0.14em] opacity-90'>
               {shortLine}
             </p>
-            <h1 className='font-display text-inherit text-[2.25rem] leading-[1.08] md:text-5xl lg:text-6xl lg:leading-[1.05] font-bold tracking-[-0.03em] md:max-w-[55%] mt-4 mb-5 text-balance'>
+            {/* A phone shows the Russian and Ukrainian headline on four lines;
+                at 36px that was most of the viewport and the reader felt it.
+                28px keeps the line count and gives the photo back. */}
+            <h1 className='font-display text-inherit text-[1.75rem] leading-[1.12] sm:text-[2.25rem] sm:leading-[1.08] md:text-5xl lg:text-6xl lg:leading-[1.05] font-bold tracking-[-0.02em] md:tracking-[-0.03em] md:max-w-[55%] mt-3 mb-4 md:mt-4 md:mb-5 text-balance'>
               {title}
             </h1>
             {subtitle ? (
-              <p className='text-inherit text-lg md:text-xl leading-relaxed opacity-95 md:max-w-[46%] mb-7 whitespace-pre-line'>
+              <p className='text-inherit text-base md:text-xl leading-relaxed opacity-95 md:max-w-[46%] mb-6 md:mb-7 whitespace-pre-line'>
                 {subtitle}
               </p>
             ) : null}
