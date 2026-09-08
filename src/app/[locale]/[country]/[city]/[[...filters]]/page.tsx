@@ -296,6 +296,10 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   const tCatalog = await getTranslations("Catalog");
   const rawSeo = await fetchCatalogSeoPageByCity(geo.listingCitySlug);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+  // A typed page ("Apartamente në shitje në Durrës") used to open under the
+  // city's heading, so the H1 said less than the <title> did. The heading
+  // now carries the same words the tab and the search snippet carry.
+  const typedCopy = typeSlug ? await buildCityTypeListingSeo(geo.listingCitySlug, typeSlug, locale) : null;
 
   const breadcrumbCountry: string | undefined =
     geo.mode === "fullGeo" ? geo.listingCountrySlug : undefined;
@@ -303,7 +307,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   return (
     <>
       <CatalogHero
-        title={catalogSeo?.title || t("title")}
+        title={typedCopy?.title || catalogSeo?.title || t("title")}
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}

@@ -9,6 +9,7 @@ import {
   resolveCatalogSeoPage,
 } from "@/lib/sanity/client";
 import { getNonGeoDealListingRedirectUrl } from "@/lib/routes/listingRouteResolver";
+import { buildTypeListingSeo } from "@/lib/seo/listingSeoCopy";
 import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
 
 function normalizeSeg(s: string): string {
@@ -88,11 +89,14 @@ export async function NonGeoDealListingPage({
   const tCatalog = await getTranslations("Catalog");
   const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+  // Same words in the H1 as in the <title>: "Apartamente në shitje në Shqipëri"
+  // on the typed page, not the root catalogue's heading.
+  const typedCopy = propertyTypeSegment ? await buildTypeListingSeo(propertyTypeSegment, locale) : null;
 
   return (
     <>
       <CatalogHero
-        title={catalogSeo?.title || t("title")}
+        title={typedCopy?.title || catalogSeo?.title || t("title")}
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}
