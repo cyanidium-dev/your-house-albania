@@ -442,6 +442,7 @@ for u in sq/albania/vlore en/albania/tirana pl/albania/sarande it/albania/durres
 
 ### SEO-12 🤖 Программные лендинги {тип}+{сделка}+{зона}
 - [ ] **Сделано**
+- [x] **Часть сдана 08.09.2026** (`652cc14`, `205c6ab`): районный листинг стал собственным URL `/{locale}/{country}/{city}/{district}` (плюс `/{deal}/{type}` под ним) с H1, intro и bottomText из `catalogSeoPage` района, своим canonical, крошками и попаданием в `sitemap-types.xml` при > 20 объектов; `?district=` → 307 на путь. Попутно: `intro`/`bottomText` каталога вообще не рендерились (строки vs Portable Text) — починено; H1 всех 39 `catalogSeoPage` = metaTitle; для Дурреса и 10 прибрежных зон написан sq-текст с ценами из `zone-metrics-seed.json` (`domlivo-admin/scripts/seedDurresCoastCatalogSeo.ts`). Осталось: типовые срезы по зонам с гейтом ≥ 3 объектов, остальные города.
 
 Спека уже написана в `10-seo/seo-map.md` (60+ зон × 4–6 типов × языки) с жёстким правилом: **у каждой программной страницы должен быть уникальный блок данных, иначе это дорвей**.
 
