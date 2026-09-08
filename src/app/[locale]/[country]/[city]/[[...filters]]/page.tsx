@@ -8,6 +8,7 @@ import {
   fetchPropertyBySlug,
   fetchSiteSettings,
   fetchCatalogSeoPageByCity,
+  fetchCatalogSeoPageByDistrict,
   resolveCatalogSeoPage,
   fetchCatalogFilterOptions,
   fetchCatalogProperties,
@@ -24,7 +25,11 @@ import {
   LISTING_DISTRICT_NOINDEX_THRESHOLD,
   shouldNoindexEmptyCityListing,
 } from "@/lib/seo/listingIndexPolicy";
-import { buildCityListingSeo, buildCityTypeListingSeo } from "@/lib/seo/listingSeoCopy";
+import {
+  buildCityDistrictListingSeo,
+  buildCityListingSeo,
+  buildCityTypeListingSeo,
+} from "@/lib/seo/listingSeoCopy";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
@@ -50,8 +55,38 @@ type Props = {
   searchParams: Promise<SearchParams>;
 };
 
-function mergedSearchParams(search: SearchParams, dealSegment?: string, propertyType?: string): SearchParams {
-  return mergeListingSearchParams(search, dealSegment, propertyType);
+function mergedSearchParams(
+  search: SearchParams,
+  dealSegment?: string,
+  propertyType?: string,
+  district?: string
+): SearchParams {
+  return mergeListingSearchParams(search, dealSegment, propertyType, district);
+}
+
+/** The slugs a first path segment may name as a district of this city. */
+function districtSlugsFor(
+  options: { districts: { value: string; citySlug?: string }[] },
+  citySlug: string
+): string[] {
+  return options.districts.filter((d) => d.citySlug === citySlug).map((d) => d.value);
+}
+
+function districtLabelFor(
+  options: { districts: { value: string; label: string }[] },
+  districtSlug: string
+): string {
+  return options.districts.find((d) => d.value.toLowerCase() === districtSlug.toLowerCase())?.label || districtSlug;
+}
+
+/**
+ * The catalogue copy for the page: the district's own document on a district
+ * page — never the city's, whose text is about the whole city — and the
+ * city's otherwise.
+ */
+async function fetchListingSeoDoc(citySlug: string, districtSlug: string) {
+  if (districtSlug) return fetchCatalogSeoPageByDistrict(citySlug, districtSlug);
+  return fetchCatalogSeoPageByCity(citySlug);
 }
 
 async function validateListingGeoContent(
@@ -86,10 +121,15 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   const resolved =
     geo.mode === "fullGeo"
-      ? resolveListingPathFilters(filters, options.propertyTypes, "geoCity")
+      ? resolveListingPathFilters(
+          filters,
+          options.propertyTypes,
+          "geoCity",
+          districtSlugsFor(options, geo.listingCitySlug)
+        )
       : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
   if (!resolved) return {};
-  const { dealType, propertyType } = resolved;
+  const { dealType, propertyType, district: pathDistrict } = resolved;
   const typeSlug = propertyType;
 
   if (geo.mode === "fullGeo") {
@@ -101,7 +141,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   const [siteSettings, rawSeo] = await Promise.all([
     fetchSiteSettings(),
-    fetchCatalogSeoPageByCity(geo.listingCitySlug),
+    fetchListingSeoDoc(geo.listingCitySlug, pathDistrict),
   ]);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const defaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo as
@@ -130,6 +170,11 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     geo.listingCitySlug && typeSlug
       ? await buildCityTypeListingSeo(geo.listingCitySlug, typeSlug, locale)
       : null;
+  // District listing: the district's own catalogue copy first, then a
+  // localized template naming the district and the city.
+  const generatedDistrict = pathDistrict
+    ? await buildCityDistrictListingSeo(geo.listingCitySlug, districtLabelFor(options, pathDistrict), locale)
+    : null;
   // stripBrandSuffix: CMS titles often bake in "| Domlivo" — the root template
   // appends the brand, so strip it here to avoid "… | Domlivo — Domlivo".
   // Order matters: a CMS title written in this locale wins, then the generated
@@ -138,6 +183,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const title = stripBrandSuffix(
     generatedType?.title ||
       catalogSeo?.metaTitleInLocale ||
+      generatedDistrict?.title ||
       generated?.title ||
       catalogSeo?.metaTitle ||
       (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle)
@@ -145,6 +191,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const description =
     generatedType?.description ||
     catalogSeo?.metaDescriptionInLocale ||
+    generatedDistrict?.description ||
     generated?.description ||
     catalogSeo?.metaDescription ||
     (defaultSeo?.metaDescription
@@ -178,7 +225,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       : {}),
     dealType: dealForPath || undefined,
     propertyType: typeSlug || undefined,
-    district: typeof search.district === "string" ? search.district : undefined,
+    district: pathDistrict || (typeof search.district === "string" ? search.district : undefined),
   });
   const baseUrl = getSiteBaseUrl();
   const canonical = `${baseUrl}${path.split("?")[0]}`;
@@ -202,10 +249,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     const totalCount = listing?.totalCount ?? 0;
     noindexByThreshold = totalCount <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD;
   }
-  if (!noindexQuery && !seoNoIndex && typeof search.district === "string" && search.district.trim()) {
+  const districtForIndex =
+    pathDistrict || (typeof search.district === "string" ? search.district.trim().toLowerCase() : "");
+  if (!noindexQuery && !seoNoIndex && districtForIndex) {
     const listing = await fetchCatalogProperties({
       city: geo.listingCitySlug,
-      district: search.district.trim().toLowerCase(),
+      district: districtForIndex,
       page: 1,
       pageSize: 1,
     });
@@ -219,7 +268,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   // own as soon as the city has inventory.
   let noindexEmptyCity = false;
   const isBareCityListing =
-    !dealForPath && !typeSlug && !(typeof search.district === "string" && search.district.trim());
+    !dealForPath && !typeSlug && !pathDistrict && !(typeof search.district === "string" && search.district.trim());
   if (!noindexQuery && !seoNoIndex && isBareCityListing && geo.listingCitySlug) {
     const listing = await fetchCatalogProperties({
       city: geo.listingCitySlug,
@@ -263,15 +312,25 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
 
   const resolved =
     geo.mode === "fullGeo"
-      ? resolveListingPathFilters(filters, options.propertyTypes, "geoCity")
+      ? resolveListingPathFilters(
+          filters,
+          options.propertyTypes,
+          "geoCity",
+          districtSlugsFor(options, geo.listingCitySlug)
+        )
       : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
   if (!resolved) notFound();
-  const { dealType, propertyType, dealQuery } = resolved;
+  const { dealType, propertyType, dealQuery, district: pathDistrict } = resolved;
   const typeSlug = propertyType;
 
   await validateListingGeoContent(locale, geo.listingCitySlug, options.propertyTypes, typeSlug || undefined);
 
-  const mergedSearch = mergedSearchParams(search, dealType || undefined, typeSlug || undefined);
+  const mergedSearch = mergedSearchParams(
+    search,
+    dealType || undefined,
+    typeSlug || undefined,
+    pathDistrict || undefined
+  );
   const dupUrl = getGeoListingDuplicateFacetRedirectUrl({
     locale,
     geo,
@@ -287,6 +346,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
     geo,
     dealType,
     propertyType: typeSlug,
+    pathDistrict: pathDistrict || undefined,
     rawSearch: search,
     mergedSearch,
   });
@@ -294,8 +354,11 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");
-  const rawSeo = await fetchCatalogSeoPageByCity(geo.listingCitySlug);
+  const rawSeo = await fetchListingSeoDoc(geo.listingCitySlug, pathDistrict);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+  const districtCopy = pathDistrict
+    ? await buildCityDistrictListingSeo(geo.listingCitySlug, districtLabelFor(options, pathDistrict), locale)
+    : null;
   // A typed page ("Apartamente në shitje në Durrës") used to open under the
   // city's heading, so the H1 said less than the <title> did. The heading
   // now carries the same words the tab and the search snippet carry.
@@ -307,7 +370,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   return (
     <>
       <CatalogHero
-        title={typedCopy?.title || catalogSeo?.title || t("title")}
+        title={typedCopy?.title || catalogSeo?.title || districtCopy?.title || t("title")}
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
         introFallback={tCatalog("heroIntroFallback")}
@@ -319,6 +382,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
             locale={locale}
             country={breadcrumbCountry}
             city={geo.listingCitySlug}
+            district={pathDistrict || undefined}
             dealType={dealType || undefined}
             propertyType={typeSlug || undefined}
           />

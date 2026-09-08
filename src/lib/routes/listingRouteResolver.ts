@@ -52,12 +52,15 @@ export function normalizeListingPathSegment(value?: string): string {
 export function mergeListingSearchParams(
   search: ListingSearchParams,
   dealSegment?: string,
-  propertyType?: string
+  propertyType?: string,
+  district?: string
 ): ListingSearchParams {
   const merged: ListingSearchParams = { ...search };
   const deal = dealSegment ? dealRouteSegmentToQueryValue(dealSegment) : "";
   if (deal) merged.deal = deal;
   if (propertyType) merged.type = propertyType;
+  // A district in the path is the filter, whatever the query says.
+  if (district) merged.district = district;
   return merged;
 }
 
@@ -111,7 +114,40 @@ function pickSearchParamsExcluding(
  *   that skip deal or geo context. Deal/type without full geo stay query-only on the agent root
  *   (see Step 1 builder rules).
  */
+export type ResolvedListingPathFilters = {
+  dealType: string;
+  propertyType: string;
+  dealQuery: string;
+  /** District slug when the first segment named one of the city's districts; "" otherwise. */
+  district: string;
+};
+
 export function resolveListingPathFilters(
+  filters: string[],
+  propertyTypeOptions: { value: string }[],
+  mode: "geoCity" | "agentCity",
+  /**
+   * The city's district slugs. On `geoCity` a first segment that names one is
+   * the district (`/durres/golem-durres`, `/durres/golem-durres/sale/apartment`);
+   * deal and type follow it under the usual rules. Agent listings never take a
+   * district in the path.
+   */
+  districtSlugs: readonly string[] = []
+): ResolvedListingPathFilters | null {
+  let district = "";
+  let rest = filters;
+  if (mode === "geoCity" && filters.length > 0) {
+    const first = normalizeListingPathSegment(filters[0]);
+    if (first && districtSlugs.some((d) => normalizeListingPathSegment(d) === first)) {
+      district = first;
+      rest = filters.slice(1);
+    }
+  }
+  const tail = resolveDealTypeSegments(rest, propertyTypeOptions, mode);
+  return tail ? { ...tail, district } : null;
+}
+
+function resolveDealTypeSegments(
   filters: string[],
   propertyTypeOptions: { value: string }[],
   mode: "geoCity" | "agentCity"
@@ -151,18 +187,18 @@ export function resolveOmitCountryListingPathFilters(
   filters: string[],
   propertyTypeOptions: { value: string }[],
   dealSegmentNormalized: string
-): { dealType: string; propertyType: string; dealQuery: string } | null {
+): ResolvedListingPathFilters | null {
   if (filters.length > 1) return null;
   const dSeg = normalizeListingPathSegment(dealSegmentNormalized);
   const dealQuery = dealRouteSegmentToQueryValue(dSeg);
   if (!dealQuery) return null;
   if (filters.length === 0) {
-    return { dealType: dSeg, propertyType: "", dealQuery };
+    return { dealType: dSeg, propertyType: "", dealQuery, district: "" };
   }
   const only = normalizeListingPathSegment(filters[0]);
   const knownType = propertyTypeOptions.some((t) => normalizeListingPathSegment(t.value) === only);
   if (!knownType) return null;
-  return { dealType: dSeg, propertyType: only, dealQuery };
+  return { dealType: dSeg, propertyType: only, dealQuery, district: "" };
 }
 
 export type CatalogGeoListingInterpretation =
@@ -316,23 +352,39 @@ export function getGeoListingDuplicateFacetRedirectUrl(opts: {
   });
 }
 
-/** Normalize district in query when path + `catalogFilterPath` canonicalize casing. */
+/**
+ * District canonicalization. On the full-geo shape the district is a path
+ * segment, so `?district=` — however it is cased — redirects to
+ * `/{country}/{city}/{district}`, and a path district drops any stray query
+ * copy. On the omit-country shape the query is canonical and only casing is
+ * normalized.
+ */
 export function getGeoListingDistrictNormalizeRedirectUrl(opts: {
   locale: string;
   geo: CatalogGeoListingInterpretation;
   dealType: string;
   propertyType: string;
+  /** District already read from the path, if any. */
+  pathDistrict?: string;
   /** Original `searchParams` from the request. */
   rawSearch: ListingSearchParams;
-  /** After merging path-implied `deal` / `type`. */
+  /** After merging path-implied `deal` / `type` / `district`. */
   mergedSearch: ListingSearchParams;
 }): string | null {
+  const queryDistrict =
+    typeof opts.rawSearch.district === "string" ? normalizeListingPathSegment(opts.rawSearch.district) : "";
   const district =
-    typeof opts.mergedSearch.district === "string"
+    normalizeListingPathSegment(opts.pathDistrict) ||
+    (typeof opts.mergedSearch.district === "string"
       ? normalizeListingPathSegment(opts.mergedSearch.district)
-      : "";
+      : "");
   if (!district) return null;
-  if (normalizeListingPathSegment(opts.rawSearch.district as string) === district) return null;
+  if (opts.geo.mode === "fullGeo") {
+    // Already on the path, nothing in the query: canonical as it stands.
+    if (!queryDistrict) return null;
+  } else if (queryDistrict === district) {
+    return null;
+  }
   if (opts.geo.mode === "omitCountry") {
     return buildListingUrl({
       scope: "catalog",

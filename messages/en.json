@@ -690,7 +690,9 @@
         "office": "Offices",
         "commercial-space": "Commercial Property",
         "short-term-rent": "Short-Term Rentals"
-      }
+      },
+      "cityDistrictTitle": "Property for Sale in {district}, {city}",
+      "cityDistrictDescription": "Apartments, houses and villas for sale in {district}, {city}: current prices, photos and direct contact with owners and agencies, no commission."
     },
     "og": {
       "studio": "Studio",

@@ -1,7 +1,10 @@
 import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { buildListingPath } from '@/lib/routes/listingRoutes';
 import { isPublicDealQuery, isPublicDealRouteSegment } from '@/lib/catalog/publicDealTypes';
-import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
+import {
+  LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
+  LISTING_DISTRICT_NOINDEX_THRESHOLD,
+} from '@/lib/seo/listingIndexPolicy';
 import {
   resolveLandingPathForSitemap,
   type LandingPageSitemapRow,
@@ -179,8 +182,13 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
     "catalogCitySeoNoIndex": *[_type == "catalogSeoPage" && active == true && pageScope == "city" && seo.noIndex == true]{
       "citySlug": city->slug.current
     },
+    "catalogDistrictSeoNoIndex": *[_type == "catalogSeoPage" && active == true && pageScope == "district" && seo.noIndex == true]{
+      "citySlug": city->slug.current,
+      "districtSlug": district->slug.current
+    },
     "propertyRows": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(city->slug.current) && defined(status)]{
       "citySlug": city->slug.current,
+      "districtSlug": district->slug.current,
       "deal": status,
       "typeSlug": type->slug.current,
       _updatedAt
@@ -190,13 +198,24 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
     const result = await client.fetch<{
       cityRows?: Array<{ citySlug?: string; countrySlug?: string; _updatedAt?: string }>;
       catalogCitySeoNoIndex?: Array<{ citySlug?: string }>;
+      catalogDistrictSeoNoIndex?: Array<{ citySlug?: string; districtSlug?: string }>;
       propertyRows?: Array<{
         citySlug?: string;
+        districtSlug?: string;
         deal?: string;
         typeSlug?: string;
         _updatedAt?: string;
       }>;
     }>(query);
+    const blockedDistrictSeo = new Set(
+      (result?.catalogDistrictSeoNoIndex ?? [])
+        .map((r) =>
+          typeof r.citySlug === 'string' && typeof r.districtSlug === 'string'
+            ? `${r.citySlug.trim().toLowerCase()}|${r.districtSlug.trim().toLowerCase()}`
+            : ''
+        )
+        .filter(Boolean)
+    );
     const blockedCitySeo = new Set(
       (result?.catalogCitySeoNoIndex ?? [])
         .map((r) => (typeof r.citySlug === 'string' ? r.citySlug.trim().toLowerCase() : ''))
@@ -223,6 +242,9 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
 
     const dealBest = new Map<string, Date>();
     const typeCount = new Map<string, { count: number; lastmod: Date }>();
+    // District listing pages (`/{country}/{city}/{district}`): counted over the
+    // public deal types, the same set the unfiltered page shows.
+    const districtCount = new Map<string, { count: number; lastmod: Date }>();
     const propertyRows = result?.propertyRows ?? [];
     for (const row of propertyRows) {
       const citySlug = typeof row.citySlug === 'string' ? row.citySlug.trim().toLowerCase() : '';
@@ -232,6 +254,15 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
         deal === 'sale' || deal === 'rent' ? deal : deal === 'short-term' ? 'short-term-rent' : '';
       if (!dealSegment) continue;
       const lm = parseSitemapDate(row._updatedAt);
+
+      const districtSlug =
+        typeof row.districtSlug === 'string' ? row.districtSlug.trim().toLowerCase() : '';
+      if (districtSlug && isPublicDealRouteSegment(dealSegment)) {
+        const key = `${citySlug}|${districtSlug}`;
+        const prev = districtCount.get(key);
+        if (!prev) districtCount.set(key, { count: 1, lastmod: lm });
+        else districtCount.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
+      }
 
       const dealKey = `${citySlug}|${dealSegment}`;
       const prevDeal = dealBest.get(dealKey);
@@ -274,6 +305,19 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
       const countrySeg = encodeURIComponent(countryForCity);
       out.push({
         segmentAfterLocale: `${countrySeg}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}/${encodeURIComponent(typeSlug)}`,
+        lastModified: value.lastmod,
+      });
+    }
+
+    for (const [key, value] of districtCount.entries()) {
+      // Same gate as the route's robots: a thin district listing is noindexed there too.
+      if (value.count <= LISTING_DISTRICT_NOINDEX_THRESHOLD) continue;
+      if (blockedDistrictSeo.has(key)) continue;
+      const [citySlug, districtSlug] = key.split('|');
+      const countryForCity =
+        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      out.push({
+        segmentAfterLocale: `${encodeURIComponent(countryForCity)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(districtSlug)}`,
         lastModified: value.lastmod,
       });
     }

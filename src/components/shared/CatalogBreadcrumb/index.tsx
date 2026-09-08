@@ -20,6 +20,8 @@ type CatalogBreadcrumbProps = {
   agentName?: string;
   country?: string;
   city?: string;
+  /** District listing page: a crumb between the city and the deal. */
+  district?: string;
   dealType?: string;
   propertyType?: string;
 };
@@ -30,6 +32,7 @@ export async function CatalogBreadcrumb({
   agentName,
   country,
   city,
+  district,
   dealType,
   propertyType,
 }: CatalogBreadcrumbProps) {
@@ -75,6 +78,15 @@ export async function CatalogBreadcrumb({
             formatSlug(city),
         }
       : undefined,
+    district:
+      district && city
+        ? {
+            slug: district,
+            label:
+              options.districts.find((d) => d.value.toLowerCase() === district.toLowerCase())?.label ||
+              formatSlug(district),
+          }
+        : undefined,
     deal: dealType ? {slug: dealType, label: dealLabel(dealType)} : undefined,
     type: propertyType
       ? {
@@ -92,6 +104,7 @@ export async function CatalogBreadcrumb({
     agentSlug,
     country: countryForPath,
     city,
+    district,
     dealType,
     propertyType,
   });
@@ -116,6 +129,7 @@ function buildCurrentPath({
   agentSlug,
   country,
   city,
+  district,
   dealType,
   propertyType,
 }: {
@@ -123,6 +137,7 @@ function buildCurrentPath({
   agentSlug?: string;
   country?: string;
   city?: string;
+  district?: string;
   dealType?: string;
   propertyType?: string;
 }): string {
@@ -149,6 +164,7 @@ function buildCurrentPath({
         locale,
         country: cSeg,
         city,
+        district,
         dealQuery,
         propertyType,
       });

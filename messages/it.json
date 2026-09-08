@@ -690,7 +690,9 @@
         "office": "Uffici",
         "commercial-space": "Immobili commerciali",
         "short-term-rent": "Affitti brevi"
-      }
+      },
+      "cityDistrictTitle": "Case in vendita a {district}, {city}",
+      "cityDistrictDescription": "Appartamenti, case e ville in vendita a {district}, {city}: prezzi aggiornati, foto e contatto diretto con proprietari e agenzie, senza commissioni."
     },
     "og": {
       "studio": "Monolocale",

@@ -2,8 +2,11 @@
  * Unified listing URL construction for catalog + agent (builder only; no route resolution).
  *
  * ## Path vs URL
- * - **`buildListingPath`** — pathname only (no `?`). Ignores `district` for the path; district is a
- *   **query-only** facet on catalog listings (`/{locale}/catalog?district=…` or geo paths with `?district=`).
+ * - **`buildListingPath`** — pathname only (no `?`). On the full-geo catalog shape
+ *   (`/{locale}/{country}/{city}/…`) a `district` becomes the segment right after the city:
+ *   `/{locale}/{country}/{city}/{district}[/{deal}[/{type}]]`, so a district listing is a page
+ *   of its own that search engines can index. Everywhere else — agent scope, omit-country
+ *   shape, `/catalog` — district stays a **query-only** facet (`?district=`).
  * - **`buildListingUrl`** — pathname + merged query. Use this whenever the browser needs a full `href`.
  *
  * ## Agent without city (`/{locale}/agent/{slug}` only)
@@ -40,7 +43,7 @@ export type BuildListingPathInput = {
   /** Catalog filter value: `sale` | `rent` | `short-term` (not the URL segment for short-term rent). */
   dealQuery?: string | null;
   propertyType?: string | null;
-  /** Used only by `buildListingUrl` (query param), not by `buildListingPath`. */
+  /** Path segment after the city on the full-geo catalog shape; a query param everywhere else. */
   district?: string | null;
 };
 
@@ -86,7 +89,8 @@ function buildCatalogPathname(
   countryNorm: string,
   city: string,
   dealSeg: string,
-  type: string
+  type: string,
+  district = ""
 ): string {
   const hasCity = Boolean(city);
   const hasExplicitCountry = Boolean(countryRaw);
@@ -135,12 +139,29 @@ function buildCatalogPathname(
 
   if (hasCity) {
     let p = `/${locale}/${encodeURIComponent(countryNorm)}/${encodeURIComponent(city)}`;
+    // The district sits between the city and the deal, so `/durres/golem-durres`
+    // and `/durres/golem-durres/sale/apartment` both read as places first.
+    if (district) p += `/${encodeURIComponent(district)}`;
     if (dealSeg) p += `/${encodeURIComponent(dealSeg)}`;
     if (type) p += `/${encodeURIComponent(type)}`;
     return p;
   }
 
   return `/${locale}/catalog`;
+}
+
+/** True when `buildListingPath` will put the district in the path for this input. */
+export function districtIsPathSegment(input: BuildListingPathInput): boolean {
+  if (input.scope !== "catalog") return false;
+  const city = input.city?.trim() || "";
+  const district = input.district?.trim() || "";
+  if (!city || !district) return false;
+  const { countryNorm } = resolveEffectiveCountryForListingBuild({
+    city,
+    country: input.country,
+    trustedCityCountrySlug: input.trustedCityCountrySlug,
+  });
+  return Boolean(countryNorm);
 }
 
 /**
@@ -161,7 +182,8 @@ export function buildListingPath(input: BuildListingPathInput): string {
     return buildAgentPathname(locale, input.agentSlug, countryNorm, city, dealSeg, type);
   }
 
-  return buildCatalogPathname(locale, countryRaw, countryNorm, city, dealSeg, type);
+  const district = districtIsPathSegment(input) ? input.district!.trim().toLowerCase() : "";
+  return buildCatalogPathname(locale, countryRaw, countryNorm, city, dealSeg, type, district);
 }
 
 /**
@@ -203,7 +225,8 @@ export function buildListingUrl(input: BuildListingUrlInput): string {
   }
 
   if (input.district?.trim()) {
-    params.set("district", input.district.trim());
+    if (districtIsPathSegment(input)) params.delete("district");
+    else params.set("district", input.district.trim());
   }
 
   const qs = params.toString();

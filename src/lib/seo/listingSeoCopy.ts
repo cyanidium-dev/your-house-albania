@@ -132,6 +132,26 @@ export async function buildCityTypeListingSeo(
   };
 }
 
+/**
+ * Title and description for a district listing
+ * (`/{locale}/{country}/{city}/{district}`), used when the district has no
+ * catalogSeoPage copy of its own in this locale.
+ */
+export async function buildCityDistrictListingSeo(
+  citySlug: string,
+  districtLabel: string,
+  locale: string
+): Promise<ListingSeoCopy | null> {
+  const city = await resolveCityDisplayName(citySlug, locale);
+  const district = districtLabel.trim();
+  if (!city || !district) return null;
+  const t = await getTranslations({ locale, namespace: "Seo.listing" });
+  return {
+    title: t("cityDistrictTitle", { district, city }),
+    description: t("cityDistrictDescription", { district, city }),
+  };
+}
+
 /** Title and description for the country-level listing. */
 export async function buildCountryListingSeo(): Promise<ListingSeoCopy> {
   const t = await getTranslations("Seo.listing");

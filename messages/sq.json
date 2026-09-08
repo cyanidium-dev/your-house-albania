@@ -690,7 +690,9 @@
         "office": "Zyra",
         "commercial-space": "Prona tregtare",
         "short-term-rent": "Qira afatshkurtër"
-      }
+      },
+      "cityDistrictTitle": "Shtëpi dhe apartamente në shitje në {district}, {city}",
+      "cityDistrictDescription": "Apartamente 1+1 dhe 2+1, shtëpi dhe vila në shitje në {district}, {city}: çmime aktuale, foto dhe kontakt i drejtpërdrejtë me pronarët dhe agjencitë, pa komision."
     },
     "og": {
       "studio": "Garsonierë",

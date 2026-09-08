@@ -690,7 +690,9 @@
         "office": "Biura",
         "commercial-space": "Lokale użytkowe",
         "short-term-rent": "Wynajem krótkoterminowy"
-      }
+      },
+      "cityDistrictTitle": "Nieruchomości na sprzedaż w {district}, {city}",
+      "cityDistrictDescription": "Mieszkania, domy i wille na sprzedaż w dzielnicy {district}, {city}: aktualne ceny, zdjęcia i bezpośredni kontakt z właścicielami i agencjami, bez prowizji."
     },
     "og": {
       "studio": "Kawalerka",
