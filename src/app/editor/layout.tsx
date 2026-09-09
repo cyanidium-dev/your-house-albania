@@ -1,11 +1,17 @@
 import type { ReactNode } from 'react';
+import '../globals.css';
 
 /**
- * Editor shell wrapper.
+ * Editor root layout.
  *
- * Must NOT declare its own <html>/<body> — Next.js has a single root layout
- * at `src/app/layout.tsx`. This wrapper only scopes editor-specific styling
- * and metadata. The editor still avoids all public client code because:
+ * This is one of the app's two root layouts and therefore declares its own
+ * <html>/<body>. The split exists so the public tree's root layout can live at
+ * `[locale]/layout.tsx` and read the locale from its own params: the previous
+ * single root layout sat above `[locale]`, could only get the locale from
+ * `headers()`, and that one call made every route on the site dynamic and
+ * uncacheable.
+ *
+ * The editor still avoids all public client code because:
  *   - `/editor/**` is outside `[locale]` (no `LocaleLayout`, no Header/Footer)
  *   - `/editor` is excluded from `next-intl` middleware
  *   - @dnd-kit and editor UI are imported only inside this tree, so Next.js
@@ -18,7 +24,8 @@ export const metadata = {
 
 export default function EditorLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <html lang="en">
+      <body className="min-h-screen bg-neutral-50 text-neutral-900">
       {/*
         Editor-only visual cues for inline-editable text nodes. The selectors
         exist only inside /editor/**, so the public site is untouched.
@@ -39,7 +46,8 @@ export default function EditorLayout({ children }: { children: ReactNode }) {
           border-radius: 4px;
         }
       `}</style>
-      {children}
-    </div>
+        {children}
+      </body>
+    </html>
   );
 }
