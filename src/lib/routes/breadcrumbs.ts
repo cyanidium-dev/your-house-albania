@@ -94,7 +94,12 @@ export function buildCatalogCrumbs(input: CatalogCrumbInput): BreadcrumbItem[] {
   const items: BreadcrumbItem[] = [{ label: labels.home, href: `/${locale}` }];
 
   if (agent) {
-    items.push({ label: labels.agents, href: `/${locale}/agent` });
+    // `/{locale}/agent` is a segment, not a page — its route calls `notFound()`
+    // because there is no agents index to send anyone to. Linking the crumb
+    // there put a 404 in the trail of every agent page (91 internal links in
+    // the Ahrefs crawl of 2026-09-10). The level still belongs in the trail, so
+    // it stays as an unlinked label until an index exists.
+    items.push({ label: labels.agents });
     items.push({
       label: agent.name || formatBreadcrumbSlug(agent.slug),
       href: agentFilterPath({ locale, agentSlug: agent.slug }),
