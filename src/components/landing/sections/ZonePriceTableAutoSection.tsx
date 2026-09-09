@@ -5,10 +5,9 @@ import { SourcesList, type SourcesListItem } from '@/components/landing/sections
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import {
   formatMetric,
-  isMetricKey,
   latestPeriodLabel,
   mergeSources,
-  METRIC_KEYS,
+  resolveTableColumns,
   type MetricKey,
 } from '@/lib/zoneMetrics/metrics'
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics'
@@ -76,17 +75,7 @@ export function ZonePriceTableAutoSection({
   const rows = (Array.isArray(records) ? records : []).filter((r) => r && r.zone)
   if (rows.length === 0) return null
 
-  const requested = Array.isArray(columns) ? columns.filter(isMetricKey) : []
-  const candidates: MetricKey[] = requested.length > 0 ? requested : DEFAULT_COLUMNS
-  // Keep a column only when some row can fill it.
-  const activeColumns = candidates.filter((key) =>
-    rows.some((record) => formatMetric(record, key, locale) !== null),
-  )
-  const columnKeys: MetricKey[] =
-    activeColumns.length > 0
-      ? activeColumns
-      : METRIC_KEYS.filter((key) => rows.some((r) => formatMetric(r, key, locale) !== null)).slice(0, 4)
-
+  const columnKeys = resolveTableColumns(rows, columns, DEFAULT_COLUMNS, locale)
   if (columnKeys.length === 0) return null
 
   const sorted =
@@ -116,7 +105,11 @@ export function ZonePriceTableAutoSection({
         section={{
           title: titleOverride ? loc(titleOverride) : undefined,
           subtitle: subtitleOverride ? loc(subtitleOverride) : undefined,
-          columns: [loc(t('zone')), ...columnKeys.map((key) => loc(t(key)))],
+          // `columns` describes the value columns only — the row label has its
+          // own header slot. Prepending "zone" here shifted every heading one
+          // column right, so each price sat under the wrong label.
+          labelHeader: loc(t('zone')),
+          columns: columnKeys.map((key) => loc(t(key))),
           rows: tableRows,
           confidenceEnabled: true,
           sourceNote: period ? loc(period) : undefined,

@@ -23,6 +23,13 @@ type PriceTableSectionShape = {
   enabled?: boolean
   title?: unknown
   subtitle?: unknown
+  /**
+   * Header for the row-label column. `columns` describes only the value
+   * columns, so without this the label column is headerless — fine for a
+   * manual table whose labels are self-evident, wrong for the generated zone
+   * table, where the column means "zone".
+   */
+  labelHeader?: unknown
   columns?: unknown[]
   rows?: PriceTableRow[]
   confidenceEnabled?: boolean
@@ -88,6 +95,7 @@ export function PriceTableSection({
 
   const title = resolveLocalizedString(section.title as never, locale) || ''
   const subtitle = resolveLocalizedString(section.subtitle as never, locale) || ''
+  const labelHeader = resolveLocalizedString(section.labelHeader as never, locale) || ''
   const sourceNote = resolveLocalizedString(section.sourceNote as never, locale) || ''
   const lastUpdated = parseDate(section.lastUpdated)
   const showConfidence =
@@ -136,7 +144,9 @@ export function PriceTableSection({
           <table className="w-full border-collapse text-left">
             <thead className="bg-dark/[0.04] dark:bg-white/5">
               <tr>
-                <th className="px-4 sm:px-5 py-3.5 text-dark dark:text-white font-semibold text-sm sm:text-base border-b border-dark/10 dark:border-white/15" />
+                <th className="px-4 sm:px-5 py-3.5 text-dark dark:text-white font-semibold text-sm sm:text-base border-b border-dark/10 dark:border-white/15">
+                  {labelHeader}
+                </th>
                 {columns.map((h, i) => (
                   <th
                     key={i}

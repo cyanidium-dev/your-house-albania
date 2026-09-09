@@ -247,6 +247,9 @@ const SeoText: React.FC<{
   author?: SeoAuthor;
   stats?: SeoStat[];
   pullQuote?: SeoPullQuote;
+  /** Optional photograph of the place the copy is about. */
+  imageUrl?: string;
+  imageAlt?: string;
 }> = async ({
   locale,
   seoTextData,
@@ -258,6 +261,8 @@ const SeoText: React.FC<{
   author,
   stats,
   pullQuote,
+  imageUrl,
+  imageAlt,
 }) => {
   const t = await getTranslations('Shared.seoText');
   const content = seoTextData?.content;
@@ -288,10 +293,31 @@ const SeoText: React.FC<{
   const showStats = Array.isArray(stats) && stats.length > 0;
   const showHeader = Boolean(category || readingTimeMinutes);
   const readLabel = READ_LABEL_BY_LOCALE[locale] ?? READ_LABEL_BY_LOCALE.en;
+  const photo = imageUrl?.trim() ? imageUrl.trim() : null;
+  // A column of prose sized for reading looks stranded on a page built at
+  // `max-w-8xl`. With a photograph beside it the block fills the page the way
+  // the sections above and below it do, so it is widened only in that case —
+  // text-only blocks keep the measure that makes them readable.
+  const shellClass = photo
+    ? 'container mx-auto max-w-8xl px-5 2xl:px-0'
+    : 'container mx-auto max-w-4xl px-5 2xl:px-0';
 
   return (
     <section className="py-16 md:py-24">
-      <div className="container mx-auto max-w-4xl px-5 2xl:px-0">
+      <div className={shellClass}>
+        {photo ? (
+          <figure className="relative mb-10 md:mb-12 aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-3xl bg-dark/5 dark:bg-white/5">
+            <Image
+              src={photo}
+              alt={imageAlt || heading || ''}
+              fill
+              sizes="(max-width: 1024px) 100vw, 1280px"
+              className="object-cover object-center"
+              unoptimized={photo.startsWith('http')}
+            />
+          </figure>
+        ) : null}
+        <div className={photo ? 'max-w-4xl' : ''}>
         {/* Header chip strip */}
         {showHeader ? (
           <div className="flex items-center gap-3 text-xs">
@@ -467,6 +493,7 @@ const SeoText: React.FC<{
             <SeoTextCta href={cta.href} label={cta.label} locale={locale} />
           </div>
         ) : null}
+        </div>
       </div>
     </section>
   );

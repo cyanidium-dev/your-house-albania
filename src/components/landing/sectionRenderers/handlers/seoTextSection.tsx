@@ -22,6 +22,7 @@ export const seoTextSectionHandler: SectionHandler = ({ locale, section }) => {
     }
     stats?: unknown
     pullQuote?: { text?: unknown; author?: unknown }
+    image?: { asset?: { url?: string }; alt?: string } | null
   }
   const raw = s.content ?? s.body
   const seoTextData = resolveRichTextDataFromContent(raw, locale)
@@ -78,6 +79,9 @@ export const seoTextSectionHandler: SectionHandler = ({ locale, section }) => {
     ? { text: pullQuoteText, ...(pullQuoteAuthor ? { author: pullQuoteAuthor } : {}) }
     : undefined
 
+  const imageUrl = s.image?.asset?.url?.trim() || undefined
+  const imageAlt = typeof s.image?.alt === 'string' ? s.image.alt.trim() || undefined : undefined
+
   return (
     <SeoTextSection
       key={section._key ?? 'seoText'}
@@ -91,6 +95,8 @@ export const seoTextSectionHandler: SectionHandler = ({ locale, section }) => {
       author={author}
       stats={stats.length > 0 ? stats : undefined}
       pullQuote={pullQuote}
+      imageUrl={imageUrl}
+      imageAlt={imageAlt}
     />
   )
 }

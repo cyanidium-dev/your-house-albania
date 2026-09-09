@@ -52,7 +52,18 @@ export function EntityCard({
             unoptimized={!!imageUrl?.startsWith("http")}
           />
         ) : (
-          <div className="absolute inset-0 bg-dark/10 dark:bg-white/10" />
+          // Districts photographed later still ship in the grid, and a flat
+          // grey rectangle reads as a broken image. A branded plate with the
+          // place name reads as a card whose photo is pending.
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/15 via-dark/[0.06] to-primary/5 dark:from-primary/25 dark:via-white/[0.06] dark:to-primary/10">
+            <Icon
+              aria-hidden
+              icon="ph:map-pin-fill"
+              width={26}
+              height={26}
+              className="text-primary/60"
+            />
+          </div>
         )}
         {tag ? (
           <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white/90">

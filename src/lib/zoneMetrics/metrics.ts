@@ -134,3 +134,38 @@ export function latestPeriodLabel(records: ZoneMetricsDoc[]): string | undefined
     .sort((a, b) => String(b.periodDate ?? '').localeCompare(String(a.periodDate ?? '')));
   return sorted[0]?.periodLabel;
 }
+
+/**
+ * Which metric columns a zone price table should show.
+ *
+ * A column has to be filled by at least half the rows, not by one of them.
+ * Durrës carries `priceAll` for every zone and `priceNew`/`priceResale` for
+ * exactly one (Shkëmbi, whose new-to-old spread is the widest in the city);
+ * under a "some row has it" test that single record bought two columns of
+ * dashes across thirteen rows. Half rounds down for a pair, so a two-zone
+ * comparison still shows a metric only one side reports.
+ *
+ * Falls back to the best-covered metrics the records actually carry, so a
+ * table never disappears because every requested column is sparse.
+ */
+export function resolveTableColumns(
+  records: ZoneMetricsDoc[],
+  requested: unknown,
+  fallbackOrder: readonly MetricKey[],
+  locale = 'en',
+): MetricKey[] {
+  if (records.length === 0) return [];
+  const coverage = (key: MetricKey) =>
+    records.reduce((n, record) => (formatMetric(record, key, locale) !== null ? n + 1 : n), 0);
+
+  const wanted = Array.isArray(requested) ? requested.filter(isMetricKey) : [];
+  const candidates = wanted.length > 0 ? wanted : fallbackOrder;
+  const minFilled = Math.ceil(records.length / 2);
+
+  const active = candidates.filter((key) => coverage(key) >= minFilled);
+  if (active.length > 0) return active;
+
+  return METRIC_KEYS.filter((key) => coverage(key) > 0)
+    .sort((a, b) => coverage(b) - coverage(a))
+    .slice(0, 4);
+}
