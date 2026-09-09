@@ -9,7 +9,7 @@ import { isLandingInLocale } from "@/lib/landing/localeScope";
 import { buildGuideCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcrumbs";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
-import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -22,12 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entries = (await fetchGuideIndexEntries()).filter((e) => isLandingInLocale(e, locale));
   // An index with nothing in it should not be advertised to search engines.
   const indexable = isIndexingEnabled() && entries.length > 0;
-  return {
+  return buildSimplePageMetadata({
+    locale,
     title: t("title"),
     description: t("description"),
-    alternates: await buildHreflangAlternates("guides"),
+    pathAfterLocale: "guides",
     robots: indexable ? undefined : indexingDisabledRobots,
-  };
+  });
 }
 
 /**

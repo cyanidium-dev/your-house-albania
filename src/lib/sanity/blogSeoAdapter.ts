@@ -4,6 +4,7 @@ import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import { resolveLocalizedString } from './localized';
 import { buildMetadata } from './socialMetadataResolution';
 import { stripBrandSuffix } from '@/lib/seo/brandTitle';
+import { landingOgImageUrl } from '@/lib/seo/ogImageUrl';
 
 type LocalizedField = { en?: string; uk?: string; ru?: string; sq?: string; it?: string } | null | undefined;
 
@@ -73,15 +74,26 @@ export function buildBlogMetadata(
 
   const seoOgImageUrl = (blogSeo?.ogImage as { asset?: { url?: string } })?.asset?.url;
   const coverFallback = articleOptions?.coverImageUrl;
+  // A post with no cover and the blog index itself had no `og:image` at all —
+  // a link preview with a blank space where the picture goes. `/api/og` draws
+  // one from the resolved title and description, which is what the landing
+  // adapter already does for every other page family.
   const ogImageAbsolute =
     (seoOgImageUrl && seoOgImageUrl.startsWith('http') ? seoOgImageUrl : undefined) ||
-    (coverFallback && coverFallback.startsWith('http') ? coverFallback : undefined);
+    (coverFallback && coverFallback.startsWith('http') ? coverFallback : undefined) ||
+    landingOgImageUrl({ locale, title: ogTitle, subtitle: ogDescription });
 
   const base = articleOptions?.baseUrl?.replace(/\/$/, '');
-  const canonicalUrl =
-    base && articleOptions?.slug
+  // The index and the author pages have no slug; their canonical is the path
+  // they already declare for hreflang. Without this they were the only pages
+  // in the section with neither a canonical nor an `og:url`.
+  const canonicalUrl = !base
+    ? undefined
+    : articleOptions?.slug
       ? `${base}/${locale}/blog/${articleOptions.slug}`
-      : undefined;
+      : articleOptions?.pathnameForAlternates
+        ? `${base}/${locale}${articleOptions.pathnameForAlternates}`
+        : undefined;
 
   const noIndex = blogSeo?.noIndex ?? false;
   const noFollow = blogSeo?.noFollow ?? false;

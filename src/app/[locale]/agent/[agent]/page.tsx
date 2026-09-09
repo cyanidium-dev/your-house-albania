@@ -11,6 +11,7 @@ import {
 } from "@/lib/sanity/client";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
 import {
@@ -57,6 +58,10 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     (agentDoc ? !agentDoc.isPublished : false)
       ? { index: false as const, follow: true as const }
       : undefined;
+  // The agent's own portrait on the card, falling back to the drawn default.
+  // Before this these pages had no `og:image` and no `og:url` at all — 48 URLs
+  // sharing a blank link preview.
+  const photoUrl = agentDoc?.photo?.url?.trim();
   return {
     title,
     description,
@@ -64,6 +69,23 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       canonical: `${base}${pathOnly}`,
       ...(href?.languages ? { languages: href.languages } : {}),
     },
+    openGraph: {
+      type: "profile",
+      title,
+      description,
+      url: `${base}${pathOnly}`,
+      images: [
+        {
+          url:
+            photoUrl ??
+            landingOgImageUrl({ locale, title, subtitle: description }),
+          width: 1200,
+          height: 630,
+          alt: agentDoc?.photo?.alt || title,
+        },
+      ],
+    },
+    twitter: { card: "summary_large_image", title, description },
     robots,
   };
 }

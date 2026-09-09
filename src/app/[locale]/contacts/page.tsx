@@ -1,3 +1,4 @@
+import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { fetchSiteSettings } from '@/lib/sanity/client'
@@ -5,9 +6,6 @@ import { mapContactsManagerFromSiteSettings } from '@/lib/sanity/contactsManager
 import { ContactsHero } from '@/components/contact/ContactsHero'
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb"
 import { ContactPageContent } from '@/components/contact/ContactPageContent'
-import { buildHreflangAlternates } from '@/lib/seo/hreflang'
-import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
-import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -17,28 +15,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = t('metaTitle')
   const description = t('metaDescription')
 
-  if (!isIndexingEnabled()) {
-    return {
-      title,
-      description,
-      robots: indexingDisabledRobots,
-    }
-  }
-
-  const baseUrl = getSiteBaseUrl()
-  const path = '/contacts'
-  const canonical = `${baseUrl}/${locale}${path}`
-  const href = buildHreflangAlternates(path)
-
-  return {
+  return buildSimplePageMetadata({
+    locale,
     title,
     description,
-    alternates: {
-      canonical,
-      ...(href?.languages ? { languages: href.languages } : {}),
-    },
+    pathAfterLocale: 'contacts',
     robots: { index: true, follow: true },
-  }
+  })
 }
 
 export default async function ContactsPage({ params }: Props) {

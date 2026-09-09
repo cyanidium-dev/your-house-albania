@@ -90,7 +90,7 @@ export async function generateNonGeoDealRouteMetadata(input: {
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage),
+    openGraph: listingOpenGraph(title, description, ogImage, `${base}${purePath}`),
     alternates: {
       canonical: `${base}${purePath}`,
       ...(href?.languages ? { languages: href.languages } : {}),

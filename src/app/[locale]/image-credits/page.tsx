@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { getTranslations } from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { BreadcrumbJsonLd } from "@/components/shared/BreadcrumbJsonLd";
@@ -10,20 +11,21 @@ import {
 } from "@/lib/sanity/client";
 import { buildFlatCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcrumbs";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
-import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { ALBANIA_PHOTO_LIST } from "@/lib/media/albaniaPhotos";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export const revalidate = 3600;
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations("ImageCredits");
-  return {
+  return buildSimplePageMetadata({
+    locale,
     title: t("title"),
     description: t("description"),
-    alternates: await buildHreflangAlternates("image-credits"),
-  };
+    pathAfterLocale: "image-credits",
+  });
 }
 
 /**

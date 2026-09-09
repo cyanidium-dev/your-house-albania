@@ -149,7 +149,7 @@ async function buildListingMetadata(
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage),
+    openGraph: listingOpenGraph(title, description, ogImage, canonical),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),

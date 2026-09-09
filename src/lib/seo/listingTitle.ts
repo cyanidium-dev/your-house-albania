@@ -26,11 +26,18 @@ export function listingOpenGraph(
   title: string,
   description: string,
   imageUrl?: string,
+  canonicalUrl?: string,
 ): Metadata["openGraph"] {
   const images = buildOgImageArray(imageUrl, title);
   return {
+    // Setting `openGraph` on a page replaces the root layout's object rather
+    // than merging into it, so `type` has to be restated here — without it 114
+    // listing pages shipped a card with no og:type at all. `url` is the fourth
+    // property Open Graph requires and was missing everywhere.
+    type: "website",
     title,
     description,
     ...(images ? { images } : {}),
+    ...(canonicalUrl ? { url: canonicalUrl } : {}),
   };
 }

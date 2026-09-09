@@ -10,6 +10,7 @@ import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
+import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -44,13 +45,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pathAfterLocale = `/blog/author/${encodeURIComponent(slug)}`;
   const hreflang = buildHreflangAlternates(pathAfterLocale);
   const base = getSiteBaseUrl().replace(/\/$/, "");
+  const canonical = `${base}/${locale}${pathAfterLocale}`;
+  const title = author.name || slug;
+  const description = bio || role || undefined;
   return {
-    title: author.name,
-    description: bio || role || undefined,
+    title,
+    description,
     alternates: {
-      canonical: `${base}/${locale}${pathAfterLocale}`,
+      canonical,
       ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
     },
+    openGraph: {
+      type: "profile",
+      title,
+      description,
+      url: canonical,
+      images: [
+        {
+          url:
+            author.photo?.asset?.url?.trim() ??
+            landingOgImageUrl({ locale, title, subtitle: description }),
+          width: 1200,
+          height: 630,
+          alt: author.photo?.alt || title,
+        },
+      ],
+    },
+    twitter: { card: "summary_large_image", title, description },
     // An inactive author still renders — the seed has to be testable — but it
     // is not advertised. Rendering and indexing are separate decisions.
     robots: author.active === true ? undefined : { index: false, follow: true },

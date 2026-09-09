@@ -113,7 +113,11 @@ export type BuildMetadataInput = {
   ogTitle: string;
   ogDescription: string;
   ogImageUrl?: string;
-  /** Absolute og:url; omit to leave it off (e.g. landing pages don't set it). */
+  /**
+   * Absolute og:url. Defaults to `canonical`, which is the same URL by
+   * definition — the page's own address — so a caller only passes this to
+   * override it.
+   */
   ogUrl?: string;
   /** Twitter card type; omit to drop the twitter block entirely. */
   twitterCard?: 'summary' | 'summary_large_image';
@@ -137,12 +141,19 @@ export type BuildMetadataInput = {
 export function buildMetadata(input: BuildMetadataInput): Metadata {
   const images = buildOgImageArray(input.ogImageUrl, input.ogTitle);
 
+  // og:url is one of the four properties Open Graph requires, and no caller was
+  // passing it — 735 pages shipped an incomplete card. The canonical is the
+  // same URL by definition, so it is the default rather than a second thing to
+  // remember. When indexing is off there is no canonical and no og:url either,
+  // which is the right answer for a page that should not be shared anyway.
+  const ogUrl = input.ogUrl ?? input.canonical;
+
   const openGraph: Metadata['openGraph'] = {
     type: input.ogType ?? 'website',
     title: input.ogTitle,
     description: input.ogDescription,
     ...(images ? { images } : {}),
-    ...(input.ogUrl ? { url: input.ogUrl } : {}),
+    ...(ogUrl ? { url: ogUrl } : {}),
   };
 
   const alternates =
