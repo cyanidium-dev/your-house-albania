@@ -9,6 +9,7 @@ import { PersonJsonLd } from "@/lib/seo/personJsonLd";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -36,9 +37,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!author) return {};
   const role = resolveLocalizedString(author.role as never, locale);
   const bio = resolveLocalizedString(author.bio as never, locale);
+  // The author page was the one route with neither a canonical nor hreflang of
+  // its own: it inherited alternates from the next-intl `Link` header, and
+  // that header is now off (see `src/i18n/routing.ts`). Six URLs, one per
+  // locale, all rendering the same author.
+  const pathAfterLocale = `/blog/author/${encodeURIComponent(slug)}`;
+  const hreflang = buildHreflangAlternates(pathAfterLocale);
+  const base = getSiteBaseUrl().replace(/\/$/, "");
   return {
     title: author.name,
     description: bio || role || undefined,
+    alternates: {
+      canonical: `${base}/${locale}${pathAfterLocale}`,
+      ...(hreflang?.languages ? { languages: hreflang.languages } : {}),
+    },
     // An inactive author still renders — the seed has to be testable — but it
     // is not advertised. Rendering and indexing are separate decisions.
     robots: author.active === true ? undefined : { index: false, follow: true },
