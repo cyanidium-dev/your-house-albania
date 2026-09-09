@@ -25,6 +25,14 @@ describe('compactText', () => {
     expect(compactText('abcdefghij', 5)).toBe('abcde…')
   })
 
+  it('never truncates through an emoji', () => {
+    // Partner descriptions are full of them, and half a surrogate pair makes
+    // the whole request body invalid JSON.
+    const teaser = compactText('pool 💰 Price on request', 6)
+    expect(teaser).toBe('pool…')
+    expect(/[\uD800-\uDFFF]/.test(teaser)).toBe(false)
+  })
+
   it('returns an empty string for non-strings', () => {
     expect(compactText(undefined, 10)).toBe('')
     expect(compactText({ en: 'x' }, 10)).toBe('')

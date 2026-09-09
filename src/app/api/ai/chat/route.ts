@@ -13,6 +13,7 @@ import {
   runShowProperties,
 } from '@/lib/ai/tools'
 import { checkRateLimit, clientKeyFromHeaders } from '@/lib/ai/rateLimit'
+import { sliceSafe } from '@/lib/ai/text'
 import { addUsage, EMPTY_USAGE, estimateUsd, isBudgetExhausted, recordUsage } from '@/lib/ai/budget'
 import { encodeAiEvent, type AiChatMessage, type AiStreamEvent } from '@/lib/ai/events'
 import {
@@ -41,7 +42,7 @@ function parseMessages(raw: unknown): AiChatMessage[] | null {
     // An empty assistant turn happens when a previous answer was only cards;
     // it carries nothing for the model and the API rejects blank content.
     if (!trimmed) continue
-    out.push({ role, content: trimmed.slice(0, AI_MAX_MESSAGE_CHARS) })
+    out.push({ role, content: sliceSafe(trimmed, AI_MAX_MESSAGE_CHARS) })
   }
   if (out.length === 0) return null
   if (out[out.length - 1].role !== 'user') return null

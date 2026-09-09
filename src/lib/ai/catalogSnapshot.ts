@@ -18,6 +18,7 @@ import { getClient, sanityCache, SANITY_TAGS } from '@/lib/sanity/queries/_core'
 import { PUBLISHED_PROPERTY_FILTER } from '@/lib/sanity/groq/propertyFilters'
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
+import { sliceSafe, stripLoneSurrogates } from './text'
 
 /** Characters of the description kept per listing — enough to match on, cheap to send. */
 const TEASER_CHARS = 130
@@ -58,9 +59,9 @@ export type CatalogSnapshot = {
 
 function compactText(value: unknown, limit: number): string {
   const raw = typeof value === 'string' ? value : ''
-  const flat = raw.replace(/\s+/g, ' ').trim()
+  const flat = stripLoneSurrogates(raw.replace(/\s+/g, ' ').trim())
   if (flat.length <= limit) return flat
-  return `${flat.slice(0, limit).trimEnd()}…`
+  return `${sliceSafe(flat, limit).trimEnd()}…`
 }
 
 function tally(entries: { slug: string; label: string }[]): Map<string, { label: string; count: number }> {

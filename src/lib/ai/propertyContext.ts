@@ -16,6 +16,7 @@ import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics'
 import { computeMarketPosition } from '@/lib/property/marketPosition'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
+import { sliceSafe } from './text'
 
 export type PropertyContext = {
   slug: string
@@ -171,10 +172,10 @@ export async function buildPropertyContext(
     ),
   ].filter((l): l is string => Boolean(l))
 
-  const description = resolveLocalizedString(raw.description as never, locale)
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 900)
+  const description = sliceSafe(
+    resolveLocalizedString(raw.description as never, locale).replace(/\s+/g, ' ').trim(),
+    900,
+  )
 
   const text = [
     '# THIS LISTING',

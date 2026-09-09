@@ -12,6 +12,7 @@
 
 import type Anthropic from '@anthropic-ai/sdk'
 import type { CatalogSnapshot } from './catalogSnapshot'
+import { stripLoneSurrogates } from './text'
 
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English',
@@ -111,7 +112,10 @@ export function buildSystemBlocks(
     { type: 'text', text: RULES },
     {
       type: 'text',
-      text: `${facetsBlock(snapshot)}\n\n${snapshot.lines.join('\n')}`,
+      // Sanitised because this block is assembled from CMS copy, and one
+      // listing whose text carries half a surrogate pair makes the entire
+      // request body invalid JSON — the API then rejects the turn for everyone.
+      text: stripLoneSurrogates(`${facetsBlock(snapshot)}\n\n${snapshot.lines.join('\n')}`),
       // Five minutes, not an hour. A cache write costs 1.25x base input at 5m
       // and 2x at 1h, and the longer window only pays for itself when a second
       // visitor arrives before it expires. At this traffic (~500 dialogues a
@@ -186,10 +190,12 @@ export function buildPropertySystemBlocks(
     { type: 'text', text: PROPERTY_RULES },
     {
       type: 'text',
-      text: `# CATALOG (for comparison and alternatives)\n${facetsBlock(snapshot)}\n\n${snapshot.lines.join('\n')}`,
+      text: stripLoneSurrogates(
+        `# CATALOG (for comparison and alternatives)\n${facetsBlock(snapshot)}\n\n${snapshot.lines.join('\n')}`,
+      ),
       cache_control: { type: 'ephemeral', ttl: '5m' },
     },
-    { type: 'text', text: propertyText },
+    { type: 'text', text: stripLoneSurrogates(propertyText) },
     { type: 'text', text: `Reply language: ${languageName(locale)}.` },
   ]
 }
