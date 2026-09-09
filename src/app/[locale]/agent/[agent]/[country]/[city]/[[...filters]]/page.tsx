@@ -76,13 +76,14 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const options = await fetchCatalogFilterOptions(locale);
   const resolved = await resolveRoute(locale, agent, country, city, filters, options.propertyTypes);
   const mergedSearch = mergeListingSearchParams(search, resolved.dealType || undefined, resolved.propertyType || undefined);
-  const [rawSeo, t] = await Promise.all([
+  const [rawSeo, t, tCatalog] = await Promise.all([
     fetchCatalogSeoPageByCity(resolved.citySlug),
     getTranslations("Listing.properties"),
+    getTranslations("Catalog"),
   ]);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const title = resolved.agentDoc?.name
-    ? `Properties by ${resolved.agentDoc.name} — ${resolved.citySlug.replace(/-/g, " ")}`
+    ? `${tCatalog("agentTitle", { name: resolved.agentDoc.name })} — ${resolved.citySlug.replace(/-/g, " ")}`
     : catalogSeo?.metaTitle || t("title");
   const description = catalogSeo?.metaDescription || t("description");
   if (!isIndexingEnabled()) return { title, description, robots: indexingDisabledRobots };

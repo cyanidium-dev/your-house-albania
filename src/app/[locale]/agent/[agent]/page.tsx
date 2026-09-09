@@ -27,14 +27,18 @@ type Props = {
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const [{ locale, agent }, search] = await Promise.all([params, searchParams]);
   const parsed = parseCatalogFilters({ agentSlug: agent }, search);
-  const [agentDoc, rawSeo, t] = await Promise.all([
+  const [agentDoc, rawSeo, t, tCatalog] = await Promise.all([
     fetchAgentBySlug(parsed.agentSlug, locale),
     fetchCatalogSeoPageRoot(),
     getTranslations("Listing.properties"),
+    getTranslations("Catalog"),
   ]);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+  // `Catalog.agentTitle` is translated in all six locales; hardcoding the
+  // English served "Properties by {name}" as the <title> of every agent page
+  // in every locale, so eight agents produced 48 pages sharing eight titles.
   const title = agentDoc?.name
-    ? `Properties by ${agentDoc.name}`
+    ? tCatalog("agentTitle", { name: agentDoc.name })
     : catalogSeo?.metaTitle || t("title");
   const description = catalogSeo?.metaDescription || t("description");
   if (!isIndexingEnabled()) return { title, description, robots: indexingDisabledRobots };
