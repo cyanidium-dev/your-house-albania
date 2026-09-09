@@ -109,3 +109,58 @@ description». Проверка поштучно: **title и description на м
 
 Пока этого нет, краул выше покрывает тот же набор проверок, что и Site Audit:
 статусы, дубли, метаданные, canonical, hreflang, структура заголовков, alt.
+
+
+---
+
+## 8. Отчёт Ahrefs (получен 10.09, разобран)
+
+Экспорт Site Audit: **15 847 строк**, не миллион. Совпадения с моим краулом
+точные — 45 «4XX page in sitemap», 12 «Noindex page in sitemap», 123 «Page in
+multiple sitemaps», то есть то же самое, найденное двумя независимыми способами.
+
+### Разобрано и исправлено
+
+| Ошибка Ahrefs | Строк | Что сделано |
+|---|---:|---|
+| Hreflang to redirect or broken page | 2 367 | `alternateLinks: false` — hreflang теперь в одном канале |
+| More than one page for same language | 2 337 | то же самое |
+| Page has links to broken page (Error) | 1 653 | 59 ссылок в CMS + хлебные крошки + гайды из sitemap |
+| Page has links to broken page (Warning) | 895 | то же самое |
+| 404 page / 4XX page | 75 | 45 из sitemap; остальные — см. ниже |
+| 4XX page in sitemap | 45 | гайды убраны из `sitemap-static.xml` |
+| Page in multiple sitemaps | 123 | то же самое |
+| Noindex page in sitemap | 12 | `investment/rent`, `short-term-rent` |
+| Slow page / Slow server response | 28 | рефакторинг корневого layout, §2 |
+
+**Корень двух главных ошибок — один.** next-intl по умолчанию ставит заголовок
+`Link: rel="alternate"` с hreflang, а приложение отдельно выводит hreflang в
+HTML. Наборы расходились: заголовок объявлял все шесть локалей для каждого URL
+и не содержал `x-default`, HTML объявлял только существующие локали и содержал.
+Краулер читает оба канала и складывает — отсюда «каждый язык объявлен дважды»
+и «у польских гайдов пять несуществующих переводов».
+
+### Осталось
+
+| Ошибка | Строк | Комментарий |
+|---|---:|---|
+| Changed pages not submitted to IndexNow | 1 911 | нужна интеграция IndexNow (Bing/Copilot) |
+| Noindex page + Noindex follow page | 895 + 895 | похоже на осознанный noindex фильтрованных URL — проверить выборочно |
+| Structured data schema.org validation | 768 | не разбирал |
+| Open Graph tags incomplete | 735 | не разбирал |
+| 3XX redirect | 697 | часть — `/contactus` → `/contacts` и апекс → www |
+| Meta description too short/long | 452 | контент |
+| `/privacy`, `/terms`, `/about` | 2 591+ | **страниц не существует** — см. ниже |
+
+### Требует вашего решения: privacy policy и terms
+
+`/privacy` стоит в футере каждой страницы и в баннере cookie — **2 591 ссылка**,
+и все ведут на 404. `/terms` и `/about` — то же самое. Таких страниц на сайте нет
+ни в одной локали.
+
+Ссылки я намеренно не трогал и не удалял: убрать ссылку на политику
+конфиденциальности с сайта, где работают GTM и Clarity, значит поменять SEO-
+предупреждение на проблему с законом. Правильный путь — опубликовать документы.
+Текст политики и условий должен исходить от вас (это юридический документ о ваших
+реальных практиках обработки данных), после чего я сделаю страницы и переставлю
+ссылки за пять минут.
