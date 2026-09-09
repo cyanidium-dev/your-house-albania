@@ -39,7 +39,7 @@ describe('buildMetadata — Open Graph completeness', () => {
 
   it('always sets og:type', () => {
     const meta = buildMetadata({ title: 'T', ogTitle: 'T', ogDescription: 'D' });
-    expect(meta.openGraph?.type).toBe('website');
+    expect((meta.openGraph as { type?: string })?.type).toBe('website');
   });
 });
 

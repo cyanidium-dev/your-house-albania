@@ -218,6 +218,48 @@ describe("buildPropertyJsonLd", () => {
     expect(props).toContainEqual({ "@type": "PropertyValue", name: "Bedrooms", value: 1 });
   });
 
+  // schema.org defines no `address` on Product. Every one of the 768 property
+  // pages carried one, which was the whole "structured data has a schema.org
+  // validation error" count in the Ahrefs crawl of 2026-09-10.
+  it("keeps address off the Product, where the vocabulary has no such property", () => {
+    const n = nodes(buildPropertyJsonLd(BASE));
+    expect(n.Product.address).toBeUndefined();
+    expect(n.Apartment.address).toEqual({
+      "@type": "PostalAddress",
+      addressLocality: "Plazh, Durres",
+      addressCountry: "AL",
+    });
+  });
+
+  it("keeps the address in the graph for a type with no accommodation node", () => {
+    // Land and commercial space get no Accommodation subtype, so dropping
+    // Product.address would have removed their location entirely.
+    const n = nodes(buildPropertyJsonLd({ ...BASE, propertyTypeSlug: "land" }));
+    expect(n.Product.address).toBeUndefined();
+    expect(n.RealEstateListing.spatialCoverage).toEqual({
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Plazh, Durres",
+        addressCountry: "AL",
+      },
+    });
+  });
+
+  it("does not claim spatialCoverage when an accommodation node holds the address", () => {
+    expect(nodes(buildPropertyJsonLd(BASE)).RealEstateListing.spatialCoverage).toBeUndefined();
+  });
+
+  it("publishes each image once", () => {
+    const n = nodes(
+      buildPropertyJsonLd({
+        ...BASE,
+        imageUrls: ["https://cdn.example/a.jpg", "https://cdn.example/a.jpg", "https://cdn.example/b.jpg"],
+      }),
+    );
+    expect(n.Product.image).toEqual(["https://cdn.example/a.jpg", "https://cdn.example/b.jpg"]);
+  });
+
   it("stays serialisable", () => {
     expect(() => JSON.stringify(buildPropertyJsonLd(BASE))).not.toThrow();
   });

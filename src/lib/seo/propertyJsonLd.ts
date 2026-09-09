@@ -161,9 +161,16 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
   const path = `/${locale}/property/${encodeURIComponent(slug)}`;
   const url = base ? `${base}${path}` : path;
 
-  const images = imageUrls
-    .filter((u) => u && typeof u === "string")
-    .map((u) => toAbsoluteImageUrl(u, baseUrl));
+  // De-duplicated: a listing whose cover also appears in its gallery published
+  // the same URL twice in `image`, which is legal but tells a consumer nothing
+  // and pads every property page's graph.
+  const images = Array.from(
+    new Set(
+      imageUrls
+        .filter((u) => u && typeof u === "string")
+        .map((u) => toAbsoluteImageUrl(u, baseUrl)),
+    ),
+  );
   const image = images.length > 0 ? (images.length === 1 ? images[0] : images) : undefined;
 
   const additionalProperty: { "@type": string; name: string; value: number | string }[] = [];
@@ -221,6 +228,13 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     ...(image && { image }),
     ...(datePosted && { datePosted }),
     ...(accommodation && { mainEntity: { "@id": accommodationId } }),
+    // Land and commercial space get no accommodation node — `Accommodation`
+    // subtypes describe places people live — so without this their address
+    // would leave the graph along with the invalid `Product.address`.
+    // `spatialCoverage` is what a WebPage uses to say where it is about.
+    ...(!accommodation && address
+      ? { spatialCoverage: { "@type": "Place", address } }
+      : {}),
   };
 
   const product: Record<string, unknown> = {
@@ -232,7 +246,12 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     ...(image && { image }),
     ...(offers && { offers }),
     ...(additionalProperty.length > 0 && { additionalProperty }),
-    ...(address && { address }),
+    // No `address` here: schema.org does not define it on `Product`, and every
+    // property page carried one — the whole 768-URL "structured data has a
+    // schema.org validation error" count in the Ahrefs crawl of 2026-09-10.
+    // The address belongs to the accommodation node above, which the listing
+    // points at through `mainEntity`, so the graph still carries it exactly
+    // once and in a place the vocabulary allows.
   };
 
   return {
