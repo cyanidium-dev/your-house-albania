@@ -4,6 +4,7 @@ import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
 import { Icon } from '@iconify/react';
 import { getTranslations } from 'next-intl/server';
+import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 
 export type SeoTextData =
   | { content: unknown[] | string; isPlainText: boolean }
@@ -27,7 +28,45 @@ const READ_LABEL_BY_LOCALE: Record<string, string> = {
   pl: 'min czytania',
 };
 
-const portableComponents: PortableTextComponents = {
+/**
+ * Portable Text renderers for the SEO block.
+ *
+ * Built per locale because of `marks.link`: this component had no link handler
+ * at all, so `@portabletext/react` fell back to emitting the stored href
+ * verbatim. Editors store internal links without a locale — `/sale`,
+ * `/guides/ile-kosztuje-dom-w-albanii` — and the middleware then 307s every
+ * one of them to the default locale, which is both a wasted hop and the wrong
+ * language: 33 links in the Ahrefs crawl of 2026-09-10, all of them inside the
+ * Polish guides, all landing on `sq`. `resolveLocaleHref` is the same resolver
+ * the blog article renderer uses, and it also strips a locale an editor pasted
+ * in so a Russian page never links to `/ru/en/...`.
+ */
+function portableComponentsFor(locale: string): PortableTextComponents {
+  return {
+    ...portableBlockComponents,
+    marks: {
+      link: ({ children, value }) => {
+        const raw = typeof (value as { href?: unknown })?.href === 'string'
+          ? ((value as { href: string }).href)
+          : '';
+        const href = resolveLocaleHref(raw, locale);
+        const isExternal = href.startsWith('http://') || href.startsWith('https://');
+        return (
+          <Link
+            href={href}
+            className="text-primary underline underline-offset-2 hover:text-dark dark:hover:text-white"
+            target={isExternal ? '_blank' : undefined}
+            rel={isExternal ? 'noopener noreferrer' : undefined}
+          >
+            {children}
+          </Link>
+        );
+      },
+    },
+  };
+}
+
+const portableBlockComponents: PortableTextComponents = {
   block: {
     h1: ({ children }) => (
       <h1 className="text-dark dark:text-white text-3xl sm:text-4xl font-medium leading-[1.2] mt-10 first:mt-0 mb-3">
@@ -147,7 +186,9 @@ function SeoTextCta({ href, label, locale }: { href: string; label: string; loca
       </a>
     );
   }
-  const path = href.startsWith('/') ? `/${locale}${href}` : `/${locale}/${href.replace(/^\//, '')}`;
+  // Same resolver as the body links: prefixing blindly turned an href an
+  // editor pasted from the live site (`/en/catalog`) into `/ru/en/catalog`.
+  const path = resolveLocaleHref(href, locale);
   return (
     <Link href={path} className={className}>
       <span>{label}</span>
@@ -469,7 +510,7 @@ const SeoText: React.FC<{
             <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:break-inside-avoid' : ''}>
               <PortableText
                 value={((content as unknown[]) ?? []) as PortableTextBlock[]}
-                components={portableComponents}
+                components={portableComponentsFor(locale)}
               />
             </div>
           )}
