@@ -1,22 +1,22 @@
-import { headers } from "next/headers";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 /**
  * Resolves the site base URL for absolute URLs in structured data.
- * Uses request headers when available, falls back to env or empty.
+ *
+ * This used to fall back to `headers()` when `NEXT_PUBLIC_SITE_URL` was unset,
+ * reading the request host. That call is what made every page calling it —
+ * districts, city info, blog posts, guides, properties — render per request:
+ * `headers()` opts a route into dynamic rendering whether or not the branch is
+ * ever taken, and a route that renders per request is never cached.
+ *
+ * Production sets `NEXT_PUBLIC_SITE_URL`, so the header path was already dead
+ * there; keeping it only meant local builds disagreed with production about
+ * which routes are static, and that the whole site would silently fall back to
+ * per-request rendering if the variable were ever removed.
+ *
+ * Still `async`: 38 call sites await it, and its result is awaited alongside
+ * genuinely async work.
  */
 export async function getBaseUrl(): Promise<string> {
-  if (typeof process.env.NEXT_PUBLIC_SITE_URL === "string" && process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
-  }
-  try {
-    const h = await headers();
-    const host = h.get("x-forwarded-host") ?? h.get("host");
-    const proto = h.get("x-forwarded-proto") ?? (process.env.NODE_ENV === "production" ? "https" : "http");
-    if (host) {
-      return `${proto}://${host}`;
-    }
-  } catch {
-    // headers() can throw in edge/static contexts
-  }
-  return "";
+  return getSiteBaseUrl().replace(/\/$/, "");
 }
