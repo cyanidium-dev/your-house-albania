@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Icon } from "@iconify/react/dist/iconify.js"
+import { Icon } from "@/components/shared/Icon";
 import { ALBANIA_PHOTOS, DEFAULT_ALBANIA_PHOTO, type AlbaniaPhotoKey } from "@/lib/media/albaniaPhotos";
 import { PhotoHeroFlag } from "@/components/shared/PhotoHeroFlag";
 
@@ -51,7 +51,14 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey }) => {
                             {badge}
                         </p>
                     </div>
-                    <h2 className="text-52 relative font-bold" >{title}</h2>
+                    {/*
+                      The page's main heading, so h1 — it was an h2, which left
+                      /blog with no h1 at all in any locale, plus every
+                      ?category= and ?page= variant of it (78 URLs in the Ahrefs
+                      crawl of 2026-09-10). The other caller is the home page's
+                      no-landing fallback, where this is also the only heading.
+                    */}
+                    <h1 className="text-52 relative font-bold" >{title}</h1>
                     <p className="text-lg text-white/85 font-normal w-full mx-auto whitespace-pre-line">
                         {description}
                     </p>
