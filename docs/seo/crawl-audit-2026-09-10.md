@@ -256,3 +256,47 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 Две строки в отчёте. Правится не в коде, а в настройках домена Vercel:
 Project → Settings → Domains → у `domlivo.com` выбрать Permanent redirect (308)
 на `www.domlivo.com`. 307 — временный, и вес по нему не передаётся.
+
+
+---
+
+## 11. Задеплоено и проверено на проде
+
+Всё в `main`, прод проверен после деплоя. Кэширование потребовало трёх заходов —
+причин оказалось четыре, а не одна.
+
+### Кэширование: что на самом деле держало сайт динамическим
+
+| # | Причина | Симптом |
+|---|---|---|
+| 1 | `await headers()` в корневом layout ради `<html lang>` | весь сайт динамический |
+| 2 | `Set-Cookie: NEXT_LOCALE` от middleware next-intl на каждом ответе | ответ с куки CDN не кладёт в кэш никогда |
+| 3 | нет `setRequestLocale` — `getMessages`/`getTranslations` читают `headers()` | `prerender-manifest` содержал только сайтмапы |
+| 4 | `revalidate` без `generateStaticParams` игнорируется | детальные роуты остались `ƒ` |
+
+Плюс `getBaseUrl()` звал `headers()` ради хоста, хотя в проде
+`NEXT_PUBLIC_SITE_URL` задан и ветка была мёртвой — но `headers()` переводит
+роут в динамику независимо от того, исполнится ветка или нет.
+
+### Результат (замер на проде, 3 запроса подряд)
+
+| URL | x-vercel-cache | TTFB |
+|---|---|---|
+| `/ru` | PRERENDER,HIT,HIT | 1.34 → 0.53 с |
+| `/ru/albania/durres/info` | MISS,HIT,HIT | 3.11 → 0.72 с |
+| `/ru/albania/durres/districts/plazh` | HIT,HIT,HIT | 0.58 → 0.46 с |
+| `/en/blog/where-not-to-buy-albania-2026` | MISS,HIT,HIT | 2.12 → 0.43 с |
+| `/pl/guides/mieszkania-w-albanii` | MISS,HIT,HIT | 3.05 → 0.48 с |
+| `/ru/property/…` | MISS,HIT,HIT | 2.31 → 0.46 с |
+
+Первый запрос рендерит и кладёт в кэш, дальше отдаётся с края. Окно
+ревалидации — час, но это страховка: вебхук Sanity сбрасывает теги при каждой
+правке документа.
+
+### Остальные проверки на проде
+
+hreflang в одном канале с `x-default`; Open Graph полный на десяти семействах;
+`Product` без `address`; sitemap 1593 записи без дублей, без гайдов в static,
+без польских под чужими локалями, без noindex; бывшие редиректные ссылки
+отдают 200; битые ссылки ушли со страниц; заголовки агентов локализованы;
+файл ключа IndexNow отдаёт 404 без переменной, robots и sitemap не перекрыты.
