@@ -301,7 +301,9 @@
     "register": "Regjistrohu",
     "investment": "Investime",
     "navLabel": "Shtegu i lundrimit",
-    "newBuilds": "Ndërtime të reja"
+    "newBuilds": "Ndërtime të reja",
+    "privacy": "Politika e privatësisë",
+    "terms": "Kushtet e përdorimit"
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",

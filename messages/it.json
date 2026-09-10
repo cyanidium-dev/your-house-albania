@@ -301,7 +301,9 @@
     "register": "Registrati",
     "investment": "Investimenti",
     "navLabel": "Breadcrumb",
-    "newBuilds": "Nuove costruzioni"
+    "newBuilds": "Nuove costruzioni",
+    "privacy": "Informativa sulla privacy",
+    "terms": "Termini di utilizzo"
   },
   "Districts": {
     "hubTitle": "Quartieri di {city}",

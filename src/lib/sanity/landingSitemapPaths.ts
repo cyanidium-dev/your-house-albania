@@ -53,6 +53,10 @@ export function resolveLandingPathForSitemap(doc: LandingPageSitemapRow): string
 
   // Slug matches a dedicated route that loads this document via `fetchLandingPageBySlug`.
   if (slug === "for-realtors") return "for-realtors";
+  // Legal pages live at the root, not under /guides — the footer and the
+  // cookie banner have linked to these paths since before the pages existed.
+  if (slug === "privacy") return "privacy";
+  if (slug === "terms") return "terms";
 
   // Guides: universal /guides/<slug> route ("for-realtors" already returned
   // above as its static path; other reserved slugs can't exist per validation).

@@ -31,6 +31,9 @@ export const RESERVED_GUIDE_SLUGS = [
   'sale',
   'rent',
   'short-term-rent',
+  // Legal pages: their own routes at /privacy and /terms, not guides.
+  'privacy',
+  'terms',
 ];
 
 /** Enabled custom landings that actually live under `/guides/{slug}`. */

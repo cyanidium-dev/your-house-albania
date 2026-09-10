@@ -301,7 +301,9 @@
     "howToPublish": "Jak publikować",
     "register": "Rejestracja",
     "investment": "Inwestycje",
-    "newBuilds": "Nowe inwestycje"
+    "newBuilds": "Nowe inwestycje",
+    "privacy": "Polityka prywatności",
+    "terms": "Warunki korzystania"
   },
   "Districts": {
     "hubTitle": "Dzielnice miasta {city}",

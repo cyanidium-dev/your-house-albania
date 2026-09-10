@@ -301,7 +301,9 @@
     "register": "Register",
     "investment": "Investment",
     "navLabel": "Breadcrumb",
-    "newBuilds": "New builds"
+    "newBuilds": "New builds",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
   },
   "Districts": {
     "hubTitle": "Districts of {city}",

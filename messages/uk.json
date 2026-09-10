@@ -301,7 +301,9 @@
     "register": "Реєстрація",
     "investment": "Інвестиції",
     "navLabel": "Хлібні крихти",
-    "newBuilds": "Новобудови"
+    "newBuilds": "Новобудови",
+    "privacy": "Політика конфіденційності",
+    "terms": "Умови користування"
   },
   "Districts": {
     "hubTitle": "Райони міста {city}",
