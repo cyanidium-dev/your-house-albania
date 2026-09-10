@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { SANITY_TAGS, type SanityTag } from '@/lib/sanity/queries/_core';
+import { submitUrlsToIndexNow } from '@/lib/seo/indexNow';
+import { urlsForMutatedDocument } from '@/lib/seo/indexNowDocumentUrls';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -89,5 +91,14 @@ export async function POST(req: NextRequest) {
 
   for (const tag of tags) revalidateTag(tag);
 
-  return NextResponse.json({ ok: true, revalidated: tags, type, id });
+  // Tell IndexNow (Bing, Yandex, and through Bing, Copilot) what changed. This
+  // is the same event that busts the cache, so it is the moment the new page
+  // becomes fetchable — 1,911 changed pages had never been submitted as of the
+  // Ahrefs crawl of 2026-09-10. Awaited rather than fired and forgotten: a
+  // serverless function that has already returned may be frozen mid-request.
+  // It cannot throw and cannot take more than its own timeout.
+  const urls = await urlsForMutatedDocument(type, id);
+  const indexNow = await submitUrlsToIndexNow(urls);
+
+  return NextResponse.json({ ok: true, revalidated: tags, type, id, indexNow });
 }

@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/og": ["./public/images/albania/**/*"],
   },
+  // IndexNow verifies ownership by reading a plain-text file on the host. The
+  // source is deliberately narrow — `/indexnow-*.txt` cannot shadow
+  // `robots.txt` or any `sitemap-*.xml`, which a `/:file.txt` catch-all would.
+  async rewrites() {
+    return [
+      {
+        source: "/indexnow-:key.txt",
+        destination: "/api/indexnow-key",
+      },
+    ];
+  },
   onDemandEntries: {
     // Keep pages in memory longer in dev to reduce manifest churn/races.
     maxInactiveAge: 60 * 60 * 1000,
