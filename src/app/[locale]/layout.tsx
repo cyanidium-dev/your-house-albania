@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -107,6 +107,15 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
+  // Without this, next-intl's server APIs (`getMessages`, `getTranslations`)
+  // read the locale from `headers()`, which opts the whole render into dynamic
+  // rendering. `generateStaticParams` above then produces params for pages that
+  // are never actually prerendered — the build table says otherwise, but
+  // `prerender-manifest.json` listed only the sitemaps and icons, and
+  // production answered `no-store` with `x-vercel-cache: MISS` on all 1,644
+  // URLs.
+  setRequestLocale(locale);
 
   const [messages, rawSiteSettings, countrySlugs, footerCities] = await Promise.all([
     getMessages(),
