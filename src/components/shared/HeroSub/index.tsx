@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Icon } from "@/components/shared/Icon";
+import { Icon } from "@iconify/react/dist/iconify.js"
 import { ALBANIA_PHOTOS, DEFAULT_ALBANIA_PHOTO, type AlbaniaPhotoKey } from "@/lib/media/albaniaPhotos";
 import { PhotoHeroFlag } from "@/components/shared/PhotoHeroFlag";
 
