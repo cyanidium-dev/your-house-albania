@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DealTypeLandingPage } from "@/components/deal/DealTypeLandingPage";
 import { buildDealTypeLandingMetadata } from "@/lib/sanity/dealLandingPageMeta";
+import { setRequestLocale } from "next-intl/server";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -11,5 +12,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function InvestmentRentPage({ params }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   return <DealTypeLandingPage locale={locale} deal="rent" />;
 }

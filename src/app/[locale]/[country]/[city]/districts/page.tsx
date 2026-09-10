@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
 import { ItemListJsonLd } from "@/components/shared/ItemListJsonLd";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
@@ -49,6 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DistrictsHubPage({ params }: Props) {
   const { locale, country, city } = await params;
+  setRequestLocale(locale);
   const countrySlug = normalizeSegment(country);
   const citySlug = normalizeSegment(city);
   if (!citySlug) notFound();

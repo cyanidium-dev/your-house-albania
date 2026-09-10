@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import { CitiesBreadcrumb } from "@/components/shared/CitiesBreadcrumb";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { asSections } from "@/components/landing/sectionRenderers/helpers";
@@ -54,6 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CitiesIndexPage({ params }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const landing = await fetchCitiesIndexLanding();
 
   if (landing) {

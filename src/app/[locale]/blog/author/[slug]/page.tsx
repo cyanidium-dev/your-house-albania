@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AuthorAvatar } from "@/components/Blog/AuthorAvatar";
-import { getTranslations } from "next-intl/server";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import { fetchBlogAuthorBySlug } from "@/lib/sanity/queries/blog";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
@@ -80,6 +80,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogAuthorPage({ params }: Props) {
   const { slug, locale } = await params;
+  setRequestLocale(locale);
   const author = await load(slug);
   if (!author) notFound();
 

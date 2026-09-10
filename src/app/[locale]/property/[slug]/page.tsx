@@ -31,7 +31,7 @@ import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitie
 import { PropertyContactButton } from '@/components/property/PropertyContactModal';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
-import { getTranslations } from 'next-intl/server';
+import {getTranslations, setRequestLocale} from 'next-intl/server';
 // `catalogPath` already returns a locale-prefixed path, so this uses next/link
 // rather than the i18n Link, which would prefix the locale a second time.
 import Link from 'next/link';
@@ -127,6 +127,7 @@ function getSimilarCount(settings: unknown): number {
 
 export default async function PropertyDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
+  setRequestLocale(locale);
   if (!slug || typeof slug !== 'string' || !SLUG_REGEX.test(slug)) {
     notFound();
   }

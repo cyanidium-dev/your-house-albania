@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { BreadcrumbJsonLd } from "@/components/shared/BreadcrumbJsonLd";
 import { fetchGuideIndexEntries } from "@/lib/sanity/client";
@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 export default async function GuidesIndexPage({ params }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("Guides");
   const entries = (await fetchGuideIndexEntries()).filter((e) => isLandingInLocale(e, locale));
 

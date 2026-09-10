@@ -3,7 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import { getTranslations } from "next-intl/server";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import {
   fetchBlogPostBySlug,
   fetchBlogPostsPaginated,
@@ -126,6 +126,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Post({ params }: Props) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const canonicalSlug = BLOG_SLUG_REDIRECTS[slug];
   if (canonicalSlug) {
     permanentRedirect(`/${locale}/blog/${canonicalSlug}`);

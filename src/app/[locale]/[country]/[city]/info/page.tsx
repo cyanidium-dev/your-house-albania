@@ -8,6 +8,7 @@ import {
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { setRequestLocale } from "next-intl/server";
 
 type Props = {
   params: Promise<{ locale: string; country: string; city: string }>;
@@ -68,6 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CityInfoLandingPage({ params }: Props) {
   const { locale, country, city } = await params;
+  setRequestLocale(locale);
   const countrySlug = normalizeSegment(country);
   const citySlug = normalizeSegment(city);
   if (!citySlug) notFound();

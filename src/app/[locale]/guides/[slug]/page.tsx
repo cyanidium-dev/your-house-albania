@@ -9,6 +9,7 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { isLandingInLocale, landingLocales } from "@/lib/landing/localeScope";
+import { setRequestLocale } from "next-intl/server";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -77,6 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function GuideLandingPage({ params }: Props) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const guideSlug = normalizeSlug(slug);
   if (!guideSlug) notFound();
 

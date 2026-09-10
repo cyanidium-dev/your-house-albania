@@ -4,6 +4,7 @@ import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb";
 import { fetchLandingPageBySlug, fetchSiteSettings } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
+import { setRequestLocale } from "next-intl/server";
 
 /** Must match `slug.current` on the Sanity `landingPage` document for this page. */
 const FOR_REALTORS_LANDING_SLUG = "for-realtors";
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ForRealtorsPage({ params }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const landing = await fetchLandingPageBySlug(FOR_REALTORS_LANDING_SLUG);
   if (!landing) {
     notFound();

@@ -7,7 +7,7 @@ import {
   fetchSiteSettings,
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
-import { getTranslations } from "next-intl/server";
+import {getTranslations, setRequestLocale} from "next-intl/server";
 import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
@@ -32,6 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
   if (process.env.NODE_ENV === "development") {
     console.log("[HOMEPAGE CANONICAL ROUTE ACTIVE][page]", { locale });
   }
