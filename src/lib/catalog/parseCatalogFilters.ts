@@ -25,6 +25,10 @@ export type ParsedCatalogFilters = {
   minArea: number;
   maxArea: number;
   beds: number;
+  /** Exact bedroom count (facet pages); 0 when unset. */
+  bedsExact: number;
+  /** Comma-separated `types` query, e.g. `apartment,studio`. */
+  types: string[];
   page: number;
 };
 
@@ -93,6 +97,9 @@ export function parseCatalogFilters(
   const minArea = Number(pickSearchString(searchParams, "minArea")) || 0;
   const maxArea = Number(pickSearchString(searchParams, "maxArea")) || 0;
   const beds = Number(pickSearchString(searchParams, "beds")) || 0;
+  const bedsExact = Number(pickSearchString(searchParams, "bedsExact")) || 0;
+  const typesRaw = pickSearchString(searchParams, "types", true);
+  const types = typesRaw ? typesRaw.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const page = Number(pickSearchString(searchParams, "page")) || 1;
 
   return {
@@ -111,6 +118,8 @@ export function parseCatalogFilters(
     minArea,
     maxArea,
     beds,
+    bedsExact,
+    types,
     page,
   };
 }

@@ -97,6 +97,8 @@ async function PropertiesListing({
   const minAreaFilter = parsedFilters.minArea
   const maxAreaFilter = parsedFilters.maxArea
   const bedsFilter = parsedFilters.beds
+  const bedsExactFilter = parsedFilters.bedsExact
+  const typesFilter = parsedFilters.types
   const stageFilter = parsedFilters.stage
   const investmentFilter = parsedFilters.investment
   const viewMode = parseViewMode(searchParams.view)
@@ -144,6 +146,8 @@ async function PropertiesListing({
       minArea: minAreaFilter || undefined,
       maxArea: maxAreaFilter || undefined,
       beds: bedsFilter || undefined,
+      bedsExact: bedsExactFilter || undefined,
+      types: typesFilter.length ? typesFilter : undefined,
       amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
       stage: stageFilter || undefined,
       investment: investmentFilter || undefined,
@@ -206,6 +210,34 @@ async function PropertiesListing({
     : []
   const pageItems = await attachMarketPositionToCards(pageItemsBase)
 
+  // Load-more asks the API for page 2+ with exactly the filters this page
+  // resolved — path facets included. It used to read `window.location.search`,
+  // which on `/albania/durres` holds no city, so scrolling the Durrës listing
+  // appended page 2 of the whole country.
+  const loadMoreQuery = new URLSearchParams(
+    Object.entries({
+      agent: agentSlugFilter,
+      city: cityFilter,
+      district: districtFilter,
+      type: typeFilter,
+      types: typesFilter.join(','),
+      deal: dealFilter,
+      minPrice: minPriceFilter,
+      maxPrice: maxPriceFilter,
+      minArea: minAreaFilter,
+      maxArea: maxAreaFilter,
+      beds: bedsFilter,
+      bedsExact: bedsExactFilter,
+      amenities: amenitiesFilter.join(','),
+      stage: stageFilter,
+      investment: investmentFilter ? '1' : '',
+      sort,
+      pageSize,
+    })
+      .filter(([, v]) => v !== '' && v !== 0 && v != null)
+      .map(([k, v]) => [k, String(v)]),
+  ).toString()
+
   const baseUrl = await getBaseUrl()
   const itemListEntries = pageItems.map((item) => ({
     name: item.name,
@@ -255,6 +287,7 @@ async function PropertiesListing({
             currentPage={currentPage}
             totalCount={totalItems}
             pageSize={pageSize}
+            loadMoreQuery={loadMoreQuery}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (

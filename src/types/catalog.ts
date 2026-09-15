@@ -26,6 +26,10 @@ export type CatalogFilters = {
   minArea?: number;
   maxArea?: number;
   beds?: number;
+  /** Exactly this many bedrooms (`beds` is a minimum). Facet pages: 1+1, 2+1. */
+  bedsExact?: number;
+  /** Any of these property types; `type` still narrows to one. */
+  types?: string[];
   amenities?: string[];
   /** Construction stage; `unfinished` matches off-plan and under-construction. */
   stage?: ConstructionStageFilter;

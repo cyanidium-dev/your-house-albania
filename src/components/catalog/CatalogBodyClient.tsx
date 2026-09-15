@@ -65,6 +65,8 @@ export type CatalogBodyClientProps = {
   locale: string;
   totalPages: number;
   currentPage: number;
+  /** The page's resolved filters as a query string, for load-more requests. */
+  loadMoreQuery: string;
   totalCount: number;
   pageSize: number;
 };
@@ -162,6 +164,7 @@ export function CatalogBodyClient({
   currentPage,
   totalCount,
   pageSize,
+  loadMoreQuery,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
   const { formatFromEur } = useCurrency();
@@ -187,8 +190,8 @@ export function CatalogBodyClient({
 
   // Keep `pageSize` out of the visible URL (infinite scroll uses a fixed internal
   // page size). Strip it client-side without a navigation, so inbound links that
-  // still carry ?pageSize render clean. loadMore() reads window.location.search
-  // and the API defaults to the same page size, so paging is unaffected.
+  // still carry ?pageSize render clean. loadMore() sends the server-resolved
+  // `loadMoreQuery`, page size included, so paging is unaffected.
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
@@ -217,9 +220,7 @@ export function CatalogBodyClient({
     if (isLoadingMore || !hasMore) return;
     setIsLoadingMore(true);
     try {
-      const params = new URLSearchParams(
-        typeof window !== 'undefined' ? window.location.search : ''
-      );
+      const params = new URLSearchParams(loadMoreQuery);
       params.set('page', String(nextPage));
       params.set('locale', locale);
       const res = await fetch(`/api/catalog/properties?${params.toString()}`);
@@ -243,7 +244,7 @@ export function CatalogBodyClient({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, nextPage, locale, pageSize, totalCount]);
+  }, [isLoadingMore, hasMore, nextPage, locale, pageSize, totalCount, loadMoreQuery]);
 
   // IntersectionObserver: trigger loadMore when sentinel enters viewport
   React.useEffect(() => {

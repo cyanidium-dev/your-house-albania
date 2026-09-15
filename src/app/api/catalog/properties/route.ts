@@ -25,6 +25,8 @@ export async function GET(req: NextRequest) {
     minArea: parsed.minArea || undefined,
     maxArea: parsed.maxArea || undefined,
     beds: parsed.beds || undefined,
+    bedsExact: parsed.bedsExact || undefined,
+    types: parsed.types.length ? parsed.types : undefined,
     amenities: parsed.amenities.length ? parsed.amenities : undefined,
     stage: parsed.stage || undefined,
     investment: parsed.investment || undefined,
