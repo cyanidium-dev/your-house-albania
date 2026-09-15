@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
 
@@ -26,8 +27,17 @@ function getPaginationItems(current: number, total: number): Array<number | "ell
   return items;
 }
 
+const arrowClass =
+  "min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40";
+
+/**
+ * Page links, not buttons. The buttons pushed `?page=N` from an onClick, so a
+ * crawler saw page 1 and nothing else: on the listing pages that left 109 of
+ * the 383 properties with no link pointing at them. Each page is now an
+ * `<a href>` in the server-rendered HTML; navigation and the scroll to the top
+ * are the Link defaults.
+ */
 export function PropertyPagination({ currentPage, totalPages }: Props) {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("Catalog.pagination");
@@ -36,35 +46,35 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
   const safeTotalPages = Math.max(1, totalPages);
   const safeCurrentPage = Math.min(Math.max(currentPage || 1, 1), safeTotalPages);
 
-  const setPage = (page: number) => {
-    const next = Math.min(Math.max(page, 1), safeTotalPages);
+  const hrefFor = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (next <= 1) {
-      params.delete("page");
-    } else {
-      params.set("page", String(next));
-    }
+    if (page <= 1) params.delete("page");
+    else params.set("page", String(page));
     const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    return qs ? `${pathname}?${qs}` : pathname;
   };
 
   const items = getPaginationItems(safeCurrentPage, safeTotalPages);
+  const hasPrevious = safeCurrentPage > 1;
+  const hasNext = safeCurrentPage < safeTotalPages;
 
   return (
     <div className="mt-10 flex justify-center">
-      <nav className="inline-flex items-center gap-2" aria-label={t('pagination')}>
-        <button
-          type="button"
-          disabled={safeCurrentPage === 1}
-          onClick={() => setPage(safeCurrentPage - 1)}
-          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white cursor-pointer hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 dark:disabled:hover:border-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
-          aria-label={t('previousPage')}
-        >
-          <Icon icon="ph:caret-left" width={20} height={20} />
-        </button>
+      <nav className="inline-flex items-center gap-2" aria-label={t("pagination")}>
+        {hasPrevious ? (
+          <Link
+            href={hrefFor(safeCurrentPage - 1)}
+            rel="prev"
+            className={`${arrowClass} hover:bg-primary/10 hover:border-primary/30`}
+            aria-label={t("previousPage")}
+          >
+            <Icon icon="ph:caret-left" width={20} height={20} />
+          </Link>
+        ) : (
+          <span className={`${arrowClass} opacity-40`} aria-hidden>
+            <Icon icon="ph:caret-left" width={20} height={20} />
+          </span>
+        )}
 
         {items.map((it, idx) =>
           it === "ellipsis" ? (
@@ -75,34 +85,39 @@ export function PropertyPagination({ currentPage, totalPages }: Props) {
             >
               …
             </span>
-          ) : (
-            <button
+          ) : it === safeCurrentPage ? (
+            <span
               key={it}
-              type="button"
-              onClick={() => setPage(it)}
-              className={[
-                "min-w-8 h-8 rounded-full border text-sm px-3 transition-colors duration-200 ease-out cursor-pointer",
-                "focus:outline-none focus:ring-2 focus:ring-primary/40",
-                it === safeCurrentPage
-                  ? "bg-primary text-white border-primary"
-                  : "border-dark/10 dark:border-white/20 text-dark dark:text-white hover:bg-primary/10 hover:text-primary",
-              ].join(" ")}
-              aria-current={it === safeCurrentPage ? "page" : undefined}
+              className="min-w-8 h-8 inline-flex items-center justify-center rounded-full border text-sm px-3 bg-primary text-white border-primary"
+              aria-current="page"
             >
               {it}
-            </button>
+            </span>
+          ) : (
+            <Link
+              key={it}
+              href={hrefFor(it)}
+              className="min-w-8 h-8 inline-flex items-center justify-center rounded-full border text-sm px-3 transition-colors duration-200 ease-out border-dark/10 dark:border-white/20 text-dark dark:text-white hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+            >
+              {it}
+            </Link>
           )
         )}
 
-        <button
-          type="button"
-          disabled={safeCurrentPage === safeTotalPages}
-          onClick={() => setPage(safeCurrentPage + 1)}
-          className="min-w-10 h-10 rounded-full border border-dark/10 dark:border-white/20 flex items-center justify-center text-dark dark:text-white cursor-pointer hover:bg-primary/10 hover:border-primary/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-dark/10 dark:disabled:hover:border-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40"
-          aria-label={t('nextPage')}
-        >
-          <Icon icon="ph:caret-right" width={20} height={20} />
-        </button>
+        {hasNext ? (
+          <Link
+            href={hrefFor(safeCurrentPage + 1)}
+            rel="next"
+            className={`${arrowClass} hover:bg-primary/10 hover:border-primary/30`}
+            aria-label={t("nextPage")}
+          >
+            <Icon icon="ph:caret-right" width={20} height={20} />
+          </Link>
+        ) : (
+          <span className={`${arrowClass} opacity-40`} aria-hidden>
+            <Icon icon="ph:caret-right" width={20} height={20} />
+          </span>
+        )}
       </nav>
     </div>
   );

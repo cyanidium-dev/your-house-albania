@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { displayStatusLabel } from "@/lib/property/cardFormatters";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
+import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -574,6 +575,9 @@ export function CatalogBodyClient({
                 </div>
               </div>
             )}
+            {/* Infinite scroll loads pages through fetch, which no crawler
+                follows; the links give every page an address in the HTML. */}
+            {totalPages > 1 && <PropertyPagination currentPage={currentPage} totalPages={totalPages} />}
           </>
         )}
       </div>
