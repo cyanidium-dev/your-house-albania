@@ -251,7 +251,10 @@
     },
     "blog": {
       "relatedArticles": "Artikuj të ngjashëm",
-      "relatedProperties": "Prona të ngjashme"
+      "relatedProperties": "Prona të ngjashme",
+      "listingsTitle": "Prona që lidhen me artikullin",
+      "listingsPlaceLink": "{place}: {count, plural, one {# pronë në shitje} other {# prona në shitje}}",
+      "listingsAllAlbania": "Të gjitha pronat në shitje në Shqipëri"
     },
     "goBack": "Kthehu",
     "entityCard": {

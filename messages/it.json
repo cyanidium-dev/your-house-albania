@@ -251,7 +251,10 @@
     },
     "blog": {
       "relatedArticles": "Articoli correlati",
-      "relatedProperties": "Immobili correlati"
+      "relatedProperties": "Immobili correlati",
+      "listingsTitle": "Immobili collegati all'articolo",
+      "listingsPlaceLink": "{place}: {count, plural, one {# immobile in vendita} other {# immobili in vendita}}",
+      "listingsAllAlbania": "Tutti gli immobili in vendita in Albania"
     },
     "goBack": "Indietro",
     "entityCard": {

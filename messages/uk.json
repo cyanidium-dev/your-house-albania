@@ -251,7 +251,10 @@
     },
     "blog": {
       "relatedArticles": "Схожі статті",
-      "relatedProperties": "Схожі об'єкти"
+      "relatedProperties": "Схожі об'єкти",
+      "listingsTitle": "Обʼєкти за темою",
+      "listingsPlaceLink": "{place}: {count, plural, one {# обʼєкт у продажу} few {# обʼєкти у продажу} many {# обʼєктів у продажу} other {# обʼєкта у продажу}}",
+      "listingsAllAlbania": "Уся нерухомість у продажу в Албанії"
     },
     "goBack": "Назад",
     "entityCard": {

@@ -251,7 +251,10 @@
     },
     "blog": {
       "relatedArticles": "Related articles",
-      "relatedProperties": "Related properties"
+      "relatedProperties": "Related properties",
+      "listingsTitle": "Properties on this topic",
+      "listingsPlaceLink": "{place}: {count, plural, one {# property for sale} other {# properties for sale}}",
+      "listingsAllAlbania": "All property for sale in Albania"
     },
     "goBack": "Go Back",
     "entityCard": {

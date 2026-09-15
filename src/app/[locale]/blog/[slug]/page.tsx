@@ -31,6 +31,7 @@ import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
+import { BlogListingsBlock } from "@/components/Blog/BlogListingsBlock";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
@@ -337,6 +338,7 @@ export default async function Post({ params }: Props) {
               <BlogTableOfContents content={detail.contentBlocks} />
               <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
+              <BlogListingsBlock locale={locale} postSlug={detail.slug} />
               <BlogFaq faq={detail.faq} locale={locale} />
               <BlogSources sources={detail.sources} locale={locale} />
               {/* Last thing in the article, after the sources. Editors can also

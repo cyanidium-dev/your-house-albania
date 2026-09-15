@@ -240,7 +240,10 @@
     },
     "blog": {
       "relatedArticles": "Powiązane artykuły",
-      "relatedProperties": "Powiązane nieruchomości"
+      "relatedProperties": "Powiązane nieruchomości",
+      "listingsTitle": "Oferty związane z artykułem",
+      "listingsPlaceLink": "{place}: {count, plural, one {# oferta na sprzedaż} few {# oferty na sprzedaż} many {# ofert na sprzedaż} other {# oferty na sprzedaż}}",
+      "listingsAllAlbania": "Wszystkie nieruchomości na sprzedaż w Albanii"
     },
     "goBack": "Wróć",
     "entityCard": {
