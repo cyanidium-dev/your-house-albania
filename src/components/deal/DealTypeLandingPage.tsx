@@ -1,4 +1,5 @@
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { isPublicDealQuery } from '@/lib/catalog/publicDealTypes'
 import { LandingRenderer } from '@/components/landing/LandingRenderer'
 import { fetchDealTypeLanding } from '@/lib/sanity/client'
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
@@ -11,6 +12,7 @@ export async function DealTypeLandingPage({
   locale: string
   deal: PropertiesDealParam
 }) {
+  if (!isPublicDealQuery(deal)) notFound()
   const landing = await fetchDealTypeLanding(deal)
   if (!landing) {
     redirect(canonicalCatalogUrl({ locale, deal }))

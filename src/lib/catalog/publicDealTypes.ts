@@ -7,11 +7,11 @@ export type DealType = 'sale' | 'rent' | 'short-term'
  * Deal types exposed in the public UI: navigation, footer, hero search tabs,
  * catalog filter options and sitemaps/indexing.
  *
- * Product decision (2026-07): rentals are HIDDEN from the UI — sale is the only
- * focus. Nothing is deleted: routes (`/rent`, `/short-term-rent`), property
- * statuses, CMS data and translations stay intact and keep working via direct
- * URLs (with `noindex`). To bring rentals back, add `'rent'` and/or
- * `'short-term'` back to this array — every consumer reads it.
+ * Domlivo sells only. A deal type left out of this array is gone from the
+ * site, not just hidden: its routes (`/rent`, `/short-term-rent`,
+ * `/investment/rent`, `/<country>/<city>/rent`) return 404, its properties are
+ * not public anywhere (their own pages included) and the catalog ignores it as
+ * a filter. The rental listings were archived in the CMS on 2026-09-15.
  */
 export const PUBLIC_DEAL_TYPES: DealType[] = ['sale']
 

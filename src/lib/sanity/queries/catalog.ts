@@ -104,13 +104,10 @@ function buildCatalogPredicateParts(
   if (type) {
     parts.push(`${prefix}type->slug.current == $type`);
   }
+  // Only the deal types the site offers, even when `deal` names another one.
+  parts.push(`${prefix}status in $publicDealTypes`);
   if (deal) {
     parts.push(`${prefix}status == $deal`);
-  } else {
-    // Default (unfiltered) catalog views honor PUBLIC_DEAL_TYPES — rentals are
-    // hidden from public surfaces (product decision 2026-07); explicit deal
-    // segments (direct /rent URLs) pass `deal` and bypass this.
-    parts.push(`${prefix}status in $publicDealTypes`);
   }
   // A per-m2 rate is not comparable with a total, so a price range excludes
   // those listings rather than ranking a EUR1,300/m2 new build below every

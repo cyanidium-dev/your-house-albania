@@ -322,6 +322,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
       : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
   if (!resolved) notFound();
   const { dealType, propertyType, dealQuery, district: pathDistrict } = resolved;
+  if (dealType && !isPublicDealRouteSegment(dealType)) notFound();
   const typeSlug = propertyType;
 
   await validateListingGeoContent(locale, geo.listingCitySlug, options.propertyTypes, typeSlug || undefined);

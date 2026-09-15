@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
@@ -29,6 +30,7 @@ export async function NonGeoDealListingPage({
   filters: string[] | undefined;
   searchParams: Record<string, string | string[] | undefined>;
 }) {
+  if (!isPublicDealRouteSegment(dealRouteSegment)) notFound();
   if (filters && filters.length > 1) notFound();
 
   const rawTypeSeg = filters?.[0];
