@@ -482,7 +482,9 @@
       "stageUnderConstruction": "Under construction",
       "stageCompleted": "Completed",
       "sortHandoverAsc": "Handover (soonest first)"
-    }
+    },
+    "cityInfoLink": "{place}: prices and districts",
+    "districtInfoLink": "{place}: prices and area guide"
   },
   "NewBuilds": {
     "title": "New builds and investment property in Albania",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
+import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
@@ -397,6 +398,21 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
         citySlug={geo.listingCitySlug}
         propertyType={typeSlug || undefined}
         deal={dealType || undefined}
+        footer={
+          geo.mode === "fullGeo" && !typeSlug ? (
+            <ListingPlaceInfoLink
+              locale={locale}
+              countrySlug={geo.listingCountrySlug}
+              citySlug={geo.listingCitySlug}
+              cityLabel={
+                options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label ||
+                geo.listingCitySlug
+              }
+              districtSlug={pathDistrict || undefined}
+              districtLabel={pathDistrict ? districtLabelFor(options, pathDistrict) : undefined}
+            />
+          ) : null
+        }
         breadcrumb={
           <CatalogBreadcrumb
             locale={locale}

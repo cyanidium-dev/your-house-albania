@@ -482,7 +482,9 @@
       "stageUnderConstruction": "W budowie",
       "stageCompleted": "Ukończone",
       "sortHandoverAsc": "Odbiór (najbliższe najpierw)"
-    }
+    },
+    "cityInfoLink": "{place}: ceny i dzielnice",
+    "districtInfoLink": "{place}: ceny i opis dzielnicy"
   },
   "NewBuilds": {
     "title": "Nowe inwestycje i nieruchomości inwestycyjne w Albanii",
@@ -697,7 +699,7 @@
         "commercial-space": "Lokale użytkowe",
         "short-term-rent": "Wynajem krótkoterminowy"
       },
-      "cityDistrictTitle": "Nieruchomości na sprzedaż w {district}, {city}",
+      "cityDistrictTitle": "{district}, {city}: nieruchomości na sprzedaż",
       "cityDistrictDescription": "Mieszkania, domy i wille na sprzedaż w dzielnicy {district}, {city}: aktualne ceny, zdjęcia i bezpośredni kontakt z właścicielami i agencjami, bez prowizji."
     },
     "og": {

@@ -482,7 +482,9 @@
       "stageUnderConstruction": "Në ndërtim",
       "stageCompleted": "E përfunduar",
       "sortHandoverAsc": "Dorëzimi (më të afërtit në fillim)"
-    }
+    },
+    "cityInfoLink": "{place}: çmimet dhe lagjet",
+    "districtInfoLink": "{place}: çmimet dhe përshkrimi i zonës"
   },
   "NewBuilds": {
     "title": "Ndërtime të reja dhe prona për investim në Shqipëri",

@@ -40,6 +40,8 @@ type Props = {
   propertyType?: string;
   /** Deal route segment, e.g. `short-term-rent`. */
   deal?: string;
+  /** Rendered under the intro, e.g. the link to the place's prices page. */
+  footer?: ReactNode;
 };
 
 export function CatalogHero({
@@ -52,6 +54,7 @@ export function CatalogHero({
   citySlug,
   propertyType,
   deal,
+  footer,
 }: Props) {
   const t = useTranslations("Catalog");
   const tPhoto = useTranslations("AlbaniaPhotos");
@@ -116,6 +119,7 @@ export function CatalogHero({
           {effectiveTitle}
         </h1>
         {subtitle}
+        {footer ? <div className="mt-4 md:mt-5">{footer}</div> : null}
       </div>
     </section>
   );

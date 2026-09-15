@@ -482,7 +482,9 @@
       "stageUnderConstruction": "In costruzione",
       "stageCompleted": "Completato",
       "sortHandoverAsc": "Consegna (prima le più vicine)"
-    }
+    },
+    "cityInfoLink": "{place}: prezzi e quartieri",
+    "districtInfoLink": "{place}: prezzi e guida alla zona"
   },
   "NewBuilds": {
     "title": "Nuove costruzioni e immobili da investimento in Albania",
