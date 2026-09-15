@@ -3,6 +3,7 @@ import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
 import { ListingFacetNav } from "@/components/catalog/ListingFacetNav";
+import { ListingFactsLine } from "@/components/catalog/ListingFactsLine";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
@@ -493,18 +494,31 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
         propertyType={typeSlug || undefined}
         deal={dealType || undefined}
         footer={
-          geo.mode === "fullGeo" && !typeSlug ? (
-            <ListingPlaceInfoLink
-              locale={locale}
-              countrySlug={geo.listingCountrySlug}
-              citySlug={geo.listingCitySlug}
-              cityLabel={
-                options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label ||
-                geo.listingCitySlug
-              }
-              districtSlug={pathDistrict || undefined}
-              districtLabel={pathDistrict ? districtLabelFor(options, pathDistrict) : undefined}
-            />
+          geo.mode === "fullGeo" ? (
+            <div className="flex flex-col items-center gap-3">
+              <ListingFactsLine
+                locale={locale}
+                filters={{
+                  city: geo.listingCitySlug,
+                  district: pathDistrict || undefined,
+                  ...(typeSlug ? { type: typeSlug } : {}),
+                  ...(facet ? facetCatalogFilters(facet) : {}),
+                }}
+              />
+              {!typeSlug ? (
+                <ListingPlaceInfoLink
+                  locale={locale}
+                  countrySlug={geo.listingCountrySlug}
+                  citySlug={geo.listingCitySlug}
+                  cityLabel={
+                    options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label ||
+                    geo.listingCitySlug
+                  }
+                  districtSlug={pathDistrict || undefined}
+                  districtLabel={districtLabel}
+                />
+              ) : null}
+            </div>
           ) : null
         }
         breadcrumb={

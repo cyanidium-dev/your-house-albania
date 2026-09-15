@@ -15,10 +15,17 @@
  * The test in `__tests__/listingFacets.test.ts` holds them together.
  */
 
-export const LISTING_FACET_SLUGS = ["1-1", "2-1", "3-1", "under-80k", "under-100k", "new-builds"] as const;
+export const LISTING_FACET_SLUGS = ["near-the-sea", "1-1", "2-1", "3-1", "under-80k", "under-100k", "new-builds"] as const;
 export type ListingFacetSlug = (typeof LISTING_FACET_SLUGS)[number];
 
-export type ListingFacetKind = "rooms" | "budget" | "stage";
+export type ListingFacetKind = "sea" | "rooms" | "budget" | "stage";
+
+/**
+ * "Near the sea": within this walking distance as the listing states it, or on
+ * the first line. 300 m is a few minutes on foot, which is what "у моря",
+ * "buzë detit" and "vicino al mare" promise.
+ */
+export const NEAR_SEA_MAX_METERS = 300;
 
 /** Minimal property shape the sitemap reads to count facet pages. */
 export type FacetPropertyRow = {
@@ -27,6 +34,8 @@ export type FacetPropertyRow = {
   price?: number | null;
   priceUnit?: string | null;
   constructionStage?: string | null;
+  seaDistanceMeters?: number | null;
+  beachfront?: boolean | null;
 };
 
 type FacetDefinition = {
@@ -41,6 +50,12 @@ const totalPriceAtMost = (max: number) => (row: FacetPropertyRow) =>
   typeof row.price === "number" && row.price > 0 && row.price <= max && row.priceUnit !== "per-sqm";
 
 export const LISTING_FACETS: Record<ListingFacetSlug, FacetDefinition> = {
+  "near-the-sea": {
+    kind: "sea",
+    query: { nearSea: "1" },
+    matches: (r) =>
+      r.beachfront === true || (typeof r.seaDistanceMeters === "number" && r.seaDistanceMeters <= NEAR_SEA_MAX_METERS),
+  },
   "1-1": {
     kind: "rooms",
     query: { type: "apartment", bedsExact: "1" },
@@ -94,6 +109,7 @@ export function facetCatalogFilters(facet: ListingFacetSlug): {
   beds?: number;
   maxPrice?: number;
   stage?: "unfinished";
+  nearSea?: boolean;
 } {
   const q = LISTING_FACETS[facet].query;
   return {
@@ -103,5 +119,6 @@ export function facetCatalogFilters(facet: ListingFacetSlug): {
     ...(q.beds ? { beds: Number(q.beds) } : {}),
     ...(q.maxPrice ? { maxPrice: Number(q.maxPrice) } : {}),
     ...(q.stage === "unfinished" ? { stage: "unfinished" as const } : {}),
+    ...(q.nearSea === "1" ? { nearSea: true } : {}),
   };
 }

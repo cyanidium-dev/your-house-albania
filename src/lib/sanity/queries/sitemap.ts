@@ -205,6 +205,8 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
       price,
       priceUnit,
       constructionStage,
+      seaDistanceMeters,
+      beachfront,
       _updatedAt
     }
   }`;
@@ -223,6 +225,8 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
         price?: number | null;
         priceUnit?: string | null;
         constructionStage?: string | null;
+        seaDistanceMeters?: number | null;
+        beachfront?: boolean | null;
         _updatedAt?: string;
       }>;
     }>(query);

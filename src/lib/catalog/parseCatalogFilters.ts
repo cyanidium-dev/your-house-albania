@@ -29,6 +29,8 @@ export type ParsedCatalogFilters = {
   bedsExact: number;
   /** Comma-separated `types` query, e.g. `apartment,studio`. */
   types: string[];
+  /** `nearSea=1`: within the near-the-sea distance or on the first line. */
+  nearSea: boolean;
   page: number;
 };
 
@@ -100,6 +102,8 @@ export function parseCatalogFilters(
   const bedsExact = Number(pickSearchString(searchParams, "bedsExact")) || 0;
   const typesRaw = pickSearchString(searchParams, "types", true);
   const types = typesRaw ? typesRaw.split(",").map((t) => t.trim()).filter(Boolean) : [];
+  const nearSeaRaw = pickSearchString(searchParams, "nearSea", true);
+  const nearSea = nearSeaRaw === "1" || nearSeaRaw === "true";
   const page = Number(pickSearchString(searchParams, "page")) || 1;
 
   return {
@@ -120,6 +124,7 @@ export function parseCatalogFilters(
     beds,
     bedsExact,
     types,
+    nearSea,
     page,
   };
 }

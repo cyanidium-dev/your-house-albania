@@ -497,8 +497,15 @@
         "3-1": "3+ bedrooms",
         "under-80k": "Under €80k",
         "under-100k": "Under €100k",
-        "new-builds": "New builds"
-      }
+        "new-builds": "New builds",
+        "near-the-sea": "By the sea"
+      },
+      "sea": "Sea"
+    },
+    "facts": {
+      "count": "{count, plural, one {# listing} other {# listings}}",
+      "from": "from €{price}",
+      "medianPerSqm": "median €{price}/m² for flats"
     }
   },
   "NewBuilds": {
@@ -723,7 +730,8 @@
           "3-1": "3+ Bedroom Apartments for Sale in {place} — {count} Listings",
           "under-80k": "Apartments under €80,000 in {place} — {count} Listings",
           "under-100k": "Apartments under €100,000 in {place} — {count} Listings",
-          "new-builds": "New Builds for Sale in {place} — {count} Listings"
+          "new-builds": "New Builds for Sale in {place} — {count} Listings",
+          "near-the-sea": "Property by the Sea for Sale in {place} — {count} Listings"
         },
         "what": {
           "1-1": "one-bedroom (1+1) apartments for sale",
@@ -731,7 +739,8 @@
           "3-1": "apartments with three or more bedrooms for sale",
           "under-80k": "apartments and studios under €80,000",
           "under-100k": "apartments and studios under €100,000",
-          "new-builds": "properties under construction"
+          "new-builds": "properties under construction",
+          "near-the-sea": "properties within 300 m of the sea"
         },
         "description": "{count} {what} in {place}{hasPrice, select, yes {, from €{priceFrom}} other {}}. Photos, floor areas and direct contact with owners and agencies."
       }

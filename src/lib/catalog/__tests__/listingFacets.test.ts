@@ -69,3 +69,14 @@ describe("listing facets", () => {
     expect(withFacetQuery({ sort: "newest" }, "")).toEqual({ sort: "newest" });
   });
 });
+
+describe("near the sea", () => {
+  const facet = LISTING_FACETS["near-the-sea"];
+  it("takes the stated distance up to 300 m, or the first line", () => {
+    expect(facet.matches({ seaDistanceMeters: 300 })).toBe(true);
+    expect(facet.matches({ seaDistanceMeters: 301 })).toBe(false);
+    expect(facet.matches({ beachfront: true, seaDistanceMeters: null })).toBe(true);
+    expect(facet.matches({})).toBe(false);
+    expect(facetCatalogFilters("near-the-sea")).toEqual({ nearSea: true });
+  });
+});

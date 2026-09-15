@@ -99,6 +99,7 @@ async function PropertiesListing({
   const bedsFilter = parsedFilters.beds
   const bedsExactFilter = parsedFilters.bedsExact
   const typesFilter = parsedFilters.types
+  const nearSeaFilter = parsedFilters.nearSea
   const stageFilter = parsedFilters.stage
   const investmentFilter = parsedFilters.investment
   const viewMode = parseViewMode(searchParams.view)
@@ -148,6 +149,7 @@ async function PropertiesListing({
       beds: bedsFilter || undefined,
       bedsExact: bedsExactFilter || undefined,
       types: typesFilter.length ? typesFilter : undefined,
+      nearSea: nearSeaFilter || undefined,
       amenities: amenitiesFilter.length ? amenitiesFilter : undefined,
       stage: stageFilter || undefined,
       investment: investmentFilter || undefined,
@@ -228,6 +230,7 @@ async function PropertiesListing({
       maxArea: maxAreaFilter,
       beds: bedsFilter,
       bedsExact: bedsExactFilter,
+      nearSea: nearSeaFilter ? '1' : '',
       amenities: amenitiesFilter.join(','),
       stage: stageFilter,
       investment: investmentFilter ? '1' : '',

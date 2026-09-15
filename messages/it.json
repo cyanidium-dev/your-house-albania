@@ -497,8 +497,15 @@
         "3-1": "Quadrilocali+",
         "under-80k": "Sotto 80.000 €",
         "under-100k": "Sotto 100.000 €",
-        "new-builds": "Nuove costruzioni"
-      }
+        "new-builds": "Nuove costruzioni",
+        "near-the-sea": "Vicino al mare"
+      },
+      "sea": "Mare"
+    },
+    "facts": {
+      "count": "{count, plural, one {# immobile} other {# immobili}}",
+      "from": "da {price} €",
+      "medianPerSqm": "mediana {price} €/m² per gli appartamenti"
     }
   },
   "NewBuilds": {
@@ -723,7 +730,8 @@
           "3-1": "Quadrilocali e più grandi in vendita a {place} — {count} immobili",
           "under-80k": "Appartamenti sotto 80.000 € a {place} — {count} immobili",
           "under-100k": "Appartamenti sotto 100.000 € a {place} — {count} immobili",
-          "new-builds": "Nuove costruzioni in vendita a {place} — {count} immobili"
+          "new-builds": "Nuove costruzioni in vendita a {place} — {count} immobili",
+          "near-the-sea": "Case vicino al mare in vendita a {place} — {count} immobili"
         },
         "what": {
           "1-1": "bilocali (1+1) in vendita",
@@ -731,7 +739,8 @@
           "3-1": "appartamenti con tre o più camere in vendita",
           "under-80k": "appartamenti e monolocali sotto 80.000 €",
           "under-100k": "appartamenti e monolocali sotto 100.000 €",
-          "new-builds": "immobili in costruzione"
+          "new-builds": "immobili in costruzione",
+          "near-the-sea": "immobili entro 300 m dal mare"
         },
         "description": "{count} {what} a {place}{hasPrice, select, yes {, da {priceFrom} €} other {}}. Foto, superfici e contatto diretto con proprietari e agenzie."
       }

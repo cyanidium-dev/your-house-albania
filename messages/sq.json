@@ -497,8 +497,15 @@
         "3-1": "3+1 e lart",
         "under-80k": "Deri 80 000 €",
         "under-100k": "Deri 100 000 €",
-        "new-builds": "Në ndërtim"
-      }
+        "new-builds": "Në ndërtim",
+        "near-the-sea": "Buzë detit"
+      },
+      "sea": "Deti"
+    },
+    "facts": {
+      "count": "{count, plural, one {# pronë} other {# prona}}",
+      "from": "nga {price} €",
+      "medianPerSqm": "mediana {price} €/m² për apartamentet"
     }
   },
   "NewBuilds": {
@@ -723,7 +730,8 @@
           "3-1": "Apartamente 3+1 e më të mëdha në shitje në {place} — {count} prona",
           "under-80k": "Apartamente deri në 80 000 € në {place} — {count} prona",
           "under-100k": "Apartamente deri në 100 000 € në {place} — {count} prona",
-          "new-builds": "Prona në ndërtim në shitje në {place} — {count} prona"
+          "new-builds": "Prona në ndërtim në shitje në {place} — {count} prona",
+          "near-the-sea": "Prona buzë detit në shitje në {place} — {count} prona"
         },
         "what": {
           "1-1": "apartamente 1+1 në shitje",
@@ -731,7 +739,8 @@
           "3-1": "apartamente 3+1 e më të mëdha në shitje",
           "under-80k": "apartamente dhe studio deri në 80 000 €",
           "under-100k": "apartamente dhe studio deri në 100 000 €",
-          "new-builds": "prona në ndërtim"
+          "new-builds": "prona në ndërtim",
+          "near-the-sea": "prona deri në 300 m nga deti"
         },
         "description": "{count} {what} në {place}{hasPrice, select, yes {, nga {priceFrom} €} other {}}. Foto, sipërfaqe dhe kontakt i drejtpërdrejtë me pronarët dhe agjencitë."
       }

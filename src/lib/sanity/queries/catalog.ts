@@ -6,6 +6,7 @@ import {
 } from '../localized';
 import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter } from '../groq/propertyFilters';
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes';
+import { NEAR_SEA_MAX_METERS } from '@/lib/catalog/listingFacets';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 
@@ -69,6 +70,7 @@ function buildCatalogPredicateParts(
     | 'beds'
     | 'bedsExact'
     | 'types'
+    | 'nearSea'
     | 'amenities'
     | 'stage'
     | 'investment'
@@ -88,6 +90,7 @@ function buildCatalogPredicateParts(
     beds,
     bedsExact,
     types,
+    nearSea,
     amenities,
     stage,
     investment,
@@ -136,6 +139,9 @@ function buildCatalogPredicateParts(
   }
   if (typeof bedsExact === 'number' && bedsExact > 0) {
     parts.push(`${prefix}bedrooms == $bedsExact`);
+  }
+  if (nearSea) {
+    parts.push(`(${prefix}seaDistanceMeters <= ${NEAR_SEA_MAX_METERS} || ${prefix}beachfront == true)`);
   }
 
   if (Array.isArray(amenities) && amenities.length > 0) {

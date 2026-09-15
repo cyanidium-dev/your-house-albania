@@ -30,6 +30,8 @@ export type CatalogFilters = {
   bedsExact?: number;
   /** Any of these property types; `type` still narrows to one. */
   types?: string[];
+  /** Within NEAR_SEA_MAX_METERS of the sea as the listing states it, or on the first line. */
+  nearSea?: boolean;
   amenities?: string[];
   /** Construction stage; `unfinished` matches off-plan and under-construction. */
   stage?: ConstructionStageFilter;

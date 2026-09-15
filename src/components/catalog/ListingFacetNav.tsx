@@ -27,7 +27,7 @@ type Props = {
 
 type Chip = { href: string; label: string; count: number; current: boolean };
 
-const GROUPS: ListingFacetKind[] = ["rooms", "budget", "stage"];
+const GROUPS: ListingFacetKind[] = ["sea", "rooms", "budget", "stage"];
 
 /**
  * The slices of a place as links: its districts (on a city page), then rooms,

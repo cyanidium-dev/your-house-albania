@@ -497,8 +497,15 @@
         "3-1": "4 pokoje i więcej",
         "under-80k": "Do 80 000 €",
         "under-100k": "Do 100 000 €",
-        "new-builds": "W budowie"
-      }
+        "new-builds": "W budowie",
+        "near-the-sea": "Nad morzem"
+      },
+      "sea": "Morze"
+    },
+    "facts": {
+      "count": "{count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+      "from": "od {price} €",
+      "medianPerSqm": "mediana {price} €/m² za mieszkania"
     }
   },
   "NewBuilds": {
@@ -723,7 +730,8 @@
           "3-1": "{place}: mieszkania czteropokojowe i większe — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "under-80k": "{place}: mieszkania do 80 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "under-100k": "{place}: mieszkania do 100 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "new-builds": "{place}: nowe inwestycje na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
+          "new-builds": "{place}: nowe inwestycje na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "near-the-sea": "{place}: nieruchomości nad morzem — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
         },
         "what": {
           "1-1": "mieszkania dwupokojowe (1+1) na sprzedaż",
@@ -731,7 +739,8 @@
           "3-1": "mieszkania z trzema i więcej sypialniami",
           "under-80k": "mieszkania i kawalerki do 80 000 €",
           "under-100k": "mieszkania i kawalerki do 100 000 €",
-          "new-builds": "nieruchomości w budowie"
+          "new-builds": "nieruchomości w budowie",
+          "near-the-sea": "nieruchomości do 300 m od morza"
         },
         "description": "{place}: {what}{hasPrice, select, yes {, od {priceFrom} €} other {}}. {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}} ze zdjęciami, metrażem i bezpośrednim kontaktem z właścicielami i agencjami."
       }
