@@ -15,9 +15,15 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
   pageSections?: unknown[];
   seo?: unknown;
 } | null> {
-  const client = getClient();
-  if (!client) return null;
-  const query = `*[
+  const key = typeof citySlug === "string" ? citySlug.trim().toLowerCase() : "";
+  if (!key) return null;
+  // Tagged for the same reason as `fetchCitiesIndexLanding`: the `/info` route
+  // is ISR, and only tagged fetches let the webhook purge it on an edit.
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[
     _type == "landingPage" &&
     pageType == "city" &&
     (
@@ -46,12 +52,17 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     contentUpdatedAt,
     seo
   }`;
-  try {
-    return await client.fetch(query, { citySlug });
-  } catch (err) {
-    console.warn("[Sanity] fetchCityLandingByCitySlug failed:", err);
-    return null;
-  }
+      try {
+        return await client.fetch(query, { citySlug: key });
+      } catch (err) {
+        console.warn("[Sanity] fetchCityLandingByCitySlug failed:", err);
+        return null;
+      }
+    },
+    ['sanity-city-landing-by-city-slug', key],
+    { revalidate: 60, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
+  );
+  return cached();
 }
 
 /** Projection for landing page sections with asset/ref dereferencing. */
@@ -319,9 +330,14 @@ export async function fetchCitiesIndexLanding(): Promise<{
   pageSections?: unknown[];
   seo?: unknown;
 } | null> {
-  const client = getClient();
-  if (!client) return null;
-  const query = `*[
+  // Tagged like the other landing fetchers. Untagged, the Sanity webhook's
+  // `revalidateTag` could not reach this ISR route: an edited title stayed
+  // stale for the full hour of `revalidate`.
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return null;
+      const query = `*[
     _type == "landingPage" &&
     (
       _id == "landing-cities" ||
@@ -337,12 +353,17 @@ export async function fetchCitiesIndexLanding(): Promise<{
     contentUpdatedAt,
     seo
   }`;
-  try {
-    return await client.fetch(query);
-  } catch (err) {
-    console.warn("[Sanity] fetchCitiesIndexLanding failed:", err);
-    return null;
-  }
+      try {
+        return await client.fetch(query);
+      } catch (err) {
+        console.warn("[Sanity] fetchCitiesIndexLanding failed:", err);
+        return null;
+      }
+    },
+    ['sanity-cities-index-landing'],
+    { revalidate: 60, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
+  );
+  return cached();
 }
 
 /**
