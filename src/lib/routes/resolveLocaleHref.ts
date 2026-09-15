@@ -1,4 +1,27 @@
 import { routing } from '@/i18n/routing'
+import { isSolePublicDealRouteSegment } from '@/lib/catalog/publicDealTypes'
+import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalogPathPrimitives'
+
+/** `/{country}/{city}[/{district}]/{deal}` with nothing after the deal but a query or hash. */
+const PLACE_DEAL_LISTING = /^(\/[^/?#]+\/[^/?#]+(?:\/[^/?#]+)?)\/([^/?#]+)(?=[?#]|$)/
+
+/**
+ * Drop the deal segment from a city or district listing link while that deal
+ * is the only public one. CMS CTAs ("See listings", "Listings in Golem") were
+ * written against `/albania/durres/golem-durres/sale`, which now 308s to
+ * `/albania/durres/golem-durres`; rewriting the href sends the link's weight to
+ * the indexed URL instead of through a redirect. Typed listings
+ * (`/sale/apartment`) are left alone — they are canonical as written.
+ */
+export function canonicalizePlaceListingPath(path: string): string {
+  const match = PLACE_DEAL_LISTING.exec(path)
+  if (!match) return path
+  const [whole, place, deal] = match
+  const country = place.split('/')[1]?.toLowerCase()
+  if (country !== LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG) return path
+  if (!isSolePublicDealRouteSegment(deal.toLowerCase())) return path
+  return place + path.slice(whole.length)
+}
 
 /**
  * Strip a locale segment an editor left on an internal path.
@@ -39,7 +62,7 @@ export function resolveLocaleHref(
   }
   if (h.startsWith('#')) return h
   if (h.startsWith('/')) {
-    const path = stripLocalePrefix(h, locales)
+    const path = canonicalizePlaceListingPath(stripLocalePrefix(h, locales))
     return path === '/' ? `/${locale}` : `/${locale}${path}`
   }
   return `/${locale}/${h}`

@@ -65,3 +65,22 @@ describe('resolveLocaleHref (foreign locale prefixes)', () => {
     expect(resolveLocaleHref('/en/contacts', 'ru', ['ru'])).toBe('/ru/en/contacts')
   })
 })
+
+/**
+ * CMS CTAs link `/albania/{city}[/{district}]/sale`, which duplicated the bare
+ * listing while sale is the only public deal and now redirects to it.
+ */
+describe('resolveLocaleHref (place listings under the sole public deal)', () => {
+  it('drops the deal from city and district listing links', () => {
+    expect(resolveLocaleHref('/albania/sarande/sale', 'en')).toBe('/en/albania/sarande')
+    expect(resolveLocaleHref('/en/albania/durres/golem-durres/sale', 'uk')).toBe('/uk/albania/durres/golem-durres')
+    expect(resolveLocaleHref('/albania/durres/sale?sort=newest', 'ru')).toBe('/ru/albania/durres?sort=newest')
+  })
+  it('keeps typed listings, national deal pages and non-listing paths as written', () => {
+    expect(resolveLocaleHref('/albania/durres/sale/apartment', 'en')).toBe('/en/albania/durres/sale/apartment')
+    expect(resolveLocaleHref('/sale', 'en')).toBe('/en/sale')
+    expect(resolveLocaleHref('/investment/sale', 'en')).toBe('/en/investment/sale')
+    expect(resolveLocaleHref('/albania/durres/info', 'en')).toBe('/en/albania/durres/info')
+    expect(resolveLocaleHref('/albania/durres/rent', 'en')).toBe('/en/albania/durres/rent')
+  })
+})
