@@ -23,7 +23,6 @@ export type BlogListingTopic = {
 
 export const BLOG_POST_LISTING_TOPICS: Readonly<Record<string, readonly BlogListingTopic[]>> = {
   // Tirana
-  "best-areas-to-buy-property-in-tirana": [{ city: "tirana" }],
   "best-districts-tirana": [{ city: "tirana" }],
   "tirana-apartment-prices-2026": [{ city: "tirana" }],
   "tirana-buy-without-agent": [{ city: "tirana" }],

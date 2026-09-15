@@ -96,10 +96,24 @@ type Props = {
  * "is 2026 the right time to buy", but the slug still named 2025 — flagged
  * as debt in ТЗ-13 §12 and left unrenamed at the time because a content
  * rewrite alone doesn't carry a redirect.
+ *
+ * A value starting with `/` is a path after the locale rather than another
+ * post: the article was merged into a page outside the blog.
+ *
+ * `best-areas-to-buy-property-in-tirana` merged 2026-09-15 into the Tirana
+ * prices page. Both answered "best areas in tirana to buy an apartment" and
+ * "where to live in tirana"; Search Console had the page at position 49 and
+ * the post at 64 for the same query, and the post at 84 against the page's 75
+ * for "pasuri të paluajtshme në tiranë". The post is unpublished in the CMS.
  */
 const BLOG_SLUG_REDIRECTS: Record<string, string> = {
   "market-outlook-2025": "market-outlook-2026",
+  "best-areas-to-buy-property-in-tirana": "/albania/tirana/info",
 };
+
+function blogRedirectTarget(locale: string, target: string): string {
+  return target.startsWith("/") ? `/${locale}${target}` : `/${locale}/blog/${target}`;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
@@ -148,9 +162,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Post({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const canonicalSlug = BLOG_SLUG_REDIRECTS[slug];
-  if (canonicalSlug) {
-    permanentRedirect(`/${locale}/blog/${canonicalSlug}`);
+  const redirectTarget = BLOG_SLUG_REDIRECTS[slug];
+  if (redirectTarget) {
+    permanentRedirect(blogRedirectTarget(locale, redirectTarget));
   }
   const [post, siteSettings, baseUrl, blogSettings] = await Promise.all([
     fetchBlogPostBySlug(slug),
