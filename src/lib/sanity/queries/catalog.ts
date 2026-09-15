@@ -613,7 +613,14 @@ export type FooterCityNavItem = {
 };
 
 /**
- * Cities for footer column: filtered by `city.country`, ordered by title, capped (default 6).
+ * Cities for the footer and the header drawer: filtered by `city.country`,
+ * ordered by live listing count, capped (default 6).
+ *
+ * The order used to be `order(title asc)` on a localized object — effectively
+ * arbitrary — and the cap then dropped Vlorë while Himarë and Shkodër, both
+ * empty and noindexed, kept their slots. Cities without a public listing are
+ * left out: their listing page answers nothing, and they come back on their
+ * own once they have inventory.
  */
 export async function fetchFooterCitiesByCountry(
   locale: string,
@@ -627,18 +634,20 @@ export async function fetchFooterCitiesByCountry(
     async () => {
       const client = getClient();
       if (!client) return [];
-      const query = `*[_type == "city" && isPublished != false && country->slug.current == $country] | order(title asc) {
+      const query = `*[_type == "city" && isPublished != false && country->slug.current == $country] {
         "slug": slug.current,
         title,
-        "countrySlug": country->slug.current
-      }`;
+        "countrySlug": country->slug.current,
+        "propertiesCount": count(*[_type == "property" && city._ref == ^._id && ${PUBLISHED_PROPERTY_FILTER}])
+      } | order(propertiesCount desc, slug asc)`;
       try {
         const rows = await client.fetch<
-          Array<{ slug?: string; title?: unknown; countrySlug?: string }>
+          Array<{ slug?: string; title?: unknown; countrySlug?: string; propertiesCount?: number }>
         >(query, { country: key });
         if (!Array.isArray(rows)) return [];
         return rows
-          .filter((r): r is { slug: string; title?: unknown; countrySlug?: string } => typeof r.slug === 'string' && r.slug.length > 0)
+          .filter((r): r is { slug: string; title?: unknown; countrySlug?: string; propertiesCount?: number } => typeof r.slug === 'string' && r.slug.length > 0)
+          .filter((r) => (r.propertiesCount ?? 0) > 0)
           .slice(0, safeLimit)
           .map((r) => {
             const label =
@@ -655,8 +664,8 @@ export async function fetchFooterCitiesByCountry(
         return [];
       }
     },
-    ['sanity-footer-cities', key, locale, String(safeLimit)],
-    { revalidate: 120, tags: [SANITY_TAGS.city] }
+    ['sanity-footer-cities-by-count', key, locale, String(safeLimit)],
+    { revalidate: 120, tags: [SANITY_TAGS.city, SANITY_TAGS.property] }
   )();
 }
 
