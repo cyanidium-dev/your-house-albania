@@ -1,6 +1,10 @@
 import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { buildListingPath } from '@/lib/routes/listingRoutes';
-import { isPublicDealQuery, isPublicDealRouteSegment } from '@/lib/catalog/publicDealTypes';
+import {
+  isPublicDealQuery,
+  isPublicDealRouteSegment,
+  isSolePublicDealRouteSegment,
+} from '@/lib/catalog/publicDealTypes';
 import {
   LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
   LISTING_DISTRICT_NOINDEX_THRESHOLD,
@@ -285,6 +289,9 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
       for (const dealSegment of SITEMAP_CITY_DEAL_SEGMENTS) {
         // Rentals hidden from the public UI → excluded from sitemaps too.
         if (!isPublicDealRouteSegment(dealSegment)) continue;
+        // The sole public deal's city page redirects to the bare city listing,
+        // which `sitemap-cities.xml` already carries.
+        if (isSolePublicDealRouteSegment(dealSegment)) continue;
         const dealKey = `${citySlug}|${dealSegment}`;
         const lm = dealBest.get(dealKey);
         if (!lm) continue;

@@ -27,6 +27,7 @@ import {
   nonGeoDealListingPath,
   resolveEffectiveCountryForListingBuild,
 } from "./catalogPathPrimitives";
+import { isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 
 export type ListingScope = "catalog" | "agent";
 
@@ -142,7 +143,10 @@ function buildCatalogPathname(
     // The district sits between the city and the deal, so `/durres/golem-durres`
     // and `/durres/golem-durres/sale/apartment` both read as places first.
     if (district) p += `/${encodeURIComponent(district)}`;
-    if (dealSeg) p += `/${encodeURIComponent(dealSeg)}`;
+    // While sale is the only public deal, `/durres/sale` lists what `/durres`
+    // lists, so the deal is written only when a type follows it — the
+    // `/sale/apartment` URLs are the indexed ones and keep their shape.
+    if (dealSeg && (type || !isSolePublicDealRouteSegment(dealSeg))) p += `/${encodeURIComponent(dealSeg)}`;
     if (type) p += `/${encodeURIComponent(type)}`;
     return p;
   }
@@ -209,7 +213,11 @@ export function buildListingUrl(input: BuildListingUrlInput): string {
   if (citySlug && pathIncludesSegment(path, citySlug)) {
     params.delete("city");
   }
-  if (dealSeg && pathIncludesSegment(path, dealSeg)) params.delete("deal");
+  // A sole public deal left out of a city path is implied by it, so a stray
+  // `?deal=sale` is as redundant as the segment would have been.
+  const dealImpliedByCityPath =
+    input.scope === "catalog" && Boolean(citySlug) && isSolePublicDealRouteSegment(dealSeg);
+  if (dealSeg && (pathIncludesSegment(path, dealSeg) || dealImpliedByCityPath)) params.delete("deal");
   if (typeSlug && pathIncludesSegment(path, typeSlug)) params.delete("type");
   if (hasCountryInPath) params.delete("country");
 

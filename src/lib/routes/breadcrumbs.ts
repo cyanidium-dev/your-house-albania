@@ -9,6 +9,7 @@ import {
   nonGeoDealListingPath,
   singleFilterPath,
 } from "@/lib/routes/catalog";
+import { isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 
 /**
  * Breadcrumb builders — one per page family.
@@ -70,7 +71,8 @@ export type CatalogCrumbInput = {
   locale: string;
   labels: { home: string; properties: string; agents: string };
   agent?: { slug: string; name?: string };
-  country?: { slug: string; label: string };
+  /** `href` overrides the country hub link, e.g. when the hub redirects elsewhere. */
+  country?: { slug: string; label: string; href?: string };
   city?: { slug: string; label: string };
   /** A catalog facet rather than a path segment; used by property detail pages. */
   district?: { slug: string; label: string };
@@ -113,7 +115,7 @@ export function buildCatalogCrumbs(input: CatalogCrumbInput): BreadcrumbItem[] {
       label: country.label,
       href: agent
         ? agentFilterPath({ locale, agentSlug: agent.slug, country: countrySlug })
-        : `/${locale}/${encodeURIComponent(country.slug)}`,
+        : country.href || `/${locale}/${encodeURIComponent(country.slug)}`,
     });
   }
 
@@ -146,7 +148,11 @@ export function buildCatalogCrumbs(input: CatalogCrumbInput): BreadcrumbItem[] {
     });
   }
 
-  if (deal) {
+  // Under a city the sole public deal has no page of its own — its URL is the
+  // city's (or district's) listing — so the level would only repeat the crumb
+  // before it.
+  const dealIsImpliedByPlace = Boolean(deal && city && !agent && isSolePublicDealRouteSegment(deal.slug));
+  if (deal && !dealIsImpliedByPlace) {
     items.push({
       label: deal.label,
       href: agent

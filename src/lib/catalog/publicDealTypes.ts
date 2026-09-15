@@ -26,3 +26,19 @@ export function isPublicDealRouteSegment(segment?: string | null): boolean {
   const query = dealRouteSegmentToQueryValue(segment ?? undefined)
   return isPublicDealQuery(query)
 }
+
+/**
+ * True when `deal` is the only public deal type. Unfiltered catalog views are
+ * already limited to the public deals, so a listing filtered by the sole one
+ * shows exactly what the unfiltered listing shows: `/albania/durres/sale` and
+ * `/albania/durres` were two indexable URLs with one list, one title and one
+ * H1. Goes false by itself the day a second deal type is made public.
+ */
+export function isSolePublicDealQuery(deal?: string | null): boolean {
+  return PUBLIC_DEAL_TYPES.length === 1 && isPublicDealQuery(deal)
+}
+
+/** {@link isSolePublicDealQuery} for a deal ROUTE segment. */
+export function isSolePublicDealRouteSegment(segment?: string | null): boolean {
+  return isSolePublicDealQuery(dealRouteSegmentToQueryValue(segment ?? undefined))
+}

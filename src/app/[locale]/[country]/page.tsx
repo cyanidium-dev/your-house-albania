@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
 import {
+  fetchCatalogCountryDocumentSlugs,
   fetchCatalogSeoPageByCity,
   fetchCatalogSeoPageRoot,
   fetchCityCountrySlugByCitySlug,
@@ -28,7 +29,9 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { catalogFilterPath, singleFilterPath } from "@/lib/routes/catalog";
+import { isSolePublicDealQuery } from "@/lib/catalog/publicDealTypes";
 import {
+  canonicalNonGeoDealListingPath,
   mergeTopLevelSearch,
   resolveTopLevelListingSegment,
   type TopLevelResolvedKind,
@@ -158,6 +161,28 @@ async function buildListingMetadata(
   };
 }
 
+/**
+ * `/albania` listed every public listing in the catalogue's only country under
+ * the same title as `/sale` — two indexable URLs for one page. While that holds
+ * (one country, one public deal) the hub hands over to `/sale`; with a second
+ * country or deal it is a page of its own again.
+ */
+async function isOnlyCatalogCountryHub(countrySlug: string): Promise<boolean> {
+  if (!isSolePublicDealQuery("sale")) return false;
+  const countries = await fetchCatalogCountryDocumentSlugs();
+  return countries.length === 1 && countries[0] === countrySlug;
+}
+
+function queryString(search: SearchParams): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(search)) {
+    if (typeof value === "string") params.set(key, value);
+    else if (Array.isArray(value)) value.forEach((v) => params.append(key, v));
+  }
+  const qs = params.toString();
+  return qs ? `?${qs}` : "";
+}
+
 /** Normalize the raw segment the same way the landing slug is stored. */
 function normalizeSegmentForLanding(value: string): string {
   return decodeURIComponent(value ?? "").trim().toLowerCase();
@@ -205,6 +230,9 @@ export default async function TopLevelSingleFilterPage({ params, searchParams }:
     const landing = await fetchUniqueLandingBySlug(normalizeSegmentForLanding(country));
     if (!landing) notFound();
     return <LandingRenderer locale={locale} landing={landing as never} />;
+  }
+  if (resolved.kind === "country" && (await isOnlyCatalogCountryHub(resolved.slug))) {
+    permanentRedirect(`${canonicalNonGeoDealListingPath(locale, "sale")}${queryString(search)}`);
   }
   const mergedSearch = resolved.kind === "ambiguous" ? search : mergeTopLevelSearch(search, resolved);
 

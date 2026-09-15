@@ -57,6 +57,60 @@ describe("district as a path segment (full-geo catalog shape)", () => {
   });
 });
 
+describe("the sole public deal on place listings", () => {
+  it("is implied by a city or district path, so the segment is not written", () => {
+    expect(buildListingPath({ scope: "catalog", locale: "en", country: "albania", city: "durres", dealQuery: "sale" })).toBe(
+      "/en/albania/durres",
+    );
+    expect(
+      buildListingPath({
+        scope: "catalog",
+        locale: "en",
+        country: "albania",
+        city: "durres",
+        district: "golem-durres",
+        dealQuery: "sale",
+      }),
+    ).toBe("/en/albania/durres/golem-durres");
+  });
+
+  it("still precedes a type, and hidden deals keep their segment", () => {
+    expect(
+      buildListingPath({
+        scope: "catalog",
+        locale: "en",
+        country: "albania",
+        city: "durres",
+        dealQuery: "sale",
+        propertyType: "apartment",
+      }),
+    ).toBe("/en/albania/durres/sale/apartment");
+    expect(buildListingPath({ scope: "catalog", locale: "en", country: "albania", city: "durres", dealQuery: "rent" })).toBe(
+      "/en/albania/durres/rent",
+    );
+  });
+
+  it("drops a redundant ?deal= along with it", () => {
+    expect(
+      buildListingUrl({
+        scope: "catalog",
+        locale: "en",
+        trustedCityCountrySlug: "albania",
+        city: "durres",
+        dealQuery: "sale",
+        query: new URLSearchParams("deal=sale&sort=newest"),
+      }),
+    ).toBe("/en/albania/durres?sort=newest");
+  });
+
+  it("leaves the national and agent shapes alone", () => {
+    expect(buildListingPath({ scope: "catalog", locale: "en", dealQuery: "sale" })).toBe("/en/sale");
+    expect(
+      buildListingPath({ scope: "agent", locale: "en", agentSlug: "findall", country: "albania", city: "durres", dealQuery: "sale" }),
+    ).toBe("/en/agent/findall/albania/durres/sale");
+  });
+});
+
 describe("resolveListingPathFilters with districts", () => {
   it("reads a district, then deal and type", () => {
     expect(resolveListingPathFilters(["golem-durres"], TYPES, "geoCity", DISTRICTS)).toEqual({

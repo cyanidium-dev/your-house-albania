@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
@@ -35,10 +35,11 @@ import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
-import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
+import { isPublicDealRouteSegment, isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import {
+  canonicalCatalogGeoListingHref,
   getGeoListingDistrictNormalizeRedirectUrl,
   getGeoListingDuplicateFacetRedirectUrl,
   mergeListingSearchParams,
@@ -324,6 +325,24 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   const typeSlug = propertyType;
 
   await validateListingGeoContent(locale, geo.listingCitySlug, options.propertyTypes, typeSlug || undefined);
+
+  // `/durres/sale` and `/durres/golem-durres/sale` duplicated the listing above
+  // them while sale is the only public deal (see `isSolePublicDealQuery`);
+  // links no longer build them, and anything still pointing there moves for good.
+  if (geo.mode === "fullGeo" && dealType && !typeSlug && isSolePublicDealRouteSegment(dealType)) {
+    permanentRedirect(
+      canonicalCatalogGeoListingHref({
+        locale,
+        countrySlug: geo.listingCountrySlug,
+        citySlug: geo.listingCitySlug,
+        dealTypeSegment: dealType,
+        propertyType: "",
+        district: pathDistrict || undefined,
+        query: search,
+        queryExcludeKeys: ["deal", "type", "city"],
+      })
+    );
+  }
 
   const mergedSearch = mergedSearchParams(
     search,
