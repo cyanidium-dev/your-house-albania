@@ -25,6 +25,7 @@ import {
   dealRouteSegmentToQueryValue,
 } from "./catalogPathPrimitives";
 import { isReservedFilterCountrySegment } from "./catalog";
+import { isListingFacetSlug, type ListingFacetSlug } from "@/lib/catalog/listingFacets";
 import { buildListingUrl } from "./listingRoutes";
 import type { ListingScope } from "./listingRoutes";
 
@@ -120,6 +121,8 @@ export type ResolvedListingPathFilters = {
   dealQuery: string;
   /** District slug when the first segment named one of the city's districts; "" otherwise. */
   district: string;
+  /** Facet slug (`1-1`, `under-100k`, …) when the last segment names one; "" otherwise. */
+  facet: ListingFacetSlug | "";
 };
 
 export function resolveListingPathFilters(
@@ -143,8 +146,14 @@ export function resolveListingPathFilters(
       rest = filters.slice(1);
     }
   }
+  // A facet stands alone after the place: `/durres/1-1`, `/durres/golem-durres/1-1`.
+  // It never follows a deal or type, so `/durres/sale/1-1` stays unresolved.
+  if (mode === "geoCity" && rest.length === 1 && isListingFacetSlug(normalizeListingPathSegment(rest[0]))) {
+    const facet = normalizeListingPathSegment(rest[0]) as ListingFacetSlug;
+    return { dealType: "", propertyType: "", dealQuery: "", district, facet };
+  }
   const tail = resolveDealTypeSegments(rest, propertyTypeOptions, mode);
-  return tail ? { ...tail, district } : null;
+  return tail ? { ...tail, district, facet: "" } : null;
 }
 
 function resolveDealTypeSegments(
@@ -193,12 +202,12 @@ export function resolveOmitCountryListingPathFilters(
   const dealQuery = dealRouteSegmentToQueryValue(dSeg);
   if (!dealQuery) return null;
   if (filters.length === 0) {
-    return { dealType: dSeg, propertyType: "", dealQuery, district: "" };
+    return { dealType: dSeg, propertyType: "", dealQuery, district: "", facet: "" };
   }
   const only = normalizeListingPathSegment(filters[0]);
   const knownType = propertyTypeOptions.some((t) => normalizeListingPathSegment(t.value) === only);
   if (!knownType) return null;
-  return { dealType: dSeg, propertyType: only, dealQuery, district: "" };
+  return { dealType: dSeg, propertyType: only, dealQuery, district: "", facet: "" };
 }
 
 export type CatalogGeoListingInterpretation =

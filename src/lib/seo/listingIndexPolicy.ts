@@ -6,8 +6,17 @@
 /** Noindex + omit from sitemap for deal/type when total count ≤ this; index when count is greater. */
 export const LISTING_DEAL_TYPE_NOINDEX_THRESHOLD = 15;
 
-/** Same idea for a `?district=` filter on a city listing. */
-export const LISTING_DISTRICT_NOINDEX_THRESHOLD = 20;
+/**
+ * District listings (`/{country}/{city}/{district}`): noindex at or below this.
+ *
+ * Was 20, which kept Spille (20), Mali i Robit (19) and Qerret (14) out of the
+ * index while the pages ranking for Durrës districts show a handful of
+ * listings each. Ten is enough to be a real answer to "apartments in Golem".
+ */
+export const LISTING_DISTRICT_NOINDEX_THRESHOLD = 9;
+
+/** Facet listings (`/{city}[/{district}]/1-1`, `/under-100k`, …): same bar as districts. */
+export const LISTING_FACET_NOINDEX_THRESHOLD = 9;
 
 /**
  * A bare city listing is held to a far looser bar than the combination pages

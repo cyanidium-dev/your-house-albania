@@ -484,7 +484,22 @@
       "sortHandoverAsc": "Handover (soonest first)"
     },
     "cityInfoLink": "{place}: prices and districts",
-    "districtInfoLink": "{place}: prices and area guide"
+    "districtInfoLink": "{place}: prices and area guide",
+    "facetNav": {
+      "districts": "Areas",
+      "rooms": "Bedrooms",
+      "budget": "Budget",
+      "stage": "Stage",
+      "label": "Browse property in {place}",
+      "chip": {
+        "1-1": "1 bedroom",
+        "2-1": "2 bedrooms",
+        "3-1": "3+ bedrooms",
+        "under-80k": "Under €80k",
+        "under-100k": "Under €100k",
+        "new-builds": "New builds"
+      }
+    }
   },
   "NewBuilds": {
     "title": "New builds and investment property in Albania",
@@ -700,7 +715,26 @@
         "short-term-rent": "Short-Term Rentals"
       },
       "cityDistrictTitle": "Property for Sale in {district}, {city}",
-      "cityDistrictDescription": "Apartments, houses and villas for sale in {district}, {city}: current prices, photos and direct contact with owners and agencies, no commission."
+      "cityDistrictDescription": "Apartments, houses and villas for sale in {district}, {city}: current prices, photos and direct contact with owners and agencies, no commission.",
+      "facets": {
+        "title": {
+          "1-1": "1-Bedroom Apartments for Sale in {place} — {count} Listings",
+          "2-1": "2-Bedroom Apartments for Sale in {place} — {count} Listings",
+          "3-1": "3+ Bedroom Apartments for Sale in {place} — {count} Listings",
+          "under-80k": "Apartments under €80,000 in {place} — {count} Listings",
+          "under-100k": "Apartments under €100,000 in {place} — {count} Listings",
+          "new-builds": "New Builds for Sale in {place} — {count} Listings"
+        },
+        "what": {
+          "1-1": "one-bedroom (1+1) apartments for sale",
+          "2-1": "two-bedroom (2+1) apartments for sale",
+          "3-1": "apartments with three or more bedrooms for sale",
+          "under-80k": "apartments and studios under €80,000",
+          "under-100k": "apartments and studios under €100,000",
+          "new-builds": "properties under construction"
+        },
+        "description": "{count} {what} in {place}{hasPrice, select, yes {, from €{priceFrom}} other {}}. Photos, floor areas and direct contact with owners and agencies."
+      }
     },
     "og": {
       "studio": "Studio",

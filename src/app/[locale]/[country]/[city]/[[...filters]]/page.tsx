@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
+import { ListingFacetNav } from "@/components/catalog/ListingFacetNav";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
@@ -13,6 +14,7 @@ import {
   resolveCatalogSeoPage,
   fetchCatalogFilterOptions,
   fetchCatalogProperties,
+  fetchCatalogListingStats,
   fetchCityCountrySlugByCitySlug,
 } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
@@ -24,13 +26,16 @@ import {
 import {
   LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
   LISTING_DISTRICT_NOINDEX_THRESHOLD,
+  LISTING_FACET_NOINDEX_THRESHOLD,
   shouldNoindexEmptyCityListing,
 } from "@/lib/seo/listingIndexPolicy";
 import {
   buildCityDistrictListingSeo,
   buildCityListingSeo,
   buildCityTypeListingSeo,
+  buildFacetListingSeo,
 } from "@/lib/seo/listingSeoCopy";
+import { facetCatalogFilters, withFacetQuery, type ListingFacetSlug } from "@/lib/catalog/listingFacets";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
@@ -107,6 +112,70 @@ async function validateListingGeoContent(
   if (!knownType) notFound();
 }
 
+type FacetPageInput = {
+  locale: string;
+  countrySlug: string;
+  citySlug: string;
+  districtSlug?: string;
+  districtLabel?: string;
+  facet: ListingFacetSlug;
+};
+
+/** Count, lowest price and copy for a facet page — shared by metadata and the page. */
+async function loadFacetPage(input: FacetPageInput) {
+  const stats = await fetchCatalogListingStats({
+    city: input.citySlug,
+    district: input.districtSlug,
+    ...facetCatalogFilters(input.facet),
+  });
+  const count = stats?.count ?? 0;
+  const copy = await buildFacetListingSeo({
+    citySlug: input.citySlug,
+    districtLabel: input.districtLabel,
+    facet: input.facet,
+    count,
+    priceFrom: stats?.priceFrom ?? null,
+    locale: input.locale,
+  });
+  return { stats, count, copy };
+}
+
+async function facetListingMetadata(input: FacetPageInput & { search: SearchParams }): Promise<Metadata> {
+  const { count, copy } = await loadFacetPage(input);
+  if (!copy) return {};
+  const title = copy.title;
+  const description = copy.description;
+  const ogImage = landingOgImageUrl({
+    locale: input.locale,
+    title,
+    subtitle: description,
+    photo: { key: heroPhotoFor({ citySlug: input.citySlug, propertyType: "apartment", slug: input.citySlug }).key },
+  });
+  if (!isIndexingEnabled()) {
+    return { title: listingTitleField(title), description, openGraph: listingOpenGraph(title, description, ogImage), robots: indexingDisabledRobots };
+  }
+  const path = catalogFilterPath({
+    locale: input.locale,
+    country: input.countrySlug,
+    trustedCityCountrySlug: input.countrySlug,
+    city: input.citySlug,
+    district: input.districtSlug,
+    facet: input.facet,
+  });
+  const canonical = `${getSiteBaseUrl()}${path}`;
+  const href = buildHreflangAlternates(path.replace(`/${input.locale}`, ""));
+  // Same rules as the district listings: a thin slice, or a filtered copy of
+  // one, stays reachable but out of the index.
+  const noindex = listingUrlHasQueryParams(input.search) || count <= LISTING_FACET_NOINDEX_THRESHOLD;
+  return {
+    title: listingTitleField(title),
+    description,
+    openGraph: listingOpenGraph(title, description, ogImage, canonical),
+    alternates: { canonical, ...(href?.languages ? { languages: href.languages } : {}) },
+    robots: noindex ? { index: false, follow: true } : undefined,
+  };
+}
+
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale, country, city, filters = [] } = await params;
   const search = await searchParams;
@@ -131,7 +200,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
         )
       : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
   if (!resolved) return {};
-  const { dealType, propertyType, district: pathDistrict } = resolved;
+  const { dealType, propertyType, district: pathDistrict, facet } = resolved;
   const typeSlug = propertyType;
 
   if (geo.mode === "fullGeo") {
@@ -139,6 +208,18 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     if (!cmsCountryMeta || cmsCountryMeta !== geo.listingCountrySlug) {
       return {};
     }
+  }
+
+  if (facet && geo.mode === "fullGeo") {
+    return facetListingMetadata({
+      locale,
+      search,
+      countrySlug: geo.listingCountrySlug,
+      citySlug: geo.listingCitySlug,
+      districtSlug: pathDistrict || undefined,
+      districtLabel: pathDistrict ? districtLabelFor(options, pathDistrict) : undefined,
+      facet,
+    });
   }
 
   const [siteSettings, rawSeo] = await Promise.all([
@@ -322,8 +403,9 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
         )
       : resolveOmitCountryListingPathFilters(filters, options.propertyTypes, geo.dealSegment);
   if (!resolved) notFound();
-  const { dealType, propertyType, dealQuery, district: pathDistrict } = resolved;
+  const { dealType, propertyType, dealQuery, district: pathDistrict, facet } = resolved;
   if (dealType && !isPublicDealRouteSegment(dealType)) notFound();
+  if (facet && geo.mode !== "fullGeo") notFound();
   const typeSlug = propertyType;
 
   await validateListingGeoContent(locale, geo.listingCitySlug, options.propertyTypes, typeSlug || undefined);
@@ -346,11 +428,9 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
     );
   }
 
-  const mergedSearch = mergedSearchParams(
-    search,
-    dealType || undefined,
-    typeSlug || undefined,
-    pathDistrict || undefined
+  const mergedSearch = withFacetQuery(
+    mergedSearchParams(search, dealType || undefined, typeSlug || undefined, pathDistrict || undefined),
+    facet
   );
   const dupUrl = getGeoListingDuplicateFacetRedirectUrl({
     locale,
@@ -375,7 +455,21 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
 
   const t = await getTranslations("Listing.properties");
   const tCatalog = await getTranslations("Catalog");
-  const rawSeo = await fetchListingSeoDoc(geo.listingCitySlug, pathDistrict);
+  const districtLabel = pathDistrict ? districtLabelFor(options, pathDistrict) : undefined;
+  const facetPage =
+    facet && geo.mode === "fullGeo"
+      ? await loadFacetPage({
+          locale,
+          countrySlug: geo.listingCountrySlug,
+          citySlug: geo.listingCitySlug,
+          districtSlug: pathDistrict || undefined,
+          districtLabel,
+          facet,
+        })
+      : null;
+  // A facet page carries its own copy; the place's catalogue intro and bottom
+  // text would repeat word for word across every slice of the same place.
+  const rawSeo = facet ? null : await fetchListingSeoDoc(geo.listingCitySlug, pathDistrict);
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const districtCopy = pathDistrict
     ? await buildCityDistrictListingSeo(geo.listingCitySlug, districtLabelFor(options, pathDistrict), locale)
@@ -391,10 +485,10 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   return (
     <>
       <CatalogHero
-        title={typedCopy?.title || catalogSeo?.title || districtCopy?.title || t("title")}
+        title={facetPage?.copy?.title || typedCopy?.title || catalogSeo?.title || districtCopy?.title || t("title")}
         badge={t("badge")}
         intro={catalogSeo?.intro && catalogSeo.intro.length > 0 ? catalogSeo.intro : null}
-        introFallback={tCatalog("heroIntroFallback")}
+        introFallback={facetPage?.copy?.description || tCatalog("heroIntroFallback")}
         citySlug={geo.listingCitySlug}
         propertyType={typeSlug || undefined}
         deal={dealType || undefined}
@@ -421,9 +515,35 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
             district={pathDistrict || undefined}
             dealType={dealType || undefined}
             propertyType={typeSlug || undefined}
+            leaf={facet ? tCatalog(`facetNav.chip.${facet}`) : undefined}
+            currentPath={
+              facet && geo.mode === "fullGeo"
+                ? catalogFilterPath({
+                    locale,
+                    country: geo.listingCountrySlug,
+                    trustedCityCountrySlug: geo.listingCountrySlug,
+                    city: geo.listingCitySlug,
+                    district: pathDistrict || undefined,
+                    facet,
+                  })
+                : undefined
+            }
           />
         }
       />
+      {geo.mode === "fullGeo" && !typeSlug ? (
+        <ListingFacetNav
+          locale={locale}
+          countrySlug={geo.listingCountrySlug}
+          citySlug={geo.listingCitySlug}
+          districtSlug={pathDistrict || undefined}
+          currentFacet={facet}
+          placeLabel={
+            (districtLabel ? `${districtLabel}, ` : "") +
+            (options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label || geo.listingCitySlug)
+          }
+        />
+      ) : null}
       <PropertiesListing
         locale={locale}
         pathCity={geo.listingCitySlug}

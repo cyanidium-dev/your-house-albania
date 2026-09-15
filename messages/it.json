@@ -484,7 +484,22 @@
       "sortHandoverAsc": "Consegna (prima le più vicine)"
     },
     "cityInfoLink": "{place}: prezzi e quartieri",
-    "districtInfoLink": "{place}: prezzi e guida alla zona"
+    "districtInfoLink": "{place}: prezzi e guida alla zona",
+    "facetNav": {
+      "districts": "Zone",
+      "rooms": "Locali",
+      "budget": "Budget",
+      "stage": "Stato",
+      "label": "Immobili a {place}",
+      "chip": {
+        "1-1": "Bilocali",
+        "2-1": "Trilocali",
+        "3-1": "Quadrilocali+",
+        "under-80k": "Sotto 80.000 €",
+        "under-100k": "Sotto 100.000 €",
+        "new-builds": "Nuove costruzioni"
+      }
+    }
   },
   "NewBuilds": {
     "title": "Nuove costruzioni e immobili da investimento in Albania",
@@ -700,7 +715,26 @@
         "short-term-rent": "Affitti brevi"
       },
       "cityDistrictTitle": "Case in vendita a {district}, {city}",
-      "cityDistrictDescription": "Appartamenti, case e ville in vendita a {district}, {city}: prezzi aggiornati, foto e contatto diretto con proprietari e agenzie, senza commissioni."
+      "cityDistrictDescription": "Appartamenti, case e ville in vendita a {district}, {city}: prezzi aggiornati, foto e contatto diretto con proprietari e agenzie, senza commissioni.",
+      "facets": {
+        "title": {
+          "1-1": "Bilocali in vendita a {place} — {count} immobili",
+          "2-1": "Trilocali in vendita a {place} — {count} immobili",
+          "3-1": "Quadrilocali e più grandi in vendita a {place} — {count} immobili",
+          "under-80k": "Appartamenti sotto 80.000 € a {place} — {count} immobili",
+          "under-100k": "Appartamenti sotto 100.000 € a {place} — {count} immobili",
+          "new-builds": "Nuove costruzioni in vendita a {place} — {count} immobili"
+        },
+        "what": {
+          "1-1": "bilocali (1+1) in vendita",
+          "2-1": "trilocali (2+1) in vendita",
+          "3-1": "appartamenti con tre o più camere in vendita",
+          "under-80k": "appartamenti e monolocali sotto 80.000 €",
+          "under-100k": "appartamenti e monolocali sotto 100.000 €",
+          "new-builds": "immobili in costruzione"
+        },
+        "description": "{count} {what} a {place}{hasPrice, select, yes {, da {priceFrom} €} other {}}. Foto, superfici e contatto diretto con proprietari e agenzie."
+      }
     },
     "og": {
       "studio": "Monolocale",

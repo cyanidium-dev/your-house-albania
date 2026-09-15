@@ -484,7 +484,22 @@
       "sortHandoverAsc": "Dorëzimi (më të afërtit në fillim)"
     },
     "cityInfoLink": "{place}: çmimet dhe lagjet",
-    "districtInfoLink": "{place}: çmimet dhe përshkrimi i zonës"
+    "districtInfoLink": "{place}: çmimet dhe përshkrimi i zonës",
+    "facetNav": {
+      "districts": "Zonat",
+      "rooms": "Dhomat",
+      "budget": "Buxheti",
+      "stage": "Faza",
+      "label": "Shfletoni pronat në {place}",
+      "chip": {
+        "1-1": "1+1",
+        "2-1": "2+1",
+        "3-1": "3+1 e lart",
+        "under-80k": "Deri 80 000 €",
+        "under-100k": "Deri 100 000 €",
+        "new-builds": "Në ndërtim"
+      }
+    }
   },
   "NewBuilds": {
     "title": "Ndërtime të reja dhe prona për investim në Shqipëri",
@@ -700,7 +715,26 @@
         "short-term-rent": "Qira afatshkurtër"
       },
       "cityDistrictTitle": "Shtëpi dhe apartamente në shitje në {district}, {city}",
-      "cityDistrictDescription": "Apartamente 1+1 dhe 2+1, shtëpi dhe vila në shitje në {district}, {city}: çmime aktuale, foto dhe kontakt i drejtpërdrejtë me pronarët dhe agjencitë, pa komision."
+      "cityDistrictDescription": "Apartamente 1+1 dhe 2+1, shtëpi dhe vila në shitje në {district}, {city}: çmime aktuale, foto dhe kontakt i drejtpërdrejtë me pronarët dhe agjencitë, pa komision.",
+      "facets": {
+        "title": {
+          "1-1": "Apartamente 1+1 në shitje në {place} — {count} prona",
+          "2-1": "Apartamente 2+1 në shitje në {place} — {count} prona",
+          "3-1": "Apartamente 3+1 e më të mëdha në shitje në {place} — {count} prona",
+          "under-80k": "Apartamente deri në 80 000 € në {place} — {count} prona",
+          "under-100k": "Apartamente deri në 100 000 € në {place} — {count} prona",
+          "new-builds": "Prona në ndërtim në shitje në {place} — {count} prona"
+        },
+        "what": {
+          "1-1": "apartamente 1+1 në shitje",
+          "2-1": "apartamente 2+1 në shitje",
+          "3-1": "apartamente 3+1 e më të mëdha në shitje",
+          "under-80k": "apartamente dhe studio deri në 80 000 €",
+          "under-100k": "apartamente dhe studio deri në 100 000 €",
+          "new-builds": "prona në ndërtim"
+        },
+        "description": "{count} {what} në {place}{hasPrice, select, yes {, nga {priceFrom} €} other {}}. Foto, sipërfaqe dhe kontakt i drejtpërdrejtë me pronarët dhe agjencitë."
+      }
     },
     "og": {
       "studio": "Garsonierë",

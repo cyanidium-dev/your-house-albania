@@ -118,12 +118,14 @@ describe("resolveListingPathFilters with districts", () => {
       propertyType: "",
       dealQuery: "",
       district: "golem-durres",
+      facet: "",
     });
     expect(resolveListingPathFilters(["Golem-Durres", "sale", "apartment"], TYPES, "geoCity", DISTRICTS)).toEqual({
       dealType: "sale",
       propertyType: "apartment",
       dealQuery: "sale",
       district: "golem-durres",
+      facet: "",
     });
   });
 
@@ -133,6 +135,7 @@ describe("resolveListingPathFilters with districts", () => {
       propertyType: "villa",
       dealQuery: "sale",
       district: "",
+      facet: "",
     });
   });
 
@@ -179,5 +182,42 @@ describe("district canonicalization", () => {
       deal: "sale",
       type: "apartment",
     });
+  });
+});
+
+describe("facet segments", () => {
+  const TYPES_ = [{ value: "apartment" }, { value: "villa" }];
+  const DISTRICTS_ = ["golem-durres", "plazh"];
+
+  it("resolves a facet after the city or the district, and nowhere else", () => {
+    expect(resolveListingPathFilters(["1-1"], TYPES_, "geoCity", DISTRICTS_)).toEqual({
+      dealType: "",
+      propertyType: "",
+      dealQuery: "",
+      district: "",
+      facet: "1-1",
+    });
+    expect(resolveListingPathFilters(["golem-durres", "under-100k"], TYPES_, "geoCity", DISTRICTS_)?.facet).toBe(
+      "under-100k",
+    );
+    expect(resolveListingPathFilters(["sale", "1-1"], TYPES_, "geoCity", DISTRICTS_)).toBeNull();
+    expect(resolveListingPathFilters(["1-1"], TYPES_, "agentCity", DISTRICTS_)).toBeNull();
+  });
+
+  it("builds the facet path and drops the query keys it implies", () => {
+    expect(
+      buildListingUrl({
+        scope: "catalog",
+        locale: "en",
+        trustedCityCountrySlug: "albania",
+        city: "durres",
+        district: "golem-durres",
+        facet: "1-1",
+        query: new URLSearchParams("type=apartment&bedsExact=1&sort=priceAsc"),
+      }),
+    ).toBe("/en/albania/durres/golem-durres/1-1?sort=priceAsc");
+    expect(buildListingPath({ scope: "catalog", locale: "sq", country: "albania", city: "durres", facet: "new-builds" })).toBe(
+      "/sq/albania/durres/new-builds",
+    );
   });
 });

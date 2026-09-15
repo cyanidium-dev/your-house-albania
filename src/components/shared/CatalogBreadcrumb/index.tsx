@@ -25,6 +25,10 @@ type CatalogBreadcrumbProps = {
   district?: string;
   dealType?: string;
   propertyType?: string;
+  /** Final unlinked crumb, e.g. a facet ("1+1") under the place. */
+  leaf?: string;
+  /** Path of the current page when it is not the place/deal/type path (facet pages). */
+  currentPath?: string;
 };
 
 export async function CatalogBreadcrumb({
@@ -36,6 +40,8 @@ export async function CatalogBreadcrumb({
   district,
   dealType,
   propertyType,
+  leaf,
+  currentPath: currentPathOverride,
 }: CatalogBreadcrumbProps) {
   const [t, options] = await Promise.all([
     getTranslations("Breadcrumbs"),
@@ -102,10 +108,11 @@ export async function CatalogBreadcrumb({
               ?.label || formatSlug(propertyType),
         }
       : undefined,
+    leaf,
   });
 
   const baseUrl = await getBaseUrl();
-  const currentPath = buildCurrentPath({
+  const currentPath = currentPathOverride ?? buildCurrentPath({
     locale,
     agentSlug,
     country: countryForPath,

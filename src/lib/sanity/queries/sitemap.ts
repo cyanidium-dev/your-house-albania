@@ -5,9 +5,11 @@ import {
   isPublicDealRouteSegment,
   isSolePublicDealRouteSegment,
 } from '@/lib/catalog/publicDealTypes';
+import { LISTING_FACETS, LISTING_FACET_SLUGS } from '@/lib/catalog/listingFacets';
 import {
   LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
   LISTING_DISTRICT_NOINDEX_THRESHOLD,
+  LISTING_FACET_NOINDEX_THRESHOLD,
 } from '@/lib/seo/listingIndexPolicy';
 import {
   resolveLandingPathForSitemap,
@@ -190,11 +192,19 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
       "citySlug": city->slug.current,
       "districtSlug": district->slug.current
     },
+    "publishedDistricts": *[_type == "district" && isPublished != false && defined(slug.current)]{
+      "citySlug": city->slug.current,
+      "districtSlug": slug.current
+    },
     "propertyRows": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(city->slug.current) && defined(status)]{
       "citySlug": city->slug.current,
       "districtSlug": district->slug.current,
       "deal": status,
       "typeSlug": type->slug.current,
+      bedrooms,
+      price,
+      priceUnit,
+      constructionStage,
       _updatedAt
     }
   }`;
@@ -203,11 +213,16 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
       cityRows?: Array<{ citySlug?: string; countrySlug?: string; _updatedAt?: string }>;
       catalogCitySeoNoIndex?: Array<{ citySlug?: string }>;
       catalogDistrictSeoNoIndex?: Array<{ citySlug?: string; districtSlug?: string }>;
+      publishedDistricts?: Array<{ citySlug?: string; districtSlug?: string }>;
       propertyRows?: Array<{
         citySlug?: string;
         districtSlug?: string;
         deal?: string;
         typeSlug?: string;
+        bedrooms?: number | null;
+        price?: number | null;
+        priceUnit?: string | null;
+        constructionStage?: string | null;
         _updatedAt?: string;
       }>;
     }>(query);
@@ -249,6 +264,23 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
     // District listing pages (`/{country}/{city}/{district}`): counted over the
     // public deal types, the same set the unfiltered page shows.
     const districtCount = new Map<string, { count: number; lastmod: Date }>();
+    // Facet pages (`/{city}[/{district}]/{facet}`), counted with the same
+    // predicates the route uses (`LISTING_FACETS[facet].matches`).
+    const facetCount = new Map<string, { count: number; lastmod: Date }>();
+    const bump = (map: Map<string, { count: number; lastmod: Date }>, key: string, lm: Date) => {
+      const prev = map.get(key);
+      if (!prev) map.set(key, { count: 1, lastmod: lm });
+      else map.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
+    };
+    const publishedDistrictKeys = new Set(
+      (result?.publishedDistricts ?? [])
+        .map((d) =>
+          typeof d.citySlug === 'string' && typeof d.districtSlug === 'string'
+            ? `${d.citySlug.trim().toLowerCase()}|${d.districtSlug.trim().toLowerCase()}`
+            : ''
+        )
+        .filter(Boolean)
+    );
     const propertyRows = result?.propertyRows ?? [];
     for (const row of propertyRows) {
       const citySlug = typeof row.citySlug === 'string' ? row.citySlug.trim().toLowerCase() : '';
@@ -266,6 +298,15 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
         const prev = districtCount.get(key);
         if (!prev) districtCount.set(key, { count: 1, lastmod: lm });
         else districtCount.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
+      }
+
+      if (isPublicDealRouteSegment(dealSegment)) {
+        const typeForFacet = typeof row.typeSlug === 'string' ? row.typeSlug.trim().toLowerCase() : '';
+        for (const facet of LISTING_FACET_SLUGS) {
+          if (!LISTING_FACETS[facet].matches({ ...row, typeSlug: typeForFacet })) continue;
+          bump(facetCount, `${citySlug}||${facet}`, lm);
+          if (districtSlug) bump(facetCount, `${citySlug}|${districtSlug}|${facet}`, lm);
+        }
       }
 
       const dealKey = `${citySlug}|${dealSegment}`;
@@ -325,6 +366,21 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
         cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
       out.push({
         segmentAfterLocale: `${encodeURIComponent(countryForCity)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(districtSlug)}`,
+        lastModified: value.lastmod,
+      });
+    }
+
+    for (const [key, value] of facetCount.entries()) {
+      if (value.count <= LISTING_FACET_NOINDEX_THRESHOLD) continue;
+      const [citySlug, districtSlug, facet] = key.split('|');
+      if (districtSlug && !publishedDistrictKeys.has(`${citySlug}|${districtSlug}`)) continue;
+      const countryForCity =
+        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
+      const place = districtSlug
+        ? `${encodeURIComponent(citySlug)}/${encodeURIComponent(districtSlug)}`
+        : encodeURIComponent(citySlug);
+      out.push({
+        segmentAfterLocale: `${encodeURIComponent(countryForCity)}/${place}/${encodeURIComponent(facet)}`,
         lastModified: value.lastmod,
       });
     }

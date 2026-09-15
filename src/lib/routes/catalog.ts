@@ -80,6 +80,8 @@ type CatalogFilterPathInput = {
   dealType?: string;
   propertyType?: string;
   district?: string;
+  /** Facet segment after the place (`1-1`, `under-100k`, …). See `lib/catalog/listingFacets.ts`. */
+  facet?: string;
 };
 
 type AgentFilterPathInput = {
@@ -182,6 +184,7 @@ export function catalogFilterPath({
   dealType,
   propertyType,
   district,
+  facet,
 }: CatalogFilterPathInput): string {
   return buildListingUrl({
     scope: "catalog",
@@ -192,6 +195,7 @@ export function catalogFilterPath({
     dealQuery: dealTypeSegmentToListingDealQuery(dealType),
     propertyType,
     district,
+    facet,
   });
 }
 

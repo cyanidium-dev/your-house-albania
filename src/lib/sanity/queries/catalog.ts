@@ -67,6 +67,8 @@ function buildCatalogPredicateParts(
     | 'minArea'
     | 'maxArea'
     | 'beds'
+    | 'bedsExact'
+    | 'types'
     | 'amenities'
     | 'stage'
     | 'investment'
@@ -84,6 +86,8 @@ function buildCatalogPredicateParts(
     minArea,
     maxArea,
     beds,
+    bedsExact,
+    types,
     amenities,
     stage,
     investment,
@@ -103,6 +107,9 @@ function buildCatalogPredicateParts(
   }
   if (type) {
     parts.push(`${prefix}type->slug.current == $type`);
+  }
+  if (Array.isArray(types) && types.length > 0) {
+    parts.push(`${prefix}type->slug.current in $types`);
   }
   // Only the deal types the site offers, even when `deal` names another one.
   parts.push(`${prefix}status in $publicDealTypes`);
@@ -126,6 +133,9 @@ function buildCatalogPredicateParts(
   }
   if (typeof beds === 'number' && beds > 0) {
     parts.push(`${prefix}bedrooms >= $beds`);
+  }
+  if (typeof bedsExact === 'number' && bedsExact > 0) {
+    parts.push(`${prefix}bedrooms == $bedsExact`);
   }
 
   if (Array.isArray(amenities) && amenities.length > 0) {
@@ -170,6 +180,8 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
     minArea: filters.minArea,
     maxArea: filters.maxArea,
     beds: filters.beds,
+    bedsExact: filters.bedsExact,
+    types: filters.types,
     amenities: filters.amenities,
     stage: filters.stage,
     excludedPropertyIds,
@@ -294,6 +306,60 @@ export async function fetchCatalogProperties(
 ): Promise<CatalogResult | null> {
   return cachedFetchCatalogProperties(filters);
 }
+
+export type CatalogListingStats = {
+  count: number;
+  /** Lowest total price; per-m² rates are not totals and are left out. */
+  priceFrom: number | null;
+  /** Median EUR/m²: total price ÷ area, or the stated rate for per-m² listings. */
+  medianPricePerSqm: number | null;
+};
+
+function median(values: number[]): number | null {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+}
+
+/**
+ * The numbers a listing page leads with: how many, from what price, and what a
+ * square metre costs across exactly the listings on that page. Computed from
+ * the same filters as the page, so the title never disagrees with the grid.
+ * Areas under 15 m² are treated as data errors for the per-m² median.
+ */
+export const fetchCatalogListingStats = sanityCache(
+  async (filters: CatalogFilters): Promise<CatalogListingStats | null> => {
+    const client = getClient();
+    if (!client) return null;
+    const { where, params } = buildCatalogWhereClause({ ...filters, excludedPropertyIds: undefined });
+    try {
+      const rows = await client.fetch<Array<{ price?: number; priceUnit?: string; area?: number }>>(
+        `*[${where}]{price, priceUnit, area}`,
+        params,
+      );
+      if (!Array.isArray(rows)) return null;
+      const totals = rows
+        .filter((r) => typeof r.price === 'number' && r.price > 0 && r.priceUnit !== 'per-sqm')
+        .map((r) => r.price as number);
+      const perSqm = rows.flatMap((r) => {
+        if (typeof r.price !== 'number' || r.price <= 0) return [];
+        if (r.priceUnit === 'per-sqm') return [r.price];
+        return typeof r.area === 'number' && r.area >= 15 ? [Math.round(r.price / r.area)] : [];
+      });
+      return {
+        count: rows.length,
+        priceFrom: totals.length ? Math.min(...totals) : null,
+        medianPricePerSqm: median(perSqm),
+      };
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogListingStats failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-listing-stats'],
+  { revalidate: 300, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+);
 
 type PropertyCatalogBannerCandidate = {
   _key?: string;
@@ -883,3 +949,29 @@ export function resolveCatalogSeoPage(
   };
 }
 
+
+export type DistrictListingCount = { slug: string; title: unknown; count: number };
+
+/** Public listing count per published district of a city, largest first. */
+export const fetchDistrictListingCounts = sanityCache(
+  async (citySlug: string): Promise<DistrictListingCount[]> => {
+    const client = getClient();
+    if (!client) return [];
+    try {
+      const rows = await client.fetch<DistrictListingCount[]>(
+        `*[_type == "district" && isPublished != false && city->slug.current == $city]{
+          "slug": slug.current,
+          title,
+          "count": count(*[_type == "property" && district._ref == ^._id && ${PUBLISHED_PROPERTY_FILTER}])
+        } | order(count desc, slug asc)`,
+        { city: citySlug },
+      );
+      return Array.isArray(rows) ? rows.filter((r) => typeof r.slug === 'string' && r.count > 0) : [];
+    } catch (err) {
+      console.warn('[Sanity] fetchDistrictListingCounts failed:', err);
+      return [];
+    }
+  },
+  ['sanity-district-listing-counts'],
+  { revalidate: 300, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
+);

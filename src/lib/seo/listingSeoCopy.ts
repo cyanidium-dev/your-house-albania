@@ -163,3 +163,38 @@ export async function buildCatalogListingSeo(): Promise<ListingSeoCopy> {
   const t = await getTranslations("Seo.listing");
   return { title: t("catalogTitle"), description: t("catalogDescription") };
 }
+
+/**
+ * Title and description for a facet listing (`/{country}/{city}[/{district}]/1-1`,
+ * `/under-100k`, `/new-builds`).
+ *
+ * The count and the lowest total price come from the page's own listings
+ * (`fetchCatalogListingStats`), so the snippet states what the grid shows.
+ * The place is the city in the form each template expects (Albanian
+ * locative), preceded by the district when the facet sits under one.
+ */
+export async function buildFacetListingSeo(input: {
+  citySlug: string;
+  districtLabel?: string;
+  facet: string;
+  count: number;
+  priceFrom: number | null;
+  locale: string;
+}): Promise<ListingSeoCopy | null> {
+  const city = await resolveCityDisplayName(input.citySlug, input.locale);
+  if (!city) return null;
+  const place = input.districtLabel?.trim() ? `${input.districtLabel.trim()}, ${city}` : city;
+  const t = await getTranslations({ locale: input.locale, namespace: "Seo.listing.facets" });
+  const priceFrom =
+    typeof input.priceFrom === "number" ? new Intl.NumberFormat(input.locale).format(input.priceFrom) : "";
+  return {
+    title: t(`title.${input.facet}`, { place, count: input.count }),
+    description: t("description", {
+      place,
+      count: input.count,
+      what: t(`what.${input.facet}`),
+      hasPrice: priceFrom ? "yes" : "no",
+      priceFrom,
+    }),
+  };
+}

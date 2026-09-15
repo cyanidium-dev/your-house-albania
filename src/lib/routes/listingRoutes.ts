@@ -28,6 +28,7 @@ import {
   resolveEffectiveCountryForListingBuild,
 } from "./catalogPathPrimitives";
 import { isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
+import { LISTING_FACETS, isListingFacetSlug } from "@/lib/catalog/listingFacets";
 
 export type ListingScope = "catalog" | "agent";
 
@@ -46,6 +47,11 @@ export type BuildListingPathInput = {
   propertyType?: string | null;
   /** Path segment after the city on the full-geo catalog shape; a query param everywhere else. */
   district?: string | null;
+  /**
+   * Facet segment (`1-1`, `under-100k`, …) after the city or district on the
+   * full-geo catalog shape. A facet replaces deal and type in the path.
+   */
+  facet?: string | null;
 };
 
 /** Full `href`: pathname + merged `query` (non-path facets). Path-encoded keys are stripped from `query` when redundant. */
@@ -91,7 +97,8 @@ function buildCatalogPathname(
   city: string,
   dealSeg: string,
   type: string,
-  district = ""
+  district = "",
+  facet = ""
 ): string {
   const hasCity = Boolean(city);
   const hasExplicitCountry = Boolean(countryRaw);
@@ -143,6 +150,7 @@ function buildCatalogPathname(
     // The district sits between the city and the deal, so `/durres/golem-durres`
     // and `/durres/golem-durres/sale/apartment` both read as places first.
     if (district) p += `/${encodeURIComponent(district)}`;
+    if (facet) return `${p}/${encodeURIComponent(facet)}`;
     // While sale is the only public deal, `/durres/sale` lists what `/durres`
     // lists, so the deal is written only when a type follows it — the
     // `/sale/apartment` URLs are the indexed ones and keep their shape.
@@ -187,7 +195,8 @@ export function buildListingPath(input: BuildListingPathInput): string {
   }
 
   const district = districtIsPathSegment(input) ? input.district!.trim().toLowerCase() : "";
-  return buildCatalogPathname(locale, countryRaw, countryNorm, city, dealSeg, type, district);
+  const facet = countryNorm && city ? input.facet?.trim().toLowerCase() || "" : "";
+  return buildCatalogPathname(locale, countryRaw, countryNorm, city, dealSeg, type, district, facet);
 }
 
 /**
@@ -235,6 +244,12 @@ export function buildListingUrl(input: BuildListingUrlInput): string {
   if (input.district?.trim()) {
     if (districtIsPathSegment(input)) params.delete("district");
     else params.set("district", input.district.trim());
+  }
+
+  // A facet in the path already carries its filters.
+  const facet = input.facet?.trim().toLowerCase();
+  if (isListingFacetSlug(facet) && pathIncludesSegment(path, facet)) {
+    for (const key of Object.keys(LISTING_FACETS[facet].query)) params.delete(key);
   }
 
   const qs = params.toString();

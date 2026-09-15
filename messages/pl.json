@@ -484,7 +484,22 @@
       "sortHandoverAsc": "Odbiór (najbliższe najpierw)"
     },
     "cityInfoLink": "{place}: ceny i dzielnice",
-    "districtInfoLink": "{place}: ceny i opis dzielnicy"
+    "districtInfoLink": "{place}: ceny i opis dzielnicy",
+    "facetNav": {
+      "districts": "Dzielnice",
+      "rooms": "Pokoje",
+      "budget": "Budżet",
+      "stage": "Etap",
+      "label": "Nieruchomości: {place}",
+      "chip": {
+        "1-1": "Dwupokojowe",
+        "2-1": "Trzypokojowe",
+        "3-1": "4 pokoje i więcej",
+        "under-80k": "Do 80 000 €",
+        "under-100k": "Do 100 000 €",
+        "new-builds": "W budowie"
+      }
+    }
   },
   "NewBuilds": {
     "title": "Nowe inwestycje i nieruchomości inwestycyjne w Albanii",
@@ -700,7 +715,26 @@
         "short-term-rent": "Wynajem krótkoterminowy"
       },
       "cityDistrictTitle": "{district}, {city}: nieruchomości na sprzedaż",
-      "cityDistrictDescription": "Mieszkania, domy i wille na sprzedaż w dzielnicy {district}, {city}: aktualne ceny, zdjęcia i bezpośredni kontakt z właścicielami i agencjami, bez prowizji."
+      "cityDistrictDescription": "Mieszkania, domy i wille na sprzedaż w dzielnicy {district}, {city}: aktualne ceny, zdjęcia i bezpośredni kontakt z właścicielami i agencjami, bez prowizji.",
+      "facets": {
+        "title": {
+          "1-1": "{place}: mieszkania dwupokojowe na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "2-1": "{place}: mieszkania trzypokojowe na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "3-1": "{place}: mieszkania czteropokojowe i większe — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "under-80k": "{place}: mieszkania do 80 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "under-100k": "{place}: mieszkania do 100 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "new-builds": "{place}: nowe inwestycje na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
+        },
+        "what": {
+          "1-1": "mieszkania dwupokojowe (1+1) na sprzedaż",
+          "2-1": "mieszkania trzypokojowe (2+1) na sprzedaż",
+          "3-1": "mieszkania z trzema i więcej sypialniami",
+          "under-80k": "mieszkania i kawalerki do 80 000 €",
+          "under-100k": "mieszkania i kawalerki do 100 000 €",
+          "new-builds": "nieruchomości w budowie"
+        },
+        "description": "{place}: {what}{hasPrice, select, yes {, od {priceFrom} €} other {}}. {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}} ze zdjęciami, metrażem i bezpośrednim kontaktem z właścicielami i agencjami."
+      }
     },
     "og": {
       "studio": "Kawalerka",
