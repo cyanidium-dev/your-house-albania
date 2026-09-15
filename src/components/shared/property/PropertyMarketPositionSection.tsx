@@ -2,6 +2,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { districtInfoPath } from '@/lib/routes/catalog'
+import { fetchCityCountrySlugByCitySlug, fetchDistrictBySlugs } from '@/lib/sanity/client'
 import { PriceText } from '@/components/shared/PriceText'
 import type { MarketPosition, MarketPositionLabel } from '@/lib/property/marketPosition'
 
@@ -36,8 +37,14 @@ export async function PropertyMarketPositionSection({
 }) {
   if (!marketPosition || !citySlug || !districtSlug) return null
 
-  const t = await getTranslations('PropertyMarketPosition')
-  const href = districtInfoPath(locale, citySlug, districtSlug)
+  const [t, districtPage, countrySlug] = await Promise.all([
+    getTranslations('PropertyMarketPosition'),
+    fetchDistrictBySlugs(citySlug, districtSlug),
+    fetchCityCountrySlugByCitySlug(citySlug),
+  ])
+  // A district can carry zoneMetrics without a published page (Spitallë): the
+  // market verdict still stands, but the link would be a 404.
+  const href = districtPage ? districtInfoPath(locale, citySlug, districtSlug, countrySlug) : null
 
   return (
     <div className="py-8 mt-8 border-t border-dark/5 dark:border-white/15">
@@ -59,9 +66,11 @@ export async function PropertyMarketPositionSection({
           </span>
         )}
       </div>
-      <Link href={href} className="mt-3 inline-block text-sm text-primary hover:underline">
-        {t('viewDistrict')}
-      </Link>
+      {href && (
+        <Link href={href} className="mt-3 inline-block text-sm text-primary hover:underline">
+          {t('viewDistrict')}
+        </Link>
+      )}
       <p className="mt-2 text-xs text-dark/40 dark:text-white/40">{t('disclaimer')}</p>
     </div>
   )

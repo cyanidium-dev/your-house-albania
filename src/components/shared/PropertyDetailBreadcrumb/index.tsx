@@ -1,7 +1,8 @@
 import { Breadcrumb } from "../Breadcrumb";
 import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
-import { fetchCatalogFilterOptions } from "@/lib/sanity/client";
+import { fetchCatalogFilterOptions, fetchCountryTitleBySlug } from "@/lib/sanity/client";
+import { countryHubHref } from "@/lib/routes/countryHub";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import {
   buildCatalogCrumbs,
@@ -56,9 +57,24 @@ export async function PropertyDetailBreadcrumb({
       }
     : undefined;
 
+  // Without the country the city crumb fell back to the `/{locale}/{city}`
+  // shorthand, a noindexed page that only canonicalises to the real listing;
+  // every property page linked it from its trail.
+  const countrySlug = citySlug
+    ? locations.find((l) => l.value.toLowerCase() === citySlug.toLowerCase())?.countrySlug
+    : undefined;
+  const country = countrySlug
+    ? {
+        slug: countrySlug,
+        label: (await fetchCountryTitleBySlug(countrySlug, locale)) || formatBreadcrumbSlug(countrySlug),
+        href: await countryHubHref(locale, countrySlug),
+      }
+    : undefined;
+
   const items = buildCatalogCrumbs({
     locale,
     labels: {home: t("home"), properties: t("catalog"), agents: t("agents")},
+    country,
     city,
     district,
     leaf: propertyTitle,

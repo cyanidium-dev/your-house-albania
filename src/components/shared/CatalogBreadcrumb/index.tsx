@@ -2,16 +2,14 @@ import { Breadcrumb } from "../Breadcrumb";
 import { BreadcrumbJsonLd } from "../BreadcrumbJsonLd";
 import { getTranslations } from "next-intl/server";
 import {
-  fetchCatalogCountryDocumentSlugs,
   fetchCatalogFilterOptions,
   fetchCityCountrySlugByCitySlug,
   fetchCountryTitleBySlug,
 } from "@/lib/sanity/client";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
-import { isSolePublicDealQuery } from "@/lib/catalog/publicDealTypes";
+import { countryHubHref } from "@/lib/routes/countryHub";
 import {
   dealRouteSegmentToQueryValue,
-  nonGeoDealListingPath,
   normalizeCatalogCountrySlug,
 } from "@/lib/routes/catalog";
 import { buildListingUrl } from "@/lib/routes/listingRoutes";
@@ -57,11 +55,7 @@ export async function CatalogBreadcrumb({
   const countryTitle = countrySeg ? await fetchCountryTitleBySlug(countrySeg, locale) : null;
   // The only country's hub redirects to `/sale` (see the `[country]` route);
   // link the crumb straight there instead of through the redirect.
-  const catalogCountries = countrySeg && !agentSlug ? await fetchCatalogCountryDocumentSlugs() : [];
-  const countryHref =
-    countrySeg && catalogCountries.length === 1 && catalogCountries[0] === countrySeg && isSolePublicDealQuery("sale")
-      ? nonGeoDealListingPath(locale, "sale")
-      : undefined;
+  const countryHref = countrySeg && !agentSlug ? await countryHubHref(locale, countrySeg) : undefined;
   const dealsT = await getTranslations("Catalog.filters");
   const propertyTypes = options.propertyTypes;
 

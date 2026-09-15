@@ -5,7 +5,6 @@ import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
 import {
-  fetchCatalogCountryDocumentSlugs,
   fetchCatalogSeoPageByCity,
   fetchCatalogSeoPageRoot,
   fetchCityCountrySlugByCitySlug,
@@ -29,7 +28,7 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { catalogFilterPath, singleFilterPath } from "@/lib/routes/catalog";
-import { isSolePublicDealQuery } from "@/lib/catalog/publicDealTypes";
+import { isOnlyCatalogCountryHub } from "@/lib/routes/countryHub";
 import {
   canonicalNonGeoDealListingPath,
   mergeTopLevelSearch,
@@ -159,18 +158,6 @@ async function buildListingMetadata(
     },
     robots,
   };
-}
-
-/**
- * `/albania` listed every public listing in the catalogue's only country under
- * the same title as `/sale` — two indexable URLs for one page. While that holds
- * (one country, one public deal) the hub hands over to `/sale`; with a second
- * country or deal it is a page of its own again.
- */
-async function isOnlyCatalogCountryHub(countrySlug: string): Promise<boolean> {
-  if (!isSolePublicDealQuery("sale")) return false;
-  const countries = await fetchCatalogCountryDocumentSlugs();
-  return countries.length === 1 && countries[0] === countrySlug;
 }
 
 function queryString(search: SearchParams): string {
