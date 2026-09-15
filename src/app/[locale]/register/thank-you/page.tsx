@@ -11,6 +11,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t('thankYouMetaTitle'),
     description: t('thankYouMetaDescription'),
+    // Reached only after a form submit; nothing here answers a search.
+    robots: { index: false, follow: true },
   }
 }
 

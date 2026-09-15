@@ -20,7 +20,8 @@ export const revalidate = 3600;
  */
 function isNoindexInvestmentPath(path: string): boolean {
   const segment = path.startsWith("investment/") ? path.slice("investment/".length) : null;
-  return segment !== null && !isPublicDealRouteSegment(segment);
+  // `investment/sale` is noindexed as a duplicate of the `/sale` hub (see its page).
+  return segment !== null && (segment === "sale" || !isPublicDealRouteSegment(segment));
 }
 
 function joinLocalePath(base: string, locale: string, path: string): string {

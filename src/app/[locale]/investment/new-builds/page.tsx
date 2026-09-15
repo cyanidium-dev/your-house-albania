@@ -9,6 +9,8 @@ import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { indexingDisabledRobots } from "@/lib/seo/envSeo";
 import { shouldNoindexEmptyCityListing } from "@/lib/seo/listingIndexPolicy";
 import { catalogPath } from "@/lib/routes/catalog";
+import { listingUrlHasQueryParams } from "@/lib/seo/catalogListingMetadata";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -32,18 +34,28 @@ async function countUnfinished(): Promise<number> {
   return result?.totalCount ?? 0;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const search = (await searchParams) ?? {};
   const t = await getTranslations({ locale, namespace: "NewBuilds" });
   const total = await countUnfinished();
+  const hreflang = buildHreflangAlternates(PATH);
 
   return {
     title: t("title"),
     description: t("description"),
-    alternates: await buildHreflangAlternates(PATH),
-    // Same rule the city listings follow: a page with nothing on it does not
-    // belong in the index. It stays reachable, it just stops being advertised.
-    ...(shouldNoindexEmptyCityListing(total) ? { robots: indexingDisabledRobots } : {}),
+    // The page had hreflang but no canonical, so every filtered or paged copy
+    // of it (`?page=2`, `?sort=…`) stood as a page of its own.
+    alternates: hreflang
+      ? { canonical: `${getSiteBaseUrl()}/${locale}/${PATH}`, ...hreflang }
+      : undefined,
+    // Same rules the listings follow: a page with nothing on it, or a filtered
+    // copy of one, does not belong in the index. It stays reachable.
+    ...(shouldNoindexEmptyCityListing(total)
+      ? { robots: indexingDisabledRobots }
+      : listingUrlHasQueryParams(search)
+        ? { robots: { index: false, follow: true } }
+        : {}),
   };
 }
 
