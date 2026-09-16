@@ -344,7 +344,18 @@
     "basisOfficial": "listë zyrtare",
     "basisCalculated": "shifër e nxjerrë",
     "basisMixed": "burime të përziera",
-    "referenceEdition": "Edicioni i referencës: {edition}"
+    "referenceEdition": "Edicioni i referencës: {edition}",
+    "listingIndex": {
+      "title": "{city}: sa kërkojnë shpalljet tona, sipas zonës",
+      "subtitle": "Llogaritur nga {count} shpallje aktive shitjeje në Domlivo dhe rifreskohet çdo orë. Çmimet janë vetëm për apartamente dhe studio, dhe janë çmime të kërkuara, jo shitje të përfunduara; një zonë merr rresht kur ka {min} apartamente.",
+      "district": "Zona",
+      "listings": "Shpallje",
+      "from": "Apartamente nga",
+      "median": "Çmimi median i apartamentit",
+      "medianSqm": "Mediana €/m²",
+      "wholeCity": "Gjithë {city}",
+      "note": "Shpalljet e Domlivo, rifreskim çdo orë"
+    }
   },
   "Calculators": {
     "propertyPrice": "Çmimi i pronës",

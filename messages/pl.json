@@ -344,7 +344,18 @@
     "basisOfficial": "urzędowy cennik",
     "basisCalculated": "wartość wyliczona",
     "basisMixed": "źródła mieszane",
-    "referenceEdition": "Cennik referencyjny: {edition}"
+    "referenceEdition": "Cennik referencyjny: {edition}",
+    "listingIndex": {
+      "title": "{city}: ile kosztują nasze oferty, według dzielnic",
+      "subtitle": "Wyliczone z {count} aktualnych ofert sprzedaży na Domlivo i odświeżane co godzinę. Ceny dotyczą tylko mieszkań i kawalerek i są cenami ofertowymi, nie transakcyjnymi; dzielnica dostaje wiersz, gdy ma {min} mieszkania.",
+      "district": "Dzielnica",
+      "listings": "Oferty",
+      "from": "Mieszkania od",
+      "median": "Mediana ceny mieszkania",
+      "medianSqm": "Mediana €/m²",
+      "wholeCity": "Całe miasto {city}",
+      "note": "Oferty Domlivo, aktualizacja co godzinę"
+    }
   },
   "Calculators": {
     "propertyPrice": "Cena nieruchomości",

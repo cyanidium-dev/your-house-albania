@@ -344,7 +344,18 @@
     "basisOfficial": "official schedule",
     "basisCalculated": "derived figure",
     "basisMixed": "mixed sources",
-    "referenceEdition": "Reference schedule: {edition}"
+    "referenceEdition": "Reference schedule: {edition}",
+    "listingIndex": {
+      "title": "{city}: what our listings ask, by district",
+      "subtitle": "Computed from {count} live sale listings on Domlivo and refreshed every hour. Prices are for flats and studios only, and they are asking prices, not completed sales; a district gets a row once it has {min} flats.",
+      "district": "District",
+      "listings": "Listings",
+      "from": "Flats from",
+      "median": "Median flat price",
+      "medianSqm": "Median €/m²",
+      "wholeCity": "All of {city}",
+      "note": "Domlivo listings, updated hourly"
+    }
   },
   "Calculators": {
     "propertyPrice": "Property price",

@@ -344,7 +344,18 @@
     "basisOfficial": "listino ufficiale",
     "basisCalculated": "cifra derivata",
     "basisMixed": "fonti miste",
-    "referenceEdition": "Edizione di riferimento: {edition}"
+    "referenceEdition": "Edizione di riferimento: {edition}",
+    "listingIndex": {
+      "title": "{city}: quanto chiedono i nostri annunci, per zona",
+      "subtitle": "Calcolato su {count} annunci di vendita attivi su Domlivo e aggiornato ogni ora. I prezzi riguardano solo appartamenti e monolocali e sono prezzi richiesti, non compravendite concluse; una zona ha una riga quando conta {min} appartamenti.",
+      "district": "Zona",
+      "listings": "Annunci",
+      "from": "Appartamenti da",
+      "median": "Prezzo mediano appartamento",
+      "medianSqm": "Mediana €/m²",
+      "wholeCity": "Tutta {city}",
+      "note": "Annunci Domlivo, aggiornati ogni ora"
+    }
   },
   "Calculators": {
     "propertyPrice": "Prezzo dell'immobile",

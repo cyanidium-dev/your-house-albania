@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { ZonePriceTableAutoSection } from '@/components/landing/sections'
+import { ListingPriceIndexSection } from '@/components/landing/sections/ListingPriceIndexSection'
 import {
   fetchLatestZoneMetricsForCityDistricts,
   fetchLatestZoneMetricsByZoneIds,
@@ -41,7 +42,7 @@ export const zonePriceTableAutoSectionHandler: SectionHandler = async ({
     ? (section.sortBy as ZoneTableSort)
     : 'price'
 
-  return (
+  const table = (
     <ZonePriceTableAutoSection
       key={section._key ?? 'zone-price-table-auto'}
       locale={locale}
@@ -53,5 +54,15 @@ export const zonePriceTableAutoSectionHandler: SectionHandler = async ({
       linkRows={section.linkRows !== false}
       showSources={section.showSources !== false}
     />
+  )
+
+  // A city's research table is followed by what its live listings ask — the
+  // one set of figures on the page nobody else can publish.
+  if (mode !== 'cityDistricts' || !citySlug) return table
+  return (
+    <React.Fragment key={section._key ?? 'zone-price-table-auto'}>
+      {table}
+      <ListingPriceIndexSection locale={locale} citySlug={citySlug} />
+    </React.Fragment>
   )
 }
