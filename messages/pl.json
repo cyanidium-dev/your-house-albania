@@ -711,7 +711,7 @@
   },
   "Seo": {
     "listing": {
-      "cityTitle": "{city}: nieruchomości w Albanii — mieszkania i domy",
+      "cityTitle": "{city}: apartamenty i mieszkania na sprzedaż — Albania",
       "cityDescription": "{city}, Albania: mieszkania, domy i wille z aktualnymi cenami. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
       "countryTitle": "Nieruchomości w Albanii — mieszkania i domy na sprzedaż",
       "countryDescription": "Kup nieruchomość w Albanii: mieszkania nad morzem, domy i wille w Tiranie, Durres, Wlorze i Sarandzie. Sprawdzone oferty z realnymi cenami.",
@@ -742,7 +742,7 @@
           "under-80k": "{place}: mieszkania do 80 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "under-100k": "{place}: mieszkania do 100 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "new-builds": "{place}: nowe inwestycje na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "near-the-sea": "{place}: nieruchomości nad morzem — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
+          "near-the-sea": "{place}: mieszkania i apartamenty nad morzem — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
         },
         "what": {
           "1-1": "mieszkania dwupokojowe (1+1) na sprzedaż",

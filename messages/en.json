@@ -711,9 +711,9 @@
   },
   "Seo": {
     "listing": {
-      "cityTitle": "Property for Sale in {city}, Albania — Apartments & Houses",
+      "cityTitle": "Apartments & Property for Sale in {city}, Albania",
       "cityDescription": "Verified property for sale in {city}, Albania: apartments, houses and villas with current prices. Direct from owners and trusted agencies, no commission.",
-      "countryTitle": "Albania Real Estate — Property for Sale",
+      "countryTitle": "Property for Sale in Albania — Apartments, Houses & Beach Homes",
       "countryDescription": "Buy property in Albania: apartments, houses and beachfront villas in Tirana, Durres, Vlore and Saranda. Verified listings with real prices.",
       "catalogTitle": "Property for Sale in Albania — Full Catalogue",
       "catalogDescription": "Browse every property for sale in Albania: apartments, houses, villas and land. Filter by city, price, area and number of bedrooms.",
@@ -742,7 +742,7 @@
           "under-80k": "Apartments under €80,000 in {place} — {count} Listings",
           "under-100k": "Apartments under €100,000 in {place} — {count} Listings",
           "new-builds": "New Builds for Sale in {place} — {count} Listings",
-          "near-the-sea": "Property by the Sea for Sale in {place} — {count} Listings"
+          "near-the-sea": "Beach Apartments & Property for Sale in {place} — {count} Listings"
         },
         "what": {
           "1-1": "one-bedroom (1+1) apartments for sale",

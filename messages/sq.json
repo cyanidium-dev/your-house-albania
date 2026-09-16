@@ -711,8 +711,8 @@
   },
   "Seo": {
     "listing": {
-      "cityTitle": "Shtëpi dhe apartamente në shitje në {city}",
-      "cityDescription": "Prona të verifikuara në shitje në {city}: apartamente 1+1 dhe 2+1, shtëpi private dhe vila. Çmime aktuale, drejtpërdrejt nga pronarët dhe agjencitë.",
+      "cityTitle": "Apartamente dhe shtëpi në shitje në {city}",
+      "cityDescription": "Apartamente (banesa) 1+1 dhe 2+1, shtëpi private dhe vila në shitje në {city}. Prona të verifikuara me çmime aktuale, drejtpërdrejt nga pronarët dhe agjencitë.",
       "countryTitle": "Pasuri të paluajtshme në shitje në Shqipëri",
       "countryDescription": "Apartamente, shtëpi dhe vila në shitje në Tiranë, Durrës, Vlorë dhe Sarandë. Prona të verifikuara me çmime aktuale, pa komision.",
       "catalogTitle": "Katalogu i pronave në shitje në Shqipëri",
@@ -742,7 +742,7 @@
           "under-80k": "Apartamente deri në 80 000 € në {place} — {count} prona",
           "under-100k": "Apartamente deri në 100 000 € në {place} — {count} prona",
           "new-builds": "Prona në ndërtim në shitje në {place} — {count} prona",
-          "near-the-sea": "Prona buzë detit në shitje në {place} — {count} prona"
+          "near-the-sea": "Apartamente buzë detit në shitje në {place} — {count} prona"
         },
         "what": {
           "1-1": "apartamente 1+1 në shitje",

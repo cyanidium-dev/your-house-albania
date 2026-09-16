@@ -711,7 +711,7 @@
   },
   "Seo": {
     "listing": {
-      "cityTitle": "Case in vendita a {city}, Albania — appartamenti e ville",
+      "cityTitle": "Appartamenti e case in vendita a {city}, Albania",
       "cityDescription": "Immobili verificati in vendita a {city}: appartamenti, case e ville con prezzi aggiornati. Direttamente da proprietari e agenzie affidabili.",
       "countryTitle": "Case in vendita in Albania — immobili fronte mare",
       "countryDescription": "Comprare casa in Albania: appartamenti fronte mare, case e ville a Tirana, Durazzo, Valona e Saranda. Immobili verificati con prezzi reali.",
@@ -742,7 +742,7 @@
           "under-80k": "Appartamenti sotto 80.000 € a {place} — {count} immobili",
           "under-100k": "Appartamenti sotto 100.000 € a {place} — {count} immobili",
           "new-builds": "Nuove costruzioni in vendita a {place} — {count} immobili",
-          "near-the-sea": "Case vicino al mare in vendita a {place} — {count} immobili"
+          "near-the-sea": "Case e appartamenti al mare in vendita a {place} — {count} immobili"
         },
         "what": {
           "1-1": "bilocali (1+1) in vendita",
