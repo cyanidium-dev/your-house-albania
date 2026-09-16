@@ -84,7 +84,10 @@ Search Console подключена (домен-проперти). За 3 мес
 - Тексты каталога en/uk/ru/it/pl для Дурреса, Центра, Голема, Плажа, Шкемби (domlivo-admin `41d8960`) — до этого там были заглушки на 8–15 слов, sq уже был.
 - Гид «покупка в Дурресе иностранцем» не делали: `buying-apartment-durres-complete-guide`, `durres-documents-checklist`, `durres-choose-area-2026` уже есть на 6 языках — новая страница съела бы их.
 
-Дальше: уникальные статьи из KB, которых нет у конкурентов (канализация Голема, честный разбор Durrës Marina / Eagle Hills, референс-цены по зонам, проверка старого фонда после 2019, поезд Тирана–Дуррес), фиды на агрегаторы, замер в GSC ~30.09.
+- 4 статьи из KB на 6 языках (domlivo-admin `8bf34df`, `scripts/createDurresArticles.ts`): `durres-marina-eagle-hills-2026`, `golem-sewage-buying-2026`, `durres-old-apartment-earthquake-check`, `tirana-durres-train-property-prices`. EN написан по KB, переводы сверены по цифрам, числу фактов/FAQ и ссылкам; ссылки на объявления в `postListingTopics.ts` (`447ccf0`), статьи добавлены в блок статей `/durres/info`.
+- Страницы городов получили блок сравнений (`relatedPagesAutoSection`, `zoneComparisons`) — у Шкодры убран, своих сравнений нет.
+
+Дальше: референс-цены по зонам Дурреса (сначала разрешить противоречие в KB: проект 07.2025 или действующая редакция 01.01.2026), фиды на агрегаторы, замер в GSC ~30.09.
 
 ---
 
