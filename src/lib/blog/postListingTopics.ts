@@ -51,6 +51,7 @@ export const BLOG_POST_LISTING_TOPICS: Readonly<Record<string, readonly BlogList
     { city: "durres", district: "city-center-durres" },
   ],
   "tirana-durres-train-property-prices": [{ city: "durres" }, { city: "tirana" }],
+  "durres-reference-prices-2026": [{ city: "durres", district: "city-center-durres" }, { city: "durres" }],
 
   // The coast south of Vlorë
   "living-albanian-riviera": [{ city: "vlore" }, { city: "sarande" }],
