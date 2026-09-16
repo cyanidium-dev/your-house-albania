@@ -43,6 +43,14 @@ export const BLOG_POST_LISTING_TOPICS: Readonly<Record<string, readonly BlogList
   ],
   "durres-documents-checklist": [{ city: "durres" }],
   "durres-rental-investment-2026": [{ city: "durres", type: "studio" }, { city: "durres" }],
+  "durres-marina-eagle-hills-2026": [{ city: "durres", district: "plazh" }, { city: "durres" }],
+  "golem-sewage-buying-2026": [{ city: "durres", district: "golem-durres" }, { city: "durres", district: "mali-i-robit" }],
+  "durres-old-apartment-earthquake-check": [
+    { city: "durres", district: "shkembi-durres" },
+    { city: "durres", district: "plazh" },
+    { city: "durres", district: "city-center-durres" },
+  ],
+  "tirana-durres-train-property-prices": [{ city: "durres" }, { city: "tirana" }],
 
   // The coast south of Vlorë
   "living-albanian-riviera": [{ city: "vlore" }, { city: "sarande" }],
