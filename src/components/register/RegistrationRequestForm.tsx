@@ -7,7 +7,7 @@ import { FilterSelect, type FilterOption } from '@/components/catalog/FilterSele
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics/track'
 
-const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl'] as const
+const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
 
 function normalizeLocale(locale: string): (typeof ROUTING_LOCALES)[number] {
   return ROUTING_LOCALES.includes(locale as (typeof ROUTING_LOCALES)[number])
@@ -62,6 +62,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
       { value: 'uk', label: t('langUk') },
       { value: 'it', label: t('langIt') },
       { value: 'pl', label: t('langPl') },
+      { value: 'de', label: t('langDe') },
     ],
     [t]
   )

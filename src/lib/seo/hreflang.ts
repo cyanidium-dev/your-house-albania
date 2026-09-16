@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 import { isIndexingEnabled } from "@/lib/seo/envSeo";
+import { isLocalePathIndexable } from "@/lib/seo/localeIndexing";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 /**
@@ -23,9 +24,12 @@ export function buildHreflangAlternates(
   // A locale-scoped landing (landingPage.locales) declares alternates only for
   // the locales it exists in; x-default follows en when en is among them,
   // otherwise the first listed locale.
-  const wanted = locales?.length
-    ? routing.locales.filter((l) => locales.includes(l))
-    : [...routing.locales];
+  // A partly translated locale drops out where its content is not written yet.
+  const wanted = (
+    locales?.length
+      ? routing.locales.filter((l) => locales.includes(l))
+      : [...routing.locales]
+  ).filter((l) => isLocalePathIndexable(l, cleanPath));
   if (!wanted.length) return undefined;
 
   const languages: Record<string, string> = {};

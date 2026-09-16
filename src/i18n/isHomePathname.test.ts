@@ -4,7 +4,7 @@ import { isHomePathname } from './isHomePathname'
 describe('isHomePathname', () => {
   it('matches root and every configured locale root', () => {
     expect(isHomePathname('/')).toBe(true)
-    for (const l of ['en', 'uk', 'ru', 'sq', 'it', 'pl']) {
+    for (const l of ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de']) {
       expect(isHomePathname(`/${l}`)).toBe(true)
       expect(isHomePathname(`/${l}/`)).toBe(true)
     }

@@ -116,7 +116,7 @@ export const blogListingProjection = `{
   authorImage{
     asset->{url}
   },
-  "contentForReadingTime": coalesce(content.en, content.uk, content.ru, content.sq, content["it"], content["pl"], [])[]${blogContentForReadingTimeProjection}
+  "contentForReadingTime": coalesce(content.en, content.uk, content.ru, content.sq, content["it"], content["pl"], content["de"], [])[]${blogContentForReadingTimeProjection}
 }`;
 
 const cachedFetchBlogPosts = sanityCache(
@@ -305,7 +305,8 @@ export async function fetchBlogPostBySlug(slug: string): Promise<unknown | null>
       "ru": content.ru[]${blogDetailContentBlockProjection},
       "sq": content.sq[]${blogDetailContentBlockProjection},
       "it": content.it[]${blogDetailContentBlockProjection},
-      "pl": content.pl[]${blogDetailContentBlockProjection}
+      "pl": content.pl[]${blogDetailContentBlockProjection},
+      "de": content.de[]${blogDetailContentBlockProjection}
     }
   }`;
   try {

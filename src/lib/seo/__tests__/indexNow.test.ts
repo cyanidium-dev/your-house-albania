@@ -42,9 +42,14 @@ describe('indexNowKeyLocation', () => {
 });
 
 describe('localizedUrls', () => {
+  it('leaves de out where German content does not exist yet', () => {
+    const urls = localizedUrls('blog/some-post');
+    expect(urls).toHaveLength(6);
+    expect(urls.some((u) => u.includes('/de/'))).toBe(false);
+  });
   it('returns the page in every locale', () => {
     const urls = localizedUrls('albania/durres/info');
-    expect(urls).toHaveLength(6);
+    expect(urls).toHaveLength(7);
     expect(urls.some((u) => u.endsWith('/ru/albania/durres/info'))).toBe(true);
     expect(urls.some((u) => u.endsWith('/sq/albania/durres/info'))).toBe(true);
   });

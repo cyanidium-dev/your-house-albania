@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 import { getLegacyFallbackCatalogCountrySlug } from "./lib/routes/catalog";
+import { isSitePathIndexable, PARTIAL_LOCALE_ROBOTS_HEADER } from "./lib/seo/localeIndexing";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -37,7 +38,22 @@ export default function middleware(request: NextRequest) {
     url.pathname = agentRedirect;
     return NextResponse.redirect(url);
   }
-  return withoutLocaleCookieOnCacheableDocuments(request, intlMiddleware(request));
+  return withPartialLocaleRobots(
+    request,
+    withoutLocaleCookieOnCacheableDocuments(request, intlMiddleware(request)),
+  );
+}
+
+/**
+ * `noindex, follow` on pages of a partly translated locale whose content is not
+ * written in it yet (see `lib/seo/localeIndexing`). A header rather than page
+ * metadata, so no page — present or future — can forget it.
+ */
+function withPartialLocaleRobots(request: NextRequest, response: Response): Response {
+  if (response.status >= 300 && response.status < 400) return response;
+  if (isSitePathIndexable(request.nextUrl.pathname)) return response;
+  response.headers.set("X-Robots-Tag", PARTIAL_LOCALE_ROBOTS_HEADER);
+  return response;
 }
 
 /**

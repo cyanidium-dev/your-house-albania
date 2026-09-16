@@ -1,4 +1,5 @@
 import { routing } from "@/i18n/routing";
+import { isLocalePathIndexable } from "@/lib/seo/localeIndexing";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled } from "@/lib/seo/envSeo";
 
@@ -87,5 +88,7 @@ export async function submitUrlsToIndexNow(urls: string[]): Promise<IndexNowResu
 export function localizedUrls(pathAfterLocale: string): string[] {
   const base = getSiteBaseUrl().replace(/\/$/, "");
   const path = pathAfterLocale.replace(/^\/+/, "");
-  return routing.locales.map((locale) => `${base}/${locale}${path ? `/${path}` : ""}`);
+  return routing.locales
+    .filter((locale) => isLocalePathIndexable(locale, path))
+    .map((locale) => `${base}/${locale}${path ? `/${path}` : ""}`);
 }

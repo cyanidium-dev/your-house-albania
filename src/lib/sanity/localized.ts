@@ -1,6 +1,6 @@
 /**
  * Resolves localized field from Sanity by project locale.
- * Sanity: en, uk, ru, sq, it, pl. Project: en, uk, ru, al, it, pl (al = sq).
+ * Sanity: en, uk, ru, sq, it, pl, de. Project: en, uk, ru, al, it, pl, de (al = sq).
  */
 const LOCALE_MAP: Record<string, string> = {
   en: 'en',
@@ -10,10 +10,11 @@ const LOCALE_MAP: Record<string, string> = {
   al: 'sq',
   it: 'it',
   pl: 'pl',
+  de: 'de',
 };
 
 export function resolveLocalizedString(
-  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string; pl?: string } | null | undefined,
+  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string; pl?: string; de?: string } | null | undefined,
   locale: string
 ): string {
   if (!field) return '';
@@ -30,7 +31,7 @@ export function resolveLocalizedString(
  * resolver cannot tell "authored in English" from "fell back to English".
  */
 export function resolveLocalizedStringStrict(
-  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string; pl?: string } | null | undefined,
+  field: { en?: string; uk?: string; ru?: string; sq?: string; it?: string; pl?: string; de?: string } | null | undefined,
   locale: string
 ): string {
   if (!field) return '';
@@ -73,6 +74,7 @@ export function resolveLocalizedContent(
         sq?: LocalizedContentValue;
         it?: LocalizedContentValue;
         pl?: LocalizedContentValue;
+        de?: LocalizedContentValue;
       }
     | unknown[]
     | string

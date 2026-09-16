@@ -1,0 +1,826 @@
+{
+  "Header": {
+    "menu": "Menü",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "contact": "Kontakt",
+    "nav": {
+      "home": "Startseite",
+      "buy": "Kaufen",
+      "rent": "Mieten",
+      "shortTermRent": "Kurzzeitmiete",
+      "cities": "Städte",
+      "realtors": "Für Makler",
+      "realtorsAbout": "So inserieren Sie",
+      "realtorsRegister": "Registrieren",
+      "expandRealtors": "Bereich für Makler ausklappen",
+      "collapseRealtors": "Bereich für Makler einklappen",
+      "blog": "Blog",
+      "contacts": "Kontakte",
+      "expandCities": "Städteliste ausklappen",
+      "collapseCities": "Städteliste einklappen"
+    },
+    "cta": {
+      "viewProperties": "Immobilien ansehen"
+    },
+    "toggleMobileMenu": "Mobiles Menü ein-/ausblenden",
+    "switchToLightMode": "Zum hellen Modus wechseln",
+    "switchToDarkMode": "Zum dunklen Modus wechseln",
+    "favoritesCount": "Favoriten ({count})",
+    "selectLanguage": "Sprache wählen",
+    "closeMobileMenu": "Mobiles Menü schließen",
+    "mainNavigation": "Hauptnavigation"
+  },
+  "Currency": {
+    "switchTo": "Währung auf {currency} umstellen"
+  },
+  "Footer": {
+    "columns": {
+      "guides": "Ratgeber",
+      "navigation": "Navigation",
+      "cities": "Städte",
+      "contacts": "Kontakt",
+      "socials": "Social Media",
+      "app": "App"
+    },
+    "nav": {
+      "home": "Startseite",
+      "buy": "Kaufen",
+      "rent": "Mieten",
+      "shortTermRent": "Kurzzeitmiete",
+      "cities": "Städte",
+      "investment": "Anlageimmobilien",
+      "realtors": "Für Makler",
+      "blog": "Blog"
+    },
+    "cities": {
+      "empty": "Keine Städte vorhanden."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "socials": {
+      "empty": "",
+      "followInstagram": "Folgen Sie uns auf Instagram",
+      "followFacebook": "Folgen Sie uns auf Facebook",
+      "followLinkedin": "Folgen Sie uns auf LinkedIn",
+      "followX": "Folgen Sie uns auf X",
+      "followTwitter": "Folgen Sie uns auf Twitter",
+      "followYoutube": "Folgen Sie uns auf YouTube",
+      "followTiktok": "Folgen Sie uns auf TikTok",
+      "followGeneric": "Folgen Sie uns auf {platform}"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Erstellt von",
+      "imageCredits": "Bildnachweise"
+    },
+    "developer": {
+      "ownedBy": "Diese Website wird von Code Site Art entwickelt, betrieben und gepflegt.",
+      "disclaimer": "Code Site Art ist der Entwickler der Website und nicht verantwortlich für die auf dieser Website veröffentlichten Immobilien.",
+      "contact": "Für technische Fragen, Partnerschaften, Support oder Website-Entwicklung — alles, was nicht eine konkrete Immobilie betrifft — kontaktieren Sie uns:"
+    },
+    "contactCta": "Anfrage senden"
+  },
+  "Home": {
+    "hero": {
+      "location": "Palm springs, CA",
+      "title": "Futuristisches Refugium",
+      "getInTouch": "Kontakt aufnehmen",
+      "viewDetails": "Details ansehen",
+      "bedrooms": "4 Schlafzimmer",
+      "restroom": "4 Bäder",
+      "parkingSpace": "Stellplatz",
+      "price": "4.750.000 $",
+      "forSellingPrice": "Kaufpreis",
+      "search": {
+        "tabs": {
+          "buy": "Kaufen",
+          "sale": "Verkauf",
+          "rent": "Mieten",
+          "shortTerm": "Kurzzeit"
+        }
+      }
+    },
+    "properties": {
+      "badge": "Immobilien",
+      "title": "Entdecken Sie inspirierend gestaltete Wohnungen.",
+      "description": "Ausgewählte Objekte, in denen Eleganz, Stil und Komfort zusammenkommen."
+    },
+    "topOffers": {
+      "title": "Top-Angebote",
+      "description": "Beliebte, neue und stark nachgefragte Angebote an einem Ort.",
+      "tabs": {
+        "popular": "Beliebt",
+        "new": "Neu",
+        "highDemand": "Gefragt"
+      },
+      "ctaAll": "Alle Immobilien ansehen",
+      "prev": "Zurück",
+      "next": "Weiter"
+    },
+    "featured": {
+      "badge": "Top-Immobilie",
+      "title": "Moderne Luxusvilla",
+      "address": "20 S Aurora Ave, Miami",
+      "description": "Erleben Sie luxuriöses Wohnen in der modernen Luxusvilla in 20 S Aurora Ave, Miami. Für 1.650.500 $ bietet dieses 560 m² große Smart Home 4 Schlafzimmer, 3 Bäder und großzügige Wohnbereiche. Energieeffizienz, viel Tageslicht, Sicherheitstechnik, Außenbereiche und 2 Barbereiche – ideal für 8+ Gäste. Baujahr 2025.",
+      "bedrooms": "4 Schlafzimmer",
+      "bathrooms": "3 Bäder",
+      "parkingSpace": "Stellplatz",
+      "barAreas": "2 Barbereiche",
+      "getInTouch": "Kontakt aufnehmen",
+      "price": "1.650.500 $",
+      "discountedPrice": "Reduzierter Preis"
+    },
+    "faq": {
+      "badge": "FAQ",
+      "title": "Alles über Domlivo Immobilien",
+      "description": "Wir wissen, dass der Kauf, Verkauf oder die Investition in Immobilien überfordernd sein kann. Hier finden Sie häufige Fragen, die Sie durch den Prozess begleiten",
+      "q1": "1. Kann ich meine Domlivo Wohnung individuell gestalten?",
+      "q2": "2. Wo finde ich Domlivo Immobilien?",
+      "q3": "3. Welche Schritte sind für den Kauf nötig?",
+      "answer": "Entdecken Sie eine vielfältige Auswahl an Premium-Immobilien – von luxuriösen Wohnungen bis zu großzügigen Villen, passend zu Ihren Wünschen."
+    },
+    "contact": {
+      "title": "Betreten Sie eine Welt, in der erlesenes Design und zeitloser Luxus zusammenfinden.",
+      "getInTouch": "Kontakt aufnehmen",
+      "marquee1": "KOSTENLOSE IMMOBILIENBEWERTUNG – VERKAUFEN SIE MIT SICHERHEIT!",
+      "marquee2": "TAUSENDE ANGEBOTE IN BESTEN LAGEN ZU TOP-PREISEN ENTDECKEN!"
+    },
+    "blog": {
+      "badge": "Blog",
+      "title": "Einblicke in den Immobilienmarkt",
+      "description": "Bleiben Sie mit Expertentipps und Neuigkeiten immer einen Schritt voraus",
+      "readAllArticles": "Alle Artikel lesen"
+    },
+    "testimonial": {
+      "badge": "Kundenstimmen",
+      "title": "Das sagen unsere Kunden",
+      "goToSlide": "Zu Slide {num} wechseln"
+    }
+  },
+  "Shared": {
+    "seoText": {
+      "contentMissing": "SEO-Inhalt ist nicht verfügbar.",
+      "videoTitle": "Video"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Stadtteile entdecken",
+      "comparisons": "Ähnliche Vergleiche",
+      "guides": "Passende Ratgeber",
+      "related": "Ähnliche Seiten"
+    },
+    "lightbox": {
+      "close": "Schließen",
+      "imageFullscreenView": "Bild in Vollbildansicht",
+      "viewImageFullscreen": "Bild im Vollbild ansehen"
+    },
+    "propertyDetail": {
+      "propertyDetails": "Objektdetails",
+      "checkAllAmenities": "Alle Ausstattungsmerkmale ansehen",
+      "whatThisPropertyOffers": "Was diese Immobilie bietet",
+      "similarProperties": "Ähnliche Immobilien",
+      "yearBuilt": "Baujahr {year}",
+      "checkAllPhotos": "Alle Fotos ansehen",
+      "getInTouch": "Kontakt aufnehmen",
+      "listedBy": "Angeboten von <link>{name}</link>",
+      "contactHeading": "Interessiert an dieser Immobilie?",
+      "contactIntro": "Hinterlassen Sie Ihre Kontaktdaten – wir melden uns zu diesem Angebot bei Ihnen.",
+      "contactSuccessTitle": "Anfrage gesendet!",
+      "contactSuccessBody": "Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.",
+      "contactClose": "Schließen",
+      "dealTypeSale": "Verkauf",
+      "dealTypeRent": "Miete",
+      "dealTypeShortTerm": "Kurzzeitmiete",
+      "dealTypeLongTerm": "Langzeitmiete",
+      "dealTypePrice": "Preis",
+      "dealTypeShortTermCompact": "Kurzmiete",
+      "dealTypeLongTermCompact": "Langmiete",
+      "close": "Schließen",
+      "imageGallery": "Bildergalerie",
+      "openImage": "Bild {n} öffnen",
+      "propertyImageAlt": "Bild der Immobilie {n}",
+      "imageAlt": "Bild {n}",
+      "thumbnailAlt": "Vorschaubild {n}",
+      "goToImage": "Zu Bild {n} wechseln",
+      "hideThumbnails": "Vorschaubilder ausblenden",
+      "showThumbnails": "Vorschaubilder anzeigen",
+      "approximateLocation": "Ungefähre Lage – die Markierung zeigt den Stadtteil, nicht das genaue Gebäude.",
+      "plotArea": "Grundstück {value} m²",
+      "plotAreaUnknown": "Grundstücksfläche: nicht angegeben"
+    },
+    "propertyCard": {
+      "bedrooms": "Schlafzimmer",
+      "bathrooms": "Badezimmer",
+      "roomsCount": "{count, plural, one {# Zimmer} other {# Zimmer}}",
+      "bedroomsCount": "{count, plural, one {# Schlafzimmer} other {# Schlafzimmer}}",
+      "bathroomsCount": "{count, plural, one {# Badezimmer} other {# Badezimmer}}",
+      "areaUnit": "m²",
+      "pricePrefix": "$",
+      "previousImage": "Vorheriges Bild",
+      "nextImage": "Nächstes Bild",
+      "premium": "Premium",
+      "top": "Top",
+      "sale": "Reduziert",
+      "discount": "-{value}%",
+      "propertyFallback": "Immobilie",
+      "closePreview": "Vorschau schließen",
+      "stageOffPlan": "In Planung",
+      "stageUnderConstruction": "Im Bau",
+      "handoverYear": "Übergabe {year}",
+      "handoverQuarter": "Übergabe Q{quarter} {year}",
+      "pricePerSqmFrom": "ab {amount} / m²",
+      "requestInfo": "Anfrage senden",
+      "plotArea": "Grundstück {value} m²",
+      "plotAreaUnknown": "Grundstück: nicht angegeben",
+      "priceOnRequest": "Preis auf Anfrage"
+    },
+    "blogCard": {
+      "imageAlt": "Bild zum Blogbeitrag",
+      "ariaLabel": "Blogbeitrag ansehen",
+      "readMore": "Mehr lesen",
+      "minRead": "{count} Min. Lesezeit"
+    },
+    "blogCta": {
+      "learnMore": "Mehr erfahren"
+    },
+    "blog": {
+      "relatedArticles": "Ähnliche Artikel",
+      "relatedProperties": "Passende Immobilien",
+      "listingsTitle": "Immobilien zu diesem Thema",
+      "listingsPlaceLink": "{place}: {count, plural, one {# Immobilie zu verkaufen} other {# Immobilien zu verkaufen}}",
+      "listingsAllAlbania": "Alle Immobilien zum Verkauf in Albanien"
+    },
+    "goBack": "Zurück",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {Immobilie} other {Immobilien}}"
+    }
+  },
+  "NotFound": {
+    "badge": "Fehler 404",
+    "title": "Diese Seite existiert nicht",
+    "description": "Der Link ist möglicherweise veraltet oder die Seite wurde verschoben. Hier geht es zurück.",
+    "backHome": "Zur Startseite",
+    "browseListings": "Immobilien ansehen",
+    "readBlog": "Blog lesen"
+  },
+  "Listing": {
+    "properties": {
+      "badge": "Immobilien",
+      "title": "Entdecken Sie inspirierend gestaltete Wohnungen.",
+      "description": "Erleben Sie Eleganz und Komfort in unseren exklusiven Luxusvillen, konzipiert für anspruchsvolles Wohnen."
+    },
+    "blogs": {
+      "badge": "Blog",
+      "title": "Einblicke in den Immobilienmarkt.",
+      "description": "Bleiben Sie mit Expertentipps und aktuellen Informationen dem Markt voraus.",
+      "metaTitle": "Immobilien-Blog Albanien: Markt, Preise und Kauftipps"
+    }
+  },
+  "Cities": {
+    "title": "Städte",
+    "description": "Immobilien nach Stadt entdecken.",
+    "cityDescription": "Immobilien und Objekte in {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Startseite",
+    "properties": "Immobilien",
+    "favorites": "Favoriten",
+    "cities": "Städte",
+    "blog": "Blog",
+    "guides": "Ratgeber",
+    "districts": "Stadtteile",
+    "catalog": "Immobilien",
+    "agents": "Makler",
+    "propertyTypes": "Immobilienarten",
+    "contacts": "Kontakt",
+    "forRealtors": "Für Makler",
+    "howToPublish": "So veröffentlichen Sie",
+    "register": "Registrieren",
+    "investment": "Investment",
+    "navLabel": "Breadcrumb",
+    "newBuilds": "Neubau",
+    "privacy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen"
+  },
+  "Districts": {
+    "hubTitle": "Stadtteile von {city}",
+    "hubDescription": "Entdecken Sie die Stadtteile von {city} und finden Sie die passende Lage für Ihr neues Zuhause.",
+    "faqTitle": "Häufige Fragen",
+    "exploreTitle": "Weiter entdecken",
+    "propertiesInDistrict": "Immobilien in {district}",
+    "aboutCity": "Mehr über {city}",
+    "otherDistricts": "Weitere Stadtteile von {city}",
+    "viewAllDistricts": "Alle Stadtteile von {city} ansehen"
+  },
+  "Landing": {
+    "updatedAt": "Aktualisiert: {date}",
+    "confidenceHigh": "Hohe Zuverlässigkeit",
+    "confidenceMedium": "Mittlere Zuverlässigkeit",
+    "confidenceLow": "Geringe Zuverlässigkeit",
+    "methodology": "Methodik"
+  },
+  "ZoneMetrics": {
+    "priceNew": "Neubau, €/m²",
+    "priceResale": "Bestand, €/m²",
+    "priceAll": "Gesamtbestand, €/m²",
+    "rent1br": "Miete 1+1, €/Monat",
+    "rent2br": "Miete 2+1, €/Monat",
+    "strAdr": "Preis pro Nacht, €",
+    "strOccupancy": "Auslastung, %",
+    "yieldLtr": "Bruttorendite, Langzeitmiete",
+    "yieldStr": "Bruttorendite, Kurzzeitmiete",
+    "referencePrice": "Staatlicher Referenzwert, Lek/m²",
+    "rating": "DomLivo-Bewertung",
+    "zone": "Zone",
+    "sample": "{n} Angebote",
+    "basisAsking": "Angebotspreise",
+    "basisTransaction": "Transaktionen",
+    "basisOfficial": "amtliche Tabelle",
+    "basisCalculated": "abgeleiteter Wert",
+    "basisMixed": "gemischte Quellen",
+    "referenceEdition": "Referenztabelle: {edition}",
+    "listingIndex": {
+      "title": "{city}: geforderte Preise unserer Angebote nach Stadtteil",
+      "subtitle": "Berechnet aus {count} aktiven Verkaufsangeboten auf Domlivo und stündlich aktualisiert. Die Preise gelten nur für Wohnungen und Studios und sind Angebotspreise, keine abgeschlossenen Verkäufe; ein Stadtteil erhält eine Zeile, sobald er {min} Wohnungen umfasst.",
+      "district": "Stadtteil",
+      "listings": "Angebote",
+      "from": "Wohnungen ab",
+      "median": "Medianpreis Wohnung",
+      "medianSqm": "Median €/m²",
+      "wholeCity": "Ganz {city}",
+      "note": "Domlivo-Angebote, stündlich aktualisiert"
+    }
+  },
+  "Calculators": {
+    "propertyPrice": "Kaufpreis",
+    "enterPrice": "Kaufpreis eingeben, um die Ergebnisse zu sehen",
+    "downPayment": "Eigenkapital",
+    "interestRate": "Zinssatz",
+    "loanTerm": "Laufzeit",
+    "years": "J.",
+    "monthlyPayment": "Monatliche Rate",
+    "loanAmount": "Darlehenssumme",
+    "totalInterest": "Zinsen insgesamt",
+    "ltvLabel": "LTV",
+    "ltvOk": "Innerhalb der LTV-Grenze",
+    "ltvExceeded": "Überschreitet die LTV-Grenze von {limit} % — Banken können mehr Eigenkapital verlangen",
+    "presetLabel": "Zonen-Voreinstellung",
+    "manualMode": "Manuelle Eingabe",
+    "rentalType": "Vermietungsart",
+    "ltr": "Langfristig",
+    "str": "Kurzfristig",
+    "monthlyRent": "Monatsmiete",
+    "adr": "Durchschnittlicher Tagespreis (ADR)",
+    "occupancy": "Belegung",
+    "nightsCap": "Saisonale Nächte-Obergrenze",
+    "mgmtFee": "Verwaltungsgebühr",
+    "taxRate": "Steuer auf Mieteinnahmen",
+    "grossYield": "Bruttorendite",
+    "netYield": "Nettorendite",
+    "netIncomePerYear": "Nettoeinnahmen / Jahr",
+    "breakdown": "Berechnungsdetails",
+    "grossIncome": "Bruttojahreseinnahmen",
+    "nightsUsed": "Vermietete Nächte pro Jahr",
+    "managementCost": "Verwaltung",
+    "taxCost": "Steuer",
+    "netIncome": "Nettojahreseinnahmen",
+    "transactionCosts": "Kaufnebenkosten",
+    "totalPurchaseCost": "Gesamtkosten des Kaufs",
+    "onTopOfPrice": "Zusätzlich zum Kaufpreis",
+    "capped": "begrenzt"
+  },
+  "Trackers": {
+    "statusOnTrack": "Im Zeitplan",
+    "statusDelayed": "Verzögert",
+    "statusBlocked": "Blockiert",
+    "statusDone": "Abgeschlossen",
+    "checkedAt": "Geprüft: {date}",
+    "showAllEvents": "Alle Ereignisse anzeigen ({count})",
+    "faqTitle": "Häufige Fragen",
+    "sourcesTitle": "Quellen"
+  },
+  "Developers": {
+    "tierGreen": "Stufe Grün",
+    "tierYellow": "Stufe Gelb",
+    "tierRed": "Stufe Rot",
+    "reviewedAt": "Geprüft: {date}",
+    "staleNote": "Daten möglicherweise nicht aktuell",
+    "disclaimerShort": "Redaktionelle Einschätzung auf Basis öffentlicher Quellen. Eine Erwähnung in einem Gerichtsverfahren ist kein Urteil.",
+    "about": "Über",
+    "keyProjects": "Wichtigste Projekte",
+    "riskNotes": "Risikohinweise",
+    "sourcesTitle": "Quellen",
+    "founded": "Gegründet: {year}",
+    "developerLabel": "Bauträger",
+    "details": "Details"
+  },
+  "PropertyMarketPosition": {
+    "title": "Markt in diesem Stadtteil",
+    "labelBelow": "Unter Marktniveau",
+    "labelIn": "Im Marktbereich",
+    "labelAbove": "Über Marktniveau",
+    "referencePrice": "Referenzpreis",
+    "districtYield": "Rendite im Stadtteil: {pct} %",
+    "viewDistrict": "Zur Stadtteilseite",
+    "disclaimer": "Schätzung auf Basis der Preisspannen im gesamten Stadtteil, keine Bewertung dieser konkreten Immobilie."
+  },
+  "Catalog": {
+    "pagination": {
+      "pagination": "Seitennavigation",
+      "previousPage": "Vorherige Seite",
+      "nextPage": "Nächste Seite"
+    },
+    "heroIntroFallback": "Entdecken Sie unsere Auswahl an Immobilien.",
+    "agentTitle": "Immobilien von {name}",
+    "agentIntroFallback": "Angebote dieses Maklers",
+    "empty": {
+      "title": "Keine Immobilien gefunden",
+      "description": "Passen Sie die Filter an oder setzen Sie sie zurück.",
+      "reset": "Filter zurücksetzen"
+    },
+    "filters": {
+      "location": "Lage",
+      "propertyType": "Immobilientyp",
+      "dealType": "Angebotsart",
+      "dealSale": "Kauf",
+      "dealRent": "Miete",
+      "dealShortTerm": "Kurzzeitmiete",
+      "dealAll": "Alle",
+      "priceRange": "Preisspanne",
+      "area": "Wohnfläche",
+      "areaFrom": "Min.",
+      "areaTo": "Max.",
+      "areaUnit": "m²",
+      "advancedFilters": "Erweiterte Filter",
+      "filtersShort": "Filter",
+      "mobileSearchOpen": "Suchen",
+      "closeModal": "Schließen",
+      "resetFilters": "Filter zurücksetzen",
+      "search": "Suchen",
+      "anyLocation": "Beliebige Lage",
+      "anyType": "Beliebiger Typ",
+      "any": "Beliebig",
+      "priceFrom": "Von",
+      "priceTo": "Bis",
+      "bedrooms": "Schlafzimmer",
+      "bedsAtLeast": "{count}+",
+      "district": "Stadtteil",
+      "anyDistrict": "Beliebiger Stadtteil",
+      "amenities": "Ausstattung",
+      "amenitiesSelected": "{count} ausgewählt",
+      "clear": "Zurücksetzen",
+      "done": "Fertig",
+      "sortBy": "Sortieren nach",
+      "sortNewest": "Neueste",
+      "sortPriceAsc": "Preis (aufsteigend)",
+      "sortPriceDesc": "Preis (absteigend)",
+      "sortAreaDesc": "Wohnfläche (größte zuerst)",
+      "resultsPerPage": "Ergebnisse pro Seite",
+      "viewLabel": "Ansicht",
+      "viewLarge": "Große Karten",
+      "viewSmall": "Kompakte Karten",
+      "viewList": "Listenansicht",
+      "stage": "Bauphase",
+      "stageAny": "Beliebige Bauphase",
+      "stageUnfinished": "Noch im Bau",
+      "stageOffPlan": "In Planung",
+      "stageUnderConstruction": "Im Bau",
+      "stageCompleted": "Fertiggestellt",
+      "sortHandoverAsc": "Übergabe (früheste zuerst)"
+    },
+    "cityInfoLink": "{place}: Preise und Stadtteile",
+    "districtInfoLink": "{place}: Preise und Lage im Überblick",
+    "facetNav": {
+      "districts": "Gebiete",
+      "rooms": "Schlafzimmer",
+      "budget": "Budget",
+      "stage": "Bauphase",
+      "label": "Immobilien in {place} entdecken",
+      "chip": {
+        "1-1": "1 Schlafzimmer",
+        "2-1": "2 Schlafzimmer",
+        "3-1": "3+ Schlafzimmer",
+        "under-80k": "Unter 80.000 €",
+        "under-100k": "Unter 100.000 €",
+        "new-builds": "Neubauten",
+        "near-the-sea": "Am Meer"
+      },
+      "sea": "Meer"
+    },
+    "facts": {
+      "count": "{count, plural, one {# Angebot} other {# Angebote}}",
+      "from": "ab {price} €",
+      "medianPerSqm": "Median {price} €/m² für Wohnungen"
+    }
+  },
+  "NewBuilds": {
+    "title": "Neubauten und Anlageimmobilien in Albanien",
+    "description": "Wohnungen im Bau und vom Plan an der albanischen Küste – mit Übergabetermin und Stand der Eigentumsunterlagen in jedem Inserat.",
+    "badge": "Neubauten",
+    "heading": "Neubauten und Anlageimmobilien in Albanien",
+    "intro": "Eine Immobilie, die vor der Fertigstellung gekauft wird, ist günstiger und birgt Risiken, die eine fertige Wohnung nicht hat: Die Übergabe kann sich verzögern, und die Eigentumsurkunde kann noch in Bearbeitung sein. Jedes Inserat hier nennt den Bauabschnitt und den zugesagten Termin für die Schlüsselübergabe – Sie können beides selbst abwägen, statt dass wir es beschönigen.",
+    "empty": "Derzeit sind keine Gebäude im Bau gelistet. Alles, was aktuell auf der Seite steht, ist fertiggestellt und übergeben – sehen Sie sich stattdessen den gesamten Katalog an.",
+    "emptyCta": "Alle Immobilien ansehen",
+    "breadcrumbHome": "Startseite"
+  },
+  "Contacts": {
+    "metaTitle": "Kontakt",
+    "metaDescription": "Senden Sie uns eine Anfrage – unser Team meldet sich mit passenden Angeboten für Ihre Wünsche.",
+    "heroH1": "Noch nicht die passende Immobilie gefunden?",
+    "heroH2": "Senden Sie eine Anfrage – wir stellen eine maßgeschneiderte Auswahl zusammen!",
+    "heroDescription": "Füllen Sie das Formular unten aus und unser Berater kontaktiert Sie mit Angeboten, die zu Ihren Wünschen passen. Schnell, unkompliziert und ohne unnötiges Hin und Her.",
+    "heroImageAlt": "Kontakt",
+    "managerPhotoAlt": "Unser Berater",
+    "managerEmailLabel": "E-Mail",
+    "follow": "Folgen",
+    "formHeading": "Anfrage senden",
+    "formIntro": "Sagen Sie uns, wie wir Sie erreichen und was Sie suchen.",
+    "formName": "Name",
+    "formPhone": "Telefonnummer",
+    "formEmail": "E-Mail-Adresse",
+    "formMessage": "Ihre Nachricht",
+    "formSubmit": "Nachricht senden",
+    "formSubmitting": "Wird gesendet…",
+    "errorSubmit": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+  },
+  "ContactThankYou": {
+    "metaTitle": "Vielen Dank",
+    "metaDescription": "Wir haben Ihre Anfrage erhalten. Unser Team meldet sich in Kürze bei Ihnen.",
+    "title": "Vielen Dank! Ihre Anfrage wurde erfolgreich gesendet",
+    "description": "Unser Berater meldet sich in Kürze bei Ihnen mit passenden Angeboten zu Ihrer Anfrage.",
+    "cta": "Immobilien ansehen",
+    "imageAlt": "Innenaufnahme"
+  },
+  "Favorites": {
+    "title": "Merkliste",
+    "description": "Immobilien, die Sie zu Ihrer Merkliste hinzugefügt haben.",
+    "clearFavorites": "Merkliste leeren",
+    "clearModalTitle": "Gesamte Merkliste leeren?",
+    "clearModalDescription": "Dadurch werden alle Immobilien aus Ihrer Merkliste entfernt. Sie können sie jederzeit wieder hinzufügen.",
+    "clearModalConfirm": "Alle entfernen",
+    "clearModalCancel": "Abbrechen",
+    "emptyTitle": "Noch keine Favoriten",
+    "emptyDescription": "Stöbern Sie in den Immobilien und tippen Sie auf das Herz, um sie hier zu speichern.",
+    "browseProperties": "Immobilien ansehen",
+    "noDataTitle": "Keine Immobiliendaten gefunden",
+    "noDataDescription": "Einige Favoriten sind möglicherweise nicht mehr verfügbar."
+  },
+  "HowToPublish": {
+    "metaTitle": "So veröffentlichen Sie auf Domlivo",
+    "metaDescription": "Sehen Sie sich die Demo an und erfahren Sie, wie Sie Immobilien auf Domlivo veröffentlichen und Anfragen in Telegram erhalten.",
+    "heroTitle": "So veröffentlichen Sie Immobilien auf Domlivo",
+    "heroSubtitle": "Sehen Sie sich die Demo an und erfahren Sie, wie Sie echte Anfragen erhalten",
+    "heroBody": "Alles ist einfach — fügen Sie Ihre Immobilie hinzu und erhalten Sie Kunden direkt.",
+    "heroCta": "Demo ansehen",
+    "block2Title": "So funktioniert die Domlivo-Plattform",
+    "block2Body": "Sie registrieren sich, fügen Immobilien hinzu und erhalten Anfragen von Kunden direkt in Telegram. Alles ist einfach und ohne Zwischenhändler.",
+    "step1": "Registrierung",
+    "step2": "Immobilien hinzufügen",
+    "step3": "Anfragen erhalten",
+    "block2Cta": "7 Tage kostenlos testen"
+  },
+  "Register": {
+    "metaTitle": "Als Makler registrieren",
+    "metaDescription": "Senden Sie eine Registrierungsanfrage, um auf Domlivo zu inserieren und echte Kundenanfragen zu erhalten.",
+    "heroTitle": "Registrieren Sie sich und erhalten Sie echte Anfragen",
+    "heroSubtitle": "Domlivo bringt Ihnen Kunden – Sie arbeiten direkt, provisionsfrei",
+    "blockLeftTitle": "Preise und Bedingungen",
+    "benefit1": "7 Tage kostenlos",
+    "benefit2": "80 €/Monat",
+    "benefit3": "Keine Provision",
+    "benefit4": "Direkte Anfragen in Telegram",
+    "benefit5": "Persönliches Dashboard",
+    "benefit6": "Vollständige Immobilienverwaltung per Smartphone",
+    "benefit7": "Traffic von Google und KI",
+    "blockLeftFooter": "Die Registrierung dauert 1 Minute",
+    "imageAlt": "Innenaufnahme",
+    "formHeading": "Formular ausfüllen und starten",
+    "fieldName": "Name",
+    "fieldPhone": "Telefon",
+    "fieldEmail": "E-Mail",
+    "fieldProfileType": "Profiltyp",
+    "fieldTypeHint": "Optional. Geben Sie an, ob Sie als Makler arbeiten oder eine Agentur vertreten.",
+    "typeNotSpecified": "Keine Angabe",
+    "typeRealtor": "Makler",
+    "typeAgency": "Agentur",
+    "fieldLanguage": "Kommunikationssprache",
+    "langSq": "Albanisch",
+    "langEn": "Englisch",
+    "langRu": "Russisch",
+    "langUk": "Ukrainisch",
+    "langIt": "Italienisch",
+    "langPl": "Polnisch",
+    "langDe": "Deutsch",
+    "terms": "Ich stimme den <link>Regeln zur Verarbeitung personenbezogener Daten</link> zu",
+    "submit": "Jetzt starten",
+    "submitting": "Wird gesendet…",
+    "footnote": "Wir melden uns in Kürze bei Ihnen",
+    "errorSubmit": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "errorTerms": "Bitte akzeptieren Sie die Bedingungen, um fortzufahren.",
+    "errorRequiredName": "Bitte geben Sie Ihren Namen ein.",
+    "errorRequiredPhone": "Bitte geben Sie Ihre Telefonnummer ein.",
+    "thankYouMetaTitle": "Vielen Dank",
+    "thankYouMetaDescription": "Ihre Registrierungsanfrage ist bei uns eingegangen.",
+    "thankYouTitle": "Vielen Dank",
+    "thankYouDescription": "Wir haben Ihre Anfrage erhalten und melden uns in Kürze bei Ihnen.",
+    "thankYouCta": "Zurück zur Startseite",
+    "thankYouImageAlt": "Innenaufnahme"
+  },
+  "Guides": {
+    "title": "Ratgeber",
+    "description": "Marktberichte, Vergleiche und Kauftipps für Albanien.",
+    "empty": "Noch keine Ratgeber veröffentlicht.",
+    "breadcrumbHome": "Startseite"
+  },
+  "ImageCredits": {
+    "title": "Bildnachweise",
+    "description": "Fotografen, Lizenzen und Quellen aller auf Domlivo verwendeten Fotos.",
+    "intro": "Jedes Foto auf dieser Website steht unter einer freien Lizenz. Diese Seite nennt den Fotografen, die Lizenz und die Herkunft der Datei – damit werden die unten aufgeführten Attributionslizenzen erfüllt.",
+    "attributedHeading": "Fotos mit Namensnennungspflicht",
+    "attributedNote": "Verwendet unter Creative-Commons-Lizenzen, die eine Nennung des Fotografen verlangen.",
+    "freeHeading": "Fotos gemeinfrei und unter CC0",
+    "freeNote": "Hierfür ist keine Namensnennung erforderlich. Sie werden aufgeführt, damit jedes Bild der Website zu seiner Quelle zurückverfolgt werden kann.",
+    "standIn": "Platzhalter",
+    "source": "Quelldatei",
+    "empty": "Es wurden noch keine Bildnachweise erfasst.",
+    "breadcrumbHome": "Startseite"
+  },
+  "AlbaniaPhotos": {
+    "tirana": "Tirana von oben",
+    "durres": "Der Strand von Durrës",
+    "vlore": "Die Bucht Uji i Ftohtë in Vlora",
+    "sarande": "Die Bucht und die Stadt Saranda",
+    "shkoder": "Panorama von Shkodra",
+    "shengjin": "Shëngjin aus der Luft",
+    "himare": "Der Strand von Dhërmi an der Küste von Himara",
+    "ksamil": "Die Bucht und die Inseln von Ksamil",
+    "coast": "Der Strand Gjipe an der Albanischen Riviera",
+    "apartments": "Neue Wohngebäude in Tirana",
+    "houses": "Wohnhäuser an der Küste bei Durrës",
+    "villas": "Ein Haus über dem Meer in Vuno an der Albanischen Riviera",
+    "offices": "Bürotürme am Skanderbeg-Platz in Tirana"
+  },
+  "Blog": {
+    "tableOfContents": "Inhalt",
+    "keyFacts": "Kurz gefasst",
+    "faqTitle": "Häufige Fragen",
+    "sourcesTitle": "Quellen",
+    "zoneStatsTitle": "Marktdaten",
+    "trackerLastChecked": "Geprüft",
+    "authorPostsTitle": "Artikel dieses Autors",
+    "authorNoPosts": "Noch keine veröffentlichten Artikel.",
+    "zoneStatsAll": "Alle Immobilien",
+    "zoneStatsNew": "Neubau",
+    "zoneStatsResale": "Bestand",
+    "zoneStatsYield": "Bruttorendite"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "Monat"
+  },
+  "QuickLead": {
+    "badge": "Kostenlos · unverbindlich",
+    "heading": "Individuelles Angebot innerhalb von 1 Stunde",
+    "body": "Hinterlassen Sie Ihre Telefonnummer – wir rufen zurück mit einer Auswahl passend zu Ihrem Budget, mit echten Preisen und aktueller Verfügbarkeit.",
+    "phonePlaceholder": "Ihre Telefonnummer",
+    "namePlaceholder": "Name (optional)",
+    "submit": "Angebot erhalten",
+    "submitting": "Wird gesendet…",
+    "successTitle": "Anfrage eingegangen",
+    "successBody": "Wir rufen Sie innerhalb einer Stunde während der Geschäftszeiten zurück.",
+    "error": "Senden nicht möglich. Bitte versuchen Sie es erneut oder schreiben Sie uns auf Telegram.",
+    "consent": "Mit dem Absenden stimmen Sie zu, zu Ihrer Anfrage kontaktiert zu werden."
+  },
+  "QuickContact": {
+    "open": "Kontakt aufnehmen",
+    "close": "Kontakte schließen",
+    "callbackAction": "Rückruf anfordern",
+    "formHeading": "Angebot innerhalb von 1 Stunde",
+    "formBody": "Hinterlassen Sie Ihre Nummer — wir rufen Sie zurück.",
+    "channel": {
+      "telegram": "Über Telegram schreiben",
+      "whatsapp": "Über WhatsApp schreiben",
+      "phone": "Rufen Sie uns an",
+      "email": "E-Mail senden"
+    }
+  },
+  "Seo": {
+    "listing": {
+      "cityTitle": "Wohnung kaufen in {city}, Albanien — Immobilien & Häuser",
+      "cityDescription": "Wohnungen, Häuser und Villen in {city}, Albanien kaufen: geprüfte Immobilien mit aktuellen Preisen, direkt von Eigentümern und geprüften Maklern, provisionsfrei.",
+      "countryTitle": "Immobilien in Albanien kaufen — Wohnungen & Häuser am Meer",
+      "countryDescription": "Wohnung oder Haus in Albanien kaufen: Immobilien am Meer in Durrës, Golem, Vlora und Saranda sowie in Tirana. Geprüfte Angebote mit realen Preisen.",
+      "catalogTitle": "Immobilien zum Verkauf in Albanien — kompletter Katalog",
+      "catalogDescription": "Alle Immobilien zum Verkauf in Albanien: Wohnungen, Häuser, Villen und Grundstücke. Filtern nach Stadt, Preis, Fläche und Anzahl der Schlafzimmer.",
+      "typeTitle": "{type} in Albanien kaufen",
+      "typeDescription": "{type} zum Verkauf in Albanien mit aktuellen Preisen, Fotos und Lagen. Direkt von Eigentümern und geprüften Maklern — provisionsfrei.",
+      "cityTypeTitle": "{type} kaufen in {city}, Albanien",
+      "cityTypeDescription": "{type} zum Verkauf in {city}, Albanien: aktuelle Preise, Fotos und Lagen. Direkt von Eigentümern und geprüften Maklern — provisionsfrei.",
+      "types": {
+        "apartment": "Wohnungen",
+        "house": "Häuser",
+        "villa": "Villen",
+        "studio": "Studios",
+        "penthouse": "Penthäuser",
+        "land": "Grundstücke",
+        "office": "Büros",
+        "commercial-space": "Gewerbeimmobilien",
+        "short-term-rent": "Kurzzeitmieten"
+      },
+      "cityDistrictTitle": "Immobilien in {district}, {city} kaufen — Wohnungen & Häuser",
+      "cityDistrictDescription": "Wohnungen, Häuser und Villen zum Verkauf in {district}, {city}: aktuelle Preise, Fotos und direkter Kontakt zu Eigentümern und Maklern, provisionsfrei.",
+      "facets": {
+        "title": {
+          "1-1": "Wohnungen 1+1 (2 Zimmer) in {place} kaufen — {count, plural, one {# Angebot} other {# Angebote}}",
+          "2-1": "Wohnungen 2+1 (3 Zimmer) in {place} kaufen — {count, plural, one {# Angebot} other {# Angebote}}",
+          "3-1": "Wohnungen 3+1 und größer in {place} kaufen — {count, plural, one {# Angebot} other {# Angebote}}",
+          "under-80k": "Wohnungen unter 80.000 € in {place} — {count, plural, one {# Angebot} other {# Angebote}}",
+          "under-100k": "Wohnungen unter 100.000 € in {place} — {count, plural, one {# Angebot} other {# Angebote}}",
+          "new-builds": "Neubauwohnungen in {place} kaufen — {count, plural, one {# Angebot} other {# Angebote}}",
+          "near-the-sea": "Wohnungen & Immobilien am Meer in {place} kaufen — {count, plural, one {# Angebot} other {# Angebote}}"
+        },
+        "what": {
+          "1-1": "Wohnungen 1+1 (ein Schlafzimmer) zum Verkauf",
+          "2-1": "Wohnungen 2+1 (zwei Schlafzimmer) zum Verkauf",
+          "3-1": "Wohnungen mit drei oder mehr Schlafzimmern zum Verkauf",
+          "under-80k": "Wohnungen und Studios unter 80.000 €",
+          "under-100k": "Wohnungen und Studios unter 100.000 €",
+          "new-builds": "Immobilien im Bau",
+          "near-the-sea": "Immobilien bis 300 m zum Meer"
+        },
+        "description": "{count} {what} in {place}{hasPrice, select, yes {, ab {priceFrom} €} other {}}. Fotos, Wohnflächen und direkter Kontakt zu Eigentümern und Maklern."
+      }
+    },
+    "og": {
+      "studio": "Studio",
+      "rooms": "{count}+1",
+      "plot": "Grundstück {value} m²",
+      "plotUnknown": "Grundstück: keine Angabe",
+      "forSale": "Zum Verkauf",
+      "forRent": "Zur Miete",
+      "shortTerm": "Kurzzeitmiete",
+      "priceOnRequest": "Preis auf Anfrage",
+      "perSqm": "ab {amount}/m²",
+      "perMonth": "/Monat"
+    }
+  },
+  "AiSearch": {
+    "examples": [
+      "Ich suche eine Wohnung am Meer für unter 100.000 €",
+      "Eine 2+1-Wohnung in Durrës zum Vermieten",
+      "Etwas in Saranda mit Meerblick"
+    ],
+    "inputFallbackPlaceholder": "Beschreiben Sie, was Sie suchen",
+    "inputLabel": "Beschreiben Sie die Immobilie, die Sie suchen",
+    "submit": "Suchen",
+    "heroHint": "Fragen Sie in Ihren eigenen Worten — der Assistent durchsucht unsere Angebote",
+    "headerLink": "KI-Suche",
+    "metaTitle": "KI-Immobiliensuche — DomLivo",
+    "metaDescription": "Beschreiben Sie in Ihren eigenen Worten, was Sie suchen, und der Assistent findet passende Immobilien in Albanien.",
+    "title": "KI-Suche",
+    "subtitle": "Beschreiben Sie, was Sie suchen — der Assistent wählt aus unseren Angeboten aus und zeigt sie direkt hier.",
+    "goToCatalog": "Zum Katalog",
+    "intro": {
+      "title": "Was suchen Sie?",
+      "body": "Schreiben Sie es so, wie Sie es einem Makler sagen würden: Budget, Stadt, Meer und ob zum Wohnen oder zum Vermieten."
+    },
+    "status": {
+      "thinking": "Denkt nach…",
+      "searching": "Durchsucht die Angebote…"
+    },
+    "seeAllInCatalog": "Alle im Katalog ansehen",
+    "chatPlaceholder": "Fragen Sie alles zu diesen Angeboten",
+    "disclaimer": "Der Assistent kann Fehler machen. Preise und Verfügbarkeit werden von einem Makler bestätigt.",
+    "restart": "Neu beginnen",
+    "errors": {
+      "unavailable": "Die KI-Suche ist derzeit nicht verfügbar. Der vollständige Katalog ist wie gewohnt geöffnet.",
+      "rate_limited": "Zu viele Anfragen. Bitte versuchen Sie es etwas später erneut.",
+      "too_long": "Diese Nachricht ist zu lang — versuchen Sie es kürzer.",
+      "too_many_turns": "Dieses Gespräch ist lang geworden. Beginnen Sie ein neues, um fortzufahren.",
+      "failed": "Etwas ist schiefgelaufen. Senden Sie es erneut.",
+      "budget_exhausted": "Die KI-Suche ist heute wegen hoher Auslastung pausiert. Der vollständige Katalog ist wie gewohnt geöffnet."
+    },
+    "property": {
+      "heading": "Fragen Sie zu dieser Immobilie",
+      "subheading": "Der Assistent kennt dieses Angebot und die Umgebung. Preise und Verfügbarkeit werden von einem Makler bestätigt.",
+      "openCta": "Frage stellen",
+      "chatPlaceholder": "Fragen Sie alles zu dieser Immobilie",
+      "examples": [
+        "Eignet sich das als Investition?",
+        "Wie hoch ist hier der Preis pro m²?",
+        "Wie ist der Vergleich zu ähnlichen Angeboten?",
+        "Wie ist dieses Viertel?"
+      ],
+      "intro": {
+        "title": "Was möchten Sie wissen?",
+        "body": "Fragen Sie nach dem Grundriss, dem Viertel, dem Preis im Vergleich zur Lage oder zum Vergleich mit anderen Angeboten."
+      }
+    }
+  }
+}

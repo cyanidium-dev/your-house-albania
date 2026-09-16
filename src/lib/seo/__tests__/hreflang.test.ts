@@ -22,8 +22,14 @@ describe('buildHreflangAlternates', () => {
     const out = buildHreflangAlternates('guides/x', ['pl', 'en'])!
     expect((out.languages as Record<string, string>)['x-default']).toBe('https://www.domlivo.com/en/guides/x')
   })
+  it('includes de only where German content exists', () => {
+    const catalog = buildHreflangAlternates('albania/durres')!
+    expect(Object.keys(catalog.languages ?? {})).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'x-default'])
+    const blog = buildHreflangAlternates('blog/post')!
+    expect(Object.keys(blog.languages ?? {})).not.toContain('de')
+  })
   it('ignores locales outside routing', () => {
-    const out = buildHreflangAlternates('guides/x', ['de', 'pl'])!
+    const out = buildHreflangAlternates('guides/x', ['xx', 'pl'])!
     expect(Object.keys(out.languages ?? {})).toEqual(['pl', 'x-default'])
   })
 })

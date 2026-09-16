@@ -26,6 +26,7 @@ const READ_LABEL_BY_LOCALE: Record<string, string> = {
   sq: 'min lexim',
   it: 'min di lettura',
   pl: 'min czytania',
+  de: 'Min. Lesezeit',
 };
 
 /**
