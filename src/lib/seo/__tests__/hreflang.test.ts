@@ -8,7 +8,7 @@ import { buildHreflangAlternates } from '../hreflang'
 describe('buildHreflangAlternates', () => {
   it('lists every routing locale plus x-default → en by default', () => {
     const out = buildHreflangAlternates('guides/buying')!
-    expect(Object.keys(out.languages ?? {})).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'x-default'])
+    expect(Object.keys(out.languages ?? {})).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'x-default'])
     expect((out.languages as Record<string, string>)['x-default']).toBe('https://www.domlivo.com/en/guides/buying')
   })
   it('restricts to the given locales and points x-default at the first one when en is absent', () => {
@@ -22,11 +22,9 @@ describe('buildHreflangAlternates', () => {
     const out = buildHreflangAlternates('guides/x', ['pl', 'en'])!
     expect((out.languages as Record<string, string>)['x-default']).toBe('https://www.domlivo.com/en/guides/x')
   })
-  it('includes de only where German content exists', () => {
-    const catalog = buildHreflangAlternates('albania/durres')!
-    expect(Object.keys(catalog.languages ?? {})).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'x-default'])
+  it('lists de everywhere now that German is complete', () => {
     const blog = buildHreflangAlternates('blog/post')!
-    expect(Object.keys(blog.languages ?? {})).not.toContain('de')
+    expect(Object.keys(blog.languages ?? {})).toEqual(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'x-default'])
   })
   it('ignores locales outside routing', () => {
     const out = buildHreflangAlternates('guides/x', ['xx', 'pl'])!

@@ -6,26 +6,19 @@ import { routing } from "@/i18n/routing";
  * A new locale goes into `routing.locales` the day its interface is translated,
  * but every CMS field that has no value in it falls back to English. Indexing
  * the whole site under that locale would publish a second English copy of the
- * blog, the guides and the knowledge pages. So a partial locale lists the paths
- * whose content does exist in it; everything else under that locale still
- * renders, but is `noindex, follow`, stays out of hreflang and out of the
- * sitemaps and IndexNow.
+ * sections nobody translated yet. So a partial locale lists the paths whose
+ * content does exist in it; everything else under that locale still renders,
+ * but is `noindex, follow`, stays out of hreflang and out of the sitemaps and
+ * IndexNow.
  *
- * `de` (2026-09-16): interface, listings, cities, districts, catalog SEO copy
- * and city landings are translated; blog posts, guides and knowledge articles
- * are not. Grow the list as sections get German, and drop the entry once the
- * locale is complete.
+ * History: `de` launched this way on 2026-09-16 (home, /albania/**, /sale,
+ * /rent, /property/*, /cities) and became complete the same day, once the
+ * blog, guides, comparisons and legal pages were translated. Add the next
+ * partial locale here the same way, and remove its entry when it is complete.
  */
-const PARTIAL_LOCALE_PATHS: Readonly<Record<string, readonly RegExp[]>> = {
-  de: [
-    /^$/, // home
-    /^\/albania(\/.*)?$/, // country, city, district, facet, city and district info pages
-    /^\/sale(\/.*)?$/,
-    /^\/rent(\/.*)?$/,
-    /^\/property\/[^/]+$/,
-    /^\/cities(\/[^/]+)?$/,
-  ],
-};
+export type PartialLocalePaths = Readonly<Record<string, readonly RegExp[]>>;
+
+export const PARTIAL_LOCALE_PATHS: PartialLocalePaths = {};
 
 function normalizePath(pathAfterLocale: string): string {
   const path = pathAfterLocale.split(/[?#]/)[0] ?? "";
@@ -34,13 +27,17 @@ function normalizePath(pathAfterLocale: string): string {
   return withSlash.replace(/\/+$/, "");
 }
 
-export function isPartialLocale(locale: string): boolean {
-  return Object.prototype.hasOwnProperty.call(PARTIAL_LOCALE_PATHS, locale);
+export function isPartialLocale(locale: string, config: PartialLocalePaths = PARTIAL_LOCALE_PATHS): boolean {
+  return Object.prototype.hasOwnProperty.call(config, locale);
 }
 
 /** Whether `/{locale}{pathAfterLocale}` may be indexed. Complete locales: always. */
-export function isLocalePathIndexable(locale: string, pathAfterLocale: string): boolean {
-  const allowed = PARTIAL_LOCALE_PATHS[locale];
+export function isLocalePathIndexable(
+  locale: string,
+  pathAfterLocale: string,
+  config: PartialLocalePaths = PARTIAL_LOCALE_PATHS,
+): boolean {
+  const allowed = config[locale];
   if (!allowed) return true;
   const path = normalizePath(pathAfterLocale);
   return allowed.some((re) => re.test(path));
@@ -50,7 +47,7 @@ export function isLocalePathIndexable(locale: string, pathAfterLocale: string): 
  * Same check for a site pathname (`/de/albania/durres`) or absolute URL.
  * Paths that do not start with a known locale are left alone.
  */
-export function isSitePathIndexable(pathnameOrUrl: string): boolean {
+export function isSitePathIndexable(pathnameOrUrl: string, config: PartialLocalePaths = PARTIAL_LOCALE_PATHS): boolean {
   let pathname = pathnameOrUrl;
   if (/^https?:\/\//i.test(pathnameOrUrl)) {
     try {
@@ -63,7 +60,7 @@ export function isSitePathIndexable(pathnameOrUrl: string): boolean {
   if (!match) return true;
   const [, locale, rest = ""] = match;
   if (!(routing.locales as readonly string[]).includes(locale)) return true;
-  return isLocalePathIndexable(locale, rest);
+  return isLocalePathIndexable(locale, rest, config);
 }
 
 export const PARTIAL_LOCALE_ROBOTS_HEADER = "noindex, follow";
