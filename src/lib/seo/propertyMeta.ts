@@ -11,6 +11,12 @@
  * neither city nor district, none carried a price, and 29 descriptions ran
  * past the ~160-character SERP cut. That is what this fixes.
  */
+/** German writes the sign after the amount ("78.000 €"); the other locales keep the title format they rank with. */
+function formatEuro(price: number, locale: string): string {
+  const n = new Intl.NumberFormat(locale).format(price);
+  return locale === "de" ? `${n} €` : `€${n}`;
+}
+
 export type PropertyMetaTitleInput = {
   typeLabel?: string;
   area?: number;
@@ -47,7 +53,7 @@ export function composePropertyMetaTitle(input: PropertyMetaTitleInput): string 
 
   const money =
     typeof price === "number" && price > 0
-      ? `€${new Intl.NumberFormat(locale).format(price)}${isLease(status) ? `/${perMonth}` : ""}`
+      ? `${formatEuro(price, locale)}${isLease(status) ? `/${perMonth}` : ""}`
       : null;
 
   // Nothing to compose must never produce a worse title than the fallback the
