@@ -1,0 +1,154 @@
+import { describe, expect, it } from "vitest";
+import {
+  collectSeoPageCandidates,
+  countSeoPageInventory,
+  decideSeoPages,
+  seoPageId,
+  selectSeoLinks,
+  type SeoDecisionSourceRows,
+  type SeoInventoryRow,
+  type SeoPageKey,
+} from "..";
+
+type Property = NonNullable<SeoDecisionSourceRows["properties"]>[number];
+
+const flat = (district: string | undefined, bedrooms: number, extra: Partial<Property> = {}): Property => ({
+  citySlug: "durres",
+  districtSlug: district,
+  deal: "sale",
+  typeSlug: "apartment",
+  bedrooms,
+  price: 90000,
+  priceUnit: "total",
+  _updatedAt: "2026-09-01T00:00:00Z",
+  ...extra,
+});
+
+const repeat = <T,>(n: number, make: (i: number) => T): T[] => Array.from({ length: n }, (_, i) => make(i));
+
+const source = (properties: Property[], over: Partial<SeoDecisionSourceRows> = {}): SeoDecisionSourceRows => ({
+  cities: [
+    { citySlug: "durres", countrySlug: "albania" },
+    { citySlug: "sarande", countrySlug: "albania" },
+    { citySlug: "kavaje", countrySlug: "albania" },
+  ],
+  districts: [
+    { citySlug: "durres", districtSlug: "golem-durres" },
+    { citySlug: "durres", districtSlug: "spille" },
+  ],
+  catalogNoIndex: [],
+  properties,
+  ...over,
+});
+
+const find = (rows: ReturnType<typeof decideSeoPages>, key: SeoPageKey) => rows.find((r) => seoPageId(r.decision.key) === seoPageId(key));
+const sitemap = (rows: ReturnType<typeof decideSeoPages>) => rows.filter((r) => r.decision.status === "index").map((r) => seoPageId(r.decision.key)).sort();
+
+const durres: SeoPageKey = { family: "city", country: "albania", city: "durres" };
+const golem: SeoPageKey = { family: "district", country: "albania", city: "durres", district: "golem-durres" };
+
+describe("collectSeoPageCandidates", () => {
+  const rows: SeoInventoryRow[] = [
+    { country: "albania", city: "durres", district: "golem-durres", typeSlug: "apartment", bedrooms: 1, lastModified: new Date("2026-01-01") },
+    { country: "albania", city: "durres", district: "golem-durres", typeSlug: "apartment", bedrooms: 2, lastModified: new Date("2026-03-01") },
+    { country: "albania", city: "durres", district: null, typeSlug: "land", lastModified: new Date("2026-02-01") },
+  ];
+  const candidates = collectSeoPageCandidates(rows);
+  const get = (key: SeoPageKey) => candidates.find((c) => seoPageId(c.key) === seoPageId(key));
+
+  it("counts each page and its parent", () => {
+    expect(get(durres)?.inventory).toEqual({ count: 3, parentCount: null });
+    expect(get(golem)?.inventory).toEqual({ count: 2, parentCount: 3 });
+    expect(get({ family: "cityType", country: "albania", city: "durres", type: "land" })?.inventory).toEqual({ count: 1, parentCount: 3 });
+    expect(get({ family: "facet", country: "albania", city: "durres", district: "golem-durres", facet: "1-1" })?.inventory).toEqual({ count: 1, parentCount: 2 });
+  });
+
+  it("uses the newest listing as the page's last modification", () => {
+    expect(get(durres)?.lastModified.toISOString()).toBe("2026-03-01T00:00:00.000Z");
+  });
+
+  it("does not generate pages without listings", () => {
+    expect(get({ family: "facet", country: "albania", city: "durres", facet: "3-1" })).toBeUndefined();
+    expect(collectSeoPageCandidates([])).toEqual([]);
+  });
+
+  it("agrees with the single-page counter", () => {
+    for (const c of candidates) expect(countSeoPageInventory(rows, c.key)).toBe(c.inventory.count);
+  });
+});
+
+describe("decideSeoPages → sitemap", () => {
+  it("lists only indexed pages, and none for an empty inventory", () => {
+    expect(sitemap(decideSeoPages(source([])))).toEqual([]);
+  });
+
+  it("indexes the city and a district with demand, not a thin slice", () => {
+    const props = [...repeat(40, (i) => flat("golem-durres", (i % 3) + 1)), ...repeat(12, () => flat("spille", 2))];
+    const rows = decideSeoPages(source(props));
+    expect(sitemap(rows)).toEqual(["city:albania/durres", "district:albania/durres/golem-durres", "facet:albania/durres//1-1", "facet:albania/durres//2-1"].sort());
+    expect(find(rows, { family: "district", country: "albania", city: "durres", district: "spille" })?.decision.status).toBe("noindex");
+  });
+
+  it("drops listings of hidden deals and cities without a country", () => {
+    const props = [...repeat(10, () => flat(undefined, 1, { deal: "rent" })), ...repeat(10, () => flat(undefined, 1, { citySlug: "nowhere" }))];
+    expect(decideSeoPages(source(props))).toEqual([]);
+  });
+
+  it("counts a listing in an unpublished district for its city only", () => {
+    const rows = decideSeoPages(source(repeat(6, () => flat("hidden-district", 1))));
+    expect(find(rows, durres)?.count).toBe(6);
+    expect(rows.some((r) => r.decision.key.family === "district")).toBe(false);
+  });
+
+  it("applies a district's CMS noindex to its listing and facets, not the city", () => {
+    const props = repeat(60, (i) => flat("golem-durres", (i % 2) + 1));
+    const rows = decideSeoPages(source(props, { catalogNoIndex: [{ pageScope: "district", citySlug: "durres", districtSlug: "golem-durres" }] }));
+    expect(find(rows, golem)?.decision.status).toBe("noindex");
+    expect(find(rows, durres)?.decision.status).toBe("index");
+  });
+
+  it("applies a city's noindex to every page of the city", () => {
+    const rows = decideSeoPages(source(repeat(60, () => flat("golem-durres", 1)), { cities: [{ citySlug: "durres", countrySlug: "albania", noIndex: true }] }));
+    expect(sitemap(rows)).toEqual([]);
+  });
+
+  it("carries the locales a page is indexed in", () => {
+    const rows = decideSeoPages(source(repeat(7, () => flat(undefined, 1, { citySlug: "sarande" }))));
+    expect(find(rows, { family: "city", country: "albania", city: "sarande" })?.decision.indexableLocales).toEqual(["en", "sq", "it", "pl", "de"]);
+  });
+});
+
+describe("selectSeoLinks", () => {
+  const props = [
+    ...repeat(40, (i) => flat("golem-durres", (i % 3) + 1)),
+    ...repeat(12, () => flat("spille", 2)),
+    ...repeat(7, () => flat(undefined, 1, { citySlug: "sarande" })),
+  ];
+  const rows = decideSeoPages(source(props));
+  const candidates = rows.map((r) => ({ decision: r.decision, count: r.count }));
+
+  it("links a city to its indexable districts and facets only", () => {
+    const links = selectSeoLinks({ from: durres, locale: "en", candidates });
+    expect(links.map((l) => seoPageId(l.key))).toEqual(["district:albania/durres/golem-durres", "facet:albania/durres//1-1", "facet:albania/durres//2-1"]);
+    expect(links.every((l) => !l.current)).toBe(true);
+    expect(links.map((l) => l.group)).toEqual(["districts", "rooms", "rooms"]);
+  });
+
+  it("never links to another city or to itself as a link", () => {
+    const links = selectSeoLinks({ from: golem, locale: "en", candidates });
+    expect(links.some((l) => l.key.city !== "durres")).toBe(false);
+    expect(links.some((l) => l.key.family === "district")).toBe(false);
+  });
+
+  it("keeps the current facet visible even when it is not indexed", () => {
+    const current: SeoPageKey = { family: "facet", country: "albania", city: "durres", facet: "3-1" };
+    const links = selectSeoLinks({ from: current, locale: "en", candidates });
+    expect(links.find((l) => l.current)?.key).toEqual(current);
+  });
+
+  it("does not link a page in a locale it is not indexed in", () => {
+    const sarande: SeoPageKey = { family: "city", country: "albania", city: "sarande" };
+    const onlySarandeFacets = selectSeoLinks({ from: sarande, locale: "uk", candidates });
+    expect(onlySarandeFacets).toEqual([]);
+  });
+});

@@ -18,6 +18,8 @@ export async function GET() {
   const urls: Array<{ loc: string; lastmod?: Date }> = [];
   for (const locale of routing.locales) {
     for (const row of rows) {
+      // Registry pages are indexed only in the locales with demand for them.
+      if (row.locales && !row.locales.includes(locale)) continue;
       urls.push({
         loc: `${base}/${locale}/${row.segmentAfterLocale}`,
         lastmod: row.lastModified,

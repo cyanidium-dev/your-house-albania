@@ -14,9 +14,9 @@ import {
   fetchCatalogSeoPageByDistrict,
   resolveCatalogSeoPage,
   fetchCatalogFilterOptions,
-  fetchCatalogProperties,
   fetchCatalogListingStats,
   fetchCityCountrySlugByCitySlug,
+  fetchSeoPageDecision,
 } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
@@ -24,12 +24,7 @@ import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
-import {
-  LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
-  LISTING_DISTRICT_NOINDEX_THRESHOLD,
-  LISTING_FACET_NOINDEX_THRESHOLD,
-  shouldNoindexEmptyCityListing,
-} from "@/lib/seo/listingIndexPolicy";
+import { isSeoPageIndexableIn, seoPageKeyFromListingRoute } from "@/lib/seo/pages";
 import {
   buildCityDistrictListingSeo,
   buildCityListingSeo,
@@ -41,7 +36,7 @@ import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { catalogFilterPath, dealRouteSegmentToQueryValue, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
+import { catalogFilterPath, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
 import { isPublicDealRouteSegment, isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
@@ -113,6 +108,36 @@ async function validateListingGeoContent(
   if (!knownType) notFound();
 }
 
+type RegistryIndexing = { indexable: boolean; locales: readonly string[] };
+
+/**
+ * Whether this listing may be indexed in `locale`, and in which locales it has
+ * alternates. The SEO page registry decides (demand, inventory, overlap with
+ * its parent, CMS override — docs/seo/README.md); a route that is no registry
+ * page, or has no inventory, is never indexable.
+ */
+async function registryIndexing(input: {
+  locale: string;
+  countrySlug: string;
+  citySlug: string;
+  district?: string;
+  dealSegment?: string;
+  type?: string;
+  facet?: string;
+}): Promise<RegistryIndexing> {
+  const key = seoPageKeyFromListingRoute({
+    country: input.countrySlug,
+    city: input.citySlug,
+    district: input.district,
+    dealSegment: input.dealSegment,
+    type: input.type,
+    facet: input.facet,
+  });
+  const row = key ? await fetchSeoPageDecision(key) : null;
+  if (!row) return { indexable: false, locales: [] };
+  return { indexable: isSeoPageIndexableIn(row.decision, input.locale), locales: row.decision.indexableLocales };
+}
+
 type FacetPageInput = {
   locale: string;
   countrySlug: string;
@@ -142,7 +167,7 @@ async function loadFacetPage(input: FacetPageInput) {
 }
 
 async function facetListingMetadata(input: FacetPageInput & { search: SearchParams }): Promise<Metadata> {
-  const { count, copy } = await loadFacetPage(input);
+  const { copy } = await loadFacetPage(input);
   if (!copy) return {};
   const title = copy.title;
   const description = copy.description;
@@ -164,10 +189,19 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
     facet: input.facet,
   });
   const canonical = `${getSiteBaseUrl()}${path}`;
-  const href = buildHreflangAlternates(path.replace(`/${input.locale}`, ""));
-  // Same rules as the district listings: a thin slice, or a filtered copy of
-  // one, stays reachable but out of the index.
-  const noindex = listingUrlHasQueryParams(input.search) || count <= LISTING_FACET_NOINDEX_THRESHOLD;
+  const indexing = await registryIndexing({
+    locale: input.locale,
+    countrySlug: input.countrySlug,
+    citySlug: input.citySlug,
+    district: input.districtSlug,
+    facet: input.facet,
+  });
+  // A noindexed page declares no alternates: hreflang points only at pages
+  // we want indexed, in the locales that have demand for them.
+  const href = indexing.indexable ? buildHreflangAlternates(path.replace(`/${input.locale}`, ""), indexing.locales) : undefined;
+  // A slice the registry does not index, or a filtered copy of one, stays
+  // reachable but out of the index.
+  const noindex = listingUrlHasQueryParams(input.search) || !indexing.indexable;
   return {
     title: listingTitleField(title),
     description,
@@ -313,65 +347,30 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   });
   const baseUrl = getSiteBaseUrl();
   const canonical = `${baseUrl}${path.split("?")[0]}`;
-  const href = buildHreflangAlternates(path.split("?")[0].replace(`/${locale}`, ""));
   const noindexQuery =
     listingUrlHasQueryParams(search) ||
     shouldCatalogListingNoindex(mergedSearchParams(search, dealForPath, typeSlug || undefined), {
       ignoredQueryKeys: ["deal", "type", "district"],
     });
-  const seoNoIndex = catalogSeo?.noIndex ?? false;
-  let noindexByThreshold = false;
-  let noindexByDistrictThreshold = false;
-  if (!noindexQuery && !seoNoIndex && dealForPath && typeSlug) {
-    const listing = await fetchCatalogProperties({
-      city: geo.listingCitySlug,
-      deal: dealRouteSegmentToQueryValue(dealForPath),
-      type: typeSlug,
-      page: 1,
-      pageSize: 1,
-    });
-    const totalCount = listing?.totalCount ?? 0;
-    noindexByThreshold = totalCount <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD;
-  }
-  const districtForIndex =
-    pathDistrict || (typeof search.district === "string" ? search.district.trim().toLowerCase() : "");
-  if (!noindexQuery && !seoNoIndex && districtForIndex) {
-    const listing = await fetchCatalogProperties({
-      city: geo.listingCitySlug,
-      district: districtForIndex,
-      page: 1,
-      pageSize: 1,
-    });
-    const totalCount = listing?.totalCount ?? 0;
-    noindexByDistrictThreshold = totalCount <= LISTING_DISTRICT_NOINDEX_THRESHOLD;
-  }
-
-  // Bare city listing (no deal, type or district): an empty one answers nothing
-  // and should not be in the index. Counted with the same fetch the page uses,
-  // so robots can never disagree with what the visitor sees. Comes back on its
-  // own as soon as the city has inventory.
-  let noindexEmptyCity = false;
-  const isBareCityListing =
-    !dealForPath && !typeSlug && !pathDistrict && !(typeof search.district === "string" && search.district.trim());
-  if (!noindexQuery && !seoNoIndex && isBareCityListing && geo.listingCitySlug) {
-    const listing = await fetchCatalogProperties({
-      city: geo.listingCitySlug,
-      page: 1,
-      pageSize: 1,
-    });
-    noindexEmptyCity = shouldNoindexEmptyCityListing(listing?.totalCount ?? 0);
-  }
   // Rentals hidden from the public UI: rent listing pages stay reachable but noindexed.
   const hiddenDeal = Boolean(dealForPath) && !isPublicDealRouteSegment(dealForPath);
-  const robots =
-    noindexQuery ||
-    seoNoIndex ||
-    noindexByThreshold ||
-    noindexByDistrictThreshold ||
-    noindexEmptyCity ||
-    hiddenDeal
-      ? { index: false as const, follow: true as const }
-      : undefined;
+  // Only the full geo shape can be a registry page; the omit-country shape
+  // redirects to it, and a `?district=` copy is a query URL.
+  const indexing: RegistryIndexing =
+    geo.mode === "fullGeo" && !hiddenDeal
+      ? await registryIndexing({
+          locale,
+          countrySlug: geo.listingCountrySlug,
+          citySlug: geo.listingCitySlug,
+          district: pathDistrict || undefined,
+          dealSegment: dealForPath || undefined,
+          type: typeSlug || undefined,
+        })
+      : { indexable: false, locales: [] };
+  const href = indexing.indexable
+    ? buildHreflangAlternates(path.split("?")[0].replace(`/${locale}`, ""), indexing.locales)
+    : undefined;
+  const robots = noindexQuery || !indexing.indexable ? { index: false as const, follow: true as const } : undefined;
 
   return {
     title: listingTitleField(title),
@@ -410,6 +409,43 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
   const typeSlug = propertyType;
 
   await validateListingGeoContent(locale, geo.listingCitySlug, options.propertyTypes, typeSlug || undefined);
+
+  // `/durres/sale/apartment` without the country was a second address for the
+  // full geo page; it moves for good wherever the city's country is known.
+  if (geo.mode === "omitCountry") {
+    const cityCountry = await fetchCityCountrySlugByCitySlug(geo.listingCitySlug);
+    if (cityCountry) {
+      permanentRedirect(
+        canonicalCatalogGeoListingHref({
+          locale,
+          countrySlug: cityCountry,
+          citySlug: geo.listingCitySlug,
+          dealTypeSegment: dealType,
+          propertyType: typeSlug,
+          district: typeof search.district === "string" ? normalizeListingPathSegment(search.district) || undefined : undefined,
+          query: search,
+          queryExcludeKeys: ["deal", "type", "city", "district"],
+        })
+      );
+    }
+  }
+
+  // `/durres/apartment` lists what `/durres/sale/apartment` lists while sale is
+  // the only public deal; the typed page has one address, the one with the deal.
+  if (geo.mode === "fullGeo" && typeSlug && !dealType && !facet && isSolePublicDealRouteSegment("sale")) {
+    permanentRedirect(
+      canonicalCatalogGeoListingHref({
+        locale,
+        countrySlug: geo.listingCountrySlug,
+        citySlug: geo.listingCitySlug,
+        dealTypeSegment: "sale",
+        propertyType: typeSlug,
+        district: pathDistrict || undefined,
+        query: search,
+        queryExcludeKeys: ["deal", "type", "city"],
+      })
+    );
+  }
 
   // `/durres/sale` and `/durres/golem-durres/sale` duplicated the listing above
   // them while sale is the only public deal (see `isSolePublicDealQuery`);

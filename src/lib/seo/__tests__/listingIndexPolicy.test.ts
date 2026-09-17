@@ -2,21 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   EMPTY_CITY_LISTING_NOINDEX_MAX,
   LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
-  LISTING_DISTRICT_NOINDEX_THRESHOLD,
   shouldNoindexEmptyCityListing,
 } from "../listingIndexPolicy";
+import { SEO_PAGE_POLICY } from "../pages/policy";
 
 describe("shouldNoindexEmptyCityListing", () => {
-  it("drops a city with no properties", () => {
+  it("drops a listing with no properties", () => {
     expect(shouldNoindexEmptyCityListing(0)).toBe(true);
   });
 
-  it("keeps a city that has even one property", () => {
-    // The point of the zero threshold: Vlore (4), Sarande (6) and Shengjin (2)
-    // stay indexed. Demoting them would cost four of seven cities.
+  it("keeps a listing that has even one property", () => {
     expect(shouldNoindexEmptyCityListing(1)).toBe(false);
-    expect(shouldNoindexEmptyCityListing(2)).toBe(false);
-    expect(shouldNoindexEmptyCityListing(6)).toBe(false);
     expect(shouldNoindexEmptyCityListing(23)).toBe(false);
   });
 
@@ -29,8 +25,13 @@ describe("shouldNoindexEmptyCityListing", () => {
     expect(shouldNoindexEmptyCityListing(-1)).toBe(true);
   });
 
-  it("keeps the city bar looser than the combination-page thresholds", () => {
+  it("keeps the empty bar looser than the type threshold", () => {
     expect(EMPTY_CITY_LISTING_NOINDEX_MAX).toBeLessThan(LISTING_DEAL_TYPE_NOINDEX_THRESHOLD);
-    expect(EMPTY_CITY_LISTING_NOINDEX_MAX).toBeLessThan(LISTING_DISTRICT_NOINDEX_THRESHOLD);
+  });
+});
+
+describe("national deal/type threshold", () => {
+  it("is derived from the registry's city + type minimum, not a second number", () => {
+    expect(LISTING_DEAL_TYPE_NOINDEX_THRESHOLD).toBe(SEO_PAGE_POLICY.cityType.minInventory - 1);
   });
 });

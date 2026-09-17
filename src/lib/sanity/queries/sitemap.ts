@@ -1,16 +1,8 @@
 import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { buildListingPath } from '@/lib/routes/listingRoutes';
-import {
-  isPublicDealQuery,
-  isPublicDealRouteSegment,
-  isSolePublicDealRouteSegment,
-} from '@/lib/catalog/publicDealTypes';
-import { LISTING_FACETS, LISTING_FACET_SLUGS } from '@/lib/catalog/listingFacets';
-import {
-  LISTING_DEAL_TYPE_NOINDEX_THRESHOLD,
-  LISTING_DISTRICT_NOINDEX_THRESHOLD,
-  LISTING_FACET_NOINDEX_THRESHOLD,
-} from '@/lib/seo/listingIndexPolicy';
+import { isPublicDealQuery } from '@/lib/catalog/publicDealTypes';
+import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
+import { seoPagePath, type SeoPageKey } from '@/lib/seo/pages';
 import {
   resolveLandingPathForSitemap,
   type LandingPageSitemapRow,
@@ -18,6 +10,7 @@ import {
 import { RESERVED_GUIDE_SLUGS } from './guides';
 import { AGENT_SLUG_REGEX } from './agent';
 import { getClient } from './_core';
+import { fetchSeoPageDecisions } from './seoPages';
 import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
 
 function parseSitemapDate(raw: string | undefined): Date {
@@ -106,302 +99,48 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
   }
 }
 
-const SITEMAP_CITY_DEAL_SEGMENTS = ['sale', 'rent', 'short-term-rent'] as const;
-
-export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified: Date };
-
 /**
- * City listing shorthand URLs from `city` docs and city landings (deduped). Editorial pages use `/{country}/{slug}/info`.
+ * `locales`: emit the URL only in these locales; absent = every locale.
+ * Registry pages carry the locales their decision indexes them in.
  */
-export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
-  const client = getClient();
-  if (!client) return [];
-  const query = `{
-    "cities": *[_type == "city" && isPublished != false && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
-      "slug": slug.current,
-      "countrySlug": country->slug.current,
-      _updatedAt
-    },
-    "landings": *[_type == "landingPage" && pageType == "city" && linkedCity->isPublished != false && defined(linkedCity->slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
-      "slug": linkedCity->slug.current,
-      "countrySlug": linkedCity->country->slug.current,
-      _updatedAt
-    },
-    "propertyCitySlugs": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(city->slug.current)]{
-      "citySlug": city->slug.current
-    }
-  }`;
-  try {
-    const result = await client.fetch<{
-      cities?: Array<{ slug?: string; countrySlug?: string; _updatedAt?: string }>;
-      landings?: Array<{ slug?: string; countrySlug?: string; _updatedAt?: string }>;
-      propertyCitySlugs?: Array<{ citySlug?: string }>;
-    }>(query);
-    // A city page whose listing is empty is noindexed by the route, so it has
-    // no business in the sitemap either — a sitemap should only advertise URLs
-    // we actually want indexed. Cities return here on their own once they have
-    // inventory, since this query reruns on the sitemap's revalidate window.
-    const citiesWithProperties = new Set(
-      (result?.propertyCitySlugs ?? [])
-        .map((r) => (typeof r.citySlug === 'string' ? r.citySlug.trim().toLowerCase() : ''))
-        .filter(Boolean)
-    );
-    const best = new Map<string, { lastModified: Date; countrySlug?: string }>();
-    const rows = [...(result?.cities ?? []), ...(result?.landings ?? [])];
-    for (const row of rows) {
-      const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
-      if (!slug) continue;
-      if (!citiesWithProperties.has(slug)) continue;
-      const lm = parseSitemapDate(row._updatedAt);
-      const countrySlug =
-        typeof row.countrySlug === 'string' && row.countrySlug.trim()
-          ? row.countrySlug.trim().toLowerCase()
-          : '';
-      const prev = best.get(slug);
-      if (!prev || lm > prev.lastModified) best.set(slug, { lastModified: lm, countrySlug });
-    }
-    return Array.from(best.entries()).map(([slug, { lastModified, countrySlug }]) => {
-      const segmentAfterLocale = countrySlug
-        ? `${encodeURIComponent(countrySlug)}/${encodeURIComponent(slug)}`
-        : encodeURIComponent(slug);
-      return { segmentAfterLocale, lastModified };
-    });
-  } catch (err) {
-    console.warn('[Sanity] fetchSitemapCityEntries failed:', err);
-    return [];
-  }
+export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified: Date; locales?: readonly string[] };
+
+/** Path after `/{locale}/` of a registry page. */
+function registrySegmentAfterLocale(key: SeoPageKey): string {
+  return seoPagePath(key, 'en').replace(/^\/en\//, '');
 }
 
 /**
- * Listing family URLs for sitemap.
- * Emits canonical city+deal pages and city+deal+type pages when they pass threshold.
+ * Indexed registry pages of the given families, one entry per page with the
+ * locales it is indexed in. Same decisions the listing route applies to robots,
+ * so the sitemap lists a URL exactly when the page says `index`.
+ */
+async function fetchRegistrySitemapEntries(
+  include: (family: SeoPageKey['family']) => boolean
+): Promise<SitemapSimpleEntry[]> {
+  const rows = await fetchSeoPageDecisions();
+  if (!rows) return [];
+  return rows
+    .filter((row) => row.decision.status === 'index' && include(row.decision.key.family))
+    .map((row) => ({
+      segmentAfterLocale: registrySegmentAfterLocale(row.decision.key),
+      lastModified: parseSitemapDate(row.lastModified),
+      locales: row.decision.indexableLocales,
+    }));
+}
+
+/** City listings (`/{country}/{city}`) the registry indexes. Editorial pages use `/{country}/{slug}/info`. */
+export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
+  return fetchRegistrySitemapEntries((family) => family === 'city');
+}
+
+/**
+ * District, city + type and facet listings the registry indexes. Deal-only
+ * city pages are not registry pages: the sole public deal's one redirects to
+ * the city listing, and hidden deals are noindexed.
  */
 export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
-  const client = getClient();
-  if (!client) return [];
-  const query = `{
-    "cityRows": *[_type == "city" && isPublished != false && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
-      "citySlug": slug.current,
-      "countrySlug": country->slug.current,
-      _updatedAt
-    },
-    "catalogCitySeoNoIndex": *[_type == "catalogSeoPage" && active == true && pageScope == "city" && seo.noIndex == true]{
-      "citySlug": city->slug.current
-    },
-    "catalogDistrictSeoNoIndex": *[_type == "catalogSeoPage" && active == true && pageScope == "district" && seo.noIndex == true]{
-      "citySlug": city->slug.current,
-      "districtSlug": district->slug.current
-    },
-    "publishedDistricts": *[_type == "district" && isPublished != false && defined(slug.current)]{
-      "citySlug": city->slug.current,
-      "districtSlug": slug.current
-    },
-    "propertyRows": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(city->slug.current) && defined(status)]{
-      "citySlug": city->slug.current,
-      "districtSlug": district->slug.current,
-      "deal": status,
-      "typeSlug": type->slug.current,
-      bedrooms,
-      price,
-      priceUnit,
-      constructionStage,
-      seaDistanceMeters,
-      beachfront,
-      _updatedAt
-    }
-  }`;
-  try {
-    const result = await client.fetch<{
-      cityRows?: Array<{ citySlug?: string; countrySlug?: string; _updatedAt?: string }>;
-      catalogCitySeoNoIndex?: Array<{ citySlug?: string }>;
-      catalogDistrictSeoNoIndex?: Array<{ citySlug?: string; districtSlug?: string }>;
-      publishedDistricts?: Array<{ citySlug?: string; districtSlug?: string }>;
-      propertyRows?: Array<{
-        citySlug?: string;
-        districtSlug?: string;
-        deal?: string;
-        typeSlug?: string;
-        bedrooms?: number | null;
-        price?: number | null;
-        priceUnit?: string | null;
-        constructionStage?: string | null;
-        seaDistanceMeters?: number | null;
-        beachfront?: boolean | null;
-        _updatedAt?: string;
-      }>;
-    }>(query);
-    const blockedDistrictSeo = new Set(
-      (result?.catalogDistrictSeoNoIndex ?? [])
-        .map((r) =>
-          typeof r.citySlug === 'string' && typeof r.districtSlug === 'string'
-            ? `${r.citySlug.trim().toLowerCase()}|${r.districtSlug.trim().toLowerCase()}`
-            : ''
-        )
-        .filter(Boolean)
-    );
-    const blockedCitySeo = new Set(
-      (result?.catalogCitySeoNoIndex ?? [])
-        .map((r) => (typeof r.citySlug === 'string' ? r.citySlug.trim().toLowerCase() : ''))
-        .filter(Boolean)
-    );
-    const cityRows = (result?.cityRows ?? []).filter(
-      (r): r is { citySlug: string; countrySlug?: string; _updatedAt?: string } =>
-        typeof r.citySlug === 'string' && r.citySlug.trim().length > 0
-    );
-    const cityCountryBySlug = new Map<string, string>();
-    for (const r of cityRows) {
-      const cs = r.citySlug.trim().toLowerCase();
-      const ctry =
-        typeof r.countrySlug === 'string' && r.countrySlug.trim()
-          ? r.countrySlug.trim().toLowerCase()
-          : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
-      cityCountryBySlug.set(cs, ctry);
-    }
-    const citySlugs = new Set(
-      cityRows
-        .map((r) => r.citySlug.trim().toLowerCase())
-        .filter((slug) => !blockedCitySeo.has(slug))
-    );
-
-    const dealBest = new Map<string, Date>();
-    const typeCount = new Map<string, { count: number; lastmod: Date }>();
-    // District listing pages (`/{country}/{city}/{district}`): counted over the
-    // public deal types, the same set the unfiltered page shows.
-    const districtCount = new Map<string, { count: number; lastmod: Date }>();
-    // Facet pages (`/{city}[/{district}]/{facet}`), counted with the same
-    // predicates the route uses (`LISTING_FACETS[facet].matches`).
-    const facetCount = new Map<string, { count: number; lastmod: Date }>();
-    const bump = (map: Map<string, { count: number; lastmod: Date }>, key: string, lm: Date) => {
-      const prev = map.get(key);
-      if (!prev) map.set(key, { count: 1, lastmod: lm });
-      else map.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
-    };
-    const publishedDistrictKeys = new Set(
-      (result?.publishedDistricts ?? [])
-        .map((d) =>
-          typeof d.citySlug === 'string' && typeof d.districtSlug === 'string'
-            ? `${d.citySlug.trim().toLowerCase()}|${d.districtSlug.trim().toLowerCase()}`
-            : ''
-        )
-        .filter(Boolean)
-    );
-    const propertyRows = result?.propertyRows ?? [];
-    for (const row of propertyRows) {
-      const citySlug = typeof row.citySlug === 'string' ? row.citySlug.trim().toLowerCase() : '';
-      if (!citySlug || !citySlugs.has(citySlug)) continue;
-      const deal = typeof row.deal === 'string' ? row.deal.trim().toLowerCase() : '';
-      const dealSegment =
-        deal === 'sale' || deal === 'rent' ? deal : deal === 'short-term' ? 'short-term-rent' : '';
-      if (!dealSegment) continue;
-      const lm = parseSitemapDate(row._updatedAt);
-
-      const districtSlug =
-        typeof row.districtSlug === 'string' ? row.districtSlug.trim().toLowerCase() : '';
-      if (districtSlug && isPublicDealRouteSegment(dealSegment)) {
-        const key = `${citySlug}|${districtSlug}`;
-        const prev = districtCount.get(key);
-        if (!prev) districtCount.set(key, { count: 1, lastmod: lm });
-        else districtCount.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
-      }
-
-      if (isPublicDealRouteSegment(dealSegment)) {
-        const typeForFacet = typeof row.typeSlug === 'string' ? row.typeSlug.trim().toLowerCase() : '';
-        for (const facet of LISTING_FACET_SLUGS) {
-          if (!LISTING_FACETS[facet].matches({ ...row, typeSlug: typeForFacet })) continue;
-          bump(facetCount, `${citySlug}||${facet}`, lm);
-          if (districtSlug) bump(facetCount, `${citySlug}|${districtSlug}|${facet}`, lm);
-        }
-      }
-
-      const dealKey = `${citySlug}|${dealSegment}`;
-      const prevDeal = dealBest.get(dealKey);
-      if (!prevDeal || lm > prevDeal) dealBest.set(dealKey, lm);
-
-      const typeSlug = typeof row.typeSlug === 'string' ? row.typeSlug.trim().toLowerCase() : '';
-      if (typeSlug) {
-        const key = `${citySlug}|${dealSegment}|${typeSlug}`;
-        const prev = typeCount.get(key);
-        if (!prev) typeCount.set(key, { count: 1, lastmod: lm });
-        else typeCount.set(key, { count: prev.count + 1, lastmod: lm > prev.lastmod ? lm : prev.lastmod });
-      }
-    }
-
-    const out: SitemapSimpleEntry[] = [];
-    for (const citySlug of citySlugs) {
-      const countryForCity =
-        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
-      const countrySeg = encodeURIComponent(countryForCity);
-      for (const dealSegment of SITEMAP_CITY_DEAL_SEGMENTS) {
-        // Rentals hidden from the public UI → excluded from sitemaps too.
-        if (!isPublicDealRouteSegment(dealSegment)) continue;
-        // The sole public deal's city page redirects to the bare city listing,
-        // which `sitemap-cities.xml` already carries.
-        if (isSolePublicDealRouteSegment(dealSegment)) continue;
-        const dealKey = `${citySlug}|${dealSegment}`;
-        const lm = dealBest.get(dealKey);
-        if (!lm) continue;
-        out.push({
-          segmentAfterLocale: `${countrySeg}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}`,
-          lastModified: lm,
-        });
-      }
-    }
-
-    for (const [key, value] of typeCount.entries()) {
-      // Keep thin city/deal/type combinations out of sitemap unless they pass index threshold.
-      if (value.count <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD) continue;
-      const [citySlug, dealSegment, typeSlug] = key.split('|');
-      if (!isPublicDealRouteSegment(dealSegment)) continue;
-      const countryForCity =
-        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
-      const countrySeg = encodeURIComponent(countryForCity);
-      out.push({
-        segmentAfterLocale: `${countrySeg}/${encodeURIComponent(citySlug)}/${encodeURIComponent(dealSegment)}/${encodeURIComponent(typeSlug)}`,
-        lastModified: value.lastmod,
-      });
-    }
-
-    for (const [key, value] of districtCount.entries()) {
-      // Same gate as the route's robots: a thin district listing is noindexed there too.
-      if (value.count <= LISTING_DISTRICT_NOINDEX_THRESHOLD) continue;
-      if (blockedDistrictSeo.has(key)) continue;
-      const [citySlug, districtSlug] = key.split('|');
-      const countryForCity =
-        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
-      out.push({
-        segmentAfterLocale: `${encodeURIComponent(countryForCity)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(districtSlug)}`,
-        lastModified: value.lastmod,
-      });
-    }
-
-    for (const [key, value] of facetCount.entries()) {
-      if (value.count <= LISTING_FACET_NOINDEX_THRESHOLD) continue;
-      const [citySlug, districtSlug, facet] = key.split('|');
-      if (districtSlug && !publishedDistrictKeys.has(`${citySlug}|${districtSlug}`)) continue;
-      const countryForCity =
-        cityCountryBySlug.get(citySlug) ?? LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
-      const place = districtSlug
-        ? `${encodeURIComponent(citySlug)}/${encodeURIComponent(districtSlug)}`
-        : encodeURIComponent(citySlug);
-      out.push({
-        segmentAfterLocale: `${encodeURIComponent(countryForCity)}/${place}/${encodeURIComponent(facet)}`,
-        lastModified: value.lastmod,
-      });
-    }
-
-    const dedup = new Map<string, Date>();
-    for (const row of out) {
-      const prev = dedup.get(row.segmentAfterLocale);
-      if (!prev || row.lastModified > prev) dedup.set(row.segmentAfterLocale, row.lastModified);
-    }
-    return Array.from(dedup.entries()).map(([segmentAfterLocale, lastModified]) => ({
-      segmentAfterLocale,
-      lastModified,
-    }));
-  } catch (err) {
-    console.warn('[Sanity] fetchSitemapTypeEntries failed:', err);
-    return [];
-  }
+  return fetchRegistrySitemapEntries((family) => family !== 'city');
 }
 
 /** Segments after `/{locale}/` for national deal routes; uses `buildListingPath` with dummy locale `en`. */

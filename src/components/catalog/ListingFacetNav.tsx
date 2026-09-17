@@ -1,19 +1,10 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { fetchCatalogListingStats, fetchDistrictListingCounts } from "@/lib/sanity/client";
+import { fetchDistrictListingCounts, fetchSeoPageDecisions } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { catalogFilterPath } from "@/lib/routes/catalog";
-import {
-  LISTING_FACETS,
-  LISTING_FACET_SLUGS,
-  facetCatalogFilters,
-  type ListingFacetKind,
-  type ListingFacetSlug,
-} from "@/lib/catalog/listingFacets";
-import {
-  LISTING_DISTRICT_NOINDEX_THRESHOLD,
-  LISTING_FACET_NOINDEX_THRESHOLD,
-} from "@/lib/seo/listingIndexPolicy";
+import type { ListingFacetKind, ListingFacetSlug } from "@/lib/catalog/listingFacets";
+import { selectSeoLinks, type SeoPageKey } from "@/lib/seo/pages";
 
 type Props = {
   locale: string;
@@ -31,49 +22,64 @@ const GROUPS: ListingFacetKind[] = ["sea", "rooms", "budget", "stage"];
 
 /**
  * The slices of a place as links: its districts (on a city page), then rooms,
- * budgets and new builds, each with its live count. Only slices that clear the
- * index threshold are linked, so every chip leads to a page Google may index
- * and no chip leads to a thin one. Server-rendered: these are the links that
- * give district and facet listings their internal weight — before this a
- * district listing sat four clicks deep with one inbound link.
+ * budgets and new builds, each with its live count. Only pages the SEO page
+ * registry indexes in this locale are linked (`selectSeoLinks`, ADR 004), so
+ * every chip leads to a page Google may index and none spends anchor text on a
+ * noindexed slice. Server-rendered: these are the links that give district and
+ * facet listings their internal weight.
  */
 export async function ListingFacetNav({ locale, countrySlug, citySlug, placeLabel, districtSlug, currentFacet = "" }: Props) {
-  const [t, districtCounts, facetStats] = await Promise.all([
+  const [t, districtCounts, decisions] = await Promise.all([
     getTranslations({ locale, namespace: "Catalog.facetNav" }),
     districtSlug ? Promise.resolve([]) : fetchDistrictListingCounts(citySlug),
-    Promise.all(
-      LISTING_FACET_SLUGS.map(async (facet) => ({
-        facet,
-        stats: await fetchCatalogListingStats({ city: citySlug, district: districtSlug, ...facetCatalogFilters(facet) }),
-      })),
-    ),
+    fetchSeoPageDecisions(),
   ]);
 
-  const districtChips: Chip[] = districtCounts
-    .filter((d) => d.count > LISTING_DISTRICT_NOINDEX_THRESHOLD)
-    .map((d) => ({
-      href: catalogFilterPath({ locale, country: countrySlug, trustedCityCountrySlug: countrySlug, city: citySlug, district: d.slug }),
-      label: resolveLocalizedString(d.title as never, locale) || d.slug,
-      count: d.count,
-      current: false,
-    }));
+  const from: SeoPageKey = currentFacet
+    ? { family: "facet", country: countrySlug, city: citySlug, district: districtSlug, facet: currentFacet }
+    : districtSlug
+      ? { family: "district", country: countrySlug, city: citySlug, district: districtSlug }
+      : { family: "city", country: countrySlug, city: citySlug };
+  const links = selectSeoLinks({
+    from,
+    locale,
+    candidates: (decisions ?? []).map((row) => ({ decision: row.decision, count: row.count })),
+  });
+
+  const districtChips: Chip[] = links.flatMap((link) => {
+    if (link.group !== "districts" || link.key.family !== "district") return [];
+    const slug = link.key.district;
+    const title = districtCounts.find((d) => d.slug === slug)?.title;
+    return [
+      {
+        href: catalogFilterPath({ locale, country: countrySlug, trustedCityCountrySlug: countrySlug, city: citySlug, district: slug }),
+        label: (title ? resolveLocalizedString(title as never, locale) : "") || slug,
+        count: link.count,
+        current: false,
+      },
+    ];
+  });
 
   const facetChips = (kind: ListingFacetKind): Chip[] =>
-    facetStats
-      .filter(({ facet, stats }) => LISTING_FACETS[facet].kind === kind && (stats?.count ?? 0) > LISTING_FACET_NOINDEX_THRESHOLD)
-      .map(({ facet, stats }) => ({
-        href: catalogFilterPath({
-          locale,
-          country: countrySlug,
-          trustedCityCountrySlug: countrySlug,
-          city: citySlug,
-          district: districtSlug,
-          facet,
-        }),
-        label: t(`chip.${facet}`),
-        count: stats?.count ?? 0,
-        current: facet === currentFacet,
-      }));
+    links.flatMap((link) => {
+      if (link.group !== kind || link.key.family !== "facet") return [];
+      const facet = link.key.facet;
+      return [
+        {
+          href: catalogFilterPath({
+            locale,
+            country: countrySlug,
+            trustedCityCountrySlug: countrySlug,
+            city: citySlug,
+            district: districtSlug,
+            facet,
+          }),
+          label: t(`chip.${facet}`),
+          count: link.count,
+          current: link.current,
+        },
+      ];
+    });
 
   const rows: Array<{ key: string; heading: string; chips: Chip[] }> = [
     { key: "districts", heading: t("districts"), chips: districtChips },
