@@ -425,7 +425,10 @@
     "labelBelow": "Below market",
     "labelIn": "In market range",
     "labelAbove": "Above market",
-    "referencePrice": "Reference price",
+    "marketValue": "Market price for {area} m²",
+    "thisListing": "This listing",
+    "perSqm": "<amount></amount>/m²",
+    "referenceValue": "State reference value, for tax",
     "districtYield": "District yield: {pct}%",
     "viewDistrict": "View district page",
     "disclaimer": "Estimate based on district-wide price ranges, not a valuation of this specific property."

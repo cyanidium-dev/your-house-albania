@@ -425,7 +425,10 @@
     "labelBelow": "Poniżej rynku",
     "labelIn": "W granicach rynku",
     "labelAbove": "Powyżej rynku",
-    "referencePrice": "Cena referencyjna",
+    "marketValue": "Cena rynkowa za {area} m²",
+    "thisListing": "Ta nieruchomość",
+    "perSqm": "<amount></amount>/m²",
+    "referenceValue": "Państwowa wartość referencyjna, do podatku",
     "districtYield": "Rentowność dzielnicy: {pct}%",
     "viewDistrict": "Zobacz stronę dzielnicy",
     "disclaimer": "Szacunek oparty na przedziałach cenowych dzielnicy, a nie wycena konkretnej nieruchomości."

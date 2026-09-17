@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { districtInfoPath } from '@/lib/routes/catalog'
 import { fetchCityCountrySlugByCitySlug, fetchDistrictBySlugs } from '@/lib/sanity/client'
-import { PriceText } from '@/components/shared/PriceText'
+import { MarketMoney } from '@/components/shared/property/MarketMoney'
 import type { MarketPosition, MarketPositionLabel } from '@/lib/property/marketPosition'
 
 const LABEL_KEY: Record<MarketPositionLabel, 'labelBelow' | 'labelIn' | 'labelAbove'> = {
@@ -46,6 +46,13 @@ export async function PropertyMarketPositionSection({
   // market verdict still stands, but the link would be a 404.
   const href = districtPage ? districtInfoPath(locale, citySlug, districtSlug, countrySlug) : null
 
+  // Everything below is scaled to this flat. A district's €/m² band and the
+  // state schedule's lek/m² rate are both meaningless as a bare number next to
+  // a total price, so each becomes "what that rate means for this area".
+  const { area } = marketPosition
+  const referenceLow = marketPosition.referencePriceMin ?? marketPosition.referencePrice
+  const referenceHigh = marketPosition.referencePriceMax ?? marketPosition.referencePrice
+
   return (
     <div className="py-8 mt-8 border-t border-dark/5 dark:border-white/15">
       <h3 className="text-xl font-medium">{t('title')}</h3>
@@ -55,9 +62,26 @@ export async function PropertyMarketPositionSection({
         >
           {t(LABEL_KEY[marketPosition.label])}
         </span>
-        {typeof marketPosition.referencePrice === 'number' && (
+        <span className="text-sm text-dark/70 dark:text-white/70">
+          {t('marketValue', { area: Math.round(area) })}:{' '}
+          <MarketMoney min={marketPosition.rangeMin * area} max={marketPosition.rangeMax * area} step={1000} locale={locale} />
+        </span>
+        <span className="text-sm text-dark/70 dark:text-white/70">
+          {t('thisListing')}:{' '}
+          {t.rich('perSqm', {
+            amount: () => <MarketMoney min={marketPosition.pricePerSqm} step={10} locale={locale} />,
+          })}
+        </span>
+        {typeof referenceLow === 'number' && referenceLow > 0 && (
           <span className="text-sm text-dark/70 dark:text-white/70">
-            {t('referencePrice')}: <PriceText amountEur={marketPosition.referencePrice} locale={locale} />
+            {t('referenceValue')}:{' '}
+            <MarketMoney
+              min={referenceLow * area}
+              max={typeof referenceHigh === 'number' ? referenceHigh * area : undefined}
+              from="ALL"
+              step={1000}
+              locale={locale}
+            />
           </span>
         )}
         {typeof marketPosition.grossYieldPct === 'number' && (

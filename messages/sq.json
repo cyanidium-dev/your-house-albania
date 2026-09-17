@@ -425,7 +425,10 @@
     "labelBelow": "Nën treg",
     "labelIn": "Në nivelin e tregut",
     "labelAbove": "Mbi treg",
-    "referencePrice": "Çmimi referencë",
+    "marketValue": "Çmimi i tregut për {area} m²",
+    "thisListing": "Kjo pronë",
+    "perSqm": "<amount></amount>/m²",
+    "referenceValue": "Vlera referuese shtetërore, për tatimin",
     "districtYield": "Rendimenti i zonës: {pct}%",
     "viewDistrict": "Shiko faqen e zonës",
     "disclaimer": "Vlerësim bazuar në intervalet e çmimeve të zonës, jo një vlerësim i këtij prone specifike."

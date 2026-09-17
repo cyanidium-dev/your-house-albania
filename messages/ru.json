@@ -425,7 +425,10 @@
     "labelBelow": "Ниже рынка",
     "labelIn": "В рынке",
     "labelAbove": "Выше рынка",
-    "referencePrice": "Референс-цена",
+    "marketValue": "Рыночная цена для {area} м²",
+    "thisListing": "Этот объект",
+    "perSqm": "<amount></amount>/м²",
+    "referenceValue": "Государственная референс-стоимость, для налога",
     "districtYield": "Доходность района: {pct}%",
     "viewDistrict": "Смотреть страницу района",
     "disclaimer": "Оценка на основе диапазонов цен по району, не оценка конкретного объекта."

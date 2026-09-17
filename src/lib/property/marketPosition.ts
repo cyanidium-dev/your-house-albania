@@ -11,7 +11,16 @@ export type MarketPosition = {
   rangeMin: number;
   rangeMax: number;
   rangeBasis: MarketPositionRangeBasis;
+  /** Floor area the range is scaled by, m². */
+  area: number;
+  /**
+   * State reference price, **lek per m²** — the cadastral rate used for tax,
+   * not a market figure and not euros. Min/max when the zone spans several
+   * cadastral zones.
+   */
   referencePrice?: number;
+  referencePriceMin?: number;
+  referencePriceMax?: number;
   grossYieldPct?: number;
 };
 
@@ -78,6 +87,8 @@ export function computeMarketPosition(
     pricePerSqm < range.min ? 'below' : pricePerSqm > range.max ? 'above' : 'in';
 
   const referencePrice = typeof metrics.referencePrice === 'number' ? metrics.referencePrice : undefined;
+  const referencePriceMin = typeof metrics.referencePriceMin === 'number' ? metrics.referencePriceMin : undefined;
+  const referencePriceMax = typeof metrics.referencePriceMax === 'number' ? metrics.referencePriceMax : undefined;
   const grossYieldPct =
     typeof metrics.grossYieldLtrPct === 'number'
       ? metrics.grossYieldLtrPct
@@ -91,7 +102,10 @@ export function computeMarketPosition(
     rangeMin: range.min,
     rangeMax: range.max,
     rangeBasis: range.basis,
+    area,
     referencePrice,
+    referencePriceMin,
+    referencePriceMax,
     grossYieldPct,
   };
 }

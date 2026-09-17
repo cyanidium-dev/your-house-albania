@@ -425,7 +425,10 @@
     "labelBelow": "Нижче ринку",
     "labelIn": "У межах ринку",
     "labelAbove": "Вище ринку",
-    "referencePrice": "Референс-ціна",
+    "marketValue": "Ринкова ціна для {area} м²",
+    "thisListing": "Цей об'єкт",
+    "perSqm": "<amount></amount>/м²",
+    "referenceValue": "Державна референс-вартість, для податку",
     "districtYield": "Дохідність району: {pct}%",
     "viewDistrict": "Переглянути сторінку району",
     "disclaimer": "Оцінка на основі цінових діапазонів району, не оцінка конкретного об'єкта."

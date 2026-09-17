@@ -425,7 +425,10 @@
     "labelBelow": "Sotto il mercato",
     "labelIn": "In linea con il mercato",
     "labelAbove": "Sopra il mercato",
-    "referencePrice": "Prezzo di riferimento",
+    "marketValue": "Prezzo di mercato per {area} m²",
+    "thisListing": "Questo immobile",
+    "perSqm": "<amount></amount>/m²",
+    "referenceValue": "Valore di riferimento statale, ai fini fiscali",
     "districtYield": "Rendimento della zona: {pct}%",
     "viewDistrict": "Vedi la pagina della zona",
     "disclaimer": "Stima basata sugli intervalli di prezzo della zona, non una valutazione di questo immobile specifico."

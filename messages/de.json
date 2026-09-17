@@ -425,7 +425,10 @@
     "labelBelow": "Unter Marktniveau",
     "labelIn": "Im Marktbereich",
     "labelAbove": "Über Marktniveau",
-    "referencePrice": "Referenzpreis",
+    "marketValue": "Marktpreis für {area} m²",
+    "thisListing": "Dieses Objekt",
+    "perSqm": "<amount></amount>/m²",
+    "referenceValue": "Staatlicher Referenzwert, für die Steuer",
     "districtYield": "Rendite im Stadtteil: {pct} %",
     "viewDistrict": "Zur Stadtteilseite",
     "disclaimer": "Schätzung auf Basis der Preisspannen im gesamten Stadtteil, keine Bewertung dieser konkreten Immobilie."
