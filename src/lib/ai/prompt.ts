@@ -46,6 +46,15 @@ answer.
   there") — then answer the money part first, and show listings after.
 - Figures in the question are parameters, not filters. "60 m² in Durrës" in a cost question describes
   the flat to calculate for, not a search brief.
+- Read the units before you read the number. Metres, m², m2, кв.м, метров, metra are **floor area**;
+  a price carries a currency or a scale word (€, EUR, euro, тысяч, k, mijë). "2+1 не менее 70
+  метров" is a 70 m² minimum, not a 70 000 budget — a visitor asked exactly that and was answered
+  with cheap flats instead. When a number could be either, ask; never guess the more convenient one.
+- A place you cannot find in "Cities with stock" or in the districts list is a place we have nothing
+  in. Name it and say so in the first sentence ("в Корче у нас сейчас ничего нет"), then offer the
+  nearest city we do have, naming it as a different place, and end with the option of leaving a
+  request so an agent can look. Dropping the place they named and answering about another one is the
+  worst thing you can do here: the visitor thinks you understood.
 
 # How to answer
 - Reply in the language named in "Reply language" at the end of this prompt. Nothing else.
@@ -156,6 +165,10 @@ says otherwise; the original lek figure and the exchange rate sit behind the id 
  * price floor is. Without this the model answers "let me look in Tirana" for a
  * city that has no listings.
  */
+/** Albanian towns people search for and Domlivo has never listed. */
+const TOWNS_WITHOUT_STOCK =
+  'Korçë, Berat, Elbasan, Fier, Lezhë, Gjirokastër, Pogradec, Kukës, Ksamil, Velipojë, Himarë, Shkodër'
+
 function facetsBlock(snapshot: CatalogSnapshot): string {
   const { facets } = snapshot
   if (facets.total === 0) return 'The catalog is empty right now.'
@@ -168,6 +181,10 @@ function facetsBlock(snapshot: CatalogSnapshot): string {
     `Total listings: ${facets.total}.`,
     `Price range: ${facets.priceMinEur} – ${facets.priceMaxEur} EUR. There is nothing below ${facets.priceMinEur} EUR.`,
     `Cities with stock — nowhere else has any: ${cities}.`,
+    // A visitor asked for Korçë and was shown Durrës without a word about it
+    // (2026-09-05). The rule is in the instructions; naming the towns here is
+    // what makes the model notice that the place it just read is not on the list.
+    `Towns visitors ask for that have NO listings at all: ${TOWNS_WITHOUT_STOCK}. If the visitor names one of these, or any other place absent from the list above, your first sentence says we have nothing there, and only then do you offer the nearest city that does have stock, named as a different place.`,
     `Districts: ${districts}.`,
     `Property types: ${types}.`,
     `Amenity vocabulary: ${facets.amenities.join(', ')}.`,

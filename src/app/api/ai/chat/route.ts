@@ -15,6 +15,7 @@ import {
 } from '@/lib/ai/tools'
 import { runCalcUtilities, runCite, runLookupFacts } from '@/lib/ai/knowledgeTools'
 import { checkRateLimit, clientKeyFromHeaders } from '@/lib/ai/rateLimit'
+import { unservedPlacesNote } from '@/lib/ai/unservedPlaces'
 import { sliceSafe } from '@/lib/ai/text'
 import { addUsage, EMPTY_USAGE, estimateUsd, isBudgetExhausted, recordUsage } from '@/lib/ai/budget'
 import { encodeAiEvent, type AiChatMessage, type AiStreamEvent } from '@/lib/ai/events'
@@ -122,9 +123,19 @@ export async function POST(req: NextRequest) {
   const tools = propertyContext ? AI_PROPERTY_TOOLS : AI_TOOLS
   const client = createAnthropicClient()
 
-  const conversation: Anthropic.MessageParam[] = messages.map((m) => ({
+  // A town we have nothing in, read out of this very message. As a rule in the
+  // system prompt it was ignored — asked for Korçë, the model answered about
+  // Durrës without naming Korçë at all — and a system block after the long
+  // catalog fared no better. Next to the question it lands.
+  const placeNote = propertyContext ? null : unservedPlacesNote(messages[messages.length - 1].content)
+  const conversation: Anthropic.MessageParam[] = messages.map((m, i) => ({
     role: m.role,
-    content: m.content,
+    content:
+      placeNote && i === messages.length - 1
+        ? `${m.content}
+
+[Note for you, not from the visitor — do not quote it: ${placeNote}]`
+        : m.content,
   }))
 
   const encoder = new TextEncoder()
