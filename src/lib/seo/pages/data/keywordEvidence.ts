@@ -199,12 +199,15 @@ export const KEYWORD_CLUSTERS: readonly KeywordCluster[] = [
       "nieruchomości saranda",
       "saranda domy na sprzedaż",
       "mieszkania saranda",
+      "купить квартиру в саранде",
     ],
     markets: ["AL", "GB", "US", "DE", "CH", "AT", "IT", "PL", "GR"],
-    locales: ["sq", "en", "de", "it", "pl"],
+    locales: ["sq", "en", "ru", "de", "it", "pl"],
     bucket: "100-1K",
     serp: "listings",
     sources: ["kp-albania-2026-09-17", "kp-atlas-2026-09-16", "gsc-2026-09-17"],
+    notes:
+      "ru added from Search Console: /ru/albania/sarande had 20 impressions at position 9.4 (3 months to 2026-09-14), query 'купить квартиру в саранде'. uk had 1 impression — not enough.",
   },
   {
     id: "tirana-apartments",

@@ -6,6 +6,7 @@ import {
   findDemand,
   isSeoPageIndexableIn,
   type KeywordCluster,
+  type SeoExperiment,
   type SeoPageKey,
 } from "..";
 
@@ -46,7 +47,7 @@ describe("findDemand", () => {
 
   it("takes the page's locales from its city, in routing order", () => {
     expect(findDemand(golem).locales).toEqual(["en", "uk", "ru", "sq", "it", "pl", "de"]);
-    expect(findDemand({ family: "city", country: "albania", city: "sarande" }).locales).toEqual(["en", "sq", "it", "pl", "de"]);
+    expect(findDemand({ family: "city", country: "albania", city: "sarande" }).locales).toEqual(["en", "ru", "sq", "it", "pl", "de"]);
   });
 });
 
@@ -116,8 +117,8 @@ describe("evaluateSeoPage", () => {
   it("indexes a page only in the locales with demand for its place", () => {
     const d = evaluateSeoPage({ key: { family: "city", country: "albania", city: "sarande" }, inventory: { count: 7 } });
     expect(isSeoPageIndexableIn(d, "pl")).toBe(true);
+    expect(isSeoPageIndexableIn(d, "ru")).toBe(true);
     expect(isSeoPageIndexableIn(d, "uk")).toBe(false);
-    expect(isSeoPageIndexableIn(d, "ru")).toBe(false);
   });
 
   it("indexes nothing when the page's city has no cluster to give it locales", () => {
@@ -132,5 +133,51 @@ describe("evaluateSeoPage", () => {
     for (const count of [0, 3, 12, 40, 400]) {
       expect(evaluateSeoPage({ key: golem, inventory: { count } }).reasons.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("experiments", () => {
+  const under100k: SeoPageKey = { family: "facet", country: "albania", city: "durres", facet: "under-100k" };
+  const experiment: SeoExperiment = {
+    id: "test-under-100k",
+    target: under100k,
+    hypothesis: "budget intent",
+    successCriteria: "budget queries land here",
+    startedAt: "2026-09-17",
+    reviewAt: "2026-11-12",
+  };
+
+  it("indexes a page without keyword evidence while the experiment runs", () => {
+    const d = evaluateSeoPage({ key: under100k, inventory: { count: 106, parentCount: 358 }, experiments: [experiment] });
+    expect(d.status).toBe("experiment");
+    expect(d.experiment?.id).toBe("test-under-100k");
+    expect(isSeoPageIndexableIn(d, "uk")).toBe(true);
+    expect(d.reasons.join(" ")).toMatch(/review 2026-11-12/);
+  });
+
+  it("falls back to noindex once the experiment is removed", () => {
+    expect(evaluateSeoPage({ key: under100k, inventory: { count: 106, parentCount: 358 }, experiments: [] }).status).toBe("noindex");
+  });
+
+  it("still enforces inventory, overlap and the CMS override", () => {
+    const experiments = [experiment];
+    expect(evaluateSeoPage({ key: under100k, inventory: { count: 9, parentCount: 358 }, experiments }).status).toBe("noindex");
+    expect(evaluateSeoPage({ key: under100k, inventory: { count: 95, parentCount: 100 }, experiments }).status).toBe("noindex");
+    expect(evaluateSeoPage({ key: under100k, inventory: { count: 106, parentCount: 358 }, experiments, editorialNoindex: true }).status).toBe("noindex");
+  });
+
+  it("marks a page with evidence but incomplete data as an experiment too", () => {
+    const sea: SeoPageKey = { family: "facet", country: "albania", city: "durres", facet: "near-the-sea" };
+    const d = evaluateSeoPage({ key: sea, inventory: { count: 98, parentCount: 358 }, experiments: [{ ...experiment, id: "sea", target: sea }] });
+    expect(d.status).toBe("experiment");
+    expect(d.demand.score).toBe(2);
+  });
+
+  it("ships the budget, new-build and sea experiments", () => {
+    const ids = (key: SeoPageKey) => evaluateSeoPage({ key, inventory: { count: 50, parentCount: 358 } }).status;
+    expect(ids(under100k)).toBe("experiment");
+    expect(ids({ family: "facet", country: "albania", city: "durres", facet: "new-builds" })).toBe("experiment");
+    expect(ids({ family: "facet", country: "albania", city: "durres", facet: "near-the-sea" })).toBe("experiment");
+    expect(ids({ family: "facet", country: "albania", city: "durres", facet: "under-80k" })).toBe("noindex");
   });
 });

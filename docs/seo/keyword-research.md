@@ -77,7 +77,7 @@ Patterns: every commercial SERP is won by **category/listing pages with large in
 | `durres-near-sea` | durres beach apartments for sale | albania beach property for sale, beachfront property albania, albanien immobilien am meer kaufen, casa al mare albania | UK, IT, US (+ national coast in 17 markets) | en (+ de, it national) | 10–100 | Medium | 98 (sea data on 31% of listings) | — | `/{l}/albania/durres/near-the-sea` | Tier 2 |
 | `durres-studios` | garsoniere ne shitje durres | — | AL, UK+DE+IT+US | sq | 10–100 | Low | 23 | — | `/{l}/albania/durres/sale/studio` | Tier 2 |
 | `qerret-apartments` | apartament ne shitje qerret | — | AL, UK+DE+IT+US | sq | 10–100 | Low | 14 | — | `/{l}/albania/durres/qerret` | Tier 2 |
-| `sarande-property` | apartamente ne shitje sarande | saranda apartments for sale, saranda property for sale, nieruchomości saranda, saranda domy na sprzedaż, case in vendita saranda, saranda immobilien | AL, PL, UK, US, IT, DE | sq, en, pl, it, de | 100–1K (AL; `saranda apartments for sale` in some markets); 10–100 | Low | 7 | pl 34 | `/{l}/albania/sarande` | Tier 3 |
+| `sarande-property` | apartamente ne shitje sarande | saranda apartments for sale, saranda property for sale, nieruchomości saranda, saranda domy na sprzedaż, case in vendita saranda, saranda immobilien | AL, PL, UK, US, IT, DE | sq, en, ru, pl, it, de | 100–1K (AL; `saranda apartments for sale` in some markets); 10–100 | Low | 7 | pl 34, ru 9.4 | `/{l}/albania/sarande` | Tier 3 |
 | `albania-property` | property for sale albania | albania houses for sale, apartments for sale albania, buy property albania, albanien immobilien, casa in albania, mieszkanie albania | 20+ markets | all | 1K–10K (UK, US); 100–1K (IT, DE, PL, FR) | High | 375 | — | `/{l}/sale` (national listing; not part of this registry yet) | Roadmap |
 | `durres-villas` | vila ne shitje durres | albania villa for sale | AL, 18 markets (national) | sq, en | 10–100 | Low | 11 | — | `/{l}/albania/durres/sale/villa` | Blocked by inventory (min 16) |
 | `durres-houses` | house for sale durres albania | albania house for sale | UK, IT, NL, PL, US, CA | en | 10–100 | Low | 15 | — | `/{l}/albania/durres/sale/house` | Blocked by inventory |
@@ -104,4 +104,8 @@ Patterns: every commercial SERP is won by **category/listing pages with large in
 | pl | `apartament durres`, `mieszkanie durres` 10–100 (PL) |
 | uk, ru | `купить квартиру в дурресе`, `дуррес квартира` 10–100 (UA); GSC impressions on uk/ru Durrës pages |
 
-Sarandë has no uk/ru evidence, so its listing is indexed in sq, en, de, it and pl only.
+Sarandë: Keyword Planner showed no uk/ru demand, so the listing was first indexed in sq, en, de, it and pl. Search Console then showed `/ru/albania/sarande` at 20 impressions, position 9.4, for `купить квартиру в саранде` (3 months to 2026-09-14), so ru was added the same day. uk had 1 impression and stays out.
+
+### Durrës apartments: one page or two (GSC, 2026-09-17)
+
+No Albanian or English Durrës apartment query had impressions. The Russian and Ukrainian ones (`квартири в дурресі`, `квартиры в дурресе`, `купить квартиру в дурресе`, 22 impressions) landed on the city listing and its old `/sale` alias; `/sale/apartment` never had an impression. The city page stays canonical for apartments; details and the re-check rule in [measurement.md](measurement.md#apartments-vs-the-city-page-checked-2026-09-17).

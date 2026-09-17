@@ -4,8 +4,19 @@
  */
 import { isListingFacetSlug } from "@/lib/catalog/listingFacets";
 import { findDemand } from "./demand";
+import { SEO_EXPERIMENTS } from "./data/experiments";
 import { SEO_PAGE_POLICY, TIER_ONE_INVENTORY_MULTIPLE, type SeoFamilyPolicy } from "./policy";
-import type { KeywordCluster, SeoLocale, SeoPageDecision, SeoPageInventory, SeoPageKey, SeoPageTier } from "./types";
+import { sameSeoPageKey } from "./registry";
+import type {
+  KeywordCluster,
+  SeoExperiment,
+  SeoLocale,
+  SeoPageDecision,
+  SeoPageInventory,
+  SeoPageKey,
+  SeoPageStatus,
+  SeoPageTier,
+} from "./types";
 
 export type EvaluateSeoPageInput = {
   key: SeoPageKey;
@@ -14,7 +25,14 @@ export type EvaluateSeoPageInput = {
   editorialNoindex?: boolean;
   /** Tests only; production uses the shipped evidence. */
   clusters?: readonly KeywordCluster[];
+  /** Tests only; production uses SEO_EXPERIMENTS. */
+  experiments?: readonly SeoExperiment[];
 };
+
+/** Statuses whose pages are indexed, listed in sitemaps and linked. */
+export function isIndexedSeoStatus(status: SeoPageStatus): boolean {
+  return status === "index" || status === "experiment";
+}
 
 function hasValidSlugs(key: SeoPageKey): boolean {
   const filled = (s: string | undefined) => typeof s === "string" && s.trim().length > 0;
@@ -35,6 +53,7 @@ export function evaluateSeoPage(input: EvaluateSeoPageInput): SeoPageDecision {
   const { key, inventory } = input;
   const policy: SeoFamilyPolicy = SEO_PAGE_POLICY[key.family];
   const demand = findDemand(key, input.clusters);
+  const experiment = (input.experiments ?? SEO_EXPERIMENTS).find((e) => sameSeoPageKey(e.target, key)) ?? null;
   const reasons: string[] = [];
   const skip = (reason: string): SeoPageDecision => ({
     key,
@@ -42,6 +61,7 @@ export function evaluateSeoPage(input: EvaluateSeoPageInput): SeoPageDecision {
     indexableLocales: [],
     demand,
     tier: null,
+    experiment,
     reasons: [reason],
   });
 
@@ -50,6 +70,9 @@ export function evaluateSeoPage(input: EvaluateSeoPageInput): SeoPageDecision {
   if (!Number.isFinite(count) || count <= 0) return skip("no public listings");
 
   let demandOk = demand.score >= policy.minDemandScore;
+  if (!demandOk && experiment) {
+    demandOk = true;
+  }
   if (!demandOk && policy.inferredDemandMinInventory !== undefined && demand.inferred) {
     if (count >= policy.inferredDemandMinInventory) {
       demandOk = true;
@@ -85,19 +108,21 @@ export function evaluateSeoPage(input: EvaluateSeoPageInput): SeoPageDecision {
   const qualifies = demandOk && inventoryOk && distinctOk && editorialOk;
   const indexableLocales: readonly SeoLocale[] = qualifies ? demand.locales : [];
   if (qualifies && indexableLocales.length === 0) reasons.push("no locale with demand for this place");
-  const status = qualifies && indexableLocales.length > 0 ? "index" : "noindex";
+  const indexed = qualifies && indexableLocales.length > 0;
+  const status: SeoPageStatus = indexed ? (experiment ? "experiment" : "index") : "noindex";
+  if (experiment) reasons.push(`experiment ${experiment.id}, review ${experiment.reviewAt}`);
 
   let tier: SeoPageTier = null;
-  if (status === "index") {
+  if (indexed) {
     tier = demand.score === 3 && count >= TIER_ONE_INVENTORY_MULTIPLE * policy.minInventory ? 1 : 2;
     reasons.push(`demand score ${demand.score} (${demand.clusterIds.join(", ")}), ${count} listings`);
   } else if (demandOk && !inventoryOk && distinctOk && editorialOk && demand.score >= policy.minDemandScore) {
     tier = 3;
   }
 
-  return { key, status, indexableLocales, demand, tier, reasons };
+  return { key, status, indexableLocales, demand, tier, experiment, reasons };
 }
 
 export function isSeoPageIndexableIn(decision: SeoPageDecision, locale: string): boolean {
-  return decision.status === "index" && (decision.indexableLocales as readonly string[]).includes(locale);
+  return isIndexedSeoStatus(decision.status) && (decision.indexableLocales as readonly string[]).includes(locale);
 }

@@ -5,16 +5,25 @@
  */
 import { routing } from "@/i18n/routing";
 import { isListingFacetSlug } from "@/lib/catalog/listingFacets";
+import { SEO_EXPERIMENTS } from "./data/experiments";
 import { KEYWORD_CLUSTERS } from "./data/keywordEvidence";
 import { isListingIntentCluster } from "./demand";
 import { citySeoPageKey, sameSeoPageKey, seoPageId } from "./registry";
-import type { KeywordCluster } from "./types";
+import type { KeywordCluster, SeoExperiment } from "./types";
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const normKeyword = (k: string): string => k.trim().toLowerCase().replace(/\s+/g, " ");
 
-export function validateSeoRegistry(clusters: readonly KeywordCluster[] = KEYWORD_CLUSTERS): string[] {
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Experiments older than this are overdue: review them, do not let them run on. */
+export const MAX_EXPERIMENT_DAYS = 120;
+
+export function validateSeoRegistry(
+  clusters: readonly KeywordCluster[] = KEYWORD_CLUSTERS,
+  experiments: readonly SeoExperiment[] = SEO_EXPERIMENTS,
+): string[] {
   const errors: string[] = [];
   const ids = new Set<string>();
   const keywordOwner = new Map<string, string>();
@@ -57,6 +66,30 @@ export function validateSeoRegistry(clusters: readonly KeywordCluster[] = KEYWOR
       const city = citySeoPageKey(t);
       const hasCity = clusters.some((o) => isListingIntentCluster(o) && sameSeoPageKey(o.target, city));
       if (!hasCity) errors.push(`${c.id}: no listing cluster for its city ${seoPageId(city)}`);
+    }
+  }
+
+  const experimentIds = new Set<string>();
+  const experimentTargets = new Set<string>();
+  for (const e of experiments) {
+    if (experimentIds.has(e.id)) errors.push(`duplicate experiment id "${e.id}"`);
+    experimentIds.add(e.id);
+    const target = seoPageId(e.target);
+    if (experimentTargets.has(target)) errors.push(`two experiments target ${target}`);
+    experimentTargets.add(target);
+    if (e.target.family === "facet" && !isListingFacetSlug(e.target.facet)) errors.push(`${e.id}: unknown facet "${e.target.facet}"`);
+    if (!e.hypothesis.trim()) errors.push(`${e.id}: no hypothesis`);
+    if (!e.successCriteria.trim()) errors.push(`${e.id}: no success criteria`);
+    if (!ISO_DATE.test(e.startedAt) || !ISO_DATE.test(e.reviewAt)) {
+      errors.push(`${e.id}: dates must be YYYY-MM-DD`);
+      continue;
+    }
+    const days = (Date.parse(e.reviewAt) - Date.parse(e.startedAt)) / 86_400_000;
+    if (!(days > 0)) errors.push(`${e.id}: reviewAt must be after startedAt`);
+    else if (days > MAX_EXPERIMENT_DAYS) errors.push(`${e.id}: runs ${days} days (> ${MAX_EXPERIMENT_DAYS})`);
+    const city = citySeoPageKey(e.target);
+    if (!clusters.some((o) => isListingIntentCluster(o) && sameSeoPageKey(o.target, city))) {
+      errors.push(`${e.id}: no listing cluster for its city ${seoPageId(city)}, so no locale to index it in`);
     }
   }
   return errors;

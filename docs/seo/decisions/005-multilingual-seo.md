@@ -25,5 +25,5 @@ Avoid indexing locale variants that nobody searches for, without building per-lo
 
 ## Consequences
 
-- Sarandë listing pages drop out of the index in uk and ru.
+- Sarandë listing pages drop out of the index in uk (ru was re-added the same day from Search Console evidence: 20 impressions at position 9.4).
 - Adding a language for a place is a data change with a source.

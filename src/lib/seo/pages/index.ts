@@ -14,7 +14,8 @@ export {
   seoPageKeyFromListingRoute,
 } from "./registry";
 export { findDemand, isListingIntentCluster } from "./demand";
-export { evaluateSeoPage, isSeoPageIndexableIn, type EvaluateSeoPageInput } from "./eligibility";
+export { evaluateSeoPage, isIndexedSeoStatus, isSeoPageIndexableIn, type EvaluateSeoPageInput } from "./eligibility";
+export { SEO_EXPERIMENTS } from "./data/experiments";
 export {
   collectSeoPageCandidates,
   countSeoPageInventory,

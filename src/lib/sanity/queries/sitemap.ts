@@ -2,7 +2,7 @@ import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from '@/lib/routes/catalog';
 import { buildListingPath } from '@/lib/routes/listingRoutes';
 import { isPublicDealQuery } from '@/lib/catalog/publicDealTypes';
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
-import { seoPagePath, type SeoPageKey } from '@/lib/seo/pages';
+import { isIndexedSeoStatus, seoPagePath, type SeoPageKey } from '@/lib/seo/pages';
 import {
   resolveLandingPathForSitemap,
   type LandingPageSitemapRow,
@@ -121,7 +121,7 @@ async function fetchRegistrySitemapEntries(
   const rows = await fetchSeoPageDecisions();
   if (!rows) return [];
   return rows
-    .filter((row) => row.decision.status === 'index' && include(row.decision.key.family))
+    .filter((row) => isIndexedSeoStatus(row.decision.status) && include(row.decision.key.family))
     .map((row) => ({
       segmentAfterLocale: registrySegmentAfterLocale(row.decision.key),
       lastModified: parseSitemapDate(row.lastModified),

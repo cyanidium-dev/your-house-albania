@@ -67,7 +67,25 @@ export type DemandMatch = {
   locales: readonly SeoLocale[];
 };
 
-export type SeoPageStatus = "index" | "noindex" | "skip";
+/**
+ * `experiment`: indexed like `index`, but on probation — the page has no
+ * keyword evidence (or its data is incomplete) and stays indexed only if its
+ * review shows impressions and query alignment (ADR 007).
+ */
+export type SeoPageStatus = "index" | "experiment" | "noindex" | "skip";
+
+/** A page indexed on a hypothesis instead of keyword evidence. */
+export type SeoExperiment = {
+  id: string;
+  target: SeoPageKey;
+  /** Why the page may deserve the index without Keyword Planner evidence. */
+  hypothesis: string;
+  /** What the review must see to promote the page to a keyword cluster. */
+  successCriteria: string;
+  /** ISO dates (YYYY-MM-DD). */
+  startedAt: string;
+  reviewAt: string;
+};
 
 export type SeoPageTier = 1 | 2 | 3 | null;
 
@@ -84,6 +102,8 @@ export type SeoPageDecision = {
   indexableLocales: readonly SeoLocale[];
   demand: DemandMatch;
   tier: SeoPageTier;
+  /** Set when the page is (or would be) indexed as an experiment. */
+  experiment: SeoExperiment | null;
   /** Human-readable reasons, so every noindex can be explained. */
   reasons: readonly string[];
 };

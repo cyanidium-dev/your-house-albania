@@ -65,6 +65,7 @@ Anything else a route can render — district+type, deal without type, agent lis
 | Status | Meaning | Robots | Sitemap | Internal SEO links |
 |---|---|---|---|---|
 | `index` | demand, inventory and a distinct intent all hold | `index, follow` in `indexableLocales`; `noindex, follow` in other locales | yes, in `indexableLocales` | yes |
+| `experiment` | listed in `data/experiments.ts`: indexed without keyword evidence (or with incomplete data) until its review date; every other rule still applies ([ADR 007](decisions/007-experiments.md)) | as `index` | as `index` | as `index` |
 | `noindex` | useful to visitors, not justified in search (thin, no demand, duplicate intent, CMS override) | `noindex, follow` | no | no |
 | `skip` | nothing to show (0 listings) or a combination outside every family | `noindex, follow` (route may still render for a filtering visitor) | no | no |
 
@@ -81,7 +82,7 @@ Every decision carries `reasons[]` (e.g. `inventory 4 < min 5`, `no keyword evid
 | 1 | no exact cluster, but the parent place (city) has one — inferred |
 | 0 | nothing, or only clusters whose SERP is rental/editorial |
 
-Locales: a page may be indexed in a locale only when the **city** cluster lists that language (people who search in that language look for property in that place). For Durrës that is all seven; for Sarandë it is sq, en, de, it, pl.
+Locales: a page may be indexed in a locale only when the **city** cluster lists that language (people who search in that language look for property in that place). For Durrës that is all seven; for Sarandë it is sq, en, ru, de, it, pl (ru from Search Console).
 
 ### Tiers
 
@@ -91,7 +92,7 @@ Computed, not hand-assigned (`decision.tier`):
 - **Tier 2** — status `index`, everything else.
 - **Tier 3** — status `noindex` only because of inventory, with demand ≥ 2 (becomes indexable automatically when stock arrives).
 
-Pages indexed on 2026-09-17 (production inventory): Tier 1 — Durrës city, Golem, Durrës land. Tier 2 — Plazh, Qerret, City Centre and Shkëmbi (inferred demand, strong stock), Durrës `1-1`, `2-1`, `near-the-sea`, studios, Sarandë city. Tier 3 — Tirana, Vlorë, Shëngjin, Gjiri i Lalzit, Durrës villas and houses. Not indexed for lack of demand: budget and new-build facets, `3-1`, commercial space, Mali i Robit and Spille listings, district-level facets. Not indexed as duplicate intent: `/albania/durres/sale/apartment` (the city page is canonical for apartments).
+Pages indexed on 2026-09-17 (production inventory, 14): Tier 1 — Durrës city, Golem, Durrës land. Tier 2 — Plazh, Qerret, City Centre and Shkëmbi (inferred demand, strong stock), Durrës `1-1`, `2-1`, studios, Sarandë city. Experiments (review 2026-11-12) — Durrës `under-100k`, `new-builds`, `near-the-sea`. Tier 3 — Tirana, Vlorë, Shëngjin, Gjiri i Lalzit, Durrës villas and houses. Not indexed for lack of demand: `under-80k` (inside `under-100k`), `3-1`, commercial space, Mali i Robit and Spille listings, district-level facets. Not indexed as duplicate intent: `/albania/durres/sale/apartment` (the city page is canonical for apartments).
 
 ## Page lifecycle
 
@@ -110,7 +111,7 @@ Nothing in this chain is written by hand per URL: when inventory falls under a m
 
 ## Adding a new page
 
-1. **Confirm demand.** Keyword Planner (bucket ≥ 10–100 in the target market), Search Console impressions, or both. Check the SERP: if the top results are rentals, hotels or articles, a listing page will not rank — stop.
+1. **Confirm demand.** Keyword Planner (bucket ≥ 10–100 in the target market), Search Console impressions, or both. Check the SERP: if the top results are rentals, hotels or articles, a listing page will not rank — stop. No measurable demand but a clear commercial intent and real stock? Add an entry to `data/experiments.ts` with a hypothesis, success criteria and a review date ≤ 120 days away instead ([ADR 007](decisions/007-experiments.md)).
 2. **Check inventory.** Count public sale listings for the exact filters (`inventory-analysis.md` shows how). Below the family minimum the page will be Tier 3 at best.
 3. **Check overlap.** Is there already a page whose inventory contains ≥ 90% of this one, or whose SERP returns the same URLs? Then add the keywords to that page's cluster instead. Types above 60% of their city are the city page.
 4. **Add the definition.** Add a `KeywordCluster` to `data/keywordEvidence.ts` targeting an existing family (city, district, cityType, facet). A new facet also needs an entry in `LISTING_FACETS` (with `query` and `matches`), messages in all locales and a family test. A new *family* needs an ADR.
@@ -140,6 +141,7 @@ Nothing in this chain is written by hand per URL: when inventory falls under a m
 | `src/lib/seo/pages/types.ts` | `SeoPageKey`, `SeoPageDecision`, cluster and policy types |
 | `src/lib/seo/pages/policy.ts` | All thresholds and demand scoring constants |
 | `src/lib/seo/pages/data/keywordEvidence.ts` | Research data: clusters with sources, buckets, locales, SERP type |
+| `src/lib/seo/pages/data/experiments.ts` | Pages indexed on probation, with hypothesis, success criteria and review date |
 | `src/lib/seo/pages/demand.ts` | Looks a page up in the evidence; returns score, locales, matched clusters |
 | `src/lib/seo/pages/eligibility.ts` | Pure decision function; no I/O |
 | `src/lib/seo/pages/registry.ts` | Page families, key ↔ path, `seoPagePath`, family metadata (copy source, sections, JSON-LD) |

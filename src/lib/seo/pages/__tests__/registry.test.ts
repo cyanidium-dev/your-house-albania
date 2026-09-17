@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { KEYWORD_CLUSTERS, seoPageId, seoPageKeyFromListingRoute, seoPagePath, validateSeoRegistry, type KeywordCluster, type SeoPageKey } from "..";
+import {
+  KEYWORD_CLUSTERS,
+  SEO_EXPERIMENTS,
+  seoPageId,
+  seoPageKeyFromListingRoute,
+  seoPagePath,
+  validateSeoRegistry,
+  type KeywordCluster,
+  type SeoExperiment,
+  type SeoPageKey,
+} from "..";
 
 const keys: Array<[SeoPageKey, string]> = [
   [{ family: "city", country: "albania", city: "durres" }, "/sq/albania/durres"],
@@ -103,5 +113,28 @@ describe("validateSeoRegistry", () => {
     const errors = validateSeoRegistry([...KEYWORD_CLUSTERS, orphan]).join("\n");
     expect(errors).toMatch(/no listing cluster for its city/);
     expect(errors).toMatch(/not a lowercase slug/);
+  });
+});
+
+const NL = "\n";
+
+describe("validateSeoRegistry: experiments", () => {
+  const e = SEO_EXPERIMENTS[0];
+
+  it("rejects two experiments on one page, bad dates and long runs", () => {
+    const errors = validateSeoRegistry(KEYWORD_CLUSTERS, [
+      e,
+      { ...e, id: "copy" },
+      { ...e, id: "backwards", target: { ...e.target, facet: "3-1" } as SeoExperiment["target"], reviewAt: "2026-09-01" },
+      { ...e, id: "forever", target: { ...e.target, facet: "under-80k" } as SeoExperiment["target"], reviewAt: "2027-09-01" },
+    ]).join(NL);
+    expect(errors).toMatch(/two experiments target/);
+    expect(errors).toMatch(/backwards: reviewAt must be after startedAt/);
+    expect(errors).toMatch(/forever: runs \d+ days/);
+  });
+
+  it("rejects an experiment in a city nobody searches for", () => {
+    const orphan = { ...e, id: "kavaje", target: { family: "city" as const, country: "albania", city: "kavaje" } };
+    expect(validateSeoRegistry(KEYWORD_CLUSTERS, [orphan]).join(NL)).toMatch(/no locale to index it in/);
   });
 });

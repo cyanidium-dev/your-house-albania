@@ -5,7 +5,7 @@
 import { isSolePublicDealQuery } from "@/lib/catalog/publicDealTypes";
 import { evaluateSeoPage } from "./eligibility";
 import { collectSeoPageCandidates, type SeoInventoryRow } from "./inventory";
-import type { KeywordCluster, SeoPageDecision } from "./types";
+import type { KeywordCluster, SeoExperiment, SeoPageDecision } from "./types";
 
 export type SeoDecisionSourceRows = {
   cities?: Array<{ citySlug?: string; countrySlug?: string; noIndex?: boolean }>;
@@ -41,7 +41,11 @@ const lower = (v: unknown): string => (typeof v === "string" ? v.trim().toLowerC
  * `seo.noIndex` or an active `catalogSeoPage` with `seo.noIndex` for the city
  * (every page of the city) or the district (its listing and facets).
  */
-export function decideSeoPages(source: SeoDecisionSourceRows, clusters?: readonly KeywordCluster[]): SeoPageDecisionRow[] {
+export function decideSeoPages(
+  source: SeoDecisionSourceRows,
+  clusters?: readonly KeywordCluster[],
+  experiments?: readonly SeoExperiment[],
+): SeoPageDecisionRow[] {
   const countryByCity = new Map<string, string>();
   const noindexCities = new Set<string>();
   for (const c of source.cities ?? []) {
@@ -88,7 +92,7 @@ export function decideSeoPages(source: SeoDecisionSourceRows, clusters?: readonl
     const editorialNoindex =
       noindexCities.has(key.city) || (district !== undefined && noindexDistricts.has(`${key.city}|${district}`));
     return {
-      decision: evaluateSeoPage({ key, inventory, editorialNoindex, clusters }),
+      decision: evaluateSeoPage({ key, inventory, editorialNoindex, clusters, experiments }),
       count: inventory.count,
       lastModified: lastModified.toISOString(),
     };
