@@ -222,7 +222,19 @@ exclude `1` (or save it as a segment "Without internal").
    *Testing* for a day (check with the "Test data filter name" dimension in
    Explorations), then set it to *Active*.
 
-## GTM / GA4 setup the owner needs to do
+## GTM / GA4: what is configured (2026-09-17)
+
+- **GA4 property** "Domlivo" (id 554679221) in account cyanidium-dev (328517824); web stream `https://www.domlivo.com`, measurement ID **G-2VTT0GD8V2**. Before this date the site had no GA4 property and the GTM container was empty — no Google Analytics data exists before 2026-09-17.
+- **GTM GTM-T27ZZ289, version 2** (imported from a generated container JSON, merge mode):
+  - `Google tag - Domlivo GA4` on Initialization – All Pages, config parameter `traffic_type = {{DLV - traffic_type}}`.
+  - `GA4 event - Leads and search` on regex custom event `generate_lead|contact_form_submit|property_inquiry_submit|click_whatsapp|click_phone|click_email|search_submit|filter_apply`; `source/medium/campaign/channel` are sent as `lead_source/lead_medium/lead_campaign/lead_channel`.
+  - `GA4 event - Site events` for `property_view`, `blog_view`, `ai_*`, `lead_submit` (camelCase keys mapped to snake_case).
+  - Data Layer Variables `DLV - <key>` for every key above.
+- **GA4 custom dimensions** (event scope): Lead type, Lead placement, Property slug, Lead channel, Lead source.
+- **GA4 data filter** "Internal Traffic" (exclude `traffic_type = internal`) is **Active**. The flag is pushed by the consent bootstrap before GTM loads, so page views carry it too.
+- **Still to do:** mark `generate_lead` as a key event (optionally `click_whatsapp`, `click_phone`) in Admin → Events once the first one has arrived — GA4 only lists events it has received.
+
+## GTM / GA4 setup reference
 
 1. **Data Layer Variables**: `lead_type`, `placement`, `property_slug`, `property_id`, `city`, `district`, `property_type`, `price_eur`, `landing_page`, `source`, `medium`, `campaign`, `channel`, `deal`, `traffic_type`.
 2. **Custom Event triggers** (one each, or one regex trigger `^(generate_lead|contact_form_submit|property_inquiry_submit|click_whatsapp|click_phone|click_email|search_submit|filter_apply)$`).
