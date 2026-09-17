@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'

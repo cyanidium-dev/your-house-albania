@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import { Icon } from '@iconify/react';
+import { Icon } from "@/components/shared/Icon";
 import { getTranslations } from 'next-intl/server';
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 

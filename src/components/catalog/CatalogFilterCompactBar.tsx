@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { cn } from "@/lib/utils";
 import type { CatalogFilters } from "@/components/catalog/useCatalogFilters";
 

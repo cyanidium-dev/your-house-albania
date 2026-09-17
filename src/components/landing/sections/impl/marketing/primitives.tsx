@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import type { MarketingBenefitItem, MarketingHighlightCard } from "./types";
 
 export function LightBulletList({

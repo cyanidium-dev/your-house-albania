@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useTranslations } from "next-intl";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { PropertyCardSkeleton } from "@/components/favorites/PropertyCardSkeleton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";

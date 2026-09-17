@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { cn } from "@/lib/utils";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";

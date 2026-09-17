@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Icon } from '@iconify/react';
+import { Icon } from "@/components/shared/Icon";
 import Image from 'next/image';
 import { resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import type { PropertyAmenityItem } from '@/lib/sanity/propertyAdapter';

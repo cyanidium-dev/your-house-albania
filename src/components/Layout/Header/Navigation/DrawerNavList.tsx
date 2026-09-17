@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { useEffect, useId, useMemo, useState } from 'react'
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import type { DrawerNavItem } from '@/data/navConfig'
 import type { FooterCityNavItem } from '@/lib/sanity/client'
 import { catalogFilterPath, nonGeoDealListingPath } from '@/lib/routes/catalog'

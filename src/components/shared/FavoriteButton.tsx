@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { useFavorites } from "@/hooks/useFavorites";
 import { FavoritesFlyAnimation } from "@/components/shared/FavoritesFlyAnimation";
 import { cn } from "@/lib/utils";

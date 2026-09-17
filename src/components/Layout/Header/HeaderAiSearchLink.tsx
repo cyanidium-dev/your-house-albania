@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { aiSearchPath } from '@/lib/ai/routes'

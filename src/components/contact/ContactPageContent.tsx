@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import type { ContactsManagerBlock } from '@/lib/sanity/contactsManagerFromSiteSettings'
 import {
   fetchCatalogFilterOptions,

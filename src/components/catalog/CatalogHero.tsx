@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";

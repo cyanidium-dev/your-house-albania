@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 
 type Props = {
   currentPage: number;
