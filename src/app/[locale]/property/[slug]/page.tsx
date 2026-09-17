@@ -250,6 +250,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string } | null }).agent ?? null;
 
+  // Listing dimensions for analytics: the view event and every lead from this page.
+  const propertyLeadAnalytics = {
+    city: (sanityProperty as { city?: { slug?: string } })?.city?.slug,
+    district: (sanityProperty as { district?: { slug?: string } })?.district?.slug,
+    propertyType: (sanityProperty as { type?: { slug?: string } })?.type?.slug,
+    priceEur: rawProperty.price ?? undefined,
+  };
+
   return (
         <section className="pt-20 md:pt-32 pb-24 lg:pb-20 relative">
             <TrackPageView
@@ -258,10 +266,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               event={{
                 event: "property_view",
                 slug,
-                city: (sanityProperty as { city?: { slug?: string } })?.city?.slug,
-                district: (sanityProperty as { district?: { slug?: string } })?.district?.slug,
-                propertyType: (sanityProperty as { type?: { slug?: string } })?.type?.slug,
-                priceEur: rawProperty.price ?? undefined,
+                ...propertyLeadAnalytics,
               }}
             />
             <PropertyJsonLd
@@ -358,6 +363,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             propertyTitle={title}
                             agentSlug={propertyAgent?.slug ?? null}
                             agentName={propertyAgent?.name ?? null}
+                            analytics={propertyLeadAnalytics}
                             label={tPropertyDetail('getInTouch')}
                             className='mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-primary px-8 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark hover:cursor-pointer'
                           />
@@ -446,6 +452,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               propertyTitle={title}
                               agentSlug={propertyAgent?.slug ?? null}
                               agentName={propertyAgent?.name ?? null}
+                              analytics={propertyLeadAnalytics}
                               label={tPropertyDetail('getInTouch')}
                               className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'
                             />
@@ -493,6 +500,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   propertyTitle={title}
                   agentSlug={propertyAgent?.slug ?? null}
                   agentName={propertyAgent?.name ?? null}
+                  analytics={propertyLeadAnalytics}
                   label={tPropertyDetail('getInTouch')}
                   className="shrink-0 py-3 px-6 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
                 />

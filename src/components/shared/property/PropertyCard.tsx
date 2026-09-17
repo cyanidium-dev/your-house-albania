@@ -278,6 +278,7 @@ function PropertyCard({
         propertyTitle={name}
         agentSlug={null}
         agentName={null}
+        placement="property-card"
         label={tCard('requestInfo')}
         className={cn(
           'inline-flex w-full items-center justify-center rounded-full border border-primary/40 bg-primary/5 font-semibold text-primary',

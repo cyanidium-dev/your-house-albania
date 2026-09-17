@@ -120,7 +120,7 @@ export function DistrictsComparisonSection({
   if (!hasTable) return null
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24" data-lead-placement="landing">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {(title || description) && (
           <div className="mb-10 max-w-3xl">

@@ -2,12 +2,15 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
-import { track } from '@/lib/analytics/track'
+import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
+import type { LeadPlacement } from '@/lib/leads/types'
 
 type Props = {
   locale: string
   /** Short placement label sent to Telegram so the operator knows where the lead came from. */
   sourceLabel: string
+  /** Analytics placement of this form. */
+  placement?: LeadPlacement
   /** Renders the optional name field next to the phone. */
   withName?: boolean
   /** Stacks the field and the button instead of putting them on one row. */
@@ -32,6 +35,7 @@ const buttonClass =
 export function QuickLeadForm({
   locale,
   sourceLabel,
+  placement = 'page',
   withName = false,
   stacked = false,
   className,
@@ -64,6 +68,8 @@ export function QuickLeadForm({
           name: name.trim() || undefined,
           sourceLabel,
           sourcePath: typeof window === 'undefined' ? undefined : window.location.pathname,
+          placement,
+          context: leadContextForRequest(),
         }),
       })
       const data = (await res.json().catch(() => null)) as { ok?: boolean } | null
@@ -71,7 +77,11 @@ export function QuickLeadForm({
         setError(t('error'))
         return
       }
-      track({ event: 'lead_submit', kind: 'quote', source: sourceLabel })
+      trackFormLead({
+        leadType: 'contact_form',
+        placement,
+        legacy: { kind: 'quote', source: sourceLabel },
+      })
       setSent(true)
       onSent?.()
     } catch {

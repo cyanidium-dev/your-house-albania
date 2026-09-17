@@ -1,4 +1,11 @@
 import { NextResponse } from 'next/server'
+import { countryFromHeaders } from '@/lib/leads/buildLeadDocument'
+import { parseLeadContext } from '@/lib/leads/context'
+import { createLead } from '@/lib/leads/createLead'
+import {
+  appendLeadAnalytics,
+  withTestPrefix,
+} from '@/lib/notifications/leads/formatLeadTelegram'
 import {
   resolveAgentContactTelegramRouting,
   resolveTelegramBotToken,
@@ -22,6 +29,8 @@ type Body = {
   realtorOrAgency?: string
   /** Honeypot — must stay empty for real users. */
   companyWebsite?: string
+  /** Optional visit journey from `getLeadContext()`; validated, never trusted. */
+  context?: unknown
 }
 
 function isNonEmptyString(v: unknown): v is string {
@@ -103,24 +112,56 @@ export async function POST(request: Request) {
     return jsonError(500, 'Submission failed')
   }
 
-  const text = formatTelegramRegistrationRequestMessage({
-    name,
-    phone,
-    language: body.language,
-    ...(email !== undefined ? { email } : {}),
-    ...(realtorOrAgency !== undefined ? { realtorOrAgency } : {}),
-  })
+  const context = parseLeadContext(body.context)
+  const country = countryFromHeaders(request.headers)
+  const siteLocale = context?.locale || undefined
+
+  const text = withTestPrefix(
+    appendLeadAnalytics(
+      formatTelegramRegistrationRequestMessage({
+        name,
+        phone,
+        language: body.language,
+        ...(email !== undefined ? { email } : {}),
+        ...(realtorOrAgency !== undefined ? { realtorOrAgency } : {}),
+      }),
+      {
+        ...(context ? { context } : {}),
+        ...(country ? { country } : {}),
+        ...(siteLocale ? { locale: siteLocale } : {}),
+      }
+    ),
+    context?.internal === true
+  )
 
   console.log('[registration-request] sending Telegram', {
     chatIdLength: chatId.length,
     textLength: text.length,
   })
 
-  const delivery = await sendTelegramTextMessage({
-    botToken,
-    chatId,
-    text,
-  })
+  // The `lead` document is the registration's record in Studio; the older
+  // `registrationRequest` write below stays off, as before.
+  const [delivery, lead] = await Promise.all([
+    sendTelegramTextMessage({
+      botToken,
+      chatId,
+      text,
+    }),
+    createLead({
+      type: 'registration',
+      placement: 'register-page',
+      ...(siteLocale ? { locale: siteLocale } : {}),
+      ...(context ? { context } : {}),
+      ...(country ? { country } : {}),
+      contact: { name, phone, ...(email !== undefined ? { email } : {}) },
+      ...(realtorOrAgency !== undefined ? { formLabel: realtorOrAgency } : {}),
+      now: new Date(),
+    }),
+  ])
+
+  if (!lead.ok) {
+    console.error('[registration-request] lead not saved', lead.reason)
+  }
 
   if (!delivery.ok) {
     console.error('[registration-request] Telegram delivery failed', delivery.reason)

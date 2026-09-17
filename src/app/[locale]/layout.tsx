@@ -23,6 +23,7 @@ import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from "@/lib/routes/catalogPathPr
 import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
+import { LeadTracker } from "@/components/analytics/LeadTracker";
 // Hidden 2026-09-02 together with its mount below.
 // import { QuickContact } from "@/components/shared/QuickContact/QuickContact";
 
@@ -194,6 +195,10 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           <NextIntlClientProvider messages={messages}>
             <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
         <ConsentProvider locale={locale} policyHref={policyHref} active={analyticsEnabled}>
+          {/* Visit journey + contact-link leads. Not gated on analytics: it
+              stays in the browser until the visitor submits a form or clicks
+              a contact link, and then goes only to our own API. */}
+          <LeadTracker />
           <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
           {children}
           <Footer

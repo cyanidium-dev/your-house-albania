@@ -17,6 +17,7 @@ import {
   formatPriceRangeDisplay,
   getPriceQueryParams,
 } from "@/lib/catalog/priceRanges";
+import { trackSearchSubmit } from "@/lib/analytics/searchEvents";
 
 type DealTab = "sale" | "rent" | "short-term";
 
@@ -94,6 +95,8 @@ export function HeroSearchWidget({
     const priceParams = getPriceQueryParams(priceRangeState);
     if (priceParams.minPrice) params.set("minPrice", priceParams.minPrice);
     if (priceParams.maxPrice) params.set("maxPrice", priceParams.maxPrice);
+
+    trackSearchSubmit({ city, propertyType: type, deal: deal ?? undefined });
 
     router.push(
       canonicalCatalogUrl({

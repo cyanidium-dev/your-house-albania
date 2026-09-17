@@ -35,6 +35,7 @@ export function BlogQuoteCta({ locale, heading, body, sourceLabel }: Props) {
       <QuickLeadForm
         locale={locale}
         sourceLabel={sourceLabel ? `Blog: ${sourceLabel}` : 'Blog article'}
+        placement="blog-cta"
         className="mt-5"
       />
     </aside>

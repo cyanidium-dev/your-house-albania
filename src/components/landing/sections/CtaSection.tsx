@@ -75,7 +75,7 @@ export function CtaSection({
   if (!eyebrow && !title?.trim() && !description?.trim() && !showCtas) return null
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24" data-lead-placement="landing">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
           {eyebrow ? (

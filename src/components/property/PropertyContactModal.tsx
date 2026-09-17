@@ -3,7 +3,8 @@
 import * as React from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslations } from 'next-intl'
-import { track } from '@/lib/analytics/track'
+import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'
+import type { LeadPlacement } from '@/lib/leads/types'
 
 type Props = {
   locale: string
@@ -15,6 +16,10 @@ type Props = {
   label: string
   /** Button styling — the modal itself is fixed-position and unaffected. */
   className?: string
+  /** Analytics: where the button is. Defaults to the property page. */
+  placement?: LeadPlacement
+  /** Analytics: listing dimensions for the lead events (no personal data). */
+  analytics?: Omit<LeadSubject, 'propertySlug'>
 }
 
 /**
@@ -30,6 +35,8 @@ export function PropertyContactButton({
   agentName,
   label,
   className,
+  placement = 'property',
+  analytics,
 }: Props) {
   const t = useTranslations('Contacts')
   const tp = useTranslations('Shared.propertyDetail')
@@ -87,6 +94,8 @@ export function PropertyContactButton({
           phone: phone.trim(),
           email: email.trim(),
           message: message.trim(),
+          placement,
+          context: leadContextForRequest(),
         }),
       })
       const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null
@@ -94,7 +103,12 @@ export function PropertyContactButton({
         setError(data?.error ?? t('errorSubmit'))
         return
       }
-      track({ event: 'lead_submit', kind: 'agent', source: propertySlug })
+      trackFormLead({
+        leadType: 'property_inquiry',
+        placement,
+        subject: { ...analytics, propertySlug },
+        legacy: { kind: 'agent', source: propertySlug },
+      })
       setSent(true)
     } catch {
       setError(t('errorSubmit'))

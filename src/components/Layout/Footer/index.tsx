@@ -201,7 +201,7 @@ export default function Footer({
   const lgColsClass = footerLgColsClass(showGuidesColumn, showAppColumn);
 
   return (
-    <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
+    <footer data-lead-placement="footer" className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
       <div
         className={`container mx-auto max-w-8xl min-w-0 px-5 py-8 sm:py-10 2xl:px-0 lg:py-12 ${
           hasMobileStickyBar ? "pb-28 lg:pb-12" : ""
