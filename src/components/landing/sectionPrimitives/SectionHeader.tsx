@@ -92,7 +92,9 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        'flex justify-between md:items-end items-start mb-10 md:flex-row flex-col',
+        // On a phone the stack had no gap, so a trailing button sat on the
+        // subtitle's last line.
+        'flex justify-between md:items-end items-start mb-10 md:flex-row flex-col gap-6 md:gap-10',
         className,
       )}
     >
@@ -112,10 +114,10 @@ export function SectionHeader({
             {e}
           </p>
         ) : null}
-        {t ? <h2 className={cn(titleSplit, titleClassName)}>{title}</h2> : null}
-        {s ? <p className={cn(subtitleSplit, subtitleClassName)}>{subtitle}</p> : null}
+        {t ? <h2 className={cn(titleSplit, 'mt-2 leading-[1.15]', titleClassName)}>{title}</h2> : null}
+        {s ? <p className={cn(subtitleSplit, 'mt-3', subtitleClassName)}>{subtitle}</p> : null}
       </div>
-      {trailing}
+      {trailing ? <div className="shrink-0">{trailing}</div> : null}
     </div>
   )
 }

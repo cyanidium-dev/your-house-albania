@@ -118,7 +118,7 @@ const BlogSmall: React.FC<{
           trailing={
             <Link
               href={ctaHref}
-              className="bg-dark dark:bg-white text-white dark:text-dark py-4 px-8 rounded-full hover:bg-primary duration-300"
+              className="inline-flex items-center bg-dark dark:bg-white text-white dark:text-dark py-4 px-8 rounded-full hover:bg-primary duration-300"
               aria-label={ctaLabel}
             >
               {ctaLabel}
