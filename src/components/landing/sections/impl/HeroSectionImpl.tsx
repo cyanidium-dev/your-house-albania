@@ -9,6 +9,7 @@ import { heroPhotoFor } from '@/lib/media/albaniaPhotos'
 import { PhotoHeroFlag } from '@/components/shared/PhotoHeroFlag'
 import AiSearchInput from '@/components/ai/AiSearchInput'
 import { isAiSearchEnabled } from '@/lib/ai/config'
+import { cn } from '@/lib/utils'
 
 export type HeroData = {
   shortLine?: string;
@@ -22,6 +23,13 @@ export type HeroData = {
   searchEnabled?: boolean;
   /** Plain-language assistant field. Homepage only — see the hero section handler. */
   aiSearchEnabled?: boolean;
+  /**
+   * `home` gives phones a search-first hero: on the homepage most visitors
+   * arrive on a phone, and a full-screen photo with a long headline, a big
+   * button and the search three screens down lost 63% of them before they
+   * scrolled at all (Clarity, 2026-09). Tablets and desktops are unchanged.
+   */
+  layout?: 'default' | 'home';
   backgroundImageUrl?: string;
   backgroundImageAlt?: string;
   enabled?: boolean;
@@ -54,6 +62,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
     heroData?.backgroundImageUrl
       ? heroData.backgroundImageAlt || title || 'Hero background'
       : tPhoto(fallbackPhoto.key)
+  const isHome = heroData?.layout === 'home'
   const searchEnabled = heroData?.searchEnabled === true
   const aiSearchVisible = heroData?.aiSearchEnabled === true && isAiSearchEnabled()
   const primaryCta = resolveCta(heroData?.ctaLabel, heroData?.ctaHref, locale)
@@ -82,7 +91,14 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
 
   return (
     <section className='relative z-10 !py-0'>
-      <div className='bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 relative min-h-screen flex'>
+      <div
+        className={cn(
+          'bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 relative flex',
+          // On a phone the homepage hero is only as tall as its content, so the
+          // first listings start inside the first screen.
+          isHome ? 'md:min-h-screen' : 'min-h-screen'
+        )}
+      >
         <PhotoHeroFlag />
         <div className="absolute inset-0 z-0">
           <Image
@@ -107,10 +123,18 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-t from-white/90 to-transparent dark:from-black/90"
+          className={cn(
+            'pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-white/90 to-transparent dark:from-black/90',
+            isHome ? 'h-16 md:h-40' : 'h-40'
+          )}
           aria-hidden
         />
-        <div className='container max-w-8xl mx-auto px-5 2xl:px-0 pt-32 md:pt-60 md:pb-20 flex-1 relative'>
+        <div
+          className={cn(
+            'container max-w-8xl mx-auto px-5 2xl:px-0 md:pt-60 md:pb-20 flex-1 relative',
+            isHome ? 'pt-24 pb-6' : 'pt-32'
+          )}
+        >
           {breadcrumb ? (
             <div className="relative z-20 text-left mb-6 [&_*]:!text-white/85 [&_a:hover]:!text-white">
               {breadcrumb}
@@ -118,23 +142,51 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
           ) : null}
           {/* The copy always sits on the scrim over a photo now, so it is white
               in both themes. */}
-          <div className="relative text-center md:text-start z-20 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
-            <p className='text-inherit text-xs md:text-base font-semibold uppercase tracking-[0.12em] md:tracking-[0.14em] opacity-90'>
+          <div
+            className={cn(
+              'relative md:text-start z-20 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]',
+              // Home on a phone: headline, then the search, then the assistant,
+              // then a plain link to everything. `md:block` drops the flex
+              // ordering, so tablets and desktops keep the source order.
+              isHome ? 'flex flex-col text-start md:block' : 'text-center'
+            )}
+          >
+            <p
+              className={cn(
+                'text-inherit font-semibold uppercase opacity-90 md:text-base md:tracking-[0.14em]',
+                isHome ? 'hidden md:block text-xs tracking-[0.12em]' : 'text-xs tracking-[0.12em]'
+              )}
+            >
               {shortLine}
             </p>
             {/* A phone shows the Russian and Ukrainian headline on four lines;
                 at 36px that was most of the viewport and the reader felt it.
                 28px keeps the line count and gives the photo back. */}
-            <h1 className='font-display text-inherit text-[1.75rem] leading-[1.12] sm:text-[2.25rem] sm:leading-[1.08] md:text-5xl lg:text-6xl lg:leading-[1.05] font-bold tracking-[-0.02em] md:tracking-[-0.03em] md:max-w-[55%] mt-3 mb-4 md:mt-4 md:mb-5 text-balance'>
+            <h1
+              className={cn(
+                'font-display text-inherit sm:text-[2.25rem] sm:leading-[1.08] md:text-5xl lg:text-6xl lg:leading-[1.05] font-bold tracking-[-0.02em] md:tracking-[-0.03em] md:max-w-[55%] md:mt-4 md:mb-5 text-balance',
+                isHome ? 'order-2 text-[1.625rem] leading-[1.12] mt-1 mb-5' : 'text-[1.75rem] leading-[1.12] mt-3 mb-4'
+              )}
+            >
               {title}
             </h1>
             {subtitle ? (
-              <p className='text-inherit text-base md:text-xl leading-relaxed opacity-95 md:max-w-[46%] mb-6 md:mb-7 whitespace-pre-line'>
+              <p
+                className={cn(
+                  'text-inherit text-base md:text-xl leading-relaxed opacity-95 md:max-w-[46%] mb-6 md:mb-7 whitespace-pre-line',
+                  isHome && 'hidden md:block'
+                )}
+              >
                 {subtitle}
               </p>
             ) : null}
             {primaryCta || secondaryCta ? (
-              <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start">
+              <div
+                className={cn(
+                  'flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start',
+                  isHome ? 'hidden md:flex' : 'flex'
+                )}
+              >
                 {primaryCta ? (
                   <Link
                     href={primaryCta.href}
@@ -154,17 +206,27 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               </div>
             ) : null}
             {aiSearchVisible ? (
-              <div className="mt-8 flex justify-center md:justify-start">
+              <div className={cn('md:mt-8 flex justify-center md:justify-start', isHome ? 'order-4 mt-4' : 'mt-8')}>
                 <AiSearchInput locale={locale} />
               </div>
             ) : null}
+            {isHome && primaryCta ? (
+              <Link
+                href={primaryCta.href}
+                className="order-5 mt-3 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-white underline-offset-4 hover:underline md:hidden"
+              >
+                {primaryCta.label}
+                <span aria-hidden>→</span>
+              </Link>
+            ) : null}
             {searchEnabled ? (
-              <div className="mt-12 md:mt-16 flex justify-center">
+              <div className={cn('md:mt-16 flex justify-center', isHome ? 'order-3' : 'mt-12')}>
                 <HeroSearchWidget
                   locationOptions={locationOptions}
                   propertyTypeOptions={propertyTypeOptions}
                   searchTabs={cmsTabs}
                   priceRangesByDeal={priceRangesByDeal}
+                  compact={isHome}
                 />
               </div>
             ) : null}

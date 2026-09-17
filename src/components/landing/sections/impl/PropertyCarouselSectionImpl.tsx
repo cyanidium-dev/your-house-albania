@@ -63,13 +63,18 @@ const Properties: React.FC<{
     })
   }
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-10 md:py-24">
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
+        {/* On a phone the 40px centred heading took four lines and most of a
+            screen before the first listing; tablets and desktops keep it. */}
         <SectionHeader
           variant="center"
           eyebrowText={badge}
           title={title}
           subtitle={description}
+          className="mb-6 gap-2 md:mb-16 md:gap-3"
+          titleClassName="text-[1.625rem] leading-[1.15] md:text-40 md:leading-11 mb-0 md:mb-2"
+          subtitleClassName="text-sm md:text-xm"
         />
         <TopOffersCarouselClient
           locale={locale}

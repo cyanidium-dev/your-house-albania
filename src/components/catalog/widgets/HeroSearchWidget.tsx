@@ -26,7 +26,13 @@ export function HeroSearchWidget({
   propertyTypeOptions,
   searchTabs,
   priceRangesByDeal,
+  compact = false,
 }: {
+  /**
+   * Phones only: location and type side by side, no price slider. The slider
+   * made the card taller than the screen and is one tap away in the catalog.
+   */
+  compact?: boolean;
   locationOptions: FilterOption[];
   propertyTypeOptions: FilterOption[];
   searchTabs: Array<{ key: DealTab; label?: string }>;
@@ -170,7 +176,14 @@ export function HeroSearchWidget({
       ) : null}
 
       {/* Filters row */}
-      <form onSubmit={handleSubmit} className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto] gap-3 items-end min-w-0 [&>*]:min-w-0">
+      <form
+        onSubmit={handleSubmit}
+        className={cn(
+          "grid sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto] gap-3 items-end min-w-0 [&>*]:min-w-0",
+          compact ? "grid-cols-2 gap-2.5 sm:gap-3" : "grid-cols-1",
+          (tabs.length > 1 || !compact) && "mt-3"
+        )}
+      >
         <FilterSelect
           label={tFilters("location")}
           value={city}
@@ -186,7 +199,7 @@ export function HeroSearchWidget({
           anyLabel={tFilters("anyType")}
         />
 
-        <div className="min-w-0">
+        <div className={cn("min-w-0", compact && "hidden sm:block")}>
           <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
             <span className="truncate">{tFilters("priceRange")}</span>
             <span className="font-medium text-dark dark:text-white text-[11px] shrink-0">
@@ -215,7 +228,8 @@ export function HeroSearchWidget({
             "h-10 px-6 rounded-full font-semibold",
             "bg-primary text-white hover:bg-dark dark:hover:bg-white dark:hover:text-dark",
             "transition-colors duration-200 ease-out cursor-pointer",
-            "w-full lg:w-auto"
+            "w-full lg:w-auto",
+            compact && "col-span-2 h-11 sm:col-span-1"
           )}
         >
           {tFilters("search")}

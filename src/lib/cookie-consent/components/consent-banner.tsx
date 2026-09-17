@@ -45,7 +45,7 @@ export function ConsentBanner({ copy, policyHref, onAcceptAll, onRejectAll, onCu
           </p>
         </div>
         <div className={bannerActionsClass}>
-          <ConsentButton variant="ghost" onClick={onCustomise} className="self-start lg:self-auto">
+          <ConsentButton variant="ghost" onClick={onCustomise}>
             {copy.banner.customise}
           </ConsentButton>
           <div className={bannerChoiceRowClass}>
