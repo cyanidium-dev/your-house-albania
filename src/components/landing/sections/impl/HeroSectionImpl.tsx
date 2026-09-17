@@ -91,8 +91,10 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
             fill
             sizes="100vw"
             className="object-cover object-center"
-            priority={false}
-            unoptimized={bgImageUrl.startsWith('http')}
+            // Full-bleed hero above the fold: it has to start downloading with
+            // the document, not after the lazy-loading pass.
+            priority
+            fetchPriority="high"
           />
         </div>
         {/* Scrim. A photo can be any brightness, so the text needs its own

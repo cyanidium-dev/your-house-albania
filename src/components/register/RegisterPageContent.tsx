@@ -57,7 +57,6 @@ export async function RegisterPageContent({ locale }: Props) {
                     fill
                     className="object-cover object-center brightness-[0.92]"
                     sizes="(max-width: 1024px) 100vw, 52vw"
-                    unoptimized
                   />
                 </div>
 

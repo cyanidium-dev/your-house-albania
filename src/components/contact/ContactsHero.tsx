@@ -25,7 +25,6 @@ export async function ContactsHero({ locale }: Props) {
             fill
             className="object-cover object-center"
             priority
-            unoptimized
           />
         </div>
         <div

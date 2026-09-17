@@ -43,7 +43,6 @@ export function AuthorAvatar({ imageUrl, name, alt, size = 48, className }: Prop
         quality={100}
         style={style}
         className={`${box} object-cover`}
-        unoptimized={imageUrl.startsWith("http")}
       />
     );
   }

@@ -45,7 +45,6 @@ export default async function ContactThankYouPage({ params }: Props) {
             width={497}
             height={535}
             className="h-auto max-h-[200px] w-full rounded-2xl object-cover object-center brightness-[0.85] lg:max-h-none"
-            unoptimized
           />
         </div>
       </div>

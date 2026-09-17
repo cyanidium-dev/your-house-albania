@@ -148,7 +148,6 @@ export function LogoTile({
   locale: string
 }) {
   const src = image.url
-  const unoptimized = src.startsWith('http')
   /** Intrinsic placeholder; display size comes from CSS (fixed height, auto width). */
   const inner = (
     <span className="inline-flex max-w-[12rem] shrink-0 items-center justify-center">
@@ -160,7 +159,6 @@ export function LogoTile({
         draggable={false}
         className={logoImgClassName}
         sizes="(max-width: 768px) 160px, 192px"
-        unoptimized={unoptimized}
       />
     </span>
   )

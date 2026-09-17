@@ -144,7 +144,6 @@ export function SplitVariant({
             fill
             className="object-cover object-center"
             sizes="(max-width: 1023px) 100vw, 25vw"
-            unoptimized={showPrimary.url.startsWith("http")}
           />
         </div>
       ) : null}
@@ -156,7 +155,6 @@ export function SplitVariant({
             fill
             className="object-cover object-center"
             sizes="25vw"
-            unoptimized={showSecondary.url.startsWith("http")}
           />
         </div>
       ) : null}

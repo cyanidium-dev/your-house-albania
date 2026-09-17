@@ -159,18 +159,12 @@ function CreditGroup({ heading, note, credits, standInLabel, sourceLabel }: Cred
           >
             {credit.imageUrl && (
               <div className="relative aspect-[3/2] bg-black/5 dark:bg-white/5">
-                {/*
-                  `unoptimized` for remote Sanity URLs, matching the rest of the
-                  site — there is no `images.remotePatterns` entry for
-                  cdn.sanity.io, so the optimizer would throw.
-                */}
                 <Image
                   src={credit.imageUrl}
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
                   className="object-cover"
-                  unoptimized={credit.imageUrl.startsWith("http")}
                 />
               </div>
             )}

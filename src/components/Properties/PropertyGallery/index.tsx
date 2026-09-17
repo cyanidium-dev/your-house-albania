@@ -13,6 +13,8 @@ type Props = {
 };
 
 const PREVIEW_MAX = 5;
+/** How many slides either side of the visible one keep their photograph mounted. */
+const SLIDE_PRELOAD_RADIUS = 1;
 
 export function PropertyGallery({ images }: Props) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -111,8 +113,10 @@ export function PropertyGallery({ images }: Props) {
 
   if (galleryImages.length === 0) return null;
 
-  const unoptimized = galleryImages[0]?.url?.startsWith('http') ?? false;
   const imgAlt = (img: GalleryImage, fallback: string) => img.alt ?? fallback;
+  /** Slides within a swipe of the visible one; the rest mount on approach. */
+  const isSlideNearViewport = (idx: number) =>
+    Math.abs(idx - mobileSlideIndex) <= SLIDE_PRELOAD_RADIUS;
 
   const imgBtn = (
     img: GalleryImage,
@@ -132,8 +136,10 @@ export function PropertyGallery({ images }: Props) {
         alt={imgAlt(img, ariaLabel)}
         fill
         className="object-cover object-center"
-        sizes="(max-width: 1023px) 100vw, 33vw"
-        unoptimized={unoptimized}
+        // Hidden below lg — the mobile slider shows these photographs instead.
+        sizes="(max-width: 1023px) 1px, 33vw"
+        priority={index === 0}
+        fetchPriority={index === 0 ? 'high' : undefined}
       />
     </button>
   );
@@ -155,8 +161,9 @@ export function PropertyGallery({ images }: Props) {
                 alt={imgAlt(galleryImages[0], t('propertyImageAlt', { n: 1 }))}
                 fill
                 className="object-cover object-center"
-                sizes="100vw"
-                unoptimized={unoptimized}
+                sizes="(min-width: 1024px) 1px, 100vw"
+                priority
+                fetchPriority="high"
               />
             </button>
           ) : (
@@ -176,14 +183,21 @@ export function PropertyGallery({ images }: Props) {
                     className="snap-start shrink-0 w-full min-w-full h-[280px] xs:h-[340px] mobile:h-[400px] relative focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
                     aria-label={t('openImage', { n: idx + 1 })}
                   >
-                    <Image
-                      src={img.url}
-                      alt={imgAlt(img, t('propertyImageAlt', { n: idx + 1 }))}
-                      fill
-                      className="object-cover object-center"
-                      sizes="100vw"
-                      unoptimized={unoptimized}
-                    />
+                    {/* The slide keeps its box either way; only the photograph
+                        waits. Every slide used to mount at once, so a listing
+                        with thirty pictures downloaded thirty of them before
+                        the first one had finished painting. */}
+                    {isSlideNearViewport(idx) ? (
+                      <Image
+                        src={img.url}
+                        alt={imgAlt(img, t('propertyImageAlt', { n: idx + 1 }))}
+                        fill
+                        className="object-cover object-center"
+                        sizes="(min-width: 1024px) 1px, 100vw"
+                        priority={idx === 0}
+                        fetchPriority={idx === 0 ? 'high' : undefined}
+                      />
+                    ) : null}
                   </button>
                 ))}
               </div>
@@ -452,7 +466,6 @@ export function PropertyGallery({ images }: Props) {
               fill
               className="object-contain object-center"
               sizes="100vw"
-              unoptimized={unoptimized}
             />
           </div>
 
@@ -513,7 +526,6 @@ export function PropertyGallery({ images }: Props) {
                           fill
                           className="object-cover"
                           sizes="(max-width: 1023px) 64px, 96px"
-                          unoptimized={unoptimized}
                         />
                       </button>
                     ))}

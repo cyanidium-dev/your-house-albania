@@ -75,7 +75,6 @@ export async function DeveloperCard({
               fill
               className="object-contain p-1"
               sizes="48px"
-              unoptimized={logoUrl.startsWith('http')}
             />
           ) : (
             <span className="text-sm font-semibold text-dark/60 dark:text-white/60">{initials}</span>

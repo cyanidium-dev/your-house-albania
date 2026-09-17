@@ -30,7 +30,6 @@ const ErrorPage = () => {
         alt=""
         width={420}
         height={386}
-        unoptimized
         className="h-auto w-full max-w-[320px]"
       />
       <h1 className="font-display text-3xl md:text-5xl font-bold text-dark dark:text-white">

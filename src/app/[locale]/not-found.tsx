@@ -27,7 +27,6 @@ export default async function LocaleNotFound() {
             alt=""
             width={420}
             height={386}
-            unoptimized
             className="h-auto w-full max-w-[320px] md:max-w-[420px]"
           />
 

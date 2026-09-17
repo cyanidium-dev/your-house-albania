@@ -50,7 +50,6 @@ export function SplitDarkVariant({
                 alt={data.splitDarkImageAlt || data.title || "Marketing"}
                 fill
                 className="object-cover object-center"
-                unoptimized={imgUrl!.startsWith("http")}
               />
             </div>
           ) : null}

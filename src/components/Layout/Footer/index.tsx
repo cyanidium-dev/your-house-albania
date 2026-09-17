@@ -216,7 +216,6 @@ export default function Footer({
                 alt={siteName || "Logo"}
                 width={180}
                 height={72}
-                unoptimized={siteSettings.logoUrl.startsWith("http")}
                 className="h-11 w-auto object-contain object-left brightness-0 invert md:h-12"
               />
             ) : (

@@ -32,7 +32,6 @@ export function PropertyCatalogBannerCard({
             fill
             sizes="(min-width: 1280px) 1200px, 100vw"
             className="object-cover"
-            unoptimized={imageUrl.startsWith("http")}
           />
         ) : null}
       </div>

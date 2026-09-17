@@ -90,7 +90,11 @@ export function CatalogHero({
           fill
           sizes="100vw"
           className="object-cover object-center"
-          priority={false}
+          // This photograph is the LCP element on every city and listing page.
+          // It used to be explicitly deprioritised, so it was lazy-loaded and
+          // only started downloading after the rest of the page.
+          priority
+          fetchPriority="high"
         />
       </div>
       {/* Same scrim recipe as the landing hero: a flat wash so the copy has a

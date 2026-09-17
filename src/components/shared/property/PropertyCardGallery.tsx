@@ -65,6 +65,14 @@ export function PropertyCardGallery({
   const dragStartX = useRef<number | null>(null)
   const hasMultipleImages = imageList.length > 1 && !singleImage
   const displayImages = singleImage ? imageList.slice(0, 1) : imageList
+  /**
+   * A card carousel used to put every photograph of the listing in the markup,
+   * and a listing page holds two dozen cards: 283 `<img>` tags, 422 KB of
+   * `srcset` strings — over half the HTML document, for slides nobody had
+   * swiped to. The slide boxes still all render, so the translateX maths is
+   * unchanged; only the photograph waits until it is a swipe away.
+   */
+  const isSlideNearby = (idx: number) => Math.abs(idx - imageIndex) <= 1
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
@@ -279,14 +287,15 @@ export function PropertyCardGallery({
               >
                 {displayImages.map((img, idx) => (
                   <div key={idx} className="relative h-full w-full shrink-0">
-                    <Image
-                      src={img.src}
-                      alt={name}
-                      fill
-                      sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
-                      className={imageClass}
-                      unoptimized
-                    />
+                    {isSlideNearby(idx) ? (
+                      <Image
+                        src={img.src}
+                        alt={name}
+                        fill
+                        sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
+                        className={imageClass}
+                      />
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -311,14 +320,15 @@ export function PropertyCardGallery({
             >
               {displayImages.map((img, idx) => (
                 <div key={idx} className="relative h-full w-full shrink-0">
-                  <Image
-                    src={img.src}
-                    alt={name}
-                    fill
-                    sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
-                    className={imageClass}
-                    unoptimized
-                  />
+                  {isSlideNearby(idx) ? (
+                    <Image
+                      src={img.src}
+                      alt={name}
+                      fill
+                      sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
+                      className={imageClass}
+                    />
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -337,7 +347,6 @@ export function PropertyCardGallery({
               alt={name}
               isOpen={lightboxOpen}
               onClose={closeLightbox}
-              unoptimized
               action={
                 locale && contactLabel ? (
                   <PropertyContactButton

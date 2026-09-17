@@ -2,7 +2,7 @@
  * Global `next/image` loader (wired up through `images.loaderFile`).
  *
  * Every photograph on this site comes from the Sanity CDN, and every call site
- * used to opt those out of optimisation with `unoptimized={url.startsWith("http")}`
+ * used to opt those out of optimisation with a remote-URL check
  * because remote hosts were never added to `images.remotePatterns`. The result
  * was that Sanity served the untouched original on every page: 3.4 MB JPEGs and
  * 3.3 MB PNGs on the home page, ~9 MB of gallery originals on a property page.

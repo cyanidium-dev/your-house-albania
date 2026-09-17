@@ -306,7 +306,6 @@ export default async function Post({ params }: Props) {
           quality={100}
           priority
           className="h-full w-full object-cover object-center"
-          unoptimized={detail.coverImageUrl.startsWith("http")}
         />
       </div>
     </div>

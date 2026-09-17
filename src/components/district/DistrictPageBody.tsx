@@ -112,7 +112,6 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
                 priority
                 className="object-cover object-center"
                 sizes="(max-width: 1023px) 100vw, 1280px"
-                unoptimized={Boolean(heroImageUrl?.startsWith("http"))}
               />
             </div>
           ) : null}
@@ -157,7 +156,6 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
                     fill
                     className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    unoptimized={img.asset!.url!.startsWith("http")}
                   />
                   {img.label ? (
                     <span className="absolute bottom-3 left-3 inline-flex items-center rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white/90">
