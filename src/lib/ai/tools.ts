@@ -193,6 +193,10 @@ async function buildCatalogUrl(locale: string, link: CatalogLinkInput | undefine
     trustedCityCountrySlug,
     district: district || undefined,
     propertyType: type || undefined,
+    // A typed listing lives at `/{city}/sale/{type}`; without the deal the URL
+    // is the old `/{city}/{type}`, which now 308s there. The button should not
+    // spend a redirect.
+    dealQuery: type ? PUBLIC_DEAL_TYPES[0] : undefined,
     query,
   })
 }
