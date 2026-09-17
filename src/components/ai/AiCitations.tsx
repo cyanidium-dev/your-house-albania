@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Icon } from '@iconify/react'
+import { Icon } from '@/components/shared/Icon'
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics/track'
 import type { AiCitation } from '@/lib/ai/knowledgeTools'

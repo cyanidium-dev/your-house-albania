@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react'
+import { Icon } from '@/components/shared/Icon'
 import { cn } from '@/lib/utils'
 import type { KnowledgeFact, KnowledgeTable as KnowledgeTableData } from '@/lib/sanity/queries/knowledge'
 
