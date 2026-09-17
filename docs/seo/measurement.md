@@ -41,7 +41,7 @@ All listing URLs under `/albania/` (excluding `/info`, `/districts`, guides, blo
 | `/pl/albania/vlore` | 0 | 4 | 10.5 | noindex (4 listings, Tier 3) |
 | `/uk/albania/sarande` | 0 | 1 | 6.0 | noindex (no uk evidence) |
 
-No district listing, type page or facet had impressions yet. `/uk/albania/canggu` and `/ru/albania/canggu` (11 and 1 impressions) are a data error — a Bali location stored as a city of Albania.
+No district listing, type page or facet had impressions yet. `/uk/albania/canggu` and `/ru/albania/canggu` (11 and 1 impressions) are history: until 2026-08-14 the Shkodër city document carried Bali test data (title "Canngu", slug `canggu`). `domlivo-admin/scripts/fixShkoderCity.ts` restored it; the old URLs return 404 and drop out on their own.
 
 ### Apartments vs the city page (checked 2026-09-17)
 
