@@ -197,6 +197,10 @@ export async function POST(req: NextRequest) {
           if (hop === AI_MAX_TOOL_HOPS) break
 
           const results: Anthropic.ToolResultBlockParam[] = []
+          // cite is called after the answer is written. A further generation
+          // pass has nothing left to say and the model fills it anyway — "sources
+          // are below", "Done.", a second offer — so a clean cite ends the turn.
+          let citeClosesTurn = false
           for (const toolUse of toolUses) {
             send({ type: 'tool_start', name: toolUse.name })
 
@@ -238,6 +242,8 @@ export async function POST(req: NextRequest) {
                 // corrected in the same turn rather than shown as a source.
                 const { model, ui } = await runCite(toolUse.input, locale)
                 if (ui.length > 0) send({ type: 'citations', items: ui })
+                citeClosesTurn =
+                  toolUses.length === 1 && sentText && ui.length > 0 && model.dropped.length === 0
                 results.push({
                   type: 'tool_result',
                   tool_use_id: toolUse.id,
@@ -280,6 +286,7 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          if (citeClosesTurn) break
           conversation.push({ role: 'user', content: results })
         }
 

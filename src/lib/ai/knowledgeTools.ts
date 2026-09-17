@@ -58,7 +58,8 @@ export const LOOKUP_FACTS_TOOL: Anthropic.Tool = {
         type: 'string',
         description:
           'Narrow by topic: electricity, water, internet, heating, air_conditioning, property_prices, ' +
-          'long_term_rental, short_term_rental, taxes, purchase_costs, renovation, furniture, ' +
+          'long_term_rental, short_term_rental, taxes, purchase_costs, legal (documents for buying, what foreigners may buy), ' +
+          'renovation, furniture, ' +
           'building_fees, property_management, macro, tourism, forecast.',
       },
       city: {
@@ -108,7 +109,7 @@ export const CALC_UTILITIES_TOOL: Anthropic.Tool = {
 export const CITE_TOOL: Anthropic.Tool = {
   name: 'cite',
   description:
-    'Register the sources behind the figures in your answer. Call it once, last, with every data id ' +
+    'Register the sources behind the figures in your answer. Call it once, after your answer text is complete, with every data id ' +
     'you used. The visitor sees them as source chips under your reply, so you never have to write ' +
     'ids into your text. Ids that do not exist are dropped — if all of them are dropped, say where ' +
     'the figure came from in words instead.',
