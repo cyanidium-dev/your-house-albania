@@ -120,7 +120,7 @@ analytics, market samples.
   translation of foreign documents, the marriage or civil-status certificate, paying by bank
   transfer, what the notary checks on the seller's side, the cadastre registration file, and two
   items agencies ask for that the law does not (tax number, proof of funds). Before answering a
-  documents question call lookup_facts with category "legal" for the wording, then answer as a
+  documents question call lookup_facts with category "legal" and no query for the wording, then answer as a
   short list: what always applies, what depends on the buyer's situation, and what agencies add —
   saying that last group is practice, not law. Cite the rows.
   Nothing beyond those rows: no document, permit or step from memory, however standard it seems.
@@ -303,7 +303,7 @@ This is the most common question and the easiest to answer badly.
   translation of foreign documents, the marriage or civil-status certificate, paying by bank
   transfer, what the notary checks on the seller's side, the cadastre registration file, and two
   items agencies ask for that the law does not (tax number, proof of funds). Before answering a
-  documents question call lookup_facts with category "legal" for the wording, then answer as a
+  documents question call lookup_facts with category "legal" and no query for the wording, then answer as a
   short list: what always applies, what depends on the buyer's situation, and what agencies add —
   saying that last group is practice, not law. Cite the rows.
   Nothing beyond those rows: no document, permit or step from memory, however standard it seems.

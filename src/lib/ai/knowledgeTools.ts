@@ -173,18 +173,28 @@ export async function runLookupFacts(rawInput: unknown): Promise<unknown> {
   const input = (rawInput ?? {}) as Record<string, unknown>
   const ids = sanitizeIds(input.dataIds)
 
-  const facts = ids.length > 0
-    ? await fetchFactsByDataIds(ids)
-    : await searchKnowledgeFacts({
-        query: typeof input.query === 'string' ? input.query.slice(0, 120) : undefined,
-        category: typeof input.category === 'string' ? input.category.slice(0, 40) : undefined,
-        citySlug: typeof input.city === 'string' ? input.city.slice(0, 40) : undefined,
-        season:
-          typeof input.season === 'string' && input.season !== 'annual'
-            ? input.season.slice(0, 20)
-            : undefined,
-        limit: typeof input.limit === 'number' ? input.limit : MAX_FACTS,
-      })
+  const search = {
+    query: typeof input.query === 'string' ? input.query.slice(0, 120) : undefined,
+    category: typeof input.category === 'string' ? input.category.slice(0, 40) : undefined,
+    citySlug: typeof input.city === 'string' ? input.city.slice(0, 40) : undefined,
+    season:
+      typeof input.season === 'string' && input.season !== 'annual'
+        ? input.season.slice(0, 20)
+        : undefined,
+    limit: typeof input.limit === 'number' ? input.limit : MAX_FACTS,
+  }
+
+  let facts = ids.length > 0 ? await fetchFactsByDataIds(ids) : await searchKnowledgeFacts(search)
+
+  // Every query word has to match, so a natural phrasing ("documents foreign
+  // buyer") finds nothing in a category that answers it completely, and the
+  // model then tells the visitor the data does not exist. With a category or
+  // city to stand on, drop the words and return the whole slice instead.
+  let relaxed = false
+  if (facts.length === 0 && ids.length === 0 && search.query && (search.category || search.citySlug)) {
+    facts = await searchKnowledgeFacts({ ...search, query: undefined })
+    relaxed = facts.length > 0
+  }
 
   if (facts.length === 0) {
     return {
@@ -197,6 +207,9 @@ export async function runLookupFacts(rawInput: unknown): Promise<unknown> {
   return {
     facts: facts.map(factForModel),
     notFound: ids.filter((id) => !found.has(id)),
+    note: relaxed
+      ? 'No row matched every word of the query, so this is the whole category. Read it before saying anything is missing.'
+      : undefined,
   }
 }
 
