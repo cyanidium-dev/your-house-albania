@@ -1,4 +1,9 @@
 import { NextResponse } from 'next/server'
+import { countryFromHeaders } from '@/lib/leads/buildLeadDocument'
+import { parseLeadContext } from '@/lib/leads/context'
+import { createLead } from '@/lib/leads/createLead'
+import { isLeadPlacement, type LeadPlacement, type LeadType } from '@/lib/leads/types'
+import { formatLeadAnalyticsBlock } from '@/lib/notifications/leads/formatLeadTelegram'
 import { formatMinMaxLabel } from '@/lib/notifications/agentContact/formatTelegramAgentContact'
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
 import { deliverAgentContactTelegram } from '@/lib/notifications/agentContact/telegramDelivery'
@@ -33,6 +38,10 @@ type Body = {
   /** Quote submissions: same-site path the widget was on, and a short placement label. */
   sourcePath?: string
   sourceLabel?: string
+  /** Optional visit journey from `getLeadContext()`; validated, never trusted. */
+  context?: unknown
+  /** Optional placement of the form on the page (`LeadPlacement`). */
+  placement?: unknown
 }
 
 function isNonEmptyString(v: unknown): v is string {
@@ -219,8 +228,71 @@ export async function POST(request: Request) {
     message: `${normalized.message.slice(0, 160)}${normalized.message.length > 160 ? '…' : ''}`,
   })
 
+  // Lead entity + analytics. A client without `context` (a page cached before
+  // this shipped) still gets its lead, just without the journey.
+  const context = parseLeadContext(body.context)
+  const country = countryFromHeaders(request.headers)
+  const leadType: LeadType =
+    normalized.submissionKind === 'agent'
+      ? normalized.propertySlug
+        ? 'property_inquiry'
+        : 'agent_contact'
+      : 'contact_form'
+  const defaultPlacement: LeadPlacement =
+    normalized.submissionKind === 'general'
+      ? 'contact-page'
+      : normalized.submissionKind === 'agent'
+        ? 'property'
+        : 'page'
+  const placement = isLeadPlacement(body.placement) ? body.placement : defaultPlacement
+  const leadLocale = /^[a-z]{2}$/.test(locale) ? locale : undefined
+  const hasAgent = normalized.agentSlug !== '—' && normalized.agentSlug !== 'unassigned'
+
   const routing = resolveAgentContactTelegramRouting()
-  const delivery = await deliverAgentContactTelegram(normalized, routing)
+  const [delivery, lead] = await Promise.all([
+    deliverAgentContactTelegram(normalized, routing, {
+      appendix: formatLeadAnalyticsBlock({
+        ...(context ? { context } : {}),
+        ...(country ? { country } : {}),
+        ...(leadLocale ? { locale: leadLocale } : {}),
+      }),
+      internal: context?.internal === true,
+    }),
+    createLead({
+      type: leadType,
+      placement,
+      ...(leadLocale ? { locale: leadLocale } : {}),
+      ...(context ? { context } : {}),
+      ...(country ? { country } : {}),
+      ...(normalized.propertySlug ? { propertySlug: normalized.propertySlug } : {}),
+      ...(normalized.propertyTitle ? { propertyTitle: normalized.propertyTitle } : {}),
+      ...(hasAgent ? { agentSlug: normalized.agentSlug } : {}),
+      contact: {
+        ...(normalized.customerName !== '—' ? { name: normalized.customerName } : {}),
+        phone: normalized.phone,
+        ...(normalized.email !== '—' ? { email: normalized.email } : {}),
+        ...(normalized.message ? { message: normalized.message } : {}),
+      },
+      ...(normalized.submissionKind === 'general'
+        ? {
+            interest: {
+              location: normalized.location,
+              propertyType: normalized.propertyType,
+              dealType: normalized.dealType,
+              budget: normalized.priceRangeLabel === '—' ? undefined : normalized.priceRangeLabel,
+              area: normalized.areaRangeLabel === '—' ? undefined : normalized.areaRangeLabel,
+            },
+          }
+        : {}),
+      ...(normalized.sourceLabel ? { formLabel: normalized.sourceLabel } : {}),
+      now: new Date(),
+    }),
+  ])
+
+  if (!lead.ok) {
+    // Telegram still went out; the lead is only missing from Studio.
+    console.error('[contact-agent] lead not saved', lead.reason)
+  }
 
   if (!delivery.ok) {
     console.error('[contact-agent] delivery failed', delivery.reason)

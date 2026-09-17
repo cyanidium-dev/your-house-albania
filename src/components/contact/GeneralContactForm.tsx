@@ -17,7 +17,7 @@ import {
   getAreaQueryParams,
 } from '@/lib/catalog/areaRanges'
 import { cn } from '@/lib/utils'
-import { track } from '@/lib/analytics/track'
+import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 
 export type GeneralContactRequestFilterProps = {
   locations: Array<{ value: string; label: string }>
@@ -151,6 +151,8 @@ export function GeneralContactForm({ locale, filterProps, className }: Props) {
           phone: phone.trim(),
           email: email.trim(),
           message: message.trim(),
+          placement: 'contact-page',
+          context: leadContextForRequest(),
         }),
       })
 
@@ -160,7 +162,15 @@ export function GeneralContactForm({ locale, filterProps, className }: Props) {
         return
       }
 
-      track({ event: 'lead_submit', kind: 'general' })
+      trackFormLead({
+        leadType: 'contact_form',
+        placement: 'contact-page',
+        subject: {
+          ...(city ? { city } : {}),
+          ...(type ? { propertyType: type } : {}),
+        },
+        legacy: { kind: 'general' },
+      })
       router.push(`/${locale}/contact/thank-you`)
     } catch {
       setError(t('errorSubmit'))

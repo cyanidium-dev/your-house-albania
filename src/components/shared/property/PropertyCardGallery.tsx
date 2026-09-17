@@ -355,6 +355,7 @@ export function PropertyCardGallery({
                     propertyTitle={name}
                     agentSlug={null}
                     agentName={null}
+                    placement="property-card"
                     label={contactLabel}
                     className={cn(
                       'inline-flex h-10 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-white',

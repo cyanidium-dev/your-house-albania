@@ -22,6 +22,7 @@ import {
 } from "@/lib/catalog/areaRanges";
 import { buildCatalogFilterUrl } from "@/lib/catalog/buildCatalogFilterUrl";
 import { useCatalogFilterChrome } from "@/components/catalog/useCatalogFilterChrome";
+import { trackFilterApply } from "@/lib/analytics/searchEvents";
 import {
   type FilterOption,
 } from "@/components/catalog/FilterSelect";
@@ -271,6 +272,18 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
       initialAgentSlug,
       initialCountrySlug,
       locations,
+    });
+    const dealRange = priceRangesByDeal[effectiveDeal || "any"] || priceRangesByDeal.any;
+    trackFilterApply({
+      placement: opts?.dealForQuery !== undefined ? "catalog-deal-tab" : "catalog",
+      city,
+      district,
+      property_type: type,
+      deal: effectiveDeal,
+      beds,
+      has_price: !!dealRange && (pv[0] > dealRange.min || pv[1] < dealRange.max),
+      has_area: areaValues[0] > defaultAreaRange.min || areaValues[1] < defaultAreaRange.max,
+      amenities_count: amenities.length,
     });
     router.push(url);
   },

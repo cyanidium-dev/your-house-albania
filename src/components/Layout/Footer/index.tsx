@@ -201,7 +201,7 @@ export default function Footer({
   const lgColsClass = footerLgColsClass(showGuidesColumn, showAppColumn);
 
   return (
-    <footer className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
+    <footer data-lead-placement="footer" className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
       <div
         className={`container mx-auto max-w-8xl min-w-0 px-5 py-8 sm:py-10 2xl:px-0 lg:py-12 ${
           hasMobileStickyBar ? "pb-28 lg:pb-12" : ""
@@ -405,7 +405,8 @@ export default function Footer({
           </div>
 
           {/* Developer / ownership note + listings disclaimer */}
-          <div className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/40 sm:text-left md:text-xs">
+          {/* The developer's own contacts: not Domlivo leads. */}
+          <div data-lead-ignore className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/40 sm:text-left md:text-xs">
             <p>
               {t("developer.ownedBy")} {t("developer.disclaimer")}
             </p>

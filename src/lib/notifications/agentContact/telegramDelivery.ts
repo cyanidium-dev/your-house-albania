@@ -1,3 +1,4 @@
+import { withTestPrefix } from '@/lib/notifications/leads/formatLeadTelegram'
 import { formatAgentContactTelegramMessage } from './formatTelegramAgentContact'
 import { resolveTelegramBotToken } from './routing'
 import { sendTelegramTextMessage } from './telegramBotSend'
@@ -25,7 +26,13 @@ function debugShouldFail(kind: NormalizedAgentContactSubmission['submissionKind'
  */
 export async function deliverAgentContactTelegram(
   normalized: NormalizedAgentContactSubmission,
-  routing: AgentContactTelegramRouting
+  routing: AgentContactTelegramRouting,
+  options: {
+    /** Appended after a blank line — the lead's analytics block. */
+    appendix?: string
+    /** Internal (owner) traffic: the message is prefixed `[ТЕСТ]`. */
+    internal?: boolean
+  } = {}
 ): Promise<TelegramSendResult> {
   const botToken = resolveTelegramBotToken()
   const chatId = routing.generalChatId
@@ -46,7 +53,11 @@ export async function deliverAgentContactTelegram(
     return { ok: false, reason: `debug failure (${normalized.submissionKind})` }
   }
 
-  const text = formatAgentContactTelegramMessage(normalized)
+  const base = formatAgentContactTelegramMessage(normalized)
+  const text = withTestPrefix(
+    options.appendix ? `${base}\n\n${options.appendix}` : base,
+    options.internal === true
+  )
 
   console.log('[contact-agent] sending Telegram', {
     kind: normalized.submissionKind,

@@ -116,6 +116,7 @@ export function QuickContact({ locale, channels }: Props) {
   return (
     <div
       ref={wrapRef}
+      data-lead-placement="quick-contact"
       /**
        * The collapsed actions keep their layout box — only scale and opacity
        * change — so this wrapper stays roughly 173x356 even with nothing
@@ -180,6 +181,7 @@ export function QuickContact({ locale, channels }: Props) {
           <QuickLeadForm
             locale={locale}
             sourceLabel="Floating widget"
+            placement="quick-contact"
             stacked
             className="mt-4"
             onSent={() => window.setTimeout(close, 2500)}

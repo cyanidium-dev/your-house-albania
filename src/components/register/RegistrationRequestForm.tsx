@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { FilterSelect, type FilterOption } from '@/components/catalog/FilterSelect'
 import { cn } from '@/lib/utils'
-import { track } from '@/lib/analytics/track'
+import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 
 const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
 
@@ -96,6 +96,8 @@ export function RegistrationRequestForm({ locale, className }: Props) {
     const em = email.trim()
     if (em) payload.email = em
     if (realtorOrAgency !== 'any') payload.realtorOrAgency = realtorOrAgency
+    const context = leadContextForRequest()
+    if (context) payload.context = context
 
     setSubmitting(true)
     try {
@@ -109,7 +111,11 @@ export function RegistrationRequestForm({ locale, className }: Props) {
         setError(data?.error ?? t('errorSubmit'))
         return
       }
-      track({ event: 'lead_submit', kind: 'registration' })
+      trackFormLead({
+        leadType: 'registration',
+        placement: 'register-page',
+        legacy: { kind: 'registration' },
+      })
       router.push(`/${locale}/register/thank-you`)
     } catch {
       setError(t('errorSubmit'))

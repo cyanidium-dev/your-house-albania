@@ -51,6 +51,7 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
     <section
       className="border-t border-black/5 pb-16 pt-10 dark:border-white/10 md:pb-28 md:pt-12"
       aria-labelledby="contacts-main-heading"
+      data-lead-placement="contact-page"
     >
       <h2 id="contacts-main-heading" className="sr-only">
         {t('formHeading')}
