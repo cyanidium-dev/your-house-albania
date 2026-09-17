@@ -821,6 +821,43 @@
         "title": "Co chcesz wiedzieć?",
         "body": "Zapytaj o rozkład, dzielnicę, cenę na tle rynku albo porównanie z innymi ofertami."
       }
+    },
+    "sources": {
+      "heading": "Źródła",
+      "verified": "zweryfikowano",
+      "mayHaveChanged": "mogło się zmienić"
     }
+  },
+  "Knowledge": {
+    "title": "Baza wiedzy",
+    "breadcrumbHome": "Strona główna",
+    "description": "Sprawdzalne dane: ile kosztuje kupno, utrzymanie i wynajem nieruchomości w Albanii.",
+    "intro": "Każda liczba pochodzi z nazwanego źródła z datą: regulatorzy, statystyka publiczna, prawo podatkowe, analityka najmu i próbki ogłoszeń. Tam, gdzie danych nie mamy, strona to mówi.",
+    "empty": "Nic jeszcze nie opublikowano.",
+    "groups": {
+      "costs": "Ile kosztuje utrzymanie",
+      "market": "Ile jest warta",
+      "renting": "Ile przynosi",
+      "buying": "Co obejmuje zakup",
+      "outlook": "Dokąd zmierza",
+      "other": "Więcej"
+    },
+    "questionsShort": "pytań",
+    "updated": "zaktualizowano",
+    "period": "Okres",
+    "confidence": "Wiarygodność",
+    "exchangeRate": "Kurs",
+    "verified": "zweryfikowano",
+    "method": "Metoda",
+    "estimateNote": "wyliczenie, nie pomiar",
+    "questionsHeading": "Na jakie pytania odpowiada ta strona",
+    "sources": "Źródła",
+    "gapsHeading": "Czego brakuje",
+    "gapsIntro": "Znane luki. Nazwanie ich wprost sprawia, że reszcie można ufać.",
+    "askHeading": "Zapytaj o swój przypadek",
+    "askIntro": "Asystent korzysta z tych samych danych i pokazuje źródło każdej liczby.",
+    "askCta": "Zapytaj asystenta",
+    "related": "Powiązane strony",
+    "methodNote": "Kwoty przeliczono na euro po kursie Banku Albanii podanym na stronie. Cena ofertowa to nie cena transakcyjna, a czynsz z ogłoszenia to nie czynsz uzyskany."
   }
 }

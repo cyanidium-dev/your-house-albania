@@ -6,12 +6,14 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import PropertyCard from '@/components/shared/property/PropertyCard'
 import AssistantText from '@/components/ai/AssistantText'
+import AiCitations from '@/components/ai/AiCitations'
 import { cn } from '@/lib/utils'
 import { parseAiEvent, type AiChatMessage, type AiErrorCode } from '@/lib/ai/events'
 import { AI_MAX_MESSAGE_CHARS, AI_MAX_TURNS } from '@/lib/ai/limits'
 import { track } from '@/lib/analytics/track'
 import { clearChat, loadChat, saveChat, type StoredTurn } from './chatStorage'
 import type { PropertyHomes } from '@/types/propertyHomes'
+import type { AiCitation } from '@/lib/ai/knowledgeTools'
 
 type CardGroup = { items: PropertyHomes[]; catalogUrl?: string }
 
@@ -21,6 +23,8 @@ type Turn =
       role: 'assistant'
       text: string
       cards: CardGroup[]
+      /** Sources behind any figures in this answer. */
+      citations: AiCitation[]
       pending: boolean
       searching: boolean
       /**
@@ -57,7 +61,9 @@ function settleLastAssistant(turns: Turn[]): Turn[] {
   const index = turns.length - 1
   const last = turns[index]
   if (!last || !isAssistant(last)) return turns
-  if (!last.text.trim() && last.cards.length === 0) return turns.slice(0, index)
+  if (!last.text.trim() && last.cards.length === 0 && last.citations.length === 0) {
+    return turns.slice(0, index)
+  }
   return patchLastAssistant(turns, (turn) => ({ ...turn, pending: false, searching: false }))
 }
 
@@ -107,6 +113,7 @@ export default function AiSearchChat({
               role: 'assistant',
               text: turn.text,
               cards: turn.cards ?? [],
+              citations: turn.citations ?? [],
               pending: false,
               searching: false,
               breakBeforeNextText: false,
@@ -174,7 +181,15 @@ export default function AiSearchChat({
       setTurns((prev) => [
         ...prev,
         { role: 'user', text: question },
-        { role: 'assistant', text: '', cards: [], pending: true, searching: false, breakBeforeNextText: false },
+        {
+          role: 'assistant',
+          text: '',
+          cards: [],
+          citations: [],
+          pending: true,
+          searching: false,
+          breakBeforeNextText: false,
+        },
       ])
 
       const controller = new AbortController()
@@ -245,6 +260,17 @@ export default function AiSearchChat({
                     cards: [...turn.cards, { items: event.items, catalogUrl: event.catalogUrl }],
                   })),
                 )
+              } else if (event.type === 'citations') {
+                setTurns((prev) =>
+                  patchLastAssistant(prev, (turn) => ({
+                    ...turn,
+                    pending: false,
+                    searching: false,
+                    // Replaced, not appended: `cite` is called once per answer
+                    // and a retry inside the same turn should not double the list.
+                    citations: event.items,
+                  })),
+                )
               } else if (event.type === 'error') {
                 setErrorCode(event.code)
               }
@@ -261,7 +287,12 @@ export default function AiSearchChat({
           const stored: StoredTurn[] = settled.map((turn) =>
             turn.role === 'user'
               ? { role: 'user', text: turn.text }
-              : { role: 'assistant', text: turn.text, cards: turn.cards },
+              : {
+                  role: 'assistant',
+                  text: turn.text,
+                  cards: turn.cards,
+                  citations: turn.citations,
+                },
           )
           saveChat(stored, propertySlug)
           return settled
@@ -383,6 +414,17 @@ export default function AiSearchChat({
                   ) : null}
                 </div>
               ))}
+
+              {turn.citations.length > 0 ? (
+                <AiCitations
+                  items={turn.citations}
+                  labels={{
+                    heading: t('sources.heading'),
+                    verified: t('sources.verified'),
+                    mayHaveChanged: t('sources.mayHaveChanged'),
+                  }}
+                />
+              ) : null}
             </div>
           ),
         )}

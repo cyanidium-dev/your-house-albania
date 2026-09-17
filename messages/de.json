@@ -821,6 +821,43 @@
         "title": "Was möchten Sie wissen?",
         "body": "Fragen Sie nach dem Grundriss, dem Viertel, dem Preis im Vergleich zur Lage oder zum Vergleich mit anderen Angeboten."
       }
+    },
+    "sources": {
+      "heading": "Quellen",
+      "verified": "geprüft",
+      "mayHaveChanged": "kann sich geändert haben"
     }
+  },
+  "Knowledge": {
+    "title": "Wissensdatenbank",
+    "breadcrumbHome": "Startseite",
+    "description": "Belegte Zahlen dazu, was Kauf, Unterhalt und Vermietung einer Immobilie in Albanien kosten.",
+    "intro": "Jede Zahl hier stammt aus einer benannten Quelle mit Datum: Regulierungsbehörden, Statistikämter, Steuerrecht, Mietanalysen und Marktstichproben. Wo uns Daten fehlen, sagt die Seite das.",
+    "empty": "Noch nichts veröffentlicht.",
+    "groups": {
+      "costs": "Was der Unterhalt kostet",
+      "market": "Was sie wert ist",
+      "renting": "Was sie einbringt",
+      "buying": "Was der Kauf mit sich bringt",
+      "outlook": "Wohin es geht",
+      "other": "Mehr"
+    },
+    "questionsShort": "Fragen",
+    "updated": "aktualisiert",
+    "period": "Zeitraum",
+    "confidence": "Verlässlichkeit",
+    "exchangeRate": "Wechselkurs",
+    "verified": "geprüft",
+    "method": "Methode",
+    "estimateNote": "berechnet, nicht gemessen",
+    "questionsHeading": "Welche Fragen diese Seite beantwortet",
+    "sources": "Quellen",
+    "gapsHeading": "Was fehlt",
+    "gapsIntro": "Lücken, die wir kennen. Sie offen zu nennen macht den Rest vertrauenswürdig.",
+    "askHeading": "Fragen Sie zu Ihrem Fall",
+    "askIntro": "Der Assistent arbeitet mit denselben Daten und zeigt die Quelle jeder Zahl.",
+    "askCta": "Assistenten fragen",
+    "related": "Verwandte Seiten",
+    "methodNote": "Beträge sind zum auf der Seite angegebenen Kurs der Bank of Albania in Euro umgerechnet. Angebotspreise sind keine Transaktionspreise, inserierte Mieten keine erzielten Mieten."
   }
 }

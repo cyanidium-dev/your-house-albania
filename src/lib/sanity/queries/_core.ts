@@ -47,6 +47,9 @@ export const SANITY_TAGS = {
   developer: 'sanity:developer',
   zoneMetrics: 'sanity:zoneMetrics',
   imageCredit: 'sanity:imageCredit',
+  knowledgeArticle: 'sanity:knowledgeArticle',
+  knowledgeFact: 'sanity:knowledgeFact',
+  knowledgeSource: 'sanity:knowledgeSource',
 } as const;
 
 export type SanityTag = (typeof SANITY_TAGS)[keyof typeof SANITY_TAGS];

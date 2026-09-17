@@ -22,6 +22,7 @@ export async function GET() {
     "/sitemap-blog.xml",
     "/sitemap-landings.xml",
     "/sitemap-districts.xml",
+    "/sitemap-knowledge.xml",
   ];
   const xml = buildSitemapIndexXml(paths.map((p) => `${base}${p}`));
   return new NextResponse(xml, {

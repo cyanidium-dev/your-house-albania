@@ -21,6 +21,7 @@ import type { PropertyHomes } from '@/types/propertyHomes'
 import { calculateRoi } from '@/lib/calculators/roi'
 import { calculateMortgage } from '@/lib/calculators/mortgage'
 import { AI_MAX_CARDS } from './limits'
+import { KNOWLEDGE_TOOLS } from './knowledgeTools'
 
 export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
   name: 'show_properties',
@@ -59,7 +60,8 @@ export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
   },
 }
 
-export const AI_TOOLS: Anthropic.Tool[] = [SHOW_PROPERTIES_TOOL]
+/** Catalog conversation: find listings, and answer the money questions from the knowledge base. */
+export const AI_TOOLS: Anthropic.Tool[] = [SHOW_PROPERTIES_TOOL, ...KNOWLEDGE_TOOLS]
 
 type CatalogLinkInput = {
   city?: string
@@ -81,6 +83,9 @@ export type ShowPropertiesModelResult = {
   /** Slugs the model asked for that are not in the published catalog. */
   notFound: string[]
   catalogUrl?: string
+  /** The listing in view, dropped from the cards. */
+  withheld?: string[]
+  note?: string
 }
 
 /** What goes to the browser: everything the card component needs. */
@@ -195,9 +200,17 @@ async function buildCatalogUrl(locale: string, link: CatalogLinkInput | undefine
 export async function runShowProperties(
   rawInput: unknown,
   locale: string,
+  /**
+   * The listing the visitor is already looking at. Never rendered as a card:
+   * on its own page a card of itself is noise, and it pushes the answer below
+   * the fold. The model is told it was withheld so it does not try again.
+   */
+  inViewSlug?: string,
 ): Promise<{ model: ShowPropertiesModelResult; ui: ShowPropertiesUiResult }> {
   const input = (rawInput ?? {}) as ShowPropertiesInput
-  const requested = sanitizeSlugs(input.slugs)
+  const asked = sanitizeSlugs(input.slugs)
+  const withheld = inViewSlug ? asked.filter((slug) => slug === inViewSlug) : []
+  const requested = inViewSlug ? asked.filter((slug) => slug !== inViewSlug) : asked
   const rows = await fetchPublishedBySlugs(requested)
 
   // Keep the model's ordering — it ranked them, the catalog did not.
@@ -212,7 +225,17 @@ export async function runShowProperties(
   const catalogUrl = await buildCatalogUrl(locale, input.catalogLink)
 
   return {
-    model: { shown, notFound, catalogUrl },
+    model: {
+      shown,
+      notFound,
+      catalogUrl,
+      ...(withheld.length > 0
+        ? {
+            withheld,
+            note: 'That is the listing the visitor is already viewing; it is never shown as a card. Talk about it directly.',
+          }
+        : {}),
+    },
     ui: { items, catalogUrl },
   }
 }
@@ -222,12 +245,12 @@ export const __testables = { sanitizeSlugs, buildCatalogUrl }
 /* ------------------------------------------------------------------ *
  * Calculators
  *
- * The zone data needed to model a return does not exist yet — yields are
- * empty across every metrics record — so these deliberately take the numbers
- * from the visitor instead: "if you rented it for 600 a month, here is the
- * gross yield". That is an honest calculation on a stated assumption rather
- * than a market claim, and it is useful today. The arithmetic runs in the
- * project's tested calculators; the model never does it itself.
+ * These take the numbers from the visitor: "if you rented it for 600 a month,
+ * here is the gross yield". Market figures to sanity-check that rent against
+ * now exist in the knowledge base (`knowledgeTools.ts`), so the model can say
+ * whether 600 is plausible for that district — but the calculation itself
+ * stays on stated assumptions rather than becoming a promise. The arithmetic
+ * runs in the project's tested calculators; the model never does it itself.
  * ------------------------------------------------------------------ */
 
 export const CALC_ROI_TOOL: Anthropic.Tool = {
@@ -307,9 +330,10 @@ export function runCalcMortgage(rawInput: unknown): unknown {
   return result
 }
 
-/** Tools for the property conversation: the catalog tool plus the calculators. */
+/** One listing in view: the catalog tool, the calculators, and the knowledge base. */
 export const AI_PROPERTY_TOOLS: Anthropic.Tool[] = [
   SHOW_PROPERTIES_TOOL,
   CALC_ROI_TOOL,
   CALC_MORTGAGE_TOOL,
+  ...KNOWLEDGE_TOOLS,
 ]

@@ -821,6 +821,43 @@
         "title": "What would you like to know?",
         "body": "Ask about the layout, the district, the price against the area, or how it compares with other listings."
       }
+    },
+    "sources": {
+      "heading": "Sources",
+      "verified": "verified",
+      "mayHaveChanged": "may have changed"
     }
+  },
+  "Knowledge": {
+    "title": "Knowledge base",
+    "breadcrumbHome": "Home",
+    "description": "Sourced figures on what property in Albania costs to buy, run and rent out.",
+    "intro": "Every number here comes from a named source with a date: regulators, statistics offices, tax law, rental analytics and market samples. Where we do not have data, the page says so.",
+    "empty": "Nothing published yet.",
+    "groups": {
+      "costs": "What it costs to run",
+      "market": "What it is worth",
+      "renting": "What it earns",
+      "buying": "What buying involves",
+      "outlook": "Where it is going",
+      "other": "More"
+    },
+    "questionsShort": "questions",
+    "updated": "updated",
+    "period": "Period",
+    "confidence": "Confidence",
+    "exchangeRate": "Exchange rate",
+    "verified": "verified",
+    "method": "Method",
+    "estimateNote": "calculated, not measured",
+    "questionsHeading": "Questions this page answers",
+    "sources": "Sources",
+    "gapsHeading": "What is missing",
+    "gapsIntro": "Gaps we know about. Saying so is what makes the rest worth trusting.",
+    "askHeading": "Ask about your own case",
+    "askIntro": "The assistant works from this same data and shows the sources behind every figure.",
+    "askCta": "Ask the assistant",
+    "related": "Related pages",
+    "methodNote": "Figures are normalised to EUR at the Bank of Albania rate stated on each page. Asking prices are not transaction prices, and advertised rents are not achieved rents — every row says which it is."
   }
 }

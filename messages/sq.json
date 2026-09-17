@@ -821,6 +821,43 @@
         "title": "Çfarë doni të dini?",
         "body": "Pyesni për planimetrinë, lagjen, çmimin krahasuar me tregun ose krahasimin me prona të tjera."
       }
+    },
+    "sources": {
+      "heading": "Burimet",
+      "verified": "verifikuar",
+      "mayHaveChanged": "mund të ketë ndryshuar"
     }
+  },
+  "Knowledge": {
+    "title": "Baza e njohurive",
+    "breadcrumbHome": "Ballina",
+    "description": "Shifra me burim: sa kushton të blesh, të mbash dhe të japësh me qira një pronë në Shqipëri.",
+    "intro": "Çdo shifrë këtu vjen nga një burim i emëruar me datë: rregullatorë, statistika zyrtare, legjislacioni tatimor, analitika e qirasë dhe mostra nga tregu. Aty ku nuk kemi të dhëna, faqja e thotë.",
+    "empty": "Ende asgjë e publikuar.",
+    "groups": {
+      "costs": "Sa kushton mbajtja",
+      "market": "Sa vlen prona",
+      "renting": "Sa sjell",
+      "buying": "Çfarë përfshin blerja",
+      "outlook": "Ku po shkon",
+      "other": "Më shumë"
+    },
+    "questionsShort": "pyetje",
+    "updated": "përditësuar",
+    "period": "Periudha",
+    "confidence": "Besueshmëria",
+    "exchangeRate": "Kursi",
+    "verified": "verifikuar",
+    "method": "Metodika",
+    "estimateNote": "llogaritje, jo matje",
+    "questionsHeading": "Pyetjet që kjo faqe u përgjigjet",
+    "sources": "Burimet",
+    "gapsHeading": "Çfarë mungon",
+    "gapsIntro": "Boshllëqe që i dimë. Ta thuash hapur është ajo që e bën pjesën tjetër të besueshme.",
+    "askHeading": "Pyet për rastin tënd",
+    "askIntro": "Asistenti punon mbi të njëjtat të dhëna dhe tregon burimin e çdo shifre.",
+    "askCta": "Pyet asistentin",
+    "related": "Faqe të lidhura",
+    "methodNote": "Shumat janë sjellë në euro me kursin e Bankës së Shqipërisë të shënuar në faqe. Çmimi i kërkuar nuk është çmimi i shitjes, dhe qiraja e publikuar nuk është qiraja e realizuar."
   }
 }

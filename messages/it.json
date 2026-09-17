@@ -821,6 +821,43 @@
         "title": "Cosa desidera sapere?",
         "body": "Chieda della planimetria, della zona, del prezzo rispetto al mercato o del confronto con altri immobili."
       }
+    },
+    "sources": {
+      "heading": "Fonti",
+      "verified": "verificato",
+      "mayHaveChanged": "potrebbe essere cambiato"
     }
+  },
+  "Knowledge": {
+    "title": "Base di conoscenza",
+    "breadcrumbHome": "Home",
+    "description": "Dati verificabili su quanto costa comprare, mantenere e affittare un immobile in Albania.",
+    "intro": "Ogni cifra proviene da una fonte citata con data: autorità di regolazione, istituti di statistica, normativa fiscale, analisi degli affitti e campioni di mercato. Dove non abbiamo dati, la pagina lo dice.",
+    "empty": "Ancora nulla di pubblicato.",
+    "groups": {
+      "costs": "Quanto costa mantenerlo",
+      "market": "Quanto vale",
+      "renting": "Quanto rende",
+      "buying": "Cosa comporta l’acquisto",
+      "outlook": "Dove sta andando",
+      "other": "Altro"
+    },
+    "questionsShort": "domande",
+    "updated": "aggiornato",
+    "period": "Periodo",
+    "confidence": "Affidabilità",
+    "exchangeRate": "Cambio",
+    "verified": "verificato",
+    "method": "Metodo",
+    "estimateNote": "calcolo, non misurazione",
+    "questionsHeading": "A quali domande risponde questa pagina",
+    "sources": "Fonti",
+    "gapsHeading": "Cosa manca",
+    "gapsIntro": "Lacune note. Dichiararle è ciò che rende affidabile il resto.",
+    "askHeading": "Chiedi per il tuo caso",
+    "askIntro": "L’assistente usa questi stessi dati e mostra la fonte di ogni cifra.",
+    "askCta": "Chiedi all’assistente",
+    "related": "Pagine collegate",
+    "methodNote": "Gli importi sono convertiti in euro al cambio della Banca d’Albania indicato nella pagina. Il prezzo richiesto non è il prezzo di vendita, e l’affitto pubblicizzato non è quello effettivo."
   }
 }

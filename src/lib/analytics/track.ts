@@ -37,6 +37,16 @@ export type AnalyticsEvent =
   | { event: 'ai_card_click'; slug: string }
   /** The "see all in the catalog" button under an answer was clicked. */
   | { event: 'ai_catalog_click' }
+  /**
+   * The sources behind an answer were expanded. Worth measuring on its own:
+   * how often people check the provenance is the evidence for whether citing
+   * figures is buying any trust.
+   */
+  | { event: 'ai_sources_open'; count: number }
+  /** A source link under an answer was followed out to the original document. */
+  | { event: 'ai_source_click'; dataId: string }
+  /** A citation was followed into the knowledge base page it lives on. */
+  | { event: 'ai_knowledge_click'; dataId: string }
   /** A contact form was submitted successfully. */
   | { event: 'lead_submit'; kind: string; source?: string }
 

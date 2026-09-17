@@ -3,6 +3,7 @@ import { after, type NextRequest } from 'next/server'
 import { createAnthropicClient } from '@/lib/ai/client'
 import { routing } from '@/i18n/routing'
 import { getCatalogSnapshot } from '@/lib/ai/catalogSnapshot'
+import { getKnowledgeSnapshot } from '@/lib/ai/knowledgeSnapshot'
 import { buildPropertySystemBlocks, buildSystemBlocks } from '@/lib/ai/prompt'
 import { buildPropertyContext } from '@/lib/ai/propertyContext'
 import {
@@ -12,6 +13,7 @@ import {
   runCalcRoi,
   runShowProperties,
 } from '@/lib/ai/tools'
+import { runCalcUtilities, runCite, runLookupFacts } from '@/lib/ai/knowledgeTools'
 import { checkRateLimit, clientKeyFromHeaders } from '@/lib/ai/rateLimit'
 import { sliceSafe } from '@/lib/ai/text'
 import { addUsage, EMPTY_USAGE, estimateUsd, isBudgetExhausted, recordUsage } from '@/lib/ai/budget'
@@ -113,10 +115,10 @@ export async function POST(req: NextRequest) {
     typeof rawSlug === 'string' && /^[a-z0-9-]{1,120}$/.test(rawSlug) ? rawSlug : ''
   const propertyContext = propertySlug ? await buildPropertyContext(propertySlug, locale) : null
 
-  const snapshot = await getCatalogSnapshot()
+  const [snapshot, knowledge] = await Promise.all([getCatalogSnapshot(), getKnowledgeSnapshot()])
   const system = propertyContext
-    ? buildPropertySystemBlocks(snapshot, propertyContext.text, locale)
-    : buildSystemBlocks(snapshot, locale)
+    ? buildPropertySystemBlocks(snapshot, knowledge, propertyContext.text, locale)
+    : buildSystemBlocks(snapshot, knowledge, locale)
   const tools = propertyContext ? AI_PROPERTY_TOOLS : AI_TOOLS
   const client = createAnthropicClient()
 
@@ -137,6 +139,7 @@ export async function POST(req: NextRequest) {
         controller.enqueue(encoder.encode(encodeAiEvent(event)))
       }
 
+      let sentText = false
       try {
         for (let hop = 0; hop <= AI_MAX_TOOL_HOPS; hop += 1) {
           const modelStream = client.messages.stream({
@@ -151,7 +154,17 @@ export async function POST(req: NextRequest) {
             messages: conversation,
           })
 
-          modelStream.on('text', (delta) => send({ type: 'text', delta }))
+          // A later hop continues the same reply, and the model starts it with no
+          // leading whitespace — "…per year.In short" — so the break is added here.
+          let hopStarted = false
+          modelStream.on('text', (delta) => {
+            if (!hopStarted && hop > 0 && sentText && !/^\s/.test(delta)) {
+              send({ type: 'text', delta: '\n\n' })
+            }
+            hopStarted = true
+            sentText = true
+            send({ type: 'text', delta })
+          })
 
           const message = await modelStream.finalMessage()
 
@@ -188,17 +201,47 @@ export async function POST(req: NextRequest) {
             send({ type: 'tool_start', name: toolUse.name })
 
             try {
-              if (toolUse.name === 'calc_roi' || toolUse.name === 'calc_mortgage') {
-                // Pure arithmetic on numbers the visitor supplied — nothing for
-                // the browser to render, so no `cards` event.
+              if (
+                toolUse.name === 'calc_roi' ||
+                toolUse.name === 'calc_mortgage' ||
+                toolUse.name === 'calc_utilities'
+              ) {
+                // Pure arithmetic on stored parameters and what the visitor
+                // supplied — nothing for the browser to render, so no `cards`.
                 const output =
                   toolUse.name === 'calc_roi'
                     ? runCalcRoi(toolUse.input)
-                    : runCalcMortgage(toolUse.input)
+                    : toolUse.name === 'calc_mortgage'
+                      ? runCalcMortgage(toolUse.input)
+                      : runCalcUtilities(toolUse.input)
                 results.push({
                   type: 'tool_result',
                   tool_use_id: toolUse.id,
                   content: JSON.stringify(output),
+                })
+                continue
+              }
+
+              if (toolUse.name === 'lookup_facts') {
+                const output = await runLookupFacts(toolUse.input)
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  content: JSON.stringify(output),
+                })
+                continue
+              }
+
+              if (toolUse.name === 'cite') {
+                // Two audiences again: the browser gets source chips, the model
+                // is told which ids were real, so a hallucinated one can be
+                // corrected in the same turn rather than shown as a source.
+                const { model, ui } = await runCite(toolUse.input, locale)
+                if (ui.length > 0) send({ type: 'citations', items: ui })
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  content: JSON.stringify(model),
                 })
                 continue
               }
@@ -213,7 +256,11 @@ export async function POST(req: NextRequest) {
                 continue
               }
 
-              const { model, ui } = await runShowProperties(toolUse.input, locale)
+              const { model, ui } = await runShowProperties(
+                toolUse.input,
+                locale,
+                propertyContext ? propertySlug : undefined,
+              )
               if (ui.items.length > 0) {
                 send({ type: 'cards', items: ui.items, catalogUrl: ui.catalogUrl })
               }

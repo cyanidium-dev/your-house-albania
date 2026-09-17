@@ -33,6 +33,12 @@ const TYPE_TO_TAGS: Record<string, SanityTag[]> = {
   tracker: [SANITY_TAGS.tracker],
   developer: [SANITY_TAGS.developer],
   zoneMetrics: [SANITY_TAGS.zoneMetrics],
+  // A fact or a source changes what the pages show *and* what the assistant
+  // holds in its prompt, so both purge the article tag too: the snapshot is
+  // built from all three and would otherwise keep serving the old figure.
+  knowledgeArticle: [SANITY_TAGS.knowledgeArticle],
+  knowledgeFact: [SANITY_TAGS.knowledgeFact, SANITY_TAGS.knowledgeArticle],
+  knowledgeSource: [SANITY_TAGS.knowledgeSource, SANITY_TAGS.knowledgeArticle],
 };
 
 /**

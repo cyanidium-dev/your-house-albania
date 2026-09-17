@@ -14,12 +14,19 @@
  */
 
 import type { PropertyHomes } from '@/types/propertyHomes'
+import type { AiCitation } from '@/lib/ai/knowledgeTools'
 
 export type StoredCardGroup = { items: PropertyHomes[]; catalogUrl?: string }
 
 export type StoredTurn =
   | { role: 'user'; text: string }
-  | { role: 'assistant'; text: string; cards: StoredCardGroup[] }
+  | {
+      role: 'assistant'
+      text: string
+      cards: StoredCardGroup[]
+      /** Optional: entries written before citations existed do not carry it. */
+      citations?: AiCitation[]
+    }
 
 /** Version prefix: a shape change should drop old entries, not crash on them. */
 const KEY_PREFIX = 'domlivo:ai-chat:v1:'

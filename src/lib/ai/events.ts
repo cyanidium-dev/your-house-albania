@@ -8,6 +8,7 @@
  */
 
 import type { PropertyHomes } from '@/types/propertyHomes'
+import type { AiCitation } from './knowledgeTools'
 
 export type AiChatMessage = {
   role: 'user' | 'assistant'
@@ -35,6 +36,12 @@ export type AiStreamEvent =
   | { type: 'tool_start'; name: string }
   /** Listings to render as cards, plus an optional "see all" catalog link. */
   | { type: 'cards'; items: PropertyHomes[]; catalogUrl?: string }
+  /**
+   * Sources behind the figures in the answer, rendered as chips beneath it.
+   * Separate from the text so the model never has to write fact ids into prose
+   * — the visitor reads a sentence, and the provenance sits under it.
+   */
+  | { type: 'citations'; items: AiCitation[] }
   /** Turn finished cleanly. */
   | { type: 'done' }
   | { type: 'error'; code: AiErrorCode; retryAfterSec?: number }
