@@ -23,6 +23,7 @@ export function PropertyGallery({ images }: Props) {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [showThumbs, setShowThumbs] = useState(true);
   const mobileScrollerRef = useRef<HTMLDivElement>(null);
+  const mobileThumbsRef = useRef<HTMLDivElement>(null);
   const galleryImages = images;
   const t = useTranslations('Shared.propertyDetail');
   const tCard = useTranslations('Shared.propertyCard');
@@ -104,6 +105,33 @@ export function PropertyGallery({ images }: Props) {
     if (w <= 0) return;
     el.scrollBy({ left: w, behavior: 'smooth' });
   }, []);
+
+  /**
+   * Thumbnail tap: bring that slide into the main frame. Next door slides
+   * glide; a long jump goes straight there, or every photograph in between
+   * would mount (and download) as the slider scrolled past it.
+   */
+  const goMobileSlide = useCallback((idx: number) => {
+    const el = mobileScrollerRef.current;
+    if (!el) return;
+    const w = el.clientWidth;
+    if (w <= 0) return;
+    const far = Math.abs(idx - Math.round(el.scrollLeft / w)) > 1;
+    // Set the index now rather than waiting for the scroll event: the target
+    // photograph mounts and its thumbnail lights up on the tap itself.
+    setMobileSlideIndex(idx);
+    el.scrollTo({ left: idx * w, behavior: far ? 'instant' : 'smooth' });
+  }, []);
+
+  // Keep the active thumbnail in view as the photographs are swiped. The rail
+  // scrolls on its own; scrollIntoView would drag the whole page to it.
+  useEffect(() => {
+    const rail = mobileThumbsRef.current;
+    const thumb = rail?.children[mobileSlideIndex] as HTMLElement | undefined;
+    if (!rail || !thumb) return;
+    const target = thumb.offsetLeft - (rail.clientWidth - thumb.clientWidth) / 2;
+    rail.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+  }, [mobileSlideIndex]);
 
   useEffect(() => {
     if (lightboxOpen && typeof window !== 'undefined') {
@@ -238,6 +266,41 @@ export function PropertyGallery({ images }: Props) {
               >
                 <Icon icon="ph:caret-right" width={28} height={28} />
               </button>
+            </div>
+          )}
+          {galleryImages.length > 1 && (
+            <div
+              ref={mobileThumbsRef}
+              className={cn(
+                'relative mt-2 flex gap-2 overflow-x-auto',
+                '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
+              )}
+            >
+              {galleryImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => goMobileSlide(idx)}
+                  className={cn(
+                    'shrink-0 relative w-[72px] h-[54px] rounded-lg overflow-hidden bg-dark/5 dark:bg-white/5 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 cursor-pointer',
+                    mobileSlideIndex === idx ? 'opacity-100' : 'opacity-60 hover:opacity-100'
+                  )}
+                  aria-label={t('goToImage', { n: idx + 1 })}
+                  aria-current={mobileSlideIndex === idx ? 'true' : undefined}
+                >
+                  <Image
+                    src={img.url}
+                    alt={imgAlt(img, t('thumbnailAlt', { n: idx + 1 }))}
+                    fill
+                    className="object-cover object-center"
+                    sizes="(min-width: 1024px) 1px, 72px"
+                  />
+                  {/* Drawn over the photo: a ring on the button itself would sit under it. */}
+                  {mobileSlideIndex === idx ? (
+                    <span className="absolute inset-0 rounded-lg ring-2 ring-inset ring-primary pointer-events-none" aria-hidden />
+                  ) : null}
+                </button>
+              ))}
             </div>
           )}
           {galleryImages.length > 1 && (
