@@ -100,6 +100,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Composed from the property's own fields, never stored — see propertyMeta.
   const raw = sanityProperty as {
     price?: number;
+    priceUnit?: string;
     area?: number;
     status?: string;
     type?: { title?: unknown };
@@ -113,6 +114,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     district: resolveLocalizedString(raw?.district?.title as never, locale) || undefined,
     city: resolveLocalizedString(raw?.city?.title as never, locale) || undefined,
     price: raw?.price,
+    priceUnit: raw?.priceUnit,
     status: raw?.status,
     locale,
     areaUnit: tMeta('areaUnit'),
@@ -231,7 +233,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
     status?: string;
   };
   const marketPosition = computeMarketPosition(
-    { price: rawProperty.price, area, yearBuilt },
+    { price: rawProperty.price, priceUnit: rawProperty.priceUnit, area, yearBuilt },
     zoneMetrics,
   );
   const baseUrl = await getBaseUrl();
@@ -289,6 +291,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               location={location || null}
               countryCode={(sanityProperty as { city?: { countryCode?: string } })?.city?.countryCode ?? null}
               price={rawProperty.price ?? null}
+              priceUnit={rawProperty.priceUnit ?? null}
               status={rawProperty.status ?? null}
               lifecycleStatus={(sanityProperty as { lifecycleStatus?: string })?.lifecycleStatus ?? null}
               propertyTypeSlug={(sanityProperty as { type?: { slug?: string } })?.type?.slug ?? null}

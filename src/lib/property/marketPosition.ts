@@ -26,6 +26,8 @@ export type MarketPosition = {
 
 type MarketPositionPropertyInput = {
   price?: number | null;
+  /** `per-sqm`: `price` is already a rate (a development's "from €1,300/m²"). */
+  priceUnit?: string | null;
   area?: number | null;
   yearBuilt?: number | null;
 };
@@ -82,7 +84,9 @@ export function computeMarketPosition(
   const range = pickRange(metrics, isNew);
   if (!range) return null;
 
-  const pricePerSqm = price / area;
+  // 78 listings are priced per m². Dividing that rate by the area again made a
+  // €1,300/m² flat in Golem read as €19/m² and earn a "below market" badge.
+  const pricePerSqm = property.priceUnit === 'per-sqm' ? price : price / area;
   const label: MarketPositionLabel =
     pricePerSqm < range.min ? 'below' : pricePerSqm > range.max ? 'above' : 'in';
 
@@ -140,7 +144,7 @@ export async function attachMarketPositionToCards(
     if (!item.districtId) return item;
     const metrics = metricsByDistrictId.get(item.districtId) ?? null;
     const marketPosition = computeMarketPosition(
-      { price: item.price, area: item.area, yearBuilt: item.yearBuilt },
+      { price: item.price, priceUnit: item.priceUnit, area: item.area, yearBuilt: item.yearBuilt },
       metrics,
     );
     return { ...item, marketPosition };

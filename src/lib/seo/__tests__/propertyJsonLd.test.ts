@@ -54,6 +54,26 @@ describe("availabilityFor", () => {
 });
 
 describe("buildOffer", () => {
+  // 78 listings are priced per m²; their offer said the flat cost €1,300.
+  it("prices a per-m² listing at its total and keeps the rate as a unit price", () => {
+    const o = buildOffer({ price: 1300, priceUnit: "per-sqm", area: 68, status: "sale", url: "u" }) as Record<
+      string,
+      unknown
+    >;
+    expect(o.price).toBe(88400);
+    expect(o.priceSpecification).toEqual({
+      "@type": "UnitPriceSpecification",
+      price: 1300,
+      priceCurrency: "EUR",
+      unitCode: "MTK",
+      unitText: "m²",
+    });
+  });
+
+  it("publishes no offer for a per-m² rate without an area", () => {
+    expect(buildOffer({ price: 1300, priceUnit: "per-sqm", status: "sale", url: "u" })).toBeUndefined();
+  });
+
   it("marks a sale with the GoodRelations sell function and no period", () => {
     const o = buildOffer({ price: 78000, status: "sale", lifecycleStatus: "active", url: "u" });
     expect(o).toEqual({

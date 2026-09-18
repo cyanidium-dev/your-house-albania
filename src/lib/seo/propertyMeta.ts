@@ -23,6 +23,8 @@ export type PropertyMetaTitleInput = {
   district?: string;
   city?: string;
   price?: number;
+  /** `per-sqm`: `price` is a rate, and the title must say so. */
+  priceUnit?: string;
   status?: string;
   locale: string;
   /** "m²" / "м²", from the message catalogue. */
@@ -37,7 +39,7 @@ function isLease(status?: string): boolean {
 }
 
 export function composePropertyMetaTitle(input: PropertyMetaTitleInput): string | null {
-  const { typeLabel, area, district, city, price, status, locale, areaUnit, perMonth } = input;
+  const { typeLabel, area, district, city, price, priceUnit, status, locale, areaUnit, perMonth } = input;
 
   // No room count, on purpose. Russian and Ukrainian inflect the adjective to
   // the noun's gender — двухкомнатная квартира against двухкомнатный дом — and
@@ -53,7 +55,11 @@ export function composePropertyMetaTitle(input: PropertyMetaTitleInput): string 
 
   const money =
     typeof price === "number" && price > 0
-      ? `${formatEuro(price, locale)}${isLease(status) ? `/${perMonth}` : ""}`
+      ? `${formatEuro(price, locale)}${
+          // "Apartment, 68 m², Golem — €1,300" sold a flat for the price of its
+          // square metre in the search results.
+          priceUnit === "per-sqm" ? `/${areaUnit}` : isLease(status) ? `/${perMonth}` : ""
+        }`
       : null;
 
   // Nothing to compose must never produce a worse title than the fallback the

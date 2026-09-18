@@ -22,6 +22,8 @@ export type PropertyJsonLdInput = {
   location?: string | null;
   countryCode?: string | null;
   price?: number | null;
+  /** `per-sqm` when `price` is a rate per m² rather than the unit's total. */
+  priceUnit?: string | null;
   /** Deal type: "sale" | "rent" | "short-term". Never an availability. */
   status?: string | null;
   /** Lifecycle: "active" | "draft" | "reserved" | "sold" | "rented" | "archived". */
@@ -103,12 +105,24 @@ function isLease(status?: string | null): boolean {
 
 export function buildOffer(input: {
   price?: number | null;
+  priceUnit?: string | null;
+  /** Floor area, m² — turns a per-m² rate into the unit's total. */
+  area?: number | null;
   status?: string | null;
   lifecycleStatus?: string | null;
   url: string;
 }): Record<string, unknown> | undefined {
-  const { price, status, lifecycleStatus, url } = input;
-  if (typeof price !== "number" || price < 0) return undefined;
+  const { priceUnit, area, status, lifecycleStatus, url } = input;
+  const rate = input.price;
+  if (typeof rate !== "number" || rate < 0) return undefined;
+
+  // A per-m² listing ("from €1,300/m²") published `price: 1300`, which every
+  // consumer reads as the price of the flat. The offer now carries the total
+  // for this unit's area and keeps the rate in a unit price specification.
+  // Without an area there is no honest total, so there is no offer.
+  const perSqm = priceUnit === "per-sqm";
+  if (perSqm && !(typeof area === "number" && area > 0)) return undefined;
+  const price = perSqm ? Math.round(rate * (area as number)) : rate;
 
   const offer: Record<string, unknown> = {
     "@type": "Offer",
@@ -122,7 +136,15 @@ export function buildOffer(input: {
   // A rent is per month. Without the unit a crawler reads "€250" as the price
   // of an apartment. The flat `price` stays for readers that ignore the
   // specification, so the number never disappears — it only gains a period.
-  if (isLease(status)) {
+  if (perSqm) {
+    offer.priceSpecification = {
+      "@type": "UnitPriceSpecification",
+      price: rate,
+      priceCurrency: CURRENCY,
+      unitCode: "MTK",
+      unitText: "m²",
+    };
+  } else if (isLease(status)) {
     offer.priceSpecification = {
       "@type": "UnitPriceSpecification",
       price,
@@ -142,6 +164,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     location,
     countryCode,
     price,
+    priceUnit,
     status,
     lifecycleStatus,
     propertyTypeSlug,
@@ -190,7 +213,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     additionalProperty.push({ "@type": "PropertyValue", name: "Plot area (m²)", value: plotArea });
   }
 
-  const offers = buildOffer({ price, status, lifecycleStatus, url });
+  const offers = buildOffer({ price, priceUnit, area, status, lifecycleStatus, url });
 
   const address =
     location && location.trim()

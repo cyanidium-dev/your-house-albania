@@ -8,6 +8,14 @@ function metrics(overrides: Partial<ZoneMetricsDoc> = {}): ZoneMetricsDoc {
 }
 
 describe('computeMarketPosition', () => {
+  // A Golem flat listed at €1,300/m² earned "below market" as €19/m².
+  it('reads a per-m² price as the rate itself', () => {
+    const m = metrics({ priceAllMin: 1100, priceAllMax: 1500 });
+    const result = computeMarketPosition({ price: 1300, priceUnit: 'per-sqm', area: 68 }, m);
+    expect(result?.pricePerSqm).toBe(1300);
+    expect(result?.label).toBe('in');
+  });
+
   it('returns null with no metrics', () => {
     expect(computeMarketPosition({ price: 100000, area: 50 }, null)).toBeNull();
   });

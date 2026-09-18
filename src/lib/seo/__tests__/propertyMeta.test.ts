@@ -18,6 +18,13 @@ describe("composePropertyMetaTitle", () => {
     expect(composePropertyMetaTitle(BASE)).toBe("Apartment, 42 m², Plazh, Durrës — €73,000");
   });
 
+  // A development priced "from €1,300/m²" was titled as a €1,300 flat.
+  it("marks a per-m² price with the area unit", () => {
+    expect(composePropertyMetaTitle({ ...BASE, price: 1300, priceUnit: "per-sqm" })).toBe(
+      "Apartment, 42 m², Plazh, Durrës — €1,300/m²",
+    );
+  });
+
   // A bare €330 on an apartment reads as a sale price.
   it("marks a rental as per month", () => {
     expect(composePropertyMetaTitle({ ...BASE, price: 330, status: "rent" })).toBe(
