@@ -433,6 +433,28 @@
     "viewDistrict": "Vedi la pagina della zona",
     "disclaimer": "Stima basata sugli intervalli di prezzo della zona, non una valutazione di questo immobile specifico."
   },
+  "PropertyOwnershipCosts": {
+    "title": "Quanto costa comprare e mantenere",
+    "belowMedian": "{pct}% sotto la mediana della zona",
+    "aboveMedian": "{pct}% sopra la mediana della zona",
+    "atMedian": "In linea con la mediana della zona",
+    "districtMedian": "Mediana per immobili simili a {district} su Domlivo: <amount></amount>/m² su {count} annunci.",
+    "districtMedianNoName": "Mediana per immobili simili in questa zona su Domlivo: <amount></amount>/m² su {count} annunci.",
+    "purchaseTitle": "Costi una tantum all'acquisto",
+    "notary": "Notaio (0,23–0,35% del prezzo)",
+    "registration": "Registrazione della proprietà (ASHK)",
+    "agency": "Provvigione d'agenzia per l'acquirente (di solito 1%)",
+    "purchaseTotal": "Oltre al prezzo ({pct}%)",
+    "transferTaxNote": "L'imposta di trasferimento del 2% è a carico del venditore.",
+    "annualTitle": "Costi di gestione",
+    "propertyTax": "Imposta sugli immobili",
+    "utilities": "Utenze, internet, spese condominiali",
+    "perYear": "<amount></amount>/anno",
+    "perMonth": "<amount></amount>/mese",
+    "monthlyTotal": "In media al mese",
+    "fromRate": "Importi calcolati per {area} m² a <rate></rate>/m², cioè <total></total>.",
+    "disclaimer": "Stima basata sulle tariffe notarili ufficiali, sui diritti ASHK, sull'imposta sugli edifici calcolata sul valore di riferimento statale e sulle tariffe comunali delle utenze, per due occupanti con aria condizionata in stagione. Verifica gli importi esatti con il notaio."
+  },
   "Catalog": {
     "pagination": {
       "pagination": "Paginazione",

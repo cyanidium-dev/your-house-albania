@@ -433,6 +433,28 @@
     "viewDistrict": "Shiko faqen e zonës",
     "disclaimer": "Vlerësim bazuar në intervalet e çmimeve të zonës, jo një vlerësim i këtij prone specifike."
   },
+  "PropertyOwnershipCosts": {
+    "title": "Sa kushton blerja dhe mbajtja",
+    "belowMedian": "{pct}% nën medianën e zonës",
+    "aboveMedian": "{pct}% mbi medianën e zonës",
+    "atMedian": "Në nivelin e medianës së zonës",
+    "districtMedian": "Mediana për prona të ngjashme në {district} në Domlivo: <amount></amount>/m², nga {count} njoftime.",
+    "districtMedianNoName": "Mediana për prona të ngjashme në këtë zonë në Domlivo: <amount></amount>/m², nga {count} njoftime.",
+    "purchaseTitle": "Kostot e njëhershme të blerjes",
+    "notary": "Noteri (0,23–0,35% e çmimit)",
+    "registration": "Regjistrimi i pronësisë (ASHK)",
+    "agency": "Komisioni i agjencisë për blerësin (zakonisht 1%)",
+    "purchaseTotal": "Mbi çmimin ({pct}%)",
+    "transferTaxNote": "Tatimin 2% për kalimin e pronësisë e paguan shitësi.",
+    "annualTitle": "Kostot e mbajtjes",
+    "propertyTax": "Taksa e pronës",
+    "utilities": "Shërbimet, interneti, tarifa e pallatit",
+    "perYear": "<amount></amount>/vit",
+    "perMonth": "<amount></amount>/muaj",
+    "monthlyTotal": "Mesatarisht në muaj",
+    "fromRate": "Shumat janë për {area} m² me <rate></rate>/m², pra <total></total>.",
+    "disclaimer": "Vlerësim sipas tarifave zyrtare noteriale, tarifave të ASHK, taksës mbi ndërtesat nga vlera e referencës shtetërore dhe tarifave të shërbimeve të qytetit; dy banorë, kondicioner në sezon. Shumat e sakta konfirmojini me noterin."
+  },
   "Catalog": {
     "pagination": {
       "pagination": "Faqosja",

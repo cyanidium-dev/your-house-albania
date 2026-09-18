@@ -279,3 +279,32 @@ export async function fetchActivePropertyTypes(limit = 8): Promise<unknown[] | n
   return cachedFetchActivePropertyTypes(limit);
 }
 
+
+export type DistrictPriceRow = { price?: number | null; priceUnit?: string | null; area?: number | null };
+
+/**
+ * Price, unit and area of every public listing in a district among the given
+ * types — the sample `rankInDistrict` takes a median over. One small query per
+ * district, cached like the rest of the catalogue.
+ */
+export async function fetchDistrictPriceRows(districtId: string, typeSlugs: string[]): Promise<DistrictPriceRow[]> {
+  const id = typeof districtId === 'string' ? districtId.trim() : '';
+  if (!id || typeSlugs.length === 0) return [];
+  const types = [...typeSlugs].sort();
+  const cached = sanityCache(
+    async () => {
+      const client = getClient();
+      if (!client) return [];
+      const query = `*[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && district._ref == $id && type->slug.current in $types]{price, priceUnit, area}`;
+      try {
+        return await client.fetch<DistrictPriceRow[]>(query, { id, types });
+      } catch (err) {
+        console.warn('[Sanity] fetchDistrictPriceRows failed:', err);
+        return [];
+      }
+    },
+    ['sanity-district-price-rows-v1', id, types.join(',')],
+    { revalidate: 3600, tags: [SANITY_TAGS.property] },
+  );
+  return cached();
+}

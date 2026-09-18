@@ -433,6 +433,28 @@
     "viewDistrict": "View district page",
     "disclaimer": "Estimate based on district-wide price ranges, not a valuation of this specific property."
   },
+  "PropertyOwnershipCosts": {
+    "title": "What it costs to buy and own",
+    "belowMedian": "{pct}% below the district median",
+    "aboveMedian": "{pct}% above the district median",
+    "atMedian": "At the district median",
+    "districtMedian": "Median for similar homes in {district} on Domlivo: <amount></amount>/m² across {count} listings.",
+    "districtMedianNoName": "Median for similar homes in this district on Domlivo: <amount></amount>/m² across {count} listings.",
+    "purchaseTitle": "One-off costs when buying",
+    "notary": "Notary (0.23–0.35% of the price)",
+    "registration": "Ownership registration (ASHK)",
+    "agency": "Buyer's agency fee (typically 1%)",
+    "purchaseTotal": "On top of the price ({pct}%)",
+    "transferTaxNote": "The 2% transfer tax is paid by the seller.",
+    "annualTitle": "Running costs",
+    "propertyTax": "Property tax",
+    "utilities": "Utilities, internet, building fee",
+    "perYear": "<amount></amount>/year",
+    "perMonth": "<amount></amount>/month",
+    "monthlyTotal": "On average per month",
+    "fromRate": "Totals are for {area} m² at <rate></rate>/m², that is <total></total>.",
+    "disclaimer": "Estimate from the official notary scale, ASHK fees, the building tax on the state reference value and city utility tariffs, for two occupants with AC in season. Confirm the exact amounts with your notary."
+  },
   "Catalog": {
     "pagination": {
       "pagination": "Pagination",

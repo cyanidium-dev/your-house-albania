@@ -433,6 +433,28 @@
     "viewDistrict": "Zur Stadtteilseite",
     "disclaimer": "Schätzung auf Basis der Preisspannen im gesamten Stadtteil, keine Bewertung dieser konkreten Immobilie."
   },
+  "PropertyOwnershipCosts": {
+    "title": "Was Kauf und Unterhalt kosten",
+    "belowMedian": "{pct} % unter dem Median im Viertel",
+    "aboveMedian": "{pct} % über dem Median im Viertel",
+    "atMedian": "Auf Höhe des Medians im Viertel",
+    "districtMedian": "Median vergleichbarer Objekte in {district} auf Domlivo: <amount></amount>/m² aus {count} Angeboten.",
+    "districtMedianNoName": "Median vergleichbarer Objekte in diesem Viertel auf Domlivo: <amount></amount>/m² aus {count} Angeboten.",
+    "purchaseTitle": "Einmalige Kaufnebenkosten",
+    "notary": "Notar (0,23–0,35 % des Preises)",
+    "registration": "Eigentumsregistrierung (ASHK)",
+    "agency": "Maklerprovision für Käufer (üblich 1 %)",
+    "purchaseTotal": "Zusätzlich zum Preis ({pct} %)",
+    "transferTaxNote": "Die Übertragungssteuer von 2 % zahlt der Verkäufer.",
+    "annualTitle": "Laufende Kosten",
+    "propertyTax": "Grundsteuer",
+    "utilities": "Nebenkosten, Internet, Hausgeld",
+    "perYear": "<amount></amount>/Jahr",
+    "perMonth": "<amount></amount>/Monat",
+    "monthlyTotal": "Im Schnitt pro Monat",
+    "fromRate": "Beträge für {area} m² zu <rate></rate>/m², also <total></total>.",
+    "disclaimer": "Schätzung nach der amtlichen Notargebührenordnung, den ASHK-Gebühren, der Gebäudesteuer auf den staatlichen Referenzwert und den städtischen Versorgungstarifen, für zwei Bewohner mit Klimaanlage in der Saison. Die genauen Beträge bestätigt Ihr Notar."
+  },
   "Catalog": {
     "pagination": {
       "pagination": "Seitennavigation",

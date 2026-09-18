@@ -16,6 +16,10 @@ import { computeMarketPosition, attachMarketPositionToCards } from '@/lib/proper
 import { showsPlotArea, showsRooms } from '@/lib/property/plotArea';
 import { propertyOgImageUrl } from '@/lib/seo/ogImageUrl';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
+import { fetchDistrictPriceRows } from '@/lib/sanity/queries/property';
+import { PropertyOwnershipCostsSection } from '@/components/shared/property/PropertyOwnershipCostsSection';
+import { comparableTypeSlugs, computeOwnershipCosts, rankInDistrict } from '@/lib/property/ownershipCosts';
+import { utilityCityFor } from '@/lib/calculators/utilities';
 import TrackPageView from "@/components/analytics/TrackPageView";
 import MobileStickyBar from "@/components/property/MobileStickyBar";
 import AiPropertyPanel from "@/components/ai/AiPropertyPanel";
@@ -178,13 +182,17 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const similarCount = getSimilarCount(siteSettings);
   const citySlug = (sanityProperty as { city?: { slug?: string } })?.city?.slug;
   const districtId = (sanityProperty as { district?: { _id?: string } })?.district?._id;
-  const [similarCandidates, zoneMetrics] = await Promise.all([
+  const comparableTypes = comparableTypeSlugs(
+    (sanityProperty as { type?: { slug?: string } })?.type?.slug ?? null,
+  );
+  const [similarCandidates, zoneMetrics, districtPriceRows] = await Promise.all([
     fetchSimilarPropertyCandidates(
       (sanityProperty as { _id: string })._id,
       citySlug ?? null,
       similarCount
     ),
     districtId ? fetchLatestZoneMetricsByZoneId(districtId) : Promise.resolve(null),
+    districtId && comparableTypes ? fetchDistrictPriceRows(districtId, comparableTypes) : Promise.resolve([]),
   ]);
   const similarItems = await attachMarketPositionToCards(
     similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale))
@@ -236,6 +244,22 @@ export default async function PropertyDetailsPage({ params }: Props) {
     { price: rawProperty.price, priceUnit: rawProperty.priceUnit, area, yearBuilt },
     zoneMetrics,
   );
+  const ownershipCosts = computeOwnershipCosts({
+    price: rawProperty.price,
+    priceUnit: rawProperty.priceUnit,
+    area,
+    typeSlug: propertyTypeSlug,
+    utilityCity: utilityCityFor(citySlug, districtSlug),
+    referencePriceMin: zoneMetrics?.referencePriceMin ?? zoneMetrics?.referencePrice,
+    referencePriceMax: zoneMetrics?.referencePriceMax ?? zoneMetrics?.referencePrice,
+  });
+  const districtRank = rankInDistrict(
+    { price: rawProperty.price, priceUnit: rawProperty.priceUnit, area },
+    districtPriceRows,
+  );
+  const districtName =
+    resolveLocalizedString((sanityProperty as { district?: { title?: unknown } })?.district?.title as never, locale) ||
+    null;
   const baseUrl = await getBaseUrl();
   const imageUrls = galleryImages.map((img) => img.url);
 
@@ -424,6 +448,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           marketPosition={marketPosition}
                           citySlug={citySlug}
                           districtSlug={districtSlug}
+                        />
+                        <PropertyOwnershipCostsSection
+                          locale={locale}
+                          costs={ownershipCosts}
+                          rank={districtRank}
+                          districtName={districtName}
+                          area={area}
+                          rateEur={rawProperty.priceUnit === 'per-sqm' ? rawProperty.price ?? null : null}
                         />
                         {/* Straight after the market verdict: the visitor has
                             just read how this price sits against the district,
