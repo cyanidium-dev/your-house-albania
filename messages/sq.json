@@ -437,7 +437,9 @@
     "pagination": {
       "pagination": "Faqosja",
       "previousPage": "Faqja e mëparshme",
-      "nextPage": "Faqja tjetër"
+      "nextPage": "Faqja tjetër",
+      "showMore": "Shfaq më shumë prona",
+      "shownRange": "{from}–{to} nga {total}"
     },
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
     "agentTitle": "Pronat nga {name}",

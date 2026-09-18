@@ -437,7 +437,9 @@
     "pagination": {
       "pagination": "Paginazione",
       "previousPage": "Pagina precedente",
-      "nextPage": "Pagina successiva"
+      "nextPage": "Pagina successiva",
+      "showMore": "Mostra altri immobili",
+      "shownRange": "{from}–{to} di {total}"
     },
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",

@@ -179,16 +179,15 @@ export function CatalogBodyClient({
   const mapCardRef = React.useRef<HTMLDivElement | null>(null);
   const previewRef = React.useRef<HTMLDivElement | null>(null);
 
-  // ── Infinite scroll state ───────────────────────────────────────────────
+  // ── "Show more" state (see PropertyPagination) ─────────────────────────
   const [allItems, setAllItems] = React.useState<PropertyHomes[]>(pageItems);
   const [nextPage, setNextPage] = React.useState(currentPage + 1);
   const [hasMore, setHasMore] = React.useState(currentPage < totalPages);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
-  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   // Track the filter key so we reset when filters change (URL changes → SSR re-render → new props)
   const filterKeyRef = React.useRef<string>('');
 
-  // Keep `pageSize` out of the visible URL (infinite scroll uses a fixed internal
+  // Keep `pageSize` out of the visible URL ("Show more" uses a fixed internal
   // page size). Strip it client-side without a navigation, so inbound links that
   // still carry ?pageSize render clean. loadMore() sends the server-resolved
   // `loadMoreQuery`, page size included, so paging is unaffected.
@@ -205,7 +204,7 @@ export function CatalogBodyClient({
     }
   }, []);
 
-  // Reset infinite scroll when SSR re-renders with new pageItems (filter change)
+  // Reset the appended pages when SSR re-renders with new pageItems (filter change)
   React.useEffect(() => {
     const filterKey = JSON.stringify({ pageItems: pageItems.map(p => p.slug) });
     if (filterKey !== filterKeyRef.current) {
@@ -240,25 +239,12 @@ export function CatalogBodyClient({
         setNextPage(n => n + 1);
       }
     } catch {
-      // silent — user can scroll again
+      // silent — the button stays for another try
     } finally {
       setIsLoadingMore(false);
     }
   }, [isLoadingMore, hasMore, nextPage, locale, pageSize, totalCount, loadMoreQuery]);
 
-  // IntersectionObserver: trigger loadMore when sentinel enters viewport
-  React.useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) loadMore();
-      },
-      { rootMargin: '200px' }
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [loadMore]);
 
   const handleActiveSlugFromMap = React.useCallback(
     (slug: string) => {
@@ -564,21 +550,20 @@ export function CatalogBodyClient({
           <CatalogEmptyState locale={locale} />
         ) : (
           <>
-            {/* Sentinel for IntersectionObserver — sits below the last card */}
-            <div ref={sentinelRef} className="h-1" aria-hidden />
-            {isLoadingMore && (
-              <div className="mt-8 flex justify-center">
-                <div className="flex items-center gap-3 text-sm text-dark/50 dark:text-white/40">
-                  <svg className="h-5 w-5 animate-spin text-primary" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                  </svg>
-                </div>
-              </div>
+            {/* One control: a link to the next page for crawlers, an in-place
+                append for people. See PropertyPagination. */}
+            {totalPages > 1 && (
+              <PropertyPagination
+                currentPage={currentPage}
+                nextPage={nextPage}
+                hasMore={hasMore}
+                isLoading={isLoadingMore}
+                onShowMore={loadMore}
+                from={(currentPage - 1) * pageSize + 1}
+                to={Math.min(totalCount, (currentPage - 1) * pageSize + allItems.length)}
+                total={totalCount}
+              />
             )}
-            {/* Infinite scroll loads pages through fetch, which no crawler
-                follows; the links give every page an address in the HTML. */}
-            {totalPages > 1 && <PropertyPagination currentPage={currentPage} totalPages={totalPages} />}
           </>
         )}
       </div>

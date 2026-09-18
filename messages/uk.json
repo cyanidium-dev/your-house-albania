@@ -437,7 +437,9 @@
     "pagination": {
       "pagination": "Пагінація",
       "previousPage": "Попередня сторінка",
-      "nextPage": "Наступна сторінка"
+      "nextPage": "Наступна сторінка",
+      "showMore": "Показати ще об’єкти",
+      "shownRange": "{from}–{to} з {total}"
     },
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "agentTitle": "Об'єкти від {name}",

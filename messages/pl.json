@@ -437,7 +437,9 @@
     "pagination": {
       "pagination": "Paginacja",
       "previousPage": "Poprzednia strona",
-      "nextPage": "Następna strona"
+      "nextPage": "Następna strona",
+      "showMore": "Pokaż więcej ofert",
+      "shownRange": "{from}–{to} z {total}"
     },
     "heroIntroFallback": "Przeglądaj naszą ofertę nieruchomości.",
     "agentTitle": "Nieruchomości agenta {name}",

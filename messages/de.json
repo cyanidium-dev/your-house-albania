@@ -437,7 +437,9 @@
     "pagination": {
       "pagination": "Seitennavigation",
       "previousPage": "Vorherige Seite",
-      "nextPage": "Nächste Seite"
+      "nextPage": "Nächste Seite",
+      "showMore": "Weitere Immobilien anzeigen",
+      "shownRange": "{from}–{to} von {total}"
     },
     "heroIntroFallback": "Entdecken Sie unsere Auswahl an Immobilien.",
     "agentTitle": "Immobilien von {name}",

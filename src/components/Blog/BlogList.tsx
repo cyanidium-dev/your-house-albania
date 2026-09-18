@@ -1,6 +1,6 @@
 import React from "react";
 import BlogCard from "@/components/shared/Blog/blogCard";
-import { PropertyPagination } from "@/components/catalog/PropertyPagination";
+import { NumberedPagination } from "@/components/shared/NumberedPagination";
 import type { BlogListItem } from "@/lib/sanity/blogAdapter";
 import Link from "next/link";
 
@@ -72,7 +72,7 @@ export default function BlogList({
           ))}
         </div>
         {totalPages > 1 && (
-          <PropertyPagination currentPage={currentPage} totalPages={totalPages} />
+          <NumberedPagination currentPage={currentPage} totalPages={totalPages} />
         )}
         <div className="h-16 md:h-20" aria-hidden />
       </div>
