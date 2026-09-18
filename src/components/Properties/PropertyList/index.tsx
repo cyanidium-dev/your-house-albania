@@ -245,6 +245,7 @@ async function PropertiesListing({
   const itemListEntries = pageItems.map((item) => ({
     name: item.name,
     slug: item.slug,
+    href: item._href,
     image: item.images?.[0]?.src ?? null,
   }))
 

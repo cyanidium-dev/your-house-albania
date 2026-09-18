@@ -99,6 +99,7 @@ const CARD_PROJECTION = `{
   _type,
   title,
   "slug": slug.current,
+  localizedSlug,
   description,
   price,
   currency,

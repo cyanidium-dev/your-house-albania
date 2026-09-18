@@ -49,6 +49,8 @@ export type CatalogProperty = {
   _type: 'property';
   title?: unknown;
   slug?: string;
+  /** The listing's address per locale; see lib/property/propertyUrl. */
+  localizedSlug?: Partial<Record<string, string | null>> | null;
   /** Short textual teaser/description for list cards. */
   description?: unknown;
   /** Source coordinates in Studio (flat fields). */

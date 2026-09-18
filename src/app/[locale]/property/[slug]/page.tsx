@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapPropertyAmenityDisplayItems, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
@@ -36,6 +36,7 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 // rather than the i18n Link, which would prefix the locale a second time.
 import Link from 'next/link';
 import { catalogPath } from '@/lib/routes/catalog';
+import { propertyPath, propertyUrlSlug, type LocalizedSlug } from '@/lib/property/propertyUrl';
 
 /**
  * ISR. Two exports, and the route needs both.
@@ -119,6 +120,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   const coverImageUrl = (sanityProperty as { gallery?: Array<{ asset?: { url?: string } }> })?.gallery?.[0]?.asset?.url;
+  const keySlug = (sanityProperty as { slug?: string }).slug || slug;
+  const localizedSlug = (sanityProperty as { localizedSlug?: LocalizedSlug }).localizedSlug;
 
   const baseUrl = ((await getBaseUrl()) || getSiteBaseUrl()).replace(/\/$/, '');
 
@@ -133,8 +136,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       coverImageUrl: coverImageUrl ?? undefined,
       // The photo with the price, size and layout drawn over it, in this
       // locale — see /api/og. Only a hand-picked seo.ogImage beats it.
-      generatedOgImageUrl: coverImageUrl ? propertyOgImageUrl({ locale, slug }) : undefined,
-      propertyPath: { baseUrl, locale, slug },
+      generatedOgImageUrl: coverImageUrl ? propertyOgImageUrl({ locale, slug: keySlug }) : undefined,
+      propertyPath: { baseUrl, locale, slug: keySlug, localizedSlug },
     }
   );
 }
@@ -158,6 +161,16 @@ export default async function PropertyDetailsPage({ params }: Props) {
   ]);
   if (sanityProperty == null) {
     notFound();
+  }
+
+  // The request may carry the listing's key, another locale's address or an
+  // old one; each lands on this locale's address. `urlSlug` is only ever used
+  // in URLs — favourites, leads, analytics and the AI keep the key.
+  const keySlug = (sanityProperty as { slug?: string }).slug || slug;
+  const localizedSlug = (sanityProperty as { localizedSlug?: LocalizedSlug }).localizedSlug;
+  const urlSlug = propertyUrlSlug(locale, keySlug, localizedSlug);
+  if (slug !== urlSlug) {
+    permanentRedirect(propertyPath(locale, keySlug, localizedSlug));
   }
 
   const similarCount = getSimilarCount(siteSettings);
@@ -262,16 +275,16 @@ export default async function PropertyDetailsPage({ params }: Props) {
         <section className="pt-20 md:pt-32 pb-24 lg:pb-20 relative">
             <TrackPageView
               kind="property"
-              slug={slug}
+              slug={keySlug}
               event={{
                 event: "property_view",
-                slug,
+                slug: keySlug,
                 ...propertyLeadAnalytics,
               }}
             />
             <PropertyJsonLd
               name={title}
-              slug={slug}
+              slug={urlSlug}
               description={sanityFields.description || null}
               location={location || null}
               countryCode={(sanityProperty as { city?: { countryCode?: string } })?.city?.countryCode ?? null}
@@ -294,7 +307,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 <PropertyDetailBreadcrumb
                   locale={locale}
                   propertyTitle={title}
-                  propertySlug={slug}
+                  propertySlug={urlSlug}
                   citySlug={citySlug}
                   districtSlug={districtSlug}
                 />
@@ -353,13 +366,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                   </p>
                                 ) : null}
                             </div>
-                            <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
+                            <FavoriteButton slug={keySlug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                         </div>
                         {/* Phones get the same CTA in the sticky bottom bar. */}
                         <div className="hidden lg:block">
                           <PropertyContactButton
                             locale={locale}
-                            propertySlug={slug}
+                            propertySlug={keySlug}
                             propertyTitle={title}
                             agentSlug={propertyAgent?.slug ?? null}
                             agentName={propertyAgent?.name ?? null}
@@ -415,7 +428,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             foot of the page it sat below the similar-properties
                             carousel, 52% of the way down, and went unfound. */}
                         {isAiSearchEnabled() ? (
-                          <AiPropertyPanel locale={locale} propertySlug={slug} />
+                          <AiPropertyPanel locale={locale} propertySlug={keySlug} />
                         ) : null}
                     </div>
                     <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
@@ -424,7 +437,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               <h4 className='text-dark text-3xl font-medium dark:text-white'>
                                   <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                               </h4>
-                              <FavoriteButton slug={slug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
+                              <FavoriteButton slug={keySlug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                             </div>
                             <p className='text-sm text-dark/50 dark:text-white'>{dealTypeLabel}</p>
                             {propertyAgent?.slug && propertyAgent?.name ? (
@@ -448,7 +461,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             ) : null}
                             <PropertyContactButton
                               locale={locale}
-                              propertySlug={slug}
+                              propertySlug={keySlug}
                               propertyTitle={title}
                               agentSlug={propertyAgent?.slug ?? null}
                               agentName={propertyAgent?.name ?? null}
@@ -496,7 +509,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 </div>
                 <PropertyContactButton
                   locale={locale}
-                  propertySlug={slug}
+                  propertySlug={keySlug}
                   propertyTitle={title}
                   agentSlug={propertyAgent?.slug ?? null}
                   agentName={propertyAgent?.name ?? null}

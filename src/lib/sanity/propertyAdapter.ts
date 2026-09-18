@@ -1,6 +1,7 @@
 import type { PropertyHomes } from '@/types/propertyHomes';
 import type { CatalogProperty } from './client';
 import { normalizePlotArea } from '@/lib/property/plotArea';
+import { propertyPath } from '@/lib/property/propertyUrl';
 import { resolveLocalizedString } from './localized';
 
 /** Fallback Iconify ID when iconKey is unknown or unresolved. */
@@ -454,5 +455,8 @@ export function mapCatalogPropertyToCard(
     locale
   );
   base.images = catalogImages(p);
+  // Link to this locale's address when the listing has one; without it the
+  // card falls back to `/{locale}/property/{slug}`, which is the same URL.
+  if (p.slug && p.localizedSlug) base._href = propertyPath(locale, p.slug, p.localizedSlug);
   return base;
 }

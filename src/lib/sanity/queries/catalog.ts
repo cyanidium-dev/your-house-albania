@@ -1,4 +1,5 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
+import { propertyPath, type LocalizedSlug } from '@/lib/property/propertyUrl';
 import {
   resolveLocalizedString,
   resolveLocalizedStringStrict,
@@ -239,6 +240,7 @@ const cachedFetchCatalogProperties = sanityCache(
     _type,
     title,
     "slug": slug.current,
+    localizedSlug,
     price,
     priceUnit,
     area,
@@ -448,7 +450,7 @@ type PropertyCatalogBannerCandidate = {
   order?: number;
   imageSmall?: { alt?: string; asset?: { url?: string } };
   imageBig?: { alt?: string; asset?: { url?: string } };
-  property?: { _id?: string; slug?: string };
+  property?: { _id?: string; slug?: string; localizedSlug?: LocalizedSlug };
 };
 
 /**
@@ -511,7 +513,8 @@ export async function fetchSelectedPropertyCatalogBanners(args: {
         imageBig{alt,asset->{url}},
         "property": property->{
           _id,
-          "slug": slug.current
+          "slug": slug.current,
+          localizedSlug
         }
       },
       []
@@ -560,7 +563,7 @@ export async function fetchSelectedPropertyCatalogBanners(args: {
       key,
       propertyId: pid,
       propertySlug: slug,
-      href: `/${locale}/property/${slug}`,
+      href: propertyPath(locale, slug, b.property!.localizedSlug),
       imageSmallUrl,
       imageSmallAlt,
       imageBigUrl,

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { buildHreflangAlternates } from '@/lib/seo/hreflang';
+import { buildHreflangAlternatesPerLocale } from '@/lib/seo/hreflang';
+import { propertyPath as propertyPathFor, type LocalizedSlug } from '@/lib/property/propertyUrl';
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
 import type { LocalizedField } from './socialMetadataResolution';
 import {
@@ -44,9 +45,11 @@ export type PropertyMetadataOptions = {
    */
   generatedOgImageUrl?: string;
   /**
-   * When set, adds canonical (unless overridden later) and hreflang for `/property/[slug]`.
+   * When set, adds canonical (unless overridden later) and hreflang for
+   * `/property/[slug]`: `slug` is the listing's key, `localizedSlug` its
+   * address per locale (lib/property/propertyUrl).
    */
-  propertyPath?: { baseUrl: string; locale: string; slug: string };
+  propertyPath?: { baseUrl: string; locale: string; slug: string; localizedSlug?: LocalizedSlug };
 };
 
 /**
@@ -99,13 +102,15 @@ export function buildPropertyMetadata(
     });
   }
 
-  const pathSeg =
-    propertyPath != null ? `/property/${encodeURIComponent(propertyPath.slug)}` : undefined;
+  // The path after the locale, which differs by locale once a listing has
+  // per-language addresses.
+  const pathAfterLocale = (l: string) =>
+    propertyPathFor(l, propertyPath!.slug, propertyPath!.localizedSlug).slice(l.length + 1);
   const canonicalFallback =
     propertyPath != null
-      ? `${propertyPath.baseUrl.replace(/\/$/, '')}/${propertyPath.locale}${pathSeg}`
+      ? `${propertyPath.baseUrl.replace(/\/$/, '')}/${propertyPath.locale}${pathAfterLocale(propertyPath.locale)}`
       : undefined;
-  const hreflang = pathSeg != null ? buildHreflangAlternates(pathSeg) : undefined;
+  const hreflang = propertyPath != null ? buildHreflangAlternatesPerLocale(pathAfterLocale) : undefined;
 
   return buildMetadata({
     title,

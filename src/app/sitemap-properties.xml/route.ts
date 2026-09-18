@@ -4,6 +4,7 @@ import { isIndexingEnabled } from "@/lib/seo/envSeo";
 import { fetchSitemapPropertyEntries } from "@/lib/sanity/client";
 import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { propertyPath } from "@/lib/property/propertyUrl";
 
 export const revalidate = 3600;
 
@@ -19,7 +20,7 @@ export async function GET() {
   for (const locale of routing.locales) {
     for (const row of rows) {
       urls.push({
-        loc: `${base}/${locale}/property/${encodeURIComponent(row.slug)}`,
+        loc: `${base}${propertyPath(locale, row.slug, row.localizedSlug)}`,
         lastmod: row.lastModified,
       });
     }

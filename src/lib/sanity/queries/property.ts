@@ -2,16 +2,22 @@ import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { blogListingProjection } from './blog';
 import { PUBLISHED_PROPERTY_FILTER, PUBLIC_DEAL_STATUS_FILTER } from '../groq/propertyFilters';
 import type { CatalogProperty } from '@/types/catalog';
+import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl';
 
-/** Fetch single property by slug. Returns null if not found or client not configured. */
+/**
+ * Fetch a single property by any slug it answers to — its key or one of its
+ * per-locale addresses (see lib/property/propertyUrl). Returns null if not
+ * found or client not configured.
+ */
 export async function fetchPropertyBySlug(slug: string): Promise<unknown | null> {
   const client = getClient();
   if (!client) return null;
-  const query = `*[_type == "property" && slug.current == $slug && ${PUBLISHED_PROPERTY_FILTER}][0] {
+  const query = `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && ${PUBLISHED_PROPERTY_FILTER}][0] {
     _id,
     _type,
     title,
     "slug": slug.current,
+    localizedSlug,
     price,
     priceUnit,
     area,
@@ -126,6 +132,7 @@ export async function fetchPropertiesBySlugs(slugs: string[]): Promise<CatalogPr
     _type,
     title,
     "slug": slug.current,
+    localizedSlug,
     price,
     priceUnit,
     area,
@@ -189,6 +196,7 @@ export async function fetchSimilarPropertyCandidates(
     _type,
     title,
     "slug": slug.current,
+    localizedSlug,
     price,
     priceUnit,
     area,

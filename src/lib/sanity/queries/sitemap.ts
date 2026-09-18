@@ -10,6 +10,7 @@ import {
 import { RESERVED_GUIDE_SLUGS } from './guides';
 import { AGENT_SLUG_REGEX } from './agent';
 import { getClient } from './_core';
+import type { LocalizedSlug } from '@/lib/property/propertyUrl';
 import { fetchSeoPageDecisions } from './seoPages';
 import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
 
@@ -364,17 +365,18 @@ export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntr
   }
 }
 
-export type SitemapPropertyEntry = { slug: string; lastModified: Date };
+export type SitemapPropertyEntry = { slug: string; localizedSlug: LocalizedSlug; lastModified: Date };
 
 export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntry[]> {
   const client = getClient();
   if (!client) return [];
   const query = `*[_type == "property" && defined(slug.current) && ${PUBLISHED_PROPERTY_FILTER} && (!defined(seo.noIndex) || seo.noIndex != true)]{
     "slug": slug.current,
+    localizedSlug,
     _updatedAt
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    const rows = await client.fetch<Array<{ slug?: string; localizedSlug?: LocalizedSlug; _updatedAt?: string }>>(query);
     if (!Array.isArray(rows)) return [];
     const out: SitemapPropertyEntry[] = [];
     for (const row of rows) {
@@ -382,6 +384,7 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
       if (!slug) continue;
       out.push({
         slug,
+        localizedSlug: row.localizedSlug ?? null,
         lastModified: parseSitemapDate(row._updatedAt),
       });
     }

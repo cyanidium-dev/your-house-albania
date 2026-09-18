@@ -7,6 +7,7 @@ import { hasLocale } from 'next-intl'
 import { routing } from '@/i18n/routing'
 import { ALBANIA_PHOTOS, DEFAULT_ALBANIA_PHOTO, type AlbaniaPhotoKey } from '@/lib/media/albaniaPhotos'
 import { showsPlotArea } from '@/lib/property/plotArea'
+import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl'
 import { getClient } from '@/lib/sanity/queries/_core'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
@@ -348,7 +349,7 @@ type OgProperty = {
   photo?: string
 }
 
-const PROPERTY_QUERY = `*[_type == "property" && slug.current == $slug && isPublished == true][0]{
+const PROPERTY_QUERY = `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && isPublished == true][0]{
   title, price, priceUnit, status, area, plotArea, bedrooms,
   "typeSlug": type->slug.current,
   "typeTitle": type->title,

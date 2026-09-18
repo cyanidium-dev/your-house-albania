@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { getClient } from '@/lib/sanity/queries/_core'
+import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl'
 import { getWriteClient } from '@/lib/sanity/writeClient'
 import { buildLeadDocument, type LeadInput } from './buildLeadDocument'
 
@@ -26,12 +27,13 @@ export async function lookupLeadProperty(slug: string): Promise<LeadProperty | n
   try {
     const row = await client.fetch<{
       _id?: string
+      slug?: string
       title?: LocalizedTitle
       agentId?: string
       agentSlug?: string
     } | null>(
-      `*[_type == "property" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
-        _id, title, "agentId": agent._ref, "agentSlug": agent->slug.current
+      `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && !(_id in path("drafts.**"))][0]{
+        _id, "slug": slug.current, title, "agentId": agent._ref, "agentSlug": agent->slug.current
       }`,
       { slug }
     )
@@ -40,7 +42,8 @@ export async function lookupLeadProperty(slug: string): Promise<LeadProperty | n
     const title = typeof t === 'string' ? t : t?.ru || t?.en || undefined
     return {
       id: row._id,
-      slug,
+      // The listing's key, even when the request carried a locale's address.
+      slug: row.slug || slug,
       ...(title ? { title: title.slice(0, 200) } : {}),
       ...(row.agentId ? { agentId: row.agentId } : {}),
       ...(row.agentSlug ? { agentSlug: row.agentSlug } : {}),
