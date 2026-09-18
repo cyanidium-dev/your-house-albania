@@ -1,6 +1,10 @@
 import { getClient } from "@/lib/sanity/queries/_core";
 import { localizedUrls } from "@/lib/seo/indexNow";
 import { resolveLandingPathForSitemap } from "@/lib/sanity/landingSitemapPaths";
+import { propertyPath, type LocalizedSlug } from "@/lib/property/propertyUrl";
+import { isLocalePathIndexable } from "@/lib/seo/localeIndexing";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { routing } from "@/i18n/routing";
 
 /**
  * The public URLs a mutated Sanity document renders, for IndexNow.
@@ -23,11 +27,16 @@ export async function urlsForMutatedDocument(
   try {
     switch (type) {
       case "property": {
-        const slug = await client.fetch<string | null>(
-          `*[_id == $id][0].slug.current`,
+        const row = await client.fetch<{ slug?: string; localizedSlug?: LocalizedSlug } | null>(
+          `*[_id == $id][0]{ "slug": slug.current, localizedSlug }`,
           { id },
         );
-        return slug ? localizedUrls(`property/${encodeURIComponent(slug)}`) : [];
+        if (!row?.slug) return [];
+        // Each locale has its own address (lib/property/propertyUrl).
+        const base = getSiteBaseUrl().replace(/\/$/, "");
+        return routing.locales
+          .filter((locale) => isLocalePathIndexable(locale, "property"))
+          .map((locale) => `${base}${propertyPath(locale, row.slug!, row.localizedSlug)}`);
       }
 
       case "blogPost": {
