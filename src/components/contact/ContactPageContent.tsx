@@ -60,8 +60,8 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-stretch lg:gap-x-10 lg:gap-y-0 xl:gap-x-12">
           <div className="flex min-w-0 flex-col lg:col-span-5 lg:h-full lg:min-h-0">
             <div className="flex h-full min-h-0 flex-col gap-4">
-              <div className="relative min-h-[220px] flex-1 overflow-hidden rounded-2xl border border-dark/10 bg-dark/5 shadow-md dark:border-white/10 dark:bg-white/5 sm:min-h-[260px] lg:min-h-[280px] lg:flex-1">
-                {photo?.url ? (
+              {photo?.url ? (
+                <div className="relative min-h-[220px] flex-1 overflow-hidden rounded-2xl border border-dark/10 bg-dark/5 shadow-md dark:border-white/10 dark:bg-white/5 sm:min-h-[260px] lg:min-h-[280px] lg:flex-1">
                   <Image
                     src={photo.url}
                     alt={photoAlt}
@@ -70,16 +70,8 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                     sizes="(max-width: 1024px) 100vw, 42vw"
                     priority={false}
                   />
-                ) : (
-                  <div
-                    className="flex h-full min-h-[220px] items-center justify-center bg-gradient-to-br from-dark/10 to-dark/5 dark:from-white/10 dark:to-white/5"
-                    role="img"
-                    aria-label={photoAlt}
-                  >
-                    <Icon icon="ph:user-circle" className="size-20 text-dark/25 dark:text-white/25" aria-hidden />
-                  </div>
-                )}
-              </div>
+                </div>
+              ) : null}
 
               {manager.email || manager.socialLinks.length > 0 ? (
                 <div className="shrink-0 rounded-2xl border border-dark/10 bg-white/40 p-5 shadow-md backdrop-blur-sm dark:border-white/10 dark:bg-dark/40 md:p-6">
