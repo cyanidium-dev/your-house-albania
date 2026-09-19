@@ -59,7 +59,7 @@ export const fetchSeoPageDecisions = sanityCache(
   },
   ['sanity-seo-page-decisions'],
   {
-    revalidate: 300,
+    revalidate: 3600,
     tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType, SANITY_TAGS.catalogSeoPage],
   },
 );

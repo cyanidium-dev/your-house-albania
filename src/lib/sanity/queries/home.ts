@@ -189,7 +189,7 @@ const cachedFetchHomePage = sanityCache(
   },
   ['sanity-home-page'],
   {
-    revalidate: 60,
+    revalidate: 3600,
     tags: [
       SANITY_TAGS.homePage,
       SANITY_TAGS.property,

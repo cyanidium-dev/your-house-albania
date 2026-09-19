@@ -105,7 +105,7 @@ export async function fetchLatestZoneMetricsByZoneId(zoneId: string): Promise<Zo
       }
     },
     ['sanity-zone-metrics-latest-v1', id],
-    { revalidate: 60, tags: TAGS },
+    { revalidate: 3600, tags: TAGS },
   );
   return cached();
 }
@@ -127,7 +127,7 @@ export async function fetchZoneMetricsHistoryByZoneId(zoneId: string): Promise<Z
       }
     },
     ['sanity-zone-metrics-history-v1', id],
-    { revalidate: 60, tags: TAGS },
+    { revalidate: 3600, tags: TAGS },
   );
   return cached();
 }
@@ -170,7 +170,7 @@ export async function fetchLatestZoneMetricsForCityDistricts(city: {
       }
     },
     ['sanity-zone-metrics-city-districts-v3', id || slug],
-    { revalidate: 60, tags: TAGS },
+    { revalidate: 3600, tags: TAGS },
   );
   return cached();
 }
@@ -208,7 +208,7 @@ export async function fetchLatestZoneMetricsByZoneIds(zoneIds: string[]): Promis
       }
     },
     ['sanity-zone-metrics-by-ids-v3', ids.slice().sort().join(',')],
-    { revalidate: 60, tags: TAGS },
+    { revalidate: 3600, tags: TAGS },
   );
   return cached();
 }

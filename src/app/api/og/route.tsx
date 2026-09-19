@@ -32,7 +32,7 @@ const HEIGHT = 630
 const PRIMARY = '#078660'
 
 const CACHE_HEADERS = {
-  'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
+  'Cache-Control': 'public, max-age=3600, s-maxage=604800, stale-while-revalidate=2592000',
 }
 
 // --- fonts -----------------------------------------------------------------

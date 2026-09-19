@@ -94,7 +94,7 @@ export async function fetchDistrictBySlugs(
       }
     },
     ['sanity-district-by-slugs-v1', city, district],
-    { revalidate: 60, tags: [SANITY_TAGS.district, SANITY_TAGS.city] },
+    { revalidate: 3600, tags: [SANITY_TAGS.district, SANITY_TAGS.city] },
   );
 
   return cached();
@@ -155,7 +155,7 @@ export async function fetchDistrictLandingBySlugs(
       }
     },
     ['sanity-district-landing-by-slugs-v1', city, district],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.district] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.district] },
   );
 
   return cached();
@@ -209,7 +209,7 @@ export async function fetchCityNameForms(citySlug: string, locale: string): Prom
       }
     },
     ['sanity-city-name-forms-v1', slug, locale],
-    { revalidate: 300, tags: [SANITY_TAGS.city] },
+    { revalidate: 3600, tags: [SANITY_TAGS.city] },
   );
   return cached();
 }
@@ -249,7 +249,7 @@ export async function fetchPublishedDistrictsByCity(citySlug: string): Promise<D
       }
     },
     ['sanity-districts-by-city-v1', city],
-    { revalidate: 60, tags: [SANITY_TAGS.district, SANITY_TAGS.city, SANITY_TAGS.property] },
+    { revalidate: 3600, tags: [SANITY_TAGS.district, SANITY_TAGS.city, SANITY_TAGS.property] },
   );
 
   return cached();

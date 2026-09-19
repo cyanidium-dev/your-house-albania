@@ -12,7 +12,7 @@ import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
 
 type Props = { params: Promise<{ locale: string }> }
 
-export const revalidate = 900
+export const revalidate = 3600
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params

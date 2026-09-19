@@ -94,7 +94,7 @@ export async function fetchTrackerById(id: string): Promise<TrackerDoc | null> {
       }
     },
     ['sanity-tracker-by-id-v1', trimmed],
-    { revalidate: 60, tags: [SANITY_TAGS.tracker] },
+    { revalidate: 3600, tags: [SANITY_TAGS.tracker] },
   );
   return cached();
 }
@@ -116,7 +116,7 @@ export async function fetchDeveloperById(id: string): Promise<DeveloperDoc | nul
       }
     },
     ['sanity-developer-by-id-v1', trimmed],
-    { revalidate: 60, tags: [SANITY_TAGS.developer] },
+    { revalidate: 3600, tags: [SANITY_TAGS.developer] },
   );
   return cached();
 }
@@ -148,7 +148,7 @@ export async function fetchDevelopersForRating(ids?: string[]): Promise<Develope
       }
     },
     ['sanity-developers-for-rating-v1', keyIds],
-    { revalidate: 60, tags: [SANITY_TAGS.developer] },
+    { revalidate: 3600, tags: [SANITY_TAGS.developer] },
   );
   return cached();
 }

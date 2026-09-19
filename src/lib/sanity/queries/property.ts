@@ -271,7 +271,7 @@ const cachedFetchActivePropertyTypes = sanityCache(
     }
   },
   ['sanity-active-property-types'],
-  { revalidate: 120, tags: [SANITY_TAGS.propertyType] },
+  { revalidate: 3600, tags: [SANITY_TAGS.propertyType] },
 );
 
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */

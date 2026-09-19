@@ -133,7 +133,7 @@ const cachedFetchBlogPosts = sanityCache(
     }
   },
   ['sanity-blog-posts'],
-  { revalidate: 60, tags: [SANITY_TAGS.blogPost, SANITY_TAGS.blogCategory] },
+  { revalidate: 3600, tags: [SANITY_TAGS.blogPost, SANITY_TAGS.blogCategory] },
 );
 
 /** Fetch published blog posts for listing. Uses publishedAt <= now(). */

@@ -60,7 +60,7 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
       }
     },
     ['sanity-city-landing-by-city-slug', key],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
   );
   return cached();
 }
@@ -361,7 +361,7 @@ export async function fetchCitiesIndexLanding(): Promise<{
       }
     },
     ['sanity-cities-index-landing'],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
   );
   return cached();
 }
@@ -443,7 +443,7 @@ export async function fetchDealTypeLanding(deal: PropertiesDealParam): Promise<{
       }
     },
     ['sanity-deal-landing-v2', deal],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
   );
 
   return cached();
@@ -486,7 +486,7 @@ export async function fetchLandingPageBySlug(slug: string): Promise<{
       }
     },
     ['sanity-landing-by-slug', trimmed],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
   );
 
   return cached();
@@ -550,7 +550,7 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
       }
     },
     ['sanity-guide-landing-by-slug', trimmed],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
   );
 
   return cached();
@@ -605,7 +605,7 @@ export async function fetchUniqueLandingBySlug(slug: string): Promise<{
       }
     },
     ['sanity-unique-landing-by-slug', trimmed],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
   );
 
   return cached();
@@ -697,7 +697,7 @@ export async function fetchRelatedDistrictLandingCards(
       }
     },
     ['related-district-cards-v2', city, excludeId ?? '', String(limit), loc],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();
 }
@@ -735,7 +735,7 @@ async function fetchCustomLandingCardsByTags(
       }
     },
     [cacheKeyPrefix, [...cleaned].sort().join(','), excludeId ?? '', String(limit), loc],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();
 }
@@ -794,7 +794,7 @@ export async function fetchCityLandingNavItems(locale: string): Promise<CityLand
       }
     },
     ['sanity-city-nav-items-v1', locale],
-    { revalidate: 60, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage, SANITY_TAGS.city] },
   );
 
   return cached();

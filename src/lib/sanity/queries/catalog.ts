@@ -36,7 +36,7 @@ const cachedFetchCatalogAreaBoundsFromData = sanityCache(
     }
   },
   ['sanity-catalog-area-bounds'],
-  { revalidate: 120, tags: [SANITY_TAGS.property] },
+  { revalidate: 3600, tags: [SANITY_TAGS.property] },
 );
 
 /**
@@ -298,7 +298,7 @@ const cachedFetchCatalogProperties = sanityCache(
   },
   ['sanity-catalog-properties'],
   {
-    revalidate: 60,
+    revalidate: 3600,
     tags: [
       SANITY_TAGS.property,
       SANITY_TAGS.city,
@@ -366,7 +366,7 @@ export const fetchCatalogListingStats = sanityCache(
     }
   },
   ['sanity-catalog-listing-stats'],
-  { revalidate: 300, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 const PRICE_INDEX_FLAT_TYPES = ['apartment', 'studio'];
@@ -710,7 +710,7 @@ function getCachedFetchCatalogFilterOptions(
       },
       ['sanity-catalog-filter-options', locale],
       {
-        revalidate: 60,
+        revalidate: 3600,
         tags: [
           SANITY_TAGS.city,
           SANITY_TAGS.propertyType,
@@ -747,7 +747,7 @@ const fetchCatalogCountryDocumentSlugsCached = sanityCache(
     }
   },
   ['sanity-country-document-slugs'],
-  { revalidate: 300, tags: [SANITY_TAGS.country] }
+  { revalidate: 3600, tags: [SANITY_TAGS.country] }
 );
 
 /** Slugs of published `country` documents (for validating `/{locale}/[country]` hub segments). */
@@ -814,7 +814,7 @@ export async function fetchFooterCitiesByCountry(
       }
     },
     ['sanity-footer-cities-by-count', key, locale, String(safeLimit)],
-    { revalidate: 120, tags: [SANITY_TAGS.city, SANITY_TAGS.property] }
+    { revalidate: 3600, tags: [SANITY_TAGS.city, SANITY_TAGS.property] }
   )();
 }
 
@@ -841,7 +841,7 @@ export async function fetchCityCountrySlugByCitySlug(citySlug: string): Promise<
       }
     },
     ['sanity-city-country', key],
-    { revalidate: 120, tags: [SANITY_TAGS.city, SANITY_TAGS.country] }
+    { revalidate: 3600, tags: [SANITY_TAGS.city, SANITY_TAGS.country] }
   )();
 }
 
@@ -872,7 +872,7 @@ export async function fetchCountryTitleBySlug(
       }
     },
     ['sanity-country-title', key, locale],
-    { revalidate: 300, tags: [SANITY_TAGS.country] }
+    { revalidate: 3600, tags: [SANITY_TAGS.country] }
   )();
 }
 
@@ -896,7 +896,7 @@ export async function fetchCityExistsBySlug(citySlug: string): Promise<boolean> 
       }
     },
     ['sanity-city-exists', key],
-    { revalidate: 120, tags: [SANITY_TAGS.city] }
+    { revalidate: 3600, tags: [SANITY_TAGS.city] }
   )();
 }
 
@@ -942,7 +942,7 @@ const cachedFetchCatalogSeoPageRoot = sanityCache(
     }
   },
   ['sanity-catalog-seo-root'],
-  { revalidate: 60, tags: [SANITY_TAGS.catalogSeoPage] }
+  { revalidate: 3600, tags: [SANITY_TAGS.catalogSeoPage] }
 );
 
 /** Fetch catalog SEO page for properties root. Returns null if none or inactive. */
@@ -1056,5 +1056,5 @@ export const fetchDistrictListingCounts = sanityCache(
     }
   },
   ['sanity-district-listing-counts'],
-  { revalidate: 300, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
 );
