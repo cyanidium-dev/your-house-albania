@@ -23,6 +23,21 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/og": ["./public/images/albania/**/*"],
   },
+  // The project's production alias served the whole site as a second copy:
+  // 485 requests a day on 2026-09-19, crawlers included. Only this exact
+  // host moves; per-deployment preview URLs keep working.
+  async redirects() {
+    return [
+      {
+        // /api/ stays put: Vercel Cron calls the production URL and does not
+        // follow redirects.
+        source: "/:path((?!api/).*)",
+        has: [{ type: "host", value: "your-house-albania.vercel.app" }],
+        destination: "https://www.domlivo.com/:path",
+        permanent: true,
+      },
+    ];
+  },
   // IndexNow verifies ownership by reading a plain-text file on the host. The
   // source is deliberately narrow — `/indexnow-*.txt` cannot shadow
   // `robots.txt` or any `sitemap-*.xml`, which a `/:file.txt` catch-all would.
