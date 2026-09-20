@@ -3,6 +3,7 @@ import { buildListingPath } from '@/lib/routes/listingRoutes';
 import { isPublicDealQuery } from '@/lib/catalog/publicDealTypes';
 import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolicy';
 import { isIndexedSeoStatus, seoPagePath, type SeoPageKey } from '@/lib/seo/pages';
+import { agentBioText, isAgentPageIndexable } from '@/lib/seo/agentIndexPolicy';
 import {
   resolveLandingPathForSitemap,
   type LandingPageSitemapRow,
@@ -25,7 +26,11 @@ function parseSitemapDate(raw: string | undefined): Date {
 export type AgentSitemapEntry = { slug: string; lastModified: Date };
 
 /**
- * Published agents with valid path slugs for `/properties/agent/[slug]`.
+ * Published agents with valid path slugs for `/agent/[slug]` — only those whose
+ * page is indexable, i.e. whose document carries a bio and a photograph
+ * (`isAgentPageIndexable`, the same predicate the page's robots tag uses).
+ * Every other agent page is `noindex, follow`, and a sitemap that lists a
+ * noindex URL is a contradiction the crawler reports back as an error.
  * Draft documents excluded via default API; slugs validated with `AGENT_SLUG_REGEX`.
  */
 export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[]> {
@@ -38,15 +43,35 @@ export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[
   // agent document with no way to exclude it.
   const query = `*[_type == "agent" && defined(slug.current) && isPublished != false]{
     "slug": slug.current,
-    _updatedAt
+    _updatedAt,
+    isPublished,
+    bio,
+    "photoUrl": photo.asset->url
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    const rows = await client.fetch<
+      Array<{
+        slug?: string;
+        _updatedAt?: string;
+        isPublished?: boolean;
+        bio?: unknown;
+        photoUrl?: string;
+      }>
+    >(query);
     if (!Array.isArray(rows)) return [];
     const out: AgentSitemapEntry[] = [];
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
       if (!slug || !AGENT_SLUG_REGEX.test(slug)) continue;
+      if (
+        !isAgentPageIndexable({
+          bio: agentBioText(row.bio),
+          photo: { url: row.photoUrl },
+          isPublished: row.isPublished,
+        })
+      ) {
+        continue;
+      }
       out.push({
         slug,
         lastModified: parseSitemapDate(row._updatedAt),
