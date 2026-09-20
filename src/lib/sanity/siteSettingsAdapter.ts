@@ -1,5 +1,6 @@
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { resolveLocalizedString } from "./localized";
+import { realPhoneOrEmpty } from "@/lib/contacts/phone";
 
 export type ResolvedFooterApp = {
   enabled: boolean;
@@ -120,7 +121,8 @@ export function mapSiteSettingsToResolved(
     logoUrl: (raw.logo as { asset?: { url?: string } })?.asset?.url ?? "",
     siteName: resolveLocalizedString(raw.siteName as never, locale) || "",
     siteTagline: resolveLocalizedString(raw.siteTagline as never, locale) || "",
-    phone: raw.contactPhone ?? DEFAULT_PHONE,
+    // A placeholder number counts as no number: nothing prints or dials it.
+    phone: realPhoneOrEmpty(raw.contactPhone) || DEFAULT_PHONE,
     email: raw.contactEmail ?? DEFAULT_EMAIL,
     companyAddress: raw.companyAddress ?? "",
     footerIntro,

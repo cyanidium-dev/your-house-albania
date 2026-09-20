@@ -1,4 +1,5 @@
 import { resolveLocalizedString } from './localized'
+import { realPhoneOrEmpty } from '@/lib/contacts/phone'
 
 /** Resolved agent for a future contact-realtor page (one document, locale-aware strings). */
 export type AgentContactPage = {
@@ -81,7 +82,7 @@ export function mapSanityAgentToContactPage(
     name: name || '—',
     bio,
     email: nullableTrimmed(raw.email),
-    phone: nullableTrimmed(raw.phone),
+    phone: realPhoneOrEmpty(raw.phone) || null,
     photo: pickImage(raw.photo),
     agentLogo: pickImage(raw.agentLogo),
     isPublished: raw.isPublished !== false,
