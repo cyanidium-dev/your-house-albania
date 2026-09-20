@@ -13,6 +13,8 @@
  * anything. Local assets under /public still go through the built-in optimiser.
  */
 
+import { CANONICAL_IMAGE_WIDTH, canonicalPropertyImageUrl, parseSanityImageUrl } from "./propertyImageUrl";
+
 const SANITY_IMAGE_PREFIX = "https://cdn.sanity.io/images/";
 
 /** Sanity re-encodes on the fly; 72 is visually clean and well below the default. */
@@ -24,8 +26,23 @@ type LoaderArgs = {
   quality?: number;
 };
 
-export default function imageLoader({ src, width, quality }: LoaderArgs): string {
+export default function imageLoader({ src: input, width, quality }: LoaderArgs): string {
+  let src = input;
   if (src.startsWith(SANITY_IMAGE_PREFIX)) {
+    // A listing photo arrives with a readable file name on the end of its path
+    // (see propertyImageUrl.ts). That name belongs to exactly one variant — the
+    // canonical one the sitemap and JSON-LD also publish — so every width at
+    // or above it collapses onto that URL, and it becomes the `src`. The
+    // smaller candidates drop the name: they are not what gets indexed, and
+    // forty characters on each of them is markup nobody reads.
+    const named = parseSanityImageUrl(src);
+    if (named?.vanity) {
+      if (width >= CANONICAL_IMAGE_WIDTH && quality === undefined) {
+        return canonicalPropertyImageUrl(src);
+      }
+      src = named.query ? `${named.asset}?${named.query}` : named.asset;
+    }
+
     const [path, existingQuery] = src.split("?");
     const params = new URLSearchParams(existingQuery ?? "");
     params.set("w", String(width));

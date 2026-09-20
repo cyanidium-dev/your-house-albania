@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { buildHreflangAlternates } from '@/lib/seo/hreflang';
-import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
+import { indexingDisabledRobots, isIndexingEnabled, robotsFromFlags } from '@/lib/seo/envSeo';
 import { resolveLocalizedString } from './localized';
 import { buildMetadata } from './socialMetadataResolution';
 import { stripBrandSuffix } from '@/lib/seo/brandTitle';
@@ -125,6 +125,6 @@ export function buildBlogMetadata(
     twitterCard,
     canonical: canonicalUrl,
     hreflangLanguages: hreflang?.languages,
-    robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
+    robots: robotsFromFlags({ noIndex, noFollow }),
   });
 }

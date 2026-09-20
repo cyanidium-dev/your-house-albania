@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { buildHreflangAlternates } from '@/lib/seo/hreflang'
-import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
+import { indexingDisabledRobots, isIndexingEnabled, robotsFromFlags } from '@/lib/seo/envSeo'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 import { withBrand } from '@/lib/seo/brandTitle'
 import { landingOgImageUrl, type LandingOgPhoto } from '@/lib/seo/ogImageUrl'
@@ -173,7 +173,7 @@ export function buildLandingMetadata(
     ogType: 'article',
     canonical,
     hreflangLanguages: hreflang?.languages,
-    robots: noIndex || noFollow ? { index: !noIndex, follow: !noFollow } : undefined,
+    robots: robotsFromFlags({ noIndex, noFollow }),
     modifiedTimeIso,
   })
 }

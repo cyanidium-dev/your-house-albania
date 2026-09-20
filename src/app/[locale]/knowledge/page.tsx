@@ -8,7 +8,7 @@ import { fetchKnowledgeIndex } from '@/lib/sanity/queries/knowledge'
 import { buildFlatCrumbs, toBreadcrumbJsonLdItems } from '@/lib/routes/breadcrumbs'
 import { getBaseUrl } from '@/lib/seo/baseUrl'
 import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
-import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
+import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from '@/lib/seo/envSeo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t('title'),
     description: t('description'),
     pathAfterLocale: 'knowledge',
-    robots: isIndexingEnabled() && entries.length > 0 ? undefined : indexingDisabledRobots,
+    robots: isIndexingEnabled() && entries.length > 0 ? indexableRobots : indexingDisabledRobots,
   })
 }
 

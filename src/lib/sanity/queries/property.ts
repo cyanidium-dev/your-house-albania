@@ -29,6 +29,10 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     yearBuilt,
     status,
     lifecycleStatus,
+    // Read for the photo alt text only ("near the sea", "new build").
+    beachfront,
+    seaDistanceMeters,
+    constructionStage,
     createdAt,
     promoted,
     promotionType,

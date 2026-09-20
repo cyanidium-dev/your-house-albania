@@ -12,6 +12,7 @@ import { displayDealLabel, truncateTeaser } from '@/lib/property/cardFormatters'
 import { showsPlotArea, showsRooms } from '@/lib/property/plotArea'
 import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { PropertyCardGallery } from './PropertyCardGallery'
+import { buildPropertyCardAlt, propertyCardImageSeoName } from '@/lib/property/propertyCardImages'
 import { PropertyCardMeta } from './PropertyCardMeta'
 
 const MARKET_POSITION_LABEL_KEY: Record<'below' | 'in' | 'above', 'labelBelow' | 'labelIn' | 'labelAbove'> = {
@@ -303,6 +304,8 @@ function PropertyCard({
         <PropertyCardGallery
           images={images}
           name={name}
+          alt={buildPropertyCardAlt({ name, district: item.district, city: item.city })}
+          imageSeoName={propertyCardImageSeoName(item)}
           slug={slug}
           href={href}
           view={view}

@@ -3,8 +3,8 @@ import { routing } from "@/i18n/routing";
 import { isIndexingEnabled } from "@/lib/seo/envSeo";
 import { fetchSitemapPropertyEntries } from "@/lib/sanity/client";
 import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
+import { buildPropertySitemapXml } from "@/lib/seo/propertySitemap";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { propertyPath } from "@/lib/property/propertyUrl";
 
 export const revalidate = 3600;
 
@@ -16,16 +16,8 @@ export async function GET() {
   }
   const base = getSiteBaseUrl();
   const rows = await fetchSitemapPropertyEntries();
-  const urls: Array<{ loc: string; lastmod?: Date }> = [];
-  for (const locale of routing.locales) {
-    for (const row of rows) {
-      urls.push({
-        loc: `${base}${propertyPath(locale, row.slug, row.localizedSlug)}`,
-        lastmod: row.lastModified,
-      });
-    }
-  }
-  const xml = buildUrlsetXml(urls);
+  // Photos ride along as <image:image> entries — see lib/seo/propertySitemap.
+  const xml = buildPropertySitemapXml({ base, locales: routing.locales, rows });
   return new NextResponse(xml, {
     headers: { "Content-Type": "application/xml; charset=utf-8" },
   });

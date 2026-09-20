@@ -34,7 +34,7 @@ import {
 } from "@/lib/seo/listingSeoCopy";
 import { facetCatalogFilters, withFacetQuery, type ListingFacetSlug } from "@/lib/catalog/listingFacets";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
-import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/lib/seo/envSeo";
 import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
@@ -208,7 +208,7 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
     description,
     openGraph: listingOpenGraph(title, description, ogImage, canonical),
     alternates: { canonical, ...(href?.languages ? { languages: href.languages } : {}) },
-    robots: noindex ? { index: false, follow: true } : undefined,
+    robots: noindex ? { index: false, follow: true } : indexableRobots,
   };
 }
 
@@ -371,7 +371,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const href = indexing.indexable
     ? buildHreflangAlternates(path.split("?")[0].replace(`/${locale}`, ""), indexing.locales)
     : undefined;
-  const robots = noindexQuery || !indexing.indexable ? { index: false as const, follow: true as const } : undefined;
+  const robots = noindexQuery || !indexing.indexable ? { index: false as const, follow: true as const } : indexableRobots;
 
   return {
     title: listingTitleField(title),

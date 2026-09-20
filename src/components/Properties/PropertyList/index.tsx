@@ -22,6 +22,7 @@ import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
 import { buildListingUrl } from '@/lib/routes/listingRoutes'
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
+import { propertyCardCanonicalCoverUrl } from '@/lib/property/propertyCardImages'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -246,7 +247,8 @@ async function PropertiesListing({
     name: item.name,
     slug: item.slug,
     href: item._href,
-    image: item.images?.[0]?.src ?? null,
+    // The same single variant the listing's page and the image sitemap publish.
+    image: propertyCardCanonicalCoverUrl(item),
   }))
 
   const filterProps = {

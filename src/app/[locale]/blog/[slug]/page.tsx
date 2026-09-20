@@ -300,7 +300,10 @@ export default async function Post({ params }: Props) {
       <div className="overflow-hidden rounded-2xl lg:rounded-3xl">
         <Image
           src={detail.coverImageUrl}
-          alt={detail.coverImageAlt || detail.title}
+          // The localised title first: the CMS cover alt is one plain string,
+          // English on every post, and would describe the picture in English
+          // on the six other locales.
+          alt={detail.title || detail.coverImageAlt || ""}
           width={1170}
           height={766}
           quality={100}

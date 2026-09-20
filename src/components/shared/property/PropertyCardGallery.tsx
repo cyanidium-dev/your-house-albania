@@ -12,10 +12,13 @@ import { PropertyContactButton } from '@/components/property/PropertyContactModa
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { PropertyBadges } from './PropertyBadges'
+import { withImageSeoName } from '@/lib/images/propertyImageUrl'
 
 export function PropertyCardGallery({
   images,
   name,
+  alt,
+  imageSeoName,
   slug,
   href,
   view,
@@ -33,6 +36,14 @@ export function PropertyCardGallery({
 }: {
   images: { src: string }[]
   name: string
+  /** Localised title plus the place — see lib/property/propertyCardImages. Falls back to `name`. */
+  alt?: string
+  /**
+   * Locale-independent file name for the photos ("apartment-1-1-plazh-durres").
+   * Applied here rather than upstream: the card receives every gallery URL as a
+   * prop, and naming them all in the payload would cost more than it earns.
+   */
+  imageSeoName?: string
   slug: string
   href: string
   view: ViewMode
@@ -55,7 +66,10 @@ export function PropertyCardGallery({
   const isList = view === 'list'
   const isSmall = view === 'small'
 
-  const imageList = images?.length ? images : (images?.[0]?.src ? [images[0]] : [])
+  const imageAlt = alt?.trim() || name
+  const imageList = (images?.length ? images : (images?.[0]?.src ? [images[0]] : [])).map((img, idx) =>
+    imageSeoName ? { ...img, src: withImageSeoName(img.src, imageSeoName, idx + 1) } : img
+  )
   const [imageIndex, setImageIndex] = useState(0)
   const [slideOffset, setSlideOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -290,7 +304,7 @@ export function PropertyCardGallery({
                     {isSlideNearby(idx) ? (
                       <Image
                         src={img.src}
-                        alt={name}
+                        alt={imageAlt}
                         fill
                         sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
                         className={imageClass}
@@ -323,7 +337,7 @@ export function PropertyCardGallery({
                   {isSlideNearby(idx) ? (
                     <Image
                       src={img.src}
-                      alt={name}
+                      alt={imageAlt}
                       fill
                       sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
                       className={imageClass}
@@ -342,9 +356,9 @@ export function PropertyCardGallery({
       {mounted && lightboxOpen
         ? createPortal(
             <ImageLightbox
-              images={imageList.map((img) => ({ url: img.src, alt: name }))}
+              images={imageList.map((img) => ({ url: img.src, alt: imageAlt }))}
               initialIndex={imageIndex}
-              alt={name}
+              alt={imageAlt}
               isOpen={lightboxOpen}
               onClose={closeLightbox}
               action={

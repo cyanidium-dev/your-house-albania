@@ -13,6 +13,8 @@ import { getClient } from './_core';
 import type { LocalizedSlug } from '@/lib/property/propertyUrl';
 import { fetchSeoPageDecisions } from './seoPages';
 import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
+import { canonicalPropertyImageUrl, propertyImageSeoName, withImageSeoName } from '@/lib/images/propertyImageUrl';
+import { SITEMAP_IMAGES_PER_URL } from '@/lib/seo/propertySitemap';
 
 function parseSitemapDate(raw: string | undefined): Date {
   if (raw) {
@@ -365,7 +367,23 @@ export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntr
   }
 }
 
-export type SitemapPropertyEntry = { slug: string; localizedSlug: LocalizedSlug; lastModified: Date };
+export type SitemapPropertyEntry = {
+  slug: string;
+  localizedSlug: LocalizedSlug;
+  lastModified: Date;
+  /** First photos of the gallery, under the one URL every other surface publishes. */
+  images: string[];
+};
+
+/** Gallery asset URLs → canonical named URLs, position preserved. */
+export function sitemapImageUrls(urls: Array<string | null> | undefined, seoName: string): string[] {
+  if (!Array.isArray(urls)) return [];
+  return urls
+    .map((url, idx) =>
+      typeof url === 'string' && url ? canonicalPropertyImageUrl(withImageSeoName(url, seoName, idx + 1)) : '',
+    )
+    .filter(Boolean);
+}
 
 export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntry[]> {
   const client = getClient();
@@ -373,10 +391,28 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
   const query = `*[_type == "property" && defined(slug.current) && ${PUBLISHED_PROPERTY_FILTER} && (!defined(seo.noIndex) || seo.noIndex != true)]{
     "slug": slug.current,
     localizedSlug,
-    _updatedAt
+    _updatedAt,
+    // Same order and the same filter as the listing page's gallery, so photo
+    // N here carries the file name photo N has there.
+    "images": gallery[defined(asset)][0...${SITEMAP_IMAGES_PER_URL}].asset->url,
+    bedrooms,
+    "typeSlug": type->slug.current,
+    "districtSlug": district->slug.current,
+    "citySlug": city->slug.current
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; localizedSlug?: LocalizedSlug; _updatedAt?: string }>>(query);
+    const rows = await client.fetch<
+      Array<{
+        slug?: string;
+        localizedSlug?: LocalizedSlug;
+        _updatedAt?: string;
+        images?: Array<string | null>;
+        bedrooms?: number;
+        typeSlug?: string;
+        districtSlug?: string;
+        citySlug?: string;
+      }>
+    >(query);
     if (!Array.isArray(rows)) return [];
     const out: SitemapPropertyEntry[] = [];
     for (const row of rows) {
@@ -386,6 +422,7 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
         slug,
         localizedSlug: row.localizedSlug ?? null,
         lastModified: parseSitemapDate(row._updatedAt),
+        images: sitemapImageUrls(row.images, propertyImageSeoName(row)),
       });
     }
     return out;

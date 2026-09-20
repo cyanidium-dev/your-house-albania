@@ -13,7 +13,7 @@ import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
+import { isIndexingEnabled, indexingDisabledRobots, indexableRobots } from "@/lib/seo/envSeo";
 import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
@@ -57,7 +57,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     (catalogSeo?.noIndex ?? false) ||
     (agentDoc ? !agentDoc.isPublished : false)
       ? { index: false as const, follow: true as const }
-      : undefined;
+      : indexableRobots;
   // The agent's own portrait on the card, falling back to the drawn default.
   // Before this these pages had no `og:image` and no `og:url` at all — 48 URLs
   // sharing a blank link preview.

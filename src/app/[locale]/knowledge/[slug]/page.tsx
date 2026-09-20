@@ -11,7 +11,7 @@ import KnowledgeTable, { assignRowAnchors } from '@/components/knowledge/Knowled
 import { fetchKnowledgeArticle, fetchKnowledgeSlugs } from '@/lib/sanity/queries/knowledge'
 import { getBaseUrl } from '@/lib/seo/baseUrl'
 import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
-import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
+import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from '@/lib/seo/envSeo'
 import { toBreadcrumbJsonLdItems } from '@/lib/routes/breadcrumbs'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: article.title,
     description: article.summary?.slice(0, 300),
     pathAfterLocale: `knowledge/${slug}`,
-    robots: isIndexingEnabled() ? undefined : indexingDisabledRobots,
+    robots: isIndexingEnabled() ? indexableRobots : indexingDisabledRobots,
   })
 }
 

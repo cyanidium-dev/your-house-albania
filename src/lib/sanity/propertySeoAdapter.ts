@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { buildHreflangAlternatesPerLocale } from '@/lib/seo/hreflang';
 import { propertyPath as propertyPathFor, type LocalizedSlug } from '@/lib/property/propertyUrl';
-import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo';
+import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from '@/lib/seo/envSeo';
 import type { LocalizedField } from './socialMetadataResolution';
 import {
   buildMetadata,
@@ -122,6 +122,6 @@ export function buildPropertyMetadata(
     twitterCard: ogImageAbsolute ? 'summary_large_image' : 'summary',
     canonical: canonicalFallback,
     hreflangLanguages: hreflang?.languages,
-    robots: noIndex ? { index: false, follow: true } : undefined,
+    robots: noIndex ? { index: false, follow: true } : indexableRobots,
   });
 }

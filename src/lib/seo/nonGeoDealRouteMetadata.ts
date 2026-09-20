@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server";
 import { fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
-import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
+import { isIndexingEnabled, indexingDisabledRobots, indexableRobots } from "@/lib/seo/envSeo";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import {
   listingUrlHasQueryParams,
@@ -85,7 +85,7 @@ export async function generateNonGeoDealRouteMetadata(input: {
   const robots =
     hasQuery || seoNo || thinType || hiddenDeal
       ? { index: false as const, follow: true as const }
-      : undefined;
+      : indexableRobots;
 
   return {
     title: listingTitleField(title),

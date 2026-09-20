@@ -57,7 +57,9 @@ export function BlogCardClient({
           {coverImageUrl ? (
             <Image
               src={coverImageUrl}
-              alt={t("imageAlt")}
+              // The post's own title, in the page locale — every card used to
+              // say "Blog post image".
+              alt={title || t("imageAlt")}
               className="object-cover w-full h-full will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.05]"
               width={190}
               height={163}
