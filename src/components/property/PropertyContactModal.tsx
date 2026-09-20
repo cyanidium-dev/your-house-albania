@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useTranslations } from 'next-intl'
 import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'
 import type { LeadPlacement } from '@/lib/leads/types'
+import { useContactModalFlag } from '@/lib/contacts/useContactModalFlag'
 
 type Props = {
   locale: string
@@ -14,6 +15,8 @@ type Props = {
   agentName: string | null
   /** Localized button label (rendered server-side). */
   label: string
+  /** Full accessible name when `label` is a shortened one (the phone contact bar). */
+  ariaLabel?: string
   /** Button styling — the modal itself is fixed-position and unaffected. */
   className?: string
   /** Analytics: where the button is. Defaults to the property page. */
@@ -34,6 +37,7 @@ export function PropertyContactButton({
   agentSlug,
   agentName,
   label,
+  ariaLabel,
   className,
   placement = 'property',
   analytics,
@@ -53,6 +57,8 @@ export function PropertyContactButton({
   React.useEffect(() => setMounted(true), [])
   const [error, setError] = React.useState<string | null>(null)
   const [sent, setSent] = React.useState(false)
+
+  useContactModalFlag(open)
 
   const close = React.useCallback(() => {
     if (submitting) return
@@ -124,7 +130,7 @@ export function PropertyContactButton({
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className={className}>
+      <button type="button" onClick={() => setOpen(true)} aria-label={ariaLabel} className={className}>
         {label}
       </button>
 

@@ -33,6 +33,8 @@ import { getSiteBaseUrl } from '@/lib/siteUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
 import { PropertyContactButton } from '@/components/property/PropertyContactModal';
+import { MessengerButtons } from '@/components/contact/MessengerButtons';
+import { resolveMessengers } from '@/lib/contacts/messengers';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
@@ -265,6 +267,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const t = await getTranslations('Shared.propertyCard');
   const tPropertyDetail = await getTranslations('Shared.propertyDetail');
+  const tContactBar = await getTranslations('ContactBar');
+  const tQuickContact = await getTranslations('QuickContact');
   // A house is bought with its land, so the tile is always there on a house —
   // saying "not specified" beats leaving the buyer to wonder whether we forgot.
   const plotFact = showsPlotArea(propertyTypeSlug)
@@ -288,6 +292,18 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const dealTypeLabel = tPropertyDetail(dealTypeKey);
 
   const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string } | null }).agent ?? null;
+
+  // Platform messengers next to the inquiry form, Telegram first for ru/uk.
+  // The listing carries no lister contact of its own (the agent projection is
+  // name + slug), so these are always the platform's.
+  const messengers = resolveMessengers(
+    (siteSettings as { socialLinks?: { platform: string; url: string; channel?: string }[] } | null)?.socialLinks,
+    locale,
+  );
+  const messengerAriaLabels = {
+    whatsapp: tQuickContact('channel.whatsapp'),
+    telegram: tQuickContact('channel.telegram'),
+  };
 
   // Listing dimensions for analytics: the view event and every lead from this page.
   const propertyLeadAnalytics = {
@@ -407,6 +423,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             label={tPropertyDetail('getInTouch')}
                             className='mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-primary px-8 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark hover:cursor-pointer'
                           />
+                          <div data-lead-placement="property" data-property-slug={keySlug}>
+                            <MessengerButtons
+                              messengers={messengers}
+                              ariaLabels={messengerAriaLabels}
+                              className="mt-2 flex gap-2"
+                            />
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -504,6 +527,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               label={tPropertyDetail('getInTouch')}
                               className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'
                             />
+                            <div data-lead-placement="property" data-property-slug={keySlug}>
+                              <MessengerButtons
+                                messengers={messengers}
+                                ariaLabels={messengerAriaLabels}
+                                className="mt-3 flex gap-2"
+                              />
+                            </div>
                             <div className="absolute right-0 top-4 -z-[1]">
                                 <Image src="/images/properties/vector.svg" width={400} height={500} alt="vector" unoptimized={true} />
                             </div>
@@ -533,15 +563,23 @@ export default async function PropertyDetailsPage({ params }: Props) {
             </div>
             {/* Mobile-only sticky bottom bar: price + CTA. It reserves its own
                 room at the end of the document — see MobileStickyBar. */}
-            <MobileStickyBar>
-              <div className='flex items-center justify-between gap-4 px-5 py-4 bg-primary/50'
-                style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))' }}>
+            <MobileStickyBar placement="property" propertySlug={keySlug} label={tContactBar('barLabel')}>
+              <div className='flex items-center gap-2 px-4 py-3 bg-primary/50'
+                style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-dark dark:text-white text-xl font-semibold truncate">
+                  <h4 className="text-dark dark:text-white text-lg font-semibold leading-tight truncate">
                     <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                   </h4>
                   <p className="text-sm text-dark/50 dark:text-white/50 truncate">{dealTypeLabel}</p>
                 </div>
+                <MessengerButtons
+                  messengers={messengers}
+                  ariaLabels={messengerAriaLabels}
+                  variant="icon"
+                  className="flex shrink-0 gap-2 [&>a]:bg-white dark:[&>a]:bg-dark"
+                />
+                {/* Short label so the price keeps its room on a 360px screen; the
+                    accessible name says the whole thing. */}
                 <PropertyContactButton
                   locale={locale}
                   propertySlug={keySlug}
@@ -549,8 +587,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   agentSlug={propertyAgent?.slug ?? null}
                   agentName={propertyAgent?.name ?? null}
                   analytics={propertyLeadAnalytics}
-                  label={tPropertyDetail('getInTouch')}
-                  className="shrink-0 py-3 px-6 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
+                  label={tContactBar('ask')}
+                  ariaLabel={tContactBar('askProperty')}
+                  className="shrink-0 h-11 px-5 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
                 />
               </div>
             </MobileStickyBar>
