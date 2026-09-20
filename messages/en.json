@@ -51,7 +51,8 @@
       "cities": "Cities",
       "investment": "Investment property",
       "realtors": "For realtors",
-      "blog": "Blog"
+      "blog": "Blog",
+      "about": "About"
     },
     "cities": {
       "empty": "No cities to show."
@@ -306,7 +307,8 @@
     "navLabel": "Breadcrumb",
     "newBuilds": "New builds",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Use"
+    "terms": "Terms of Use",
+    "about": "About"
   },
   "Districts": {
     "hubTitle": "Districts of {city}",
@@ -886,5 +888,59 @@
     "askCta": "Ask the assistant",
     "related": "Related pages",
     "methodNote": "Figures are normalised to EUR at the Bank of Albania rate stated on each page. Asking prices are not transaction prices, and advertised rents are not achieved rents — every row says which it is."
+  },
+  "About": {
+    "metaTitle": "About Domlivo: the team and how the site works",
+    "metaDescription": "Who builds Domlivo, the property marketplace for Albania: the three founders, where the listings come from, how they are kept current and how to reach us.",
+    "h1": "About Domlivo",
+    "intro1": "Domlivo is a property marketplace for Albania. It lists apartments, houses, villas, land and commercial space for sale in Durrës, Tirana, Vlorë, Sarandë and along the coast, for buyers from abroad and for people who already live here.",
+    "intro2": "Listings come from owners and partner agencies. Every listing states its price and who is offering the property; you talk to them directly, and Domlivo adds no commission of its own. The site is available in seven languages: Albanian, English, Ukrainian, Russian, Italian, Polish and German.",
+    "research": {
+      "title": "Research, with sources",
+      "body": "Next to the listings we publish market research: buying guides, a blog and price pages for cities and districts. Figures come from a named source with a date, and where we have no data the page says so.",
+      "guides": "Guides",
+      "blog": "Blog",
+      "cities": "Cities"
+    },
+    "team": {
+      "title": "The team",
+      "intro": "Domlivo was started by three people. One sells property in Albania every day; the other two build websites for a living.",
+      "linksLabel": "Links",
+      "members": {
+        "fedir": {
+          "role": "Co-founder, analytics and development",
+          "bio": "Analyst and marketer. He builds the Domlivo platform and the market research published on it: the price pages, the guides and the data behind them. Tech lead and founder of the web studio Code-Site."
+        },
+        "viktor": {
+          "role": "Co-founder, Albanian property market expert",
+          "bio": "He lives in Albania and runs the agency Grinchenko Real Estate. Over the last few years he has sold more than 100 apartments here, and he helps buyers with documents, renting a property out and the questions that come up after a purchase. He founded a popular Telegram channel about Albania. His rule is to visit every flat in person and tell viewers the truth about it, the pluses and the minuses."
+        },
+        "diana": {
+          "role": "Co-founder, design and user experience",
+          "bio": "She is responsible for the design, packaging and user experience of Domlivo; the ideas that turn a visit into an enquiry are hers. Lead designer at Code-Site. Her view is that design has to sell, so she thinks about conversion before she thinks about grids and colours."
+        }
+      },
+      "links": {
+        "codeSite": "Code-Site",
+        "agency": "Grinchenko Real Estate",
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "codeSiteProfile": "Profile at Code-Site",
+        "telegram": "Telegram channel"
+      }
+    },
+    "listings": {
+      "title": "How listings get on Domlivo",
+      "intro": "We would rather describe what actually happens than promise more than we do.",
+      "item1": "Listings are added by property owners and by partner agencies and realtors who register on the site.",
+      "item2": "When an agency or a realtor lists a property, the listing names them next to the price.",
+      "item3": "The price is stated in the listing. When a property is sold or withdrawn, the listing leaves the catalogue.",
+      "item4": "Seen a listing that is out of date or wrong? Write to us and we will check it with whoever posted it."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "For questions about a property, a listing of your own or the site itself:",
+      "form": "Contact form"
+    }
   }
 }
