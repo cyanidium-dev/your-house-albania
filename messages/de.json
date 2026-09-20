@@ -354,7 +354,8 @@
       "median": "Medianpreis Wohnung",
       "medianSqm": "Median €/m²",
       "wholeCity": "Ganz {city}",
-      "note": "Domlivo-Angebote, stündlich aktualisiert"
+      "note": "Domlivo-Angebote, stündlich aktualisiert",
+      "versusMarket": "Die beiden Tabellen messen Verschiedenes, deshalb weichen die Zahlen ab: Die obere gibt veröffentlichte Marktstudien wieder, oft als Spanne; diese zeigt den Median der Angebotspreise der heute hier inserierten Wohnungen."
     }
   },
   "Calculators": {

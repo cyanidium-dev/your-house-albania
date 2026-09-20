@@ -354,7 +354,8 @@
       "median": "Prezzo mediano appartamento",
       "medianSqm": "Mediana €/m²",
       "wholeCity": "Tutta {city}",
-      "note": "Annunci Domlivo, aggiornati ogni ora"
+      "note": "Annunci Domlivo, aggiornati ogni ora",
+      "versusMarket": "Le due tabelle misurano cose diverse, perciò le cifre non coincidono: quella sopra riporta ricerche di mercato pubblicate, spesso come intervallo; questa è la mediana dei prezzi richiesti per gli appartamenti in vendita qui oggi."
     }
   },
   "Calculators": {

@@ -354,7 +354,8 @@
       "median": "Çmimi median i apartamentit",
       "medianSqm": "Mediana €/m²",
       "wholeCity": "Gjithë {city}",
-      "note": "Shpalljet e Domlivo, rifreskim çdo orë"
+      "note": "Shpalljet e Domlivo, rifreskim çdo orë",
+      "versusMarket": "Dy tabelat matin gjëra të ndryshme, prandaj shifrat ndryshojnë: ajo më sipër raporton studime të publikuara të tregut, shpesh si interval; kjo tregon medianën e çmimeve të apartamenteve të listuara këtu sot."
     }
   },
   "Calculators": {

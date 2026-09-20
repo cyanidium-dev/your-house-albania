@@ -4,6 +4,8 @@ import { PriceTableSection } from '@/components/landing/sections/PriceTableSecti
 import { fetchCityCountrySlugByCitySlug, fetchCityListingPriceIndex } from '@/lib/sanity/client'
 import { fetchCityNameForms } from '@/lib/sanity/queries/district'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
+import { getBaseUrl } from '@/lib/seo/baseUrl'
+import { buildListingPriceDatasetJsonLd } from '@/lib/seo/listingPriceDatasetJsonLd'
 
 /** A median of two flats is an anecdote, not a price. */
 const MIN_ROW_FLATS = 3
@@ -19,11 +21,12 @@ const loc = (value: string) => ({ en: value, uk: value, ru: value, sq: value, it
  * for these cities publishes either, and the second one cannot be copied.
  */
 export async function ListingPriceIndexSection({ locale, citySlug }: { locale: string; citySlug: string }) {
-  const [rows, country, name, t] = await Promise.all([
+  const [rows, country, name, t, baseUrl] = await Promise.all([
     fetchCityListingPriceIndex(citySlug),
     fetchCityCountrySlugByCitySlug(citySlug),
     fetchCityNameForms(citySlug, locale),
     getTranslations({ locale, namespace: 'ZoneMetrics.listingIndex' }),
+    getBaseUrl(),
   ])
   const [city, ...districts] = rows
   const shown = districts.filter((r) => r.flatCount >= MIN_ROW_FLATS)
@@ -38,12 +41,28 @@ export async function ListingPriceIndexSection({ locale, citySlug }: { locale: s
     loc(money(r.medianFlatPricePerSqm)),
   ]
 
+  // The page is regenerated at most hourly, so the day it was rendered is the
+  // day the figures were computed: a date a reader can quote.
+  const asOf = new Date().toISOString().slice(0, 10)
+  const dataset = buildListingPriceDatasetJsonLd({
+    baseUrl,
+    pageUrl: `/${locale}/${country}/${citySlug}/info`,
+    locale,
+    cityName: name.base,
+    listingCount: city.count,
+    districtNames: shown.map((r) => resolveLocalizedString(r.districtTitle as never, 'en') || r.districtSlug || '').filter(Boolean),
+    asOf,
+    minFlatsPerRow: MIN_ROW_FLATS,
+  })
+
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dataset).replace(/</g, '\\u003c') }} />
     <PriceTableSection
       locale={locale}
       section={{
         title: loc(t('title', { city: name.base })),
-        subtitle: loc(t('subtitle', { count: city.count, min: MIN_ROW_FLATS })),
+        subtitle: loc(`${t('subtitle', { count: city.count, min: MIN_ROW_FLATS })} ${t('versusMarket')}`),
         labelHeader: loc(t('district')),
         columns: [loc(t('listings')), loc(t('from')), loc(t('median')), loc(t('medianSqm'))],
         rows: [
@@ -56,7 +75,9 @@ export async function ListingPriceIndexSection({ locale, citySlug }: { locale: s
           { _key: 'city', label: loc(t('wholeCity', { city: name.base })), cells: cells(city), href: `/${country}/${citySlug}` },
         ],
         sourceNote: loc(t('note')),
+        lastUpdated: asOf,
       }}
     />
+    </>
   )
 }

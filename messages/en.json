@@ -354,7 +354,8 @@
       "median": "Median flat price",
       "medianSqm": "Median €/m²",
       "wholeCity": "All of {city}",
-      "note": "Domlivo listings, updated hourly"
+      "note": "Domlivo listings, updated hourly",
+      "versusMarket": "The two tables measure different things, so their figures differ: the one above reports published market research, often as a range; this one is the median asking price of the flats listed here today."
     }
   },
   "Calculators": {

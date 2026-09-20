@@ -354,7 +354,8 @@
       "median": "Mediana ceny mieszkania",
       "medianSqm": "Mediana €/m²",
       "wholeCity": "Całe miasto {city}",
-      "note": "Oferty Domlivo, aktualizacja co godzinę"
+      "note": "Oferty Domlivo, aktualizacja co godzinę",
+      "versusMarket": "Obie tabele mierzą co innego, dlatego liczby się różnią: ta wyżej podaje opublikowane badania rynku, często jako przedział; ta pokazuje medianę cen ofertowych mieszkań wystawionych u nas dzisiaj."
     }
   },
   "Calculators": {
