@@ -6,10 +6,10 @@ import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb";
 import { Icon } from "@/components/shared/Icon";
 import { TEAM_MEMBERS, teamMemberId, type TeamMemberLink } from "@/lib/about/team";
 import {
-  BUSINESS_EMAIL,
   BUSINESS_TELEGRAM_URL,
   BUSINESS_WHATSAPP_URL,
 } from "@/lib/contacts/businessContacts";
+import { BUSINESS_EMAIL } from "@/lib/contacts/businessEmail";
 import { buildAboutJsonLd } from "@/lib/seo/aboutJsonLd";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { getSiteBaseUrl } from "@/lib/siteUrl";

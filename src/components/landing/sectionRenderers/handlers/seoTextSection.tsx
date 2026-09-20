@@ -10,6 +10,8 @@ export const seoTextSectionHandler: SectionHandler = ({ locale, section }) => {
     content?: unknown
     body?: unknown
     title?: unknown
+    /** Not a CMS field: set in code for pages whose only heading is this one. */
+    headingLevel?: unknown
     videoUrl?: unknown
     cta?: { href?: string; label?: unknown }
     category?: unknown
@@ -88,6 +90,7 @@ export const seoTextSectionHandler: SectionHandler = ({ locale, section }) => {
       locale={locale}
       seoTextData={seoTextData}
       heading={heading}
+      headingAs={s.headingLevel === 1 ? 'h1' : undefined}
       videoUrl={videoUrl}
       cta={cta}
       category={category}

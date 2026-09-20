@@ -942,5 +942,8 @@
       "body": "W sprawie nieruchomości, własnego ogłoszenia albo samego serwisu:",
       "form": "Formularz kontaktowy"
     }
+  },
+  "Legal": {
+    "operatorNotice": "Serwis prowadzi zespół Domlivo. Możesz napisać do nas na {email}, przez {whatsapp} lub {telegram}."
   }
 }

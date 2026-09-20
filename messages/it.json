@@ -942,5 +942,8 @@
       "body": "Per domande su un immobile, su un tuo annuncio o sul sito:",
       "form": "Modulo di contatto"
     }
+  },
+  "Legal": {
+    "operatorNotice": "Questo sito è gestito dal team di Domlivo. Puoi scriverci a {email}, su {whatsapp} o su {telegram}."
   }
 }

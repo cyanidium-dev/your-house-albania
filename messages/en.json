@@ -942,5 +942,8 @@
       "body": "For questions about a property, a listing of your own or the site itself:",
       "form": "Contact form"
     }
+  },
+  "Legal": {
+    "operatorNotice": "This site is operated by the Domlivo team. You can reach us at {email}, on {whatsapp} or on {telegram}."
   }
 }

@@ -942,5 +942,8 @@
       "body": "Bei Fragen zu einer Immobilie, zu einem eigenen Inserat oder zur Website:",
       "form": "Kontaktformular"
     }
+  },
+  "Legal": {
+    "operatorNotice": "Diese Website wird vom Domlivo-Team betrieben. Sie erreichen uns unter {email}, über {whatsapp} oder über {telegram}."
   }
 }

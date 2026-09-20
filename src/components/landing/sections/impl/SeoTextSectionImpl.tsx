@@ -282,6 +282,11 @@ const SeoText: React.FC<{
   locale: string;
   seoTextData?: SeoTextData;
   heading?: string;
+  /**
+   * `h1` on pages that open with this section and have no hero — the legal
+   * pages, which otherwise rendered no `<h1>` at all. Default `h2`.
+   */
+  headingAs?: 'h1' | 'h2';
   videoUrl?: string;
   cta?: { href: string; label: string };
   category?: string;
@@ -296,6 +301,7 @@ const SeoText: React.FC<{
   locale,
   seoTextData,
   heading,
+  headingAs,
   videoUrl,
   cta,
   category,
@@ -307,6 +313,7 @@ const SeoText: React.FC<{
   imageAlt,
 }) => {
   const t = await getTranslations('Shared.seoText');
+  const HeadingTag = headingAs === 'h1' ? 'h1' : 'h2';
   const content = seoTextData?.content;
   const isPlainText = seoTextData?.isPlainText ?? false;
 
@@ -378,9 +385,9 @@ const SeoText: React.FC<{
         ) : null}
 
         {heading ? (
-          <h2 className="mt-5 text-3xl sm:text-4xl lg:text-[44px] xl:text-[56px] font-medium leading-[1.04] tracking-tight text-dark dark:text-white">
+          <HeadingTag className="mt-5 text-3xl sm:text-4xl lg:text-[44px] xl:text-[56px] font-medium leading-[1.04] tracking-tight text-dark dark:text-white">
             {heading}
-          </h2>
+          </HeadingTag>
         ) : null}
 
         {/* Author byline */}

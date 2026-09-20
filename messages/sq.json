@@ -942,5 +942,8 @@
       "body": "Për pyetje rreth një prone, njoftimit tuaj ose vetë faqes:",
       "form": "Formulari i kontaktit"
     }
+  },
+  "Legal": {
+    "operatorNotice": "Kjo faqe administrohet nga ekipi i Domlivo. Mund të na shkruani në {email}, në {whatsapp} ose në {telegram}."
   }
 }
