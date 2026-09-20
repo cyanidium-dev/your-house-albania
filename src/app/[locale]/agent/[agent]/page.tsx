@@ -121,6 +121,7 @@ export default async function AgentCatalogPage({ params, searchParams }: Props) 
         locale={locale}
         pathAgentSlug={parsed.agentSlug}
         searchParams={search}
+        urlSearch={search}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />
     </>

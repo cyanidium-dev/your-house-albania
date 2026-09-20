@@ -45,6 +45,7 @@ async function PropertiesListing({
   /** When the listing URL omits a country segment (`/{locale}/{city}/…`); do not inject CMS country into canonical URLs. */
   omitCountryInPath = false,
   searchParams,
+  urlSearch,
   catalogSeo,
 }: {
   locale: string
@@ -54,6 +55,13 @@ async function PropertiesListing({
   pathCountrySlug?: string
   omitCountryInPath?: boolean
   searchParams: SearchParams
+  /**
+   * The query exactly as it stands in the URL — `searchParams` above may also
+   * carry what the path says (city, type, facet). Pagination links are built
+   * from it on the server; omitted, they start from an empty query and the
+   * browser's own takes over after hydration.
+   */
+  urlSearch?: SearchParams
   catalogSeo?: CatalogSeoContent
 }) {
   const [filterOptions, siteSettings, areaBoundsFromData] = await Promise.all([
@@ -241,6 +249,12 @@ async function PropertiesListing({
       .map(([k, v]) => [k, String(v)]),
   ).toString()
 
+  const serverSearch = new URLSearchParams(
+    Object.entries(urlSearch ?? {}).flatMap(([k, v]) =>
+      typeof v === 'string' ? [[k, v]] : Array.isArray(v) ? v.map((item) => [k, item]) : [],
+    ),
+  ).toString()
+
   const baseUrl = await getBaseUrl()
   const itemListEntries = pageItems.map((item) => ({
     name: item.name,
@@ -292,6 +306,7 @@ async function PropertiesListing({
             totalCount={totalItems}
             pageSize={pageSize}
             loadMoreQuery={loadMoreQuery}
+            serverSearch={serverSearch}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (

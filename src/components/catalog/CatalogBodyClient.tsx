@@ -69,6 +69,8 @@ export type CatalogBodyClientProps = {
   loadMoreQuery: string;
   totalCount: number;
   pageSize: number;
+  /** The URL's own query string as the server saw it (no `?`); empty on a cached page. */
+  serverSearch?: string;
 };
 
 type LayoutTier = "mobile" | "md" | "xl";
@@ -165,6 +167,7 @@ export function CatalogBodyClient({
   totalCount,
   pageSize,
   loadMoreQuery,
+  serverSearch = "",
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
   const { formatFromEur } = useCurrency();
@@ -562,6 +565,7 @@ export function CatalogBodyClient({
                 from={(currentPage - 1) * pageSize + 1}
                 to={Math.min(totalCount, (currentPage - 1) * pageSize + allItems.length)}
                 total={totalCount}
+                serverSearch={serverSearch}
               />
             )}
           </>
