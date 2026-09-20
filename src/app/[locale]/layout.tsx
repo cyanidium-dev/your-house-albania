@@ -24,6 +24,9 @@ import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
 import { LeadTracker } from "@/components/analytics/LeadTracker";
+import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
+import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
+import { BUSINESS_TELEGRAM_URL, BUSINESS_WHATSAPP_URL } from "@/lib/contacts/businessContacts";
 // Hidden 2026-09-02 together with its mount below.
 // import { QuickContact } from "@/components/shared/QuickContact/QuickContact";
 
@@ -145,6 +148,21 @@ export default async function LocaleLayout({ children, params }: Props) {
     });
   }
 
+  // Organization + WebSite, once per page and the same on every page. It used
+  // to be emitted by the home page alone, so an Article's publisher, a
+  // founder's `worksFor` or an assistant reading a listing had no entity to
+  // resolve: the node they point at by `@id` now travels with every URL.
+  const siteBaseUrl = getSiteBaseUrl().replace(/\/$/, "");
+  const orgSettings = rawSiteSettings as {
+    contactEmail?: string;
+    contactPhone?: string;
+    logo?: { asset?: { url?: string } };
+    socialLinks?: { url?: string }[];
+  } | null;
+  const orgSameAs = (orgSettings?.socialLinks ?? [])
+    .map((s) => s?.url?.trim())
+    .filter((u): u is string => Boolean(u));
+
   // Privacy-policy link for the consent banner: prefer a CMS policy row whose
   // label suggests privacy, else the first configured policy link.
   const policyHref =
@@ -190,6 +208,25 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             {/* End Microsoft Clarity */}
           </>
         )}
+        <SiteJsonLd
+          baseUrl={siteBaseUrl}
+          brandName={SITE_NAME}
+          legalName="Domlivo — Real estate in Albania"
+          logoUrl={orgSettings?.logo?.asset?.url || undefined}
+          sameAs={orgSameAs}
+          email={orgSettings?.contactEmail}
+          telephone={orgSettings?.contactPhone}
+          messengers={[
+            { name: "WhatsApp", url: BUSINESS_WHATSAPP_URL },
+            { name: "Telegram", url: BUSINESS_TELEGRAM_URL },
+          ]}
+          languages={routing.locales}
+          founders={TEAM_MEMBERS.map((m) => ({
+            id: teamMemberId(siteBaseUrl, m.slug),
+            name: m.name,
+          }))}
+          searchUrlTemplate={`/${locale}/catalog?q={search_term_string}`}
+        />
         <NextTopLoader color="#078660" />
         <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
           <NextIntlClientProvider messages={messages}>

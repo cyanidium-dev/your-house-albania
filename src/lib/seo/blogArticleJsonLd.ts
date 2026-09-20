@@ -1,7 +1,9 @@
 /**
- * Builds Article, Author (Person), and Organization JSON-LD for blog detail pages.
- * Follows schema.org Article spec.
+ * Builds Article JSON-LD for blog detail pages: the article, its author and a
+ * reference to the site's one Organization node as publisher.
  */
+import { organizationId } from "./siteJsonLd";
+import { isEditorialTeamAuthor } from "./editorialAuthor";
 
 export type BlogArticleJsonLdInput = {
   headline: string;
@@ -12,8 +14,8 @@ export type BlogArticleJsonLdInput = {
   authorName: string;
   authorImageUrl?: string;
   publisherName: string;
+  /** Absolute site origin; also resolves relative image URLs and the `@id`. */
   publisherUrl: string;
-  publisherLogoUrl?: string;
   /** From the document's _updatedAt. Falls back to datePublished. */
   dateModified?: string;
   /** Slug of the linked blogAuthor. Absent for the legacy inline authors,
@@ -44,7 +46,6 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
     authorImageUrl,
     publisherName,
     publisherUrl,
-    publisherLogoUrl,
     dateModified,
     authorSlug,
     locale,
@@ -55,8 +56,12 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
     ? toAbsoluteUrl(imageUrl, baseUrl)
     : undefined;
 
+  // "Domlivo Editorial" is a byline for the team, not a human being. Typing it
+  // as Person claimed an individual who does not exist; it is a department of
+  // the organisation, and the people behind it are named on /about.
+  const isTeamByline = isEditorialTeamAuthor({ name: authorName, slug: authorSlug });
   const author: Record<string, unknown> = {
-    "@type": "Person",
+    "@type": isTeamByline ? "Organization" : "Person",
     name: authorName || "Unknown",
   };
   if (authorImageUrl) {
@@ -65,24 +70,21 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
   }
   // Only a post with a blogAuthor reference has an author page to point at.
   // The 12 posts still on the legacy inline fields keep a bare Person node.
-  if (authorSlug && locale) {
+  if (isTeamByline) {
+    author.parentOrganization = { "@id": organizationId(baseUrl) };
+    if (locale) author.url = `${baseUrl}/${locale}/about`;
+  } else if (authorSlug && locale) {
     author.url = `${baseUrl}/${locale}/blog/author/${authorSlug}`;
   }
 
+  // Not a second Organization: a pointer at the node the layout emits on this
+  // same page (logo, contact points and founders live there). The name stays
+  // for consumers that read `publisher.name` without resolving the `@id`.
   const publisher: Record<string, unknown> = {
     "@type": "Organization",
-    name: publisherName || "Site",
-    url: publisherUrl,
+    "@id": organizationId(baseUrl),
+    name: publisherName || "Domlivo",
   };
-  if (publisherLogoUrl) {
-    const abs = toAbsoluteUrl(publisherLogoUrl, baseUrl);
-    if (abs) {
-      publisher.logo = {
-        "@type": "ImageObject",
-        url: abs,
-      };
-    }
-  }
 
   const article: Record<string, unknown> = {
     "@context": "https://schema.org",

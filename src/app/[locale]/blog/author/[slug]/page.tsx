@@ -6,6 +6,8 @@ import { fetchBlogAuthorBySlug } from "@/lib/sanity/queries/blog";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
 import { PersonJsonLd } from "@/lib/seo/personJsonLd";
+import { isEditorialTeamAuthor } from "@/lib/seo/editorialAuthor";
+import { organizationId } from "@/lib/seo/siteJsonLd";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
@@ -119,6 +121,9 @@ export default async function BlogAuthorPage({ params }: Props) {
         imageUrl={photoUrl}
         jobTitle={role || undefined}
         description={bio || undefined}
+        {...(isEditorialTeamAuthor({ name: author.name, slug: author.slug ?? slug })
+          ? { entityType: "Organization" as const, organizationId: organizationId(baseUrl) }
+          : {})}
         sameAs={(author.socialLinks ?? [])
           .map((s) => s?.url)
           .filter((u): u is string => typeof u === "string" && u.trim().length > 0)}

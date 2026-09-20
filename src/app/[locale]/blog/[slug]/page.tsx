@@ -210,11 +210,10 @@ export default async function Post({ params }: Props) {
     finalRelatedPosts = manualRelated.slice(0, relatedCount);
   }
 
-  const rawSite = siteSettings as { siteName?: unknown; logo?: { asset?: { url?: string } } } | null;
+  const rawSite = siteSettings as { siteName?: unknown } | null;
   const siteName = rawSite?.siteName
     ? (resolveLocalizedString(rawSite.siteName as never, locale) || (typeof rawSite.siteName === "string" ? rawSite.siteName : "") || "Site")
     : "Site";
-  const siteLogoUrl = rawSite?.logo?.asset?.url ?? undefined;
 
   const readingTime = computeReadingTime(detail.contentBlocks);
   const t = await getTranslations("Shared");
@@ -319,7 +318,6 @@ export default async function Post({ params }: Props) {
         baseUrl={baseUrl}
         locale={locale}
         siteName={siteName}
-        siteLogoUrl={siteLogoUrl}
       />
       <section className="relative !pt-24 md:!pt-28 pb-0!">
         <div className="container max-w-8xl mx-auto md:px-0 px-4">

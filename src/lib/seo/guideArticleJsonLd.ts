@@ -7,11 +7,13 @@
  * they are, who stands behind them, or how fresh they are. Blog posts have had
  * that since `blogArticleJsonLd`; this closes the same gap for guides.
  *
- * `author` is an Organization on purpose. `landingPage` has no author field,
+ * `author` is the Organization on purpose. `landingPage` has no author field,
  * and inventing a named expert is exactly the fabrication CONTENT-OPS.md
  * forbids — these pages are written by the company, so the company is the
  * author. Swap in a Person once the schema carries one.
  */
+
+import { organizationId } from "./siteJsonLd";
 
 export type GuideArticleJsonLdInput = {
   headline: string;
@@ -26,7 +28,6 @@ export type GuideArticleJsonLdInput = {
   publisherName: string;
   /** Absolute site origin; also used to resolve relative image URLs. */
   publisherUrl: string;
-  publisherLogoUrl?: string;
   /** BCP-47-ish locale code, emitted as `inLanguage`. */
   locale?: string;
 };
@@ -69,7 +70,6 @@ export function buildGuideArticleJsonLd(
     documentUpdatedAt,
     publisherName,
     publisherUrl,
-    publisherLogoUrl,
     locale,
   } = input;
 
@@ -82,17 +82,14 @@ export function buildGuideArticleJsonLd(
 
   const baseUrl = publisherUrl.replace(/\/$/, "");
 
-  const publisher: Record<string, unknown> = {
+  // Author and publisher are the same entity, and it is the one the layout
+  // emits on this page — so both point at its `@id` instead of declaring two
+  // more anonymous Organizations that a parser would have to guess are one.
+  const organization = {
     "@type": "Organization",
+    "@id": organizationId(baseUrl),
     name: publisherName || "Domlivo",
-    url: publisherUrl,
   };
-  if (publisherLogoUrl) {
-    const abs = toAbsoluteUrl(publisherLogoUrl, baseUrl);
-    if (abs) {
-      publisher.logo = { "@type": "ImageObject", url: abs };
-    }
-  }
 
   const article: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -103,8 +100,8 @@ export function buildGuideArticleJsonLd(
     // `_updatedAt` moves on any field change, including unrelated ones.
     datePublished: editorDate ?? systemDate,
     dateModified: systemDate ?? editorDate,
-    author: { "@type": "Organization", name: publisherName || "Domlivo", url: publisherUrl },
-    publisher,
+    author: organization,
+    publisher: organization,
   };
 
   if (description && description.trim()) {

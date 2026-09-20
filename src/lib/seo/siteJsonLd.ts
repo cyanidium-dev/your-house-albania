@@ -1,34 +1,51 @@
 /**
- * Build site-level JSON-LD: WebSite (with SearchAction for Google Sitelinks
- * searchbox) + Organization (for Knowledge Panel). Emit both as a single
- * @graph payload — Google reads it the same as two separate script tags but
- * stays cheaper to render.
+ * Site-level JSON-LD: one Organization and one WebSite, emitted from the locale
+ * layout on every page as a single @graph.
+ *
+ * Both nodes are identical in every locale and on every URL. Their `@id`s are
+ * what the rest of the structured data points at — Article `publisher`, the
+ * founders' `worksFor`, the About page's `about` — so a crawler that meets the
+ * entity on a blog post in Polish and on a listing in Albanian is looking at
+ * the same node, not at seven near-copies that disagree about `url`.
  */
 
 export type SiteJsonLdInput = {
   baseUrl: string;
-  locale: string;
   /** Brand name displayed everywhere (Organization.name, WebSite.name). */
   brandName?: string;
-  /** Public-facing legal name / longer description for Organization. */
+  /** Public-facing longer name for Organization. */
   legalName?: string;
-  /** Absolute URL to the brand logo (square, ≥112×112). */
+  /** Absolute URL to the brand logo. */
   logoUrl?: string;
   /** Social profile / sameAs links. Optional, helps disambiguate the entity. */
   sameAs?: string[];
-  /** Catalog URL template that the searchbox should hit, e.g. "/catalog?q={search_term_string}". */
+  /**
+   * Catalog URL template the SearchAction should hit, after the origin. The one
+   * value that may differ by locale (`/{locale}/catalog?q=…`), so a search
+   * lands in the visitor's language instead of on a locale redirect.
+   */
   searchUrlTemplate?: string;
-  /** Contact email / phone shown in Organization.contactPoint. */
-  contactPoint?: {
-    email?: string;
-    telephone?: string;
-    contactType?: string;
-  };
+  /** Contact email, from the CMS. */
+  email?: string;
+  /** Contact phone, from the CMS. Dropped when it is the seeded placeholder. */
+  telephone?: string;
+  /** Messenger entry points, emitted as `contactPoint.url`. */
+  messengers?: Array<{ name: string; url: string }>;
+  /** Locale codes the site is published in → `knowsLanguage` / `inLanguage`. */
+  languages?: readonly string[];
+  /** The founders, by stable Person `@id`. */
+  founders?: Array<{ id: string; name: string }>;
 };
 
 const DEFAULT_BRAND = 'Domlivo';
 const DEFAULT_LEGAL = 'Domlivo — Real estate in Albania';
 const DEFAULT_SEARCH_TEMPLATE = '/catalog?q={search_term_string}';
+
+/**
+ * The phone number the CMS was seeded with. It reaches nobody, so publishing it
+ * as the organisation's `telephone` would be a false contact detail.
+ */
+const PLACEHOLDER_PHONE_DIGITS = '355690000000';
 
 function abs(baseUrl: string, path: string): string {
   const base = baseUrl.replace(/\/$/, '');
@@ -37,59 +54,100 @@ function abs(baseUrl: string, path: string): string {
   return path.startsWith('/') ? `${base}${path}` : `${base}/${path}`;
 }
 
-export function buildSiteJsonLd(input: SiteJsonLdInput): object {
-  const {
-    baseUrl,
-    locale,
-    brandName = DEFAULT_BRAND,
-    legalName = DEFAULT_LEGAL,
-    logoUrl,
-    sameAs,
-    searchUrlTemplate = DEFAULT_SEARCH_TEMPLATE,
-    contactPoint,
-  } = input;
+/** `@id` of the one Organization node. Same value in every locale. */
+export function organizationId(baseUrl: string): string {
+  return `${abs(baseUrl, '/')}#organization`;
+}
 
-  const homeUrl = abs(baseUrl, `/${locale}`);
-  const orgId = `${abs(baseUrl, '/')}#organization`;
-  const websiteId = `${abs(baseUrl, '/')}#website`;
+/** `@id` of the one WebSite node. Same value in every locale. */
+export function websiteId(baseUrl: string): string {
+  return `${abs(baseUrl, '/')}#website`;
+}
 
-  const organization: Record<string, unknown> = {
+/** A real, publishable phone number — or undefined. */
+export function publishablePhone(raw: string | null | undefined): string | undefined {
+  const phone = typeof raw === 'string' ? raw.trim() : '';
+  if (!phone) return undefined;
+  const digits = phone.replace(/\D/g, '');
+  if (!digits || digits === PLACEHOLDER_PHONE_DIGITS) return undefined;
+  return phone;
+}
+
+function cleanList(values: readonly string[] | undefined): string[] {
+  return (values ?? []).map((v) => (typeof v === 'string' ? v.trim() : '')).filter(Boolean);
+}
+
+export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, unknown> {
+  const { baseUrl, brandName = DEFAULT_BRAND, legalName = DEFAULT_LEGAL, logoUrl } = input;
+  const email = input.email?.trim() || undefined;
+  const telephone = publishablePhone(input.telephone);
+  const languages = cleanList(input.languages);
+  const sameAs = cleanList(input.sameAs);
+  const messengers = (input.messengers ?? []).filter((m) => m?.url?.trim());
+  const founders = (input.founders ?? []).filter((f) => f?.id && f?.name);
+
+  const contactPoints: Record<string, unknown>[] = [];
+  if (email || telephone) {
+    contactPoints.push({
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      ...(email ? { email } : {}),
+      ...(telephone ? { telephone } : {}),
+      ...(languages.length > 0 ? { availableLanguage: languages } : {}),
+    });
+  }
+  for (const messenger of messengers) {
+    contactPoints.push({
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      name: messenger.name,
+      url: messenger.url.trim(),
+    });
+  }
+
+  return {
     '@type': 'Organization',
-    '@id': orgId,
+    '@id': organizationId(baseUrl),
     name: brandName,
     legalName,
     url: abs(baseUrl, '/'),
     ...(logoUrl ? { logo: { '@type': 'ImageObject', url: abs(baseUrl, logoUrl) } } : {}),
-    ...(Array.isArray(sameAs) && sameAs.length > 0 ? { sameAs } : {}),
+    ...(email ? { email } : {}),
+    ...(telephone ? { telephone } : {}),
+    areaServed: { '@type': 'Country', name: 'Albania' },
+    ...(languages.length > 0 ? { knowsLanguage: languages } : {}),
+    ...(founders.length > 0
+      ? { founder: founders.map((f) => ({ '@type': 'Person', '@id': f.id, name: f.name })) }
+      : {}),
+    ...(contactPoints.length > 0 ? { contactPoint: contactPoints } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   };
-  if (contactPoint && (contactPoint.email || contactPoint.telephone)) {
-    organization.contactPoint = {
-      '@type': 'ContactPoint',
-      contactType: contactPoint.contactType || 'customer support',
-      ...(contactPoint.email ? { email: contactPoint.email } : {}),
-      ...(contactPoint.telephone ? { telephone: contactPoint.telephone } : {}),
-    };
-  }
+}
 
-  const website: Record<string, unknown> = {
+export function buildWebSiteNode(input: SiteJsonLdInput): Record<string, unknown> {
+  const { baseUrl, brandName = DEFAULT_BRAND, searchUrlTemplate = DEFAULT_SEARCH_TEMPLATE } = input;
+  const languages = cleanList(input.languages);
+  return {
     '@type': 'WebSite',
-    '@id': websiteId,
+    '@id': websiteId(baseUrl),
     name: brandName,
-    url: homeUrl,
-    inLanguage: locale,
-    publisher: { '@id': orgId },
+    url: abs(baseUrl, '/'),
+    ...(languages.length > 0 ? { inLanguage: languages } : {}),
+    publisher: { '@id': organizationId(baseUrl) },
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: abs(baseUrl, `/${locale}${searchUrlTemplate}`),
+        urlTemplate: abs(baseUrl, searchUrlTemplate),
       },
       'query-input': 'required name=search_term_string',
     },
   };
+}
 
+export function buildSiteJsonLd(input: SiteJsonLdInput): object {
   return {
     '@context': 'https://schema.org',
-    '@graph': [organization, website],
+    '@graph': [buildOrganizationNode(input), buildWebSiteNode(input)],
   };
 }

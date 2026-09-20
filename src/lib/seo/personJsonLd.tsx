@@ -13,18 +13,30 @@ export type PersonJsonLdInput = {
   jobTitle?: string;
   sameAs?: string[];
   description?: string;
+  /**
+   * `Organization` for a byline that stands for the team ("Domlivo
+   * Editorial"): the author page still exists, but it must not claim a human.
+   */
+  entityType?: "Person" | "Organization";
+  /** `@id` of the employer (Person) or parent (Organization) node. */
+  organizationId?: string;
 };
 
 export function buildPersonJsonLd(input: PersonJsonLdInput): object {
-  const { name, url, imageUrl, jobTitle, sameAs, description } = input;
+  const { name, url, imageUrl, jobTitle, sameAs, description, organizationId } = input;
+  const isOrganization = input.entityType === "Organization";
   const person: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "Person",
+    "@type": isOrganization ? "Organization" : "Person",
     name: name || "Author",
     url,
   };
-  if (imageUrl) person.image = imageUrl;
-  if (jobTitle && jobTitle.trim()) person.jobTitle = jobTitle.trim();
+  if (imageUrl) person[isOrganization ? "logo" : "image"] = imageUrl;
+  // `jobTitle` is a Person property; an Organization has none.
+  if (!isOrganization && jobTitle && jobTitle.trim()) person.jobTitle = jobTitle.trim();
+  if (organizationId) {
+    person[isOrganization ? "parentOrganization" : "worksFor"] = { "@id": organizationId };
+  }
   if (description && description.trim()) person.description = description.trim();
   const links = (sameAs ?? []).filter((s) => typeof s === "string" && s.trim());
   if (links.length > 0) person.sameAs = links;

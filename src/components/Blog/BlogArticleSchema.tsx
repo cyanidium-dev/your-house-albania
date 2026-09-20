@@ -6,7 +6,6 @@ type Props = {
   baseUrl: string;
   locale: string;
   siteName: string;
-  siteLogoUrl?: string;
 };
 
 export function BlogArticleSchema({
@@ -14,7 +13,6 @@ export function BlogArticleSchema({
   baseUrl,
   locale,
   siteName,
-  siteLogoUrl,
 }: Props) {
   const base = baseUrl.replace(/\/$/, "");
   const articleUrl = base ? `${base}/${locale}/blog/${detail.slug}` : `/${locale}/blog/${detail.slug}`;
@@ -35,7 +33,6 @@ export function BlogArticleSchema({
     authorImageUrl: detail.authorImageUrl || undefined,
     publisherName: siteName || "Site",
     publisherUrl,
-    publisherLogoUrl: siteLogoUrl,
     dateModified:
       detail.updatedAt && !Number.isNaN(new Date(detail.updatedAt).getTime())
         ? new Date(detail.updatedAt).toISOString()

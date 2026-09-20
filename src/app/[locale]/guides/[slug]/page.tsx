@@ -120,9 +120,7 @@ export default async function GuideLandingPage({ params }: Props) {
   // stands behind them and when they were last reviewed. FAQPage already comes
   // from LandingRenderer — this adds Article next to it, never a second FAQ.
   const siteSettings = await fetchSiteSettings();
-  const rawSite = siteSettings as
-    | { siteName?: unknown; logo?: { asset?: { url?: string } } }
-    | null;
+  const rawSite = siteSettings as { siteName?: unknown } | null;
   const siteName =
     resolveLocalizedString(rawSite?.siteName as never, locale) ||
     (typeof rawSite?.siteName === "string" ? rawSite.siteName : "") ||
@@ -138,7 +136,6 @@ export default async function GuideLandingPage({ params }: Props) {
     documentUpdatedAt: landing._updatedAt ?? null,
     publisherName: siteName,
     publisherUrl: baseUrl,
-    publisherLogoUrl: rawSite?.logo?.asset?.url,
     locale,
   });
 
