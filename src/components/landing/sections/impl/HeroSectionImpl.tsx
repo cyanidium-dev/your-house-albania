@@ -48,10 +48,13 @@ export type HeroData = {
 const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.ReactNode }> = async ({ locale, heroData, breadcrumb }) => {
   if (heroData?.enabled === false) return null
 
-  const t = await getTranslations('Home.hero')
   const tPhoto = await getTranslations('AlbaniaPhotos')
-  const shortLine = heroData?.shortLine ?? t('location')
-  const title = heroData?.title ?? t('title')
+  // The theme's demo strings ("Palm springs, CA", "Futuristic Haven") used to
+  // stand in for an empty CMS field and were live above the H1 of two guides.
+  // An empty eyebrow renders nothing; a landing without a title has no H1 text
+  // to invent, so it stays empty rather than borrow a villa in California.
+  const shortLine = heroData?.shortLine?.trim() || null
+  const title = heroData?.title?.trim() || ''
   const subtitle = heroData?.subtitle
   // No CMS background is the common case — most landings have never had one,
   // and the theme's stock banner (a rendered villa in a desert) is not a
@@ -151,14 +154,16 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               isHome ? 'flex flex-col text-start md:block' : 'text-center'
             )}
           >
-            <p
-              className={cn(
-                'text-inherit font-semibold uppercase opacity-90 md:text-base md:tracking-[0.14em]',
-                isHome ? 'hidden md:block text-xs tracking-[0.12em]' : 'text-xs tracking-[0.12em]'
-              )}
-            >
-              {shortLine}
-            </p>
+            {shortLine ? (
+              <p
+                className={cn(
+                  'text-inherit font-semibold uppercase opacity-90 md:text-base md:tracking-[0.14em]',
+                  isHome ? 'hidden md:block text-xs tracking-[0.12em]' : 'text-xs tracking-[0.12em]'
+                )}
+              >
+                {shortLine}
+              </p>
+            ) : null}
             {/* A phone shows the Russian and Ukrainian headline on four lines;
                 at 36px that was most of the viewport and the reader felt it.
                 28px keeps the line count and gives the photo back. */}

@@ -23,6 +23,25 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/og": ["./public/images/albania/**/*"],
   },
+  // Baseline security headers (audit 2026-09-20: only HSTS was present).
+  // `frame-ancestors` rather than X-Frame-Options: Sanity Studio's Presentation
+  // tool previews the site inside an iframe, and X-Frame-Options has no way to
+  // name a second allowed parent. No script-src policy here on purpose: GTM,
+  // Clarity and the map load third-party code, and a wrong allowlist breaks
+  // them silently in production.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self' https://*.sanity.studio" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), payment=(), usb=()" },
+        ],
+      },
+    ];
+  },
   // The project's production alias served the whole site as a second copy:
   // 485 requests a day on 2026-09-19, crawlers included. Only this exact
   // host moves; per-deployment preview URLs keep working.
