@@ -4,6 +4,7 @@ import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
 import { ListingFacetNav } from "@/components/catalog/ListingFacetNav";
 import { ListingFactsLine } from "@/components/catalog/ListingFactsLine";
+import { ListingContactBar } from "@/components/catalog/ListingContactBar";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
@@ -602,6 +603,7 @@ export default async function CatalogCityShorthandPage({ params, searchParams }:
         searchParams={mergedSearch}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />
+      <ListingContactBar locale={locale} />
     </>
   );
 }
