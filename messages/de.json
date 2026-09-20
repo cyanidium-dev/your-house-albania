@@ -737,6 +737,13 @@
       "email": "E-Mail senden"
     }
   },
+  "ContactBar": {
+    "ask": "Anfragen",
+    "askProperty": "Zu dieser Immobilie anfragen",
+    "helpChoosing": "Hilfe bei der Auswahl",
+    "barLabel": "Kontaktmöglichkeiten",
+    "messageUs": "Schreiben Sie uns direkt"
+  },
   "Seo": {
     "listing": {
       "cityTitle": "Wohnung kaufen in {city}, Albanien — Immobilien & Häuser",
