@@ -6,6 +6,7 @@ import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
+/** `alt` arrives composed in the page locale — see lib/property/propertyGalleryImages. */
 export type GalleryImage = { url: string; alt?: string; label?: string };
 
 type Props = {
@@ -557,11 +558,13 @@ export function PropertyGallery({ images }: Props) {
                   showThumbs ? 'max-h-[220px] opacity-100' : 'max-h-0 opacity-0'
                 )}
               >
-                {/* Label row — caption: label first, then alt, then none */}
+                {/* Label row — the editor's caption, if there is one. The alt is
+                    composed for crawlers and screen readers (see
+                    lib/seo/propertyImageAlt) and would only repeat the page title here. */}
                 <div className="px-4 pt-3 pb-2">
                   {(() => {
                     const img = galleryImages[currentIndex];
-                    const caption = img?.label?.trim() || img?.alt?.trim() || '';
+                    const caption = img?.label?.trim() || '';
                     return caption ? (
                       <p className="text-white/90 text-sm lg:text-base truncate">{caption}</p>
                     ) : null;

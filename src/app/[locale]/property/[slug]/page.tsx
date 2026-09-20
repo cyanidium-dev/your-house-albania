@@ -8,6 +8,8 @@ import { Icon } from "@/components/shared/Icon";
 import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
+import { buildPropertyGalleryImages } from '@/lib/property/propertyGalleryImages';
+import { canonicalPropertyImageUrl } from '@/lib/images/propertyImageUrl';
 import { PropertyFactRow } from '@/components/property/PropertyFactRow';
 import { PropertyDetailBreadcrumb } from '@/components/shared/PropertyDetailBreadcrumb';
 import { PropertyDeveloperBadge, type PropertyDeveloperRef } from '@/components/shared/property/PropertyDeveloperBadge';
@@ -199,7 +201,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
   );
 
   const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
-  const galleryImages = mapSanityPropertyGallery(sanityProperty as never);
 
   const title = sanityFields.title;
   const location = sanityFields.location;
@@ -261,7 +262,35 @@ export default async function PropertyDetailsPage({ params }: Props) {
     resolveLocalizedString((sanityProperty as { district?: { title?: unknown } })?.district?.title as never, locale) ||
     null;
   const baseUrl = await getBaseUrl();
-  const imageUrls = galleryImages.map((img) => img.url);
+  // Every photo gets a readable file name and an alt in this locale; JSON-LD
+  // then publishes the same single variant the `<img src>` and the image
+  // sitemap use, instead of the untransformed original.
+  const galleryFacts = sanityProperty as {
+    type?: { title?: unknown; slug?: string };
+    bedrooms?: number;
+    city?: { title?: unknown; slug?: string };
+    amenitiesRefs?: Array<{ slug?: string }>;
+    beachfront?: boolean;
+    seaDistanceMeters?: number;
+    constructionStage?: string;
+  };
+  const galleryImages = buildPropertyGalleryImages(mapSanityPropertyGallery(sanityProperty as never), {
+    locale,
+    typeLabel: resolveLocalizedString(galleryFacts.type?.title as never, locale) || null,
+    typeSlug: propertyTypeSlug,
+    bedrooms: galleryFacts.bedrooms ?? null,
+    areaM2: area,
+    district: districtName,
+    districtSlug: districtSlug ?? null,
+    city: resolveLocalizedString(galleryFacts.city?.title as never, locale) || null,
+    citySlug: citySlug ?? null,
+    deal: rawProperty.status ?? null,
+    amenitySlugs: (galleryFacts.amenitiesRefs ?? []).map((a) => a?.slug),
+    beachfront: galleryFacts.beachfront ?? null,
+    seaDistanceMeters: galleryFacts.seaDistanceMeters ?? null,
+    constructionStage: galleryFacts.constructionStage ?? null,
+  });
+  const imageUrls = galleryImages.map((img) => canonicalPropertyImageUrl(img.url));
 
   const t = await getTranslations('Shared.propertyCard');
   const tPropertyDetail = await getTranslations('Shared.propertyDetail');
