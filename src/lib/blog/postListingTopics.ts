@@ -53,6 +53,9 @@ export const BLOG_POST_LISTING_TOPICS: Readonly<Record<string, readonly BlogList
   "tirana-durres-train-property-prices": [{ city: "durres" }, { city: "tirana" }],
   "durres-reference-prices-2026": [{ city: "durres", district: "city-center-durres" }, { city: "durres" }],
   "durres-asking-price-index-2026-09": [{ city: "durres", type: "apartment" }, { city: "durres" }],
+  "retiring-to-albania-property-costs": [{ city: "durres", type: "apartment" }, { city: "vlore" }],
+  "albania-rental-yield-for-investors": [{ city: "durres" }, { city: "sarande" }],
+  "moving-to-albania-with-family": [{ city: "tirana" }, { city: "durres" }, { city: "vlore" }],
 
   // The coast south of Vlorë
   "living-albanian-riviera": [{ city: "vlore" }, { city: "sarande" }],
