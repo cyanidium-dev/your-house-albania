@@ -32,7 +32,7 @@ export async function generateNonGeoDealRouteMetadata(input: {
   titleFragment: string;
 }): Promise<Metadata> {
   const { locale, filters, search, dealQuery, titleFragment } = input;
-  const t = await getTranslations("Listing.properties");
+  const t = await getTranslations({ locale, namespace: "Listing.properties" });
   const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   const typeSeg = filters[0] ? decodeURIComponent(filters[0]).trim() : "";

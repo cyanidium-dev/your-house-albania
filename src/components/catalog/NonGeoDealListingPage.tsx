@@ -3,7 +3,7 @@ import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   fetchCatalogFilterOptions,
   fetchCatalogSeoPageRoot,
@@ -30,6 +30,9 @@ export async function NonGeoDealListingPage({
   filters: string[] | undefined;
   searchParams: Record<string, string | string[] | undefined>;
 }) {
+  // Without this next-intl reads the locale from `headers()`, and the route
+  // renders per request whatever else it does.
+  setRequestLocale(locale);
   if (!isPublicDealRouteSegment(dealRouteSegment)) notFound();
   if (filters && filters.length > 1) notFound();
 
@@ -87,8 +90,9 @@ export async function NonGeoDealListingPage({
     mergedSearch.type = propertyTypeSegment;
   }
 
-  const t = await getTranslations("Listing.properties");
-  const tCatalog = await getTranslations("Catalog");
+  // The locale is passed, not inferred: a cached route cannot read the request.
+  const t = await getTranslations({ locale, namespace: "Listing.properties" });
+  const tCatalog = await getTranslations({ locale, namespace: "Catalog" });
   const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   // Same words in the H1 as in the <title>: "Apartamente në shitje në Shqipëri"
@@ -115,6 +119,7 @@ export async function NonGeoDealListingPage({
       <PropertiesListing
         locale={locale}
         searchParams={mergedSearch}
+        urlSearch={search}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />
     </>
