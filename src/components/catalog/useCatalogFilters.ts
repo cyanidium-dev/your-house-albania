@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { buildListingUrl } from "@/lib/routes/listingRoutes";
 import {
@@ -243,7 +243,6 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
   ]);
 
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const applyFilters = React.useCallback(
     (opts?: {
@@ -255,7 +254,9 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     const pv: [number, number] = opts?.priceTupleOverride ?? priceValues;
     const url = buildCatalogFilterUrl({
       locale,
-      currentSearch: searchParams.toString(),
+      // Read when the filters are applied, not with `useSearchParams`: that hook
+      // would bail a cached listing page out to client rendering.
+      currentSearch: typeof window === "undefined" ? "" : window.location.search.replace(/^\?/, ""),
       type,
       effectiveDeal,
       priceTuple: pv,
@@ -303,7 +304,6 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
       priceRangesByDeal,
       priceValues,
       router,
-      searchParams,
       sort,
       stage,
       type,

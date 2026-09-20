@@ -23,6 +23,8 @@ import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
 import { buildListingUrl } from '@/lib/routes/listingRoutes'
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
 import { propertyCardCanonicalCoverUrl } from '@/lib/property/propertyCardImages'
+import { getTranslations } from 'next-intl/server'
+import { LISTINGS_ANCHOR_ID } from '@/lib/routes/currentCityListing'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -46,7 +48,9 @@ async function PropertiesListing({
   /** When the listing URL omits a country segment (`/{locale}/{city}/…`); do not inject CMS country into canonical URLs. */
   omitCountryInPath = false,
   searchParams,
+  urlSearch,
   catalogSeo,
+  heading,
 }: {
   locale: string
   pathAgentSlug?: string
@@ -55,7 +59,21 @@ async function PropertiesListing({
   pathCountrySlug?: string
   omitCountryInPath?: boolean
   searchParams: SearchParams
+  /**
+   * The query exactly as it stands in the URL — `searchParams` above may also
+   * carry what the path says (city, type, facet). Pagination links are built
+   * from it on the server; omitted, they start from an empty query and the
+   * browser's own takes over after hydration.
+   */
+  urlSearch?: SearchParams
   catalogSeo?: CatalogSeoContent
+  /**
+   * Names the place so the card grid sits under an `<h2>` with the live count
+   * ("Apartments and property for sale in Durrës: 358 listings"). `filtered`
+   * when the page shows a slice or a filtered result rather than the place's
+   * whole stock. Also titles the bottom text when that has no heading.
+   */
+  heading?: { place: string; placeIn: string; filtered: boolean }
 }) {
   const [filterOptions, siteSettings, areaBoundsFromData] = await Promise.all([
     fetchCatalogFilterOptions(locale),
@@ -242,6 +260,12 @@ async function PropertiesListing({
       .map(([k, v]) => [k, String(v)]),
   ).toString()
 
+  const serverSearch = new URLSearchParams(
+    Object.entries(urlSearch ?? {}).flatMap(([k, v]) =>
+      typeof v === 'string' ? [[k, v]] : Array.isArray(v) ? v.map((item) => [k, item]) : [],
+    ),
+  ).toString()
+
   const baseUrl = await getBaseUrl()
   const itemListEntries = pageItems.map((item) => ({
     name: item.name,
@@ -277,12 +301,26 @@ async function PropertiesListing({
     initialView: viewMode,
   }
 
+  const tDepth = heading ? await getTranslations({ locale, namespace: 'Catalog.depth' }) : null
+
   return (
     <section className='pt-0!'>
       {pageItems.length > 0 && (
         <ItemListJsonLd items={itemListEntries} baseUrl={baseUrl} locale={locale} />
       )}
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0 overflow-x-clip'>
+        {heading && tDepth && totalItems > 0 ? (
+          <h2
+            id={LISTINGS_ANCHOR_ID}
+            className='scroll-mt-28 pt-6 text-dark dark:text-white text-xl md:text-2xl font-semibold'
+          >
+            {tDepth(heading.filtered ? 'listingsHeadingFiltered' : 'listingsHeading', {
+              place: heading.place,
+              placeIn: heading.placeIn,
+              count: totalItems,
+            })}
+          </h2>
+        ) : null}
         <CatalogViewProvider initialView={viewMode}>
           <CatalogBodyClient
             filterProps={filterProps}
@@ -294,10 +332,14 @@ async function PropertiesListing({
             totalCount={totalItems}
             pageSize={pageSize}
             loadMoreQuery={loadMoreQuery}
+            serverSearch={serverSearch}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (
-          <CatalogSeoText content={catalogSeo.bottomText} />
+          <CatalogSeoText
+            content={catalogSeo.bottomText}
+            heading={heading && tDepth ? tDepth('aboutTitle', { place: heading.place, placeIn: heading.placeIn }) : undefined}
+          />
         )}
       </div>
     </section>

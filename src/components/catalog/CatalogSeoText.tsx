@@ -41,13 +41,27 @@ const components: PortableTextComponents = {
 
 type Props = {
   content: unknown[];
+  /**
+   * Heading for copy that has none of its own. The CMS field is plain text, so
+   * it arrives as paragraphs only and the page's longest prose sat under no
+   * heading at all.
+   */
+  heading?: string;
 };
 
-export function CatalogSeoText({ content }: Props) {
+const HEADING_STYLES = new Set(["h1", "h2"]);
+
+export function CatalogSeoText({ content, heading }: Props) {
   if (!Array.isArray(content) || content.length === 0) return null;
+  const hasOwnHeading = content.some(
+    (block) => HEADING_STYLES.has(String((block as { style?: unknown } | null)?.style ?? "")),
+  );
 
   return (
     <div className="py-6">
+      {heading && !hasOwnHeading ? (
+        <h2 className="text-dark dark:text-white text-xl md:text-2xl font-semibold mb-3">{heading}</h2>
+      ) : null}
       <PortableText value={content as PortableTextBlock[]} components={components} />
     </div>
   );

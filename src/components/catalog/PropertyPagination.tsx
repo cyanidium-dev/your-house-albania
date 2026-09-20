@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/shared/Icon";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 type Props = {
   /** The page the server rendered (`?page=`), 1 on a plain listing URL. */
@@ -18,6 +19,8 @@ type Props = {
   from: number;
   to: number;
   total: number;
+  /** The query string the server rendered this page for (no leading `?`). */
+  serverSearch?: string;
 };
 
 /**
@@ -44,13 +47,15 @@ export function PropertyPagination({
   from,
   to,
   total,
+  serverSearch = "",
 }: Props) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // Not `useSearchParams`: see `useUrlSearch`.
+  const search = useUrlSearch(serverSearch);
   const t = useTranslations("Catalog.pagination");
 
   const hrefFor = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(search);
     params.delete("pageSize");
     if (page <= 1) params.delete("page");
     else params.set("page", String(page));

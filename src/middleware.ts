@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 import { getLegacyFallbackCatalogCountrySlug } from "./lib/routes/catalog";
 import { isSitePathIndexable, PARTIAL_LOCALE_ROBOTS_HEADER } from "./lib/seo/localeIndexing";
+import { listingQueryPublicPathname, listingQueryRewritePathname } from "./lib/routes/listingQueryRewrite";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -38,10 +39,44 @@ export default function middleware(request: NextRequest) {
     url.pathname = agentRedirect;
     return NextResponse.redirect(url);
   }
+  // The query-reading listing route is internal; its path is not an address.
+  const publicListingPath = listingQueryPublicPathname(url.pathname, LOCALES);
+  if (publicListingPath) {
+    url.pathname = publicListingPath;
+    return NextResponse.redirect(url, 308);
+  }
   return withPartialLocaleRobots(
     request,
-    withoutLocaleCookieOnCacheableDocuments(request, intlMiddleware(request)),
+    withoutLocaleCookieOnCacheableDocuments(
+      request,
+      withListingQueryRewrite(request, intlMiddleware(request)),
+    ),
   );
+}
+
+/**
+ * Send a listing URL that carries a query (`?page=2`, filters, sort) to the
+ * route that reads it, so the path-only listing route never touches
+ * `searchParams` and stays cached. See `lib/routes/listingQueryRewrite`.
+ *
+ * Only a response that lets the request through is replaced: a redirect or a
+ * rewrite of next-intl's own stands. The request header next-intl would have
+ * forwarded is forwarded here too.
+ */
+function withListingQueryRewrite(request: NextRequest, response: NextResponse): NextResponse {
+  if (!response.headers.has("x-middleware-next")) return response;
+  const target = listingQueryRewritePathname(
+    request.nextUrl.pathname,
+    request.nextUrl.searchParams,
+    LOCALES,
+  );
+  if (!target) return response;
+
+  const url = request.nextUrl.clone();
+  url.pathname = target;
+  const headers = new Headers(request.headers);
+  headers.set("X-NEXT-INTL-LOCALE", target.split("/")[1] ?? "");
+  return NextResponse.rewrite(url, { request: { headers } });
 }
 
 /**

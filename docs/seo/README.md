@@ -109,6 +109,14 @@ keyword opportunity (Keyword Planner / Search Console / SERP)
 
 Nothing in this chain is written by hand per URL: when inventory falls under a minimum the page drops out of the sitemap, the navigation and the index on the next revalidate, and comes back the same way.
 
+## Rendering and caching of the listing route
+
+`/{l}/{country}/{city}/[[...filters]]` is ISR (`revalidate = 3600`, empty `generateStaticParams`, nothing prerendered at build) and **takes no `searchParams`** — awaiting that prop is what kept every listing URL on `private, no-store` until 2026-09-20. A URL with a real query (`?page=2`, filters, sort) is rewritten by the middleware to the internal route `/{l}/listing-query/…`, which reads the query and renders the same module (`src/components/catalog/geoListing/GeoListingRoute.tsx`) with `noindex, follow` and the path-only canonical. Tracking-only queries (`utm_*`, `gclid`, …) get the cached page. Rules: `src/lib/routes/listingQueryRewrite.ts` (a test fails when a new folder under `app/[locale]` is missing from its list). Client components under the listing must not call `useSearchParams` — use `useUrlSearch`.
+
+## Blocks under the card grid
+
+City and district pages that the registry indexes in the visitor's locale carry, below the cards: an `<h2>` over the grid with the live count, the CMS bottom text under its own `<h2>`, then `priceStats`, `districtLinks`, `faq`, `buyingCosts` (`ListingDepthSections`; the family's `contentSections` lists them). Numbers come from the queries the `/info` price table, the facet chips and the sitemap already use; nothing under 3 listings is printed (`src/lib/catalog/listingDepth.ts`); links go only to indexable pages (ADR 004). The FAQ is the place's CMS FAQ in the visitor's language, with no FAQPage markup here — `/info` and the district page declare it. Facet, type and query pages get the grid heading only.
+
 ## Adding a new page
 
 1. **Confirm demand.** Keyword Planner (bucket ≥ 10–100 in the target market), Search Console impressions, or both. Check the SERP: if the top results are rentals, hotels or articles, a listing page will not rank — stop. No measurable demand but a clear commercial intent and real stock? Add an entry to `data/experiments.ts` with a hypothesis, success criteria and a review date ≤ 120 days away instead ([ADR 007](decisions/007-experiments.md)).
@@ -155,7 +163,7 @@ Nothing in this chain is written by hand per URL: when inventory falls under a m
 | `src/lib/seo/listingIndexPolicy.ts` | National `/sale/{type}` threshold (derived from `policy.ts`) and the empty-listing check |
 | `src/lib/catalog/listingFacets.ts` | Facet definitions (`query` + `matches`) |
 | `src/lib/seo/listingSeoCopy.ts` | Listing titles, descriptions, H1 copy |
-| `src/app/[locale]/[country]/[city]/[[...filters]]/page.tsx` | Listing route: resolves the key, asks for a decision, applies it; 308s duplicate URL shapes |
+| `src/components/catalog/geoListing/GeoListingRoute.tsx` | Listing route logic: resolves the key, asks for a decision, applies it; 308s duplicate URL shapes. Mounted by `app/[locale]/[country]/[city]/[[...filters]]/page.tsx` (cached, no query) and `app/[locale]/listing-query/…/page.tsx` (query URLs, via middleware rewrite) |
 | `src/app/[locale]/agent/[agent]/[country]/[city]/[[...filters]]/page.tsx` | Agent listings: always `noindex, follow`, no alternates |
 | `src/lib/sanity/queries/sitemap.ts` | Sitemap rows; city and type entries carry `locales` from decisions |
 | `src/components/catalog/ListingFacetNav.tsx` | Internal links to indexable districts and facets |

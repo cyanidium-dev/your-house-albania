@@ -7,7 +7,10 @@ import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { catalogPath } from "@/lib/routes/catalog";
+import { currentCityListingHref } from "@/lib/routes/currentCityListing";
+import { routing } from "@/i18n/routing";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 
 export type TopOffersGroup = "popular" | "new" | "highDemand";
@@ -32,6 +35,8 @@ export function TopOffersCarouselClient({
 }) {
   const debug = process.env.NODE_ENV === "development";
   const t = useTranslations("Home.topOffers");
+  // On a city or district page "all properties" are that city's.
+  const allHref = currentCityListingHref(usePathname(), routing.locales) ?? catalogPath(locale);
   const [active, setActive] = React.useState<TopOffersGroup>(initialGroup);
   const scrollerRef = React.useRef<HTMLDivElement>(null);
 
@@ -145,7 +150,7 @@ export function TopOffersCarouselClient({
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Link href={catalogPath(locale)} className={brandButtonClass("primary")}>
+        <Link href={allHref} className={brandButtonClass("primary")}>
           {t("ctaAll")}
         </Link>
       </div>

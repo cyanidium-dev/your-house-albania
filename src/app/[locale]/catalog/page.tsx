@@ -117,6 +117,7 @@ export default async function CatalogRootPage({ params, searchParams }: Props) {
       <PropertiesListing
         locale={locale}
         searchParams={search}
+        urlSearch={search}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
       />
     </>

@@ -91,6 +91,35 @@ export function notaryFeeEur(priceEur: number): number | null {
   return (priceAll * band.pct) / 100 / ALL_PER_EUR;
 }
 
+/**
+ * The one-off buyer costs as rates, for pages that describe them without a
+ * listing to apply them to (the listing pages' "what it costs" block). The
+ * same constants `computePurchaseCosts` charges.
+ */
+export const PURCHASE_COST_RATES = {
+  notaryPctMin: Math.min(...NOTARY_BANDS_ALL.map((b) => b.pct)),
+  notaryPctMax: Math.max(...NOTARY_BANDS_ALL.map((b) => b.pct)),
+  registrationAll: REGISTRATION_ALL,
+  registrationEur: Math.round(REGISTRATION_ALL / ALL_PER_EUR),
+  agencyBuyerPct: AGENCY_BUYER_PCT,
+  dataIds: ['DATA-PURCHASE-0001', 'DATA-PURCHASE-0003', 'DATA-PURCHASE-0004'],
+} as const;
+
+/** One-off costs of buying at `totalPriceEur`: notary, registration, buyer's agency fee. */
+export function computePurchaseCosts(totalPriceEur: number): { lines: CostLine[]; totalEur: number; pct: number } {
+  const lines: CostLine[] = [];
+  const notary = notaryFeeEur(totalPriceEur);
+  if (notary !== null) lines.push({ key: 'notary', eur: round(notary), dataIds: ['DATA-PURCHASE-0001'] });
+  lines.push({ key: 'registration', eur: round(REGISTRATION_ALL / ALL_PER_EUR), dataIds: ['DATA-PURCHASE-0003'] });
+  lines.push({
+    key: 'agency',
+    eur: round((totalPriceEur * AGENCY_BUYER_PCT) / 100),
+    dataIds: ['DATA-PURCHASE-0004'],
+  });
+  const totalEur = lines.reduce((sum, line) => sum + line.eur, 0);
+  return { lines, totalEur, pct: totalPriceEur > 0 ? (totalEur / totalPriceEur) * 100 : 0 };
+}
+
 export type OwnershipCostsInput = {
   price?: number | null;
   priceUnit?: string | null;
@@ -111,16 +140,7 @@ export function computeOwnershipCosts(input: OwnershipCostsInput): OwnershipCost
   const totalFromRate = input.priceUnit === 'per-sqm';
   const totalPriceEur = totalFromRate ? price * area : price;
 
-  const purchase: CostLine[] = [];
-  const notary = notaryFeeEur(totalPriceEur);
-  if (notary !== null) purchase.push({ key: 'notary', eur: round(notary), dataIds: ['DATA-PURCHASE-0001'] });
-  purchase.push({ key: 'registration', eur: round(REGISTRATION_ALL / ALL_PER_EUR), dataIds: ['DATA-PURCHASE-0003'] });
-  purchase.push({
-    key: 'agency',
-    eur: round((totalPriceEur * AGENCY_BUYER_PCT) / 100),
-    dataIds: ['DATA-PURCHASE-0004'],
-  });
-  const purchaseTotalEur = purchase.reduce((sum, line) => sum + line.eur, 0);
+  const { lines: purchase, totalEur: purchaseTotalEur } = computePurchaseCosts(totalPriceEur);
 
   const annual: CostLine[] = [];
   const refs = [input.referencePriceMin, input.referencePriceMax].filter(
