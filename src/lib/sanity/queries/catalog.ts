@@ -8,6 +8,14 @@ import {
 import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter } from '../groq/propertyFilters';
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes';
 import { NEAR_SEA_MAX_METERS } from '@/lib/catalog/listingFacets';
+import {
+  groupRowsBy,
+  median,
+  pricesPerSqm,
+  summarizeFlatPrices,
+  totalPrices,
+  type FlatPriceSummary,
+} from '@/lib/catalog/listingPriceSummary';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 
@@ -323,13 +331,6 @@ export type CatalogListingStats = {
   medianPricePerSqm: number | null;
 };
 
-function median(values: number[]): number | null {
-  if (values.length === 0) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
-}
-
 /**
  * The numbers a listing page leads with: how many, from what price, and what a
  * square metre costs across exactly the listings on that page. Computed from
@@ -347,18 +348,11 @@ export const fetchCatalogListingStats = sanityCache(
         params,
       );
       if (!Array.isArray(rows)) return null;
-      const totals = rows
-        .filter((r) => typeof r.price === 'number' && r.price > 0 && r.priceUnit !== 'per-sqm')
-        .map((r) => r.price as number);
-      const perSqm = rows.flatMap((r) => {
-        if (typeof r.price !== 'number' || r.price <= 0) return [];
-        if (r.priceUnit === 'per-sqm') return [r.price];
-        return typeof r.area === 'number' && r.area >= 15 ? [Math.round(r.price / r.area)] : [];
-      });
+      const totals = totalPrices(rows);
       return {
         count: rows.length,
         priceFrom: totals.length ? Math.min(...totals) : null,
-        medianPricePerSqm: median(perSqm),
+        medianPricePerSqm: median(pricesPerSqm(rows)),
       };
     } catch (err) {
       console.warn('[Sanity] fetchCatalogListingStats failed:', err);
@@ -369,22 +363,14 @@ export const fetchCatalogListingStats = sanityCache(
   { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
-const PRICE_INDEX_FLAT_TYPES = ['apartment', 'studio'];
-
-export type ListingPriceIndexRow = {
+/**
+ * `count` is every live sale listing, land and commercial included; the price
+ * columns are flats only (`summarizeFlatPrices`).
+ */
+export type ListingPriceIndexRow = FlatPriceSummary & {
   /** Null for the whole-city row. */
   districtSlug: string | null;
   districtTitle?: unknown;
-  /** Every live sale listing, land and commercial included. */
-  count: number;
-  /**
-   * The price columns are flats only. A district like Spille is mostly land
-   * and commercial space, and one median across a plot and a studio is noise.
-   */
-  flatCount: number;
-  flatPriceFrom: number | null;
-  medianFlatPrice: number | null;
-  medianFlatPricePerSqm: number | null;
 };
 
 /**
@@ -405,35 +391,10 @@ export const fetchCityListingPriceIndex = sanityCache(
         params,
       );
       if (!Array.isArray(rows) || rows.length === 0) return [];
-      const summarize = (items: Row[], districtSlug: string | null, districtTitle?: unknown): ListingPriceIndexRow => {
-        const flats = items.filter((r) => r.type && PRICE_INDEX_FLAT_TYPES.includes(r.type));
-        const totals = flats
-          .filter((r) => typeof r.price === 'number' && r.price > 0 && r.priceUnit !== 'per-sqm')
-          .map((r) => r.price as number);
-        const perSqm = flats.flatMap((r) => {
-          if (typeof r.price !== 'number' || r.price <= 0) return [];
-          if (r.priceUnit === 'per-sqm') return [r.price];
-          return typeof r.area === 'number' && r.area >= 15 ? [Math.round(r.price / r.area)] : [];
-        });
-        return {
-          districtSlug,
-          districtTitle,
-          count: items.length,
-          flatCount: flats.length,
-          flatPriceFrom: totals.length ? Math.min(...totals) : null,
-          medianFlatPrice: median(totals),
-          medianFlatPricePerSqm: median(perSqm),
-        };
-      };
-      const byDistrict = new Map<string, Row[]>();
-      for (const r of rows) {
-        if (!r.d || !r.dp) continue;
-        byDistrict.set(r.d, [...(byDistrict.get(r.d) ?? []), r]);
-      }
-      const districts = [...byDistrict.entries()]
-        .map(([slug, items]) => summarize(items, slug, items[0]?.dt))
+      const districts = [...groupRowsBy(rows, (r) => (r.dp ? r.d : null)).entries()]
+        .map(([slug, items]) => ({ districtSlug: slug, districtTitle: items[0]?.dt, ...summarizeFlatPrices(items) }))
         .sort((a, b) => b.count - a.count || String(a.districtSlug).localeCompare(String(b.districtSlug)));
-      return [summarize(rows, null), ...districts];
+      return [{ districtSlug: null, districtTitle: undefined, ...summarizeFlatPrices(rows) }, ...districts];
     } catch (err) {
       console.warn('[Sanity] fetchCityListingPriceIndex failed:', err);
       return [];
@@ -441,6 +402,50 @@ export const fetchCityListingPriceIndex = sanityCache(
   },
   ['sanity-city-listing-price-index'],
   { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+);
+
+export type NationalListingPriceIndex = {
+  /** Every live sale listing on the site. */
+  national: FlatPriceSummary;
+  /** Per published city, largest first. */
+  cities: Array<FlatPriceSummary & { citySlug: string }>;
+  /** Listings per property type, largest first. */
+  types: Array<{ typeSlug: string; count: number }>;
+};
+
+/**
+ * Asking prices across every live sale listing, nationally and per published
+ * city, plus the split by property type — what the `/sale` hub prints under its
+ * grid. One fetch and the same arithmetic as the city index, so the Durrës row
+ * here and the figures on `/albania/durres` come out of one function.
+ */
+export const fetchNationalListingPriceIndex = sanityCache(
+  async (): Promise<NationalListingPriceIndex | null> => {
+    const client = getClient();
+    if (!client) return null;
+    const { where, params } = buildCatalogWhereClause({ deal: 'sale' });
+    type Row = { price?: number; priceUnit?: string; area?: number; type?: string; c?: string; cp?: boolean };
+    try {
+      const rows = await client.fetch<Row[]>(
+        `*[${where}]{price, priceUnit, area, "type": type->slug.current,
+          "c": city->slug.current, "cp": city->isPublished != false}`,
+        params,
+      );
+      if (!Array.isArray(rows)) return null;
+      const cities = [...groupRowsBy(rows, (r) => (r.cp ? r.c : null)).entries()]
+        .map(([citySlug, items]) => ({ citySlug, ...summarizeFlatPrices(items) }))
+        .sort((a, b) => b.count - a.count || a.citySlug.localeCompare(b.citySlug));
+      const types = [...groupRowsBy(rows, (r) => r.type).entries()]
+        .map(([typeSlug, items]) => ({ typeSlug, count: items.length }))
+        .sort((a, b) => b.count - a.count || a.typeSlug.localeCompare(b.typeSlug));
+      return { national: summarizeFlatPrices(rows), cities, types };
+    } catch (err) {
+      console.warn('[Sanity] fetchNationalListingPriceIndex failed:', err);
+      return null;
+    }
+  },
+  ['sanity-national-listing-price-index'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.propertyType] },
 );
 
 type PropertyCatalogBannerCandidate = {
