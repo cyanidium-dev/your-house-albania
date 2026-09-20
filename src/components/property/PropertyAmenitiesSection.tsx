@@ -7,6 +7,17 @@ import { resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import type { PropertyAmenityItem } from '@/lib/sanity/propertyAdapter';
 import { cn } from '@/lib/utils';
 
+/**
+ * One amenity: icon and name.
+ *
+ * The one-line descriptions came from the shared amenity documents, so every
+ * listing with air conditioning printed the same "Climate control for
+ * year-round comfort." Across 2,600 property URLs that was the same dozen
+ * sentences on each, and on a short listing it outweighed the text written
+ * for that flat (audit 2026-09-20). The name says all the sentence said. It
+ * is a list item rather than a heading for the same reason: nineteen H3s
+ * reading "Balcony" tell nobody anything about the page's structure.
+ */
 function AmenityRow({
   item,
   className,
@@ -15,10 +26,7 @@ function AmenityRow({
   className?: string;
 }) {
   return (
-    <div
-      key={item.key}
-      className={cn('flex items-center gap-4 lg:gap-6', className)}
-    >
+    <li className={cn('flex items-center gap-4', className)}>
       <div className="w-8 h-8 shrink-0 flex items-center justify-center">
         {item.customIconUrl ? (
           <Image
@@ -38,13 +46,8 @@ function AmenityRow({
           />
         )}
       </div>
-      <div>
-        <h3 className="text-dark dark:text-white text-xm">{item.title}</h3>
-        {item.description && (
-          <p className="text-base text-dark/50 dark:text-white/50">{item.description}</p>
-        )}
-      </div>
-    </div>
+      <span className="text-dark dark:text-white text-xm">{item.title}</span>
+    </li>
   );
 }
 
@@ -83,16 +86,18 @@ export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabe
       <h3 className="text-xl font-medium">{sectionTitle}</h3>
       <div className="py-5 my-5 lg:py-8 lg:my-8 border-y border-dark/10 dark:border-white/20 flex flex-col gap-5 lg:gap-8">
         {/* Desktop/tablet: full list */}
-        <div className="hidden lg:flex flex-col gap-8">
+        <ul className="hidden lg:grid grid-cols-2 gap-x-10 gap-y-5">
           {amenities.map((item) => (
             <AmenityRow key={item.key} item={item} />
           ))}
-        </div>
+        </ul>
         {/* Mobile: first 3 + optional button */}
         <div className="flex flex-col gap-4 lg:hidden">
-          {mobileItems.map((item) => (
-            <AmenityRow key={item.key} item={item} />
-          ))}
+          <ul className="flex flex-col gap-4">
+            {mobileItems.map((item) => (
+              <AmenityRow key={item.key} item={item} />
+            ))}
+          </ul>
           {hasMore && (
             <button
               type="button"
@@ -135,11 +140,11 @@ export function PropertyAmenitiesSection({ amenities, sectionTitle, checkAllLabe
               </button>
               <h2 className="text-xl font-medium text-dark dark:text-white">{sectionTitle}</h2>
             </div>
-            <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-6">
+            <ul className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-6">
               {amenities.map((item) => (
                 <AmenityRow key={item.key} item={item} />
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       )}
