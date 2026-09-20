@@ -54,7 +54,9 @@ export async function buildCityListingSeo(
 ): Promise<ListingSeoCopy | null> {
   const city = await resolveCityDisplayName(citySlug, locale);
   if (!city) return null;
-  const t = await getTranslations("Seo.listing");
+  // The locale is passed, not inferred: without it next-intl falls back to the
+  // request's headers, and a cached route cannot read those.
+  const t = await getTranslations({ locale, namespace: "Seo.listing" });
   return {
     title: t("cityTitle", { city }),
     description: t("cityDescription", { city }),

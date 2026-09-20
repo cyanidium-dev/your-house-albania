@@ -544,6 +544,41 @@
       "count": "{count, plural, one {# Angebot} other {# Angebote}}",
       "from": "ab {price} €",
       "medianPerSqm": "Median {price} €/m² für Wohnungen"
+    },
+    "depth": {
+      "listingsHeading": "Wohnungen und Immobilien zum Kauf in {placeIn}: {count, plural, one {# Angebot} other {# Angebote}}",
+      "listingsHeadingFiltered": "Passende Angebote in {placeIn}: {count}",
+      "aboutTitle": "Immobilien kaufen in {placeIn}",
+      "prices": {
+        "title": "Immobilienpreise in {placeIn}",
+        "lead": "Was die Verkaufsangebote auf Domlivo aktuell verlangen. Es sind Angebotspreise, keine abgeschlossenen Verkäufe; die Mediane beziehen sich auf Wohnungen und Studios.",
+        "listings": "Angebote zum Kauf",
+        "medianPrice": "Medianpreis einer Wohnung",
+        "medianSqm": "Medianpreis pro m²",
+        "from": "Wohnungen ab",
+        "slices": "Nach Größe und Lage",
+        "asOf": "Datenstand {date}, basierend auf {count, plural, one {# Angebot} other {# Angeboten}} auf Domlivo."
+      },
+      "districts": {
+        "title": "Immobilien nach Stadtteil in {placeIn}",
+        "siblingsTitle": "Weitere Stadtteile in {cityIn}",
+        "allInCity": "Alle Immobilien zum Kauf in {cityIn}"
+      },
+      "faq": {
+        "title": "Kaufen in {placeIn}: Fragen und Antworten",
+        "more": "Weitere Antworten zu {place}"
+      },
+      "costs": {
+        "title": "Als Ausländer kaufen: Was es kostet",
+        "lead": "Ausländer kaufen Wohnungen, Häuser und Gewerbeimmobilien in Albanien zu denselben rechtlichen Bedingungen wie Staatsbürger; eingeschränkt ist nur landwirtschaftlicher Boden. Das Eigentum geht ausschließlich durch notarielle Urkunde über. Zusätzlich zum Kaufpreis zahlt der Käufer:",
+        "notary": "Notar: {min}–{max} % des Preises nach der amtlichen Gebührentabelle",
+        "registration": "Eintragung des Eigentums im Kataster (ASHK): {lek} Lek, etwa {eur} €",
+        "agency": "Maklerprovision für den Käufer: üblicherweise {pct} %",
+        "example": "Bei einer Wohnung zum hiesigen Medianpreis, <price></price>, sind das etwa <total></total> ({pct} % des Preises).",
+        "source": "Sätze: Verordnung 279/2012 des Justizministeriums (Notargebühren), ASHK-Gebührenordnung, Marktpraxis bei Provisionen. Die genauen Beträge bestätigt Ihr Notar.",
+        "guideForeigners": "Können Ausländer in Albanien Immobilien kaufen?",
+        "guideLegal": "Rechtsleitfaden für Käufer"
+      }
     }
   },
   "NewBuilds": {

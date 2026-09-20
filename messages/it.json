@@ -544,6 +544,41 @@
       "count": "{count, plural, one {# immobile} other {# immobili}}",
       "from": "da {price} €",
       "medianPerSqm": "mediana {price} €/m² per gli appartamenti"
+    },
+    "depth": {
+      "listingsHeading": "Appartamenti e immobili in vendita a {placeIn}: {count, plural, one {# annuncio} other {# annunci}}",
+      "listingsHeadingFiltered": "Annunci corrispondenti a {placeIn}: {count}",
+      "aboutTitle": "Comprare casa a {placeIn}",
+      "prices": {
+        "title": "Prezzi degli immobili a {placeIn}",
+        "lead": "Quanto chiedono oggi gli annunci di vendita su Domlivo. Sono prezzi richiesti, non di compravendite concluse; le mediane riguardano appartamenti e monolocali.",
+        "listings": "Immobili in vendita",
+        "medianPrice": "Prezzo mediano di un appartamento",
+        "medianSqm": "Prezzo mediano al m²",
+        "from": "Appartamenti da",
+        "slices": "Per tipologia e posizione",
+        "asOf": "Dati al {date}, basati su {count, plural, one {# annuncio} other {# annunci}} su Domlivo."
+      },
+      "districts": {
+        "title": "Immobili per zona a {placeIn}",
+        "siblingsTitle": "Altre zone di {city}",
+        "allInCity": "Tutti gli immobili in vendita a {cityIn}"
+      },
+      "faq": {
+        "title": "Comprare a {placeIn}: domande e risposte",
+        "more": "Altre risposte su {place}"
+      },
+      "costs": {
+        "title": "Comprare da straniero: quanto costa",
+        "lead": "Gli stranieri acquistano appartamenti, case e immobili commerciali in Albania alle stesse condizioni legali dei cittadini; l'unica limitazione riguarda i terreni agricoli. La proprietà si trasferisce solo con atto notarile. Oltre al prezzo, l'acquirente paga:",
+        "notary": "Notaio: {min}–{max}% del prezzo, secondo la tariffa ufficiale",
+        "registration": "Registrazione della proprietà al catasto (ASHK): {lek} lek, circa {eur} €",
+        "agency": "Provvigione dell'agenzia a carico dell'acquirente: di norma {pct}%",
+        "example": "Per un appartamento al prezzo mediano di questa zona, <price></price>, si tratta di circa <total></total> ({pct}% del prezzo).",
+        "source": "Tariffe: Ordinanza 279/2012 del Ministero della Giustizia (tariffe notarili), tariffario ASHK, prassi di mercato per le provvigioni. Verifica gli importi esatti con il notaio.",
+        "guideForeigners": "Gli stranieri possono comprare casa in Albania?",
+        "guideLegal": "Guida legale per chi compra"
+      }
     }
   },
   "NewBuilds": {

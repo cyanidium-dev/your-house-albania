@@ -544,6 +544,41 @@
       "count": "{count, plural, one {# pronë} other {# prona}}",
       "from": "nga {price} €",
       "medianPerSqm": "mediana {price} €/m² për apartamentet"
+    },
+    "depth": {
+      "listingsHeading": "Apartamente dhe prona në shitje në {placeIn}: {count, plural, one {# pronë} other {# prona}}",
+      "listingsHeadingFiltered": "Prona që përputhen në {placeIn}: {count}",
+      "aboutTitle": "Blerja e pronës në {placeIn}",
+      "prices": {
+        "title": "Çmimet e pronave në {placeIn}",
+        "lead": "Sa kërkojnë sot njoftimet e shitjes në Domlivo. Janë çmime të kërkuara, jo shitje të përfunduara; medianat llogariten për apartamente dhe garsoniere.",
+        "listings": "Prona në shitje",
+        "medianPrice": "Çmimi median i apartamentit",
+        "medianSqm": "Çmimi median për m²",
+        "from": "Apartamente nga",
+        "slices": "Sipas madhësisë dhe vendndodhjes",
+        "asOf": "Të dhëna të datës {date}, bazuar në {count, plural, one {# njoftim} other {# njoftime}} në Domlivo."
+      },
+      "districts": {
+        "title": "Prona sipas lagjeve në {placeIn}",
+        "siblingsTitle": "Lagje të tjera në {cityIn}",
+        "allInCity": "Të gjitha pronat në shitje në {cityIn}"
+      },
+      "faq": {
+        "title": "Blerja në {placeIn}: pyetje dhe përgjigje",
+        "more": "{place}: më shumë përgjigje"
+      },
+      "costs": {
+        "title": "Blerja si i huaj: sa kushton",
+        "lead": "Të huajt blejnë apartamente, shtëpi dhe prona tregtare në Shqipëri me të njëjtat kushte ligjore si shtetasit; kufizohet vetëm toka bujqësore. Pronësia kalon vetëm me akt noterial. Përveç çmimit, blerësi paguan:",
+        "notary": "Noteri: {min}–{max}% e çmimit, sipas tarifës zyrtare",
+        "registration": "Regjistrimi i pronësisë në kadastër (ASHK): {lek} lekë, rreth {eur} €",
+        "agency": "Komisioni i agjencisë për blerësin: zakonisht {pct}%",
+        "example": "Për një apartament me çmimin median këtu, <price></price>, kjo bën rreth <total></total> ({pct}% e çmimit).",
+        "source": "Tarifat: Urdhri 279/2012 i Ministrisë së Drejtësisë (tarifat noteriale), tarifat e ASHK-së, praktika e tregut për komisionet. Shumat e sakta konfirmojini me noterin.",
+        "guideForeigners": "A mund të blejnë të huajt pronë në Shqipëri?",
+        "guideLegal": "Udhëzues ligjor për blerësit"
+      }
     }
   },
   "NewBuilds": {

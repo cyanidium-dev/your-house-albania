@@ -115,7 +115,12 @@ export type SeoContentSection =
   | "placeInfoLink"
   | "catalogIntro"
   | "listings"
-  | "catalogBottomText";
+  | "catalogBottomText"
+  // Under the grid, on indexable pages only (`ListingDepthSections`).
+  | "priceStats"
+  | "districtLinks"
+  | "faq"
+  | "buyingCosts";
 
 export type SeoStructuredData = "BreadcrumbList" | "ItemList";
 

@@ -15,7 +15,10 @@ export const SEO_PAGE_FAMILIES: Record<SeoPageFamily, SeoPageFamilyDefinition> =
     parent: null,
     copySource: "buildCityListingSeo",
     editorialScope: "city",
-    contentSections: ["hero", "factsLine", "facetNav", "placeInfoLink", "catalogIntro", "listings", "catalogBottomText"],
+    contentSections: [
+      "hero", "factsLine", "facetNav", "placeInfoLink", "catalogIntro", "listings", "catalogBottomText",
+      "priceStats", "districtLinks", "faq", "buyingCosts",
+    ],
     structuredData: ["BreadcrumbList", "ItemList"],
   },
   district: {
@@ -24,7 +27,10 @@ export const SEO_PAGE_FAMILIES: Record<SeoPageFamily, SeoPageFamilyDefinition> =
     parent: null,
     copySource: "buildCityDistrictListingSeo",
     editorialScope: "district",
-    contentSections: ["hero", "factsLine", "facetNav", "placeInfoLink", "catalogIntro", "listings", "catalogBottomText"],
+    contentSections: [
+      "hero", "factsLine", "facetNav", "placeInfoLink", "catalogIntro", "listings", "catalogBottomText",
+      "priceStats", "districtLinks", "faq", "buyingCosts",
+    ],
     structuredData: ["BreadcrumbList", "ItemList"],
   },
   cityType: {

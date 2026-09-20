@@ -544,6 +544,41 @@
       "count": "{count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
       "from": "od {price} €",
       "medianPerSqm": "mediana {price} €/m² za mieszkania"
+    },
+    "depth": {
+      "listingsHeading": "{place}: mieszkania i nieruchomości na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+      "listingsHeadingFiltered": "{place}: pasujące oferty — {count}",
+      "aboutTitle": "{place}: o zakupie nieruchomości",
+      "prices": {
+        "title": "{place}: ceny nieruchomości",
+        "lead": "Ile dziś kosztują nieruchomości w ogłoszeniach sprzedaży na Domlivo. To ceny ofertowe, nie transakcyjne; mediany dotyczą mieszkań i kawalerek.",
+        "listings": "Oferty sprzedaży",
+        "medianPrice": "Mediana ceny mieszkania",
+        "medianSqm": "Mediana ceny za m²",
+        "from": "Mieszkania od",
+        "slices": "Według liczby pokoi i położenia",
+        "asOf": "Dane na dzień {date}, na podstawie {count, plural, one {# oferty} few {# ofert} many {# ofert} other {# oferty}} w Domlivo."
+      },
+      "districts": {
+        "title": "{place}: nieruchomości według dzielnic",
+        "siblingsTitle": "{city}: pozostałe dzielnice",
+        "allInCity": "{city}: wszystkie nieruchomości na sprzedaż"
+      },
+      "faq": {
+        "title": "{place}: pytania i odpowiedzi o zakupie",
+        "more": "{place}: więcej odpowiedzi"
+      },
+      "costs": {
+        "title": "Zakup przez cudzoziemca: ile to kosztuje",
+        "lead": "Cudzoziemcy kupują mieszkania, domy i lokale użytkowe w Albanii na takich samych zasadach prawnych jak obywatele; ograniczenie dotyczy tylko gruntów rolnych. Własność przechodzi wyłącznie na podstawie aktu notarialnego. Oprócz ceny kupujący płaci:",
+        "notary": "Notariusz: {min}–{max}% ceny według oficjalnej taryfy",
+        "registration": "Wpis własności do katastru (ASHK): {lek} leków, około {eur} €",
+        "agency": "Prowizja agencji po stronie kupującego: zwykle {pct}%",
+        "example": "Dla mieszkania w tutejszej cenie medianowej, <price></price>, to około <total></total> ({pct}% ceny).",
+        "source": "Stawki: zarządzenie Ministerstwa Sprawiedliwości nr 279/2012 (taryfa notarialna), cennik ASHK, praktyka rynkowa w zakresie prowizji. Dokładne kwoty potwierdź u notariusza.",
+        "guideForeigners": "Czy cudzoziemiec może kupić nieruchomość w Albanii?",
+        "guideLegal": "Przewodnik prawny dla kupujących"
+      }
     }
   },
   "NewBuilds": {

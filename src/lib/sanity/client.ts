@@ -6,6 +6,7 @@ export * from './queries/property';
 export * from './queries/settings';
 export * from './queries/catalog';
 export * from './queries/landing';
+export * from './queries/placeFaq';
 export * from './queries/district';
 export * from './queries/referenceDocs';
 export * from './queries/zoneMetrics';

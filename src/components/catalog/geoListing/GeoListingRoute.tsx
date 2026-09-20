@@ -24,7 +24,9 @@ import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
-import { isSeoPageIndexableIn, seoPageKeyFromListingRoute } from "@/lib/seo/pages";
+import { SEO_PAGE_FAMILIES, isSeoPageIndexableIn, seoPageKeyFromListingRoute } from "@/lib/seo/pages";
+import { ListingDepthSections } from "@/components/catalog/geoListing/ListingDepthSections";
+import { resolveCityDisplayName } from "@/lib/seo/listingSeoCopy";
 import {
   buildCityDistrictListingSeo,
   buildCityListingSeo,
@@ -505,8 +507,8 @@ export async function GeoListingPage({ params, search }: Props) {
   });
   if (districtUrl) redirect(districtUrl);
 
-  const t = await getTranslations("Listing.properties");
-  const tCatalog = await getTranslations("Catalog");
+  const t = await getTranslations({ locale, namespace: "Listing.properties" });
+  const tCatalog = await getTranslations({ locale, namespace: "Catalog" });
   const districtLabel = pathDistrict ? districtLabelFor(options, pathDistrict) : undefined;
   const facetPage =
     facet && geo.mode === "fullGeo"
@@ -530,6 +532,30 @@ export async function GeoListingPage({ params, search }: Props) {
   // city's heading, so the H1 said less than the <title> did. The heading
   // now carries the same words the tab and the search snippet carry.
   const typedCopy = typeSlug ? await buildCityTypeListingSeo(geo.listingCitySlug, typeSlug, locale) : null;
+
+  const cityLabel =
+    options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label || geo.listingCitySlug;
+  const placeName = districtLabel ? `${districtLabel}, ${cityLabel}` : cityLabel;
+  // Albanian needs the city in the locative after "në", as the district title template has it.
+  const cityIn = (await resolveCityDisplayName(geo.listingCitySlug, locale)) || cityLabel;
+  const placeIn = districtLabel ? `${districtLabel}, ${cityIn}` : cityIn;
+  const hasQuery = listingUrlHasQueryParams(search);
+
+  // The blocks under the grid are for the pages we ask Google to index: a city
+  // or a district the registry indexes in this locale, at its bare URL. A
+  // filtered or noindexed listing skips the queries and the markup.
+  const depthFamily = !facet && !typeSlug && !dealType ? (pathDistrict ? "district" : "city") : null;
+  const depthIndexable =
+    geo.mode === "fullGeo" && depthFamily && !hasQuery
+      ? (
+          await registryIndexing({
+            locale,
+            countrySlug: geo.listingCountrySlug,
+            citySlug: geo.listingCitySlug,
+            district: pathDistrict || undefined,
+          })
+        ).indexable
+      : false;
 
   const breadcrumbCountry: string | undefined =
     geo.mode === "fullGeo" ? geo.listingCountrySlug : undefined;
@@ -617,7 +643,23 @@ export async function GeoListingPage({ params, search }: Props) {
         searchParams={mergedSearch}
         urlSearch={search}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
+        heading={
+          geo.mode === "fullGeo"
+            ? { place: placeName, placeIn, filtered: Boolean(facet || typeSlug || dealType || hasQuery) }
+            : undefined
+        }
       />
+      {depthIndexable && depthFamily && geo.mode === "fullGeo" ? (
+        <ListingDepthSections
+          locale={locale}
+          countrySlug={geo.listingCountrySlug}
+          citySlug={geo.listingCitySlug}
+          cityLabel={cityLabel}
+          districtSlug={pathDistrict || undefined}
+          districtLabel={districtLabel}
+          sections={SEO_PAGE_FAMILIES[depthFamily].contentSections}
+        />
+      ) : null}
     </>
   );
 }
