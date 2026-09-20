@@ -11,26 +11,30 @@
  */
 import { LISTING_FACETS, LISTING_FACET_SLUGS, type ListingFacetSlug } from "@/lib/catalog/listingFacets";
 import { isSeoPageIndexableIn, selectSeoLinks, type SeoPageDecision, type SeoPageKey } from "@/lib/seo/pages";
+import type { FlatPriceSummary } from "@/lib/catalog/listingPriceSummary";
 
 /** A median of two flats is an anecdote, not a price. Same floor as the /info price table. */
 export const MIN_STAT_LISTINGS = 3;
 
-export type PlacePriceIndexRow = {
-  districtSlug: string | null;
-  count: number;
-  flatCount: number;
-  flatPriceFrom: number | null;
-  medianFlatPrice: number | null;
-  medianFlatPricePerSqm: number | null;
-};
+export type PlacePriceIndexRow = FlatPriceSummary & { districtSlug: string | null };
 
-export type PlacePriceFacts = {
-  count: number;
-  flatCount: number;
-  flatPriceFrom: number | null;
-  medianFlatPrice: number | null;
-  medianFlatPricePerSqm: number | null;
-};
+export type PlacePriceFacts = FlatPriceSummary;
+
+/**
+ * The figures of one group of listings that are fit to print: `null` when the
+ * group is too small for any of them, and no median over too few flats.
+ */
+export function printablePriceFacts(row: FlatPriceSummary | null | undefined): PlacePriceFacts | null {
+  if (!row || row.count < MIN_STAT_LISTINGS) return null;
+  const enoughFlats = row.flatCount >= MIN_STAT_LISTINGS;
+  return {
+    count: row.count,
+    flatCount: row.flatCount,
+    flatPriceFrom: row.flatCount > 0 ? row.flatPriceFrom : null,
+    medianFlatPrice: enoughFlats ? row.medianFlatPrice : null,
+    medianFlatPricePerSqm: enoughFlats ? row.medianFlatPricePerSqm : null,
+  };
+}
 
 /**
  * The city's row of the price index, or one district's. `null` when the place
@@ -41,16 +45,7 @@ export function placePriceFacts(
   districtSlug?: string | null,
 ): PlacePriceFacts | null {
   const wanted = districtSlug ? districtSlug.toLowerCase() : null;
-  const row = rows.find((r) => (r.districtSlug ? r.districtSlug.toLowerCase() : null) === wanted);
-  if (!row || row.count < MIN_STAT_LISTINGS) return null;
-  const enoughFlats = row.flatCount >= MIN_STAT_LISTINGS;
-  return {
-    count: row.count,
-    flatCount: row.flatCount,
-    flatPriceFrom: row.flatCount > 0 ? row.flatPriceFrom : null,
-    medianFlatPrice: enoughFlats ? row.medianFlatPrice : null,
-    medianFlatPricePerSqm: enoughFlats ? row.medianFlatPricePerSqm : null,
-  };
+  return printablePriceFacts(rows.find((r) => (r.districtSlug ? r.districtSlug.toLowerCase() : null) === wanted));
 }
 
 export type DecisionRow = { decision: SeoPageDecision; count: number };

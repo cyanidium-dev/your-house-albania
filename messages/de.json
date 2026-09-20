@@ -582,6 +582,23 @@
         "guideForeigners": "Können Ausländer in Albanien Immobilien kaufen?",
         "guideLegal": "Rechtsleitfaden für Käufer"
       }
+    },
+    "saleHub": {
+      "listingsHeading": "Wohnungen und Immobilien zum Kauf in Albanien: {count, plural, one {# Angebot} other {# Angebote}}",
+      "listingsHeadingFiltered": "Passende Angebote in Albanien: {count}",
+      "aboutTitle": "Immobilien kaufen in Albanien",
+      "prices": {
+        "title": "Immobilienpreise in Albanien",
+        "byCity": "Angebotspreise nach Stadt",
+        "city": "Stadt"
+      },
+      "cities": {
+        "title": "Immobilien zum Kauf in Albanien nach Stadt",
+        "districts": "{city}: die wichtigsten Stadtteile"
+      },
+      "types": {
+        "title": "Immobilien zum Kauf in Albanien nach Art"
+      }
     }
   },
   "NewBuilds": {

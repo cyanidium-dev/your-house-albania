@@ -16,6 +16,16 @@ import { SEO_PAGE_POLICY } from "@/lib/seo/pages/policy";
  */
 export const LISTING_DEAL_TYPE_NOINDEX_THRESHOLD = SEO_PAGE_POLICY.cityType.minInventory - 1;
 
+/**
+ * Whether a national `/sale/{type}` page is too thin to index. One rule for the
+ * page's robots tag and for whoever links to it (the `/sale` hub's type block).
+ * A non-numeric count means the inventory query failed: thin.
+ */
+export function isNationalTypeListingThin(totalCount: number): boolean {
+  if (!Number.isFinite(totalCount)) return true;
+  return totalCount <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD;
+}
+
 /** A listing with nothing on it answers nothing. */
 export const EMPTY_CITY_LISTING_NOINDEX_MAX = 0;
 

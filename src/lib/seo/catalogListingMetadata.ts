@@ -9,7 +9,7 @@
  */
 
 import { fetchCatalogProperties } from "@/lib/sanity/client";
-import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
+import { isNationalTypeListingThin } from "@/lib/seo/listingIndexPolicy";
 
 export { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
 
@@ -69,8 +69,7 @@ export async function shouldNoindexNonGeoDealTypeCombo(
     page: 1,
     pageSize: 1,
   });
-  const totalCount = listing?.totalCount ?? 0;
-  return totalCount <= LISTING_DEAL_TYPE_NOINDEX_THRESHOLD;
+  return isNationalTypeListingThin(listing?.totalCount ?? 0);
 }
 
 /**

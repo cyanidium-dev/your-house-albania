@@ -582,6 +582,23 @@
         "guideForeigners": "Gli stranieri possono comprare casa in Albania?",
         "guideLegal": "Guida legale per chi compra"
       }
+    },
+    "saleHub": {
+      "listingsHeading": "Appartamenti e immobili in vendita in Albania: {count, plural, one {# annuncio} other {# annunci}}",
+      "listingsHeadingFiltered": "Annunci corrispondenti in Albania: {count}",
+      "aboutTitle": "Comprare casa in Albania",
+      "prices": {
+        "title": "Prezzi degli immobili in Albania",
+        "byCity": "Prezzi richiesti per città",
+        "city": "Città"
+      },
+      "cities": {
+        "title": "Immobili in vendita in Albania per città",
+        "districts": "{city}: zone principali"
+      },
+      "types": {
+        "title": "Immobili in vendita in Albania per tipologia"
+      }
     }
   },
   "NewBuilds": {

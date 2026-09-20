@@ -5,6 +5,7 @@ import {
   LISTING_QUERY_SEGMENT,
   NON_LISTING_FIRST_SEGMENTS,
   hasListingQuery,
+  isDealHubPathname,
   isGeoListingPathname,
   listingQueryPublicPathname,
   listingQueryRewritePathname,
@@ -40,6 +41,22 @@ describe("listingQueryRewritePathname", () => {
   it("ignores empty values, as the page's noindex rule does", () => {
     expect(hasListingQuery(q("page="))).toBe(false);
     expect(hasListingQuery(q("page=1"))).toBe(true);
+  });
+
+  it("keeps the national sale hub cached and sends its query URLs to the query route", () => {
+    expect(listingQueryRewritePathname("/pl/sale", q(""), LOCALES)).toBeNull();
+    expect(listingQueryRewritePathname("/pl/sale/apartment", q("utm_source=x"), LOCALES)).toBeNull();
+    expect(listingQueryRewritePathname("/pl/sale", q("page=2"), LOCALES)).toBe(`/pl/${LISTING_QUERY_SEGMENT}/sale`);
+    expect(listingQueryRewritePathname("/de/sale/apartment", q("city=durres&sort=price-asc"), LOCALES)).toBe(
+      `/de/${LISTING_QUERY_SEGMENT}/sale/apartment`,
+    );
+    // `?type=` on the bare hub is what the query route redirects to `/sale/{type}`.
+    expect(listingQueryRewritePathname("/en/sale", q("type=villa"), LOCALES)).toBe(`/en/${LISTING_QUERY_SEGMENT}/sale`);
+  });
+
+  it("leaves the hidden rental hubs on their own per-request route", () => {
+    expect(listingQueryRewritePathname("/en/rent", q("page=2"), LOCALES)).toBeNull();
+    expect(listingQueryRewritePathname("/en/short-term-rent/apartment", q("page=2"), LOCALES)).toBeNull();
   });
 
   it("never touches other routes", () => {
@@ -85,8 +102,21 @@ describe("isGeoListingPathname", () => {
   });
 });
 
+describe("isDealHubPathname", () => {
+  it("matches the hub and its type pages, nothing deeper and no other deal", () => {
+    expect(isDealHubPathname("/en/sale", LOCALES)).toBe(true);
+    expect(isDealHubPathname("/en/sale/", LOCALES)).toBe(true);
+    expect(isDealHubPathname("/en/sale/villa", LOCALES)).toBe(true);
+    expect(isDealHubPathname("/en/sale/villa/x", LOCALES)).toBe(false);
+    expect(isDealHubPathname("/en/rent", LOCALES)).toBe(false);
+    expect(isDealHubPathname("/xx/sale", LOCALES)).toBe(false);
+    expect(isDealHubPathname("/sale", LOCALES)).toBe(false);
+  });
+});
+
 describe("listingQueryPublicPathname", () => {
   it("maps the internal path back to the public one", () => {
+    expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}/sale/apartment`, LOCALES)).toBe("/en/sale/apartment");
     expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}/albania/durres/1-1`, LOCALES)).toBe("/en/albania/durres/1-1");
     expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}`, LOCALES)).toBe("/en");
     expect(listingQueryPublicPathname("/en/albania/durres", LOCALES)).toBeNull();

@@ -3,7 +3,7 @@ import { isPublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   fetchCatalogFilterOptions,
   fetchCatalogSeoPageRoot,
@@ -12,6 +12,8 @@ import {
 import { getNonGeoDealListingRedirectUrl } from "@/lib/routes/listingRouteResolver";
 import { buildTypeListingSeo } from "@/lib/seo/listingSeoCopy";
 import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
+import { listingUrlHasQueryParams } from "@/lib/seo/catalogListingMetadata";
+import { SaleHubDepthSections } from "@/components/catalog/saleHub/SaleHubDepthSections";
 
 function normalizeSeg(s: string): string {
   return decodeURIComponent(s).trim().toLowerCase();
@@ -30,6 +32,9 @@ export async function NonGeoDealListingPage({
   filters: string[] | undefined;
   searchParams: Record<string, string | string[] | undefined>;
 }) {
+  // Without this next-intl reads the locale from `headers()`, and the route
+  // renders per request whatever else it does.
+  setRequestLocale(locale);
   if (!isPublicDealRouteSegment(dealRouteSegment)) notFound();
   if (filters && filters.length > 1) notFound();
 
@@ -87,13 +92,22 @@ export async function NonGeoDealListingPage({
     mergedSearch.type = propertyTypeSegment;
   }
 
-  const t = await getTranslations("Listing.properties");
-  const tCatalog = await getTranslations("Catalog");
+  // The locale is passed, not inferred: a cached route cannot read the request.
+  const t = await getTranslations({ locale, namespace: "Listing.properties" });
+  const tCatalog = await getTranslations({ locale, namespace: "Catalog" });
   const rawSeo = await fetchCatalogSeoPageRoot();
   const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
   // Same words in the H1 as in the <title>: "Apartamente në shitje në Shqipëri"
   // on the typed page, not the root catalogue's heading.
   const typedCopy = propertyTypeSegment ? await buildTypeListingSeo(propertyTypeSegment, locale) : null;
+
+  // The sale hub names the country in its headings; the hidden rental hubs keep none.
+  const tHub = dealRouteSegment === "sale" ? await getTranslations({ locale, namespace: "Catalog.saleHub" }) : null;
+  const filtered = Boolean(propertyTypeSegment) || listingUrlHasQueryParams(search);
+  // The blocks under the grid belong to the one URL we ask Google to index for
+  // the country: the bare hub. A typed, filtered or noindexed copy skips the
+  // queries and the markup.
+  const showDepth = Boolean(tHub) && !filtered && !(catalogSeo?.noIndex ?? false);
 
   return (
     <>
@@ -115,8 +129,18 @@ export async function NonGeoDealListingPage({
       <PropertiesListing
         locale={locale}
         searchParams={mergedSearch}
+        urlSearch={search}
         catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
+        heading={
+          tHub
+            ? {
+                text: (count) => tHub(filtered ? "listingsHeadingFiltered" : "listingsHeading", { count }),
+                aboutText: tHub("aboutTitle"),
+              }
+            : undefined
+        }
       />
+      {showDepth ? <SaleHubDepthSections locale={locale} /> : null}
     </>
   );
 }

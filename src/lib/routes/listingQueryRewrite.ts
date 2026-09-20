@@ -6,6 +6,10 @@
  * route `/{locale}/listing-query/{country}/{city}/…`, which reads the query and
  * renders the same tree per request. The browser URL does not change.
  *
+ * The national sale hub works the same way: `/{locale}/sale[/{type}]` is
+ * cached, and `/{locale}/sale?page=2` is rewritten to
+ * `/{locale}/listing-query/sale[/{type}]`.
+ *
  * Edge-safe: no imports, the middleware bundles this file.
  */
 
@@ -78,6 +82,21 @@ export function isGeoListingPathname(pathname: string, locales: readonly string[
   return true;
 }
 
+/**
+ * Deal hubs whose path-only URL is cached and whose query URLs have a sibling
+ * under `listing-query`. `rent` and `short-term-rent` are hidden deals that
+ * answer 404; they keep their single per-request route.
+ */
+export const CACHED_DEAL_HUB_SEGMENTS: ReadonlySet<string> = new Set(["sale"]);
+
+/** True for `/{locale}/sale` and `/{locale}/sale/{type}` — the national hub route. */
+export function isDealHubPathname(pathname: string, locales: readonly string[]): boolean {
+  const parts = segmentsOf(pathname);
+  if (parts.length < 2 || parts.length > 3) return false;
+  if (!locales.includes(parts[0])) return false;
+  return CACHED_DEAL_HUB_SEGMENTS.has(parts[1].toLowerCase());
+}
+
 /** True when the query holds anything the page has to read. */
 export function hasListingQuery(searchParams: URLSearchParams): boolean {
   for (const [name, value] of searchParams) {
@@ -96,7 +115,7 @@ export function listingQueryRewritePathname(
   searchParams: URLSearchParams,
   locales: readonly string[],
 ): string | null {
-  if (!isGeoListingPathname(pathname, locales)) return null;
+  if (!isGeoListingPathname(pathname, locales) && !isDealHubPathname(pathname, locales)) return null;
   if (!hasListingQuery(searchParams)) return null;
   const [locale, ...rest] = segmentsOf(pathname);
   return `/${locale}/${LISTING_QUERY_SEGMENT}/${rest.join("/")}`;

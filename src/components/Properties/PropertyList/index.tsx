@@ -72,8 +72,9 @@ async function PropertiesListing({
    * ("Apartments and property for sale in Durrës: 358 listings"). `filtered`
    * when the page shows a slice or a filtered result rather than the place's
    * whole stock. Also titles the bottom text when that has no heading.
+   * The national hub has no place to name and passes its two lines ready-made.
    */
-  heading?: { place: string; placeIn: string; filtered: boolean }
+  heading?: { place: string; placeIn: string; filtered: boolean } | { text: (count: number) => string; aboutText: string }
 }) {
   const [filterOptions, siteSettings, areaBoundsFromData] = await Promise.all([
     fetchCatalogFilterOptions(locale),
@@ -301,7 +302,23 @@ async function PropertiesListing({
     initialView: viewMode,
   }
 
-  const tDepth = heading ? await getTranslations({ locale, namespace: 'Catalog.depth' }) : null
+  const tDepth = heading && !('text' in heading) ? await getTranslations({ locale, namespace: 'Catalog.depth' }) : null
+  const headingText = !heading
+    ? ''
+    : 'text' in heading
+      ? heading.text(totalItems)
+      : tDepth
+        ? tDepth(heading.filtered ? 'listingsHeadingFiltered' : 'listingsHeading', {
+            place: heading.place,
+            placeIn: heading.placeIn,
+            count: totalItems,
+          })
+        : ''
+  const aboutHeading = !heading
+    ? undefined
+    : 'text' in heading
+      ? heading.aboutText
+      : tDepth?.('aboutTitle', { place: heading.place, placeIn: heading.placeIn })
 
   return (
     <section className='pt-0!'>
@@ -309,16 +326,12 @@ async function PropertiesListing({
         <ItemListJsonLd items={itemListEntries} baseUrl={baseUrl} locale={locale} />
       )}
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0 overflow-x-clip'>
-        {heading && tDepth && totalItems > 0 ? (
+        {headingText && totalItems > 0 ? (
           <h2
             id={LISTINGS_ANCHOR_ID}
             className='scroll-mt-28 pt-6 text-dark dark:text-white text-xl md:text-2xl font-semibold'
           >
-            {tDepth(heading.filtered ? 'listingsHeadingFiltered' : 'listingsHeading', {
-              place: heading.place,
-              placeIn: heading.placeIn,
-              count: totalItems,
-            })}
+            {headingText}
           </h2>
         ) : null}
         <CatalogViewProvider initialView={viewMode}>
@@ -338,7 +351,7 @@ async function PropertiesListing({
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (
           <CatalogSeoText
             content={catalogSeo.bottomText}
-            heading={heading && tDepth ? tDepth('aboutTitle', { place: heading.place, placeIn: heading.placeIn }) : undefined}
+            heading={aboutHeading}
           />
         )}
       </div>
