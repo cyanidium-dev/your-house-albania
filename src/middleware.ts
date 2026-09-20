@@ -34,6 +34,15 @@ export default function middleware(request: NextRequest) {
     url.pathname = url.pathname.replace(/^\/al\//, "/sq/");
     return NextResponse.redirect(url);
   }
+  // `/en/Albania/Durres` answered 200 with a canonical tag (audit 2026-09-20):
+  // a second address for the page, rendered by the most expensive route. Every
+  // path the site generates is lower-case, so an upper-case ASCII letter is
+  // always someone's typo or a mangled link. ASCII only: nothing else in a
+  // slug is touched.
+  if (/[A-Z]/.test(url.pathname)) {
+    url.pathname = url.pathname.replace(/[A-Z]/g, (c) => c.toLowerCase());
+    return NextResponse.redirect(url, 308);
+  }
   const agentRedirect = maybeRedirectLegacyAgentCityPath(url.pathname);
   if (agentRedirect) {
     url.pathname = agentRedirect;
