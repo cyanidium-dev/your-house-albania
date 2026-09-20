@@ -51,7 +51,8 @@
       "cities": "Qytetet",
       "investment": "Prona për investim",
       "realtors": "Për agjentë",
-      "blog": "Blog"
+      "blog": "Blog",
+      "about": "Rreth nesh"
     },
     "cities": {
       "empty": "Nuk ka qytete për të shfaqur."
@@ -306,7 +307,8 @@
     "navLabel": "Shtegu i lundrimit",
     "newBuilds": "Ndërtime të reja",
     "privacy": "Politika e privatësisë",
-    "terms": "Kushtet e përdorimit"
+    "terms": "Kushtet e përdorimit",
+    "about": "Rreth nesh"
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",
@@ -894,5 +896,77 @@
     "askCta": "Pyet asistentin",
     "related": "Faqe të lidhura",
     "methodNote": "Shumat janë sjellë në euro me kursin e Bankës së Shqipërisë të shënuar në faqe. Çmimi i kërkuar nuk është çmimi i shitjes, dhe qiraja e publikuar nuk është qiraja e realizuar."
+  },
+  "About": {
+    "metaTitle": "Rreth Domlivo: ekipi dhe si funksionon faqja",
+    "metaDescription": "Kush e ndërton Domlivo, tregun e pronave në Shqipëri: tre bashkëthemeluesit, nga vijnë njoftimet, si mbahen të përditësuara dhe si të na kontaktoni.",
+    "h1": "Rreth Domlivo",
+    "intro1": "Domlivo është një treg pronash për Shqipërinë. Këtu gjeni apartamente, shtëpi, vila, troje dhe ambiente tregtare në shitje, në Durrës, Tiranë, Vlorë, Sarandë dhe përgjatë bregdetit, si për blerës nga jashtë, ashtu edhe për ata që jetojnë tashmë në Shqipëri.",
+    "intro2": "Njoftimet vijnë nga pronarët dhe nga agjencitë partnere. Çdo njoftim tregon çmimin dhe kush e ofron pronën; ju flisni drejtpërdrejt me ta dhe Domlivo nuk shton asnjë komision të vetin. Faqja është në shtatë gjuhë: shqip, anglisht, ukrainisht, rusisht, italisht, polonisht dhe gjermanisht.",
+    "mission": {
+      "title": "Ideja jonë",
+      "body1": "Domlivo-n po e ndërtojmë si një treg pronash të decentralizuar, analitik dhe me inteligjencë artificiale për Shqipërinë. Qëllimi është i thjeshtë: blerësi ta gjejë shpejt njoftimin e duhur dhe të marrë këshillim nga asistenti me IA drejtpërdrejt në bisedë. Asistenti përgjigjet duke u mbështetur në dokumentet kërkimore të vetë Domlivo-s: sa kushtojnë shpenzimet komunale, sa kthen një investim, sa kushton blerja përtej çmimit.",
+      "body2": "Fjala “i decentralizuar” ka këtu një kuptim konkret. Katalogu nuk i përket një agjencie të vetme: në të publikojnë pronarët dhe shumë agjenci partnere, çdo njoftim tregon kush e ka publikuar dhe blerësi flet drejtpërdrejt me të.",
+      "uspTitle": "Çfarë ka sot në faqe",
+      "usp": {
+        "item1": "Kërkim me IA: përshkruani shtëpinë me fjalët tuaja; asistenti kërkon në njoftime dhe përgjigjet nga baza e njohurive, duke cituar burimet.",
+        "item2": "Bazë njohurish dhe udhëzues ku çdo shifër ka burim dhe datë.",
+        "item3": "Çmimet e kërkuara sipas lagjeve në faqet e qyteteve, të rillogaritura çdo orë nga njoftimet aktive.",
+        "item4": "Blloku “Sa kushton blerja dhe mbajtja” në faqet e njoftimeve.",
+        "item5": "Shtatë gjuhë dhe ndërrim i monedhës.",
+        "item6": "Krahasime të lagjeve dhe të qyteteve, krah për krah.",
+        "item7": "Kontakt i drejtpërdrejtë me pronarët dhe agjencitë, pa komision."
+      }
+    },
+    "research": {
+      "title": "Analiza me burime",
+      "body": "Krahas njoftimeve botojmë analiza të tregut: udhëzues për blerjen, blog dhe faqe çmimesh për qytete e lagje. Shifrat vijnë nga burime të emërtuara, me datë, dhe aty ku nuk kemi të dhëna, faqja e thotë hapur.",
+      "guides": "Udhëzues",
+      "blog": "Blog",
+      "cities": "Qytetet"
+    },
+    "team": {
+      "title": "Ekipi",
+      "intro": "Domlivo u krijua nga tre persona. Njëri shet prona në Shqipëri çdo ditë; dy të tjerët e kanë zanat ndërtimin e faqeve të internetit.",
+      "linksLabel": "Lidhje",
+      "members": {
+        "fedir": {
+          "role": "Bashkëthemelues, analiza dhe zhvillimi",
+          "bio": "Analist dhe marketer. Ndërton platformën Domlivo dhe analizat e tregut që botohen në të: faqet e çmimeve, udhëzuesit dhe të dhënat mbi të cilat mbështeten. Drejtues teknik dhe themelues i studios së uebit Code-Site."
+        },
+        "viktor": {
+          "role": "Bashkëthemelues, ekspert i tregut shqiptar të pronave",
+          "bio": "Jeton në Shqipëri dhe drejton agjencinë Grinchenko Real Estate. Në vitet e fundit ka shitur këtu mbi 100 apartamente dhe i ndihmon blerësit me dokumentet, dhënien e pronës me qira dhe pyetjet që dalin pas blerjes. Ka themeluar një kanal të njohur në Telegram për Shqipërinë. Parimi i tij: e viziton vetë çdo apartament dhe u tregon shikuesve të vërtetën për të, me të mirat dhe të metat."
+        },
+        "diana": {
+          "role": "Bashkëthemeluese, dizajni dhe përvoja e përdoruesit",
+          "bio": "Përgjigjet për dizajnin, paraqitjen dhe përvojën e përdoruesit në Domlivo; idetë që e kthejnë një vizitë në kërkesë janë të sajat. Dizajnere kryesore në Code-Site. Sipas saj, dizajni duhet të shesë, prandaj mendon për konvertimin përpara se të mendojë për rrjetën dhe ngjyrat."
+        }
+      },
+      "links": {
+        "codeSite": "Code-Site",
+        "agency": "Grinchenko Real Estate",
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "codeSiteProfile": "Profili në Code-Site",
+        "telegram": "Kanali në Telegram"
+      }
+    },
+    "listings": {
+      "title": "Si vijnë njoftimet në Domlivo",
+      "intro": "Parapëlqejmë të përshkruajmë atë që ndodh realisht, sesa të premtojmë më shumë nga sa bëjmë.",
+      "item1": "Njoftimet i shtojnë pronarët, si dhe agjencitë dhe agjentët partnerë që regjistrohen në faqe.",
+      "item2": "Kur pronën e ofron një agjenci ose një agjent, emri i tyre shfaqet në njoftim pranë çmimit.",
+      "item3": "Çmimi shkruhet në njoftim. Kur prona shitet ose tërhiqet nga tregu, njoftimi hiqet nga katalogu.",
+      "item4": "Keni parë një njoftim të vjetruar ose të pasaktë? Na shkruani dhe do ta verifikojmë me atë që e ka publikuar."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "body": "Për pyetje rreth një prone, njoftimit tuaj ose vetë faqes:",
+      "form": "Formulari i kontaktit"
+    }
+  },
+  "Legal": {
+    "operatorNotice": "Kjo faqe administrohet nga ekipi i Domlivo. Mund të na shkruani në {email}, në {whatsapp} ose në {telegram}."
   }
 }

@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb";
 import { fetchLandingPageBySlug, fetchSiteSettings } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
+import { prepareLegalLanding } from "@/lib/legal/legalLanding";
+import {
+  BUSINESS_TELEGRAM_URL,
+  BUSINESS_WHATSAPP_URL,
+} from "@/lib/contacts/businessContacts";
+import { BUSINESS_EMAIL } from "@/lib/contacts/businessEmail";
 
 /**
  * Terms of Use.
@@ -38,8 +44,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TermsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const landing = await fetchLandingPageBySlug(TERMS_LANDING_SLUG);
-  if (!landing) notFound();
+  const rawLanding = await fetchLandingPageBySlug(TERMS_LANDING_SLUG);
+  if (!rawLanding) notFound();
+  const t = await getTranslations("Legal");
+  // The CMS copy still carries `TODO(legal)` markers for facts only the owner
+  // can supply. They are handled at render time (see `legalLanding.ts`, which
+  // keeps the list of what is still open) and the title becomes the page's h1.
+  const landing = prepareLegalLanding(rawLanding, {
+    // `t.raw`: the {email}/{whatsapp}/{telegram} placeholders are turned into
+    // links by the block builder, not interpolated by next-intl.
+    operatorTemplate: t.raw("operatorNotice") as string,
+    contacts: {
+      email: BUSINESS_EMAIL,
+      whatsappUrl: BUSINESS_WHATSAPP_URL,
+      telegramUrl: BUSINESS_TELEGRAM_URL,
+    },
+  });
   return (
     <LandingRenderer
       locale={locale}

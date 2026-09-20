@@ -51,7 +51,8 @@
       "cities": "Städte",
       "investment": "Anlageimmobilien",
       "realtors": "Für Makler",
-      "blog": "Blog"
+      "blog": "Blog",
+      "about": "Über uns"
     },
     "cities": {
       "empty": "Keine Städte vorhanden."
@@ -306,7 +307,8 @@
     "navLabel": "Breadcrumb",
     "newBuilds": "Neubau",
     "privacy": "Datenschutzerklärung",
-    "terms": "Nutzungsbedingungen"
+    "terms": "Nutzungsbedingungen",
+    "about": "Über uns"
   },
   "Districts": {
     "hubTitle": "Stadtteile von {city}",
@@ -894,5 +896,77 @@
     "askCta": "Assistenten fragen",
     "related": "Verwandte Seiten",
     "methodNote": "Beträge sind zum auf der Seite angegebenen Kurs der Bank of Albania in Euro umgerechnet. Angebotspreise sind keine Transaktionspreise, inserierte Mieten keine erzielten Mieten."
+  },
+  "About": {
+    "metaTitle": "Über Domlivo: Team und Arbeitsweise",
+    "metaDescription": "Wer hinter Domlivo steht, dem Immobilienmarktplatz für Albanien: die drei Gründer, woher die Inserate kommen, wie sie aktuell bleiben und wie Sie uns erreichen.",
+    "h1": "Über Domlivo",
+    "intro1": "Domlivo ist ein Immobilienmarktplatz für Albanien. Hier finden Sie Wohnungen, Häuser, Villen, Grundstücke und Gewerbeflächen zum Kauf in Durrës, Tirana, Vlora, Saranda und entlang der Küste, für Käufer aus dem Ausland ebenso wie für Menschen, die bereits in Albanien leben.",
+    "intro2": "Die Inserate stammen von Eigentümern und Partneragenturen. Jedes Inserat nennt den Preis und den Anbieter; Sie sprechen direkt mit ihm, und Domlivo schlägt keine eigene Provision auf. Die Website gibt es in sieben Sprachen: Albanisch, Englisch, Ukrainisch, Russisch, Italienisch, Polnisch und Deutsch.",
+    "mission": {
+      "title": "Unsere Idee",
+      "body1": "Wir bauen Domlivo als dezentralen, analytischen KI-Marktplatz für Immobilien in Albanien. Das Ziel ist einfach: Käufer finden schnell das passende Inserat und bekommen direkt im Chat eine Beratung durch einen KI-Assistenten. Der Assistent antwortet auf Grundlage der eigenen Recherchedokumente von Domlivo: was Nebenkosten ausmachen, was eine Investition einbringt, was ein Kauf über den Preis hinaus kostet.",
+      "body2": "„Dezentral“ hat hier eine konkrete Bedeutung. Der Katalog gehört nicht einer einzelnen Agentur: Eigentümer und viele Partneragenturen veröffentlichen darin, jedes Inserat nennt, wer es eingestellt hat, und der Käufer spricht direkt mit diesem Anbieter.",
+      "uspTitle": "Was es heute auf der Website gibt",
+      "usp": {
+        "item1": "KI-Suche: Beschreiben Sie die Immobilie in eigenen Worten; der Assistent durchsucht die Inserate und antwortet aus der Wissensdatenbank, mit Quellenangaben.",
+        "item2": "Eine Wissensdatenbank und Ratgeber, in denen jede Zahl eine Quelle und ein Datum hat.",
+        "item3": "Angebotspreise nach Stadtteil auf den Stadtseiten, stündlich aus den aktiven Inseraten neu berechnet.",
+        "item4": "Der Block „Was Kauf und Unterhalt kosten“ auf den Inseratsseiten.",
+        "item5": "Sieben Sprachen und ein Währungsumschalter.",
+        "item6": "Direkte Vergleiche von Stadtteilen und Städten.",
+        "item7": "Direkter Kontakt zu Eigentümern und Agenturen, ohne Provision."
+      }
+    },
+    "research": {
+      "title": "Marktanalysen mit Quellen",
+      "body": "Neben den Inseraten veröffentlichen wir Marktanalysen: Kaufratgeber, einen Blog und Preisseiten für Städte und Stadtteile. Zahlen haben eine benannte Quelle und ein Datum, und wo uns Daten fehlen, steht das auf der Seite.",
+      "guides": "Ratgeber",
+      "blog": "Blog",
+      "cities": "Städte"
+    },
+    "team": {
+      "title": "Das Team",
+      "intro": "Domlivo wurde von drei Menschen gegründet. Einer verkauft jeden Tag Immobilien in Albanien, die beiden anderen bauen beruflich Websites.",
+      "linksLabel": "Links",
+      "members": {
+        "fedir": {
+          "role": "Mitgründer, Analyse und Entwicklung",
+          "bio": "Analyst und Marketer. Er entwickelt die Plattform Domlivo und die Marktanalysen, die dort erscheinen: die Preisseiten, die Ratgeber und die Daten dahinter. Tech Lead und Gründer des Webstudios Code-Site."
+        },
+        "viktor": {
+          "role": "Mitgründer, Experte für den albanischen Immobilienmarkt",
+          "bio": "Er lebt in Albanien und führt die Agentur Grinchenko Real Estate. In den vergangenen Jahren hat er hier mehr als 100 Wohnungen verkauft und unterstützt Käufer bei Dokumenten, bei der Vermietung und bei Fragen, die nach dem Kauf aufkommen. Er hat einen beliebten Telegram-Kanal über Albanien gegründet. Sein Grundsatz: Er besichtigt jede Wohnung selbst und sagt den Zuschauern die Wahrheit über sie, mit Vor- und Nachteilen."
+        },
+        "diana": {
+          "role": "Mitgründerin, Design und Nutzererlebnis",
+          "bio": "Sie verantwortet Design, Auftritt und Nutzererlebnis von Domlivo; die Ideen, die aus einem Besuch eine Anfrage machen, stammen von ihr. Lead Designerin bei Code-Site. Ihr Standpunkt: Design muss verkaufen, deshalb denkt sie an die Conversion, bevor sie an Raster und Farben denkt."
+        }
+      },
+      "links": {
+        "codeSite": "Code-Site",
+        "agency": "Grinchenko Real Estate",
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "codeSiteProfile": "Profil bei Code-Site",
+        "telegram": "Telegram-Kanal"
+      }
+    },
+    "listings": {
+      "title": "Wie Inserate zu Domlivo kommen",
+      "intro": "Wir beschreiben lieber, was tatsächlich passiert, als mehr zu versprechen, als wir tun.",
+      "item1": "Inserate werden von Eigentümern sowie von Partneragenturen und Maklern eingestellt, die sich auf der Website registrieren.",
+      "item2": "Bietet eine Agentur oder ein Makler die Immobilie an, steht ihr Name im Inserat neben dem Preis.",
+      "item3": "Der Preis steht im Inserat. Ist eine Immobilie verkauft oder zurückgezogen, verschwindet das Inserat aus dem Katalog.",
+      "item4": "Ein Inserat ist veraltet oder fehlerhaft? Schreiben Sie uns, wir klären es mit dem Anbieter."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "body": "Bei Fragen zu einer Immobilie, zu einem eigenen Inserat oder zur Website:",
+      "form": "Kontaktformular"
+    }
+  },
+  "Legal": {
+    "operatorNotice": "Diese Website wird vom Domlivo-Team betrieben. Sie erreichen uns unter {email}, über {whatsapp} oder über {telegram}."
   }
 }

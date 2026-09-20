@@ -51,7 +51,8 @@
       "cities": "Miasta",
       "investment": "Nieruchomości inwestycyjne",
       "realtors": "Dla agentów",
-      "blog": "Blog"
+      "blog": "Blog",
+      "about": "O nas"
     },
     "cities": {
       "empty": "Brak miast do wyświetlenia."
@@ -306,7 +307,8 @@
     "investment": "Inwestycje",
     "newBuilds": "Nowe inwestycje",
     "privacy": "Polityka prywatności",
-    "terms": "Warunki korzystania"
+    "terms": "Warunki korzystania",
+    "about": "O nas"
   },
   "Districts": {
     "hubTitle": "Dzielnice miasta {city}",
@@ -894,5 +896,77 @@
     "askCta": "Zapytaj asystenta",
     "related": "Powiązane strony",
     "methodNote": "Kwoty przeliczono na euro po kursie Banku Albanii podanym na stronie. Cena ofertowa to nie cena transakcyjna, a czynsz z ogłoszenia to nie czynsz uzyskany."
+  },
+  "About": {
+    "metaTitle": "O Domlivo: zespół i zasady działania serwisu",
+    "metaDescription": "Kto tworzy Domlivo, serwis z nieruchomościami w Albanii: troje założycieli, skąd pochodzą ogłoszenia, jak są aktualizowane i jak się z nami skontaktować.",
+    "h1": "O Domlivo",
+    "intro1": "Domlivo to serwis ogłoszeń nieruchomości w Albanii. Znajdziesz tu mieszkania, domy, wille, działki i lokale użytkowe na sprzedaż w Durrës, Tiranie, Wlorze, Sarandzie i na wybrzeżu, zarówno dla kupujących z zagranicy, jak i dla osób, które już mieszkają w Albanii.",
+    "intro2": "Ogłoszenia pochodzą od właścicieli i agencji partnerskich. W każdym podana jest cena oraz to, kto oferuje nieruchomość; rozmawiasz z tą osobą bezpośrednio, a Domlivo nie dolicza własnej prowizji. Serwis działa w siedmiu językach: albańskim, angielskim, ukraińskim, rosyjskim, włoskim, polskim i niemieckim.",
+    "mission": {
+      "title": "Nasz pomysł",
+      "body1": "Budujemy Domlivo jako zdecentralizowany, analityczny marketplace nieruchomości w Albanii oparty na AI. Cel jest prosty: kupujący szybko znajduje odpowiednie ogłoszenie i dostaje konsultację asystenta AI od razu na czacie. Asystent odpowiada na podstawie własnych opracowań Domlivo: ile kosztują media, jaki zwrot daje inwestycja, ile kosztuje zakup ponad cenę.",
+      "body2": "„Zdecentralizowany” oznacza tu konkretną rzecz. Katalog nie należy do jednej agencji: publikują w nim właściciele i wiele agencji partnerskich, każde ogłoszenie podaje, kto je dodał, a kupujący rozmawia z tą osobą bezpośrednio.",
+      "uspTitle": "Co już jest w serwisie",
+      "usp": {
+        "item1": "Wyszukiwanie AI: opisz mieszkanie własnymi słowami; asystent przeszukuje ogłoszenia i odpowiada z bazy wiedzy, podając źródła.",
+        "item2": "Baza wiedzy i poradniki, w których każda liczba ma źródło i datę.",
+        "item3": "Ceny ofertowe według dzielnic na stronach miast, przeliczane co godzinę z aktywnych ogłoszeń.",
+        "item4": "Blok „Ile kosztuje zakup i utrzymanie” na stronach ogłoszeń.",
+        "item5": "Siedem języków i przełącznik walut.",
+        "item6": "Porównania dzielnic i miast obok siebie.",
+        "item7": "Bezpośredni kontakt z właścicielami i agencjami, bez prowizji."
+      }
+    },
+    "research": {
+      "title": "Analizy ze źródłami",
+      "body": "Oprócz ogłoszeń publikujemy analizy rynku: poradniki zakupowe, blog oraz strony z cenami w miastach i dzielnicach. Liczby mają podane źródło i datę, a gdy danych brakuje, strona mówi o tym wprost.",
+      "guides": "Poradniki",
+      "blog": "Blog",
+      "cities": "Miasta"
+    },
+    "team": {
+      "title": "Zespół",
+      "intro": "Domlivo założyły trzy osoby. Jedna na co dzień sprzedaje nieruchomości w Albanii, dwie pozostałe zawodowo tworzą strony internetowe.",
+      "linksLabel": "Linki",
+      "members": {
+        "fedir": {
+          "role": "Współzałożyciel, analityka i rozwój platformy",
+          "bio": "Analityk i marketer. Buduje platformę Domlivo i przygotowuje publikowane na niej analizy rynku: strony z cenami, poradniki i dane, na których się opierają. Tech lead i założyciel studia internetowego Code-Site."
+        },
+        "viktor": {
+          "role": "Współzałożyciel, ekspert albańskiego rynku nieruchomości",
+          "bio": "Mieszka w Albanii i prowadzi agencję Grinchenko Real Estate. W ostatnich latach sprzedał tu ponad 100 mieszkań; pomaga kupującym w formalnościach, wynajmie i sprawach, które pojawiają się po zakupie. Założył popularny kanał o Albanii na Telegramie. Jego zasada: każde mieszkanie ogląda osobiście i mówi widzom prawdę o nim, o zaletach i o wadach."
+        },
+        "diana": {
+          "role": "Współzałożycielka, design i doświadczenie użytkownika",
+          "bio": "Odpowiada za design, sposób prezentacji i doświadczenie użytkownika w Domlivo; to jej pomysły zamieniają wizytę w zapytanie. Główna projektantka w Code-Site. Uważa, że design ma sprzedawać, dlatego najpierw myśli o konwersji, a dopiero potem o siatce i kolorach."
+        }
+      },
+      "links": {
+        "codeSite": "Code-Site",
+        "agency": "Grinchenko Real Estate",
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "codeSiteProfile": "Profil w Code-Site",
+        "telegram": "Kanał na Telegramie"
+      }
+    },
+    "listings": {
+      "title": "Skąd biorą się ogłoszenia na Domlivo",
+      "intro": "Wolimy opisać to, co dzieje się naprawdę, niż obiecywać więcej, niż robimy.",
+      "item1": "Ogłoszenia dodają właściciele oraz partnerskie agencje i pośrednicy, którzy rejestrują się w serwisie.",
+      "item2": "Gdy nieruchomość oferuje agencja lub pośrednik, ich nazwa jest podana w ogłoszeniu obok ceny.",
+      "item3": "Cena jest podana w ogłoszeniu. Gdy nieruchomość zostanie sprzedana lub wycofana, ogłoszenie znika z katalogu.",
+      "item4": "Widzisz nieaktualne lub błędne ogłoszenie? Napisz do nas, sprawdzimy to u osoby, która je dodała."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "body": "W sprawie nieruchomości, własnego ogłoszenia albo samego serwisu:",
+      "form": "Formularz kontaktowy"
+    }
+  },
+  "Legal": {
+    "operatorNotice": "Serwis prowadzi zespół Domlivo. Możesz napisać do nas na {email}, przez {whatsapp} lub {telegram}."
   }
 }

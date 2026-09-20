@@ -55,12 +55,15 @@ describe("buildGuideArticleJsonLd", () => {
 
   it("credits the organization, since landingPage has no author field", () => {
     const a = buildGuideArticleJsonLd({ ...base, contentUpdatedAt: "2026-07-19" }) as Article;
-    expect(a.author).toEqual({
+    const organization = {
       "@type": "Organization",
+      "@id": "https://www.domlivo.com/#organization",
       name: "Domlivo",
-      url: "https://www.domlivo.com",
-    });
-    expect((a.publisher as Article)["@type"]).toBe("Organization");
+    };
+    // Author and publisher are the node the layout emits, referenced by @id —
+    // not two more anonymous Organizations.
+    expect(a.author).toEqual(organization);
+    expect(a.publisher).toEqual(organization);
   });
 
   it("resolves a relative image against the site origin", () => {

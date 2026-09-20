@@ -8,8 +8,6 @@ import {
 } from "@/lib/sanity/client";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import {getTranslations, setRequestLocale} from "next-intl/server";
-import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
-import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -38,45 +36,14 @@ export default async function Home({ params }: Props) {
   }
 
   const landing = await fetchHomeLanding();
-  const siteSettings = await fetchSiteSettings();
-  const baseUrl = getSiteBaseUrl();
-  const siteLogoUrl =
-    (siteSettings as { logo?: { asset?: { url?: string } } } | null)?.logo?.asset?.url ||
-    undefined;
-  // Organization contact + sameAs come from the CMS; both were modelled but
-  // never passed, so contactPhone/companyAddress had no consumer at all.
-  const rawSettings = siteSettings as {
-    contactEmail?: string;
-    contactPhone?: string;
-    socialLinks?: { url?: string }[];
-  } | null;
-  const sameAs = (rawSettings?.socialLinks ?? [])
-    .map((s) => s?.url?.trim())
-    .filter((u): u is string => Boolean(u));
-  const contactEmail = rawSettings?.contactEmail?.trim();
-  const contactPhone = rawSettings?.contactPhone?.trim();
-  const siteJsonLd = (
-    <SiteJsonLd
-      baseUrl={baseUrl}
-      locale={locale}
-      brandName="Domlivo"
-      legalName="Domlivo — Real estate in Albania"
-      logoUrl={siteLogoUrl}
-      sameAs={sameAs.length > 0 ? sameAs : undefined}
-      contactPoint={
-        contactEmail || contactPhone
-          ? { email: contactEmail, telephone: contactPhone, contactType: 'customer support' }
-          : undefined
-      }
-      searchUrlTemplate="/catalog?q={search_term_string}"
-    />
-  );
+  // Organization + WebSite JSON-LD used to be built here. The locale layout
+  // emits it now, on every page including this one, so emitting it again would
+  // give the home page two copies of the same `@id`.
 
   if (!landing) {
     const t = await getTranslations("Home.blog");
     return (
       <main>
-        {siteJsonLd}
         <HeroSub
           title={t("title")}
           description={t("description")}
@@ -88,7 +55,6 @@ export default async function Home({ params }: Props) {
   }
   return (
     <>
-      {siteJsonLd}
       <LandingRenderer locale={locale} landing={landing as never} />
     </>
   );

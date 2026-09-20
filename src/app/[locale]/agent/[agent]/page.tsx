@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
@@ -19,6 +20,7 @@ import {
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
 import { agentFilterPath } from "@/lib/routes/catalog";
+import { agentPageRobots, hasAgentProfile } from "@/lib/seo/agentIndexPolicy";
 
 type Props = {
   params: Promise<{ locale: string; agent: string }>;
@@ -51,13 +53,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   // An agent unpublished in the CMS drops out of the sitemap; without this the
   // page would stay indexable, which is the gap that left a test-agent record
   // in the index with no way to remove it.
-  const robots =
+  //
+  // And an agent with no bio and no photo has a page that is only "Properties
+  // by X" over cards the city pages already show: thin, so `noindex, follow`
+  // until the CMS document carries both (see `agentIndexPolicy`, which also
+  // covers the unpublished case).
+  const robots = agentPageRobots(
+    agentDoc,
     listingUrlHasQueryParams(search) ||
-    shouldCatalogListingNoindex(search, { ignoredQueryKeys: ["agent"] }) ||
-    (catalogSeo?.noIndex ?? false) ||
-    (agentDoc ? !agentDoc.isPublished : false)
-      ? { index: false as const, follow: true as const }
-      : indexableRobots;
+      shouldCatalogListingNoindex(search, { ignoredQueryKeys: ["agent"] }) ||
+      (catalogSeo?.noIndex ?? false),
+  ) ?? indexableRobots;
   // The agent's own portrait on the card, falling back to the drawn default.
   // Before this these pages had no `og:image` and no `og:url` at all — 48 URLs
   // sharing a blank link preview.
@@ -117,6 +123,26 @@ export default async function AgentCatalogPage({ params, searchParams }: Props) 
           />
         }
       />
+      {/* The profile is what makes this page about the agent rather than a
+          filtered copy of the catalogue. It is also the condition for the page
+          being indexable, so the two appear together or not at all. */}
+      {hasAgentProfile(agentDoc) && agentDoc.photo ? (
+        <section className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-8 md:pt-10">
+          <div className="flex max-w-3xl items-start gap-5">
+            <Image
+              src={agentDoc.photo.url}
+              alt={agentDoc.photo.alt || agentDoc.name}
+              width={96}
+              height={96}
+              sizes="96px"
+              className="h-24 w-24 shrink-0 rounded-2xl object-cover"
+            />
+            <p className="text-base md:text-lg leading-relaxed text-dark/70 dark:text-white/70 whitespace-pre-line">
+              {agentDoc.bio}
+            </p>
+          </div>
+        </section>
+      ) : null}
       <PropertiesListing
         locale={locale}
         pathAgentSlug={parsed.agentSlug}
