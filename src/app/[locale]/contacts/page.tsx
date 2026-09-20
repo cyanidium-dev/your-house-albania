@@ -1,3 +1,4 @@
+import { indexableRobots } from "@/lib/seo/envSeo";
 import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     pathAfterLocale: 'contacts',
-    robots: { index: true, follow: true },
+    robots: indexableRobots,
   })
 }
 

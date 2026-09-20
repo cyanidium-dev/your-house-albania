@@ -1,3 +1,4 @@
+import { indexableRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "../globals.css";
@@ -59,6 +60,9 @@ export const metadata: Metadata = {
   },
   description: DEFAULT_DESCRIPTION,
   applicationName: SITE_NAME,
+  // The default for every page that does not decide its own robots. Pages that
+  // are noindex set `robots` themselves, which replaces this whole object.
+  ...(isIndexingEnabled() ? { robots: indexableRobots } : {}),
   // No default og/twitter title or description: Next.js merges these into
   // every page that does not set its own `openGraph`, which put this English
   // text on 52 non-English URLs (sweep 2026-09-05, F5). Pages that build their

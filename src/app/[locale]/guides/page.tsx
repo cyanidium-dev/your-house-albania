@@ -10,7 +10,7 @@ import { buildGuideCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcru
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
-import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/lib/seo/envSeo";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t("title"),
     description: t("description"),
     pathAfterLocale: "guides",
-    robots: indexable ? undefined : indexingDisabledRobots,
+    robots: indexable ? indexableRobots : indexingDisabledRobots,
   });
 }
 

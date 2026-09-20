@@ -23,7 +23,7 @@ import {
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
-import { indexingDisabledRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
@@ -146,7 +146,7 @@ async function buildListingMetadata(
     shouldCatalogListingNoindex(search, { ignoredQueryKeys }) ||
     (catalogSeo?.noIndex ?? false)
       ? { index: false as const, follow: true as const }
-      : undefined;
+      : indexableRobots;
 
   return {
     title: listingTitleField(title),

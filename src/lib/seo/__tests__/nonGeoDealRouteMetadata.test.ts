@@ -29,6 +29,7 @@ vi.mock("@/lib/seo/listingSeoCopy", () => ({
 vi.mock("@/lib/seo/envSeo", () => ({
   isIndexingEnabled: () => true,
   indexingDisabledRobots: { index: false, follow: false },
+  indexableRobots: { index: true, follow: true, "max-image-preview": "large" },
 }));
 
 vi.mock("@/lib/seo/catalogListingMetadata", () => ({
@@ -80,6 +81,8 @@ describe("generateNonGeoDealRouteMetadata", () => {
     expect(meta.description).toBe("Mieszkania na sprzedaż w Albanii: aktualne ceny.");
     // The defect being fixed: this must not be the root CMS copy.
     expect(meta.description).not.toBe(CMS_DESCRIPTION);
+    // An indexable listing asks for large image previews.
+    expect(meta.robots).toEqual({ index: true, follow: true, "max-image-preview": "large" });
   });
 
   it("falls back to the CMS copy when the type has no dedicated wording", async () => {

@@ -1,3 +1,4 @@
+import { indexableRobots } from "@/lib/seo/envSeo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AuthorAvatar } from "@/components/Blog/AuthorAvatar";
@@ -94,7 +95,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: { card: "summary_large_image", title, description },
     // An inactive author still renders — the seed has to be testable — but it
     // is not advertised. Rendering and indexing are separate decisions.
-    robots: author.active === true ? undefined : { index: false, follow: true },
+    robots: author.active === true ? indexableRobots : { index: false, follow: true },
   };
 }
 
