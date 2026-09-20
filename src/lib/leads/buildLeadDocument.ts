@@ -8,7 +8,7 @@
  */
 
 import type { DeviceClass, LeadContext, TouchPoint } from './context'
-import type { LeadPlacement, LeadStatus, LeadType } from './types'
+import { isClickLeadType, type LeadPlacement, type LeadStatus, type LeadType } from './types'
 
 type WeakReference = { _type: 'reference'; _ref: string; _weak: true }
 
@@ -111,7 +111,7 @@ function compact<T extends Record<string, unknown>>(obj: T): T {
 }
 
 export function isClickLead(type: LeadType): boolean {
-  return type === 'click_whatsapp' || type === 'click_phone' || type === 'click_email'
+  return isClickLeadType(type)
 }
 
 export function buildLeadDocument(input: LeadInput): LeadDocument {

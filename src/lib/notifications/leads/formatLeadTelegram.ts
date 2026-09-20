@@ -33,6 +33,7 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
   footer: 'подвал сайта',
   property: 'страница объекта',
   'property-card': 'карточка объекта в списке',
+  catalog: 'каталог',
   agent: 'блок агента',
   'quick-contact': 'плавающая кнопка связи',
   'contact-page': 'страница контактов',
@@ -44,6 +45,7 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
 
 const CLICK_HEADLINE: Record<ClickLeadType, string> = {
   click_whatsapp: '🟢 Лид кликнул по WhatsApp',
+  click_telegram: '🔵 Лид кликнул по Telegram',
   click_phone: '📞 Лид кликнул по телефону',
   click_email: '✉️ Лид кликнул по email',
 }

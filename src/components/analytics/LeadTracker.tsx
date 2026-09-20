@@ -17,7 +17,7 @@ import { classifyContactHref, isLeadPlacement, type LeadPlacement } from '@/lib/
 const CLICK_DEDUPE_MS = 2000
 
 /**
- * Records the visitor journey and turns clicks on WhatsApp, phone and email
+ * Records the visitor journey and turns clicks on WhatsApp, Telegram, phone and email
  * links into leads. Mounted once in the locale layout; renders nothing.
  *
  * Contact links need no wiring of their own: one capture-phase listener on the
