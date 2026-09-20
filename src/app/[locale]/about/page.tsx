@@ -166,7 +166,7 @@ export default async function AboutPage({ params }: Props) {
                       the photo is never drawn larger than its own pixels. */}
                   <Image
                     src={member.photo}
-                    alt={member.name}
+                    alt={member.localName?.[locale] ?? member.name}
                     width={AVATAR_PX}
                     height={AVATAR_PX}
                     sizes={`${AVATAR_PX}px`}
@@ -174,7 +174,7 @@ export default async function AboutPage({ params }: Props) {
                     style={{ width: AVATAR_PX, height: AVATAR_PX }}
                   />
                   <h3 className="mt-5 text-xl md:text-2xl font-display font-semibold text-dark dark:text-white">
-                    {member.name}
+                    {member.localName?.[locale] ?? member.name}
                   </h3>
                   <p className="mt-1 text-sm md:text-base font-medium text-primary">
                     {t(`team.members.${member.key}.role`)}

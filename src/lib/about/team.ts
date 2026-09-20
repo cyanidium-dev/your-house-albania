@@ -22,6 +22,8 @@ export type TeamMember = {
   /** Fragment of the stable `@id`. */
   slug: string;
   name: string;
+  /** The name as readers of that locale write it; `name` (Latin) everywhere else and in JSON-LD. */
+  localName?: Partial<Record<string, string>>;
   /** Path under /public. */
   photo: string;
   /** Intrinsic pixel size of the square photograph; the card never renders larger. */
@@ -36,6 +38,7 @@ export const TEAM_MEMBERS: readonly TeamMember[] = [
     key: "fedir",
     slug: "fedir-alpatov",
     name: "Fedir Alpatov",
+    localName: { ru: "Фёдор Алпатов", uk: "Федір Алпатов" },
     photo: "/images/team/fedir-alpatov.jpg",
     photoSize: 900,
     links: [{ labelKey: "codeSite", href: "https://www.code-site.art" }],
@@ -45,6 +48,7 @@ export const TEAM_MEMBERS: readonly TeamMember[] = [
     key: "viktor",
     slug: "viktor-grinchenko",
     name: "Viktor Grinchenko",
+    localName: { ru: "Виктор Гринченко", uk: "Віктор Гринченко" },
     photo: "/images/team/viktor-grinchenko.jpg",
     photoSize: 900,
     links: [
@@ -63,6 +67,7 @@ export const TEAM_MEMBERS: readonly TeamMember[] = [
     key: "diana",
     slug: "diana-merkotun",
     name: "Diana Merkotun",
+    localName: { ru: "Диана Меркотун", uk: "Діана Меркотун" },
     photo: "/images/team/diana-merkotun.jpg",
     photoSize: 256,
     links: [{ labelKey: "codeSiteProfile", href: "https://www.code-site.art/en/about" }],
