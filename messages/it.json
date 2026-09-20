@@ -895,6 +895,21 @@
     "h1": "Domlivo: chi siamo",
     "intro1": "Domlivo è un marketplace immobiliare per l'Albania. Raccoglie appartamenti, case, ville, terreni e locali commerciali in vendita a Durazzo, Tirana, Valona, Saranda e lungo la costa, per chi compra dall'estero e per chi in Albania ci vive già.",
     "intro2": "Gli annunci arrivano da proprietari e agenzie partner. Ogni annuncio riporta il prezzo e chi propone l'immobile: si parla direttamente con loro e Domlivo non aggiunge alcuna commissione propria. Il sito è disponibile in sette lingue: albanese, inglese, ucraino, russo, italiano, polacco e tedesco.",
+    "mission": {
+      "title": "La nostra idea",
+      "body1": "Stiamo costruendo Domlivo come un marketplace immobiliare per l'Albania decentralizzato, analitico e basato sull'IA. L'obiettivo è semplice: chi compra trova in fretta l'annuncio giusto e riceve una consulenza da un assistente IA direttamente in chat. L'assistente risponde a partire dai documenti di ricerca di Domlivo: quanto costano le utenze, quanto rende un investimento, quanto costa l'acquisto oltre al prezzo.",
+      "body2": "“Decentralizzato” qui ha un significato preciso. Il catalogo non appartiene a una sola agenzia: vi pubblicano proprietari e molte agenzie partner, ogni annuncio indica chi l'ha inserito e l'acquirente parla direttamente con lui.",
+      "uspTitle": "Cosa c'è oggi sul sito",
+      "usp": {
+        "item1": "Ricerca con IA: descrivi la casa con parole tue; l'assistente cerca tra gli annunci e risponde dalla base di conoscenza, citando le fonti.",
+        "item2": "Una base di conoscenza e guide in cui ogni cifra ha una fonte e una data.",
+        "item3": "Prezzi richiesti per quartiere nelle pagine delle città, ricalcolati ogni ora dagli annunci attivi.",
+        "item4": "Il riquadro “Quanto costa comprare e mantenere” nelle pagine degli annunci.",
+        "item5": "Sette lingue e cambio di valuta.",
+        "item6": "Confronti affiancati tra quartieri e città.",
+        "item7": "Contatto diretto con proprietari e agenzie, senza commissioni."
+      }
+    },
     "research": {
       "title": "Analisi con le fonti",
       "body": "Accanto agli annunci pubblichiamo analisi di mercato: guide all'acquisto, un blog e pagine con i prezzi per città e quartiere. I numeri hanno una fonte dichiarata e una data; dove i dati mancano, la pagina lo dice.",

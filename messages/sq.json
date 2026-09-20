@@ -895,6 +895,21 @@
     "h1": "Rreth Domlivo",
     "intro1": "Domlivo është një treg pronash për Shqipërinë. Këtu gjeni apartamente, shtëpi, vila, troje dhe ambiente tregtare në shitje, në Durrës, Tiranë, Vlorë, Sarandë dhe përgjatë bregdetit, si për blerës nga jashtë, ashtu edhe për ata që jetojnë tashmë në Shqipëri.",
     "intro2": "Njoftimet vijnë nga pronarët dhe nga agjencitë partnere. Çdo njoftim tregon çmimin dhe kush e ofron pronën; ju flisni drejtpërdrejt me ta dhe Domlivo nuk shton asnjë komision të vetin. Faqja është në shtatë gjuhë: shqip, anglisht, ukrainisht, rusisht, italisht, polonisht dhe gjermanisht.",
+    "mission": {
+      "title": "Ideja jonë",
+      "body1": "Domlivo-n po e ndërtojmë si një treg pronash të decentralizuar, analitik dhe me inteligjencë artificiale për Shqipërinë. Qëllimi është i thjeshtë: blerësi ta gjejë shpejt njoftimin e duhur dhe të marrë këshillim nga asistenti me IA drejtpërdrejt në bisedë. Asistenti përgjigjet duke u mbështetur në dokumentet kërkimore të vetë Domlivo-s: sa kushtojnë shpenzimet komunale, sa kthen një investim, sa kushton blerja përtej çmimit.",
+      "body2": "Fjala “i decentralizuar” ka këtu një kuptim konkret. Katalogu nuk i përket një agjencie të vetme: në të publikojnë pronarët dhe shumë agjenci partnere, çdo njoftim tregon kush e ka publikuar dhe blerësi flet drejtpërdrejt me të.",
+      "uspTitle": "Çfarë ka sot në faqe",
+      "usp": {
+        "item1": "Kërkim me IA: përshkruani shtëpinë me fjalët tuaja; asistenti kërkon në njoftime dhe përgjigjet nga baza e njohurive, duke cituar burimet.",
+        "item2": "Bazë njohurish dhe udhëzues ku çdo shifër ka burim dhe datë.",
+        "item3": "Çmimet e kërkuara sipas lagjeve në faqet e qyteteve, të rillogaritura çdo orë nga njoftimet aktive.",
+        "item4": "Blloku “Sa kushton blerja dhe mbajtja” në faqet e njoftimeve.",
+        "item5": "Shtatë gjuhë dhe ndërrim i monedhës.",
+        "item6": "Krahasime të lagjeve dhe të qyteteve, krah për krah.",
+        "item7": "Kontakt i drejtpërdrejtë me pronarët dhe agjencitë, pa komision."
+      }
+    },
     "research": {
       "title": "Analiza me burime",
       "body": "Krahas njoftimeve botojmë analiza të tregut: udhëzues për blerjen, blog dhe faqe çmimesh për qytete e lagje. Shifrat vijnë nga burime të emërtuara, me datë, dhe aty ku nuk kemi të dhëna, faqja e thotë hapur.",

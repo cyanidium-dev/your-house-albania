@@ -895,6 +895,21 @@
     "h1": "O Domlivo",
     "intro1": "Domlivo to serwis ogłoszeń nieruchomości w Albanii. Znajdziesz tu mieszkania, domy, wille, działki i lokale użytkowe na sprzedaż w Durrës, Tiranie, Wlorze, Sarandzie i na wybrzeżu, zarówno dla kupujących z zagranicy, jak i dla osób, które już mieszkają w Albanii.",
     "intro2": "Ogłoszenia pochodzą od właścicieli i agencji partnerskich. W każdym podana jest cena oraz to, kto oferuje nieruchomość; rozmawiasz z tą osobą bezpośrednio, a Domlivo nie dolicza własnej prowizji. Serwis działa w siedmiu językach: albańskim, angielskim, ukraińskim, rosyjskim, włoskim, polskim i niemieckim.",
+    "mission": {
+      "title": "Nasz pomysł",
+      "body1": "Budujemy Domlivo jako zdecentralizowany, analityczny marketplace nieruchomości w Albanii oparty na AI. Cel jest prosty: kupujący szybko znajduje odpowiednie ogłoszenie i dostaje konsultację asystenta AI od razu na czacie. Asystent odpowiada na podstawie własnych opracowań Domlivo: ile kosztują media, jaki zwrot daje inwestycja, ile kosztuje zakup ponad cenę.",
+      "body2": "„Zdecentralizowany” oznacza tu konkretną rzecz. Katalog nie należy do jednej agencji: publikują w nim właściciele i wiele agencji partnerskich, każde ogłoszenie podaje, kto je dodał, a kupujący rozmawia z tą osobą bezpośrednio.",
+      "uspTitle": "Co już jest w serwisie",
+      "usp": {
+        "item1": "Wyszukiwanie AI: opisz mieszkanie własnymi słowami; asystent przeszukuje ogłoszenia i odpowiada z bazy wiedzy, podając źródła.",
+        "item2": "Baza wiedzy i poradniki, w których każda liczba ma źródło i datę.",
+        "item3": "Ceny ofertowe według dzielnic na stronach miast, przeliczane co godzinę z aktywnych ogłoszeń.",
+        "item4": "Blok „Ile kosztuje zakup i utrzymanie” na stronach ogłoszeń.",
+        "item5": "Siedem języków i przełącznik walut.",
+        "item6": "Porównania dzielnic i miast obok siebie.",
+        "item7": "Bezpośredni kontakt z właścicielami i agencjami, bez prowizji."
+      }
+    },
     "research": {
       "title": "Analizy ze źródłami",
       "body": "Oprócz ogłoszeń publikujemy analizy rynku: poradniki zakupowe, blog oraz strony z cenami w miastach i dzielnicach. Liczby mają podane źródło i datę, a gdy danych brakuje, strona mówi o tym wprost.",

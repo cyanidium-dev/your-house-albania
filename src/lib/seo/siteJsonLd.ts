@@ -40,6 +40,12 @@ export type SiteJsonLdInput = {
 const DEFAULT_BRAND = 'Domlivo';
 const DEFAULT_LEGAL = 'Domlivo — Real estate in Albania';
 const DEFAULT_SEARCH_TEMPLATE = '/catalog?q={search_term_string}';
+/**
+ * What the organisation is, in one factual sentence. English in every locale:
+ * the node has to be identical wherever it is emitted.
+ */
+export const ORGANIZATION_DESCRIPTION =
+  'Property marketplace for Albania: listings published by owners and partner agencies, sourced market research, and an AI assistant that answers from it.';
 
 /**
  * The phone number the CMS was seeded with. It reaches nobody, so publishing it
@@ -110,6 +116,7 @@ export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, un
     '@id': organizationId(baseUrl),
     name: brandName,
     legalName,
+    description: ORGANIZATION_DESCRIPTION,
     url: abs(baseUrl, '/'),
     ...(logoUrl ? { logo: { '@type': 'ImageObject', url: abs(baseUrl, logoUrl) } } : {}),
     ...(email ? { email } : {}),

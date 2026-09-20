@@ -895,6 +895,21 @@
     "h1": "About Domlivo",
     "intro1": "Domlivo is a property marketplace for Albania. It lists apartments, houses, villas, land and commercial space for sale in Durrës, Tirana, Vlorë, Sarandë and along the coast, for buyers from abroad and for people who already live here.",
     "intro2": "Listings come from owners and partner agencies. Every listing states its price and who is offering the property; you talk to them directly, and Domlivo adds no commission of its own. The site is available in seven languages: Albanian, English, Ukrainian, Russian, Italian, Polish and German.",
+    "mission": {
+      "title": "Our idea",
+      "body1": "We are building Domlivo as a decentralised, analytical AI marketplace for property in Albania. The aim is simple: a buyer finds a suitable listing quickly and gets a consultation from an AI assistant right in the chat. The assistant answers from Domlivo's own research documents: what utilities cost, what an investment returns, what a purchase costs on top of the price.",
+      "body2": "Decentralised means something specific here. The catalogue does not belong to one agency: owners and many partner agencies publish on it, each listing names who listed it, and the buyer talks to that lister directly.",
+      "uspTitle": "What is on the site today",
+      "usp": {
+        "item1": "AI search: describe the home in your own words; the assistant searches the listings and answers from the knowledge base, citing its sources.",
+        "item2": "A knowledge base and guides where every figure has a source and a date.",
+        "item3": "Asking prices by district on city pages, recalculated every hour from live listings.",
+        "item4": "A “what it costs to buy and own” block on listing pages.",
+        "item5": "Seven languages and a currency switcher.",
+        "item6": "Side-by-side comparisons of districts and cities.",
+        "item7": "Direct contact with owners and agencies, no commission."
+      }
+    },
     "research": {
       "title": "Research, with sources",
       "body": "Next to the listings we publish market research: buying guides, a blog and price pages for cities and districts. Figures come from a named source with a date, and where we have no data the page says so.",

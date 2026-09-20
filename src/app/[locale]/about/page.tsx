@@ -73,7 +73,8 @@ export default async function AboutPage({ params }: Props) {
     baseUrl,
     locale,
     title: t("h1"),
-    description: t("metaDescription"),
+    // The mission, in the page's language: what the organisation is for.
+    description: t("mission.body1"),
     people: TEAM_MEMBERS.map((m) => ({
       id: teamMemberId(baseUrl, m.slug),
       name: m.name,
@@ -102,6 +103,28 @@ export default async function AboutPage({ params }: Props) {
             <p className={`mt-5 ${bodyClass}`}>{t("intro1")}</p>
             <p className={`mt-4 ${bodyClass}`}>{t("intro2")}</p>
           </header>
+
+          <section className="mt-14 max-w-3xl" aria-labelledby="about-mission">
+            <h2 id="about-mission" className={h2Class}>
+              {t("mission.title")}
+            </h2>
+            <p className={`mt-4 ${bodyClass}`}>{t("mission.body1")}</p>
+            <p className={`mt-4 ${bodyClass}`}>{t("mission.body2")}</p>
+            {/* Only things the site does today; each line was checked against
+                the code when it was written. No link to /ai-search: that page
+                is `noindex`, and the header already carries the entry point. */}
+            <h3 className="mt-8 text-lg md:text-xl font-display font-semibold text-dark dark:text-white">
+              {t("mission.uspTitle")}
+            </h3>
+            <ul className="mt-4 flex flex-col gap-2.5">
+              {(["item1", "item2", "item3", "item4", "item5", "item6", "item7"] as const).map((key) => (
+                <li key={key} className={`flex items-start gap-3 ${bodyClass}`}>
+                  <span className="mt-2.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{t(`mission.usp.${key}`)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
 
           <section className="mt-14 max-w-3xl" aria-labelledby="about-research">
             <h2 id="about-research" className={h2Class}>
