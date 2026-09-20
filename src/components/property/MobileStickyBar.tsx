@@ -16,9 +16,34 @@ import { useEffect, useRef, type ReactNode } from 'react'
  * zero and the padding disappears on its own; a wrapped label or a longer price
  * widens the bar and the padding grows with it. Watching the element and the
  * window covers both ways the height can change.
+ *
+ * It is the site's one floating contact surface on phones (the QuickContact
+ * bubble is not mounted). The cookie banner sits above it (`z-[90]`) until it
+ * is answered, and the bar goes invisible — keeping its box, so nothing moves —
+ * while a contact dialog is open (`useContactModalFlag`).
  */
-export default function MobileStickyBar({ children }: { children: ReactNode }) {
+
+/** Tailwind needs the class names spelled out; the pixel value feeds matchMedia. */
+const BREAKPOINT = {
+  md: { hidden: 'md:hidden', minWidth: 768 },
+  lg: { hidden: 'lg:hidden', minWidth: 1024 },
+} as const
+
+type Props = {
+  children: ReactNode
+  /** First breakpoint at which the bar disappears. The listing page keeps its CTA in the page only from `lg`. */
+  hideFrom?: keyof typeof BREAKPOINT
+  /** `data-lead-placement` for the contact links inside. */
+  placement?: string
+  /** `data-property-slug` for the contact links inside. */
+  propertySlug?: string
+  /** Accessible name of the bar. */
+  label?: string
+}
+
+export default function MobileStickyBar({ children, hideFrom = 'lg', placement, propertySlug, label }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const { hidden, minWidth } = BREAKPOINT[hideFrom]
 
   useEffect(() => {
     const el = ref.current
@@ -56,7 +81,7 @@ export default function MobileStickyBar({ children }: { children: ReactNode }) {
     // rendered — so the media query carries the transition the other way.
     const observer = new ResizeObserver(schedule)
     observer.observe(el)
-    const desktop = window.matchMedia('(min-width: 1024px)')
+    const desktop = window.matchMedia(`(min-width: ${minWidth}px)`)
     desktop.addEventListener('change', schedule)
     window.addEventListener('resize', schedule)
     window.addEventListener('orientationchange', schedule)
@@ -70,12 +95,15 @@ export default function MobileStickyBar({ children }: { children: ReactNode }) {
       window.removeEventListener('orientationchange', schedule)
       document.body.style.paddingBottom = ''
     }
-  }, [])
+  }, [minWidth])
 
   return (
     <div
       ref={ref}
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20"
+      {...(label ? { role: 'region', 'aria-label': label } : {})}
+      {...(placement ? { 'data-lead-placement': placement } : {})}
+      {...(propertySlug ? { 'data-property-slug': propertySlug } : {})}
+      className={`${hidden} fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20 print:hidden [[data-contact-modal]_&]:invisible`}
     >
       {children}
     </div>

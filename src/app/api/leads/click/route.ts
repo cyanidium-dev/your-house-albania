@@ -24,7 +24,7 @@ function status(code: number, error?: string) {
 }
 
 /**
- * A visitor clicked a WhatsApp, phone or email link. The browser sends this
+ * A visitor clicked a WhatsApp, Telegram, phone or email link. The browser sends this
  * with `sendBeacon` as it leaves for the app, so nothing waits on the answer:
  * validation happens up front, and the Sanity write and the Telegram message
  * run after the response is sent.

@@ -56,7 +56,12 @@ describe('classifyContactHref', () => {
     ['whatsapp://send?phone=355', 'click_whatsapp'],
     ['tel:+355689286136', 'click_phone'],
     ['mailto:info@domlivo.com', 'click_email'],
-    ['https://t.me/fedirdev', null],
+    ['https://wa.me/message/KPXIGD5DJISGO1', 'click_whatsapp'],
+    ['https://t.me/real_estate_al', 'click_telegram'],
+    ['https://telegram.me/real_estate_al', 'click_telegram'],
+    ['tg://resolve?domain=real_estate_al', 'click_telegram'],
+    ['https://t.me/', null],
+    ['https://example.com/t.me/abc', null],
     ['https://example.com/wa.me/123', null],
     ['/ru/contacts', null],
   ])('%s → %s', (href, expected) => {

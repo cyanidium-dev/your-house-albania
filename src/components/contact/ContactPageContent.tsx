@@ -11,6 +11,9 @@ import { resolvePriceRange, toRangesByDeal } from '@/lib/catalog/priceRanges'
 import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { GeneralContactForm, type GeneralContactRequestFilterProps } from '@/components/contact/GeneralContactForm'
 import { iconForContactsSocialPlatform } from '@/components/contact/contactsSocialIcon'
+import { MessengerButtons } from '@/components/contact/MessengerButtons'
+import { nonMessengerLinks, resolveMessengers } from '@/lib/contacts/messengers'
+import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 
 type ContactPageContentProps = {
   locale: string
@@ -21,6 +24,8 @@ const DEAL_TYPE_VALUES = ['sale', 'rent', 'short-term'] as const
 
 export async function ContactPageContent({ locale, manager }: ContactPageContentProps) {
   const t = await getTranslations({ locale, namespace: 'Contacts' })
+  const tBar = await getTranslations({ locale, namespace: 'ContactBar' })
+  const tQuick = await getTranslations({ locale, namespace: 'QuickContact' })
   const photo = manager.photo
   const photoAlt = photo?.alt?.trim() || t('managerPhotoAlt')
 
@@ -29,6 +34,16 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
     fetchSiteSettings(),
     fetchCatalogAreaBoundsFromData(),
   ])
+
+  // WhatsApp and Telegram get buttons of their own (CMS link first, the
+  // business link when the CMS has none); the "follow" list keeps the rest.
+  const messengers = resolveMessengers(
+    (siteSettings as { socialLinks?: SocialLinkInput[] } | null)?.socialLinks,
+    locale
+  )
+  const followLinks = nonMessengerLinks(manager.socialLinks)
+  // The owners' address, for the day the CMS field is empty.
+  const email = manager.email ?? 'hello@domlivo.com'
 
   const { locations: locationOptions, propertyTypes: typeOptions } = filterOptions
   const priceRangesByDeal = toRangesByDeal(
@@ -73,26 +88,33 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                 </div>
               ) : null}
 
-              {manager.email || manager.socialLinks.length > 0 ? (
-                <div className="shrink-0 rounded-2xl border border-dark/10 bg-white/40 p-5 shadow-md backdrop-blur-sm dark:border-white/10 dark:bg-dark/40 md:p-6">
-                  {manager.email ? (
+              <div className="shrink-0 rounded-2xl border border-dark/10 bg-white/40 p-5 shadow-md backdrop-blur-sm dark:border-white/10 dark:bg-dark/40 md:p-6">
+                  <div className="mb-5">
+                    <p className="mb-3 text-sm font-medium text-dark/70 dark:text-white/70">{tBar('messageUs')}</p>
+                    <MessengerButtons
+                      messengers={messengers}
+                      ariaLabels={{ whatsapp: tQuick('channel.whatsapp'), telegram: tQuick('channel.telegram') }}
+                      className="flex gap-3 [&>a]:h-12 [&>a]:text-base"
+                    />
+                  </div>
+                  {email ? (
                     <a
-                      href={`mailto:${manager.email}`}
-                      className="mb-5 inline-flex max-w-full items-start gap-3 break-all text-base text-dark transition-colors hover:text-primary dark:text-white dark:hover:text-primary"
+                      href={`mailto:${email}`}
+                      className="inline-flex min-h-11 max-w-full items-center gap-3 break-all text-base text-dark transition-colors hover:text-primary dark:text-white dark:hover:text-primary"
                     >
-                      <Icon icon="ph:envelope-simple" width={22} height={22} className="mt-0.5 shrink-0 text-primary" />
+                      <Icon icon="ph:envelope-simple" width={22} height={22} className="shrink-0 text-primary" aria-hidden />
                       <span>
                         <span className="text-sm text-dark/60 dark:text-white/60">{t('managerEmailLabel')}: </span>
-                        {manager.email}
+                        {email}
                       </span>
                     </a>
                   ) : null}
 
-                  {manager.socialLinks.length > 0 ? (
-                    <div>
+                  {followLinks.length > 0 ? (
+                    <div className="mt-5">
                       <p className="mb-3 text-sm font-medium text-dark/70 dark:text-white/70">{t('follow')}</p>
                       <ul className="grid grid-cols-2 gap-3">
-                        {manager.socialLinks.map((s, i) => (
+                        {followLinks.map((s, i) => (
                           <li key={`${s.url}-${i}`} className="min-w-0">
                             <a
                               href={s.url}
@@ -113,8 +135,7 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                       </ul>
                     </div>
                   ) : null}
-                </div>
-              ) : null}
+              </div>
             </div>
           </div>
 

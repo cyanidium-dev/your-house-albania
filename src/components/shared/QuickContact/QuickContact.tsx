@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from 'next-intl'
 import { QuickLeadForm } from '@/components/shared/QuickLead/QuickLeadForm'
+import { isRealPhone } from '@/lib/contacts/phone'
 import { partitionSocialLinks, type SocialLinkInput } from '@/lib/footer/socialChannels'
 
 export type QuickContactChannels = {
@@ -32,6 +33,7 @@ type Action = {
 
 /** `tel:` needs the number without spaces, brackets or dashes. */
 function telHref(phone: string): string {
+  if (!isRealPhone(phone)) return ''
   const cleaned = phone.replace(/[^\d+]/g, '')
   return cleaned ? `tel:${cleaned}` : ''
 }

@@ -84,8 +84,8 @@ export type AnalyticsEvent =
   | ({ event: 'contact_form_submit' } & LeadEventParams)
   /** The contact form about a specific listing was sent. */
   | ({ event: 'property_inquiry_submit' } & LeadEventParams)
-  /** A WhatsApp / phone / email link was clicked (the app opens outside the site). */
-  | ({ event: 'click_whatsapp' | 'click_phone' | 'click_email' } & LeadEventParams)
+  /** A WhatsApp / Telegram / phone / email link was clicked (the app opens outside the site). */
+  | ({ event: 'click_whatsapp' | 'click_telegram' | 'click_phone' | 'click_email' } & LeadEventParams)
   /** An explicit search from a search widget (hero). */
   | {
       event: 'search_submit'
@@ -134,6 +134,7 @@ const LEAD_EVENTS = new Set([
   'contact_form_submit',
   'property_inquiry_submit',
   'click_whatsapp',
+  'click_telegram',
   'click_phone',
   'click_email',
 ])

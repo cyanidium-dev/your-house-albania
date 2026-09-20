@@ -40,7 +40,8 @@ pushed unless `NEXT_PUBLIC_ENABLE_ANALYTICS=true`.
 | `generate_lead` | A lead **form** was accepted by the server (any form; clicks excluded) | `lead_type`, `placement`, listing params, attribution params |
 | `contact_form_submit` | General contact form (`/contacts`) or a phone-only callback form (blog CTA, floating widget) was accepted | same |
 | `property_inquiry_submit` | The contact form about a listing (property page, or a listing card) was accepted | same |
-| `click_whatsapp` | Click on `wa.me`, `api.whatsapp.com`, `web.whatsapp.com` or `whatsapp://` | `lead_type`, `placement`, `property_slug` (if any), attribution params |
+| `click_whatsapp` | Click on `wa.me` (number or `wa.me/message/<code>` business link), `api.whatsapp.com`, `web.whatsapp.com` or `whatsapp://` | `lead_type`, `placement`, `property_slug` (if any), attribution params |
+| `click_telegram` | Click on `t.me/<name>`, `telegram.me/<name>` or `tg:` | same |
 | `click_phone` | Click on `tel:` | same |
 | `click_email` | Click on `mailto:` | same |
 | `search_submit` | Hero search submitted | `placement: hero`, `city`, `property_type`, `deal` |
@@ -50,7 +51,7 @@ pushed unless `NEXT_PUBLIC_ENABLE_ANALYTICS=true`.
 
 - **Listing params**: `property_slug`, `property_id`, `city`, `district`, `property_type`, `price_eur` (where the page knows them).
 - **Attribution params**: `landing_page`, `source`, `medium`, `campaign`, `channel` — this session's, as below.
-- **Placement** values: `header`, `footer`, `property`, `property-card`, `agent`, `quick-contact`, `contact-page`, `blog-cta`, `landing`, `register-page`, `page` (fallback).
+- **Placement** values: `header`, `footer`, `property`, `property-card`, `catalog` (the phone contact bar on city/district listing pages), `agent`, `quick-contact`, `contact-page`, `blog-cta`, `landing`, `register-page`, `page` (fallback).
 - **Never sent** to GA4 or Clarity: names, phones, emails, messages, the page journey, referrer URLs.
 - Lead events reset the listing/attribution keys they do not set, so a `property_slug` from one lead cannot ride along on the next (GTM keeps every pushed key in its data model).
 - Clarity also gets tags (`clarity("set", …)`) for `lead_type`, `placement`, `channel`, `source`, and `internal`.
@@ -232,12 +233,13 @@ exclude `1` (or save it as a segment "Without internal").
   - Data Layer Variables `DLV - <key>` for every key above.
 - **GA4 custom dimensions** (event scope): Lead type, Lead placement, Property slug, Lead channel, Lead source.
 - **GA4 data filter** "Internal Traffic" (exclude `traffic_type = internal`) is **Active**. The flag is pushed by the consent bootstrap before GTM loads, so page views carry it too.
+- **Still to do (2026-09-20):** `click_telegram` is new. Add it to the regex of the `GA4 event - Leads and search` trigger in GTM (the live container still lists only the three older click events, so until then the event reaches the dataLayer, Clarity, Sanity and Telegram but not GA4), and add `click_telegram` to the `type` options of the Studio `lead` schema in domlivo-admin.
 - **Still to do:** mark `generate_lead` as a key event (optionally `click_whatsapp`, `click_phone`) in Admin → Events once the first one has arrived — GA4 only lists events it has received.
 
 ## GTM / GA4 setup reference
 
 1. **Data Layer Variables**: `lead_type`, `placement`, `property_slug`, `property_id`, `city`, `district`, `property_type`, `price_eur`, `landing_page`, `source`, `medium`, `campaign`, `channel`, `deal`, `traffic_type`.
-2. **Custom Event triggers** (one each, or one regex trigger `^(generate_lead|contact_form_submit|property_inquiry_submit|click_whatsapp|click_phone|click_email|search_submit|filter_apply)$`).
+2. **Custom Event triggers** (one each, or one regex trigger `^(generate_lead|contact_form_submit|property_inquiry_submit|click_whatsapp|click_telegram|click_phone|click_email|search_submit|filter_apply)$`).
 3. **GA4 Event tags** with event name `{{Event}}` and the parameters above.
    Avoid naming GA4 parameters `source`/`medium`/`campaign` if they collide with
    reserved traffic-source dimensions in your reports — map them to

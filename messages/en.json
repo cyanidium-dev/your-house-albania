@@ -738,6 +738,13 @@
       "email": "Send an email"
     }
   },
+  "ContactBar": {
+    "ask": "Ask",
+    "askProperty": "Ask about this property",
+    "helpChoosing": "Get help choosing",
+    "barLabel": "Contact options",
+    "messageUs": "Message us directly"
+  },
   "Seo": {
     "listing": {
       "cityTitle": "Apartments & Property for Sale in {city}, Albania",

@@ -738,6 +738,13 @@
       "email": "Scrivici una email"
     }
   },
+  "ContactBar": {
+    "ask": "Chiedi",
+    "askProperty": "Chiedi informazioni su questo immobile",
+    "helpChoosing": "Aiuto nella scelta",
+    "barLabel": "Opzioni di contatto",
+    "messageUs": "Scrivici direttamente"
+  },
   "Seo": {
     "listing": {
       "cityTitle": "Appartamenti e case in vendita a {city}, Albania",

@@ -738,6 +738,13 @@
       "email": "Na dërgoni email"
     }
   },
+  "ContactBar": {
+    "ask": "Pyet",
+    "askProperty": "Pyet për këtë pronë",
+    "helpChoosing": "Ndihmë për zgjedhjen",
+    "barLabel": "Mënyrat e kontaktit",
+    "messageUs": "Na shkruani drejtpërdrejt"
+  },
   "Seo": {
     "listing": {
       "cityTitle": "Apartamente dhe shtëpi në shitje në {city}",

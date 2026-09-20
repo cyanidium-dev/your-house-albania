@@ -16,6 +16,7 @@ import { analyticsEnabled } from "@/lib/analytics/config";
 // Unused since the Contacts/Socials columns were replaced (2026-09-02):
 // import { contactLabelKey, partitionSocialLinks } from "@/lib/footer/socialChannels";
 import { footerLgColsClass } from "@/lib/footer/columns";
+import { MESSENGER_ICON, resolveMessengers } from "@/lib/contacts/messengers";
 import CodeSiteTagIcon from "./CodeSiteTagIcon";
 
 type FooterProps = {
@@ -141,6 +142,7 @@ export default function Footer({
   const pathname = usePathname();
   const t = useTranslations("Footer");
   const navT = useTranslations("Footer.nav");
+  const tQuickContact = useTranslations("QuickContact");
 
   const activeCountry = useMemo(
     () => deriveFooterCountrySlugFromPathname(pathname, locale, countrySlugs),
@@ -187,6 +189,10 @@ export default function Footer({
   const hasMobileStickyBar = pathname.includes("/property/");
 
   const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
+
+  // WhatsApp and Telegram, Telegram first for ru/uk. Tracked as footer leads by
+  // LeadTracker through the `data-lead-placement` on <footer>.
+  const messengers = resolveMessengers(siteSettings?.socialLinks, locale);
 
   // Contacts and Social columns came from one source: socialLinks[].channel.
   // Both columns were replaced by a link to the contact form on 2026-09-02;
@@ -292,6 +298,10 @@ export default function Footer({
               column pointing at the contact form replaces both. The social URLs
               still reach schema.org `sameAs` from siteSettings on the homepage,
               which is built independently of this footer.
+
+              2026-09-20: WhatsApp and Telegram are back under the form link.
+              Their clicks are recorded now (LeadTracker → click_whatsapp /
+              click_telegram, placement `footer`), which was the objection.
             */}
             <div>
               <h3 className={colHeadingClass}>{t("columns.contacts")}</h3>
@@ -308,6 +318,28 @@ export default function Footer({
                 />
                 <span>{t("contactCta")}</span>
               </Link>
+              <ul className="mt-1 flex flex-col">
+                {messengers.map((m) => (
+                  <li key={m.key}>
+                    <a
+                      href={m.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={tQuickContact(`channel.${m.key}`)}
+                      className={`inline-flex min-h-11 items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${colLinkClass}`}
+                    >
+                      <Icon
+                        icon={MESSENGER_ICON[m.key]}
+                        width={20}
+                        height={20}
+                        className="shrink-0 opacity-80"
+                        aria-hidden
+                      />
+                      <span>{t(`contacts.${m.key}`)}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {showAppColumn ? (

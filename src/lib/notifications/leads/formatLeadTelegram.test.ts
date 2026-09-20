@@ -136,6 +136,12 @@ describe('formatClickLeadTelegram', () => {
     expect(text).toContain('📊 Аналитика\nИсточник: google / organic')
   })
 
+  it('renders a Telegram click', () => {
+    expect(formatClickLeadTelegram({ type: 'click_telegram', placement: 'catalog' })).toMatch(
+      /^🔵 Лид кликнул по Telegram\n\nГде: каталог\n/
+    )
+  })
+
   it('renders phone and email clicks, marks tests', () => {
     expect(
       formatClickLeadTelegram({ type: 'click_phone', placement: 'footer', context: sampleContext({ internal: true }) })

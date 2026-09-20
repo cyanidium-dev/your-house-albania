@@ -115,7 +115,7 @@ function sendClickLead(payload: ClickLeadPayload): void {
   }
 }
 
-/** A WhatsApp/phone/email link was clicked: analytics event plus the server lead. */
+/** A WhatsApp/Telegram/phone/email link was clicked: analytics event plus the server lead. */
 export function trackContactClick(opts: {
   type: ClickLeadType
   placement: LeadPlacement
