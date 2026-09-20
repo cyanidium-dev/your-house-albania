@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import DrawerNavList from './Navigation/DrawerNavList'
 import { DRAWER_NAV_ITEMS } from '@/data/navConfig'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -16,6 +17,8 @@ import HeaderMobileController from './HeaderMobileController'
 import Image from 'next/image'
 import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
 import { catalogPath } from '@/lib/routes/catalog'
+import { currentCityListingHref } from '@/lib/routes/currentCityListing'
+import { routing } from '@/i18n/routing'
 import { cn } from '@/lib/utils'
 
 export type HeaderTranslations = {
@@ -49,6 +52,10 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
   const [drawerCitiesOpen, setDrawerCitiesOpen] = useState(false)
   const [drawerRealtorsOpen, setDrawerRealtorsOpen] = useState(false)
   const drawerExpanded = drawerCitiesOpen || drawerRealtorsOpen
+  // Inside a city — its listing, a district, its /info page — "View
+  // properties" means that city's, not a jump out to the whole country.
+  const pathname = usePathname()
+  const propertiesHref = currentCityListingHref(pathname, routing.locales, countrySlugs) ?? catalogPath(locale)
 
   return (
     <HeaderVisualState>
@@ -114,7 +121,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       <HeaderFavoritesLink locale={locale} overHero={overHero} sticky={sticky} />
                       <div className="hidden md:block">
                         <Link
-                          href={catalogPath(locale)}
+                          href={propertiesHref}
                           className={cn(
                             'inline-flex items-center justify-center px-5 py-3 rounded-full font-semibold whitespace-nowrap text-sm md:text-base',
                             'bg-white text-dark shadow-sm border border-white/30',
@@ -193,7 +200,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
 
                   <div className="shrink-0 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                     <Link
-                      href={catalogPath(locale)}
+                      href={propertiesHref}
                       className="inline-flex w-fit min-h-11 items-center justify-center rounded-full border border-primary bg-primary px-7 py-3.5 text-base font-semibold leading-tight text-white duration-300 hover:bg-transparent hover:text-primary"
                       onClick={onClose}
                     >
