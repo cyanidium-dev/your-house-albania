@@ -7,7 +7,8 @@ import {
   fetchAllAgentSlugsForSitemap,
   fetchAllLandingPathsForSitemap,
 } from "@/lib/sanity/client";
-import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
+import { buildUrlsetXml, type SitemapUrl } from "@/lib/seo/sitemapXml";
+import { buildStaticCodePageEntries } from "@/lib/seo/staticCodePages";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 export const revalidate = 3600;
@@ -43,7 +44,7 @@ export async function GET() {
   ]);
 
   const seen = new Set<string>();
-  const urls: Array<{ loc: string; lastmod: Date }> = [];
+  const urls: SitemapUrl[] = [];
   const staticNow = new Date();
 
   const push = (loc: string, lastmod: Date) => {
@@ -78,6 +79,14 @@ export async function GET() {
       if (isNoindexInvestmentPath(path)) continue;
       push(joinLocalePath(base, locale, path), lastModified);
     }
+  }
+
+  // Pages that live in code only (/about): one entry per locale, each carrying
+  // the whole hreflang set, since no CMS query can discover them.
+  for (const entry of buildStaticCodePageEntries(base, routing.locales)) {
+    if (seen.has(entry.loc)) continue;
+    seen.add(entry.loc);
+    urls.push(entry);
   }
 
   const xml = buildUrlsetXml(urls);

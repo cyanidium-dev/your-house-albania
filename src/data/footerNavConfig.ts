@@ -21,5 +21,9 @@ export const FOOTER_STABLE_NAV_ITEMS = (
     { key: "investment", href: "/investment/sale" },
     { key: "realtors", href: "/for-realtors" },
     { key: "blog", href: "/blog" },
+    // Removed on 2026-09-10 while it pointed at a 404; back now that the page
+    // exists. Sitewide, so the founders and the Organization are one click from
+    // every URL.
+    { key: "about", href: "/about" },
   ] as const
 ).filter((item) => isPublicNavKey(item.key));
