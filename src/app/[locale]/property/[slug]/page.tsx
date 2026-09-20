@@ -374,6 +374,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
               imageUrls={imageUrls}
               baseUrl={baseUrl}
               locale={locale}
+              districtName={districtName}
+              cityName={resolveLocalizedString((sanityProperty as { city?: { title?: unknown } })?.city?.title as never, locale) || null}
+              geo={locationIsApproximate ? null : resolvedCoordinates}
+              amenityNames={amenities.map((a) => a.title)}
             />
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
                 <PropertyDetailBreadcrumb

@@ -284,3 +284,48 @@ describe("buildPropertyJsonLd", () => {
     expect(() => JSON.stringify(buildPropertyJsonLd(BASE))).not.toThrow();
   });
 });
+
+describe("buildPropertyJsonLd: place and language (audit 2026-09-20)", () => {
+  const base = {
+    name: "1+1 apartment",
+    slug: "apartment-1-1-plazh-durres-61m2",
+    location: "Plazh, Durres",
+    countryCode: "AL",
+    price: 90000,
+    propertyTypeSlug: "apartment",
+    imageUrls: [],
+    baseUrl: "https://www.domlivo.com",
+    locale: "de",
+  };
+  const graphOf = (json: object) => (json as { "@graph": Record<string, unknown>[] })["@graph"];
+  const node = (json: object, type: string) => graphOf(json).find((n) => n["@type"] === type) as Record<string, any>;
+
+  it("splits the address into city and district when both names are known", () => {
+    const json = buildPropertyJsonLd({ ...base, cityName: "Durrës", districtName: "Plazh" } as never);
+    expect(node(json, "Apartment").address).toMatchObject({
+      addressLocality: "Durrës",
+      addressRegion: "Plazh",
+      addressCountry: "AL",
+    });
+  });
+
+  it("falls back to the free-text location without the names", () => {
+    const json = buildPropertyJsonLd(base as never);
+    expect(node(json, "Apartment").address.addressLocality).toBe("Plazh, Durres");
+    expect(node(json, "Apartment").address.addressRegion).toBeUndefined();
+  });
+
+  it("publishes geo only when it is given, and the page language always", () => {
+    const without = buildPropertyJsonLd(base as never);
+    expect(node(without, "Apartment").geo).toBeUndefined();
+    expect(node(without, "RealEstateListing").inLanguage).toBe("de");
+
+    const withGeo = buildPropertyJsonLd({ ...base, geo: { lat: 41.31, lng: 19.47 } } as never);
+    expect(node(withGeo, "Apartment").geo).toMatchObject({ latitude: 41.31, longitude: 19.47 });
+  });
+
+  it("lists amenities by name and drops blanks", () => {
+    const json = buildPropertyJsonLd({ ...base, amenityNames: ["Balkon", " ", "Aufzug"] } as never);
+    expect(node(json, "Apartment").amenityFeature.map((a: { name: string }) => a.name)).toEqual(["Balkon", "Aufzug"]);
+  });
+});

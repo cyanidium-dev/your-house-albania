@@ -21,6 +21,8 @@ function buildLlmsTxt(base: string): string {
 
 > Domlivo (domlivo.com) is a property marketplace for Albania: apartments, houses, villas, land and commercial space for sale, listed by owners and partner agencies, with asking prices on every listing. Most of the current inventory is in Durrës and along its coast (Golem, Plazh, Shkëmbi i Kavajës, Qerret, Mali i Robit). Alongside the listings the site publishes sourced research on prices, districts, taxes and the buying process for foreign buyers.
 
+The idea behind it: an analytical marketplace that no single agency owns. Owners and many partner agencies publish on it, each listing names who listed it, and an AI assistant on the site searches the listings in the visitor's own words and answers questions about utilities, buying costs and rental income from Domlivo's own sourced research, with citations.
+
 Every page exists in seven languages under its locale prefix: /en, /sq, /ru, /uk, /it, /pl, /de. The English URLs are listed here.
 
 Figures on the price pages come from two places and are labelled as such: asking prices computed from the listings live on Domlivo (count, median price and median price per m² by district, refreshed hourly), and published market sources, each cited on the page with a link.
@@ -50,6 +52,7 @@ Figures on the price pages come from two places and are labelled as such: asking
 ## About
 
 - [About Domlivo and the team](${u('/en/about')})
+- [AI property search and assistant](${u('/en/ai-search')}): describe what you need in plain words; answers cite the knowledge base
 - [Contacts](${u('/en/contacts')}): WhatsApp, Telegram, email hello@domlivo.com
 
 ## Sitemaps

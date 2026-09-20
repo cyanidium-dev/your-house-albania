@@ -42,6 +42,17 @@ export type PropertyJsonLdInput = {
   imageUrls: string[];
   baseUrl: string;
   locale: string;
+  /** District and city names in the page locale, for a split address. */
+  districtName?: string | null;
+  cityName?: string | null;
+  /**
+   * Coordinates of the building. Pass them only when the pin is the building:
+   * most listings carry the centre of their district, and publishing that as
+   * `geo` would state a precision the data does not have.
+   */
+  geo?: { lat: number; lng: number } | null;
+  /** Amenity names in the page locale. */
+  amenityNames?: string[];
 };
 
 /**
@@ -178,6 +189,10 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     imageUrls,
     baseUrl,
     locale,
+    districtName,
+    cityName,
+    geo,
+    amenityNames,
   } = input;
 
   const base = baseUrl.replace(/\/$/, "");
@@ -215,14 +230,30 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
 
   const offers = buildOffer({ price, priceUnit, area, status, lifecycleStatus, url });
 
+  // City and district as separate fields when both are known. The free-text
+  // `location` ("Plazh, Durres") stays the fallback: it is one string, which a
+  // consumer cannot take apart.
+  const city = cityName?.trim();
+  const district = districtName?.trim();
   const address =
-    location && location.trim()
+    city || (location && location.trim())
       ? {
           "@type": "PostalAddress",
-          addressLocality: location.trim(),
+          addressLocality: city || (location as string).trim(),
+          ...(city && district ? { addressRegion: district } : {}),
           ...(countryCode ? { addressCountry: countryCode } : {}),
         }
       : undefined;
+
+  const geoCoordinates =
+    geo && Number.isFinite(geo.lat) && Number.isFinite(geo.lng)
+      ? { "@type": "GeoCoordinates", latitude: geo.lat, longitude: geo.lng }
+      : undefined;
+
+  const amenityFeature = (amenityNames ?? [])
+    .map((n) => n?.trim())
+    .filter((n): n is string => Boolean(n))
+    .map((n) => ({ "@type": "LocationFeatureSpecification", name: n, value: true }));
 
   const accommodationType = accommodationTypeFor(propertyTypeSlug);
   const accommodationId = `${url}#accommodation`;
@@ -232,6 +263,8 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
         "@id": accommodationId,
         name: name || "Property",
         ...(address && { address }),
+        ...(geoCoordinates && { geo: geoCoordinates }),
+        ...(amenityFeature.length > 0 && { amenityFeature }),
         ...(typeof area === "number" && area > 0
           ? { floorSize: { "@type": "QuantitativeValue", value: area, unitCode: "MTK" } }
           : {}),
@@ -247,6 +280,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     "@id": `${url}#listing`,
     name: name || "Property",
     url,
+    inLanguage: locale,
     ...(description && { description }),
     ...(image && { image }),
     ...(datePosted && { datePosted }),
@@ -256,7 +290,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     // would leave the graph along with the invalid `Product.address`.
     // `spatialCoverage` is what a WebPage uses to say where it is about.
     ...(!accommodation && address
-      ? { spatialCoverage: { "@type": "Place", address } }
+      ? { spatialCoverage: { "@type": "Place", address, ...(geoCoordinates && { geo: geoCoordinates }) } }
       : {}),
   };
 
