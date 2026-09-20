@@ -582,6 +582,23 @@
         "guideForeigners": "A mund të blejnë të huajt pronë në Shqipëri?",
         "guideLegal": "Udhëzues ligjor për blerësit"
       }
+    },
+    "saleHub": {
+      "listingsHeading": "Apartamente dhe prona në shitje në Shqipëri: {count, plural, one {# pronë} other {# prona}}",
+      "listingsHeadingFiltered": "Prona që përputhen në Shqipëri: {count}",
+      "aboutTitle": "Blerja e pronës në Shqipëri",
+      "prices": {
+        "title": "Çmimet e pronave në Shqipëri",
+        "byCity": "Çmimet e kërkuara sipas qyteteve",
+        "city": "Qyteti"
+      },
+      "cities": {
+        "title": "Prona në shitje në Shqipëri sipas qyteteve",
+        "districts": "{city}: lagjet kryesore"
+      },
+      "types": {
+        "title": "Prona në shitje në Shqipëri sipas llojit"
+      }
     }
   },
   "NewBuilds": {

@@ -23,7 +23,7 @@ import {
   placeSliceCounts,
 } from "@/lib/catalog/listingDepth";
 import { resolveListingFaqItems } from "@/lib/catalog/listingFaq";
-import { PURCHASE_COST_RATES, computePurchaseCosts } from "@/lib/property/ownershipCosts";
+import { BuyingCostsSection } from "@/components/catalog/geoListing/BuyingCostsSection";
 import type { SeoContentSection } from "@/lib/seo/pages";
 
 type Props = {
@@ -37,12 +37,6 @@ type Props = {
   /** Which of the blocks this page family carries (`SEO_PAGE_FAMILIES[…].contentSections`). */
   sections: readonly SeoContentSection[];
 };
-
-/** Guides every foreign buyer needs, whatever the city. Slugs from `BLOG_POST_LISTING_TOPICS`. */
-const FOREIGN_BUYER_GUIDES = [
-  { slug: "can-foreigners-buy-real-estate-albania", label: "guideForeigners" },
-  { slug: "legal-guide-buyers", label: "guideLegal" },
-] as const;
 
 const h2Class = "text-dark dark:text-white text-xl md:text-2xl font-semibold";
 const leadClass = "mt-2 text-sm text-dark/60 dark:text-white/60 max-w-3xl";
@@ -81,13 +75,12 @@ export async function ListingDepthSections({
   if (!want("priceStats") && !want("districtLinks") && !want("faq") && !want("buyingCosts")) return null;
 
   const place = { country: countrySlug, city: citySlug, district: districtSlug };
-  const [t, tFacts, tChip, tCatalog, tCosts, priceIndex, decisions, cityIn, faqRaw, districtTitles, infoExists] =
+  const [t, tFacts, tChip, tCatalog, priceIndex, decisions, cityIn, faqRaw, districtTitles, infoExists] =
     await Promise.all([
       getTranslations({ locale, namespace: "Catalog.depth" }),
       getTranslations({ locale, namespace: "Catalog.facts" }),
       getTranslations({ locale, namespace: "Catalog.facetNav.chip" }),
       getTranslations({ locale, namespace: "Catalog" }),
-      getTranslations({ locale, namespace: "PropertyOwnershipCosts" }),
       fetchCityListingPriceIndex(citySlug),
       fetchSeoPageDecisions(),
       resolveCityDisplayName(citySlug, locale),
@@ -130,8 +123,6 @@ export async function ListingDepthSections({
     const title = districtTitles.find((d) => d.slug === slug)?.title;
     return (title ? resolveLocalizedString(title as never, locale) : "") || slug;
   };
-
-  const example = want("buyingCosts") && facts?.medianFlatPrice ? computePurchaseCosts(facts.medianFlatPrice) : null;
 
   const answerComponents: PortableTextComponents = {
     block: { normal: ({ children }) => <p className="mt-2 first:mt-0">{children}</p> },
@@ -288,45 +279,7 @@ export async function ListingDepthSections({
       ) : null}
 
       {want("buyingCosts") ? (
-        <section aria-labelledby="listing-costs">
-          <h2 id="listing-costs" className={h2Class}>
-            {t("costs.title")}
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-dark/75 dark:text-white/75 max-w-3xl">{t("costs.lead")}</p>
-          <ul className="mt-3 grid gap-1.5 text-sm text-dark/80 dark:text-white/80 list-disc pl-5 max-w-3xl">
-            <li>
-              {t("costs.notary", {
-                min: number(PURCHASE_COST_RATES.notaryPctMin, 2),
-                max: number(PURCHASE_COST_RATES.notaryPctMax, 2),
-              })}
-            </li>
-            <li>
-              {t("costs.registration", {
-                lek: number(PURCHASE_COST_RATES.registrationAll),
-                eur: number(PURCHASE_COST_RATES.registrationEur),
-              })}
-            </li>
-            <li>{t("costs.agency", { pct: number(PURCHASE_COST_RATES.agencyBuyerPct, 1) })}</li>
-            <li>{tCosts("transferTaxNote")}</li>
-          </ul>
-          {example && facts?.medianFlatPrice ? (
-            <p className="mt-3 text-sm text-dark/80 dark:text-white/80 max-w-3xl">
-              {t.rich("costs.example", {
-                pct: number(example.pct, 1),
-                price: () => <MarketMoney min={facts.medianFlatPrice as number} step={100} locale={locale} />,
-                total: () => <MarketMoney min={example.totalEur} step={10} locale={locale} />,
-              })}
-            </p>
-          ) : null}
-          <p className="mt-3 text-xs text-dark/50 dark:text-white/50 max-w-3xl">{t("costs.source")}</p>
-          <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
-            {FOREIGN_BUYER_GUIDES.map((guide) => (
-              <Link key={guide.slug} href={`/${locale}/blog/${guide.slug}`} className={textLinkClass}>
-                {t(`costs.${guide.label}`)}
-              </Link>
-            ))}
-          </p>
-        </section>
+        <BuyingCostsSection locale={locale} medianFlatPrice={facts?.medianFlatPrice ?? null} headingClassName={h2Class} />
       ) : null}
     </div>
   );

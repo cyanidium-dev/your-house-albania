@@ -582,6 +582,23 @@
         "guideForeigners": "Czy cudzoziemiec może kupić nieruchomość w Albanii?",
         "guideLegal": "Przewodnik prawny dla kupujących"
       }
+    },
+    "saleHub": {
+      "listingsHeading": "Mieszkania i nieruchomości na sprzedaż w Albanii: {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+      "listingsHeadingFiltered": "Pasujące oferty w Albanii: {count}",
+      "aboutTitle": "Zakup nieruchomości w Albanii",
+      "prices": {
+        "title": "Ceny nieruchomości w Albanii",
+        "byCity": "Ceny ofertowe według miast",
+        "city": "Miasto"
+      },
+      "cities": {
+        "title": "Nieruchomości na sprzedaż w Albanii według miast",
+        "districts": "{city}: główne dzielnice"
+      },
+      "types": {
+        "title": "Nieruchomości na sprzedaż w Albanii według rodzaju"
+      }
     }
   },
   "NewBuilds": {
