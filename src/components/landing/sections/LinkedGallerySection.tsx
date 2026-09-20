@@ -83,7 +83,9 @@ export function LinkedGallerySection({
               <div className="group relative rounded-2xl overflow-hidden aspect-[16/10] bg-dark/5 dark:bg-white/5">
                 <Image
                   src={url}
-                  alt={item.image?.alt ?? caption ?? ''}
+                  // The caption is localised; `image.alt` is one plain string
+                  // in whatever language the editor typed, so it comes second.
+                  alt={caption || item.image?.alt || ''}
                   fill
                   className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   sizes={items.length === 2 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw'}
@@ -93,6 +95,9 @@ export function LinkedGallerySection({
 
             return (
               <li key={item._key ?? `${url}-${index}`} className={span}>
+                {/* figure + figcaption: the markup that ties a caption to its
+                    photograph for a crawler, not only for the eye. */}
+                <figure>
                 {item.href ? (
                   <Link href={item.href.startsWith('/') ? `/${locale}${item.href}` : item.href}>
                     {media}
@@ -101,8 +106,9 @@ export function LinkedGallerySection({
                   media
                 )}
                 {caption ? (
-                  <p className="mt-3 text-base text-dark/70 dark:text-white/70">{caption}</p>
+                  <figcaption className="mt-3 text-base text-dark/70 dark:text-white/70">{caption}</figcaption>
                 ) : null}
+                </figure>
               </li>
             )
           })}

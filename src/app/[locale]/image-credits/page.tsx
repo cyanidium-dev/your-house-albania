@@ -12,6 +12,7 @@ import {
 import { buildFlatCrumbs, toBreadcrumbJsonLdItems } from "@/lib/routes/breadcrumbs";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { ALBANIA_PHOTO_LIST } from "@/lib/media/albaniaPhotos";
+import { buildImageCreditsJsonLd, imageCreditAlt } from "@/lib/seo/imageCreditsJsonLd";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -92,6 +93,9 @@ export default async function ImageCreditsPage({ params }: Props) {
   const baseUrl = await getBaseUrl();
   const jsonLdItems = toBreadcrumbJsonLdItems(items, `/${locale}/image-credits`);
 
+  // Licence metadata for Google Images — real licences only, see the builder.
+  const creditsJsonLd = buildImageCreditsJsonLd(credits, baseUrl);
+
   const attributed = credits.filter((c) => requiresAttribution(c.licence));
   const free = credits.filter((c) => !requiresAttribution(c.licence));
 
@@ -100,6 +104,9 @@ export default async function ImageCreditsPage({ params }: Props) {
       <section className="pt-32 md:pt-44 pb-16 md:pb-24">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <BreadcrumbJsonLd items={jsonLdItems} baseUrl={baseUrl} />
+          {creditsJsonLd && (
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creditsJsonLd) }} />
+          )}
           <Breadcrumb items={items} />
 
           <h1 className="mt-6 text-3xl md:text-5xl font-display font-semibold">{t("title")}</h1>
@@ -161,7 +168,10 @@ function CreditGroup({ heading, note, credits, standInLabel, sourceLabel }: Cred
               <div className="relative aspect-[3/2] bg-black/5 dark:bg-white/5">
                 <Image
                   src={credit.imageUrl}
-                  alt=""
+                  // The title is the description of the photograph; it was
+                  // an empty alt on all 76 entries, on the one page whose
+                  // subject is the photographs.
+                  alt={imageCreditAlt(credit)}
                   fill
                   sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
                   className="object-cover"
