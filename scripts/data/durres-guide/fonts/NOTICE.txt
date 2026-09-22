@@ -1,0 +1,13 @@
+Inter-Regular.ttf
+
+Inter, version 4.001 (variable font; its default instance, Regular, is what
+the guide PDFs embed as a static subset — the variation tables are dropped
+by scripts/buildDurresGuidePdf.ts).
+
+Copyright 2016 The Inter Project Authors (https://github.com/rsms/inter)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+The license is available with a FAQ at: https://openfontlicense.org
+
+The OFL permits embedding subsets of the font in documents. The font's own
+name table carries the same notice; the file is otherwise unmodified.

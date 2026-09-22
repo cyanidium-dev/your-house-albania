@@ -40,6 +40,7 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
   'blog-cta': 'блок в статье',
   landing: 'лендинг',
   'register-page': 'страница регистрации',
+  guide: 'карточка PDF-гида',
   page: 'ссылка на странице',
 }
 
@@ -174,6 +175,34 @@ export function formatClickLeadTelegram(input: ClickLeadMessageInput): string {
     withTestPrefix(CLICK_HEADLINE[input.type], input.context?.internal === true),
     '',
     `Где: ${PLACEMENT_LABEL[input.placement]}`,
+  ]
+  if (input.context?.currentPage) lines.push(`Страница: ${input.context.currentPage}`)
+  if (input.property) {
+    lines.push(
+      input.property.title
+        ? `Объект: ${input.property.title} (${input.property.slug})`
+        : `Объект: ${input.property.slug}`
+    )
+    lines.push(input.property.url)
+  }
+  lines.push('', formatLeadAnalyticsBlock(input))
+  return lines.join('\n')
+}
+
+export type GuideLeadMessageInput = AnalyticsBlockInput & {
+  email: string
+  /** Human title of the guide, e.g. "Buying in Durrës". */
+  guideTitle: string
+  property?: { slug: string; title?: string; url: string }
+}
+
+/** A visitor traded an email for the PDF guide. */
+export function formatGuideLeadTelegram(input: GuideLeadMessageInput): string {
+  const lines = [
+    withTestPrefix('📘 Лид скачал PDF-гид', input.context?.internal === true),
+    '',
+    `Гид: ${input.guideTitle}`,
+    `Email: ${input.email}`,
   ]
   if (input.context?.currentPage) lines.push(`Страница: ${input.context.currentPage}`)
   if (input.property) {

@@ -37,7 +37,7 @@ pushed unless `NEXT_PUBLIC_ENABLE_ANALYTICS=true`.
 
 | Event | When | Parameters |
 | --- | --- | --- |
-| `generate_lead` | A lead **form** was accepted by the server (any form; clicks excluded) | `lead_type`, `placement`, listing params, attribution params |
+| `generate_lead` | A lead **form** was accepted by the server (any form; clicks excluded). The guide gate fires it with `lead_type: guide_download` and no form-specific event | `lead_type`, `placement`, listing params, attribution params |
 | `contact_form_submit` | General contact form (`/contacts`) or a phone-only callback form (blog CTA, floating widget) was accepted | same |
 | `property_inquiry_submit` | The contact form about a listing (property page, or a listing card) was accepted | same |
 | `click_whatsapp` | Click on `wa.me` (number or `wa.me/message/<code>` business link), `api.whatsapp.com`, `web.whatsapp.com` or `whatsapp://` | `lead_type`, `placement`, `property_slug` (if any), attribution params |
@@ -51,7 +51,7 @@ pushed unless `NEXT_PUBLIC_ENABLE_ANALYTICS=true`.
 
 - **Listing params**: `property_slug`, `property_id`, `city`, `district`, `property_type`, `price_eur` (where the page knows them).
 - **Attribution params**: `landing_page`, `source`, `medium`, `campaign`, `channel` — this session's, as below.
-- **Placement** values: `header`, `footer`, `property`, `property-card`, `catalog` (the phone contact bar on city/district listing pages), `agent`, `quick-contact`, `contact-page`, `blog-cta`, `landing`, `register-page`, `page` (fallback).
+- **Placement** values: `header`, `footer`, `property`, `property-card`, `catalog` (the phone contact bar on city/district listing pages), `agent`, `quick-contact`, `contact-page`, `blog-cta`, `landing`, `register-page`, `guide` (the PDF guide card), `page` (fallback).
 - **Never sent** to GA4 or Clarity: names, phones, emails, messages, the page journey, referrer URLs.
 - Lead events reset the listing/attribution keys they do not set, so a `property_slug` from one lead cannot ride along on the next (GTM keeps every pushed key in its data model).
 - Clarity also gets tags (`clarity("set", …)`) for `lead_type`, `placement`, `channel`, `source`, and `internal`.
@@ -111,7 +111,7 @@ logged and never blocks the Telegram message.
 
 | Field | Notes |
 | --- | --- |
-| `type` | `contact_form` · `property_inquiry` · `agent_contact` · `registration` · `click_whatsapp` · `click_phone` · `click_email` |
+| `type` | `contact_form` · `property_inquiry` · `agent_contact` · `registration` · `guide_download` · `click_whatsapp` · `click_telegram` · `click_phone` · `click_email` |
 | `status` | `new` (default) · `contacted` · `qualified` · `viewing` · `negotiation` · `won` · `lost` · `spam`. Internal traffic is saved as `spam`. Editable in Studio, with `notes` |
 | `internal` | `true` for `?domlivo_internal=1` browsers |
 | `createdAt`, `placement`, `locale`, `formLabel` | `formLabel` is the label the quote widgets already send, or realtor/agency for registrations |
@@ -127,11 +127,38 @@ logged and never blocks the Telegram message.
 Type mapping: `/contacts` form and the phone-only callback forms →
 `contact_form`; property contact modal (page or card) → `property_inquiry`
 (`agent_contact` if it ever arrives without a listing); register form →
-`registration`.
+`registration`; the Durrës guide card → `guide_download` (email only,
+`formLabel: durres-buying-guide`, with the listing when the card sat on a
+property page).
 
 The API contracts are unchanged: the form endpoints accept an optional
 `context` (and `placement` on `/api/contact-agent`); without it the lead is
 still saved and Telegram says there is no visit data.
+
+### `POST /api/guide-request`
+
+The lead magnet: "Buying in Durrës: prices, taxes, steps", seven static
+PDFs in `public/guides/durres-buying-guide.<locale>.pdf`, built once by
+`npx tsx scripts/buildDurresGuidePdf.ts` from `scripts/data/durres-guide/`
+(never rendered per request — the Hobby CPU budget). The card renders on
+Durrës city/district listing pages (inside the indexable-only depth
+sections) and under the cost block of property pages whose city is Durrës.
+
+Body: `{ "locale": "de", "email": "…", "consent": true, "companyWebsite": "", "propertySlug": "…", "context": { … } }`.
+
+- Honeypot, bot UA filter (`204`), body over 32 KB → `413`, invalid → `400`
+  (`Consent required`, `Invalid locale`, `Invalid email`, `Invalid property`).
+- One lead per client per 60 s: a resubmit inside the window answers
+  `{ ok, url, duplicate: true }` and the browser skips `generate_lead`.
+- Response `{ "ok": true, "url": "/guides/durres-buying-guide.de.pdf" }` —
+  the visitor always gets the file, even if the Sanity write or Telegram fails.
+- Telegram: "📘 Лид скачал PDF-гид" with the guide, the email, the page, the
+  listing and the analytics block.
+
+**Studio schema (domlivo-admin `schemaTypes/documents/lead.ts`)**: add
+`{ title: 'Guide download', value: 'guide_download' }` to the `type` options
+and `{ title: 'Guide card', value: 'guide' }` to the `placement` options —
+until then Studio shows the raw values but the documents are saved.
 
 ### `POST /api/leads/click`
 

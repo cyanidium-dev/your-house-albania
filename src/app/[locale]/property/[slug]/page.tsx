@@ -20,6 +20,7 @@ import { propertyOgImageUrl } from '@/lib/seo/ogImageUrl';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import { fetchDistrictPriceRows } from '@/lib/sanity/queries/property';
 import { PropertyOwnershipCostsSection } from '@/components/shared/property/PropertyOwnershipCostsSection';
+import { GuideDownloadCard } from '@/components/guides/GuideDownloadCard';
 import { comparableTypeSlugs, computeOwnershipCosts, rankInDistrict } from '@/lib/property/ownershipCosts';
 import { utilityCityFor } from '@/lib/calculators/utilities';
 import TrackPageView from "@/components/analytics/TrackPageView";
@@ -512,6 +513,15 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           districtName={districtName}
                           area={area}
                           rateEur={rawProperty.priceUnit === 'per-sqm' ? rawProperty.price ?? null : null}
+                        />
+                        {/* Durrës listings only: the PDF guide that expands the
+                            cost block above, for an email. */}
+                        <GuideDownloadCard
+                          locale={locale}
+                          citySlug={citySlug}
+                          propertySlug={keySlug}
+                          subject={{ propertySlug: keySlug, ...propertyLeadAnalytics }}
+                          variant="compact"
                         />
                         {/* Straight after the market verdict: the visitor has
                             just read how this price sits against the district,

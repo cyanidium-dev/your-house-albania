@@ -1,0 +1,151 @@
+{
+ "asOf": "2026-09-20",
+ "city": {
+  "listings": 358,
+  "flats": 268,
+  "flatPriceFrom": 40000,
+  "medianFlatPrice": 100000,
+  "medianPerSqm": 1413,
+  "perSqmSample": 263
+ },
+ "byBedrooms": {
+  "studio": {
+   "listings": 23,
+   "flats": 23,
+   "flatPriceFrom": 45000,
+   "medianFlatPrice": 58680,
+   "medianPerSqm": 1500,
+   "perSqmSample": 23
+  },
+  "1+1": {
+   "listings": 151,
+   "flats": 151,
+   "flatPriceFrom": 55000,
+   "medianFlatPrice": 90000,
+   "medianPerSqm": 1416,
+   "perSqmSample": 150
+  },
+  "2+1": {
+   "listings": 73,
+   "flats": 73,
+   "flatPriceFrom": 40000,
+   "medianFlatPrice": 135000,
+   "medianPerSqm": 1444,
+   "perSqmSample": 70
+  },
+  "3+1": {
+   "listings": 11,
+   "flats": 11,
+   "flatPriceFrom": 118000,
+   "medianFlatPrice": 150000,
+   "medianPerSqm": 1119,
+   "perSqmSample": 11
+  }
+ },
+ "districts": [
+  {
+   "slug": "golem-durres",
+   "title": "Golem",
+   "listings": 80,
+   "flats": 79,
+   "flatPriceFrom": 50000,
+   "medianFlatPrice": 88000,
+   "medianPerSqm": 1311,
+   "perSqmSample": 78
+  },
+  {
+   "slug": "plazh",
+   "title": "Plazh",
+   "listings": 79,
+   "flats": 66,
+   "flatPriceFrom": 45000,
+   "medianFlatPrice": 115000,
+   "medianPerSqm": 1588,
+   "perSqmSample": 65
+  },
+  {
+   "slug": "city-center-durres",
+   "title": "City Center",
+   "listings": 72,
+   "flats": 46,
+   "flatPriceFrom": 75000,
+   "medianFlatPrice": 140000,
+   "medianPerSqm": 1500,
+   "perSqmSample": 43
+  },
+  {
+   "slug": "shkembi-durres",
+   "title": "Shkëmbi",
+   "listings": 31,
+   "flats": 30,
+   "flatPriceFrom": 50000,
+   "medianFlatPrice": 82000,
+   "medianPerSqm": 1471,
+   "perSqmSample": 30
+  },
+  {
+   "slug": "spille",
+   "title": "Spille",
+   "listings": 20,
+   "flats": 3,
+   "flatPriceFrom": null,
+   "medianFlatPrice": null,
+   "medianPerSqm": 1350,
+   "perSqmSample": 3
+  },
+  {
+   "slug": "mali-i-robit",
+   "title": "Mali i Robit",
+   "listings": 19,
+   "flats": 19,
+   "flatPriceFrom": 68000,
+   "medianFlatPrice": 87000,
+   "medianPerSqm": 1500,
+   "perSqmSample": 19
+  },
+  {
+   "slug": "qerret",
+   "title": "Qerret",
+   "listings": 14,
+   "flats": 12,
+   "flatPriceFrom": 83200,
+   "medianFlatPrice": 85000,
+   "medianPerSqm": 1300,
+   "perSqmSample": 12
+  },
+  {
+   "slug": "plepa-durres",
+   "title": "Plepa",
+   "listings": 8,
+   "flats": 7,
+   "flatPriceFrom": 65000,
+   "medianFlatPrice": 90000,
+   "medianPerSqm": 1625,
+   "perSqmSample": 7
+  }
+ ],
+ "nearSea300m": {
+  "listings": 89,
+  "flats": 89,
+  "flatPriceFrom": 50000,
+  "medianFlatPrice": 105000,
+  "medianPerSqm": 1400,
+  "perSqmSample": 89,
+  "seaDataKnownFlats": 100
+ },
+ "newBuild": {
+  "listings": 45,
+  "flats": 45,
+  "flatPriceFrom": 59360,
+  "medianFlatPrice": 83300,
+  "medianPerSqm": 1250,
+  "perSqmSample": 45
+ },
+ "priceBands": {
+  "under60k": 13,
+  "from60to100k": 91,
+  "from100to150k": 68,
+  "from150k": 38,
+  "pricedAsTotal": 210
+ }
+}
