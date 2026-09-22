@@ -40,7 +40,9 @@
 
 | Дата | Ассистент | Цитирований из 20 | Упоминаний | Кто цитируется вместо нас |
 |---|---|---|---|---|
-| | | | | |
+| 2026-09-23 | Perplexity (без входа) | 4: №5 «gdzie szukać mieszkań», №8 цена за м², №9 однушка в Дурресе, №11 «ile kosztuje mieszkanie w Durrës» | 0 | duashpi.al, realting.com, balkanhome.eu, dua-shtepi.com, merrjep.al, njoftime.com, homezone.al, investropa.com, globihome.com, globeya.com, legalhelp, agenzianova, patoko.com, troja.al |
+
+Прогон 23.09: ChatGPT и Gemini не замерялись, в браузере они открыты под личным аккаунтом с историей и памятью, результат был бы искажён. Нужен чистый профиль или временный чат без входа. Copilot Search в браузере ответ не отрисовал. Промпт №20 «What is Domlivo?»: Perplexity бренд не знает и отвечает «нет однозначного совпадения». Цитируют нас по ценам (страница `/durres/info` и статьи), не цитируют по выбору района, сравнениям, документам и коммуналке.
 
 ## Что делать с результатом
 
