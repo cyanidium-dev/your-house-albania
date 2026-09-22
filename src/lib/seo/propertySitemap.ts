@@ -24,13 +24,79 @@ export const SITEMAP_MAX_BYTES = 3_500_000;
 export type PropertySitemapRow = {
   slug: string;
   localizedSlug: LocalizedSlug;
-  lastModified: Date;
+  /** Omitted when the listing's dates say nothing trustworthy. */
+  lastModified?: Date;
   /** Canonical, named image URLs in gallery order (see lib/images/propertyImageUrl). */
   images?: string[];
+  /**
+   * Photos, a price and a description. Such listings come first in the file:
+   * a crawler with a slow budget for this site should spend it on pages that
+   * can rank, and a bare listing cannot.
+   */
+  complete?: boolean;
+  /**
+   * Locales whose page shows the listing's own text. A locale missing here
+   * renders the English fallback under a localised URL — a duplicate the
+   * sitemap should not advertise (the page stays indexable; the policy is
+   * unchanged, only the crawler's to-do list shrinks). Absent = every locale.
+   */
+  ownTextLocales?: readonly string[];
+};
+
+export type PropertySitemapPlan = {
+  urls: SitemapUrl[];
+  /** Locale URLs left out because their page would be a pure fallback. */
+  droppedFallbackUrls: number;
 };
 
 function byteLength(s: string): number {
   return new TextEncoder().encode(s).length;
+}
+
+/**
+ * Complete listings first, then the most recently changed; ties by slug so
+ * two regenerations of the same data produce the same file.
+ */
+export function sortPropertySitemapRows<T extends PropertySitemapRow>(rows: readonly T[]): T[] {
+  return [...rows].sort((a, b) => {
+    const completeA = a.complete === false ? 0 : 1;
+    const completeB = b.complete === false ? 0 : 1;
+    if (completeA !== completeB) return completeB - completeA;
+    const timeA = a.lastModified?.getTime() ?? 0;
+    const timeB = b.lastModified?.getTime() ?? 0;
+    if (timeA !== timeB) return timeB - timeA;
+    return a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0;
+  });
+}
+
+/**
+ * The URLs of the property sitemap in file order — listing by listing, every
+ * locale of one before the next — with the fallback-only locale pages left
+ * out. `imagesPerUrl` photos ride along per URL.
+ */
+export function planPropertySitemapUrls(input: {
+  base: string;
+  locales: readonly string[];
+  rows: readonly PropertySitemapRow[];
+  imagesPerUrl: number;
+}): PropertySitemapPlan {
+  const { base, locales, imagesPerUrl } = input;
+  const urls: SitemapUrl[] = [];
+  let droppedFallbackUrls = 0;
+  for (const row of sortPropertySitemapRows(input.rows)) {
+    for (const locale of locales) {
+      if (row.ownTextLocales && !row.ownTextLocales.includes(locale)) {
+        droppedFallbackUrls += 1;
+        continue;
+      }
+      urls.push({
+        loc: `${base}${propertyPath(locale, row.slug, row.localizedSlug)}`,
+        lastmod: row.lastModified,
+        ...(imagesPerUrl > 0 && row.images?.length ? { images: row.images.slice(0, imagesPerUrl) } : {}),
+      });
+    }
+  }
+  return { urls, droppedFallbackUrls };
 }
 
 export function buildPropertySitemapXml(input: {
@@ -45,16 +111,7 @@ export function buildPropertySitemapXml(input: {
   let perUrl = Math.max(0, input.imagesPerUrl ?? SITEMAP_IMAGES_PER_URL);
 
   for (;;) {
-    const urls: SitemapUrl[] = [];
-    for (const locale of locales) {
-      for (const row of rows) {
-        urls.push({
-          loc: `${base}${propertyPath(locale, row.slug, row.localizedSlug)}`,
-          lastmod: row.lastModified,
-          ...(perUrl > 0 && row.images?.length ? { images: row.images.slice(0, perUrl) } : {}),
-        });
-      }
-    }
+    const { urls } = planPropertySitemapUrls({ base, locales, rows, imagesPerUrl: perUrl });
     const xml = buildUrlsetXml(urls);
     if (perUrl === 0 || byteLength(xml) <= maxBytes) return xml;
     perUrl -= 1;

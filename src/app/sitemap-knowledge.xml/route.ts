@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { routing } from '@/i18n/routing'
 import { isIndexingEnabled } from '@/lib/seo/envSeo'
 import { fetchKnowledgeIndex } from '@/lib/sanity/queries/knowledge'
+import { latestDate, parseDateOrUndefined } from '@/lib/seo/contentLastmod'
 import { buildUrlsetXml } from '@/lib/seo/sitemapXml'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
@@ -24,17 +25,24 @@ export async function GET() {
 
   const base = getSiteBaseUrl()
   const entries = await fetchKnowledgeIndex('en')
-  const urls: Array<{ loc: string; lastmod: Date }> = []
-  const now = new Date()
+  const urls: Array<{ loc: string; lastmod?: Date }> = []
+
+  // The index changes when its newest page does; a page without a
+  // `lastUpdated` gets no date rather than the time of this request.
+  const pages = entries
+    .filter((entry) => Boolean(entry.slug))
+    .map((entry) => ({
+      slug: entry.slug,
+      lastmod: parseDateOrUndefined(entry.lastUpdated ? `${entry.lastUpdated}T00:00:00Z` : undefined),
+    }))
+  const indexLastmod = latestDate(...pages.map((p) => p.lastmod))
 
   for (const locale of routing.locales) {
-    urls.push({ loc: `${base}/${locale}/knowledge`, lastmod: now })
-    for (const entry of entries) {
-      if (!entry.slug) continue
-      const lastmod = entry.lastUpdated ? new Date(`${entry.lastUpdated}T00:00:00Z`) : now
+    urls.push({ loc: `${base}/${locale}/knowledge`, lastmod: indexLastmod })
+    for (const page of pages) {
       urls.push({
-        loc: `${base}/${locale}/knowledge/${encodeURIComponent(entry.slug)}`,
-        lastmod: Number.isNaN(lastmod.getTime()) ? now : lastmod,
+        loc: `${base}/${locale}/knowledge/${encodeURIComponent(page.slug)}`,
+        lastmod: page.lastmod,
       })
     }
   }

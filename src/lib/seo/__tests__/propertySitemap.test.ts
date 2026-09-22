@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildUrlsetXml } from "../sitemapXml";
-import { buildPropertySitemapXml, SITEMAP_IMAGES_PER_URL } from "../propertySitemap";
+import { buildPropertySitemapXml, planPropertySitemapUrls, sortPropertySitemapRows, SITEMAP_IMAGES_PER_URL } from "../propertySitemap";
 import { sitemapImageUrls } from "@/lib/sanity/queries/sitemap";
 
 const BASE = "https://www.domlivo.com";
@@ -65,5 +65,46 @@ describe("buildPropertySitemapXml", () => {
     const none = buildPropertySitemapXml({ base: BASE, locales: ["en", "de"], rows, maxBytes: 10 });
     expect(none).not.toContain("image:");
     expect(none.match(/<url>/g)).toHaveLength(4);
+  });
+});
+
+describe("planPropertySitemapUrls", () => {
+  const complete = { slug: "complete-old", localizedSlug: null, lastModified: new Date("2026-01-01T00:00:00Z"), images: [asset(1)], complete: true };
+  const completeNew = { slug: "complete-new", localizedSlug: null, lastModified: new Date("2026-06-01T00:00:00Z"), images: [asset(2)], complete: true };
+  const bare = { slug: "bare", localizedSlug: null, lastModified: new Date("2026-09-01T00:00:00Z"), images: [], complete: false };
+  const undated = { slug: "undated", localizedSlug: null, images: [asset(3)], complete: true };
+
+  it("puts complete listings first, newest first, and undated ones last among them", () => {
+    expect(sortPropertySitemapRows([bare, complete, undated, completeNew]).map((r) => r.slug)).toEqual([
+      "complete-new",
+      "complete-old",
+      "undated",
+      "bare",
+    ]);
+  });
+
+  it("lists every locale of a listing together and omits lastmod it does not know", () => {
+    const { urls } = planPropertySitemapUrls({ base: BASE, locales: ["en", "de"], rows: [bare, undated], imagesPerUrl: 1 });
+    expect(urls.map((u) => u.loc)).toEqual([
+      `${BASE}/en/property/undated`,
+      `${BASE}/de/property/undated`,
+      `${BASE}/en/property/bare`,
+      `${BASE}/de/property/bare`,
+    ]);
+    expect(urls[0].lastmod).toBeUndefined();
+    expect(buildUrlsetXml(urls.slice(0, 1))).not.toContain("<lastmod>");
+  });
+
+  it("drops the locale URLs whose page would be the English fallback", () => {
+    const rows = [
+      { ...complete, ownTextLocales: ["en", "sq"] },
+      { ...completeNew, ownTextLocales: ["en", "sq", "de"] },
+      bare, // no `ownTextLocales` → every locale
+    ];
+    const { urls, droppedFallbackUrls } = planPropertySitemapUrls({ base: BASE, locales: ["en", "sq", "de"], rows, imagesPerUrl: 0 });
+    expect(droppedFallbackUrls).toBe(1);
+    expect(urls.map((u) => u.loc)).not.toContain(`${BASE}/de/property/complete-old`);
+    expect(urls.map((u) => u.loc)).toContain(`${BASE}/de/property/complete-new`);
+    expect(urls).toHaveLength(8);
   });
 });

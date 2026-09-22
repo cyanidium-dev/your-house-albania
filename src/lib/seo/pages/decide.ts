@@ -3,6 +3,7 @@
  * Pure: `fetchSeoPageDecisions` fetches the rows, this decides.
  */
 import { isSolePublicDealQuery } from "@/lib/catalog/publicDealTypes";
+import { bulkTouchTimestamps, contentLastmod, latestDate } from "@/lib/seo/contentLastmod";
 import { evaluateSeoPage } from "./eligibility";
 import { collectSeoPageCandidates, type SeoInventoryRow } from "./inventory";
 import type { KeywordCluster, SeoExperiment, SeoPageDecision } from "./types";
@@ -11,6 +12,18 @@ export type SeoDecisionSourceRows = {
   cities?: Array<{ citySlug?: string; countrySlug?: string; noIndex?: boolean }>;
   districts?: Array<{ citySlug?: string; districtSlug?: string }>;
   catalogNoIndex?: Array<{ pageScope?: string; citySlug?: string; districtSlug?: string }>;
+  /**
+   * Every active `catalogSeoPage` with its dates: the editorial copy of a city
+   * or district page is part of that page, so its edit moves the page's
+   * `lastmod` the same way a listing does.
+   */
+  catalogSeoPages?: Array<{
+    pageScope?: string;
+    citySlug?: string;
+    districtSlug?: string;
+    _updatedAt?: string;
+    _createdAt?: string;
+  }>;
   properties?: Array<{
     citySlug?: string;
     districtSlug?: string;
@@ -23,15 +36,24 @@ export type SeoDecisionSourceRows = {
     seaDistanceMeters?: number | null;
     beachfront?: boolean | null;
     _updatedAt?: string;
+    _createdAt?: string;
   }>;
 };
 
-/** `lastModified` is an ISO string because the cache serialises the result. */
+/**
+ * `lastModified` is an ISO string because the cache serialises the result;
+ * `null` when no date of the page's documents is trustworthy (see
+ * `contentLastmod`). It is the newest individual edit among the page's
+ * listings and its `catalogSeoPage` copy.
+ */
 export type SeoPageDecisionRow = {
   decision: SeoPageDecision;
   count: number;
-  lastModified: string;
+  lastModified: string | null;
 };
+
+/** Stands for "unknown" inside the inventory pass, whose rows carry a `Date`. */
+const UNKNOWN_DATE = new Date(0);
 
 const lower = (v: unknown): string => (typeof v === "string" ? v.trim().toLowerCase() : "");
 
@@ -64,14 +86,29 @@ export function decideSeoPages(
     else if (lower(doc.districtSlug)) noindexDistricts.add(`${city}|${lower(doc.districtSlug)}`);
   }
 
+  // Editorial copy dates, keyed like the page: `city` or `city|district`.
+  const copyBulk = bulkTouchTimestamps(source.catalogSeoPages ?? []);
+  const copyDates = new Map<string, Date>();
+  for (const doc of source.catalogSeoPages ?? []) {
+    const city = lower(doc.citySlug);
+    if (!city) continue;
+    const district = lower(doc.districtSlug);
+    const key = doc.pageScope === "district" && district ? `${city}|${district}` : doc.pageScope === "city" ? city : null;
+    if (!key) continue;
+    const date = contentLastmod(doc, copyBulk, doc._createdAt);
+    const newest = latestDate(copyDates.get(key), date);
+    if (newest) copyDates.set(key, newest);
+  }
+
   const rows: SeoInventoryRow[] = [];
+  const propertyBulk = bulkTouchTimestamps(source.properties ?? []);
   for (const p of source.properties ?? []) {
     const city = lower(p.citySlug);
     const country = countryByCity.get(city);
     // Registry pages are sale pages; a listing of another deal is on none of them.
     if (!country || !isSolePublicDealQuery(lower(p.deal))) continue;
     const district = lower(p.districtSlug);
-    const updated = p._updatedAt ? new Date(p._updatedAt) : new Date(0);
+    const updated = contentLastmod(p, propertyBulk, p._createdAt) ?? UNKNOWN_DATE;
     rows.push({
       country,
       city,
@@ -83,7 +120,7 @@ export function decideSeoPages(
       constructionStage: p.constructionStage,
       seaDistanceMeters: p.seaDistanceMeters,
       beachfront: p.beachfront,
-      lastModified: Number.isNaN(updated.getTime()) ? new Date(0) : updated,
+      lastModified: updated,
     });
   }
 
@@ -91,10 +128,14 @@ export function decideSeoPages(
     const district = key.family === "district" || key.family === "facet" ? key.district : undefined;
     const editorialNoindex =
       noindexCities.has(key.city) || (district !== undefined && noindexDistricts.has(`${key.city}|${district}`));
+    // The copy document of the place the page lists: the district's for a
+    // district page and its facets, the city's for everything else.
+    const copyDate = copyDates.get(district !== undefined ? `${key.city}|${district}` : key.city);
+    const newest = latestDate(lastModified.getTime() > 0 ? lastModified : undefined, copyDate);
     return {
       decision: evaluateSeoPage({ key, inventory, editorialNoindex, clusters, experiments }),
       count: inventory.count,
-      lastModified: lastModified.toISOString(),
+      lastModified: newest ? newest.toISOString() : null,
     };
   });
 }
