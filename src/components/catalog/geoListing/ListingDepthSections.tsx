@@ -24,6 +24,7 @@ import {
 } from "@/lib/catalog/listingDepth";
 import { resolveListingFaqItems } from "@/lib/catalog/listingFaq";
 import { BuyingCostsSection } from "@/components/catalog/geoListing/BuyingCostsSection";
+import { GuideDownloadCard } from "@/components/guides/GuideDownloadCard";
 import type { SeoContentSection } from "@/lib/seo/pages";
 
 type Props = {
@@ -214,6 +215,15 @@ export async function ListingDepthSections({
           </p>
         </section>
       ) : null}
+
+      {/* The lead magnet, right after the numbers it expands on. Renders only
+          for Durrës; the card is static and the form inside is the island. */}
+      <GuideDownloadCard
+        locale={locale}
+        citySlug={citySlug}
+        subject={{ city: citySlug, ...(districtSlug ? { district: districtSlug } : {}) }}
+        headingClassName={`${h2Class} mt-2`}
+      />
 
       {districts.length > 0 ? (
         <section aria-labelledby="listing-districts">

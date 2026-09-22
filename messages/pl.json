@@ -779,6 +779,21 @@
     "error": "Nie udało się wysłać. Spróbuj ponownie lub napisz do nas na Telegramie.",
     "consent": "Wysyłając formularz, zgadzasz się na kontakt w sprawie zgłoszenia."
   },
+  "DurresGuide": {
+    "badge": "Bezpłatny PDF",
+    "title": "Pobierz przewodnik po kupnie w Durrës (PDF)",
+    "body": "Ceny ofertowe według dzielnic na dzień {date}, co zakup dokłada do ceny, kroki i dokumenty dla cudzoziemca, roczne koszty utrzymania i pytania do sprzedającego. Ze źródłami i oznaczeniami pewności.",
+    "meta": "PDF, 6–7 stron, w Twoim języku. Domlivo, wrzesień 2026.",
+    "emailPlaceholder": "Twój e-mail",
+    "emailLabel": "E-mail",
+    "consent": "Zgadzam się otrzymać przewodnik i od czasu do czasu oferty z Durrës e-mailem. <privacy>Polityka prywatności</privacy>",
+    "submit": "Wyślij mi PDF",
+    "submitting": "Wysyłanie…",
+    "successTitle": "Twój przewodnik jest gotowy",
+    "successBody": "Pobieranie powinno się rozpocząć. Jeśli nie, użyj przycisku poniżej.",
+    "download": "Pobierz PDF",
+    "error": "Nie udało się wysłać. Spróbuj ponownie lub napisz do nas na Telegramie."
+  },
   "QuickContact": {
     "open": "Skontaktuj się z nami",
     "close": "Zamknij kontakty",

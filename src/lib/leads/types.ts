@@ -8,6 +8,7 @@ export const LEAD_TYPES = [
   'property_inquiry',
   'agent_contact',
   'registration',
+  'guide_download',
   'click_whatsapp',
   'click_telegram',
   'click_phone',
@@ -45,6 +46,7 @@ export const LEAD_PLACEMENTS = [
   'blog-cta',
   'landing',
   'register-page',
+  'guide',
   'page',
 ] as const
 

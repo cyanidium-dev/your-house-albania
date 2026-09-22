@@ -779,6 +779,21 @@
     "error": "Senden nicht möglich. Bitte versuchen Sie es erneut oder schreiben Sie uns auf Telegram.",
     "consent": "Mit dem Absenden stimmen Sie zu, zu Ihrer Anfrage kontaktiert zu werden."
   },
+  "DurresGuide": {
+    "badge": "Kostenloses PDF",
+    "title": "Den Kaufleitfaden für Durrës erhalten (PDF)",
+    "body": "Angebotspreise nach Vierteln, Stand {date}, was der Kauf auf den Preis draufsetzt, Schritte und Unterlagen für Ausländer, jährliche Unterhaltskosten und die Fragen an den Verkäufer. Mit Quellen und Verlässlichkeitsvermerken.",
+    "meta": "PDF, 6–7 Seiten, in Ihrer Sprache. Domlivo, September 2026.",
+    "emailPlaceholder": "Ihre E-Mail",
+    "emailLabel": "E-Mail",
+    "consent": "Ich bin einverstanden, den Leitfaden und gelegentlich Inserate aus Durrës per E-Mail zu erhalten. <privacy>Datenschutzerklärung</privacy>",
+    "submit": "PDF zusenden",
+    "submitting": "Wird gesendet…",
+    "successTitle": "Ihr Leitfaden ist bereit",
+    "successBody": "Der Download sollte begonnen haben. Falls nicht, nutzen Sie die Schaltfläche unten.",
+    "download": "PDF herunterladen",
+    "error": "Senden fehlgeschlagen. Bitte versuchen Sie es erneut oder schreiben Sie uns auf Telegram."
+  },
   "QuickContact": {
     "open": "Kontakt aufnehmen",
     "close": "Kontakte schließen",

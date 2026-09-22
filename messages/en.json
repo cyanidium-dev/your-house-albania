@@ -779,6 +779,21 @@
     "error": "Could not send. Please try again or write to us on Telegram.",
     "consent": "By submitting you agree to be contacted about your request."
   },
+  "DurresGuide": {
+    "badge": "Free PDF",
+    "title": "Get the Durrës buying guide (PDF)",
+    "body": "Asking prices by district as of {date}, what buying adds on top of the price, the steps and documents for a foreigner, yearly running costs, and the questions to ask a seller. Sources and confidence notes included.",
+    "meta": "PDF, 6–7 pages, in your language. Domlivo, September 2026.",
+    "emailPlaceholder": "Your email",
+    "emailLabel": "Email",
+    "consent": "I agree to receive the guide and occasional Durrës listings by email. <privacy>Privacy policy</privacy>",
+    "submit": "Send me the PDF",
+    "submitting": "Sending…",
+    "successTitle": "Your guide is ready",
+    "successBody": "The download should have started. If it did not, use the button below.",
+    "download": "Download the PDF",
+    "error": "Could not send. Please try again or write to us on Telegram."
+  },
   "QuickContact": {
     "open": "Contact us",
     "close": "Close contacts",

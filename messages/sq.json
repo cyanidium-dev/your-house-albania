@@ -779,6 +779,21 @@
     "error": "Dërgimi dështoi. Provoni sërish ose na shkruani në Telegram.",
     "consent": "Duke dërguar formularin, pranoni të kontaktoheni për kërkesën tuaj."
   },
+  "DurresGuide": {
+    "badge": "PDF falas",
+    "title": "Merrni udhëzuesin e blerjes në Durrës (PDF)",
+    "body": "Çmimet e kërkuara sipas zonave më {date}, çfarë shton blerja mbi çmimin, hapat dhe dokumentet për një të huaj, kostot vjetore të mbajtjes dhe pyetjet për shitësin. Me burime dhe shënime besueshmërie.",
+    "meta": "PDF, 6–7 faqe, në gjuhën tuaj. Domlivo, shtator 2026.",
+    "emailPlaceholder": "Email-i juaj",
+    "emailLabel": "Email",
+    "consent": "Pranoj të marr udhëzuesin dhe herë pas here shpallje nga Durrësi me email. <privacy>Politika e privatësisë</privacy>",
+    "submit": "Më dërgoni PDF-në",
+    "submitting": "Po dërgohet…",
+    "successTitle": "Udhëzuesi juaj është gati",
+    "successBody": "Shkarkimi duhet të ketë filluar. Nëse jo, përdorni butonin më poshtë.",
+    "download": "Shkarko PDF-në",
+    "error": "Nuk u dërgua. Provoni përsëri ose na shkruani në Telegram."
+  },
   "QuickContact": {
     "open": "Na kontaktoni",
     "close": "Mbyll kontaktet",

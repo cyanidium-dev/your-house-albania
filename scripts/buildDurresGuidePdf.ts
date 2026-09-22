@@ -26,7 +26,7 @@ import { fileURLToPath } from 'node:url'
 import { DEFAULT_THEME, layoutGuide } from '../src/lib/guides/pdf/layout'
 import { parseMarkdown, substitute } from '../src/lib/guides/pdf/markdown'
 import { PdfDocument } from '../src/lib/guides/pdf/writer'
-import { GUIDE_LOCALES, guidePdfFileName, type GuideLocale } from '../src/lib/guides/durresGuide'
+import { GUIDE_LOCALES, GUIDE_PRICE_INDEX_AS_OF, guidePdfFileName, type GuideLocale } from '../src/lib/guides/durresGuide'
 import { PURCHASE_COST_RATES, computePurchaseCosts } from '../src/lib/property/ownershipCosts'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -216,6 +216,11 @@ function main() {
   const only = arg('--locale') as GuideLocale | undefined
   const indexPath = resolve(root, arg('--price-index') ?? resolve(dataDir, 'price-index.json'))
   const index = JSON.parse(readFileSync(indexPath, 'utf8')) as PriceIndex
+  if (index.asOf !== GUIDE_PRICE_INDEX_AS_OF) {
+    throw new Error(
+      `Price index is dated ${index.asOf} but GUIDE_PRICE_INDEX_AS_OF is ${GUIDE_PRICE_INDEX_AS_OF}; update src/lib/guides/durresGuide.ts so the card quotes the same date`,
+    )
+  }
   const ttf = new Uint8Array(readFileSync(resolve(dataDir, 'fonts/Inter-Regular.ttf')))
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })
 

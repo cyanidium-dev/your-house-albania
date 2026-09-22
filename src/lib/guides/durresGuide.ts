@@ -13,6 +13,13 @@ export type GuideLocale = (typeof GUIDE_LOCALES)[number]
 
 export const GUIDE_ID = 'durres-buying-guide' as const
 
+/**
+ * The date of the price index the PDFs were built from (`scripts/data/durres-guide/price-index.json`
+ * `asOf`). The card quotes it, and the build script refuses a JSON with another date so the
+ * site never promises fresher numbers than the file holds. Bump both when regenerating.
+ */
+export const GUIDE_PRICE_INDEX_AS_OF = '2026-09-20'
+
 export function isGuideLocale(v: unknown): v is GuideLocale {
   return typeof v === 'string' && (GUIDE_LOCALES as readonly string[]).includes(v)
 }

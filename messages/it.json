@@ -779,6 +779,21 @@
     "error": "Invio non riuscito. Riprova o scrivici su Telegram.",
     "consent": "Inviando il modulo acconsenti a essere contattato per la tua richiesta."
   },
+  "DurresGuide": {
+    "badge": "PDF gratuito",
+    "title": "Ricevi la guida all’acquisto a Durazzo (PDF)",
+    "body": "Prezzi richiesti per zona al {date}, cosa l’acquisto aggiunge al prezzo, passaggi e documenti per uno straniero, costi annui di gestione e le domande da fare al venditore. Con fonti e note di affidabilità.",
+    "meta": "PDF, 6–7 pagine, nella tua lingua. Domlivo, settembre 2026.",
+    "emailPlaceholder": "La tua email",
+    "emailLabel": "Email",
+    "consent": "Accetto di ricevere la guida e, di tanto in tanto, annunci di Durazzo via email. <privacy>Informativa sulla privacy</privacy>",
+    "submit": "Inviami il PDF",
+    "submitting": "Invio…",
+    "successTitle": "La tua guida è pronta",
+    "successBody": "Il download dovrebbe essere partito. In caso contrario, usa il pulsante qui sotto.",
+    "download": "Scarica il PDF",
+    "error": "Invio non riuscito. Riprova o scrivici su Telegram."
+  },
   "QuickContact": {
     "open": "Contattaci",
     "close": "Chiudi contatti",
