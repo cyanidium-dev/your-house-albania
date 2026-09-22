@@ -16,16 +16,18 @@ import { fetchSeoPageDecisions } from './seoPages';
 import { PUBLISHED_PROPERTY_FILTER } from '../groq/propertyFilters';
 import { canonicalPropertyImageUrl, propertyImageSeoName, withImageSeoName } from '@/lib/images/propertyImageUrl';
 import { SITEMAP_IMAGES_PER_URL } from '@/lib/seo/propertySitemap';
+import { bulkTouchTimestamps, contentLastmod, latestDate, parseDateOrUndefined } from '@/lib/seo/contentLastmod';
+import { PROPERTY_URL_LOCALES } from '@/lib/property/propertyUrl';
 
-function parseSitemapDate(raw: string | undefined): Date {
-  if (raw) {
-    const d = new Date(raw);
-    if (!Number.isNaN(d.getTime())) return d;
-  }
-  return new Date();
-}
+/**
+ * Every `lastModified` below is `undefined` when the document's dates say
+ * nothing trustworthy (see `contentLastmod`); the sitemap then omits the
+ * element. It used to fall back to the time of the request, which told the
+ * crawler that every such page had just changed — on every regeneration.
+ */
+const parseSitemapDate = parseDateOrUndefined;
 
-export type AgentSitemapEntry = { slug: string; lastModified: Date };
+export type AgentSitemapEntry = { slug: string; lastModified?: Date };
 
 /**
  * Published agents with valid path slugs for `/agent/[slug]` — only those whose
@@ -46,6 +48,7 @@ export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[
   const query = `*[_type == "agent" && defined(slug.current) && isPublished != false]{
     "slug": slug.current,
     _updatedAt,
+    _createdAt,
     isPublished,
     bio,
     "photoUrl": photo.asset->url
@@ -55,12 +58,14 @@ export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[
       Array<{
         slug?: string;
         _updatedAt?: string;
+        _createdAt?: string;
         isPublished?: boolean;
         bio?: unknown;
         photoUrl?: string;
       }>
     >(query);
     if (!Array.isArray(rows)) return [];
+    const bulk = bulkTouchTimestamps(rows);
     const out: AgentSitemapEntry[] = [];
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
@@ -76,7 +81,7 @@ export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[
       }
       out.push({
         slug,
-        lastModified: parseSitemapDate(row._updatedAt),
+        lastModified: contentLastmod(row, bulk, row._createdAt),
       });
     }
     return out;
@@ -86,7 +91,18 @@ export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[
   }
 }
 
-export type LandingPathSitemapEntry = { path: string; lastModified: Date };
+export type LandingPathSitemapEntry = { path: string; lastModified?: Date };
+
+/**
+ * A landing's date: an individual save, else the editor's own
+ * `contentUpdatedAt` (the "Updated" badge the page shows), else creation.
+ */
+export function landingLastmod(
+  row: { _updatedAt?: string; _createdAt?: string; contentUpdatedAt?: string },
+  bulk: ReadonlySet<string>,
+): Date | undefined {
+  return contentLastmod(row, bulk, row.contentUpdatedAt, row._createdAt);
+}
 
 /**
  * Indexable CMS landing routes (paths after `/{locale}/`), deduped by path.
@@ -104,6 +120,8 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
     _id,
     "slug": slug.current,
     _updatedAt,
+    _createdAt,
+    contentUpdatedAt,
     pageType,
     seo,
     "linkedCitySlug": linkedCity->slug.current,
@@ -112,13 +130,14 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
   try {
     const rows = await client.fetch<LandingPageSitemapRow[]>(query);
     if (!Array.isArray(rows)) return [];
-    const best = new Map<string, Date>();
+    const bulk = bulkTouchTimestamps(rows);
+    const best = new Map<string, Date | undefined>();
     for (const row of rows) {
       const path = resolveLandingPathForSitemap(row);
       if (!path) continue;
-      const lm = parseSitemapDate(row._updatedAt);
-      const prev = best.get(path);
-      if (!prev || lm > prev) best.set(path, lm);
+      const lm = landingLastmod(row, bulk);
+      if (!best.has(path)) best.set(path, lm);
+      else best.set(path, latestDate(best.get(path), lm));
     }
     return Array.from(best.entries()).map(([path, lastModified]) => ({ path, lastModified }));
   } catch (err) {
@@ -131,7 +150,7 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
  * `locales`: emit the URL only in these locales; absent = every locale.
  * Registry pages carry the locales their decision indexes them in.
  */
-export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified: Date; locales?: readonly string[] };
+export type SitemapSimpleEntry = { segmentAfterLocale: string; lastModified?: Date; locales?: readonly string[] };
 
 /** Path after `/{locale}/` of a registry page. */
 function registrySegmentAfterLocale(key: SeoPageKey): string {
@@ -157,6 +176,14 @@ async function fetchRegistrySitemapEntries(
     }));
 }
 
+/**
+ * Every listing page the registry indexes, as sitemap entries — the same
+ * list `sitemap-cities.xml` and `sitemap-types.xml` split between them.
+ */
+export async function fetchSitemapRegistryEntries(): Promise<SitemapSimpleEntry[]> {
+  return fetchRegistrySitemapEntries(() => true);
+}
+
 /** City listings (`/{country}/{city}`) the registry indexes. Editorial pages use `/{country}/{slug}/info`. */
 export async function fetchSitemapCityEntries(): Promise<SitemapSimpleEntry[]> {
   return fetchRegistrySitemapEntries((family) => family === 'city');
@@ -172,7 +199,7 @@ export async function fetchSitemapTypeEntries(): Promise<SitemapSimpleEntry[]> {
 }
 
 /** Segments after `/{locale}/` for national deal routes; uses `buildListingPath` with dummy locale `en`. */
-function nonGeoListingSitemapSegmentAfterLocale(
+export function nonGeoListingSitemapSegmentAfterLocale(
   dealQuery: 'sale' | 'rent' | 'short-term',
   propertyTypeSlug?: string
 ): string {
@@ -199,19 +226,22 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
     "propertyRows": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(status) && defined(type->slug.current)]{
       "deal": status,
       "typeSlug": type->slug.current,
-      _updatedAt
+      _updatedAt,
+      _createdAt
     }
   }`;
 
   try {
     const result = await client.fetch<{
-      propertyRows?: Array<{ deal?: string; typeSlug?: string; _updatedAt?: string }>;
+      propertyRows?: Array<{ deal?: string; typeSlug?: string; _updatedAt?: string; _createdAt?: string }>;
     }>(query);
 
-    const dealLastMod = new Map<string, Date>();
-    const typeCount = new Map<string, { count: number; lastmod: Date }>();
+    const propertyRows = result?.propertyRows ?? [];
+    const bulk = bulkTouchTimestamps(propertyRows);
+    const dealLastMod = new Map<string, Date | undefined>();
+    const typeCount = new Map<string, { count: number; lastmod: Date | undefined }>();
 
-    for (const row of result?.propertyRows ?? []) {
+    for (const row of propertyRows) {
       const dealRaw = typeof row.deal === 'string' ? row.deal.trim().toLowerCase() : '';
       let dealQuery: 'sale' | 'rent' | 'short-term' | null = null;
       let mapSeg: string | null = null;
@@ -227,9 +257,8 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
       }
       if (!dealQuery || !mapSeg) continue;
 
-      const lm = parseSitemapDate(row._updatedAt);
-      const prevD = dealLastMod.get(mapSeg);
-      if (!prevD || lm > prevD) dealLastMod.set(mapSeg, lm);
+      const lm = contentLastmod(row, bulk, row._createdAt);
+      dealLastMod.set(mapSeg, latestDate(dealLastMod.get(mapSeg), lm));
 
       const typeSlug = typeof row.typeSlug === 'string' ? row.typeSlug.trim().toLowerCase() : '';
       if (typeSlug) {
@@ -239,20 +268,19 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
         else {
           typeCount.set(key, {
             count: prev.count + 1,
-            lastmod: lm > prev.lastmod ? lm : prev.lastmod,
+            lastmod: latestDate(prev.lastmod, lm),
           });
         }
       }
     }
 
-    const staticNow = new Date();
     const out: SitemapSimpleEntry[] = [];
 
     for (const dq of NON_GEO_SITEMAP_DEAL_QUERIES) {
       // Rentals hidden from the public UI → excluded from sitemaps too.
       if (!isPublicDealQuery(dq)) continue;
       const seg = dq === 'short-term' ? 'short-term-rent' : dq;
-      const lm = dealLastMod.get(seg) ?? staticNow;
+      const lm = dealLastMod.get(seg);
       out.push({
         segmentAfterLocale: nonGeoListingSitemapSegmentAfterLocale(dq),
         lastModified: lm,
@@ -273,10 +301,12 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
       });
     }
 
-    const dedup = new Map<string, Date>();
+    const dedup = new Map<string, Date | undefined>();
     for (const row of out) {
-      const prev = dedup.get(row.segmentAfterLocale);
-      if (!prev || row.lastModified > prev) dedup.set(row.segmentAfterLocale, row.lastModified);
+      dedup.set(
+        row.segmentAfterLocale,
+        dedup.has(row.segmentAfterLocale) ? latestDate(dedup.get(row.segmentAfterLocale), row.lastModified) : row.lastModified,
+      );
     }
 
     return Array.from(dedup.entries()).map(([segmentAfterLocale, lastModified]) => ({
@@ -290,7 +320,7 @@ export async function fetchSitemapNonGeoListingEntries(): Promise<SitemapSimpleE
 }
 
 /** `locales` is `landingPage.locales` (SEO-04): emit the URL only for these; empty = every locale. */
-export type SitemapGuideEntry = { slug: string; lastModified: Date; locales: string[] };
+export type SitemapGuideEntry = { slug: string; lastModified?: Date; locales: string[] };
 
 /**
  * Enabled custom landings for `sitemap-landings.xml` → `/{locale}/guides/{slug}`.
@@ -312,23 +342,28 @@ export async function fetchSitemapGuideEntries(): Promise<SitemapGuideEntry[]> {
   ]{
     "slug": slug.current,
     _updatedAt,
+    _createdAt,
+    contentUpdatedAt,
     locales
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string; locales?: unknown }>>(query, {
+    const rows = await client.fetch<
+      Array<{ slug?: string; _updatedAt?: string; _createdAt?: string; contentUpdatedAt?: string; locales?: unknown }>
+    >(query, {
       reserved: RESERVED_GUIDE_SLUGS,
     });
     if (!Array.isArray(rows)) return [];
-    const best = new Map<string, { lastModified: Date; locales: string[] }>();
+    const bulk = bulkTouchTimestamps(rows);
+    const best = new Map<string, { lastModified?: Date; locales: string[] }>();
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
       if (!slug) continue;
-      const lm = parseSitemapDate(row._updatedAt);
+      const lm = landingLastmod(row, bulk);
       const locales = Array.isArray(row.locales)
         ? row.locales.map((l) => (typeof l === 'string' ? l.trim().toLowerCase() : '')).filter(Boolean)
         : [];
       const prev = best.get(slug);
-      if (!prev || lm > prev.lastModified) best.set(slug, { lastModified: lm, locales });
+      if (!prev || (lm && (!prev.lastModified || lm > prev.lastModified))) best.set(slug, { lastModified: lm, locales });
     }
     return Array.from(best.entries()).map(([slug, v]) => ({ slug, lastModified: v.lastModified, locales: v.locales }));
   } catch (err) {
@@ -341,7 +376,7 @@ export type SitemapDistrictEntry = {
   countrySlug: string;
   citySlug: string;
   slug: string;
-  lastModified: Date;
+  lastModified?: Date;
 };
 
 /**
@@ -362,13 +397,15 @@ export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntr
     "slug": slug.current,
     "citySlug": city->slug.current,
     "countrySlug": city->country->slug.current,
-    _updatedAt
+    _updatedAt,
+    _createdAt
   }`;
   try {
     const rows = await client.fetch<
-      Array<{ slug?: string; citySlug?: string; countrySlug?: string; _updatedAt?: string }>
+      Array<{ slug?: string; citySlug?: string; countrySlug?: string; _updatedAt?: string; _createdAt?: string }>
     >(query);
     if (!Array.isArray(rows)) return [];
+    const bulk = bulkTouchTimestamps(rows);
     const best = new Map<string, SitemapDistrictEntry>();
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim().toLowerCase() : '';
@@ -379,9 +416,9 @@ export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntr
           ? row.countrySlug.trim().toLowerCase()
           : LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG;
       const key = `${countrySlug}|${citySlug}|${slug}`;
-      const lm = parseSitemapDate(row._updatedAt);
+      const lm = contentLastmod(row, bulk, row._createdAt);
       const prev = best.get(key);
-      if (!prev || lm > prev.lastModified) {
+      if (!prev || (lm && (!prev.lastModified || lm > prev.lastModified))) {
         best.set(key, { countrySlug, citySlug, slug, lastModified: lm });
       }
     }
@@ -395,9 +432,14 @@ export async function fetchSitemapDistrictEntries(): Promise<SitemapDistrictEntr
 export type SitemapPropertyEntry = {
   slug: string;
   localizedSlug: LocalizedSlug;
-  lastModified: Date;
+  /** Last individual edit, else creation (`contentLastmod`); never the import's bulk stamp. */
+  lastModified?: Date;
   /** First photos of the gallery, under the one URL every other surface publishes. */
   images: string[];
+  /** Photos, a price and a description: the listings a crawler should reach first. */
+  complete: boolean;
+  /** Locales whose page shows the listing's own text, not the English fallback. */
+  ownTextLocales: readonly string[];
 };
 
 /** Gallery asset URLs → canonical named URLs, position preserved. */
@@ -410,16 +452,34 @@ export function sitemapImageUrls(urls: Array<string | null> | undefined, seoName
     .filter(Boolean);
 }
 
+/**
+ * GROQ: the listing has text of its own in `locale`. The partner import seeds
+ * every locale with the Albanian source (`setIfMissing`) until the translation
+ * script overwrites it, so a title or description equal to the `sq` one is
+ * the fallback wearing that locale's URL, not a translation. The page itself
+ * falls back to English for a missing field (`resolveLocalizedString`).
+ */
+function ownTextInLocaleGroq(locale: string): string {
+  const has = (field: string) => `coalesce(length(${field}.${locale}), 0) > 0`;
+  if (locale === 'sq') return `(${has('title')} || ${has('description')})`;
+  return `((${has('title')} && title.${locale} != title.sq) || (${has('description')} && description.${locale} != description.sq))`;
+}
+
 export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntry[]> {
   const client = getClient();
   if (!client) return [];
+  const ownText = PROPERTY_URL_LOCALES.map((l) => `"${l}": ${ownTextInLocaleGroq(l)}`).join(', ');
   const query = `*[_type == "property" && defined(slug.current) && ${PUBLISHED_PROPERTY_FILTER} && (!defined(seo.noIndex) || seo.noIndex != true)]{
     "slug": slug.current,
     localizedSlug,
     _updatedAt,
+    _createdAt,
+    price,
     // Same order and the same filter as the listing page's gallery, so photo
     // N here carries the file name photo N has there.
     "images": gallery[defined(asset)][0...${SITEMAP_IMAGES_PER_URL}].asset->url,
+    "hasDescription": coalesce(length(description.en), 0) > 0 || coalesce(length(description.sq), 0) > 0,
+    "ownText": { ${ownText} },
     bedrooms,
     "typeSlug": type->slug.current,
     "districtSlug": district->slug.current,
@@ -431,7 +491,11 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
         slug?: string;
         localizedSlug?: LocalizedSlug;
         _updatedAt?: string;
+        _createdAt?: string;
+        price?: number | null;
         images?: Array<string | null>;
+        hasDescription?: boolean;
+        ownText?: Partial<Record<string, boolean>>;
         bedrooms?: number;
         typeSlug?: string;
         districtSlug?: string;
@@ -439,15 +503,19 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
       }>
     >(query);
     if (!Array.isArray(rows)) return [];
+    const bulk = bulkTouchTimestamps(rows);
     const out: SitemapPropertyEntry[] = [];
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
       if (!slug) continue;
+      const images = sitemapImageUrls(row.images, propertyImageSeoName(row));
       out.push({
         slug,
         localizedSlug: row.localizedSlug ?? null,
-        lastModified: parseSitemapDate(row._updatedAt),
-        images: sitemapImageUrls(row.images, propertyImageSeoName(row)),
+        lastModified: contentLastmod(row, bulk, row._createdAt),
+        images,
+        complete: images.length > 0 && typeof row.price === 'number' && row.price > 0 && row.hasDescription === true,
+        ownTextLocales: PROPERTY_URL_LOCALES.filter((l) => row.ownText?.[l] === true),
       });
     }
     return out;
@@ -457,25 +525,32 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
   }
 }
 
-export type SitemapBlogEntry = { slug: string; lastModified: Date };
+export type SitemapBlogEntry = { slug: string; lastModified?: Date };
 
+/**
+ * Published posts with an honest date: an individual save in Studio, else
+ * `publishedAt` — the locale scripts stamp every post at once, and that
+ * stamp says nothing about the article.
+ */
 export async function fetchSitemapBlogEntries(): Promise<SitemapBlogEntry[]> {
   const client = getClient();
   if (!client) return [];
   const query = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)]{
     "slug": slug.current,
-    _updatedAt
+    _updatedAt,
+    publishedAt
   }`;
   try {
-    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string }>>(query);
+    const rows = await client.fetch<Array<{ slug?: string; _updatedAt?: string; publishedAt?: string }>>(query);
     if (!Array.isArray(rows)) return [];
+    const bulk = bulkTouchTimestamps(rows);
     const out: SitemapBlogEntry[] = [];
     for (const row of rows) {
       const slug = typeof row.slug === 'string' ? row.slug.trim() : '';
       if (!slug) continue;
       out.push({
         slug,
-        lastModified: parseSitemapDate(row._updatedAt),
+        lastModified: contentLastmod(row, bulk, row.publishedAt),
       });
     }
     return out;

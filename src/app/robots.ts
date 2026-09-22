@@ -57,7 +57,10 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "AhrefsBot", allow: "/", disallow: "/api/", crawlDelay: 30 },
       { userAgent: BLOCKED_BOTS, disallow: "/" },
     ],
+    // The priority file first: it is the crawler's starting point (see
+    // lib/seo/prioritySitemap), and the index lists it first too.
     sitemap: [
+      `${base}/sitemap-priority.xml`,
       `${base}/sitemap.xml`,
       `${base}/sitemap-static.xml`,
       `${base}/sitemap-cities.xml`,
@@ -67,6 +70,7 @@ export default function robots(): MetadataRoute.Robots {
       `${base}/sitemap-blog.xml`,
       `${base}/sitemap-landings.xml`,
       `${base}/sitemap-districts.xml`,
+      `${base}/sitemap-knowledge.xml`,
     ],
   };
 }

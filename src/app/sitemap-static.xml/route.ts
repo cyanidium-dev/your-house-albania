@@ -45,16 +45,18 @@ export async function GET() {
 
   const seen = new Set<string>();
   const urls: SitemapUrl[] = [];
-  const staticNow = new Date();
 
-  const push = (loc: string, lastmod: Date) => {
+  const push = (loc: string, lastmod: Date | undefined) => {
     if (seen.has(loc)) return;
     seen.add(loc);
     urls.push({ loc, lastmod });
   };
 
   for (const locale of routing.locales) {
-    push(`${base}/${locale}`, staticNow);
+    // The home page has no document of its own to date it. It used to carry
+    // the time of the request, i.e. "changed" on every regeneration; no
+    // `lastmod` is the honest value.
+    push(`${base}/${locale}`, undefined);
 
     for (const { slug, lastModified } of agents) {
       const path = catalogPath(locale, undefined, undefined, slug);

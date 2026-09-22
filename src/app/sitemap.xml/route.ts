@@ -13,7 +13,10 @@ export async function GET() {
     });
   }
   const base = getSiteBaseUrl();
+  // The priority file comes first on purpose: it is the crawler's starting
+  // point (see lib/seo/prioritySitemap). Keep it first here and in robots.ts.
   const paths = [
+    "/sitemap-priority.xml",
     "/sitemap-static.xml",
     "/sitemap-cities.xml",
     "/sitemap-types.xml",

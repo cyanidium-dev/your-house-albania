@@ -35,6 +35,13 @@ export const fetchSeoPageDecisions = sanityCache(
         "citySlug": city->slug.current,
         "districtSlug": district->slug.current
       },
+      "catalogSeoPages": *[_type == "catalogSeoPage" && active == true && pageScope in ["city", "district"]]{
+        pageScope,
+        "citySlug": city->slug.current,
+        "districtSlug": district->slug.current,
+        _updatedAt,
+        _createdAt
+      },
       "properties": *[_type == "property" && ${PUBLISHED_PROPERTY_FILTER} && defined(city->slug.current)]{
         "citySlug": city->slug.current,
         "districtSlug": district->slug.current,
@@ -46,7 +53,8 @@ export const fetchSeoPageDecisions = sanityCache(
         constructionStage,
         seaDistanceMeters,
         beachfront,
-        _updatedAt
+        _updatedAt,
+        _createdAt
       }
     }`;
     try {

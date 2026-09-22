@@ -14,6 +14,9 @@ export type LandingPageSitemapRow = {
   slug: string;
   pageType?: string;
   _updatedAt?: string;
+  _createdAt?: string;
+  /** Editorial freshness date (YYYY-MM-DD), when the editor set one. */
+  contentUpdatedAt?: string;
   seo?: { noIndex?: boolean };
   linkedCitySlug?: string | null;
   linkedCityCountrySlug?: string | null;

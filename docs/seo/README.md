@@ -166,6 +166,9 @@ City and district pages that the registry indexes in the visitor's locale carry,
 | `src/components/catalog/geoListing/GeoListingRoute.tsx` | Listing route logic: resolves the key, asks for a decision, applies it; 308s duplicate URL shapes. Mounted by `app/[locale]/[country]/[city]/[[...filters]]/page.tsx` (cached, no query) and `app/[locale]/listing-query/…/page.tsx` (query URLs, via middleware rewrite) |
 | `src/app/[locale]/agent/[agent]/[country]/[city]/[[...filters]]/page.tsx` | Agent listings: always `noindex, follow`, no alternates |
 | `src/lib/sanity/queries/sitemap.ts` | Sitemap rows; city and type entries carry `locales` from decisions |
+| `src/lib/seo/contentLastmod.ts` | Honest `lastmod`: a `_updatedAt` shared by two documents to the second is a script run and is replaced by the document's own date; nothing known → no `lastmod` |
+| `src/lib/seo/prioritySitemap.ts` + `sitemap-priority.xml` | The crawler's starting point, listed first in the index and robots.txt: indexed registry pages, `/sale`, city info pages, `/about`, guides and blog indexes, ten newest posts |
+| `src/lib/seo/propertySitemap.ts` | Property file order (complete listings first, newest first) and the fallback-only locale URLs it leaves out |
 | `src/components/catalog/ListingFacetNav.tsx` | Internal links to indexable districts and facets |
 | `docs/seo/*` | Research, decisions, measurement |
 

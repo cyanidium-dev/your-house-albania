@@ -127,6 +127,41 @@ describe("decideSeoPages → sitemap", () => {
     const rows = decide(source(repeat(7, () => flat(undefined, 1, { citySlug: "sarande" }))));
     expect(find(rows, { family: "city", country: "albania", city: "sarande" })?.decision.indexableLocales).toEqual(["en", "ru", "sq", "it", "pl", "de"]);
   });
+
+  describe("lastModified", () => {
+    it("ignores the stamp of a script run and dates the page by its listings' own dates", () => {
+      // Every fixture listing shares `_updatedAt` — the bulk-import case.
+      const props = repeat(40, (i) => flat("golem-durres", 1, { _createdAt: `2026-0${(i % 5) + 1}-10T00:00:00Z` }));
+      const rows = decide(source(props));
+      expect(find(rows, durres)?.lastModified).toBe("2026-05-10T00:00:00.000Z");
+      expect(find(rows, golem)?.lastModified).toBe("2026-05-10T00:00:00.000Z");
+    });
+
+    it("keeps an individual edit, which is newer than any creation", () => {
+      const props = [...repeat(39, () => flat("golem-durres", 1)), flat("golem-durres", 1, { _updatedAt: "2026-09-21T09:00:00Z" })];
+      expect(find(decide(source(props)), durres)?.lastModified).toBe("2026-09-21T09:00:00.000Z");
+    });
+
+    it("moves with the catalogSeoPage copy of the city or the district, not of another place", () => {
+      const props = repeat(40, () => flat("golem-durres", 1, { _createdAt: "2026-05-10T00:00:00Z" }));
+      const rows = decide(
+        source(props, {
+          catalogSeoPages: [
+            { pageScope: "district", citySlug: "durres", districtSlug: "golem-durres", _updatedAt: "2026-09-22T12:00:00Z" },
+            { pageScope: "city", citySlug: "durres", _updatedAt: "2026-09-19T12:00:00Z" },
+          ],
+        }),
+      );
+      expect(find(rows, golem)?.lastModified).toBe("2026-09-22T12:00:00.000Z");
+      expect(find(rows, durres)?.lastModified).toBe("2026-09-19T12:00:00.000Z");
+      expect(find(rows, { family: "facet", country: "albania", city: "durres", facet: "1-1" })?.lastModified).toBe("2026-09-19T12:00:00.000Z");
+    });
+
+    it("is null, not now, when nothing is known", () => {
+      const rows = decide(source(repeat(6, () => flat(undefined, 1))));
+      expect(find(rows, durres)?.lastModified).toBeNull();
+    });
+  });
 });
 
 describe("selectSeoLinks", () => {
