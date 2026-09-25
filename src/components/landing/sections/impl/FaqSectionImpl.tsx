@@ -196,20 +196,23 @@ const FAQ: React.FC<Props> = ({ faqData, locale = 'en' }) => {
                       <Icon icon="ph:plus" width={16} height={16} />
                     </span>
                   </button>
-                  {isOpen ? (
-                    <div id={panelId} className="px-5 pb-6 -mt-1">
-                      <div className="text-[15px] leading-relaxed text-dark/70 dark:text-white/70">
-                        {defaultAnswerNode(item.answer)}
-                      </div>
-                      {item.tag ? (
-                        <div className="mt-4 flex items-center gap-2 text-xs">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 text-primary px-2.5 py-1 font-medium">
-                            {item.tag}
-                          </span>
-                        </div>
-                      ) : null}
+                  {/* Every answer is in the HTML, open or not. The page's
+                      FAQPage markup lists all of them, and a closed panel that
+                      was not rendered at all left the markup claiming text the
+                      page did not carry (audit 2026-09-25, /guides/buying: one
+                      answer of three on the page). */}
+                  <div id={panelId} className="px-5 pb-6 -mt-1" hidden={!isOpen}>
+                    <div className="text-[15px] leading-relaxed text-dark/70 dark:text-white/70">
+                      {defaultAnswerNode(item.answer)}
                     </div>
-                  ) : null}
+                    {item.tag ? (
+                      <div className="mt-4 flex items-center gap-2 text-xs">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 text-primary px-2.5 py-1 font-medium">
+                          {item.tag}
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               );
             })}

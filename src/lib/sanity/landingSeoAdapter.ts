@@ -173,6 +173,7 @@ export function buildLandingMetadata(
     ogType: 'article',
     canonical,
     hreflangLanguages: hreflang?.languages,
+    locale,
     robots: robotsFromFlags({ noIndex, noFollow }),
     modifiedTimeIso,
   })

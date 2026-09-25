@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { resolveLocalizedString } from './localized';
+import { ogLocale } from '@/lib/seo/ogLocale';
 
 export type LocalizedField =
   | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
@@ -131,6 +132,8 @@ export type BuildMetadataInput = {
   robots?: Metadata['robots'];
   /** Editorial freshness → `article:modified_time`; pair it with `ogType: 'article'`. */
   modifiedTimeIso?: string;
+  /** Site locale of the page → `og:locale`. */
+  locale?: string;
 };
 
 /**
@@ -148,12 +151,14 @@ export function buildMetadata(input: BuildMetadataInput): Metadata {
   // which is the right answer for a page that should not be shared anyway.
   const ogUrl = input.ogUrl ?? input.canonical;
 
+  const locale = ogLocale(input.locale);
   const openGraph: Metadata['openGraph'] = {
     type: input.ogType ?? 'website',
     title: input.ogTitle,
     description: input.ogDescription,
     ...(images ? { images } : {}),
     ...(ogUrl ? { url: ogUrl } : {}),
+    ...(locale ? { locale } : {}),
   };
 
   const alternates =

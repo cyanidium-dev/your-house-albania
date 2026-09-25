@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
 import { landingOgImageUrl, type LandingOgPhoto } from "@/lib/seo/ogImageUrl";
+import { ogLocale } from "@/lib/seo/ogLocale";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 export type SimplePageMetadataInput = {
@@ -39,12 +40,14 @@ export function buildSimplePageMetadata(input: SimplePageMetadataInput): Metadat
   const canonical = `${base}/${locale}${path ? `/${path}` : ""}`;
   const ogImage = landingOgImageUrl({ locale, title, subtitle: description, photo });
 
+  const og = ogLocale(locale);
   const openGraph: Metadata["openGraph"] = {
     type: "website",
     title,
     description,
     url: canonical,
     images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+    ...(og ? { locale: og } : {}),
   };
 
   if (!isIndexingEnabled()) {

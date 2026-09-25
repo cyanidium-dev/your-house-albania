@@ -215,7 +215,6 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         <SiteJsonLd
           baseUrl={siteBaseUrl}
           brandName={SITE_NAME}
-          legalName="Domlivo — Real estate in Albania"
           logoUrl={orgSettings?.logo?.asset?.url || undefined}
           sameAs={orgSameAs}
           email={orgSettings?.contactEmail}

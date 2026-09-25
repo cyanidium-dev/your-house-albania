@@ -194,7 +194,7 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
     photo: { key: heroPhotoFor({ citySlug: input.citySlug, propertyType: "apartment", slug: input.citySlug }).key },
   });
   if (!isIndexingEnabled()) {
-    return { title: listingTitleField(title), description, openGraph: listingOpenGraph(title, description, ogImage), robots: indexingDisabledRobots };
+    return { title: listingTitleField(title), description, openGraph: listingOpenGraph(title, description, ogImage, undefined, input.locale), robots: indexingDisabledRobots };
   }
   const path = catalogFilterPath({
     locale: input.locale,
@@ -221,7 +221,7 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage, canonical),
+    openGraph: listingOpenGraph(title, description, ogImage, canonical, input.locale),
     alternates: { canonical, ...(href?.languages ? { languages: href.languages } : {}) },
     robots: noindex ? { index: false, follow: true } : indexableRobots,
   };
@@ -344,7 +344,7 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
     return {
       title: listingTitleField(title),
       description,
-      openGraph: listingOpenGraph(title, description, ogImage),
+      openGraph: listingOpenGraph(title, description, ogImage, undefined, locale),
       robots: indexingDisabledRobots,
     };
   }
@@ -390,7 +390,7 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage, canonical),
+    openGraph: listingOpenGraph(title, description, ogImage, canonical, locale),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),

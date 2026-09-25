@@ -125,6 +125,7 @@ export function buildBlogMetadata(
     twitterCard,
     canonical: canonicalUrl,
     hreflangLanguages: hreflang?.languages,
+    locale,
     robots: robotsFromFlags({ noIndex, noFollow }),
   });
 }

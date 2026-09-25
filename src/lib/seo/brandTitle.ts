@@ -14,8 +14,19 @@ export function stripBrandSuffix(title: string): string {
   return s;
 }
 
-/** Absolute title with the brand appended exactly once. */
+/**
+ * Longest page title that still gets the brand. Google shows about 60
+ * characters; the suffix is 10. On 2026-09-25 ten of sixteen sampled pages ran
+ * 63–78 characters, every one because " — Domlivo" had been added to a title
+ * already written to fill the line ("Durrës Real Estate: Apartments & Property
+ * for Sale"). Past this length the brand is the part that gets cut off anyway,
+ * so it is left off and the title ships as written.
+ */
+export const MAX_TITLE_LENGTH_WITH_BRAND = 50;
+
+/** Absolute title with the brand appended exactly once — or not at all when the title has no room for it. */
 export function withBrand(title: string): string {
   const clean = stripBrandSuffix(title);
-  return clean && clean !== BRAND ? `${clean} — ${BRAND}` : BRAND;
+  if (!clean || clean === BRAND) return BRAND;
+  return clean.length > MAX_TITLE_LENGTH_WITH_BRAND ? clean : `${clean} — ${BRAND}`;
 }

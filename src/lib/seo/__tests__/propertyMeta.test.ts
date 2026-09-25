@@ -112,4 +112,30 @@ describe("truncateMetaDescription", () => {
     const nospace = "x".repeat(200);
     expect(truncateMetaDescription(nospace, 155).length).toBe(156);
   });
+
+  it("folds a partner listing's line breaks into one line", () => {
+    const listed = "1+1 apartment for sale at Golem Beach\nAt Murrizi Resort\n\nFloor: 2nd\n  Parking  ";
+    expect(truncateMetaDescription(listed, 155)).toBe(
+      "1+1 apartment for sale at Golem Beach At Murrizi Resort Floor: 2nd Parking",
+    );
+  });
+
+  it("prefers a sentence end inside the window to a word cut", () => {
+    const first = "Bright one-bedroom apartment of 42 square metres on the second line in Plazh, Durrës, a short walk from the beach and the promenade.";
+    const out = truncateMetaDescription(`${first} The home features a sea view, Wi-Fi and air conditioning.`, 155);
+    expect(out).toBe(first);
+    expect(out.endsWith("…")).toBe(false);
+  });
+
+  it("does not stop at a sentence end that leaves most of the window empty", () => {
+    const out = truncateMetaDescription(long, 155);
+    expect(out.endsWith("…")).toBe(true);
+  });
+
+  it("still cuts on a word when the only sentence end is too early", () => {
+    const early = "Sea view. " + "word ".repeat(60);
+    const out = truncateMetaDescription(early, 155);
+    expect(out.endsWith("…")).toBe(true);
+    expect(out.length).toBeLessThanOrEqual(156);
+  });
 });

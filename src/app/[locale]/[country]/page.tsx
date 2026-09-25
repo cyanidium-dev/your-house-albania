@@ -110,7 +110,7 @@ async function buildListingMetadata(
     return {
       title: listingTitleField(title),
       description,
-      openGraph: listingOpenGraph(title, description, ogImage),
+      openGraph: listingOpenGraph(title, description, ogImage, undefined, locale),
       robots: indexingDisabledRobots,
     };
   }
@@ -151,7 +151,7 @@ async function buildListingMetadata(
   return {
     title: listingTitleField(title),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage, canonical),
+    openGraph: listingOpenGraph(title, description, ogImage, canonical, locale),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),

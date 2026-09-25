@@ -37,6 +37,16 @@ export async function GET() {
     }))
   const indexLastmod = latestDate(...pages.map((p) => p.lastmod))
 
+  // `/knowledge` is `noindex` while it has no published page (see the index
+  // page's robots). A sitemap that lists a noindex URL contradicts itself, and
+  // Search Console filed seven of them on 2026-09-25. Nothing to list until
+  // the first article is published.
+  if (pages.length === 0) {
+    return new NextResponse(buildUrlsetXml([]), {
+      headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+    })
+  }
+
   for (const locale of routing.locales) {
     urls.push({ loc: `${base}/${locale}/knowledge`, lastmod: indexLastmod })
     for (const page of pages) {

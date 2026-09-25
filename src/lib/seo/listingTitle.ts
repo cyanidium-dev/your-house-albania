@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildOgImageArray } from "@/lib/sanity/socialMetadataResolution";
+import { ogLocale } from "@/lib/seo/ogLocale";
 
 const SITE_BRAND = "Domlivo";
 
@@ -27,9 +28,12 @@ export function listingOpenGraph(
   description: string,
   imageUrl?: string,
   canonicalUrl?: string,
+  locale?: string,
 ): Metadata["openGraph"] {
   const images = buildOgImageArray(imageUrl, title);
+  const og = ogLocale(locale);
   return {
+    ...(og ? { locale: og } : {}),
     // Setting `openGraph` on a page replaces the root layout's object rather
     // than merging into it, so `type` has to be restated here — without it 114
     // listing pages shipped a card with no og:type at all. `url` is the fourth

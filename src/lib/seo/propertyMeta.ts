@@ -78,9 +78,15 @@ export function truncateMetaDescription(
   text: string | undefined | null,
   limit = 155
 ): string {
-  const s = (text ?? "").trim();
+  // Partner listings arrive as line-broken lists ("Floor: 2nd\nParking\n…");
+  // a meta description is one line, so every run of whitespace becomes a space.
+  const s = (text ?? "").replace(/\s+/g, " ").trim();
   if (!s || s.length <= limit) return s;
   const slice = s.slice(0, limit);
+  // A sentence end inside the window beats a word cut: the snippet then reads
+  // as a statement rather than a fragment with an ellipsis.
+  const lastStop = Math.max(slice.lastIndexOf(". "), slice.lastIndexOf("! "), slice.lastIndexOf("? "));
+  if (lastStop >= Math.floor(limit * 0.6)) return slice.slice(0, lastStop + 1);
   const lastSpace = slice.lastIndexOf(" ");
   const cut = lastSpace > 0 ? slice.slice(0, lastSpace) : slice;
   return `${cut.replace(/[\s,;:.–—-]+$/, "")}…`;

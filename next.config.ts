@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: [
+          // Vercel sets `max-age` alone; `includeSubDomains` closes the door
+          // on a plain-http subdomain ever being served. `preload` is left
+          // off: it is a submission to the browsers' list, not a header, and
+          // cannot be undone quickly.
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Content-Security-Policy", value: "frame-ancestors 'self' https://*.sanity.studio" },

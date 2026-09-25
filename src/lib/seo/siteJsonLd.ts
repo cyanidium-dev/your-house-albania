@@ -38,7 +38,12 @@ export type SiteJsonLdInput = {
 };
 
 const DEFAULT_BRAND = 'Domlivo';
-const DEFAULT_LEGAL = 'Domlivo — Real estate in Albania';
+/**
+ * A `legalName` is the registered company name. Until the owner supplies it,
+ * the node carries none: the old default ("Domlivo — Real estate in Albania")
+ * was the site's tagline dressed as a legal entity.
+ */
+const TAGLINE_NOT_A_LEGAL_NAME = /^domlivo\s*[|—–:-]/i;
 const DEFAULT_SEARCH_TEMPLATE = '/catalog?q={search_term_string}';
 /**
  * What the organisation is, in one factual sentence. English in every locale:
@@ -84,7 +89,12 @@ function cleanList(values: readonly string[] | undefined): string[] {
 }
 
 export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, unknown> {
-  const { baseUrl, brandName = DEFAULT_BRAND, legalName = DEFAULT_LEGAL, logoUrl } = input;
+  const { baseUrl, brandName = DEFAULT_BRAND, logoUrl } = input;
+  const legalNameRaw = input.legalName?.trim();
+  const legalName =
+    legalNameRaw && legalNameRaw !== brandName && !TAGLINE_NOT_A_LEGAL_NAME.test(legalNameRaw)
+      ? legalNameRaw
+      : undefined;
   const email = input.email?.trim() || undefined;
   const telephone = publishablePhone(input.telephone);
   const languages = cleanList(input.languages);
@@ -115,7 +125,7 @@ export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, un
     '@type': 'Organization',
     '@id': organizationId(baseUrl),
     name: brandName,
-    legalName,
+    ...(legalName ? { legalName } : {}),
     description: ORGANIZATION_DESCRIPTION,
     url: abs(baseUrl, '/'),
     ...(logoUrl ? { logo: { '@type': 'ImageObject', url: abs(baseUrl, logoUrl) } } : {}),
