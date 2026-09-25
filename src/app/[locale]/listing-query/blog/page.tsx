@@ -1,0 +1,178 @@
+import BlogList from "@/components/Blog/BlogList";
+import HeroSub from "@/components/shared/HeroSub";
+import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import {
+  fetchBlogPostsPaginated,
+  fetchBlogCategories,
+  fetchBlogSettings,
+  fetchSiteSettings,
+} from "@/lib/sanity/client";
+import { mapSanityBlogPostToList, type SanityListingPost } from "@/lib/sanity/blogAdapter";
+import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
+import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { isIndexingEnabled } from "@/lib/seo/envSeo";
+import { BLOG_PAGE_SIZE } from "@/lib/routes/blogIndex";
+
+/**
+ * The blog index for URLs WITH a query string (`?category=…`, `?page=2`).
+ *
+ * Never linked and never visible: the middleware rewrites `/{locale}/blog?…`
+ * here and redirects anyone who types this path back to the public one
+ * (`src/lib/routes/listingQueryRewrite.ts`). Reading `searchParams` forces
+ * per-request rendering — on 2026-09-25 `/en/blog` was the one page on the
+ * site that answered `X-Vercel-Cache: MISS` on every request — so it happens
+ * in a route of its own and the path-only index stays cached.
+ */
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  const [{ locale }, search] = await Promise.all([params, searchParams]);
+  const categoryParam =
+    typeof search.category === "string" ? search.category.trim() : undefined;
+
+  const [blogSettings, siteSettings, categoriesRaw, baseUrlRaw] = await Promise.all([
+    fetchBlogSettings(),
+    fetchSiteSettings(),
+    fetchBlogCategories(),
+    getBaseUrl(),
+  ]);
+  const baseUrl = (baseUrlRaw || getSiteBaseUrl()).replace(/\/$/, "");
+
+  const blogSeo = (blogSettings as { seo?: unknown })?.seo;
+  const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo;
+  const t = await getTranslations("Listing.blogs");
+
+  const categories = Array.isArray(categoriesRaw)
+    ? categoriesRaw
+        .filter((c) => c && typeof (c as { slug?: string }).slug === "string")
+        .map((c) => {
+          const cat = c as { slug: string; title?: unknown };
+          return {
+            slug: cat.slug,
+            label: resolveLocalizedString(cat.title as never, locale) || cat.slug,
+          };
+        })
+    : [];
+
+  const validCategory =
+    categoryParam && categories.some((c) => c.slug === categoryParam)
+      ? categoryParam
+      : undefined;
+  const categoryLabel = validCategory
+    ? categories.find((c) => c.slug === validCategory)?.label
+    : undefined;
+
+  const meta = buildBlogMetadata(
+    blogSeo as never,
+    siteDefaultSeo as never,
+    locale,
+    t("metaTitle"),
+    t("description"),
+    categoryLabel,
+    { baseUrl, pathnameForAlternates: "/blog" }
+  );
+
+  if (!isIndexingEnabled()) return meta;
+
+  // Same policy as catalog listings: any real query string (?category, ?page>1)
+  // → noindex,follow; canonical always points at the clean /blog path.
+  const pageParam = typeof search.page === "string" ? search.page.trim() : undefined;
+  const hasQuery = Boolean(categoryParam) || Boolean(pageParam && pageParam !== "1");
+  return {
+    ...meta,
+    alternates: { ...meta.alternates, canonical: `${baseUrl}/${locale}/blog` },
+    ...(hasQuery ? { robots: { index: false, follow: true } } : {}),
+  };
+}
+
+export default async function BlogQueryPage({ params, searchParams }: Props) {
+  const [{ locale }, search] = await Promise.all([params, searchParams]);
+
+  const categoryParam = typeof search.category === "string" ? search.category.trim() : undefined;
+  const pageParam = typeof search.page === "string" ? search.page : undefined;
+
+  const categoriesRaw = await fetchBlogCategories();
+
+  const categories = Array.isArray(categoriesRaw)
+    ? categoriesRaw
+        .filter((c) => c && typeof (c as { slug?: string }).slug === "string")
+        .map((c) => {
+          const cat = c as { slug: string; title?: unknown };
+          return {
+            slug: cat.slug,
+            label: resolveLocalizedString(cat.title as never, locale) || cat.slug,
+          };
+        })
+    : [];
+
+  const validCategory =
+    categoryParam && categories.some((c) => c.slug === categoryParam)
+      ? categoryParam
+      : undefined;
+
+  const pageNum = (() => {
+    const n = parseInt(pageParam ?? "1", 10);
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  })();
+
+  const { items, totalCount } = await fetchBlogPostsPaginated({
+    category: validCategory,
+    page: pageNum,
+    pageSize: BLOG_PAGE_SIZE,
+  });
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / BLOG_PAGE_SIZE));
+  const safePage = Math.min(Math.max(pageNum, 1), totalPages);
+
+  const finalItems =
+    safePage === pageNum ? items : await fetchBlogPostsPaginated({
+      category: validCategory,
+      page: safePage,
+      pageSize: BLOG_PAGE_SIZE,
+    }).then((r) => r.items);
+
+  const posts = (safePage === pageNum ? items : finalItems).map((p) =>
+    mapSanityBlogPostToList(p as SanityListingPost, locale)
+  );
+
+  const t = await getTranslations("Listing.blogs");
+  const currentCategoryLabel = validCategory
+    ? categories.find((c) => c.slug === validCategory)?.label
+    : undefined;
+
+  return (
+    <>
+      <HeroSub
+        title={t("title")}
+        description={t("description")}
+        badge={t("badge")}
+        photoKey="tirana"
+      />
+      <div className="container max-w-8xl mx-auto px-5 2xl:px-0 mb-4">
+        <BlogBreadcrumb
+          locale={locale}
+          categorySlug={validCategory}
+          categoryLabel={currentCategoryLabel}
+        />
+      </div>
+      <BlogList
+        locale={locale}
+        posts={posts}
+        categories={categories}
+        currentCategory={validCategory}
+        currentPage={safePage}
+        totalPages={totalPages}
+      />
+    </>
+  );
+}

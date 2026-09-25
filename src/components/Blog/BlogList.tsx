@@ -72,7 +72,7 @@ export default function BlogList({
           ))}
         </div>
         {totalPages > 1 && (
-          <NumberedPagination currentPage={currentPage} totalPages={totalPages} />
+          <NumberedPagination currentPage={currentPage} totalPages={totalPages} keepParams={{ category: currentCategory }} />
         )}
         <div className="h-16 md:h-20" aria-hidden />
       </div>

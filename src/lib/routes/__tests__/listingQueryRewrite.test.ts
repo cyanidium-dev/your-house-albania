@@ -54,6 +54,16 @@ describe("listingQueryRewritePathname", () => {
     expect(listingQueryRewritePathname("/en/sale", q("type=villa"), LOCALES)).toBe(`/en/${LISTING_QUERY_SEGMENT}/sale`);
   });
 
+  it("keeps the blog index cached and sends its category and page URLs to the query route", () => {
+    expect(listingQueryRewritePathname("/en/blog", q(""), LOCALES)).toBeNull();
+    expect(listingQueryRewritePathname("/en/blog", q("utm_source=x"), LOCALES)).toBeNull();
+    expect(listingQueryRewritePathname("/en/blog", q("page=2"), LOCALES)).toBe(`/en/${LISTING_QUERY_SEGMENT}/blog`);
+    expect(listingQueryRewritePathname("/ru/blog", q("category=market"), LOCALES)).toBe(`/ru/${LISTING_QUERY_SEGMENT}/blog`);
+    // Posts and author pages are not the index.
+    expect(listingQueryRewritePathname("/en/blog/some-post", q("page=2"), LOCALES)).toBeNull();
+    expect(listingQueryRewritePathname("/en/blog/author/x", q("page=2"), LOCALES)).toBeNull();
+  });
+
   it("leaves the hidden rental hubs on their own per-request route", () => {
     expect(listingQueryRewritePathname("/en/rent", q("page=2"), LOCALES)).toBeNull();
     expect(listingQueryRewritePathname("/en/short-term-rent/apartment", q("page=2"), LOCALES)).toBeNull();
@@ -116,6 +126,7 @@ describe("isDealHubPathname", () => {
 
 describe("listingQueryPublicPathname", () => {
   it("maps the internal path back to the public one", () => {
+    expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}/blog`, LOCALES)).toBe("/en/blog");
     expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}/sale/apartment`, LOCALES)).toBe("/en/sale/apartment");
     expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}/albania/durres/1-1`, LOCALES)).toBe("/en/albania/durres/1-1");
     expect(listingQueryPublicPathname(`/en/${LISTING_QUERY_SEGMENT}`, LOCALES)).toBe("/en");

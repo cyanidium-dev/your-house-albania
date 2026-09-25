@@ -97,6 +97,15 @@ export function isDealHubPathname(pathname: string, locales: readonly string[]):
   return CACHED_DEAL_HUB_SEGMENTS.has(parts[1].toLowerCase());
 }
 
+/**
+ * True for `/{locale}/blog` — the blog index, whose `?category=` and `?page=`
+ * URLs render from `listing-query/blog` so the bare index stays cached.
+ */
+export function isBlogIndexPathname(pathname: string, locales: readonly string[]): boolean {
+  const parts = segmentsOf(pathname);
+  return parts.length === 2 && locales.includes(parts[0]) && parts[1].toLowerCase() === "blog";
+}
+
 /** True when the query holds anything the page has to read. */
 export function hasListingQuery(searchParams: URLSearchParams): boolean {
   for (const [name, value] of searchParams) {
@@ -115,7 +124,12 @@ export function listingQueryRewritePathname(
   searchParams: URLSearchParams,
   locales: readonly string[],
 ): string | null {
-  if (!isGeoListingPathname(pathname, locales) && !isDealHubPathname(pathname, locales)) return null;
+  if (
+    !isGeoListingPathname(pathname, locales) &&
+    !isDealHubPathname(pathname, locales) &&
+    !isBlogIndexPathname(pathname, locales)
+  )
+    return null;
   if (!hasListingQuery(searchParams)) return null;
   const [locale, ...rest] = segmentsOf(pathname);
   return `/${locale}/${LISTING_QUERY_SEGMENT}/${rest.join("/")}`;

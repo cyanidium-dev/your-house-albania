@@ -2,13 +2,20 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/shared/Icon";
 
 type Props = {
   currentPage: number;
   totalPages: number;
+  /**
+   * Query parameters every page link keeps (`category` on the blog). Passed
+   * in by the server rather than read with `useSearchParams`: that hook bails
+   * the whole component out of the static HTML, and the page links exist for
+   * the crawler that reads the static HTML.
+   */
+  keepParams?: Record<string, string | undefined>;
 };
 
 function getPaginationItems(current: number, total: number): Array<number | "ellipsis"> {
@@ -37,9 +44,8 @@ const arrowClass =
  * `<a href>` in the server-rendered HTML; navigation and the scroll to the top
  * are the Link defaults.
  */
-export function NumberedPagination({ currentPage, totalPages }: Props) {
+export function NumberedPagination({ currentPage, totalPages, keepParams }: Props) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const t = useTranslations("Catalog.pagination");
 
   // Always render pagination so it's visible even for mocked/static results.
@@ -47,9 +53,11 @@ export function NumberedPagination({ currentPage, totalPages }: Props) {
   const safeCurrentPage = Math.min(Math.max(currentPage || 1, 1), safeTotalPages);
 
   const hrefFor = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (page <= 1) params.delete("page");
-    else params.set("page", String(page));
+    const params = new URLSearchParams();
+    for (const [name, value] of Object.entries(keepParams ?? {})) {
+      if (value) params.set(name, value);
+    }
+    if (page > 1) params.set("page", String(page));
     const qs = params.toString();
     return qs ? `${pathname}?${qs}` : pathname;
   };
