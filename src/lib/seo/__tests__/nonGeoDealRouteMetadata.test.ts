@@ -65,7 +65,8 @@ describe("generateNonGeoDealRouteMetadata", () => {
   it("keeps the CMS copy on the untyped deal page", async () => {
     buildTypeListingSeo.mockResolvedValue(null);
     const meta = await run([]);
-    expect(meta.title).toBe(CMS_TITLE);
+    // 56 characters: no room for the brand (lib/seo/brandTitle).
+    expect(meta.title).toEqual({ absolute: CMS_TITLE });
     expect(meta.description).toBe(CMS_DESCRIPTION);
     expect(buildTypeListingSeo).not.toHaveBeenCalled();
   });
@@ -77,7 +78,7 @@ describe("generateNonGeoDealRouteMetadata", () => {
     });
     const meta = await run(["apartment"]);
     expect(buildTypeListingSeo).toHaveBeenCalledWith("apartment", "pl");
-    expect(meta.title).toBe("Mieszkania w Albanii na sprzedaż");
+    expect(meta.title).toEqual({ absolute: "Mieszkania w Albanii na sprzedaż — Domlivo" });
     expect(meta.description).toBe("Mieszkania na sprzedaż w Albanii: aktualne ceny.");
     // The defect being fixed: this must not be the root CMS copy.
     expect(meta.description).not.toBe(CMS_DESCRIPTION);
@@ -88,7 +89,8 @@ describe("generateNonGeoDealRouteMetadata", () => {
   it("falls back to the CMS copy when the type has no dedicated wording", async () => {
     buildTypeListingSeo.mockResolvedValue(null);
     const meta = await run(["bungalow"]);
-    expect(meta.title).toBe(CMS_TITLE);
+    // 56 characters: no room for the brand (lib/seo/brandTitle).
+    expect(meta.title).toEqual({ absolute: CMS_TITLE });
     expect(meta.description).toBe(CMS_DESCRIPTION);
   });
 

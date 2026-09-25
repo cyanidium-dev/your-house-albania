@@ -3,6 +3,7 @@ import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import { isIndexingEnabled, indexingDisabledRobots } from "@/lib/seo/envSeo";
 import { landingOgImageUrl, type LandingOgPhoto } from "@/lib/seo/ogImageUrl";
 import { ogLocale } from "@/lib/seo/ogLocale";
+import { withBrand } from "@/lib/seo/brandTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 export type SimplePageMetadataInput = {
@@ -63,7 +64,7 @@ export function buildSimplePageMetadata(input: SimplePageMetadataInput): Metadat
   const hreflang = buildHreflangAlternates(path ? `/${path}` : "");
 
   return {
-    title,
+    title: { absolute: withBrand(title) },
     ...(description ? { description } : {}),
     alternates: {
       canonical,

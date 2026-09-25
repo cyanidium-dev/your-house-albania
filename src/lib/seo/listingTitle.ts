@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import { buildOgImageArray } from "@/lib/sanity/socialMetadataResolution";
 import { ogLocale } from "@/lib/seo/ogLocale";
-
-const SITE_BRAND = "Domlivo";
+import { withBrand } from "@/lib/seo/brandTitle";
 
 /**
- * Root layout applies a `%s — Domlivo` title template. When a resolved listing
- * title already contains the brand (e.g. a CMS catalog-SEO metaTitle like
- * "Pasuri në Shqipëri | Domlivo"), returning a plain string double-brands the
- * tab. This returns `{ absolute }` in that case to bypass the template, and a
- * plain string otherwise so short titles still get the brand suffix.
+ * Root layout applies a `%s — Domlivo` title template. A resolved listing
+ * title may already contain the brand (a CMS catalog-SEO metaTitle like
+ * "Pasuri në Shqipëri | Domlivo"), and a long one has no room for it: both
+ * are decided in one place, `withBrand`, and the result is absolute.
  */
 export function listingTitleField(title: string): Metadata["title"] {
-  return title.includes(SITE_BRAND) ? { absolute: title } : title;
+  // Absolute, so the root layout's `%s — Domlivo` template stays out of it:
+  // `withBrand` decides whether the brand fits (lib/seo/brandTitle).
+  return { absolute: withBrand(title) };
 }
 
 /**

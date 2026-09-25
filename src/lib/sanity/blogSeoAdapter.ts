@@ -50,10 +50,13 @@ export function buildBlogMetadata(
       'Blog'
   );
 
+  // Same order as the title: the page's own fallback before the site default.
+  // The site default is the home page's description, and the blog index
+  // shipped it word for word until 2026-09-25.
   let description =
     resolveLocalizedString(blogSeo?.metaDescription as never, locale) ||
-    resolveLocalizedString(siteDefaultSeo?.metaDescription as never, locale) ||
     fallbackDescription ||
+    resolveLocalizedString(siteDefaultSeo?.metaDescription as never, locale) ||
     '';
 
   if (categoryLabel && categoryLabel.trim()) {

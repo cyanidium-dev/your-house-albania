@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { resolveLocalizedString } from './localized';
 import { ogLocale } from '@/lib/seo/ogLocale';
+import { withBrand } from '@/lib/seo/brandTitle';
 
 export type LocalizedField =
   | { en?: string; uk?: string; ru?: string; sq?: string; it?: string }
@@ -170,7 +171,9 @@ export function buildMetadata(input: BuildMetadataInput): Metadata {
       : undefined;
 
   return {
-    title: input.title,
+    // A string title would get the root layout's `%s — Domlivo` template
+    // whatever its length; `withBrand` adds the brand only where it fits.
+    title: typeof input.title === 'string' ? { absolute: withBrand(input.title) } : input.title,
     description: input.description || undefined,
     ...(input.keywords ? { keywords: input.keywords } : {}),
     ...(alternates ? { alternates } : {}),
