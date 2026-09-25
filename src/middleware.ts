@@ -4,6 +4,7 @@ import { routing } from "./i18n/routing";
 import { getLegacyFallbackCatalogCountrySlug } from "./lib/routes/catalog";
 import { isSitePathIndexable, PARTIAL_LOCALE_ROBOTS_HEADER } from "./lib/seo/localeIndexing";
 import { listingQueryPublicPathname, listingQueryRewritePathname } from "./lib/routes/listingQueryRewrite";
+import { defaultLocaleRedirectTarget } from "./lib/routes/localelessRedirect";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -41,6 +42,13 @@ export default function middleware(request: NextRequest) {
   // slug is touched.
   if (/[A-Z]/.test(url.pathname)) {
     url.pathname = url.pathname.replace(/[A-Z]/g, (c) => c.toLowerCase());
+    return NextResponse.redirect(url, 308);
+  }
+  // A deep path with no locale gets a permanent 308 to the default locale
+  // rather than next-intl's 307 — see lib/routes/localelessRedirect.
+  const localelessTarget = defaultLocaleRedirectTarget(url.pathname, LOCALES, routing.defaultLocale);
+  if (localelessTarget) {
+    url.pathname = localelessTarget;
     return NextResponse.redirect(url, 308);
   }
   const agentRedirect = maybeRedirectLegacyAgentCityPath(url.pathname);
