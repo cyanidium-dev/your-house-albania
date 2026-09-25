@@ -4,15 +4,15 @@ import { isIndexingEnabled } from "@/lib/seo/envSeo";
 import { fetchSitemapPropertyEntries } from "@/lib/sanity/client";
 import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
 import { buildPropertySitemapXml } from "@/lib/seo/propertySitemap";
-import { propertyExperimentArm } from "@/lib/seo/propertyLocaleExperiment";
+import { TRIMMED_LOCALES, propertyExperimentArm } from "@/lib/seo/propertyLocaleExperiment";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
 export const revalidate = 3600;
 
 /**
- * Listings of the experiment's *full* arm, in every locale. The trimmed arm
- * has its own file (`sitemap-properties-trimmed.xml`) so Search Console
- * reports the two arms' indexed shares separately — see
+ * Listings of the experiment's *trimmed* arm, in the locales they are still
+ * indexed in. Empty once the experiment is over (`TRIMMED_LOCALES` = []),
+ * when every listing is in the full arm again. See
  * lib/seo/propertyLocaleExperiment.
  */
 export async function GET() {
@@ -22,9 +22,9 @@ export async function GET() {
     });
   }
   const base = getSiteBaseUrl();
-  const rows = (await fetchSitemapPropertyEntries()).filter((row) => propertyExperimentArm(row.slug) === "full");
-  // Photos ride along as <image:image> entries — see lib/seo/propertySitemap.
-  const xml = buildPropertySitemapXml({ base, locales: routing.locales, rows });
+  const rows = (await fetchSitemapPropertyEntries()).filter((row) => propertyExperimentArm(row.slug) === "trimmed");
+  const locales = routing.locales.filter((locale) => !TRIMMED_LOCALES.includes(locale));
+  const xml = buildPropertySitemapXml({ base, locales, rows });
   return new NextResponse(xml, {
     headers: { "Content-Type": "application/xml; charset=utf-8" },
   });

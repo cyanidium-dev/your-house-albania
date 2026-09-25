@@ -3,6 +3,7 @@ import { localizedUrls } from "@/lib/seo/indexNow";
 import { resolveLandingPathForSitemap } from "@/lib/sanity/landingSitemapPaths";
 import { propertyPath, type LocalizedSlug } from "@/lib/property/propertyUrl";
 import { isLocalePathIndexable } from "@/lib/seo/localeIndexing";
+import { isPropertyLocaleIndexable } from "@/lib/seo/propertyLocaleExperiment";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { routing } from "@/i18n/routing";
 
@@ -36,6 +37,8 @@ export async function urlsForMutatedDocument(
         const base = getSiteBaseUrl().replace(/\/$/, "");
         return routing.locales
           .filter((locale) => isLocalePathIndexable(locale, "property"))
+          // A noindex locale of the experiment's trimmed arm is not submitted.
+          .filter((locale) => isPropertyLocaleIndexable(row.slug!, locale))
           .map((locale) => `${base}${propertyPath(locale, row.slug!, row.localizedSlug)}`);
       }
 

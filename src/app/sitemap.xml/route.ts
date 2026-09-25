@@ -22,6 +22,9 @@ export async function GET() {
     "/sitemap-types.xml",
     "/sitemap-non-geo-listings.xml",
     "/sitemap-properties.xml",
+    // The trimmed arm of the locale experiment, in its own file so Search
+    // Console reports each arm's indexed share (lib/seo/propertyLocaleExperiment).
+    "/sitemap-properties-trimmed.xml",
     "/sitemap-blog.xml",
     "/sitemap-landings.xml",
     "/sitemap-districts.xml",

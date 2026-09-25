@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { buildHreflangAlternatesPerLocale } from '@/lib/seo/hreflang';
 import { propertyPath as propertyPathFor, type LocalizedSlug } from '@/lib/property/propertyUrl';
 import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from '@/lib/seo/envSeo';
+import { indexablePropertyLocales, isPropertyLocaleIndexable } from '@/lib/seo/propertyLocaleExperiment';
+import { routing } from '@/i18n/routing';
 import type { LocalizedField } from './socialMetadataResolution';
 import {
   buildMetadata,
@@ -110,7 +112,14 @@ export function buildPropertyMetadata(
     propertyPath != null
       ? `${propertyPath.baseUrl.replace(/\/$/, '')}/${propertyPath.locale}${pathAfterLocale(propertyPath.locale)}`
       : undefined;
-  const hreflang = propertyPath != null ? buildHreflangAlternatesPerLocale(pathAfterLocale) : undefined;
+  // A listing in the trimmed arm of the locale experiment is not indexed in
+  // some locales; those drop out of hreflang too, and the page in them says
+  // `noindex, follow` (lib/seo/propertyLocaleExperiment).
+  const hreflang =
+    propertyPath != null
+      ? buildHreflangAlternatesPerLocale(pathAfterLocale, indexablePropertyLocales(propertyPath.slug, routing.locales))
+      : undefined;
+  const localeIndexable = propertyPath == null || isPropertyLocaleIndexable(propertyPath.slug, propertyPath.locale);
 
   return buildMetadata({
     title,
@@ -122,6 +131,7 @@ export function buildPropertyMetadata(
     twitterCard: ogImageAbsolute ? 'summary_large_image' : 'summary',
     canonical: canonicalFallback,
     hreflangLanguages: hreflang?.languages,
-    robots: noIndex ? { index: false, follow: true } : indexableRobots,
+    locale,
+    robots: noIndex || !localeIndexable ? { index: false, follow: true } : indexableRobots,
   });
 }
