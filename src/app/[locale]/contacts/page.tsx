@@ -7,6 +7,9 @@ import { mapContactsManagerFromSiteSettings } from '@/lib/sanity/contactsManager
 import { ContactsHero } from '@/components/contact/ContactsHero'
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb"
 import { ContactPageContent } from '@/components/contact/ContactPageContent'
+import { AddPropertyNote } from '@/components/contact/AddPropertyNote'
+import { resolveMessengers } from '@/lib/contacts/messengers'
+import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -29,6 +32,10 @@ export default async function ContactsPage({ params }: Props) {
   const { locale } = await params
   const raw = await fetchSiteSettings()
   const manager = mapContactsManagerFromSiteSettings(raw)
+  const messengers = resolveMessengers(
+    (raw as { socialLinks?: SocialLinkInput[] } | null)?.socialLinks,
+    locale
+  )
 
   return (
     <>
@@ -39,6 +46,7 @@ export default async function ContactsPage({ params }: Props) {
       </section>
       <ContactsHero locale={locale} />
       <ContactPageContent locale={locale} manager={manager} />
+      <AddPropertyNote locale={locale} messengers={messengers} />
     </>
   )
 }

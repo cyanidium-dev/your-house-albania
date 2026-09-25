@@ -8,13 +8,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/shared/Icon";
 import type { FooterCityNavItem } from "@/lib/sanity/client";
 import type { ResolvedSiteSettings } from "@/lib/sanity/siteSettingsAdapter";
-import { FOOTER_STABLE_NAV_ITEMS } from "@/data/footerNavConfig";
+import {
+  FOOTER_COMPANY_ITEMS,
+  FOOTER_PROPERTY_HEAD,
+  FOOTER_PROPERTY_TAIL,
+  FOOTER_USEFUL_ITEMS,
+} from "@/data/footerNavConfig";
+import { orderMenuCities } from "@/data/navConfig";
 import { catalogFilterPath } from "@/lib/routes/catalog";
 import { deriveFooterCountrySlugFromPathname } from "@/lib/routes/footerCountry";
 import { CookieSettingsLink } from "@/lib/cookie-consent";
 import { analyticsEnabled } from "@/lib/analytics/config";
-// Unused since the Contacts/Socials columns were replaced (2026-09-02):
-// import { contactLabelKey, partitionSocialLinks } from "@/lib/footer/socialChannels";
 import { footerLgColsClass } from "@/lib/footer/columns";
 import { MESSENGER_ICON, resolveMessengers } from "@/lib/contacts/messengers";
 import CodeSiteTagIcon from "./CodeSiteTagIcon";
@@ -32,60 +36,6 @@ function resolveStableHref(href: string, locale: string): string {
   return `/${locale}${href}`;
 }
 
-// Unused since the Contacts/Socials columns were replaced (2026-09-02):
-// const SOCIAL_ICONS: Record<string, string> = {
-//   twitter: "ph:x-logo-bold",
-//   x: "ph:x-logo-bold",
-//   facebook: "ph:facebook-logo-bold",
-//   instagram: "ph:instagram-logo-bold",
-//   linkedin: "ph:linkedin-logo-bold",
-//   youtube: "ph:youtube-logo-bold",
-//   tiktok: "ph:tiktok-logo-bold",
-//   // Contact-channel platforms (Contacts column) — same icons as before the
-//   // socialLinks consolidation.
-//   telegram: "ph:telegram-logo",
-//   whatsapp: "ph:whatsapp-logo",
-// };
-
-// Unused since the Contacts/Socials columns were replaced (2026-09-02):
-// function getSocialIcon(platform: string): string {
-//   return SOCIAL_ICONS[platform.toLowerCase()] ?? "ph:link";
-// }
-
-/**
- * Contacts-column label. Only platforms with a known translation key go through
- * `t()` — next-intl throws on a missing message, so anything else falls back to
- * the platform name from the CMS.
- */
-// Unused since the Contacts/Socials columns were replaced (2026-09-02):
-// const CONTACT_LABEL_KEYS = new Set(["contacts.telegram", "contacts.whatsapp"]);
-//
-// function contactRowLabel(
-//   platform: string,
-//   t: (key: string, values?: Record<string, string>) => string
-// ): string {
-//   const key = contactLabelKey(platform);
-//   return CONTACT_LABEL_KEYS.has(key) ? t(key) : platform.trim();
-// }
-
-// Unused since the Contacts/Socials columns were replaced (2026-09-02):
-// /** Localized “Follow us on …” line from CMS `platform` string. */
-// function socialFollowLabel(
-//   platform: string,
-//   t: (key: string, values?: Record<string, string>) => string
-// ): string {
-//   const raw = platform.trim();
-//   const p = raw.toLowerCase();
-//   if (p.includes("instagram")) return t("socials.followInstagram");
-//   if (p.includes("facebook")) return t("socials.followFacebook");
-//   if (p.includes("linkedin")) return t("socials.followLinkedin");
-//   if (p === "x" || /\bx\b/.test(p)) return t("socials.followX");
-//   if (p.includes("twitter")) return t("socials.followTwitter");
-//   if (p.includes("youtube")) return t("socials.followYoutube");
-//   if (p.includes("tiktok")) return t("socials.followTiktok");
-//   return t("socials.followGeneric", { platform: raw || "Social" });
-// }
-
 function cityCatalogHref(
   locale: string,
   city: FooterCityNavItem
@@ -96,15 +46,6 @@ function cityCatalogHref(
     trustedCityCountrySlug: city.countrySlug,
     country: city.countrySlug,
   });
-}
-
-/** Prefer a policy row whose label suggests privacy; else first CMS policy link. */
-function pickPrivacyPolicyLink(
-  policyLinks: { href: string; label: string }[] | undefined
-): { href: string; label: string } | null {
-  if (!policyLinks?.length) return null;
-  const privacy = policyLinks.find((p) => /privacy/i.test(p.label));
-  return privacy ?? policyLinks[0] ?? null;
 }
 
 /** Pipe with horizontal breathing room for credits row (major blocks only). */
@@ -131,7 +72,16 @@ const colHeadingClass =
 const colLinkClass =
   "text-[17px] leading-snug text-white/55 transition-colors hover:text-white md:text-base md:leading-normal";
 const colBodyClass = "text-[17px] text-white/45 md:text-sm";
+const creditsLinkClass =
+  "min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline";
 
+/**
+ * Four groups, not a site map: Property (the hub, the cities, the hub of
+ * cities), Useful (the CMS guide links and the blog), Company (about, contact,
+ * listing a property) and Contacts (the form, WhatsApp, Telegram). The legal
+ * links share the credits row. Rebuilt 2026-09-26, see
+ * docs/ux/IA-AUDIT-2026-09-26.md.
+ */
 export default function Footer({
   siteSettings,
   countrySlugs,
@@ -171,6 +121,9 @@ export default function Footer({
     };
   }, [locale, activeCountry, initialCountrySlug, initialCities.length]);
 
+  // Same order as the header's Buy menu: Durrës and Tirana first.
+  const orderedCities = useMemo(() => orderMenuCities(cities, 6), [cities]);
+
   const flavour =
     siteSettings?.footerIntro?.trim() ||
     siteSettings?.siteTagline?.trim() ||
@@ -188,23 +141,15 @@ export default function Footer({
   // pad the footer below lg so its last rows clear that bar.
   const hasMobileStickyBar = pathname.includes("/property/");
 
-  const privacyLink = pickPrivacyPolicyLink(siteSettings?.policyLinks);
+  // Every CMS policy link (privacy, terms, …), in CMS order.
+  const policyLinks = siteSettings?.policyLinks ?? [];
 
   // WhatsApp and Telegram, Telegram first for ru/uk. Tracked as footer leads by
   // LeadTracker through the `data-lead-placement` on <footer>.
   const messengers = resolveMessengers(siteSettings?.socialLinks, locale);
 
-  // Contacts and Social columns came from one source: socialLinks[].channel.
-  // Both columns were replaced by a link to the contact form on 2026-09-02;
-  // uncomment together with the helpers below to bring them back.
-  // const { contact: contactLinks, social: socialColumnLinks } = partitionSocialLinks(
-  //   siteSettings?.socialLinks
-  // );
-
-  // ТЗ-16 Guides column: 4 base columns + optional Guides + optional App.
   const guideLinks = siteSettings?.footerGuideLinks ?? [];
-  const showGuidesColumn = guideLinks.length > 0;
-  const lgColsClass = footerLgColsClass(showGuidesColumn, showAppColumn);
+  const lgColsClass = footerLgColsClass(showAppColumn);
 
   return (
     <footer data-lead-placement="footer" className="relative z-10 w-full bg-dark transition-[background-color,border-color,box-shadow,opacity] duration-[220ms] ease-out">
@@ -238,46 +183,22 @@ export default function Footer({
         {/* Column grid (full width below branding) */}
         <div className="min-w-0 w-full">
           <div
-            className={`grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 md:gap-5 lg:gap-4 ${lgColsClass} xl:gap-4 2xl:gap-5`}
+            className={`grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:grid-cols-4 md:gap-5 lg:gap-4 ${lgColsClass} xl:gap-4 2xl:gap-5`}
           >
-            <nav aria-label={t("columns.navigation")}>
-              <h3 className={colHeadingClass}>{t("columns.navigation")}</h3>
+            <nav aria-label={t("columns.property")}>
+              <h3 className={colHeadingClass}>{t("columns.property")}</h3>
               <ul className="flex flex-col gap-2 md:gap-2.5">
-                {FOOTER_STABLE_NAV_ITEMS.map((item) => (
+                {FOOTER_PROPERTY_HEAD.map((item) => (
                   <li key={item.key}>
-                    <Link
-                      href={resolveStableHref(item.href, locale)}
-                      className={colLinkClass}
-                    >
+                    <Link href={resolveStableHref(item.href, locale)} className={colLinkClass}>
                       {navT(item.key)}
                     </Link>
                   </li>
                 ))}
-              </ul>
-            </nav>
-
-            {showGuidesColumn ? (
-              <nav aria-label={t("columns.guides")}>
-                <h3 className={colHeadingClass}>{t("columns.guides")}</h3>
-                <ul className="flex flex-col gap-2 md:gap-2.5">
-                  {guideLinks.map((link) => (
-                    <li key={link._key ?? link.href}>
-                      <Link href={link.href} className={colLinkClass}>
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ) : null}
-
-            <nav aria-label={t("columns.cities")}>
-              <h3 className={colHeadingClass}>{t("columns.cities")}</h3>
-              {cities.length === 0 ? (
-                <p className={colBodyClass}>{t("cities.empty")}</p>
-              ) : (
-                <ul className="flex flex-col gap-2 md:gap-2.5">
-                  {cities.map((city) => (
+                {orderedCities.length === 0 ? (
+                  <li className={colBodyClass}>{t("cities.empty")}</li>
+                ) : (
+                  orderedCities.map((city) => (
                     <li key={city.slug}>
                       <Link
                         href={cityCatalogHref(locale, city)}
@@ -286,21 +207,56 @@ export default function Footer({
                         {city.label}
                       </Link>
                     </li>
-                  ))}
-                </ul>
-              )}
+                  ))
+                )}
+                {FOOTER_PROPERTY_TAIL.map((item) => (
+                  <li key={item.key}>
+                    <Link href={resolveStableHref(item.href, locale)} className={colLinkClass}>
+                      {navT(item.key)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <nav aria-label={t("columns.useful")}>
+              <h3 className={colHeadingClass}>{t("columns.useful")}</h3>
+              <ul className="flex flex-col gap-2 md:gap-2.5">
+                {guideLinks.map((link) => (
+                  <li key={link._key ?? link.href}>
+                    <Link href={link.href} className={colLinkClass}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+                {FOOTER_USEFUL_ITEMS.map((item) => (
+                  <li key={item.key}>
+                    <Link href={resolveStableHref(item.href, locale)} className={colLinkClass}>
+                      {navT(item.key)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <nav aria-label={t("columns.company")}>
+              <h3 className={colHeadingClass}>{t("columns.company")}</h3>
+              <ul className="flex flex-col gap-2 md:gap-2.5">
+                {FOOTER_COMPANY_ITEMS.map((item) => (
+                  <li key={item.key}>
+                    <Link href={resolveStableHref(item.href, locale)} className={colLinkClass}>
+                      {navT(item.key)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </nav>
 
             {/*
-              Contacts and Socials columns hidden 2026-09-02: every link here
-              was a direct mailto:/tel:/messenger jump, so a lead that started
-              in the footer left the site before anything could record it. One
-              column pointing at the contact form replaces both. The social URLs
-              still reach schema.org `sameAs` from siteSettings on the homepage,
-              which is built independently of this footer.
-
-              2026-09-20: WhatsApp and Telegram are back under the form link.
-              Their clicks are recorded now (LeadTracker → click_whatsapp /
+              Direct channels here were hidden on 2026-09-02 because a lead
+              that started in the footer left the site before anything could
+              record it. WhatsApp and Telegram are back since 2026-09-20: their
+              clicks are recorded now (LeadTracker → click_whatsapp /
               click_telegram, placement `footer`), which was the objection.
             */}
             <div>
@@ -386,17 +342,14 @@ export default function Footer({
               © {year} {t("legal.brandName")}
             </span>
 
-            {privacyLink ? (
-              <>
+            {policyLinks.map((link) => (
+              <span key={link._key ?? link.href} className="inline-flex items-center">
                 <CreditsDivider />
-                <Link
-                  href={privacyLink.href}
-                  className="min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-                >
-                  {privacyLink.label}
+                <Link href={link.href} className={creditsLinkClass}>
+                  {link.label}
                 </Link>
-              </>
-            ) : null}
+              </span>
+            ))}
 
             {/*
               Image credits. Not decoration: the CC BY / CC BY-SA photography on
@@ -405,10 +358,7 @@ export default function Footer({
               images in breach — see /image-credits.
             */}
             <CreditsDivider />
-            <Link
-              href={`/${locale}/image-credits`}
-              className="min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-            >
+            <Link href={`/${locale}/image-credits`} className={creditsLinkClass}>
               {t("legal.imageCredits")}
             </Link>
 

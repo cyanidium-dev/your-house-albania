@@ -5,20 +5,21 @@
     "signUp": "Зареєструватися",
     "contact": "Контакт",
     "nav": {
-      "home": "Головна",
       "buy": "Купівля",
-      "rent": "Оренда",
-      "shortTermRent": "Короткострокова оренда",
-      "cities": "Міста",
-      "realtors": "Для ріелторів",
-      "realtorsAbout": "Як публікувати",
-      "realtorsRegister": "Реєстрація",
-      "expandRealtors": "Розгорнути розділ для ріелторів",
-      "collapseRealtors": "Згорнути розділ для ріелторів",
+      "guides": "Гайди",
       "blog": "Блог",
+      "about": "Про нас",
       "contacts": "Контакти",
-      "expandCities": "Розгорнути список міст",
-      "collapseCities": "Згорнути список міст"
+      "prices": "Ціни по містах",
+      "allListings": "Усі об'єкти",
+      "allCities": "Усі міста",
+      "buyCities": "Об'єкти за містами",
+      "buyPrices": "Ціни та райони",
+      "addProperty": "Додати об'єкт",
+      "openBuyMenu": "Відкрити меню Купівля",
+      "closeBuyMenu": "Закрити меню Купівля",
+      "expandPrices": "Розгорнути ціни по містах",
+      "collapsePrices": "Згорнути ціни по містах"
     },
     "cta": {
       "viewProperties": "Переглянути об'єкти"
@@ -36,23 +37,19 @@
   },
   "Footer": {
     "columns": {
-      "guides": "Гайди",
-      "navigation": "Навігація",
-      "cities": "Міста",
+      "property": "Нерухомість",
+      "useful": "Корисне",
+      "company": "Компанія",
       "contacts": "Контакти",
-      "socials": "Соцмережі",
       "app": "Застосунок"
     },
     "nav": {
-      "home": "Головна",
-      "buy": "Купівля",
-      "rent": "Оренда",
-      "shortTermRent": "Короткострокова оренда",
-      "cities": "Міста",
-      "investment": "Інвестиційна нерухомість",
-      "realtors": "Для ріелторів",
+      "allListings": "Усі об'єкти",
+      "allCities": "Усі міста",
       "blog": "Блог",
-      "about": "Про нас"
+      "about": "Про нас",
+      "contacts": "Контакти",
+      "addProperty": "Додати об'єкт"
     },
     "cities": {
       "empty": "Немає міст для відображення."
@@ -60,17 +57,6 @@
     "contacts": {
       "telegram": "Telegram",
       "whatsapp": "WhatsApp"
-    },
-    "socials": {
-      "empty": "",
-      "followInstagram": "Слідкуйте за нами в Instagram",
-      "followFacebook": "Слідкуйте за нами у Facebook",
-      "followLinkedin": "Слідкуйте за нами в LinkedIn",
-      "followX": "Слідкуйте за нами в X",
-      "followTwitter": "Слідкуйте за нами в Twitter",
-      "followYoutube": "Слідкуйте за нами на YouTube",
-      "followTiktok": "Слідкуйте за нами в TikTok",
-      "followGeneric": "Слідкуйте за нами в {platform}"
     },
     "app": {
       "ios": "App Store",
@@ -638,7 +624,13 @@
     "formMessage": "Ваше повідомлення",
     "formSubmit": "Надіслати",
     "formSubmitting": "Надсилання…",
-    "errorSubmit": "Щось пішло не так. Спробуйте ще раз."
+    "errorSubmit": "Щось пішло не так. Спробуйте ще раз.",
+    "addProperty": {
+      "title": "Власникам і агентствам",
+      "body": "Якщо ви власник об'єкта або представляєте агентство і хочете додати нерухомість на Domlivo, напишіть нам у WhatsApp або Telegram. Розповімо, як проходить публікація і які дані знадобляться.",
+      "howTo": "Як проходить публікація",
+      "register": "Залишити заявку на розміщення"
+    }
   },
   "ContactThankYou": {
     "metaTitle": "Дякуємо",

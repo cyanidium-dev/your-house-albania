@@ -5,20 +5,21 @@
     "signUp": "Zarejestruj się",
     "contact": "Kontakt",
     "nav": {
-      "home": "Strona główna",
       "buy": "Kup",
-      "rent": "Wynajem",
-      "shortTermRent": "Wynajem krótkoterminowy",
-      "cities": "Miasta",
-      "realtors": "Dla agentów",
-      "realtorsAbout": "Jak publikować",
-      "realtorsRegister": "Zarejestruj się",
-      "expandRealtors": "Rozwiń sekcję Dla agentów",
-      "collapseRealtors": "Zwiń sekcję Dla agentów",
+      "guides": "Przewodniki",
       "blog": "Blog",
+      "about": "O nas",
       "contacts": "Kontakty",
-      "expandCities": "Rozwiń listę miast",
-      "collapseCities": "Zwiń listę miast"
+      "prices": "Ceny według miast",
+      "allListings": "Wszystkie oferty",
+      "allCities": "Wszystkie miasta",
+      "buyCities": "Oferty według miast",
+      "buyPrices": "Ceny i dzielnice",
+      "addProperty": "Dodaj nieruchomość",
+      "openBuyMenu": "Otwórz menu Kup",
+      "closeBuyMenu": "Zamknij menu Kup",
+      "expandPrices": "Rozwiń ceny według miast",
+      "collapsePrices": "Zwiń ceny według miast"
     },
     "cta": {
       "viewProperties": "Zobacz nieruchomości"
@@ -36,23 +37,19 @@
   },
   "Footer": {
     "columns": {
-      "guides": "Przewodniki",
-      "navigation": "Nawigacja",
-      "cities": "Miasta",
+      "property": "Nieruchomości",
+      "useful": "Przydatne",
+      "company": "Firma",
       "contacts": "Kontakty",
-      "socials": "Social media",
       "app": "Aplikacja"
     },
     "nav": {
-      "home": "Strona główna",
-      "buy": "Kup",
-      "rent": "Wynajem",
-      "shortTermRent": "Wynajem krótkoterminowy",
-      "cities": "Miasta",
-      "investment": "Nieruchomości inwestycyjne",
-      "realtors": "Dla agentów",
+      "allListings": "Wszystkie oferty",
+      "allCities": "Wszystkie miasta",
       "blog": "Blog",
-      "about": "O nas"
+      "about": "O nas",
+      "contacts": "Kontakty",
+      "addProperty": "Dodaj nieruchomość"
     },
     "cities": {
       "empty": "Brak miast do wyświetlenia."
@@ -60,17 +57,6 @@
     "contacts": {
       "telegram": "Telegram",
       "whatsapp": "WhatsApp"
-    },
-    "socials": {
-      "empty": "",
-      "followInstagram": "Obserwuj nas na Instagramie",
-      "followFacebook": "Obserwuj nas na Facebooku",
-      "followLinkedin": "Obserwuj nas na LinkedIn",
-      "followX": "Obserwuj nas na X",
-      "followTwitter": "Obserwuj nas na Twitterze",
-      "followYoutube": "Obserwuj nas na YouTube",
-      "followTiktok": "Obserwuj nas na TikToku",
-      "followGeneric": "Obserwuj nas na {platform}"
     },
     "app": {
       "ios": "App Store",
@@ -638,7 +624,13 @@
     "formMessage": "Twoja wiadomość",
     "formSubmit": "Wyślij wiadomość",
     "formSubmitting": "Wysyłanie…",
-    "errorSubmit": "Coś poszło nie tak. Spróbuj ponownie."
+    "errorSubmit": "Coś poszło nie tak. Spróbuj ponownie.",
+    "addProperty": {
+      "title": "Właściciele i agencje",
+      "body": "Jeśli jesteś właścicielem nieruchomości lub reprezentujesz agencję i chcesz dodać ofertę na Domlivo, napisz do nas na WhatsApp lub Telegram. Wyjaśnimy, jak przebiega publikacja i jakie dane będą potrzebne.",
+      "howTo": "Jak przebiega publikacja",
+      "register": "Wyślij zgłoszenie oferty"
+    }
   },
   "ContactThankYou": {
     "metaTitle": "Dziękujemy",

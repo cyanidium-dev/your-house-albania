@@ -5,20 +5,21 @@
     "signUp": "Regjistrohu",
     "contact": "Kontakt",
     "nav": {
-      "home": "Kryefaqja",
       "buy": "Bli",
-      "rent": "Qira",
-      "shortTermRent": "Qira afatshkurtër",
-      "cities": "Qytetet",
-      "realtors": "Për agjentë",
-      "realtorsAbout": "Si të publikoni",
-      "realtorsRegister": "Regjistrim",
-      "expandRealtors": "Zgjero seksionin për agjentë",
-      "collapseRealtors": "Mbyll seksionin për agjentë",
+      "guides": "Udhëzues",
       "blog": "Blog",
+      "about": "Rreth nesh",
       "contacts": "Kontakte",
-      "expandCities": "Zgjero listën e qyteteve",
-      "collapseCities": "Mbyll listën e qyteteve"
+      "prices": "Çmimet sipas qyteteve",
+      "allListings": "Të gjitha pronat",
+      "allCities": "Të gjitha qytetet",
+      "buyCities": "Prona sipas qyteteve",
+      "buyPrices": "Çmime dhe lagje",
+      "addProperty": "Shtoni pronën tuaj",
+      "openBuyMenu": "Hap menunë Bli",
+      "closeBuyMenu": "Mbyll menunë Bli",
+      "expandPrices": "Zgjero çmimet sipas qyteteve",
+      "collapsePrices": "Mbyll çmimet sipas qyteteve"
     },
     "cta": {
       "viewProperties": "Shiko pronat"
@@ -36,23 +37,19 @@
   },
   "Footer": {
     "columns": {
-      "guides": "Udhëzues",
-      "navigation": "Navigimi",
-      "cities": "Qytetet",
+      "property": "Pronat",
+      "useful": "Të dobishme",
+      "company": "Kompania",
       "contacts": "Kontakte",
-      "socials": "Rrjetet sociale",
       "app": "Aplikacioni"
     },
     "nav": {
-      "home": "Kryefaqja",
-      "buy": "Bli",
-      "rent": "Qira",
-      "shortTermRent": "Qira afatshkurtër",
-      "cities": "Qytetet",
-      "investment": "Prona për investim",
-      "realtors": "Për agjentë",
+      "allListings": "Të gjitha pronat",
+      "allCities": "Të gjitha qytetet",
       "blog": "Blog",
-      "about": "Rreth nesh"
+      "about": "Rreth nesh",
+      "contacts": "Kontakte",
+      "addProperty": "Shtoni pronën tuaj"
     },
     "cities": {
       "empty": "Nuk ka qytete për të shfaqur."
@@ -60,17 +57,6 @@
     "contacts": {
       "telegram": "Telegram",
       "whatsapp": "WhatsApp"
-    },
-    "socials": {
-      "empty": "",
-      "followInstagram": "Na ndiqni në Instagram",
-      "followFacebook": "Na ndiqni në Facebook",
-      "followLinkedin": "Na ndiqni në LinkedIn",
-      "followX": "Na ndiqni në X",
-      "followTwitter": "Na ndiqni në Twitter",
-      "followYoutube": "Na ndiqni në YouTube",
-      "followTiktok": "Na ndiqni në TikTok",
-      "followGeneric": "Na ndiqni në {platform}"
     },
     "app": {
       "ios": "App Store",
@@ -638,7 +624,13 @@
     "formMessage": "Mesazhi juaj",
     "formSubmit": "Dërgo",
     "formSubmitting": "Duke dërguar…",
-    "errorSubmit": "Diçka shkoi keq. Ju lutemi provoni përsëri."
+    "errorSubmit": "Diçka shkoi keq. Ju lutemi provoni përsëri.",
+    "addProperty": {
+      "title": "Për pronarë dhe agjenci",
+      "body": "Nëse jeni pronar i një prone ose përfaqësoni një agjenci dhe doni ta shtoni pronën në Domlivo, na shkruani në WhatsApp ose Telegram. Ju shpjegojmë si bëhet publikimi dhe cilat të dhëna nevojiten.",
+      "howTo": "Si bëhet publikimi",
+      "register": "Dërgo kërkesë për publikim"
+    }
   },
   "ContactThankYou": {
     "metaTitle": "Faleminderit",

@@ -5,20 +5,21 @@
     "signUp": "Регистрация",
     "contact": "Контакты",
     "nav": {
-      "home": "Главная",
       "buy": "Купить",
-      "rent": "Аренда",
-      "shortTermRent": "Краткосрочная аренда",
-      "cities": "Города",
-      "realtors": "Риелторам",
-      "realtorsAbout": "Как публиковать",
-      "realtorsRegister": "Регистрация",
-      "expandRealtors": "Развернуть раздел для риелторов",
-      "collapseRealtors": "Свернуть раздел для риелторов",
+      "guides": "Гайды",
       "blog": "Блог",
+      "about": "О нас",
       "contacts": "Контакты",
-      "expandCities": "Развернуть список городов",
-      "collapseCities": "Свернуть список городов"
+      "prices": "Цены по городам",
+      "allListings": "Все объекты",
+      "allCities": "Все города",
+      "buyCities": "Объекты по городам",
+      "buyPrices": "Цены и районы",
+      "addProperty": "Добавить объект",
+      "openBuyMenu": "Открыть меню Купить",
+      "closeBuyMenu": "Закрыть меню Купить",
+      "expandPrices": "Развернуть цены по городам",
+      "collapsePrices": "Свернуть цены по городам"
     },
     "cta": {
       "viewProperties": "Смотреть объекты"
@@ -36,23 +37,19 @@
   },
   "Footer": {
     "columns": {
-      "guides": "Гайды",
-      "navigation": "Навигация",
-      "cities": "Города",
+      "property": "Недвижимость",
+      "useful": "Полезное",
+      "company": "Компания",
       "contacts": "Контакты",
-      "socials": "Соцсети",
       "app": "Приложение"
     },
     "nav": {
-      "home": "Главная",
-      "buy": "Купить",
-      "rent": "Аренда",
-      "shortTermRent": "Краткосрочная аренда",
-      "cities": "Города",
-      "investment": "Инвестиционная недвижимость",
-      "realtors": "Риелторам",
+      "allListings": "Все объекты",
+      "allCities": "Все города",
       "blog": "Блог",
-      "about": "О нас"
+      "about": "О нас",
+      "contacts": "Контакты",
+      "addProperty": "Добавить объект"
     },
     "cities": {
       "empty": "Нет городов для отображения."
@@ -60,17 +57,6 @@
     "contacts": {
       "telegram": "Telegram",
       "whatsapp": "WhatsApp"
-    },
-    "socials": {
-      "empty": "",
-      "followInstagram": "Мы в Instagram",
-      "followFacebook": "Мы в Facebook",
-      "followLinkedin": "Мы в LinkedIn",
-      "followX": "Мы в X",
-      "followTwitter": "Мы в Twitter",
-      "followYoutube": "Мы на YouTube",
-      "followTiktok": "Мы в TikTok",
-      "followGeneric": "Мы в {platform}"
     },
     "app": {
       "ios": "App Store",
@@ -638,7 +624,13 @@
     "formMessage": "Ваше сообщение",
     "formSubmit": "Отправить",
     "formSubmitting": "Отправка…",
-    "errorSubmit": "Что-то пошло не так. Попробуйте ещё раз."
+    "errorSubmit": "Что-то пошло не так. Попробуйте ещё раз.",
+    "addProperty": {
+      "title": "Собственникам и агентствам",
+      "body": "Если вы собственник объекта или представляете агентство и хотите добавить недвижимость на Domlivo, напишите нам в WhatsApp или Telegram. Расскажем, как проходит публикация, и подскажем, какие данные понадобятся.",
+      "howTo": "Как проходит публикация",
+      "register": "Оставить заявку на размещение"
+    }
   },
   "ContactThankYou": {
     "metaTitle": "Спасибо",

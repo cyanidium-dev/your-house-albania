@@ -5,20 +5,21 @@
     "signUp": "Sign up",
     "contact": "Contact",
     "nav": {
-      "home": "Home",
       "buy": "Buy",
-      "rent": "Rent",
-      "shortTermRent": "Short-term rent",
-      "cities": "Cities",
-      "realtors": "For realtors",
-      "realtorsAbout": "How to publish",
-      "realtorsRegister": "Register",
-      "expandRealtors": "Expand For realtors section",
-      "collapseRealtors": "Collapse For realtors section",
+      "guides": "Guides",
       "blog": "Blog",
+      "about": "About",
       "contacts": "Contacts",
-      "expandCities": "Expand cities list",
-      "collapseCities": "Collapse cities list"
+      "prices": "Prices by city",
+      "allListings": "All listings",
+      "allCities": "All cities",
+      "buyCities": "Listings by city",
+      "buyPrices": "Prices and districts",
+      "addProperty": "List your property",
+      "openBuyMenu": "Open the Buy menu",
+      "closeBuyMenu": "Close the Buy menu",
+      "expandPrices": "Expand prices by city",
+      "collapsePrices": "Collapse prices by city"
     },
     "cta": {
       "viewProperties": "View properties"
@@ -36,23 +37,19 @@
   },
   "Footer": {
     "columns": {
-      "guides": "Guides",
-      "navigation": "Navigation",
-      "cities": "Cities",
+      "property": "Property",
+      "useful": "Useful",
+      "company": "Company",
       "contacts": "Contacts",
-      "socials": "Social",
       "app": "App"
     },
     "nav": {
-      "home": "Home",
-      "buy": "Buy",
-      "rent": "Rent",
-      "shortTermRent": "Short-term rent",
-      "cities": "Cities",
-      "investment": "Investment property",
-      "realtors": "For realtors",
+      "allListings": "All listings",
+      "allCities": "All cities",
       "blog": "Blog",
-      "about": "About"
+      "about": "About",
+      "contacts": "Contacts",
+      "addProperty": "List your property"
     },
     "cities": {
       "empty": "No cities to show."
@@ -60,17 +57,6 @@
     "contacts": {
       "telegram": "Telegram",
       "whatsapp": "WhatsApp"
-    },
-    "socials": {
-      "empty": "",
-      "followInstagram": "Follow us on Instagram",
-      "followFacebook": "Follow us on Facebook",
-      "followLinkedin": "Follow us on LinkedIn",
-      "followX": "Follow us on X",
-      "followTwitter": "Follow us on Twitter",
-      "followYoutube": "Follow us on YouTube",
-      "followTiktok": "Follow us on TikTok",
-      "followGeneric": "Follow us on {platform}"
     },
     "app": {
       "ios": "App Store",
@@ -638,7 +624,13 @@
     "formMessage": "Your message",
     "formSubmit": "Send message",
     "formSubmitting": "Sending…",
-    "errorSubmit": "Something went wrong. Please try again."
+    "errorSubmit": "Something went wrong. Please try again.",
+    "addProperty": {
+      "title": "Owners and agencies",
+      "body": "If you own a property or represent an agency and want to list it on Domlivo, message us on WhatsApp or Telegram. We will explain how publishing works and what details we need.",
+      "howTo": "How publishing works",
+      "register": "Send a listing request"
+    }
   },
   "ContactThankYou": {
     "metaTitle": "Thank you",

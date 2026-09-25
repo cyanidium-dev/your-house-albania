@@ -5,20 +5,21 @@
     "signUp": "Registrieren",
     "contact": "Kontakt",
     "nav": {
-      "home": "Startseite",
       "buy": "Kaufen",
-      "rent": "Mieten",
-      "shortTermRent": "Kurzzeitmiete",
-      "cities": "Städte",
-      "realtors": "Für Makler",
-      "realtorsAbout": "So inserieren Sie",
-      "realtorsRegister": "Registrieren",
-      "expandRealtors": "Bereich für Makler ausklappen",
-      "collapseRealtors": "Bereich für Makler einklappen",
+      "guides": "Ratgeber",
       "blog": "Blog",
+      "about": "Über uns",
       "contacts": "Kontakte",
-      "expandCities": "Städteliste ausklappen",
-      "collapseCities": "Städteliste einklappen"
+      "prices": "Preise nach Stadt",
+      "allListings": "Alle Immobilien",
+      "allCities": "Alle Städte",
+      "buyCities": "Immobilien nach Stadt",
+      "buyPrices": "Preise und Stadtteile",
+      "addProperty": "Immobilie inserieren",
+      "openBuyMenu": "Menü Kaufen öffnen",
+      "closeBuyMenu": "Menü Kaufen schließen",
+      "expandPrices": "Preise nach Stadt ausklappen",
+      "collapsePrices": "Preise nach Stadt einklappen"
     },
     "cta": {
       "viewProperties": "Immobilien ansehen"
@@ -36,23 +37,19 @@
   },
   "Footer": {
     "columns": {
-      "guides": "Ratgeber",
-      "navigation": "Navigation",
-      "cities": "Städte",
+      "property": "Immobilien",
+      "useful": "Wissenswertes",
+      "company": "Unternehmen",
       "contacts": "Kontakt",
-      "socials": "Social Media",
       "app": "App"
     },
     "nav": {
-      "home": "Startseite",
-      "buy": "Kaufen",
-      "rent": "Mieten",
-      "shortTermRent": "Kurzzeitmiete",
-      "cities": "Städte",
-      "investment": "Anlageimmobilien",
-      "realtors": "Für Makler",
+      "allListings": "Alle Immobilien",
+      "allCities": "Alle Städte",
       "blog": "Blog",
-      "about": "Über uns"
+      "about": "Über uns",
+      "contacts": "Kontakte",
+      "addProperty": "Immobilie inserieren"
     },
     "cities": {
       "empty": "Keine Städte vorhanden."
@@ -60,17 +57,6 @@
     "contacts": {
       "telegram": "Telegram",
       "whatsapp": "WhatsApp"
-    },
-    "socials": {
-      "empty": "",
-      "followInstagram": "Folgen Sie uns auf Instagram",
-      "followFacebook": "Folgen Sie uns auf Facebook",
-      "followLinkedin": "Folgen Sie uns auf LinkedIn",
-      "followX": "Folgen Sie uns auf X",
-      "followTwitter": "Folgen Sie uns auf Twitter",
-      "followYoutube": "Folgen Sie uns auf YouTube",
-      "followTiktok": "Folgen Sie uns auf TikTok",
-      "followGeneric": "Folgen Sie uns auf {platform}"
     },
     "app": {
       "ios": "App Store",
@@ -638,7 +624,13 @@
     "formMessage": "Ihre Nachricht",
     "formSubmit": "Nachricht senden",
     "formSubmitting": "Wird gesendet…",
-    "errorSubmit": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    "errorSubmit": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "addProperty": {
+      "title": "Für Eigentümer und Agenturen",
+      "body": "Wenn Sie Eigentümer einer Immobilie sind oder eine Agentur vertreten und auf Domlivo inserieren möchten, schreiben Sie uns per WhatsApp oder Telegram. Wir erklären, wie die Veröffentlichung abläuft und welche Angaben wir brauchen.",
+      "howTo": "So läuft die Veröffentlichung",
+      "register": "Anfrage zum Inserieren senden"
+    }
   },
   "ContactThankYou": {
     "metaTitle": "Vielen Dank",

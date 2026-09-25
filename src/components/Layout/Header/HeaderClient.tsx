@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import DrawerNavList from './Navigation/DrawerNavList'
-import { DRAWER_NAV_ITEMS } from '@/data/navConfig'
+import DesktopNav from './Navigation/DesktopNav'
+import { ADD_PROPERTY_HREF, type BuyMenuData } from '@/data/navConfig'
 import LanguageSwitcher from './LanguageSwitcher'
 import CurrencySwitcher from './CurrencySwitcher'
 import HeaderThemeToggle from './HeaderThemeToggle'
@@ -38,6 +39,7 @@ type HeaderClientProps = {
   siteSettings?: ResolvedSiteSettings
   countrySlugs: string[]
   translations: HeaderTranslations
+  buyMenu: BuyMenuData
   /** Hides the assistant entry point when the API key is not configured. */
   aiSearchEnabled?: boolean
 }
@@ -47,15 +49,15 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
   siteSettings,
   countrySlugs,
   translations: t,
+  buyMenu,
   aiSearchEnabled = false,
 }) => {
-  const [drawerCitiesOpen, setDrawerCitiesOpen] = useState(false)
-  const [drawerRealtorsOpen, setDrawerRealtorsOpen] = useState(false)
-  const drawerExpanded = drawerCitiesOpen || drawerRealtorsOpen
+  const [drawerPricesOpen, setDrawerPricesOpen] = useState(false)
   // Inside a city — its listing, a district, its /info page — "View
   // properties" means that city's, not a jump out to the whole country.
   const pathname = usePathname()
   const propertiesHref = currentCityListingHref(pathname, routing.locales, countrySlugs) ?? catalogPath(locale)
+  const addPropertyHref = `/${locale}${ADD_PROPERTY_HREF}`
 
   return (
     <HeaderVisualState>
@@ -77,41 +79,50 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
               <div className="h-full min-w-0 px-4 lg:px-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-0">
                 <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
-                    <div className="ml-0.5 md:ml-[14px] min-w-0 max-w-[45%] md:max-w-none shrink">
-                      <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
-                        {siteSettings?.logoUrl ? (
-                          <>
-                            <Image
-                              src={siteSettings.logoUrl}
-                              alt={siteSettings?.siteName || 'logo'}
-                              width={150}
-                              height={68}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <Image
-                              src={'/images/header/dark-logo.svg'}
-                              alt='logo'
-                              width={150}
-                              height={68}
-                              unoptimized={true}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
-                            />
-                            <Image
-                              src={'/images/header/logo.svg'}
-                              alt='logo'
-                              width={150}
-                              height={68}
-                              unoptimized={true}
-                              className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
-                            />
-                          </>
-                        )}
-                      </Link>
+                    <div className="flex min-w-0 items-center gap-4 xl:gap-6 shrink">
+                      <div className="ml-0.5 md:ml-[14px] min-w-0 max-w-[45%] md:max-w-none shrink-0">
+                        <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
+                          {siteSettings?.logoUrl ? (
+                            <>
+                              <Image
+                                src={siteSettings.logoUrl}
+                                alt={siteSettings?.siteName || 'logo'}
+                                width={150}
+                                height={68}
+                                className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <Image
+                                src={'/images/header/dark-logo.svg'}
+                                alt='logo'
+                                width={150}
+                                height={68}
+                                unoptimized={true}
+                                className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                              />
+                              <Image
+                                src={'/images/header/logo.svg'}
+                                alt='logo'
+                                width={150}
+                                height={68}
+                                unoptimized={true}
+                                className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                              />
+                            </>
+                          )}
+                        </Link>
+                      </div>
+                      <DesktopNav
+                        locale={locale}
+                        buyMenu={buyMenu}
+                        nav={t.nav}
+                        onPhoto={logoOnPhoto}
+                        ariaLabel={t.mainNavigation}
+                      />
                     </div>
-                    <div className='flex items-center gap-1 sm:gap-4 min-w-0 shrink-0'>
+                    <div className='flex items-center gap-1 sm:gap-3 xl:gap-4 min-w-0 shrink-0'>
                       <LanguageSwitcher overHero={overHero} sticky={sticky} />
                       <CurrencySwitcher overHero={overHero} sticky={sticky} />
                       <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
@@ -119,7 +130,9 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
                       ) : null}
                       <HeaderFavoritesLink locale={locale} overHero={overHero} sticky={sticky} />
-                      <div className="hidden md:block">
+                      {/* Tablets keep the button next to the burger; at lg the bar
+                          gains its links and loses the room, xl has both. */}
+                      <div className="hidden md:block lg:hidden xl:block">
                         <Link
                           href={propertiesHref}
                           className={cn(
@@ -134,7 +147,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                           {t.cta.viewProperties}
                         </Link>
                       </div>
-                      <div>
+                      <div className="lg:hidden">
                         <HeaderBurgerButton
                           onClick={onToggle}
                           overHero={overHero}
@@ -149,7 +162,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
               </div>
 
               <HeaderMobileDrawer open={navbarOpen} onClose={onClose}>
-                <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden px-12 sm:px-16 md:px-20">
+                <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden px-8 sm:px-16 md:px-20">
                   <div className="shrink-0 pt-[max(0.5rem,env(safe-area-inset-top))]">
                     <div className="flex w-full items-center justify-end py-4 md:py-5">
                       <button
@@ -178,33 +191,35 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     </div>
                   </div>
 
-                  <div
-                    className={cn(
-                      'no-scrollbar min-h-0 flex-1 flex flex-col',
-                      drawerExpanded ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden',
-                    )}
-                  >
-                    <nav className="flex min-h-0 flex-1 flex-col items-start gap-2 sm:gap-2.5" aria-label={t.mainNavigation}>
+                  <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+                    <nav className="flex min-h-0 flex-col items-start gap-2 sm:gap-2.5 pb-4" aria-label={t.mainNavigation}>
                       <DrawerNavList
-                        items={DRAWER_NAV_ITEMS}
-                        countrySlugs={countrySlugs}
+                        locale={locale}
+                        buyMenu={buyMenu}
                         translations={{ nav: t.nav }}
                         onNavigate={onClose}
-                        citiesOpen={drawerCitiesOpen}
-                        onCitiesOpenChange={setDrawerCitiesOpen}
-                        realtorsOpen={drawerRealtorsOpen}
-                        onRealtorsOpenChange={setDrawerRealtorsOpen}
+                        pricesOpen={drawerPricesOpen}
+                        onPricesOpenChange={setDrawerPricesOpen}
                       />
                     </nav>
                   </div>
 
-                  <div className="shrink-0 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                  <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                     <Link
                       href={propertiesHref}
                       className="inline-flex w-fit min-h-11 items-center justify-center rounded-full border border-primary bg-primary px-7 py-3.5 text-base font-semibold leading-tight text-white duration-300 hover:bg-transparent hover:text-primary"
                       onClick={onClose}
                     >
                       {t.cta.viewProperties}
+                    </Link>
+                    {/* The owner's and the agency's way in: a note on the
+                        contact page, not a section of the menu. */}
+                    <Link
+                      href={addPropertyHref}
+                      className="text-sm font-medium text-white/55 underline-offset-4 transition-colors hover:text-white hover:underline"
+                      onClick={onClose}
+                    >
+                      {t.nav.addProperty}
                     </Link>
                   </div>
                 </div>

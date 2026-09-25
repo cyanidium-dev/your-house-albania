@@ -98,8 +98,11 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
         className={cn(
           'bg-gradient-to-b from-skyblue via-lightskyblue dark:via-[#4298b0] to-white/10 dark:to-black/10 relative flex',
           // On a phone the homepage hero is only as tall as its content, so the
-          // first listings start inside the first screen.
-          isHome ? 'md:min-h-screen' : 'min-h-screen'
+          // first listings start inside the first screen. The other landings
+          // (/cities, /{city}/info, guides) used to take a full screen too and
+          // showed a headline in a field of gradient; they are as tall as
+          // their copy and search now, with a floor so the photo still reads.
+          isHome ? 'md:min-h-screen' : 'min-h-[32rem] md:min-h-[36rem]'
         )}
       >
         <PhotoHeroFlag />
@@ -134,8 +137,8 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
         />
         <div
           className={cn(
-            'container max-w-8xl mx-auto px-5 2xl:px-0 md:pt-60 md:pb-20 flex-1 relative',
-            isHome ? 'pt-24 pb-6' : 'pt-32'
+            'container max-w-8xl mx-auto px-5 2xl:px-0 md:pb-20 flex-1 relative',
+            isHome ? 'pt-24 pb-6 md:pt-60' : 'pt-32 pb-14 md:pt-44'
           )}
         >
           {breadcrumb ? (

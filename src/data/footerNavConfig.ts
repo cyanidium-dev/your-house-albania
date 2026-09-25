@@ -1,29 +1,41 @@
-import { NON_GEO_DEAL_NAV_HREF } from "./nonGeoDealNavHref";
-import { isPublicNavKey } from "./navConfig";
+import { ADD_PROPERTY_HREF } from "./navConfig";
 
 /**
- * Stable footer navigation (not CMS-driven). Labels from `Footer.nav.*` translations.
- * Paths match `DRAWER_NAV_ITEMS` / header patterns (locale applied at render).
- * Deal items are filtered by `PUBLIC_DEAL_TYPES` (rentals hidden from the UI).
+ * Footer groups (not CMS-driven). Labels from `Footer.nav.*`; the locale is
+ * prefixed at render time. The CMS still supplies the city list (Property
+ * column), the guide links (Useful column) and the policy links (credits row).
+ *
+ * Rebuilt 2026-09-26 with the header (docs/ux/IA-AUDIT-2026-09-26.md). The
+ * footer stopped mirroring the site map: the investment landing (a noindex
+ * duplicate of /sale) and the realtor landing (0 clicks in 3 months) are out,
+ * the contact page and the "list your property" note are in.
  */
-export const FOOTER_STABLE_NAV_ITEMS = (
-  [
-    { key: "home", href: "/" },
-    { key: "buy", href: NON_GEO_DEAL_NAV_HREF.buy },
-    { key: "rent", href: NON_GEO_DEAL_NAV_HREF.rent },
-    { key: "shortTermRent", href: NON_GEO_DEAL_NAV_HREF.shortTermRent },
-    { key: "cities", href: "/cities" },
-    // The investment landings had no inbound link anywhere on the site — not
-    // from the homepage, the catalogue, /cities or any city page — so they were
-    // reachable only from a sitemap (SEO-08 audit, 02.09.2026). Only the sale
-    // page is listed: /investment/rent and /investment/short-term-rent describe
-    // the rental vertical, which is hidden from the UI by PUBLIC_DEAL_TYPES.
-    { key: "investment", href: "/investment/sale" },
-    { key: "realtors", href: "/for-realtors" },
-    { key: "blog", href: "/blog" },
-    // Removed on 2026-09-10 while it pointed at a 404; back now that the page
-    // exists. Sitewide, so the founders and the Organization are one click from
-    // every URL.
-    { key: "about", href: "/about" },
-  ] as const
-).filter((item) => isPublicNavKey(item.key));
+export type FooterNavItem = { key: string; href: `/${string}` };
+
+/** Property column: the national hub first, the CMS cities, then the hub of cities. */
+export const FOOTER_PROPERTY_HEAD: readonly FooterNavItem[] = [
+  { key: "allListings", href: "/sale" },
+];
+export const FOOTER_PROPERTY_TAIL: readonly FooterNavItem[] = [
+  { key: "allCities", href: "/cities" },
+];
+
+/** Useful column: after the CMS guide links. */
+export const FOOTER_USEFUL_ITEMS: readonly FooterNavItem[] = [
+  { key: "blog", href: "/blog" },
+];
+
+/** Company column. */
+export const FOOTER_COMPANY_ITEMS: readonly FooterNavItem[] = [
+  { key: "about", href: "/about" },
+  { key: "contacts", href: "/contacts" },
+  { key: "addProperty", href: ADD_PROPERTY_HREF },
+];
+
+/** Every code-defined footer link, for tests and for the sitemap of internal links. */
+export const FOOTER_STABLE_NAV_ITEMS: readonly FooterNavItem[] = [
+  ...FOOTER_PROPERTY_HEAD,
+  ...FOOTER_PROPERTY_TAIL,
+  ...FOOTER_USEFUL_ITEMS,
+  ...FOOTER_COMPANY_ITEMS,
+];
