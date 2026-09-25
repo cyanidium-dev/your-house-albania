@@ -213,7 +213,9 @@
       "showThumbnails": "Mostra miniature",
       "approximateLocation": "Posizione approssimativa: il segnaposto indica il quartiere, non l’edificio esatto.",
       "plotArea": "Terreno {value} m²",
-      "plotAreaUnknown": "Superficie del terreno: non specificata"
+      "plotAreaUnknown": "Superficie del terreno: non specificata",
+      "seaDistance": "{m} m dal mare",
+      "beachfront": "Prima linea sul mare"
     },
     "propertyCard": {
       "bedrooms": "Camere",
@@ -278,8 +280,8 @@
     },
     "blogs": {
       "badge": "Blog",
-      "title": "Approfondimenti sul mercato immobiliare.",
-      "description": "Resta al passo con consigli e aggiornamenti dagli esperti.",
+      "title": "Blog immobiliare Albania: mercato, prezzi e consigli",
+      "description": "Notizie di mercato, dati sui prezzi e consigli passo per passo per comprare in Albania, da Durazzo a Saranda.",
       "metaTitle": "Blog immobiliare Albania: mercato, prezzi e consigli"
     }
   },
@@ -457,6 +459,13 @@
     "monthlyTotal": "In media al mese",
     "fromRate": "Importi calcolati per {area} m² a <rate></rate>/m², cioè <total></total>.",
     "disclaimer": "Stima basata sulle tariffe notarili ufficiali, sui diritti ASHK, sull'imposta sugli edifici calcolata sul valore di riferimento statale e sulle tariffe comunali delle utenze, per due occupanti con aria condizionata in stagione. Verifica gli importi esatti con il notaio."
+  },
+  "PropertyPriceHistory": {
+    "title": "Prezzo richiesto su Domlivo",
+    "listedAt": "Pubblicato il {date} a <amount></amount>.",
+    "unchanged": "Invariato da allora.",
+    "perSqm": "/m²",
+    "note": "Prezzi richiesti così come pubblicati qui; una variazione viene registrata quando il prezzo dell’annuncio viene aggiornato."
   },
   "Catalog": {
     "pagination": {
@@ -715,8 +724,8 @@
     "thankYouImageAlt": "Foto interni"
   },
   "Guides": {
-    "title": "Guide",
-    "description": "Guide di mercato, confronti e consigli per acquistare in Albania.",
+    "title": "Guide all'acquisto di immobili in Albania",
+    "description": "Confronti tra città, prezzi per zona, passaggi legali e costi: guide per comprare in Albania, Durazzo per prima.",
     "empty": "Nessuna guida pubblicata per ora.",
     "breadcrumbHome": "Home"
   },

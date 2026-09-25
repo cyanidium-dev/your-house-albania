@@ -202,7 +202,9 @@
       "showThumbnails": "Pokaż miniatury",
       "approximateLocation": "Lokalizacja przybliżona — pinezka wskazuje dzielnicę, a nie konkretny budynek.",
       "plotArea": "Działka {value} m²",
-      "plotAreaUnknown": "Powierzchnia działki: nie podano"
+      "plotAreaUnknown": "Powierzchnia działki: nie podano",
+      "seaDistance": "{m} m do morza",
+      "beachfront": "Pierwsza linia od morza"
     },
     "propertyCard": {
       "bedrooms": "Sypialnie",
@@ -278,8 +280,8 @@
     },
     "blogs": {
       "badge": "Blog",
-      "title": "Wiedza o rynku nieruchomości.",
-      "description": "Bądź na bieżąco z rynkiem nieruchomości dzięki poradom i aktualnościom od ekspertów.",
+      "title": "Blog o nieruchomościach w Albanii: rynek, ceny i porady",
+      "description": "Wiadomości z rynku, dane o cenach i porady krok po kroku dla kupujących w Albanii, od Durrës po Sarandę.",
       "metaTitle": "Blog o nieruchomościach w Albanii: rynek, ceny i porady"
     }
   },
@@ -457,6 +459,13 @@
     "monthlyTotal": "Średnio miesięcznie",
     "fromRate": "Kwoty obliczone dla {area} m² po <rate></rate>/m², czyli <total></total>.",
     "disclaimer": "Szacunek według oficjalnej taryfy notarialnej, opłat ASHK, podatku od budynków od państwowej wartości referencyjnej i miejskich taryf za media, dla dwóch osób z klimatyzacją w sezonie. Dokładne kwoty potwierdź u notariusza."
+  },
+  "PropertyPriceHistory": {
+    "title": "Cena ofertowa na Domlivo",
+    "listedAt": "Opublikowano {date} za <amount></amount>.",
+    "unchanged": "Od tego czasu bez zmian.",
+    "perSqm": "/m²",
+    "note": "Ceny ofertowe w postaci opublikowanej tutaj; zmiana jest zapisywana, gdy cena oferty zostaje zaktualizowana."
   },
   "Catalog": {
     "pagination": {
@@ -715,8 +724,8 @@
     "thankYouImageAlt": "Zdjęcie wnętrza"
   },
   "Guides": {
-    "title": "Poradniki",
-    "description": "Poradniki rynkowe, porównania i wskazówki zakupowe dla Albanii.",
+    "title": "Poradniki zakupu nieruchomości w Albanii",
+    "description": "Porównania miast, ceny według dzielnic, kroki prawne i koszty: poradniki dla kupujących w Albanii, przede wszystkim w Durrës.",
     "empty": "Nie opublikowano jeszcze żadnych poradników.",
     "breadcrumbHome": "Strona główna"
   },

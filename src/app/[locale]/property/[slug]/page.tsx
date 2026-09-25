@@ -20,6 +20,7 @@ import { propertyOgImageUrl } from '@/lib/seo/ogImageUrl';
 import { fetchLatestZoneMetricsByZoneId } from '@/lib/sanity/queries/zoneMetrics';
 import { fetchDistrictPriceRows } from '@/lib/sanity/queries/property';
 import { PropertyOwnershipCostsSection } from '@/components/shared/property/PropertyOwnershipCostsSection';
+import { PropertyPriceHistorySection } from '@/components/shared/property/PropertyPriceHistorySection';
 import { GuideDownloadCard } from '@/components/guides/GuideDownloadCard';
 import { comparableTypeSlugs, computeOwnershipCosts, rankInDistrict } from '@/lib/property/ownershipCosts';
 import { utilityCityFor } from '@/lib/calculators/utilities';
@@ -416,6 +417,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                   ...(area > 0 ? [{ key: 'area', icon: 'lineicons:arrow-all-direction', label: `${area}${t('areaUnit')}` }] : []),
                                   ...(plotFact ? [{ key: 'plot', icon: 'solar:map-linear', label: plotFact }] : []),
                                   ...(yearBuilt ? [{ key: 'year', icon: 'solar:calendar-linear', label: tPropertyDetail('yearBuilt', { year: yearBuilt }) }] : []),
+                                  // The distance to the sea was read for the photo alt text
+                                  // only; it is the fact a coast buyer asks first.
+                                  ...(galleryFacts.beachfront
+                                    ? [{ key: 'sea', icon: 'ph:waves', label: tPropertyDetail('beachfront') }]
+                                    : typeof galleryFacts.seaDistanceMeters === 'number' && galleryFacts.seaDistanceMeters > 0
+                                      ? [{ key: 'sea', icon: 'ph:waves', label: tPropertyDetail('seaDistance', { m: galleryFacts.seaDistanceMeters }) }]
+                                      : []),
                               ]}
                           />
                         </div>
@@ -513,6 +521,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           districtName={districtName}
                           area={area}
                           rateEur={rawProperty.priceUnit === 'per-sqm' ? rawProperty.price ?? null : null}
+                        />
+                        <PropertyPriceHistorySection
+                          locale={locale}
+                          history={(sanityProperty as { priceHistory?: Array<{ date?: string; price?: number; priceUnit?: string | null }> }).priceHistory}
                         />
                         {/* Durrës listings only: the PDF guide that expands the
                             cost block above, for an email. */}

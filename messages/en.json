@@ -213,7 +213,9 @@
       "showThumbnails": "Show thumbnails",
       "approximateLocation": "Approximate location — the pin marks the district, not the exact building.",
       "plotArea": "Plot {value} m²",
-      "plotAreaUnknown": "Plot area: not specified"
+      "plotAreaUnknown": "Plot area: not specified",
+      "seaDistance": "{m} m to the sea",
+      "beachfront": "First line to the sea"
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
@@ -278,8 +280,8 @@
     },
     "blogs": {
       "badge": "Blog",
-      "title": "Real estate insights.",
-      "description": "Stay ahead in the property market with expert advice and updates.",
+      "title": "Albania property blog: market, prices and buying advice",
+      "description": "Market news, price data and step-by-step buying advice for Albania, from Durrës to Saranda.",
       "metaTitle": "Albania property blog: market, prices and buying advice"
     }
   },
@@ -457,6 +459,13 @@
     "monthlyTotal": "On average per month",
     "fromRate": "Totals are for {area} m² at <rate></rate>/m², that is <total></total>.",
     "disclaimer": "Estimate from the official notary scale, ASHK fees, the building tax on the state reference value and city utility tariffs, for two occupants with AC in season. Confirm the exact amounts with your notary."
+  },
+  "PropertyPriceHistory": {
+    "title": "Asking price on Domlivo",
+    "listedAt": "Listed on {date} at <amount></amount>.",
+    "unchanged": "Unchanged since.",
+    "perSqm": "/m²",
+    "note": "Asking prices as published here; a change is recorded when the listing's price is updated."
   },
   "Catalog": {
     "pagination": {
@@ -715,8 +724,8 @@
     "thankYouImageAlt": "Interior photo"
   },
   "Guides": {
-    "title": "Guides",
-    "description": "Market guides, comparisons and buying advice for Albania.",
+    "title": "Guides to buying property in Albania",
+    "description": "City comparisons, prices by district, legal steps and costs: guides for buying in Albania, Durrës first.",
     "empty": "No guides published yet.",
     "breadcrumbHome": "Home"
   },

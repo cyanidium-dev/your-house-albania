@@ -34,6 +34,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     seaDistanceMeters,
     constructionStage,
     createdAt,
+    // Asking prices on record, oldest first (written by the partner imports).
+    priceHistory[] { date, price, priceUnit },
     promoted,
     promotionType,
     featuredOrder,

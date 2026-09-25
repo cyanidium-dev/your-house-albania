@@ -213,7 +213,9 @@
       "showThumbnails": "Shfaq miniaturat",
       "approximateLocation": "Vendndodhje e përafërt — shenja tregon lagjen, jo ndërtesën e saktë.",
       "plotArea": "Truall {value} m²",
-      "plotAreaUnknown": "Sipërfaqja e truallit: nuk është specifikuar"
+      "plotAreaUnknown": "Sipërfaqja e truallit: nuk është specifikuar",
+      "seaDistance": "{m} m nga deti",
+      "beachfront": "Vija e parë nga deti"
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",
@@ -278,8 +280,8 @@
     },
     "blogs": {
       "badge": "Blog",
-      "title": "Pamje të tregut të pasurive të paluajtshme.",
-      "description": "Këshilla dhe përditësime nga ekspertët.",
+      "title": "Blog për pronat në Shqipëri: tregu, çmimet dhe këshilla",
+      "description": "Lajme tregu, të dhëna çmimesh dhe këshilla hap pas hapi për blerjen në Shqipëri, nga Durrësi në Sarandë.",
       "metaTitle": "Blog për pronat në Shqipëri: tregu, çmimet dhe këshilla"
     }
   },
@@ -457,6 +459,13 @@
     "monthlyTotal": "Mesatarisht në muaj",
     "fromRate": "Shumat janë për {area} m² me <rate></rate>/m², pra <total></total>.",
     "disclaimer": "Vlerësim sipas tarifave zyrtare noteriale, tarifave të ASHK, taksës mbi ndërtesat nga vlera e referencës shtetërore dhe tarifave të shërbimeve të qytetit; dy banorë, kondicioner në sezon. Shumat e sakta konfirmojini me noterin."
+  },
+  "PropertyPriceHistory": {
+    "title": "Çmimi i kërkuar në Domlivo",
+    "listedAt": "Publikuar më {date} për <amount></amount>.",
+    "unchanged": "I pandryshuar që atëherë.",
+    "perSqm": "/m²",
+    "note": "Çmimet e kërkuara siç janë publikuar këtu; një ndryshim regjistrohet kur përditësohet çmimi i pronës."
   },
   "Catalog": {
     "pagination": {
@@ -715,8 +724,8 @@
     "thankYouImageAlt": "Foto e brendshme"
   },
   "Guides": {
-    "title": "Udhëzues",
-    "description": "Udhëzues tregu, krahasime dhe këshilla blerjeje për Shqipërinë.",
+    "title": "Udhëzues për blerjen e pronës në Shqipëri",
+    "description": "Krahasime qytetesh, çmime sipas zonave, hapat ligjorë dhe kostot: udhëzues për blerjen në Shqipëri, në radhë të parë në Durrës.",
     "empty": "Ende nuk ka udhëzues të publikuar.",
     "breadcrumbHome": "Kryefaqja"
   },
