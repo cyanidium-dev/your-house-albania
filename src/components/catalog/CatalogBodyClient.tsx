@@ -24,8 +24,11 @@ const PropertiesMap = dynamic(
     ),
   {
     ssr: false,
+    // Fills the slot the list item reserves (see `mapSlotClassName`); with
+    // `h-full` alone it was 0 px tall on phones, where the item has no height
+    // of its own until the map mounts.
     loading: () => (
-      <div className="h-full w-full rounded-2xl bg-dark/5 dark:bg-white/10 animate-pulse" />
+      <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10 animate-pulse" />
     ),
   }
 );
@@ -377,6 +380,18 @@ export function CatalogBodyClient({
         ? "h-[220px] sm:h-[235px] md:h-full md:min-h-[200px]"
         : "h-[330px] md:h-full md:min-h-[200px]";
 
+  // The map is client-only (`ssr: false`), so in the server HTML its list item
+  // had no height on phones and every card below it sat 330 px higher than
+  // after hydration: a 0.16 layout shift on /catalog, the top entry page
+  // (measured 2026-09-27; Clarity reported CLS 0.31 in the field). The item
+  // reserves the map's phone height itself; md+ keeps the row-height rule.
+  const mapSlotClassName =
+    viewMode === "list"
+      ? "min-h-[250px] md:min-h-[270px]"
+      : viewMode === "small"
+        ? "min-h-[220px] sm:min-h-[235px] md:min-h-0"
+        : "min-h-[330px] md:min-h-0";
+
   const isSmallMode = viewMode === 'small'
   React.useEffect(() => {
     const resolveTier = () => {
@@ -432,7 +447,7 @@ export function CatalogBodyClient({
             }
             if (entry.kind === "map") {
               return (
-                <div key={entry.key} className={cn(mapListItemClassName, "relative")} ref={mapCardRef}>
+                <div key={entry.key} className={cn(mapListItemClassName, "relative", mapSlotClassName)} ref={mapCardRef}>
                   <PropertiesMap
                     items={mapItems}
                     activeSlug={activeSlug}
