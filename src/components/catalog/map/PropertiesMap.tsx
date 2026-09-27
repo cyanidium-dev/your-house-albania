@@ -369,7 +369,10 @@ export function PropertiesMap({
         layout: {
           'text-field': '{point_count_abbreviated}',
           'text-size': 12,
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          // Only stacks the glyph server has: "Open Sans Bold" answered 404
+          // for every range and the browser drew the counts from local fonts
+          // after a failed request per cluster (console, 2026-09-27).
+          'text-font': ['Open Sans Semibold', 'Noto Sans Regular'],
           'text-allow-overlap': true,
           'text-ignore-placement': true,
         },
