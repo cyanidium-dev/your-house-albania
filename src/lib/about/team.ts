@@ -69,7 +69,7 @@ export const TEAM_MEMBERS: readonly TeamMember[] = [
     name: "Diana Merkotun",
     localName: { ru: "Диана Меркотун", uk: "Діана Меркотун" },
     photo: "/images/team/diana-merkotun.jpg",
-    photoSize: 560,
+    photoSize: 900,
     links: [{ labelKey: "codeSiteProfile", href: "https://www.code-site.art/en/about" }],
     knowsAbout: ["Web design", "User experience", "Conversion rate optimisation"],
   },
