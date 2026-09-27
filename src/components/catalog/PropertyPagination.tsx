@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/shared/Icon";
 import { useUrlSearch } from "@/hooks/useUrlSearch";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   /** The page the server rendered (`?page=`), 1 on a plain listing URL. */
@@ -81,7 +82,7 @@ export function PropertyPagination({
             if (!isLoading) onShowMore();
           }}
           aria-busy={isLoading || undefined}
-          className="inline-flex h-12 min-w-[240px] items-center justify-center gap-2 rounded-full bg-primary px-8 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          className={brandButtonClass("primary", "min-w-[240px]", "lg")}
         >
           {isLoading ? (
             <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>

@@ -157,14 +157,15 @@ export default async function BlogQueryPage({ params, searchParams }: Props) {
         description={t("description")}
         badge={t("badge")}
         photoKey="tirana"
+        breadcrumb={
+          <BlogBreadcrumb
+            locale={locale}
+            categorySlug={validCategory}
+            categoryLabel={currentCategoryLabel}
+            overHero
+          />
+        }
       />
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0 mb-4">
-        <BlogBreadcrumb
-          locale={locale}
-          categorySlug={validCategory}
-          categoryLabel={currentCategoryLabel}
-        />
-      </div>
       <BlogList
         locale={locale}
         posts={posts}

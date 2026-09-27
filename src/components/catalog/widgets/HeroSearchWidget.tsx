@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import { canonicalCatalogUrl } from "@/lib/routes/catalog";
 import { FilterSelect, type FilterOption } from "@/components/catalog/FilterSelect";
 import * as Slider from "@radix-ui/react-slider";
@@ -224,12 +225,9 @@ export function HeroSearchWidget({
 
         <button
           type="submit"
-          className={cn(
-            "h-10 px-6 rounded-full font-semibold",
-            "bg-primary text-white hover:bg-dark dark:hover:bg-white dark:hover:text-dark",
-            "transition-colors duration-200 ease-out cursor-pointer",
-            "w-full lg:w-auto",
-            compact && "col-span-2 h-11 sm:col-span-1"
+          className={brandButtonClass(
+            "primary",
+            cn("w-full lg:w-auto", compact && "col-span-2 sm:col-span-1")
           )}
         >
           {tFilters("search")}

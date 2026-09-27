@@ -5,6 +5,7 @@ import {
   fetchPublishedDistrictsByCity,
 } from "@/lib/sanity/client";
 import { districtsHubPath } from "@/lib/routes/catalog";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   locale: string;
@@ -39,7 +40,7 @@ export async function CityDistrictsHubLink({ locale, citySlug, cityLabel }: Prop
           </div>
           <Link
             href={districtsHubPath(locale, citySlug, countrySlug)}
-            className="shrink-0 inline-flex items-center justify-center py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white font-semibold text-sm"
+            className={brandButtonClass("primary", "shrink-0", "md")}
           >
             {t("viewAllDistricts", { city: cityLabel })}
           </Link>

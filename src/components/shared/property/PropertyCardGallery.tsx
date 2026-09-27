@@ -10,6 +10,7 @@ import { FavoriteButton } from '@/components/shared/FavoriteButton'
 import { ImageLightbox } from '@/components/shared/ImageLightbox'
 import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { PropertyBadges } from './PropertyBadges'
 import { withImageSeoName } from '@/lib/images/propertyImageUrl'
@@ -371,11 +372,7 @@ export function PropertyCardGallery({
                     agentName={null}
                     placement="property-card"
                     label={contactLabel}
-                    className={cn(
-                      'inline-flex h-10 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-white',
-                      'transition-colors duration-200 hover:bg-primary/90 cursor-pointer',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-                    )}
+                    className={brandButtonClass('primary', undefined, 'sm')}
                   />
                 ) : undefined
               }

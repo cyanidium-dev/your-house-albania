@@ -1,5 +1,6 @@
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 /** Shared landing card shape (from Sanity `landingPage` dereference or inline). */
 export type LandingCardModel = {
@@ -71,8 +72,7 @@ export function resolveLandingHeaderCta(
 }
 
 /** Shared header CTA button styles for landing collection section. */
-export const landingFamilyHeaderCtaClassName =
-  'shrink-0 py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white font-semibold text-sm'
+export const landingFamilyHeaderCtaClassName = brandButtonClass('primary', 'shrink-0', 'md')
 
 /** Grid vs carousel; invalid / missing → grid. */
 export function resolveLandingPresentation(section: LandingCollectionSectionLike): 'grid' | 'carousel' {

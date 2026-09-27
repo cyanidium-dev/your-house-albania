@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'
 import type { LeadPlacement } from '@/lib/leads/types'
 import { useContactModalFlag } from '@/lib/contacts/useContactModalFlag'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 type Props = {
   locale: string
@@ -169,7 +170,7 @@ export function PropertyContactButton({
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="mt-2 rounded-full bg-primary px-8 py-3 text-base font-semibold text-white duration-300 hover:bg-dark"
+                  className={brandButtonClass('primary', 'mt-2', 'md')}
                 >
                   {tp('contactClose')}
                 </button>
@@ -241,7 +242,7 @@ export function PropertyContactButton({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="mt-1 w-full rounded-full bg-primary px-8 py-3.5 text-base font-semibold text-white duration-300 hover:bg-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  className={brandButtonClass('primary', 'mt-1 w-full', 'md')}
                 >
                   {submitting ? t('formSubmitting') : t('formSubmit')}
                 </button>

@@ -11,6 +11,7 @@ import { shouldNoindexEmptyCityListing } from "@/lib/seo/listingIndexPolicy";
 import { catalogPath } from "@/lib/routes/catalog";
 import { listingUrlHasQueryParams } from "@/lib/seo/catalogListingMetadata";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -88,7 +89,7 @@ export default async function NewBuildsPage({ params, searchParams }: Props) {
             </p>
             <Link
               href={catalogPath(locale)}
-              className="mt-8 inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
+              className={brandButtonClass("primary", "mt-8", "md")}
             >
               {t("emptyCta")}
             </Link>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { catalogPath } from "@/lib/routes/catalog";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   locale: string;
@@ -19,7 +20,7 @@ export function CatalogEmptyState({ locale }: Props) {
       </p>
       <Link
         href={catalogPath(locale)}
-        className="px-6 py-2.5 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+        className={brandButtonClass("primary", undefined, "sm")}
       >
         {t("reset")}
       </Link>

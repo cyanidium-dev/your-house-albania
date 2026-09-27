@@ -10,6 +10,7 @@ import { PhotoHeroFlag } from '@/components/shared/PhotoHeroFlag'
 import AiSearchInput from '@/components/ai/AiSearchInput'
 import { isAiSearchEnabled } from '@/lib/ai/config'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 export type HeroData = {
   shortLine?: string;
@@ -198,7 +199,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 {primaryCta ? (
                   <Link
                     href={primaryCta.href}
-                    className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold bg-primary text-white hover:bg-dark transition-colors duration-200 ease-out"
+                    className={brandButtonClass('primary', undefined, 'md')}
                   >
                     {primaryCta.label}
                   </Link>
@@ -206,7 +207,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 {secondaryCta ? (
                   <Link
                     href={secondaryCta.href}
-                    className="inline-flex items-center justify-center h-11 px-8 rounded-full font-semibold border-2 border-white text-white hover:bg-white/15 transition-colors duration-200 ease-out"
+                    className={brandButtonClass('onDark', undefined, 'md')}
                   >
                     {secondaryCta.label}
                   </Link>

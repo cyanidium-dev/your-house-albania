@@ -12,6 +12,7 @@ import { resolveAreaRangeBounds } from '@/lib/catalog/areaRanges'
 import { GeneralContactForm, type GeneralContactRequestFilterProps } from '@/components/contact/GeneralContactForm'
 import { iconForContactsSocialPlatform } from '@/components/contact/contactsSocialIcon'
 import { MessengerButtons } from '@/components/contact/MessengerButtons'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { nonMessengerLinks, resolveMessengers } from '@/lib/contacts/messengers'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 
@@ -120,7 +121,7 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                               href={s.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex w-full min-w-0 items-center justify-center gap-2 rounded-full border border-dark/10 px-3 py-2 text-center text-sm text-dark transition-colors hover:border-primary hover:text-primary dark:border-white/15 dark:text-white"
+                              className={brandButtonClass('secondary', 'w-full min-w-0', 'sm')}
                             >
                               <Icon
                                 icon={iconForContactsSocialPlatform(s.platform)}

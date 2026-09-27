@@ -8,6 +8,7 @@ import PropertyCard from '@/components/shared/property/PropertyCard'
 import AssistantText from '@/components/ai/AssistantText'
 import AiCitations from '@/components/ai/AiCitations'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { parseAiEvent, type AiChatMessage, type AiErrorCode } from '@/lib/ai/events'
 import { AI_MAX_MESSAGE_CHARS, AI_MAX_TURNS } from '@/lib/ai/limits'
 import { track } from '@/lib/analytics/track'
@@ -402,11 +403,7 @@ export default function AiSearchChat({
                     <Link
                       href={group.catalogUrl}
                       onClick={() => track({ event: 'ai_catalog_click' })}
-                      className={cn(
-                        'inline-flex items-center gap-2 rounded-full border border-primary px-5 py-2.5',
-                        'text-sm font-semibold text-primary transition-colors duration-200',
-                        'hover:bg-primary hover:text-white',
-                      )}
+                      className={brandButtonClass('primaryOutline', undefined, 'sm')}
                     >
                       {t('seeAllInCatalog')}
                       <Icon icon="ph:arrow-right" width={16} height={16} aria-hidden />
@@ -452,7 +449,7 @@ export default function AiSearchChat({
             <button
               type="button"
               onClick={restart}
-              className="cursor-pointer rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white"
+              className={brandButtonClass('primary', undefined, 'sm')}
             >
               {t('restart')}
             </button>

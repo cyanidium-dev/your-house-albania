@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/shared/Icon";
@@ -8,18 +8,27 @@ import { PhotoHeroFlag } from "@/components/shared/PhotoHeroFlag";
 interface HeroSubProps {
     title: string;
     description: string;
-    badge: string;
+    /** Small label above the title. Optional since 2026-09-27. */
+    badge?: string;
     /** Which photograph of Albania backs the hero. Defaults to the coast. */
     photoKey?: AlbaniaPhotoKey;
+    /**
+     * Breadcrumb rendered inside the hero, above the title, in the same place
+     * the CMS landings put theirs (HeroSectionImpl). Pass it with `overHero`
+     * so it reads white on the photo. Before this slot existed the blog put
+     * its breadcrumb under the hero while the guides put theirs above the
+     * heading, so the two content hubs read as two different sites.
+     */
+    breadcrumb?: ReactNode;
 }
 
-const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey }) => {
+const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey, breadcrumb }) => {
     const tPhoto = useTranslations("AlbaniaPhotos");
     const photo = photoKey ? ALBANIA_PHOTOS[photoKey] : DEFAULT_ALBANIA_PHOTO;
 
     return (
         <>
-            <section className="relative text-center !pt-40 pb-20 overflow-x-hidden">
+            <section className="relative text-center !pt-32 md:!pt-40 pb-20 overflow-x-hidden">
                 <PhotoHeroFlag />
                 <div className="absolute inset-0 z-0">
                     <Image
@@ -37,20 +46,25 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey }) => {
                     className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-white to-transparent dark:from-black"
                     aria-hidden
                 />
-                <div className="relative z-20 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
-                    <div className='flex gap-2.5 items-center justify-center'>
-                        <span>
-                            <Icon
-                                icon={'ph:house-simple-fill'}
-                                width={20}
-                                height={20}
-                                className='text-primary'
-                            />
-                        </span>
-                        <p className='text-base font-semibold text-white/90'>
-                            {badge}
-                        </p>
-                    </div>
+                <div className="container relative z-20 mx-auto max-w-8xl px-5 2xl:px-0 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
+                    {breadcrumb ? (
+                        <div className="mb-6 text-left [&_nav]:mb-0">{breadcrumb}</div>
+                    ) : null}
+                    {badge ? (
+                        <div className='flex gap-2.5 items-center justify-center'>
+                            <span>
+                                <Icon
+                                    icon={'ph:house-simple-fill'}
+                                    width={20}
+                                    height={20}
+                                    className='text-primary'
+                                />
+                            </span>
+                            <p className='text-base font-semibold text-white/90'>
+                                {badge}
+                            </p>
+                        </div>
+                    ) : null}
                     {/*
                       The page's main heading, so h1 — it was an h2, which left
                       /blog with no h1 at all in any locale, plus every
@@ -58,8 +72,8 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey }) => {
                       crawl of 2026-09-10). The other caller is the home page's
                       no-landing fallback, where this is also the only heading.
                     */}
-                    <h1 className="text-52 relative font-bold" >{title}</h1>
-                    <p className="text-lg text-white/85 font-normal w-full mx-auto whitespace-pre-line">
+                    <h1 className="text-40 md:text-52 relative font-bold text-balance">{title}</h1>
+                    <p className="mx-auto mt-3 max-w-3xl text-lg text-white/85 font-normal whitespace-pre-line text-pretty">
                         {description}
                     </p>
                 </div>

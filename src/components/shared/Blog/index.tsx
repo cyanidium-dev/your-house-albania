@@ -4,6 +4,7 @@ import { SectionHeader } from "@/components/landing/sectionPrimitives";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import { fetchBlogPostsPaginated } from "@/lib/sanity/client";
 import {
   mapSanityBlogPostToList,
@@ -118,7 +119,7 @@ const BlogSmall: React.FC<{
           trailing={
             <Link
               href={ctaHref}
-              className="inline-flex items-center bg-dark dark:bg-white text-white dark:text-dark py-4 px-8 rounded-full hover:bg-primary duration-300"
+              className={brandButtonClass("dark", undefined, "md")}
               aria-label={ctaLabel}
             >
               {ctaLabel}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { FilterSelect, type FilterOption } from '@/components/catalog/FilterSelect'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 
 const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
@@ -238,7 +239,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-1 w-full rounded-full bg-primary px-8 py-3.5 text-base font-semibold text-white duration-300 hover:bg-dark disabled:cursor-not-allowed disabled:opacity-60 md:py-4"
+          className={brandButtonClass('primary', 'mt-1 w-full')}
         >
           {submitting ? t('submitting') : t('submit')}
         </button>

@@ -36,6 +36,7 @@ import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { formatBlogDate } from "@/lib/date/formatLocale";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
@@ -226,7 +227,7 @@ export default async function Post({ params }: Props) {
       <div>
         <Link
           href={`/${locale}/blog`}
-          className="flex items-center gap-3 text-white bg-primary py-3 px-4 rounded-full w-fit hover:bg-dark duration-300"
+          className={brandButtonClass("primary", "w-fit", "sm")}
         >
           <Icon icon="ph:arrow-left" width={20} height={20} />
           <span>{t("goBack")}</span>

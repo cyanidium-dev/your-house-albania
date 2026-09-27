@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import AiSearchChat from '@/components/ai/AiSearchChat'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { isAiSearchEnabled } from '@/lib/ai/config'
 import { AI_MAX_MESSAGE_CHARS } from '@/lib/ai/limits'
 import { catalogPath } from '@/lib/routes/catalog'
@@ -61,7 +62,7 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
           <p className="text-dark dark:text-white">{t('errors.unavailable')}</p>
           <Link
             href={catalogPath(locale)}
-            className="mt-4 inline-flex items-center rounded-full bg-primary px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-dark"
+            className={brandButtonClass('primary', 'mt-4')}
           >
             {t('goToCatalog')}
           </Link>

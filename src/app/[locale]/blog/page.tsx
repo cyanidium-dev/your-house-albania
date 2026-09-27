@@ -100,10 +100,8 @@ export default async function Blog({ params }: Props) {
         description={t("description")}
         badge={t("badge")}
         photoKey="tirana"
+        breadcrumb={<BlogBreadcrumb locale={locale} overHero />}
       />
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0 mb-4">
-        <BlogBreadcrumb locale={locale} />
-      </div>
       <BlogList
         locale={locale}
         posts={posts}

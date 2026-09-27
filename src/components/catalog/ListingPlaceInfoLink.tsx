@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { fetchCityLandingByCitySlug, fetchDistrictBySlugs } from "@/lib/sanity/client";
 import { cityInfoPath, districtInfoPath } from "@/lib/routes/catalog";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   locale: string;
@@ -45,7 +46,7 @@ export async function ListingPlaceInfoLink({
   return (
     <Link
       href={href}
-      className="inline-flex items-center rounded-full border border-white/40 px-5 py-2 text-sm font-semibold !text-white hover:bg-white/10 transition-colors"
+      className={brandButtonClass("onDark", "!text-white", "sm")}
     >
       {label}
     </Link>

@@ -17,6 +17,7 @@ import {
   getAreaQueryParams,
 } from '@/lib/catalog/areaRanges'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 
 export type GeneralContactRequestFilterProps = {
@@ -340,7 +341,7 @@ export function GeneralContactForm({ locale, filterProps, className }: Props) {
           <button
             type="submit"
             disabled={submitting}
-            className="mobile:w-fit mt-auto w-full rounded-full bg-primary px-8 py-3.5 text-base font-semibold text-white duration-300 hover:bg-dark disabled:cursor-not-allowed disabled:opacity-60 md:py-4"
+            className={brandButtonClass('primary', 'mobile:w-fit mt-auto w-full')}
           >
             {submitting ? t('formSubmitting') : t('formSubmit')}
           </button>

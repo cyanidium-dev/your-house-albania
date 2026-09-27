@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import AiSearchChat from '@/components/ai/AiSearchChat'
 import { track } from '@/lib/analytics/track'
-import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 /**
  * "Ask about this listing" on a property page.
@@ -52,11 +52,7 @@ export default function AiPropertyPanel({
             setOpen(true)
             track({ event: 'ai_search_open', entry: 'direct' })
           }}
-          className={cn(
-            'mt-5 inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-6 py-3',
-            'font-semibold text-white transition-colors duration-200 hover:bg-dark',
-            'dark:hover:bg-white dark:hover:text-dark',
-          )}
+          className={brandButtonClass('primary', 'mt-5')}
         >
           {t('property.openCta')}
           <Icon icon="ph:arrow-right" width={18} height={18} aria-hidden />

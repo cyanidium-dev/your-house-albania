@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import * as Slider from "@radix-ui/react-slider";
-import { Button } from "@/components/ui/button";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import { cn } from "@/lib/utils";
 import { FilterSelect } from "@/components/catalog/FilterSelect";
 import { FilterMultiSelect } from "@/components/catalog/FilterMultiSelect";
@@ -211,36 +211,31 @@ export function CatalogFilterForm({
 
           {/* Search: one control per cell, aligned to the field baseline */}
           <div className="flex items-end">
-            <Button
-              type="submit"
-              className="h-10 w-full rounded-full cursor-pointer"
-            >
+            <button type="submit" className={brandButtonClass("primary", "w-full")}>
               {t("search")}
-            </Button>
+            </button>
           </div>
 
           {/* Secondary actions: slim, right-aligned, never compete with the fields */}
           <div className="flex flex-col items-stretch justify-end gap-2 sm:flex-row sm:items-end sm:justify-end">
-            <Button
+            <button
               type="button"
-              variant="outline"
-              className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
+              className={brandButtonClass("secondary", "w-full sm:w-auto", "sm")}
               onClick={() => setShowAdvanced((v) => !v)}
             >
               <span className="inline-block max-w-full truncate">
                 {t("advancedFilters")}
               </span>
-            </Button>
-            <Button
+            </button>
+            <button
               type="button"
-              variant="outline"
-              className="h-9 px-4 rounded-full cursor-pointer text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/10 dark:hover:text-primary dark:hover:border-primary/30 w-full sm:w-auto"
+              className={brandButtonClass("secondary", "w-full sm:w-auto", "sm")}
               onClick={resetFilters}
             >
               <span className="inline-block max-w-full truncate">
                 {t("resetFilters")}
               </span>
-            </Button>
+            </button>
           </div>
         </div>
 

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Icon } from "@/components/shared/Icon";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 export type FilterMultiOption = {
   value: string;
@@ -225,7 +226,7 @@ export function FilterMultiSelect({
                     </button>
                     <button
                       type="button"
-                      className="px-4 py-1.5 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+                      className={brandButtonClass("primary", undefined, "sm")}
                       onClick={close}
                     >
                       {doneLabel}

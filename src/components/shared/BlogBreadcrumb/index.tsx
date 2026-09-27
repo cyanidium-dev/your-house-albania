@@ -14,6 +14,8 @@ type BlogBreadcrumbProps = {
   categoryLabel?: string;
   postTitle?: string;
   postSlug?: string;
+  /** Light text over a photo hero. */
+  overHero?: boolean;
 };
 
 export async function BlogBreadcrumb({
@@ -22,6 +24,7 @@ export async function BlogBreadcrumb({
   categoryLabel,
   postTitle,
   postSlug,
+  overHero,
 }: BlogBreadcrumbProps) {
   const t = await getTranslations("Breadcrumbs");
 
@@ -44,7 +47,7 @@ export async function BlogBreadcrumb({
   return (
     <>
       <BreadcrumbJsonLd items={jsonLdItems} baseUrl={baseUrl} />
-      <Breadcrumb items={items} />
+      <Breadcrumb items={items} overHero={overHero} />
     </>
   );
 }

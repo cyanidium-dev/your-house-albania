@@ -46,6 +46,7 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 // rather than the i18n Link, which would prefix the locale a second time.
 import Link from 'next/link';
 import { catalogPath } from '@/lib/routes/catalog';
+import { brandButtonClass } from '@/components/shared/BrandButton';
 import { propertyPath, propertyUrlSlug, type LocalizedSlug } from '@/lib/property/propertyUrl';
 
 /**
@@ -463,7 +464,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             agentName={propertyAgent?.name ?? null}
                             analytics={propertyLeadAnalytics}
                             label={tPropertyDetail('getInTouch')}
-                            className='mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-primary px-8 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark hover:cursor-pointer'
+                            className={brandButtonClass('primary', 'mt-5 w-full', 'md')}
                           />
                           <div data-lead-placement="property" data-property-slug={keySlug}>
                             <MessengerButtons
@@ -580,7 +581,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               agentName={propertyAgent?.name ?? null}
                               analytics={propertyLeadAnalytics}
                               label={tPropertyDetail('getInTouch')}
-                              className='py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer'
+                              className={brandButtonClass('primary', 'w-full mt-8', 'lg')}
                             />
                             <div data-lead-placement="property" data-property-slug={keySlug}>
                               <MessengerButtons
@@ -644,7 +645,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   analytics={propertyLeadAnalytics}
                   label={tContactBar('ask')}
                   ariaLabel={tContactBar('askProperty')}
-                  className="shrink-0 h-11 px-5 bg-primary text-white rounded-full text-base font-semibold hover:bg-dark duration-300 transition-colors text-center whitespace-nowrap"
+                  className={brandButtonClass('primary', 'shrink-0 whitespace-nowrap', 'md')}
                 />
               </div>
             </MobileStickyBar>

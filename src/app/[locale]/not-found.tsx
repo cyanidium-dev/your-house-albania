@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
 import { Icon } from "@/components/shared/Icon";
 import { catalogPath } from "@/lib/routes/catalog";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 /**
  * 404 inside the localised site.
@@ -45,19 +46,19 @@ export default async function LocaleNotFound() {
           <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
             <Link
               href={`/${locale}`}
-              className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-8 font-semibold text-white transition-colors duration-200 ease-out hover:bg-dark"
+              className={brandButtonClass("primary", undefined, "md")}
             >
               {t("backHome")}
             </Link>
             <Link
               href={catalogPath(locale)}
-              className="inline-flex h-11 items-center justify-center rounded-full border-2 border-dark/15 px-8 font-semibold text-dark transition-colors duration-200 ease-out hover:border-primary hover:text-primary dark:border-white/25 dark:text-white dark:hover:border-primary dark:hover:text-primary"
+              className={brandButtonClass("secondary", undefined, "md")}
             >
               {t("browseListings")}
             </Link>
             <Link
               href={`/${locale}/blog`}
-              className="inline-flex h-11 items-center justify-center rounded-full px-4 font-semibold text-dark/70 underline-offset-4 transition-colors duration-200 ease-out hover:text-primary hover:underline dark:text-white/70"
+              className={brandButtonClass("ghost", undefined, "md")}
             >
               {t("readBlog")}
             </Link>

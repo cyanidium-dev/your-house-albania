@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from 'next-intl'
 import { QuickLeadForm } from '@/components/shared/QuickLead/QuickLeadForm'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { isRealPhone } from '@/lib/contacts/phone'
 import { partitionSocialLinks, type SocialLinkInput } from '@/lib/footer/socialChannels'
 
@@ -161,11 +162,15 @@ export function QuickContact({ locale, channels }: Props) {
           tabIndex={open ? 0 : -1}
           aria-hidden={!open}
           style={{ transitionDelay: open ? `${actions.length * 45}ms` : '0ms' }}
-          className={`flex h-12 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 ${
-            open
-              ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
-              : 'pointer-events-none translate-y-3 scale-75 opacity-0'
-          }`}
+          className={brandButtonClass(
+            'primary',
+            `shadow-lg transition-all duration-300 ease-out hover:scale-105 ${
+              open
+                ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
+                : 'pointer-events-none translate-y-3 scale-75 opacity-0'
+            }`,
+            'lg',
+          )}
         >
           <Icon icon="ph:phone-call-fill" width={18} height={18} aria-hidden />
           {t('callbackAction')}

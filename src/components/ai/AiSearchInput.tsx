@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { AI_MAX_MESSAGE_CHARS } from '@/lib/ai/limits'
 import { aiSearchPath } from '@/lib/ai/routes'
 
@@ -92,11 +93,7 @@ export default function AiSearchInput({ locale }: { locale: string }) {
         <button
           type="submit"
           aria-label={t('submit')}
-          className={cn(
-            'inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full px-4 sm:px-5',
-            'bg-primary text-white font-semibold text-sm',
-            'transition-colors duration-200 hover:bg-dark dark:hover:bg-white dark:hover:text-dark',
-          )}
+          className={brandButtonClass('primary', 'shrink-0 h-11', 'sm')}
         >
           <span className="hidden sm:inline">{t('submit')}</span>
           <Icon icon="ph:arrow-right" width={18} height={18} aria-hidden />

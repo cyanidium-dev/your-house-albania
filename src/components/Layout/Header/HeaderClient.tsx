@@ -21,6 +21,7 @@ import { catalogPath } from '@/lib/routes/catalog'
 import { currentCityListingHref } from '@/lib/routes/currentCityListing'
 import { routing } from '@/i18n/routing'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 export type HeaderTranslations = {
   menu: string
@@ -135,14 +136,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       <div className="hidden md:block lg:hidden xl:block">
                         <Link
                           href={propertiesHref}
-                          className={cn(
-                            'inline-flex items-center justify-center px-5 py-3 rounded-full font-semibold whitespace-nowrap text-sm md:text-base',
-                            'bg-white text-dark shadow-sm border border-white/30',
-                            'transition-[background-color,color,box-shadow,border-color] duration-300 ease-out',
-                            'hover:bg-primary hover:text-white hover:border-primary/40 hover:shadow-md',
-                            'dark:bg-white dark:text-dark dark:hover:bg-primary dark:hover:text-white',
-                            'border-r-0'
-                          )}
+                          className={brandButtonClass('light', 'shadow-sm whitespace-nowrap', 'md')}
                         >
                           {t.cta.viewProperties}
                         </Link>
@@ -207,7 +201,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                   <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                     <Link
                       href={propertiesHref}
-                      className="inline-flex w-fit min-h-11 items-center justify-center rounded-full border border-primary bg-primary px-7 py-3.5 text-base font-semibold leading-tight text-white duration-300 hover:bg-transparent hover:text-primary"
+                      className={brandButtonClass('primary', 'w-fit', 'md')}
                       onClick={onClose}
                     >
                       {t.cta.viewProperties}

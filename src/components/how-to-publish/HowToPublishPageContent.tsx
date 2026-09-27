@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { CtaButton } from '@/components/landing/sections/CtaSection'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { parseVideoEmbedUrl } from '@/lib/video/embedUrl'
 import { EmbeddedVideo } from './EmbeddedVideo'
 import styles from './HowToPublishSteps.module.css'
@@ -39,7 +40,7 @@ export async function HowToPublishPageContent({ locale, videoUrl }: Props) {
               {hasEmbeddableVideo ? (
                 <a
                   href="#how-to-publish-video"
-                  className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-primary px-8 font-semibold text-white transition-colors duration-200 ease-out hover:bg-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  className={brandButtonClass('primary', 'w-fit', 'md')}
                 >
                   {t('heroCta')}
                 </a>

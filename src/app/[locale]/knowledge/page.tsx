@@ -9,6 +9,7 @@ import { buildFlatCrumbs, toBreadcrumbJsonLdItems } from '@/lib/routes/breadcrum
 import { getBaseUrl } from '@/lib/seo/baseUrl'
 import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
 import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from '@/lib/seo/envSeo'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -136,7 +137,7 @@ export default async function KnowledgeIndexPage({ params }: Props) {
             <p className="mt-1 text-dark/70 dark:text-white/70">{t('askIntro')}</p>
             <Link
               href={`/${locale}/ai-search`}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+              className={brandButtonClass('primary', 'mt-4', 'sm')}
             >
               <Icon icon="ph:sparkle" width={16} height={16} aria-hidden />
               {t('askCta')}

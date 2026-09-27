@@ -12,6 +12,7 @@ import type { DistrictDoc } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { photoForCity } from "@/lib/media/albaniaPhotos";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   locale: string;
@@ -93,7 +94,7 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
             {heroCtaHref && heroCtaLabel ? (
               <a
                 href={heroCtaHref}
-                className="mt-8 inline-flex items-center justify-center py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white font-semibold text-sm"
+                className={brandButtonClass("primary", "mt-8", "md")}
               >
                 {heroCtaLabel}
               </a>

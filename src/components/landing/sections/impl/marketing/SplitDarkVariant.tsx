@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Icon } from "@/components/shared/Icon";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import type { MarketingContentData } from "./types";
 
 export function SplitDarkVariant({
@@ -161,7 +162,7 @@ export function SplitDarkVariant({
                   {showPrimaryCta ? (
                     <a
                       href={primaryHref}
-                      className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full text-base font-semibold bg-white text-dark hover:bg-primary hover:text-white transition-colors duration-200"
+                      className={brandButtonClass("light", undefined, "lg")}
                     >
                       {data.ctaLabel}
                       <Icon icon="ph:arrow-right" width={16} height={16} aria-hidden />
@@ -170,7 +171,7 @@ export function SplitDarkVariant({
                   {showSecondaryCta ? (
                     <a
                       href={secondaryHref}
-                      className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-full text-sm font-semibold text-white/80 hover:text-white ring-1 ring-white/20 hover:ring-white/50 transition"
+                      className={brandButtonClass("onDark", undefined, "lg")}
                     >
                       <Icon icon="ph:play-circle" width={16} height={16} aria-hidden />
                       {data.secondaryCtaLabel}

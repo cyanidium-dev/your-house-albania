@@ -11,6 +11,7 @@ import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { Button } from "@/components/ui/button";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import { catalogPath } from "@/lib/routes/catalog";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 const SKELETON_COUNT = 6;
 
@@ -79,7 +80,7 @@ export function FavoritesContent({ locale }: Props) {
         <p className="text-dark/50 dark:text-white/50 text-sm mb-6">{t("emptyDescription")}</p>
         <Link
           href={catalogPath(locale)}
-          className="inline-flex items-center gap-2 py-3 px-6 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+          className={brandButtonClass("primary", undefined, "sm")}
         >
           {t("browseProperties")}
           <Icon icon="ph:arrow-right" width={18} height={18} />
@@ -105,7 +106,7 @@ export function FavoritesContent({ locale }: Props) {
         <p className="text-dark/50 dark:text-white/50 text-sm mb-6">{t("noDataDescription")}</p>
         <Link
           href={catalogPath(locale)}
-          className="inline-flex items-center gap-2 py-3 px-6 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+          className={brandButtonClass("primary", undefined, "sm")}
         >
           {t("browseProperties")}
           <Icon icon="ph:arrow-right" width={18} height={18} />

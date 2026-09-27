@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { PropertyHomes } from '@/types/propertyHomes'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatMoney } from '@/lib/currency/format'
@@ -281,11 +282,10 @@ function PropertyCard({
         agentName={null}
         placement="property-card"
         label={tCard('requestInfo')}
-        className={cn(
-          'inline-flex w-full items-center justify-center rounded-full border border-primary/40 bg-primary/5 font-semibold text-primary',
-          'transition-colors duration-200 hover:bg-primary hover:text-white hover:border-primary cursor-pointer',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
-          isSmall && !isList ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
+        className={brandButtonClass(
+          'primaryOutline',
+          cn('w-full', isSmall && !isList && 'h-8 min-h-8 px-3 py-1 text-xs'),
+          'sm',
         )}
       />
     </div>

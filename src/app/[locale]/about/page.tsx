@@ -14,6 +14,7 @@ import { ALBANIA_PHOTOS } from "@/lib/media/albaniaPhotos";
 import { buildAboutJsonLd } from "@/lib/seo/aboutJsonLd";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -82,8 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const h2Class =
   "font-display text-3xl md:text-40 lg:text-52 font-semibold leading-[1.05] tracking-[-0.02em] text-balance text-dark dark:text-white";
 const bodyClass = "text-base md:text-lg leading-relaxed text-dark/70 dark:text-white/70 text-pretty";
-const ghostOnGreen =
-  "inline-flex min-h-12 items-center gap-2 rounded-full border border-white/40 px-5 py-3 text-base font-medium text-white transition-[border-color,background-color] duration-200 ease-out hover:border-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40";
+const ghostOnGreen = brandButtonClass("onDark", undefined, "lg");
 
 export default async function AboutPage({ params }: Props) {
   const { locale } = await params;
@@ -328,7 +328,7 @@ export default async function AboutPage({ params }: Props) {
                 <li>
                   <Link
                     href={`/${locale}/contacts`}
-                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-6 py-3 text-base font-semibold text-dark transition-colors duration-200 ease-out hover:bg-white/90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40"
+                    className={brandButtonClass("light", "hover:bg-white/90 hover:text-dark", "lg")}
                   >
                     <Icon icon="ph:paper-plane-tilt" width={20} height={20} className="shrink-0" aria-hidden />
                     {t("contact.form")}

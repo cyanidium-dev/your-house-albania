@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ const ErrorPage = () => {
       </p>
       <Link
         href="/"
-        className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-8 font-semibold text-white transition-colors duration-200 ease-out hover:bg-dark"
+        className={brandButtonClass("primary", undefined, "md")}
       >
         Go to the homepage
       </Link>

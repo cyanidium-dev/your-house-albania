@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {getTranslations, setRequestLocale} from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import HeroSub from "@/components/shared/HeroSub";
 import { BreadcrumbJsonLd } from "@/components/shared/BreadcrumbJsonLd";
 import { fetchGuideIndexEntries } from "@/lib/sanity/client";
 import { isLandingInLocale } from "@/lib/landing/localeScope";
@@ -51,22 +52,22 @@ export default async function GuidesIndexPage({ params }: Props) {
 
   return (
     <main>
-      <section className="pt-32 md:pt-44 pb-16 md:pb-24">
+      <BreadcrumbJsonLd items={jsonLdItems} baseUrl={baseUrl} />
+      {/* The same photo hero as the blog index, breadcrumb inside it: the two
+          content hubs used to open on different templates. */}
+      <HeroSub
+        title={t("title")}
+        description={t("description")}
+        photoKey="durres"
+        breadcrumb={<Breadcrumb items={items} overHero />}
+      />
+      <section className="pt-4 pb-16 md:pb-24">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-          <BreadcrumbJsonLd items={jsonLdItems} baseUrl={baseUrl} />
-          <Breadcrumb items={items} />
-
-          <h1 className="mt-6 text-40 md:text-52 leading-[1.1] font-bold text-dark dark:text-white">
-            {t("title")}
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-dark/70 dark:text-white/70">
-            {t("description")}
-          </p>
 
           {entries.length === 0 ? (
-            <p className="mt-12 text-dark/60 dark:text-white/60">{t("empty")}</p>
+            <p className="mt-6 text-dark/60 dark:text-white/60">{t("empty")}</p>
           ) : (
-            <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {entries.map((entry) => {
                 const title = resolveLocalizedString(entry.title as never, locale) || entry.slug;
                 const description = resolveLocalizedString(

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -32,7 +33,7 @@ export default async function ContactThankYouPage({ params }: Props) {
           <p className="mb-8 max-w-xl text-base leading-relaxed text-black/70 dark:text-white/75">{t('description')}</p>
           <Link
             href={`/${locale}`}
-            className="inline-flex w-full max-w-xs justify-center rounded-full bg-primary px-8 py-4 text-center text-base font-semibold text-white transition-colors hover:bg-dark sm:w-auto"
+            className={brandButtonClass('primary', 'w-full max-w-xs sm:w-auto', 'lg')}
           >
             {t('cta')}
           </Link>

@@ -5,6 +5,7 @@ import type { PortableTextBlock } from '@portabletext/types';
 import { Icon } from "@/components/shared/Icon";
 import { getTranslations } from 'next-intl/server';
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
+import { brandButtonClass } from '@/components/shared/BrandButton';
 
 export type SeoTextData =
   | { content: unknown[] | string; isPlainText: boolean }
@@ -176,8 +177,7 @@ function SeoTextVideo({ url, title }: { url: string; title: string }) {
 }
 
 function SeoTextCta({ href, label, locale }: { href: string; label: string; locale: string }) {
-  const className =
-    'inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2';
+  const className = brandButtonClass('primary', undefined, 'md');
   const external = /^https?:\/\//i.test(href);
   if (external) {
     return (

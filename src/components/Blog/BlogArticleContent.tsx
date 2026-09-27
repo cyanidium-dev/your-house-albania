@@ -6,6 +6,7 @@ import { BlogCardClient } from "./BlogCardClient";
 import { BlogContentImage } from "./BlogContentImage";
 import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
 import PropertyCard from "@/components/shared/property/PropertyCard";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import { mapSanityBlogPostToList } from "@/lib/sanity/blogAdapter";
 import { mapBlogPropertyEmbedToCard } from "@/lib/sanity/blogAdapter";
 import { resolveLocalizedString, resolveLocalizedContent } from "@/lib/sanity/localized";
@@ -218,17 +219,15 @@ function createBlogComponents(
         if (variant === "quote" || isCalculateCostCta(labelObj, rawHref)) {
           return <BlogQuoteCta locale={locale} />;
         }
-        const baseClass =
-          "inline-flex items-center justify-center rounded-full font-semibold transition-colors py-3 px-6";
-        const variantClass =
+        const buttonClass =
           variant === "secondary"
-            ? "border-2 border-primary text-primary hover:bg-primary/10"
+            ? brandButtonClass("primaryOutline")
             : variant === "link"
-              ? "text-primary hover:underline"
-              : "bg-primary text-white hover:bg-primary/90";
+              ? brandButtonClass("ghost")
+              : brandButtonClass("primary");
         return (
           <div className="my-6">
-            <Link href={href} className={`${baseClass} ${variantClass}`}>
+            <Link href={href} className={buttonClass}>
               {label}
             </Link>
           </div>

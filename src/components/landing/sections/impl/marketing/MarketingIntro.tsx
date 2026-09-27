@@ -1,6 +1,7 @@
 import { Icon } from "@/components/shared/Icon";
 import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import type { MarketingBenefitItem, MarketingHighlightCard } from "./types";
 import {
   DarkBulletList,
@@ -153,12 +154,11 @@ export function MarketingIntro({
           {secondaryCta ? (
             <a
               href={secondaryCta.href}
-              className={
-                "inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold transition-colors " +
-                (isDark
-                  ? "text-white/80 hover:text-white"
-                  : "text-dark/70 hover:text-dark dark:text-white/80 dark:hover:text-white")
-              }
+              className={brandButtonClass(
+                "ghost",
+                isDark ? "text-white/80 hover:text-white dark:text-white/80 dark:hover:text-white" : undefined,
+                "md",
+              )}
             >
               {secondaryCta.label}
               <Icon icon="ph:arrow-right" width={14} height={14} aria-hidden />

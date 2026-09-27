@@ -5,6 +5,7 @@ import { MessengerButtons } from '@/components/contact/MessengerButtons'
 import { resolveMessengers } from '@/lib/contacts/messengers'
 import { fetchSiteSettings } from '@/lib/sanity/client'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 /**
  * The phone contact bar of a city or district listing: a callback request plus
@@ -33,7 +34,7 @@ export async function ListingContactBar({ locale }: { locale: string }) {
           label={t('helpChoosing')}
           sourceLabel="Listing contact bar"
           placement="catalog"
-          className="h-11 min-w-0 flex-1 truncate rounded-full bg-primary px-5 text-base font-semibold text-white transition-colors duration-300 hover:bg-dark"
+          className={brandButtonClass('primary', 'min-w-0 flex-1 truncate', 'md')}
         />
         <MessengerButtons
           messengers={messengers}

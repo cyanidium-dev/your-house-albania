@@ -1,4 +1,5 @@
 import { Icon } from '@/components/shared/Icon'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { MESSENGER_ICON, MESSENGER_NAME, type MessengerKey, type MessengerLink } from '@/lib/contacts/messengers'
 
 type Props = {
@@ -20,7 +21,7 @@ const focusRing =
 const base = `items-center justify-center rounded-full border border-dark/10 text-dark transition-colors duration-300 hover:border-primary hover:text-primary dark:border-white/15 dark:text-white dark:hover:text-primary ${focusRing}`
 
 const variantClass = {
-  pill: `flex h-11 min-w-0 flex-1 gap-2 px-4 text-sm font-medium ${base}`,
+  pill: brandButtonClass('secondary', 'flex-1 min-w-0', 'md'),
   icon: `flex h-11 w-11 shrink-0 ${base}`,
 } as const
 

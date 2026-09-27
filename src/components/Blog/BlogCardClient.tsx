@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { BlogListItem } from "@/lib/sanity/blogAdapter";
 import { formatBlogDate } from "@/lib/date/formatLocale";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 export function BlogCardClient({
   blog,
@@ -92,7 +93,7 @@ export function BlogCardClient({
             </span>
           )}
           <span
-            className="mt-3 inline-block py-2 px-4 rounded-full bg-primary text-white text-sm font-semibold transition-opacity group-hover:opacity-90"
+            className={brandButtonClass("primary", "mt-3", "sm")}
             aria-hidden
           >
             {t("readMore")}

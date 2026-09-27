@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 import type { LeadPlacement } from '@/lib/leads/types'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 
 type Props = {
   locale: string
@@ -23,8 +24,7 @@ type Props = {
 const inputClass =
   'w-full rounded-full border border-black/10 bg-white px-6 py-3.5 text-dark outline-primary placeholder:text-dark/40 focus:outline dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40'
 
-const buttonClass =
-  'rounded-full bg-primary px-8 py-3.5 text-base font-semibold text-white duration-300 hover:bg-dark disabled:cursor-not-allowed disabled:opacity-60'
+const buttonClass = brandButtonClass('primary')
 
 /**
  * One-field callback form: the visitor leaves a phone number and we promise a

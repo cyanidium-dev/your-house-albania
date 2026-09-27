@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import PropertyCard from "@/components/shared/property/PropertyCard";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 import {
   fetchCatalogFilterOptions,
   fetchCatalogProperties,
@@ -108,7 +109,7 @@ export async function BlogListingsBlock({ locale, postSlug }: Props) {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="inline-flex items-center rounded-full border border-dark/10 dark:border-white/20 px-4 py-2 text-sm font-medium text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
+              className={brandButtonClass("secondary", undefined, "sm")}
             >
               {t("listingsPlaceLink", { place: link.place, count: link.count })}
             </Link>
@@ -118,7 +119,7 @@ export async function BlogListingsBlock({ locale, postSlug }: Props) {
           <li>
             <Link
               href={nationalHref}
-              className="inline-flex items-center rounded-full border border-dark/10 dark:border-white/20 px-4 py-2 text-sm font-medium text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
+              className={brandButtonClass("secondary", undefined, "sm")}
             >
               {t("listingsAllAlbania")}
             </Link>

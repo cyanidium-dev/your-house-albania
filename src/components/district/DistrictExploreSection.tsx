@@ -3,6 +3,7 @@ import { EntityCard } from "@/components/landing/sections/impl/EntityCard";
 import { fetchPublishedDistrictsByCity } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { catalogFilterPath, cityInfoPath, districtInfoPath } from "@/lib/routes/catalog";
+import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
   locale: string;
@@ -48,15 +49,13 @@ export async function DistrictExploreSection({
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href={propertiesHref}
-            className="inline-flex items-center justify-center py-4 px-8 bg-primary hover:bg-dark duration-300 rounded-full text-white font-semibold text-sm"
+            className={brandButtonClass("primary", undefined, "md")}
           >
             {t("propertiesInDistrict", { district: districtLabel })}
           </a>
           <a
             href={cityInfoHref}
-            className="inline-flex items-center justify-center py-4 px-8 rounded-full text-sm font-semibold transition-colors
-                       text-dark/70 hover:text-dark ring-1 ring-dark/15 hover:ring-dark/40
-                       dark:text-white/80 dark:hover:text-white dark:ring-white/15 dark:hover:ring-white/40"
+            className={brandButtonClass("secondary", undefined, "md")}
           >
             {t("aboutCity", { city: cityLabel })}
           </a>

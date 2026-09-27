@@ -6,6 +6,7 @@ import { PortableText } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
 import { Icon } from "@/components/shared/Icon";
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
+import { brandButtonClass } from '@/components/shared/BrandButton';
 
 export type FaqItem = {
   question: string;
@@ -58,9 +59,7 @@ function CalloutSecondaryLink({
       href={href}
       target={href.startsWith('http') ? '_blank' : undefined}
       rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-      className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold transition-colors
-                 text-dark/70 hover:text-dark ring-1 ring-dark/15 hover:ring-dark/40
-                 dark:text-white/80 dark:hover:text-white dark:ring-white/15 dark:hover:ring-white/40"
+      className={brandButtonClass('secondary', undefined, 'sm')}
     >
       {icon ? <Icon icon={icon} width={14} height={14} /> : null}
       {label}
@@ -136,7 +135,7 @@ const FAQ: React.FC<Props> = ({ faqData, locale = 'en' }) => {
                     {callout?.primary ? (
                       <a
                         href={resolveLocaleHref(callout.primary.href, locale)}
-                        className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold bg-primary text-white hover:bg-dark transition-colors"
+                        className={brandButtonClass('primary', undefined, 'md')}
                       >
                         {callout.primary.label}
                       </a>

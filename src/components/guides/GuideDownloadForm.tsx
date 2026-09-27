@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { brandButtonClass } from '@/components/shared/BrandButton'
 import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'
 import { GUIDE_ID } from '@/lib/guides/durresGuide'
 
@@ -16,8 +17,7 @@ type Props = {
 const inputClass =
   'w-full rounded-full border border-black/10 bg-white px-5 py-3 text-sm text-dark outline-primary placeholder:text-dark/40 focus:outline dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40'
 
-const buttonClass =
-  'shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white duration-300 hover:bg-dark disabled:cursor-not-allowed disabled:opacity-60'
+const buttonClass = brandButtonClass('primary', 'shrink-0', 'sm')
 
 /**
  * The island inside `GuideDownloadCard`: email + consent → `/api/guide-request`
@@ -92,7 +92,7 @@ export function GuideDownloadForm({ locale, propertySlug, subject }: Props) {
         <a
           href={url}
           download
-          className="mt-3 inline-flex items-center gap-2 rounded-full border border-primary px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-white duration-300"
+          className={brandButtonClass('primaryOutline', 'mt-3', 'sm')}
         >
           {t('download')}
         </a>
