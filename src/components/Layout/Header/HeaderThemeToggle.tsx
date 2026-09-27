@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Icon } from "@/components/shared/Icon";
 import { useTheme } from 'next-themes'
 
@@ -16,13 +17,21 @@ export default function HeaderThemeToggle({
   lightModeLabel,
   darkModeLabel,
 }: HeaderThemeToggleProps) {
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
+  // The server does not know the visitor's theme, so it renders the "switch
+  // to dark" label; the client, once it has read localStorage, may already be
+  // dark. Reading the theme only after mount keeps the first client render
+  // identical to the server's and stops the hydration warning on every page.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const isDark = mounted && resolvedTheme === 'dark'
 
   return (
     <button
+      type="button"
       className='hover:cursor-pointer transition-colors duration-300 ease-out p-1 md:p-0'
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      aria-label={theme === 'dark' ? lightModeLabel : darkModeLabel}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label={isDark ? lightModeLabel : darkModeLabel}
     >
       <Icon
         icon={'solar:sun-bold'}
