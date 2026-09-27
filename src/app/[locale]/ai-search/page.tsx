@@ -7,6 +7,7 @@ import { isAiSearchEnabled } from '@/lib/ai/config'
 import { AI_MAX_MESSAGE_CHARS } from '@/lib/ai/limits'
 import { catalogPath } from '@/lib/routes/catalog'
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
+import { withBrand } from '@/lib/seo/brandTitle'
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -16,7 +17,8 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'AiSearch' })
-  const title = t('metaTitle')
+  // The message carries its own "— DomLivo"; withBrand keeps the brand once.
+  const title = { absolute: withBrand(t('metaTitle')) }
   const description = t('metaDescription')
 
   if (!isIndexingEnabled()) {

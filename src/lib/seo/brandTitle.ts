@@ -1,6 +1,10 @@
 /** One place that owns the "— Domlivo" title brand. */
 const BRAND = "Domlivo";
 const TRAILING_BRAND = /\s*[|—–-]\s*(Domlivo|Your House Albania)\s*$/i;
+// A CMS title can also end in the bare brand word ("Platform for real estate
+// agents Domlivo" shipped as "… agents Domlivo — Domlivo"); the word is the
+// brand there too and moves to the suffix.
+const TRAILING_BARE_BRAND = /\s+Domlivo\s*$/i;
 // CMS titles also arrive as "Domlivo — Real estate in Albania" (the home page
 // did for months, rendering "Domlivo — … — Domlivo"); a leading brand is
 // stripped the same way so the brand appears exactly once, at the end.
@@ -10,6 +14,9 @@ const LEADING_BRAND = /^\s*(Domlivo|Your House Albania)\s*[|—–:-]\s*/i;
 export function stripBrandSuffix(title: string): string {
   let s = title.trim();
   while (TRAILING_BRAND.test(s)) s = s.replace(TRAILING_BRAND, "").trim();
+  if (TRAILING_BARE_BRAND.test(s) && s.toLowerCase() !== BRAND.toLowerCase()) {
+    s = s.replace(TRAILING_BARE_BRAND, "").trim();
+  }
   while (LEADING_BRAND.test(s)) s = s.replace(LEADING_BRAND, "").trim();
   return s;
 }

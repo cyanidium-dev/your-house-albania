@@ -139,5 +139,7 @@ function withoutLocaleCookieOnCacheableDocuments(
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|editor|.*\\..*).*)"],
+  // icon and apple-icon: generated metadata routes with no dot; next-intl sent
+  // them to /sq/icon (404) once the locale-less 308 stopped catching them.
+  matcher: ["/((?!api|_next|_vercel|editor|icon$|apple-icon$|opengraph-image|twitter-image|.*\\..*).*)"],
 };

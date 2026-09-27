@@ -12,6 +12,7 @@ import { catalogPath } from "@/lib/routes/catalog";
 import { listingUrlHasQueryParams } from "@/lib/seo/catalogListingMetadata";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { withBrand } from "@/lib/seo/brandTitle";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -43,7 +44,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const hreflang = buildHreflangAlternates(PATH);
 
   return {
-    title: t("title"),
+    title: { absolute: withBrand(t("title")) },
     description: t("description"),
     // The page had hreflang but no canonical, so every filtered or paged copy
     // of it (`?page=2`, `?sort=…`) stood as a page of its own.

@@ -17,6 +17,14 @@ describe("defaultLocaleRedirectTarget", () => {
     expect(defaultLocaleRedirectTarget("", LOCALES, "sq")).toBeNull();
   });
 
+  it("leaves the root metadata files where Next.js serves them", () => {
+    expect(defaultLocaleRedirectTarget("/icon", LOCALES, "sq")).toBeNull();
+    expect(defaultLocaleRedirectTarget("/apple-icon", LOCALES, "sq")).toBeNull();
+    expect(defaultLocaleRedirectTarget("/opengraph-image", LOCALES, "sq")).toBeNull();
+    // A page that merely starts with the same word is still a page.
+    expect(defaultLocaleRedirectTarget("/icon/x", LOCALES, "sq")).toBe("/sq/icon/x");
+  });
+
   it("leaves every path that already names a locale alone", () => {
     expect(defaultLocaleRedirectTarget("/en", LOCALES, "sq")).toBeNull();
     expect(defaultLocaleRedirectTarget("/de/albania/durres", LOCALES, "sq")).toBeNull();

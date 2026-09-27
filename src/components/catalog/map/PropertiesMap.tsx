@@ -372,7 +372,7 @@ export function PropertiesMap({
           // Only stacks the glyph server has: "Open Sans Bold" answered 404
           // for every range and the browser drew the counts from local fonts
           // after a failed request per cluster (console, 2026-09-27).
-          'text-font': ['Open Sans Semibold', 'Noto Sans Regular'],
+          'text-font': ['Open Sans Semibold'],
           'text-allow-overlap': true,
           'text-ignore-placement': true,
         },
