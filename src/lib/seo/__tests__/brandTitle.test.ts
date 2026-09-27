@@ -31,4 +31,11 @@ describe("stripBrandSuffix", () => {
   it("removes leading and trailing brand segments", () => {
     expect(stripBrandSuffix("Domlivo — Real estate in Albania — Domlivo")).toBe("Real estate in Albania");
   });
+
+  it("moves a bare trailing brand word into the suffix", () => {
+    expect(withBrand("Platform for real estate agents Domlivo")).toBe("Platform for real estate agents — Domlivo");
+    expect(withBrand("AI property search — DomLivo")).toBe("AI property search — Domlivo");
+    expect(withBrand("Domlivo")).toBe("Domlivo");
+    expect(withBrand("About Domlivo")).toBe("About — Domlivo");
+  });
 });

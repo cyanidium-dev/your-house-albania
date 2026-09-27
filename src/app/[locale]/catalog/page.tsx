@@ -6,7 +6,7 @@ import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import React from "react";
 import { getTranslations } from "next-intl/server";
 import { buildCatalogListingSeo } from "@/lib/seo/listingSeoCopy";
-import { stripBrandSuffix } from "@/lib/seo/brandTitle";
+import { stripBrandSuffix, withBrand } from "@/lib/seo/brandTitle";
 import { fetchSiteSettings, fetchCatalogSeoPageRoot, resolveCatalogSeoPage } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { parseCatalogFilters } from "@/lib/catalog/parseCatalogFilters";
@@ -69,7 +69,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   if (!isIndexingEnabled()) {
     return {
-      title,
+      title: { absolute: withBrand(title) },
       description,
       robots: indexingDisabledRobots,
     };
@@ -83,7 +83,10 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const robots = { index: false as const, follow: true as const };
 
   return {
-    title,
+    // absolute + withBrand: the root template appended the brand to a title
+    // already written to fill the line ("Case in vendita in Albania — comprare
+    // casa al mare, prezzi reali — Domlivo", 78 characters on 2026-09-27).
+    title: { absolute: withBrand(title) },
     description,
     alternates: {
       canonical,
