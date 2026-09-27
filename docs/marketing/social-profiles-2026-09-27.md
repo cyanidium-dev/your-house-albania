@@ -95,3 +95,9 @@
 2. Я добавлю их в `siteSettings.socialLinks` (Studio) и в `sameAs` разметки; проверю, что на `/about` и главной они видны поисковику.
 3. В LinkedIn у всех троих основателей в личном профиле указать Domlivo как место работы, у Виктора добавить строку про 100+ сделок в Дурресе и ссылку на канал.
 4. Раз в месяц: пост с индексом цен и одна статья. Материал уже есть в блоге.
+
+## Статус 28.09.2026
+
+- LinkedIn: https://www.linkedin.com/company/domlivo (id 146659164). Заполнено: имя, адрес, сайт, отрасль, размер, тип, логотип, слоган, About, первый пост. Не заполнено: баннер (форма страницы использует один file-input на логотип и баннер, загрузка из расширения попадает в логотип; загрузить вручную: Edit page → Banner → Add cover image → `docs/marketing/assets/linkedin-cover-1128x191.png`), специализации и локация Durrës (клавиатурный ввод в Chrome был заблокирован системным диалогом).
+- Facebook: https://www.facebook.com/profile.php?id=61594817704149. Заполнено: имя, категория Real Estate Service, bio, сайт, email, город Durrës, часы «Always open», аватар, обложка, первый пост. Не сделано: username страницы (Settings → Username → `domlivo`), кнопка действия, длинное описание (в новом интерфейсе Facebook страница показывает только bio).
+- Обе ссылки добавлены в `siteSettings.socialLinks` (admin `addSocialProfiles20260928.ts`, rev `IVLcVaE7g6HuAB08OTHUyt`) и попадают в `sameAs` разметки Organization после ревалидации (до часа).
