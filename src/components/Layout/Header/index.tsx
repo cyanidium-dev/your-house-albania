@@ -48,6 +48,14 @@ async function buildBuyMenu(locale: string): Promise<BuyMenuData> {
     fetchFooterCitiesByCountry(locale, country, 12),
     fetchCityLandingNavItems(locale),
   ])
+  // The price column follows the listing column's order (stock, then the
+  // rest of the CMS alphabetically), so a city sits at the same height in both.
+  const listingRank = new Map(cities.map((c, i) => [c.slug.toLowerCase(), i]))
+  const rankedPriceCities = [...priceCities].sort(
+    (a, b) =>
+      (listingRank.get(a.slug.toLowerCase()) ?? Number.MAX_SAFE_INTEGER) -
+      (listingRank.get(b.slug.toLowerCase()) ?? Number.MAX_SAFE_INTEGER),
+  )
   return {
     cities: orderMenuCities(cities, MAX_MENU_CITIES).map((c) => ({
       key: c.slug,
@@ -59,7 +67,7 @@ async function buildBuyMenu(locale: string): Promise<BuyMenuData> {
         country: c.countrySlug ?? country,
       }),
     })),
-    priceCities: orderMenuCities(priceCities, MAX_MENU_PRICE_PAGES).map((c) => ({
+    priceCities: orderMenuCities(rankedPriceCities, MAX_MENU_PRICE_PAGES).map((c) => ({
       key: c.slug,
       label: c.label,
       href: cityInfoPath(locale, c.slug, c.countrySlug ?? country),

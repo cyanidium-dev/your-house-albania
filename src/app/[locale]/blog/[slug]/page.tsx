@@ -323,7 +323,7 @@ export default async function Post({ params }: Props) {
         siteName={siteName}
       />
       <section className="relative !pt-24 md:!pt-28 pb-0!">
-        <div className="container max-w-8xl mx-auto md:px-0 px-4">
+        <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <div className="mb-4">
             <BlogBreadcrumb
               locale={locale}
@@ -340,7 +340,7 @@ export default async function Post({ params }: Props) {
         </div>
       </section>
       <section className="pt-12 pb-16">
-        <div className="container max-w-8xl mx-auto px-4 md:px-5 2xl:px-0">
+        <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <div
             className={
               finalRelatedPosts.length > 0 || detail.properties.length > 0

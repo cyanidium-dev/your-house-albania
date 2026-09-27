@@ -31,7 +31,7 @@ export async function ContactsHero({ locale }: Props) {
           className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-white via-white/40 to-transparent dark:from-black dark:via-black/40"
           aria-hidden
         />
-        <div className="container relative z-20 mx-auto flex max-w-8xl flex-1 flex-col justify-center px-5 pt-20 pb-28 md:px-5 md:pt-28 md:pb-36 2xl:px-0">
+        <div className="container relative z-20 mx-auto flex max-w-8xl flex-1 flex-col justify-center px-5 pt-20 pb-28 md:pt-28 md:pb-36 2xl:px-0">
           <div className="max-w-3xl pb-2 text-left text-white">
             <h1 className="mb-3 text-3xl font-semibold leading-tight tracking-tight md:text-4xl lg:text-[2.35rem] lg:leading-[1.2]">
               {t('heroH1')}

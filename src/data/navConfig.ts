@@ -54,7 +54,7 @@ export const PINNED_CITY_SLUGS: readonly string[] = ['durres', 'tirana']
 export const MAX_MENU_CITIES = 6
 
 /** How many city price pages the Buy menu shows. */
-export const MAX_MENU_PRICE_PAGES = 5
+export const MAX_MENU_PRICE_PAGES = 6
 
 /**
  * Pins `PINNED_CITY_SLUGS` to the front, keeps the incoming order for the rest,

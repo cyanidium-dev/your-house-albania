@@ -130,7 +130,7 @@ export default async function BlogAuthorPage({ params }: Props) {
           .filter((u): u is string => typeof u === "string" && u.trim().length > 0)}
       />
 
-      <div className="container max-w-8xl mx-auto px-4 md:px-5 2xl:px-0">
+      <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
         <header className="flex items-center gap-5 mb-10">
           <AuthorAvatar
             imageUrl={photoUrl}
