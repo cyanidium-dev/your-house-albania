@@ -386,33 +386,13 @@ export default function Footer({
             </span>
           </div>
 
-          {/* Developer / ownership note + listings disclaimer */}
-          {/* The developer's own contacts: not Domlivo leads. */}
-          <div data-lead-ignore className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/40 sm:text-left md:text-xs">
-            <p>
-              {t("developer.ownedBy")} {t("developer.disclaimer")}
-            </p>
-            <p className="mt-1.5">
-              {t("developer.contact")}{" "}
-              <a
-                href="https://t.me/fedirdev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap text-white/55 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-              >
-                Telegram @fedirdev
-              </a>{" "}
-              ·{" "}
-              <a
-                href="https://wa.me/355689286136"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap text-white/55 underline-offset-[3px] transition-colors hover:text-primary hover:underline"
-              >
-                WhatsApp +355 68 928 6136
-              </a>
-            </p>
-          </div>
+          {/* One line: who built the site and who answers for the listings.
+              The three-paragraph note with the developer's own Telegram and
+              WhatsApp read, on every page, as the marketplace disclaiming its
+              own listings (audit 27.09). Technical contact lives on /contacts. */}
+          <p data-lead-ignore className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/40 sm:text-left md:text-xs">
+            {t("developer.note")}
+          </p>
         </div>
       </div>
     </footer>

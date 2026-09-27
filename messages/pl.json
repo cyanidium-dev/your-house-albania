@@ -68,9 +68,7 @@
       "imageCredits": "Źródła zdjęć"
     },
     "developer": {
-      "ownedBy": "Ta strona jest tworzona, prowadzona i utrzymywana przez Code Site Art.",
-      "disclaimer": "Code Site Art jest twórcą strony i nie ponosi odpowiedzialności za nieruchomości prezentowane w serwisie.",
-      "contact": "W sprawach technicznych, partnerstwa, wsparcia lub rozwoju strony — niezwiązanych z konkretną nieruchomością — skontaktuj się z nami:"
+      "note": "Serwis tworzy i utrzymuje Code Site Art; za każdą ofertę odpowiada agencja lub właściciel, który ją opublikował."
     },
     "contactCta": "Zostaw zgłoszenie"
   },

@@ -193,7 +193,11 @@ export default async function LocaleLayout({ children, params }: Props) {
             </noscript>
             {/* End Google Tag Manager (noscript) */}
             {/* Google Tag Manager */}
-            <Script id="gtm-base" strategy="afterInteractive">
+            {/* lazyOnload: GTM + gtag are 280 KB and 130 KB of it never runs
+                (Lighthouse 27.09); with consent denied by default GA4 sees
+                ~4% of sessions anyway. Clarity below stays afterInteractive:
+                it is the KPI source and records before consent. */}
+            <Script id="gtm-base" strategy="lazyOnload">
               {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

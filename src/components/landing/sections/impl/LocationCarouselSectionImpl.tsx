@@ -5,6 +5,9 @@ import { EntityCard } from "./EntityCard";
 import { getTranslations } from "next-intl/server";
 import { catalogFilterPath, cityInfoPath } from "@/lib/routes/catalog";
 
+/** Listings a city needs before its card shows the number. */
+const MIN_SHOWN_COUNT = 10;
+
 export type CitiesData = {
   title?: string;
   subtitle?: string;
@@ -85,7 +88,9 @@ const Cities: React.FC<{
                 imageUrl={card.heroImageUrl}
                 shortDescription={card.shortDescription}
                 tag={card.vibe}
-                count={card.propertiesCount}
+                // A count under ten ("4 prona" on Tirana and Vlora, 27.09) reads
+                // as "nothing here"; the card then sells the city, not the stock.
+                count={(card.propertiesCount ?? 0) >= MIN_SHOWN_COUNT ? card.propertiesCount : undefined}
                 countLabel={tCard("propertiesCountLabel", { count: card.propertiesCount ?? 0 })}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               />
