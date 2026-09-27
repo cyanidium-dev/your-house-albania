@@ -68,9 +68,7 @@
       "imageCredits": "Crediti fotografici"
     },
     "developer": {
-      "ownedBy": "Il sito è sviluppato, di proprietà e gestito da Code Site Art.",
-      "disclaimer": "Code Site Art è lo sviluppatore del sito e non è responsabile degli immobili pubblicati sul sito.",
-      "contact": "Per questioni tecniche, partnership, supporto o sviluppo di siti web — per tutto ciò che non riguarda un immobile specifico — contattaci:"
+      "note": "Il sito è sviluppato e gestito da Code Site Art; di ogni annuncio risponde l’agenzia o il proprietario che lo ha pubblicato."
     },
     "contactCta": "Lascia una richiesta"
   },

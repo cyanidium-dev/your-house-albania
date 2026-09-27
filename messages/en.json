@@ -68,9 +68,7 @@
       "imageCredits": "Image credits"
     },
     "developer": {
-      "ownedBy": "This website is developed, owned and maintained by Code Site Art.",
-      "disclaimer": "Code Site Art is the website developer and is not responsible for the properties listed on this site.",
-      "contact": "For technical matters, partnerships, support or website development — anything not related to a specific property — contact us:"
+      "note": "The site is built and maintained by Code Site Art; each listing is the responsibility of the agency or owner who published it."
     },
     "contactCta": "Leave a request"
   },
