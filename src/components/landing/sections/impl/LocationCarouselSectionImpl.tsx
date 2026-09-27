@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { CityCard, LocationCarouselCard } from "@/lib/sanity/cityAdapter";
 import { resolveCta } from "@/lib/routes/resolveLocaleHref";
@@ -55,24 +54,10 @@ const Cities: React.FC<{
 
   return (
     <section className="relative overflow-hidden py-16 md:py-24">
-      <div className="absolute left-0 top-0" aria-hidden>
-        <Image
-          src="/images/categories/Vector.svg"
-          alt=""
-          width={800}
-          height={1050}
-          className="dark:hidden"
-          unoptimized={true}
-        />
-        <Image
-          src="/images/categories/Vector-dark.svg"
-          alt=""
-          width={800}
-          height={1050}
-          className="hidden dark:block"
-          unoptimized={true}
-        />
-      </div>
+      {/* The template's decorative "Vector.svg" shape used to sit behind this
+          section; it carried no meaning, shifted layout while it loaded and
+          showed a broken-image glyph on phones in the meantime. Removed
+          2026-09-27. */}
       <div className="container max-w-8xl mx-auto min-w-0 px-5 2xl:px-0 relative z-10">
         <div className="flex flex-col gap-10 min-w-0">
           <div className="min-w-0">

@@ -80,8 +80,13 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
               <div className="h-full min-w-0 px-4 lg:px-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-0">
                 <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
-                    <div className="flex min-w-0 items-center gap-4 xl:gap-6 shrink">
-                      <div className="ml-0.5 md:ml-[14px] min-w-0 max-w-[45%] md:max-w-none shrink-0">
+                    {/* The logo never shrinks: the row's spare width goes to
+                        the nav (lg+) and, below that, stays empty. `max-w-[45%]`
+                        used to sit here on the logo itself and, once the logo
+                        shared a flex group with the nav, that 45% was of the
+                        squeezed group, not the row, and the logo went to 31px. */}
+                    <div className="flex min-w-0 flex-1 items-center gap-4 xl:gap-6">
+                      <div className="ml-0.5 md:ml-[14px] min-w-0 shrink">
                         <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
                           {siteSettings?.logoUrl ? (
                             <>
