@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Icon } from "@/components/shared/Icon";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
@@ -12,6 +11,8 @@ import { catalogPath } from "@/lib/routes/catalog";
 import { currentCityListingHref } from "@/lib/routes/currentCityListing";
 import { routing } from "@/i18n/routing";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { segmentedItemClass, segmentedTrackClass } from "@/components/shared/Segmented";
+import { CarouselArrowButton } from "@/components/shared/CarouselArrow";
 
 export type TopOffersGroup = "popular" | "new" | "highDemand";
 
@@ -75,10 +76,7 @@ export function TopOffersCarouselClient({
         )}
       >
         <div
-          className={cn(
-            'inline-flex items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10',
-            !showTabs && 'hidden'
-          )}
+          className={segmentedTrackClass(!showTabs ? 'hidden' : undefined)}
         >
           {GROUPS.map((g) => {
             const activeTab = g === active;
@@ -93,14 +91,7 @@ export function TopOffersCarouselClient({
                 key={g}
                 type="button"
                 onClick={() => setActive(g)}
-                className={cn(
-                  "h-9 px-4 rounded-full font-semibold text-sm",
-                  "transition-[background-color,color,box-shadow] duration-200 ease-out cursor-pointer",
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
-                  activeTab
-                    ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm ring-1 ring-dark/5 dark:ring-white/10"
-                    : "text-dark/70 dark:text-white/70 hover:bg-dark/10 dark:hover:bg-white/10 hover:text-dark dark:hover:text-white"
-                )}
+                className={segmentedItemClass(activeTab)}
               >
                 <span className="block max-w-full truncate">{label}</span>
               </button>
@@ -109,22 +100,8 @@ export function TopOffersCarouselClient({
         </div>
 
         <div className="hidden md:flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => scrollByCards(-1)}
-            className="h-10 w-10 rounded-full border border-dark/10 dark:border-white/10 bg-white/70 dark:bg-dark/60 backdrop-blur-md shadow-sm hover:bg-white dark:hover:bg-dark transition-colors cursor-pointer flex items-center justify-center"
-            aria-label={t("prev")}
-          >
-            <Icon icon="solar:alt-arrow-left-linear" width={18} height={18} />
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollByCards(1)}
-            className="h-10 w-10 rounded-full border border-dark/10 dark:border-white/10 bg-white/70 dark:bg-dark/60 backdrop-blur-md shadow-sm hover:bg-white dark:hover:bg-dark transition-colors cursor-pointer flex items-center justify-center"
-            aria-label={t("next")}
-          >
-            <Icon icon="solar:alt-arrow-right-linear" width={18} height={18} />
-          </button>
+          <CarouselArrowButton direction="prev" onClick={() => scrollByCards(-1)} label={t("prev")} />
+          <CarouselArrowButton direction="next" onClick={() => scrollByCards(1)} label={t("next")} />
         </div>
       </div>
 

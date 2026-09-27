@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/shared/Icon";
 import { cn } from "@/lib/utils";
+import { segmentedItemClass } from "@/components/shared/Segmented";
 import {
   useCatalogFilters,
   type PropertySearchBarProps,
@@ -53,13 +54,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
                 key={v}
                 type="button"
                 onClick={() => applyCompactDealTab(v)}
-                className={cn(
-                  "flex min-w-0 flex-1 items-center justify-center rounded-full px-2 py-1 text-center text-sm font-medium leading-tight transition-colors sm:text-base",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
-                  deal === v
-                    ? "bg-white text-dark shadow-sm dark:bg-dark dark:text-white"
-                    : "text-dark/70 hover:bg-white/40 dark:text-white/80 dark:hover:bg-white/[0.08]"
-                )}
+                className={segmentedItemClass(deal === v, { size: "sm", glass: true, className: "flex-1 h-auto min-h-8 px-2 py-1 text-center sm:text-base" })}
               >
                 <span className="min-w-0 truncate">{getDealLabel(v)}</span>
               </button>

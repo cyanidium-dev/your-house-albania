@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { formatNumber } from '@/lib/currency/format'
+import { segmentedItemClass } from '@/components/shared/Segmented'
 import { useTranslations } from 'next-intl'
 import { calculateRoi } from '@/lib/calculators/roi'
 import {
@@ -117,12 +118,7 @@ export function RoiCalcClient({
       type="button"
       onClick={() => setRentalType(value)}
       aria-pressed={rentalType === value}
-      className={
-        'rounded-full px-4 py-2 text-sm font-semibold transition-colors ' +
-        (rentalType === value
-          ? 'bg-primary text-white'
-          : 'ring-1 ring-dark/15 text-dark/70 hover:text-dark dark:ring-white/15 dark:text-white/70 dark:hover:text-white')
-      }
+      className={segmentedItemClass(rentalType === value)}
     >
       {label}
     </button>

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Icon } from "@/components/shared/Icon";
+import { CarouselArrowButton } from '@/components/shared/CarouselArrow';
 import PropertyCard from '@/components/shared/property/PropertyCard';
 import type { PropertyHomes } from '@/types/propertyHomes';
 import { useTranslations } from 'next-intl';
@@ -39,22 +39,8 @@ export function SimilarPropertiesCarousel({ items, locale }: Props) {
   return (
     <div className="min-w-0">
       <div className="flex items-center justify-end gap-2 mb-4">
-        <button
-          type="button"
-          onClick={() => scrollByCards(-1)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-dark/10 dark:border-white/10 bg-white/70 dark:bg-dark/60 backdrop-blur-md shadow-sm hover:bg-white dark:hover:bg-dark transition-colors cursor-pointer"
-          aria-label={t('prev')}
-        >
-          <Icon icon="solar:alt-arrow-left-linear" width={18} height={18} />
-        </button>
-        <button
-          type="button"
-          onClick={() => scrollByCards(1)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-dark/10 dark:border-white/10 bg-white/70 dark:bg-dark/60 backdrop-blur-md shadow-sm hover:bg-white dark:hover:bg-dark transition-colors cursor-pointer"
-          aria-label={t('next')}
-        >
-          <Icon icon="solar:alt-arrow-right-linear" width={18} height={18} />
-        </button>
+        <CarouselArrowButton direction="prev" onClick={() => scrollByCards(-1)} label={t('prev')} />
+        <CarouselArrowButton direction="next" onClick={() => scrollByCards(1)} label={t('next')} />
       </div>
       <div
         ref={scrollerRef}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { segmentedItemClass, segmentedTrackClass } from "@/components/shared/Segmented";
 import { canonicalCatalogUrl } from "@/lib/routes/catalog";
 import { FilterSelect, type FilterOption } from "@/components/catalog/FilterSelect";
 import * as Slider from "@radix-ui/react-slider";
@@ -150,7 +151,7 @@ export function HeroSearchWidget({
       {/* Tabs — only when there is a choice. With rentals hidden this was a
           lone "Buy" pill; the deal it selects is still applied to the search. */}
       {tabs.length > 1 ? (
-      <div className="flex flex-wrap items-center gap-1.5 rounded-full bg-dark/5 dark:bg-white/10 p-1.5 ring-1 ring-dark/5 dark:ring-white/10 min-w-0">
+      <div className={segmentedTrackClass("flex flex-wrap")}>
         {tabs.map((tab) => {
           const active = tab.key === deal;
           const fallbackKey = tab.key === "short-term" ? "shortTerm" : tab.key;
@@ -160,14 +161,7 @@ export function HeroSearchWidget({
               key={tab.key}
               type="button"
               onClick={() => setDeal(tab.key)}
-              className={cn(
-                "h-9 px-4 rounded-full font-semibold text-sm min-w-0",
-                "transition-[background-color,color,box-shadow] duration-200 ease-out cursor-pointer",
-                "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
-                active
-                  ? "bg-white dark:bg-dark text-dark dark:text-white shadow-sm ring-1 ring-dark/5 dark:ring-white/10"
-                  : "text-dark/70 dark:text-white/70 hover:bg-dark/10 dark:hover:bg-white/10 hover:text-dark dark:hover:text-white"
-              )}
+              className={segmentedItemClass(active)}
             >
               <span className="block max-w-full truncate">{label}</span>
             </button>
