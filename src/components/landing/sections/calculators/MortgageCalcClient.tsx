@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { formatNumber } from '@/lib/currency/format'
 import { useTranslations } from 'next-intl'
 import { calculateMortgage } from '@/lib/calculators/mortgage'
 import {
@@ -67,7 +68,7 @@ export function MortgageCalcClient({
       />
       <CalcSliderField
         label={t('propertyPrice')}
-        valueDisplay={`€${new Intl.NumberFormat(locale).format(Math.min(Math.max(priceNum, PRICE_MIN), PRICE_MAX))}`}
+        valueDisplay={`€${formatNumber(Math.min(Math.max(priceNum, PRICE_MIN), PRICE_MAX), locale)}`}
         min={PRICE_MIN}
         max={PRICE_MAX}
         step={PRICE_STEP}

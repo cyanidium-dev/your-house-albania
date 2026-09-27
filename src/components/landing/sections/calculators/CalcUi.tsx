@@ -4,13 +4,11 @@ import * as React from 'react'
 import * as Slider from '@radix-ui/react-slider'
 import { TriangleAlert } from 'lucide-react'
 import { PriceText } from '@/components/shared/PriceText'
+import { formatNumber } from '@/lib/currency/format'
 
 /** Percent formatting: localized separator, up to `digits` fraction digits. */
 export function formatPct(value: number, locale: string, digits = 1): string {
-  return `${new Intl.NumberFormat(locale, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: digits,
-  }).format(value)}%`
+  return `${formatNumber(value, locale, digits)}%`
 }
 
 /**
@@ -123,7 +121,7 @@ export function CalcNumberInput({
       ? ''
       : focused
         ? String(value)
-        : new Intl.NumberFormat(locale).format(value)
+        : formatNumber(value, locale)
 
   return (
     <label className="block min-w-0">
