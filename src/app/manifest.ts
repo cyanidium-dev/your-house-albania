@@ -15,9 +15,9 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "en",
     categories: ["real-estate", "lifestyle", "business"],
     icons: [
-      { src: "/icon", sizes: "256x256", type: "image/png", purpose: "any" },
-      { src: "/apple-icon", sizes: "180x180", type: "image/png", purpose: "any" },
-      { src: "/icon", sizes: "256x256", type: "image/png", purpose: "maskable" },
+      { src: "/icon.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/apple-icon.png", sizes: "180x180", type: "image/png", purpose: "any" },
+      { src: "/icon.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
