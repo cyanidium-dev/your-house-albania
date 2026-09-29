@@ -7,16 +7,18 @@ import { catalogFilterPath } from "@/lib/routes/catalog";
 import { canonicalNonGeoDealListingPath } from "@/lib/routes/listingRouteResolver";
 import { printablePriceFacts } from "@/lib/catalog/listingDepth";
 import { hubCities, hubCityDistricts, hubTypes } from "@/lib/catalog/saleHubDepth";
+import { Section, SectionHeading } from "@/components/shared/layout";
+import {
+  StatTiles,
+  chipClass,
+  chipLinkClass,
+  countClass,
+  noteClass,
+  subheadClass,
+  textLinkClass,
+} from "@/components/catalog/depthUi";
 
-const h2Class = "text-dark dark:text-white text-xl md:text-2xl font-semibold";
-const h3Class = "text-sm font-semibold text-dark/70 dark:text-white/70";
-const leadClass = "mt-2 text-sm text-dark/60 dark:text-white/60 max-w-3xl";
-const chipClass =
-  "inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3 py-1.5 text-sm font-medium text-dark dark:text-white";
-const chipLinkClass = `${chipClass} hover:border-primary hover:text-primary transition-colors`;
-const countClass = "text-dark/50 dark:text-white/50 tabular-nums";
-const textLinkClass = "text-primary font-medium underline-offset-4 hover:underline";
-const cellClass = "px-3 py-2 text-right tabular-nums";
+const cellClass = "px-4 sm:px-5 py-3.5 text-right tabular-nums whitespace-nowrap";
 
 /** A price table with one row says what the tiles above it already said. */
 const MIN_PRICE_TABLE_ROWS = 2;
@@ -97,52 +99,42 @@ export async function SaleHubDepthSections({ locale }: { locale: string }) {
     : [];
 
   return (
-    <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pb-10 grid gap-10">
+    <>
       {facts ? (
-        <section aria-labelledby="hub-prices">
-          <h2 id="hub-prices" className={h2Class}>
-            {t("prices.title")}
-          </h2>
-          <p className={leadClass}>{tDepth("prices.lead")}</p>
-          <dl className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-dark/10 dark:border-white/15 p-4">
-                <dt className="text-xs text-dark/60 dark:text-white/60">{stat.label}</dt>
-                <dd className="mt-1 text-lg font-semibold text-dark dark:text-white tabular-nums">{stat.value}</dd>
-              </div>
-            ))}
-          </dl>
+        <Section aria-labelledby="hub-prices">
+          <SectionHeading id="hub-prices" title={t("prices.title")} lead={tDepth("prices.lead")} />
+          <StatTiles stats={stats} />
           {showPriceTable ? (
-            <div className="mt-5 overflow-x-auto">
-              <table className="w-full max-w-3xl text-sm text-dark dark:text-white">
-                <caption className={`${h3Class} text-left pb-2`}>{t("prices.byCity")}</caption>
-                <thead className="text-xs text-dark/60 dark:text-white/60">
-                  <tr className="border-b border-dark/10 dark:border-white/15">
-                    <th scope="col" className="px-3 py-2 text-left font-medium">
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-dark/10 dark:border-white/15">
+              <table className="w-full border-collapse text-left text-sm sm:text-base text-dark dark:text-white">
+                <caption className="sr-only">{t("prices.byCity")}</caption>
+                <thead className="bg-dark/[0.04] dark:bg-white/5">
+                  <tr>
+                    <th scope="col" className="px-4 sm:px-5 py-3.5 font-semibold border-b border-dark/10 dark:border-white/15">
                       {t("prices.city")}
                     </th>
-                    <th scope="col" className={`${cellClass} font-medium`}>
+                    <th scope="col" className={`${cellClass} font-semibold border-b border-dark/10 dark:border-white/15`}>
                       {tDepth("prices.listings")}
                     </th>
-                    <th scope="col" className={`${cellClass} font-medium`}>
+                    <th scope="col" className={`${cellClass} font-semibold border-b border-dark/10 dark:border-white/15`}>
                       {tDepth("prices.medianPrice")}
                     </th>
-                    <th scope="col" className={`${cellClass} font-medium`}>
+                    <th scope="col" className={`${cellClass} font-semibold border-b border-dark/10 dark:border-white/15`}>
                       {tDepth("prices.medianSqm")}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {priceRows.map((city) => (
-                    <tr key={city.citySlug} className="border-b border-dark/5 dark:border-white/10">
-                      <th scope="row" className="px-3 py-2 text-left font-medium">
+                    <tr key={city.citySlug} className="even:bg-dark/[0.02] dark:even:bg-white/[0.03]">
+                      <th scope="row" className="px-4 sm:px-5 py-3.5 font-medium border-t border-dark/5 dark:border-white/10">
                         {cityName(city, textLinkClass)}
                       </th>
-                      <td className={cellClass}>{number(city.count)}</td>
-                      <td className={cellClass}>
+                      <td className={`${cellClass} border-t border-dark/5 dark:border-white/10`}>{number(city.count)}</td>
+                      <td className={`${cellClass} border-t border-dark/5 dark:border-white/10`}>
                         {city.medianFlatPrice ? <MarketMoney min={city.medianFlatPrice} step={100} locale={locale} /> : "—"}
                       </td>
-                      <td className={cellClass}>
+                      <td className={`${cellClass} border-t border-dark/5 dark:border-white/10`}>
                         {city.medianFlatPricePerSqm ? (
                           <MarketMoney min={city.medianFlatPricePerSqm} step={10} locale={locale} />
                         ) : (
@@ -155,16 +147,14 @@ export async function SaleHubDepthSections({ locale }: { locale: string }) {
               </table>
             </div>
           ) : null}
-          <p className="mt-4 text-xs text-dark/50 dark:text-white/50">{tDepth("prices.asOf", { date: asOf, count: facts.count })}</p>
-        </section>
+          <p className={`mt-4 ${noteClass}`}>{tDepth("prices.asOf", { date: asOf, count: facts.count })}</p>
+        </Section>
       ) : null}
 
       {cities.length > 0 ? (
-        <section aria-labelledby="hub-cities">
-          <h2 id="hub-cities" className={h2Class}>
-            {t("cities.title")}
-          </h2>
-          <ul className="mt-4 flex flex-wrap gap-2">
+        <Section aria-labelledby="hub-cities">
+          <SectionHeading id="hub-cities" title={t("cities.title")} />
+          <ul className="flex flex-wrap gap-2">
             {cities.map((city) => {
               const body = (
                 <>
@@ -187,8 +177,8 @@ export async function SaleHubDepthSections({ locale }: { locale: string }) {
           </ul>
           {cityDistricts.map((group) => (
             <div key={group.citySlug}>
-              <h3 className={`mt-5 ${h3Class}`}>{t("cities.districts", { city: cityLabel(group.citySlug) })}</h3>
-              <ul className="mt-2 flex flex-wrap gap-2">
+              <h3 className={`mt-8 ${subheadClass}`}>{t("cities.districts", { city: cityLabel(group.citySlug) })}</h3>
+              <ul className="mt-3 flex flex-wrap gap-2">
                 {group.districts.map((d) => (
                   <li key={d.district}>
                     <Link
@@ -209,15 +199,13 @@ export async function SaleHubDepthSections({ locale }: { locale: string }) {
               </ul>
             </div>
           ))}
-        </section>
+        </Section>
       ) : null}
 
       {types.length > 0 ? (
-        <section aria-labelledby="hub-types">
-          <h2 id="hub-types" className={h2Class}>
-            {t("types.title")}
-          </h2>
-          <ul className="mt-4 flex flex-wrap gap-2">
+        <Section aria-labelledby="hub-types">
+          <SectionHeading id="hub-types" title={t("types.title")} />
+          <ul className="flex flex-wrap gap-2">
             {types.map((type) => {
               const body = (
                 <>
@@ -238,10 +226,10 @@ export async function SaleHubDepthSections({ locale }: { locale: string }) {
               );
             })}
           </ul>
-        </section>
+        </Section>
       ) : null}
 
-      <BuyingCostsSection locale={locale} medianFlatPrice={facts?.medianFlatPrice ?? null} headingClassName={h2Class} />
-    </div>
+      <BuyingCostsSection locale={locale} medianFlatPrice={facts?.medianFlatPrice ?? null} />
+    </>
   );
 }

@@ -34,6 +34,8 @@ const PropertiesMap = dynamic(
 );
 
 export type CatalogFilterProps = {
+  /** City and district listings: open on the summary pill, not the full form. */
+  collapsedByDefault?: boolean;
   locations: Array<{ value: string; label: string; countrySlug?: string }>;
   propertyTypes: Array<{ value: string; label: string }>;
   dealTypeValues: readonly string[];
@@ -82,6 +84,28 @@ type ComposedItem =
   | { kind: "banner"; banner: PropertyCatalogBanner; key: string }
   | { kind: "map"; key: string }
   | { kind: "property"; item: PropertyHomes; key: string };
+
+/**
+ * Grid cells the map takes in the "large" view so the last row of cards is
+ * full. A page holds 24 cards; with the map as one more cell that is 25, and
+ * every full catalogue page ended on one card alone. The map instead takes
+ * what the row count needs at each breakpoint (2, 3 and 4 columns) — a 2×2
+ * block at four columns when a whole row is missing. Only without banners:
+ * their slots assume the one-cell map.
+ */
+const MAP_SPAN_SM: Record<number, string> = { 0: "sm:col-span-2", 1: "sm:col-span-1" };
+const MAP_SPAN_LG: Record<number, string> = { 0: "lg:col-span-3", 1: "lg:col-span-2", 2: "lg:col-span-1" };
+const MAP_SPAN_XL: Record<number, string> = {
+  0: "xl:col-span-2 xl:row-span-2",
+  1: "xl:col-span-3",
+  2: "xl:col-span-2",
+  3: "xl:col-span-1",
+};
+function largeMapSpan(cards: number): string {
+  if (cards <= 0) return "";
+  // A map alone on its row has no card to take its height from.
+  return cn(MAP_SPAN_SM[cards % 2], MAP_SPAN_LG[cards % 3], MAP_SPAN_XL[cards % 4], "lg:min-h-[22rem]");
+}
 
 function getBannerSlots(viewMode: ViewMode, tier: LayoutTier): BannerSlot[] {
   if (viewMode === "list") {
@@ -275,6 +299,7 @@ export function CatalogBodyClient({
     "min-w-0",
     viewMode === "list" && "self-start w-full",
     viewMode === "small" && "col-span-2",
+    viewMode === "large" && banners.length === 0 && largeMapSpan(allItems.length),
     (viewMode === "small" || viewMode === "large") && "min-h-0"
   );
 

@@ -26,6 +26,30 @@ import { resolveListingFaqItems } from "@/lib/catalog/listingFaq";
 import { BuyingCostsSection } from "@/components/catalog/geoListing/BuyingCostsSection";
 import { GuideDownloadCard } from "@/components/guides/GuideDownloadCard";
 import type { SeoContentSection } from "@/lib/seo/pages";
+import { FaqAccordion } from "@/components/shared/faq/FaqAccordion";
+import { ZoneStatsAutoSection } from "@/components/landing/sections/ZoneStatsAutoSection";
+import { EntityCard } from "@/components/landing/sections/impl/EntityCard";
+import { fetchLatestZoneMetricsByZoneId } from "@/lib/sanity/queries/zoneMetrics";
+import { fetchPublishedDistrictsByCity } from "@/lib/sanity/queries/district";
+import {
+  balancedGridClass,
+  CONTAINER,
+  Section,
+  SectionHeading,
+  SECTION_TITLE,
+  SPLIT,
+  SPLIT_ASIDE,
+  SPLIT_MAIN,
+} from "@/components/shared/layout";
+import {
+  StatTiles,
+  chipClass,
+  chipLinkClass,
+  countClass,
+  noteClass,
+  subheadClass,
+  textLinkClass,
+} from "@/components/catalog/depthUi";
 
 type Props = {
   locale: string;
@@ -39,13 +63,8 @@ type Props = {
   sections: readonly SeoContentSection[];
 };
 
-const h2Class = "text-dark dark:text-white text-xl md:text-2xl font-semibold";
-const leadClass = "mt-2 text-sm text-dark/60 dark:text-white/60 max-w-3xl";
-const chipClass =
-  "inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3 py-1.5 text-sm font-medium text-dark dark:text-white";
-const chipLinkClass = `${chipClass} hover:border-primary hover:text-primary transition-colors`;
-const countClass = "text-dark/50 dark:text-white/50 tabular-nums";
-const textLinkClass = "text-primary font-medium underline-offset-4 hover:underline";
+/** The lead magnet card keeps its own, smaller heading: it is a card inside a section. */
+const cardHeadingClass = "mt-2 text-xl md:text-2xl font-semibold text-dark dark:text-white";
 
 /**
  * What a listing page says under its cards: what homes here cost, how the
@@ -76,7 +95,7 @@ export async function ListingDepthSections({
   if (!want("priceStats") && !want("districtLinks") && !want("faq") && !want("buyingCosts")) return null;
 
   const place = { country: countrySlug, city: citySlug, district: districtSlug };
-  const [t, tFacts, tChip, tCatalog, priceIndex, decisions, cityIn, faqRaw, districtTitles, infoExists] =
+  const [t, tFacts, tChip, tCatalog, priceIndex, decisions, cityIn, faqRaw, districtTitles, placeDoc] =
     await Promise.all([
       getTranslations({ locale, namespace: "Catalog.depth" }),
       getTranslations({ locale, namespace: "Catalog.facts" }),
@@ -87,10 +106,9 @@ export async function ListingDepthSections({
       resolveCityDisplayName(citySlug, locale),
       want("faq") ? fetchPlaceFaqItems(citySlug, districtSlug) : Promise.resolve([]),
       want("districtLinks") ? fetchDistrictListingCounts(citySlug) : Promise.resolve([]),
-      districtSlug
-        ? fetchDistrictBySlugs(citySlug, districtSlug).then(Boolean)
-        : fetchCityLandingByCitySlug(citySlug).then(Boolean),
+      districtSlug ? fetchDistrictBySlugs(citySlug, districtSlug) : fetchCityLandingByCitySlug(citySlug),
     ]);
+  const infoExists = Boolean(placeDoc);
 
   const districtName = districtLabel || districtSlug || "";
   const placeName = districtSlug ? `${districtName}, ${cityLabel}` : cityLabel;
@@ -102,6 +120,20 @@ export async function ListingDepthSections({
   const facts = want("priceStats") ? placePriceFacts(priceIndex, districtSlug) : null;
   const slices = facts ? placeSliceCounts({ rows, place, locale }) : [];
   const districts = want("districtLinks") ? districtLinkTargets({ rows, place, locale }) : [];
+  // Too few live listings for price statistics (Shëngjin had two): the page
+  // shows the place's research figures instead, the same record its /info
+  // page opens with, and — on a city with no district chips — the city's
+  // districts as cards. The page used to end at the grid and one generic line.
+  const zoneId = !facts
+    ? districtSlug
+      ? (placeDoc as { _id?: string } | null)?._id
+      : (placeDoc as { linkedZoneId?: string } | null)?.linkedZoneId
+    : undefined;
+  const [researchRecord, cityDistricts] = await Promise.all([
+    zoneId ? fetchLatestZoneMetricsByZoneId(zoneId) : Promise.resolve(null),
+    !districtSlug && districts.length === 0 ? fetchPublishedDistrictsByCity(citySlug) : Promise.resolve([]),
+  ]);
+  const tDistricts = cityDistricts.length > 0 ? await getTranslations({ locale, namespace: "Districts" }) : null;
   const faqAll = resolveListingFaqItems(faqRaw, locale);
   const faq = pickListingFaq(faqAll, districtSlug ? "district" : "city");
   const showFaq = faq.shown.length >= LISTING_FAQ_MIN;
@@ -151,28 +183,27 @@ export async function ListingDepthSections({
       ]
     : [];
 
-  if (!facts && districts.length === 0 && !showFaq && !want("buyingCosts")) return null;
+  if (
+    !facts &&
+    !researchRecord &&
+    districts.length === 0 &&
+    cityDistricts.length === 0 &&
+    !showFaq &&
+    !want("buyingCosts")
+  ) {
+    return null;
+  }
 
   return (
-    <div className="container max-w-8xl mx-auto px-5 2xl:px-0 pb-10 grid gap-10">
+    <>
       {facts ? (
-        <section aria-labelledby="listing-prices">
-          <h2 id="listing-prices" className={h2Class}>
-            {t("prices.title", names)}
-          </h2>
-          <p className={leadClass}>{t("prices.lead")}</p>
-          <dl className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-dark/10 dark:border-white/15 p-4">
-                <dt className="text-xs text-dark/60 dark:text-white/60">{stat.label}</dt>
-                <dd className="mt-1 text-lg font-semibold text-dark dark:text-white tabular-nums">{stat.value}</dd>
-              </div>
-            ))}
-          </dl>
+        <Section aria-labelledby="listing-prices">
+          <SectionHeading id="listing-prices" title={t("prices.title", names)} lead={t("prices.lead")} />
+          <StatTiles stats={stats} />
           {slices.length > 0 ? (
             <>
-              <h3 className="mt-5 text-sm font-semibold text-dark/70 dark:text-white/70">{t("prices.slices")}</h3>
-              <ul className="mt-2 flex flex-wrap gap-2">
+              <h3 className={`mt-8 ${subheadClass}`}>{t("prices.slices")}</h3>
+              <ul className="mt-3 flex flex-wrap gap-2">
                 {slices.map((slice) => {
                   const body = (
                     <>
@@ -205,7 +236,7 @@ export async function ListingDepthSections({
               </ul>
             </>
           ) : null}
-          <p className="mt-4 text-xs text-dark/50 dark:text-white/50">
+          <p className={`mt-6 ${noteClass}`}>
             {t("prices.asOf", { date: asOf, count: facts.count })}{" "}
             {infoHref ? (
               <Link href={infoHref} className={textLinkClass}>
@@ -213,24 +244,31 @@ export async function ListingDepthSections({
               </Link>
             ) : null}
           </p>
-        </section>
+        </Section>
+      ) : null}
+
+      {!facts && researchRecord ? (
+        <ZoneStatsAutoSection locale={locale} record={researchRecord} titleOverride={infoLabel} />
       ) : null}
 
       {/* The lead magnet, right after the numbers it expands on. Renders only
           for Durrës; the card is static and the form inside is the island. */}
-      <GuideDownloadCard
-        locale={locale}
-        citySlug={citySlug}
-        subject={{ city: citySlug, ...(districtSlug ? { district: districtSlug } : {}) }}
-        headingClassName={`${h2Class} mt-2`}
-      />
+      <div className={CONTAINER}>
+        <GuideDownloadCard
+          locale={locale}
+          citySlug={citySlug}
+          subject={{ city: citySlug, ...(districtSlug ? { district: districtSlug } : {}) }}
+          headingClassName={cardHeadingClass}
+        />
+      </div>
 
       {districts.length > 0 ? (
-        <section aria-labelledby="listing-districts">
-          <h2 id="listing-districts" className={h2Class}>
-            {districtSlug ? t("districts.siblingsTitle", names) : t("districts.title", names)}
-          </h2>
-          <ul className="mt-4 flex flex-wrap gap-2">
+        <Section aria-labelledby="listing-districts">
+          <SectionHeading
+            id="listing-districts"
+            title={districtSlug ? t("districts.siblingsTitle", names) : t("districts.title", names)}
+          />
+          <ul className="flex flex-wrap gap-2">
             {districts.map((d) => (
               <li key={d.district}>
                 <Link
@@ -250,47 +288,83 @@ export async function ListingDepthSections({
             ))}
           </ul>
           {districtSlug ? (
-            <p className="mt-4 text-sm">
+            <p className="mt-6 text-sm">
               <Link href={cityHref} className={textLinkClass}>
                 {t("districts.allInCity", names)}
               </Link>
             </p>
           ) : null}
-        </section>
+        </Section>
+      ) : null}
+
+      {cityDistricts.length > 0 && tDistricts ? (
+        <Section aria-labelledby="listing-city-districts">
+          <SectionHeading
+            id="listing-city-districts"
+            title={tDistricts("hubTitle", { city: cityIn || cityLabel })}
+            trailing={
+              infoHref ? (
+                <Link href={infoHref} className={textLinkClass}>
+                  {infoLabel}
+                </Link>
+              ) : undefined
+            }
+          />
+          <div className={balancedGridClass(cityDistricts.length)}>
+            {cityDistricts.map((d) => {
+              const title = resolveLocalizedString(d.title as never, locale) || d.slug || "";
+              return (
+                <EntityCard
+                  key={d._id ?? d.slug}
+                  href={districtInfoPath(locale, citySlug, d.slug!, countrySlug)}
+                  title={title}
+                  imageUrl={d.heroImage?.asset?.url}
+                  imageAlt={d.heroImage?.alt || title}
+                  shortDescription={resolveLocalizedString(d.shortDescription as never, locale) || undefined}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  compact
+                />
+              );
+            })}
+          </div>
+        </Section>
       ) : null}
 
       {showFaq ? (
-        <section aria-labelledby="listing-faq">
-          <h2 id="listing-faq" className={h2Class}>
-            {t("faq.title", names)}
-          </h2>
-          <div className="mt-4 grid gap-5 max-w-3xl">
-            {faq.shown.map((item) => (
-              <div key={item.key}>
-                <h3 className="text-base font-semibold text-dark dark:text-white">{item.question}</h3>
-                <div className="mt-1 text-sm leading-relaxed text-dark/75 dark:text-white/75">
-                  {typeof item.answer === "string" ? (
+        <Section aria-labelledby="listing-faq">
+          <div className={SPLIT}>
+            <div className={`${SPLIT_ASIDE} lg:sticky lg:top-28 lg:self-start`}>
+              <h2 id="listing-faq" className={SECTION_TITLE}>
+                {t("faq.title", names)}
+              </h2>
+              {infoHref && (faq.hasMore || !districtSlug) ? (
+                <p className="mt-5 text-base">
+                  <Link href={infoHref} className={textLinkClass}>
+                    {t("faq.more", names)}
+                  </Link>
+                </p>
+              ) : null}
+            </div>
+            <FaqAccordion
+              className={SPLIT_MAIN}
+              idPrefix="listing-faq"
+              items={faq.shown.map((item) => ({
+                question: item.question,
+                answer:
+                  typeof item.answer === "string" ? (
                     <p className="whitespace-pre-line">{item.answer}</p>
                   ) : (
                     <PortableText value={item.answer as PortableTextBlock[]} components={answerComponents} />
-                  )}
-                </div>
-              </div>
-            ))}
+                  ),
+              }))}
+            />
           </div>
-          {infoHref && (faq.hasMore || !districtSlug) ? (
-            <p className="mt-4 text-sm">
-              <Link href={infoHref} className={textLinkClass}>
-                {t("faq.more", names)}
-              </Link>
-            </p>
-          ) : null}
-        </section>
+        </Section>
       ) : null}
 
       {want("buyingCosts") ? (
-        <BuyingCostsSection locale={locale} medianFlatPrice={facts?.medianFlatPrice ?? null} headingClassName={h2Class} />
+        <BuyingCostsSection locale={locale} medianFlatPrice={facts?.medianFlatPrice ?? null} />
       ) : null}
-    </div>
+    </>
   );
 }

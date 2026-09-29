@@ -60,6 +60,8 @@ export type PropertySearchBarProps = {
   initialView?: ViewMode;
   /** When inside CatalogViewProvider: use this instead of initialView for applyFilters; avoids rerender on view change */
   getCurrentView?: () => ViewMode;
+  /** City and district listings: open on the summary pill, not the full form. */
+  collapsedByDefault?: boolean;
 };
 
 export function useCatalogFilters(props: PropertySearchBarProps) {
@@ -113,7 +115,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     clientMounted,
     advancedInnerRef,
     advancedHeight,
-  } = useCatalogFilterChrome();
+  } = useCatalogFilterChrome({ startCollapsed: props.collapsedByDefault === true });
 
   const currentDealKey = deal || "any";
   const currentRange = React.useMemo(

@@ -7,20 +7,24 @@ import * as React from "react";
  * mobile modal (open + body-lock + Escape), advanced-row expand/measure, and mount flag.
  * Holds no filter values — only presentational state.
  */
-export function useCatalogFilterChrome() {
+export function useCatalogFilterChrome({ startCollapsed = false }: { startCollapsed?: boolean } = {}) {
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const [isCompact, setIsCompact] = React.useState(false);
   // Airbnb-style, direction-aware condense: scrolling DOWN collapses the full
   // form to a summary pill; scrolling UP (even slightly, mid-page) re-opens it.
   // Clicking the pill also opens it. `expanded` holds that open/closed intent
   // while in the compact (scrolled) zone; at the very top it's always open.
-  const [expanded, setExpanded] = React.useState(true);
+  // `startCollapsed` (a city or district listing): the place is already in
+  // the URL, so the page opens on the one-line summary instead of a two-row
+  // form whose first field asks for the city the reader just chose. The form
+  // opens on click only; scrolling never re-opens it.
+  const [expanded, setExpanded] = React.useState(!startCollapsed);
   const [isMobileViewport, setIsMobileViewport] = React.useState(false);
   const [mobileFilterModalOpen, setMobileFilterModalOpen] = React.useState(false);
   const [clientMounted, setClientMounted] = React.useState(false);
   const wasCompactRef = React.useRef(false);
   const lastScrollYRef = React.useRef(0);
-  const expandedRef = React.useRef(true);
+  const expandedRef = React.useRef(!startCollapsed);
   // Timestamp of the last open/close flip. Expanding the form grows the page, and
   // the browser's scroll anchoring then nudges scrollY downward — which would read
   // as a "scroll down" and instantly re-collapse. We freeze direction handling for
@@ -46,11 +50,11 @@ export function useCatalogFilterChrome() {
       wasCompactRef.current = compact;
       setIsCompact(compact);
       if (!compact) {
-        setExpandedNow(true); // back at the top → full form
+        if (!startCollapsed) setExpandedNow(true); // back at the top → full form
       } else if (performance.now() - toggleAtRef.current >= 300) {
         // Skip while the post-flip settle window is active (see toggleAtRef).
         const delta = y - lastScrollYRef.current;
-        if (delta <= -4) setExpandedNow(true); // scrolling up → reveal
+        if (delta <= -4 && !startCollapsed) setExpandedNow(true); // scrolling up → reveal
         else if (delta >= 4) setExpandedNow(false); // scrolling down → condense
       }
       lastScrollYRef.current = y;
@@ -58,7 +62,7 @@ export function useCatalogFilterChrome() {
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [startCollapsed]);
 
   // Catalog-mode flag for the global header: present only while the filter bar
   // is mounted (i.e. on catalog/listing routes), so the header can shrink there
@@ -83,7 +87,7 @@ export function useCatalogFilterChrome() {
     setExpanded(true);
   }, []);
 
-  const collapsed = isCompact && !expanded;
+  const collapsed = (isCompact || startCollapsed) && !expanded;
 
   React.useEffect(() => {
     setClientMounted(true);

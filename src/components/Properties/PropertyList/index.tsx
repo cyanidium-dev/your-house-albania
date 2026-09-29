@@ -300,6 +300,7 @@ async function PropertiesListing({
     initialAmenities: amenitiesFilter,
     initialPageSize: String(pageSize),
     initialView: viewMode,
+    collapsedByDefault: Boolean(pathCity),
   }
 
   const tDepth = heading && !('text' in heading) ? await getTranslations({ locale, namespace: 'Catalog.depth' }) : null
