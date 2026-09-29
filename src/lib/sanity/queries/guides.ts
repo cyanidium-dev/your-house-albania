@@ -1,4 +1,4 @@
-import { getClient, sanityCache, SANITY_TAGS } from './_core';
+import { getClient, sanityCache, SANITY_TAGS, REAL_IMAGE_ASSET } from './_core';
 
 export type GuideIndexEntry = {
   _id?: string;
@@ -54,7 +54,7 @@ export async function fetchGuideIndexEntries(): Promise<GuideIndexEntry[]> {
         "slug": slug.current,
         title,
         cardDescription,
-        cardImage { asset-> { url } },
+        cardImage { ${REAL_IMAGE_ASSET} },
         _updatedAt,
         locales
       }`;

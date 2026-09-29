@@ -311,7 +311,9 @@
     "confidenceHigh": "High confidence",
     "confidenceMedium": "Medium confidence",
     "confidenceLow": "Low confidence",
-    "methodology": "Methodology"
+    "methodology": "Methodology",
+    "confidence": "Confidence",
+    "versus": "{diff} vs {other}"
   },
   "ZoneMetrics": {
     "priceNew": "New build, €/m²",
@@ -717,7 +719,9 @@
     "title": "Guides to buying property in Albania",
     "description": "City comparisons, prices by district, legal steps and costs: guides for buying in Albania, Durrës first.",
     "empty": "No guides published yet.",
-    "breadcrumbHome": "Home"
+    "breadcrumbHome": "Home",
+    "sectionGuides": "Guides",
+    "sectionComparisons": "Comparisons: which to choose"
   },
   "ImageCredits": {
     "title": "Image credits",

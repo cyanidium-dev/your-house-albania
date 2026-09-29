@@ -15,6 +15,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { asTrackerStatus, StatusBadge, type TrackerStatus } from './impl/StatusBadge'
+import { FaqAccordion } from '@/components/shared/faq/FaqAccordion'
 import { SourcesList } from './impl/SourcesList'
 
 const VISIBLE_TIMELINE_EVENTS = 6
@@ -160,12 +161,12 @@ export async function TrackerSection({
   const sources = Array.isArray(tracker.sources) ? tracker.sources : []
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {faqLd}
         <div className="max-w-3xl">
           {title ? (
-            <h2 className="text-3xl sm:text-4xl lg:text-52 font-medium text-dark dark:text-white leading-[1.15]">
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-medium text-dark dark:text-white leading-[1.15]">
               {title}
             </h2>
           ) : null}
@@ -221,18 +222,17 @@ export async function TrackerSection({
             <h3 className="text-xl sm:text-2xl font-medium text-dark dark:text-white mb-4">
               {t('faqTitle')}
             </h3>
-            <Accordion type="single" collapsible className="flex flex-col gap-3">
-              {faqData.items.map((item, idx) => (
-                <AccordionItem key={idx} value={`tracker-faq-${idx}`}>
-                  <AccordionTrigger className="p-4 text-base">{item.question}</AccordionTrigger>
-                  <AccordionContent className="whitespace-pre-line">
-                    {typeof item.answer === 'string'
-                      ? item.answer
-                      : portableTextToPlainText(item.answer)}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <FaqAccordion
+              idPrefix="tracker-faq"
+              items={faqData.items.map((item) => ({
+                question: item.question,
+                answer: (
+                  <p className="whitespace-pre-line">
+                    {typeof item.answer === 'string' ? item.answer : portableTextToPlainText(item.answer)}
+                  </p>
+                ),
+              }))}
+            />
           </div>
         ) : null}
 

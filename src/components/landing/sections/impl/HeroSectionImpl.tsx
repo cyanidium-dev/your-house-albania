@@ -10,6 +10,7 @@ import { PhotoHeroFlag } from '@/components/shared/PhotoHeroFlag'
 import AiSearchInput from '@/components/ai/AiSearchInput'
 import { isAiSearchEnabled } from '@/lib/ai/config'
 import { cn } from '@/lib/utils'
+import { HERO_LABEL, HERO_TITLE } from '@/components/shared/layout'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 
 export type HeroData = {
@@ -33,6 +34,8 @@ export type HeroData = {
   layout?: 'default' | 'home';
   backgroundImageUrl?: string;
   backgroundImageAlt?: string;
+  /** Original pixel size of the CMS background, when known. */
+  backgroundImageSize?: { width: number; height: number };
   enabled?: boolean;
   /**
    * What the page is about, so a landing with no background in the CMS still
@@ -67,6 +70,17 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
       ? heroData.backgroundImageAlt || title || 'Hero background'
       : tPhoto(fallbackPhoto.key)
   const isHome = heroData?.layout === 'home'
+  // A CMS photo too small or too oddly shaped for a full-width background.
+  // Nineteen of fifty district heroes are 800×600 uploads, stretched to 2560px
+  // wide they read as blur; one is a 1280×183 strip. From a tablet up such a
+  // photo is shown framed beside the copy, at a size it can hold, over a
+  // blurred copy of itself. Phones keep the full-bleed photo: at 375px an
+  // 800px image is sharp.
+  const bgSize = heroData?.backgroundImageUrl ? heroData.backgroundImageSize : undefined
+  const framed =
+    !isHome &&
+    Boolean(bgSize) &&
+    (bgSize!.width < 1600 || bgSize!.width / bgSize!.height > 2.6 || bgSize!.width / bgSize!.height < 1)
   const searchEnabled = heroData?.searchEnabled === true
   const aiSearchVisible = heroData?.aiSearchEnabled === true && isAiSearchEnabled()
   const primaryCta = resolveCta(heroData?.ctaLabel, heroData?.ctaHref, locale)
@@ -107,13 +121,15 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
         )}
       >
         <PhotoHeroFlag />
-        <div className="absolute inset-0 z-0">
+        {/* Clipped: the blurred background of a framed hero is scaled up to
+            hide the blur's soft edges and would widen the page otherwise. */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
           <Image
             src={bgImageUrl}
             alt={bgImageAlt}
             fill
-            sizes="100vw"
-            className="object-cover object-center"
+            sizes={framed ? '(max-width: 767px) 100vw, 50vw' : '100vw'}
+            className={cn('object-cover object-center', framed && 'md:scale-110 md:blur-2xl')}
             // Full-bleed hero above the fold: it has to start downloading with
             // the document, not after the lazy-loading pass.
             priority
@@ -142,6 +158,17 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
             isHome ? 'pt-24 pb-6 md:pt-60' : 'pt-32 pb-14 md:pt-44'
           )}
         >
+          {framed ? (
+            <div className="hidden md:block absolute z-20 right-5 2xl:right-0 top-40 lg:top-44 w-[38%] max-w-[34rem] aspect-[4/3] overflow-hidden rounded-3xl ring-1 ring-white/15 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)]">
+              <Image
+                src={bgImageUrl}
+                alt=""
+                fill
+                sizes="(max-width: 767px) 1px, 40vw"
+                className="object-cover object-center"
+              />
+            </div>
+          ) : null}
           {breadcrumb ? (
             <div className="relative z-20 text-left mb-6 [&_*]:!text-white/85 [&_a:hover]:!text-white">
               {breadcrumb}
@@ -155,15 +182,12 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               // Home on a phone: headline, then the search, then the assistant,
               // then a plain link to everything. `md:block` drops the flex
               // ordering, so tablets and desktops keep the source order.
-              isHome ? 'flex flex-col text-start md:block' : 'text-center'
+              isHome ? 'flex flex-col text-start md:block' : 'text-start'
             )}
           >
             {shortLine ? (
               <p
-                className={cn(
-                  'text-inherit font-semibold uppercase opacity-90 md:text-base md:tracking-[0.14em]',
-                  isHome ? 'hidden md:block text-xs tracking-[0.12em]' : 'text-xs tracking-[0.12em]'
-                )}
+                className={cn(HERO_LABEL, isHome && 'hidden md:block')}
               >
                 {shortLine}
               </p>
@@ -173,8 +197,9 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 28px keeps the line count and gives the photo back. */}
             <h1
               className={cn(
-                'font-display text-inherit sm:text-[2.25rem] sm:leading-[1.08] md:text-5xl lg:text-6xl lg:leading-[1.05] font-bold tracking-[-0.02em] md:tracking-[-0.03em] md:max-w-[55%] md:mt-4 md:mb-5 text-balance',
-                isHome ? 'order-2 text-[1.625rem] leading-[1.12] mt-1 mb-5' : 'text-[1.75rem] leading-[1.12] mt-3 mb-4'
+                HERO_TITLE,
+                'text-inherit md:max-w-[55%] md:mt-4 md:mb-5',
+                isHome ? 'order-2 text-[1.625rem] mt-1 mb-5' : 'mt-3 mb-4'
               )}
             >
               {title}
@@ -192,7 +217,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
             {primaryCta || secondaryCta ? (
               <div
                 className={cn(
-                  'flex-col sm:flex-row flex-wrap gap-3 justify-center md:justify-start',
+                  'flex-col sm:flex-row flex-wrap gap-3 justify-start',
                   isHome ? 'hidden md:flex' : 'flex'
                 )}
               >
@@ -229,7 +254,9 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               </Link>
             ) : null}
             {searchEnabled ? (
-              <div className={cn('md:mt-16 flex justify-center', isHome ? 'order-3' : 'mt-12')}>
+              // Start-aligned with the headline above it on md+; centred it sat
+              // at neither edge of a left-aligned hero.
+              <div className={cn('md:mt-16 flex justify-center md:justify-start', isHome ? 'order-3' : 'mt-12')}>
                 <HeroSearchWidget
                   locationOptions={locationOptions}
                   propertyTypeOptions={propertyTypeOptions}

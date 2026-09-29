@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { balancedGridClass, CONTAINER } from '@/components/shared/layout'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { BreadcrumbJsonLd } from '@/components/shared/BreadcrumbJsonLd'
 import { Icon } from '@/components/shared/Icon'
@@ -74,14 +75,14 @@ export default async function KnowledgeIndexPage({ params }: Props) {
   return (
     <main>
       <section className="pt-32 md:pt-40 pb-16 md:pb-24">
-        <div className="container mx-auto max-w-6xl px-5 2xl:px-0">
+        <div className={CONTAINER}>
           <BreadcrumbJsonLd
             items={toBreadcrumbJsonLdItems(crumbs, `/${locale}/knowledge`)}
             baseUrl={baseUrl}
           />
           <Breadcrumb items={crumbs} />
 
-          <h1 className="mt-6 text-40 md:text-52 leading-[1.1] font-bold text-dark dark:text-white">
+          <h1 className="mt-6 text-4xl md:text-5xl leading-[1.1] tracking-tight font-bold text-dark dark:text-white">
             {t('title')}
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-dark/75 dark:text-white/75">
@@ -93,10 +94,10 @@ export default async function KnowledgeIndexPage({ params }: Props) {
           ) : (
             groups.map((group) => (
               <section key={group.key} className="mt-12">
-                <h2 className="text-24 font-bold text-dark dark:text-white">
+                <h2 className="text-2xl md:text-[1.75rem] tracking-tight font-bold text-dark dark:text-white">
                   {t(`groups.${group.key}` as never)}
                 </h2>
-                <ul className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <ul className={`mt-5 ${balancedGridClass(group.items.length)}`}>
                   {group.items.map((entry) => (
                     <li key={entry.documentId}>
                       <Link

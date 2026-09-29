@@ -144,7 +144,7 @@ export function GroupedVariant({
         </p>
       ) : null}
       {data.title ? (
-        <h2 className="lg:text-52 text-40 font-medium text-dark dark:text-white leading-[1.2]">
+        <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-medium text-dark dark:text-white leading-[1.1] tracking-tight">
           {data.title}
         </h2>
       ) : null}
@@ -214,7 +214,7 @@ export function GroupedVariant({
   );
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {hasMediaColumn ? (
           <div className="grid lg:grid-cols-2 gap-10 lg:items-start">

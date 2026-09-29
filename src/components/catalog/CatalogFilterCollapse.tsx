@@ -31,6 +31,7 @@ export function CatalogFilterCollapse({
   collapsed,
   form,
   pill,
+  align = "center",
 }: {
   /** Page scrolled past the condense threshold. Accepted for API compatibility. */
   compact: boolean;
@@ -38,6 +39,8 @@ export function CatalogFilterCollapse({
   collapsed: boolean;
   form: React.ReactNode;
   pill: React.ReactNode;
+  /** `start`: the pill lines up with the listing heading (pages that open collapsed). */
+  align?: "center" | "start";
 }) {
   const formRef = React.useRef<HTMLDivElement>(null);
   const pillRef = React.useRef<HTMLDivElement>(null);
@@ -90,7 +93,9 @@ export function CatalogFilterCollapse({
   // renders inside an md:block wrapper). Applied to the glass + pill layers only,
   // so the full-width form layer still measures its natural height.
   const collapsedPanel =
-    "md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[42rem] md:max-w-[calc(100%-1rem)]";
+    align === "start"
+      ? "md:left-0 md:right-auto md:w-[42rem] md:max-w-full"
+      : "md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[42rem] md:max-w-[calc(100%-1rem)]";
 
   // ONE constant radius for both states instead of animating rounded-2xl -> full.
   // 24px (rounded-3xl) is exactly half the pill height, so the collapsed bar reads
@@ -114,7 +119,7 @@ export function CatalogFilterCollapse({
           mounted
             ? `absolute inset-x-0 top-0 transition-[height] ${ease}`
             : "absolute inset-0",
-          mounted && collapsed && collapsedPanel
+          collapsed && collapsedPanel
         )}
         style={mounted ? { height: glassH } : undefined}
       />
@@ -127,7 +132,9 @@ export function CatalogFilterCollapse({
           "z-20",
           mounted
             ? `absolute inset-x-0 top-0 transition-opacity ${ease}`
-            : "relative",
+            : collapsed
+              ? "hidden"
+              : "relative",
           mounted && collapsed ? "pointer-events-none opacity-0" : "opacity-100"
         )}
       >
@@ -140,10 +147,10 @@ export function CatalogFilterCollapse({
         aria-hidden={mounted ? !collapsed : true}
         className={cn(
           "z-10",
-          !mounted && "hidden",
+          !mounted && (collapsed ? "relative" : "hidden"),
           mounted && `absolute inset-x-0 top-0 transition-opacity ${ease}`,
-          mounted && collapsed ? "opacity-100" : "pointer-events-none opacity-0",
-          mounted && collapsed && collapsedPanel
+          mounted && (collapsed ? "opacity-100" : "pointer-events-none opacity-0"),
+          collapsed && collapsedPanel
         )}
       >
         {pill}

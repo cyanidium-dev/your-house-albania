@@ -40,7 +40,7 @@ export function SplitDarkVariant({
   const floatingStats = (data.highlightCards ?? []).slice(0, 2);
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="relative overflow-hidden rounded-3xl bg-dark ring-1 ring-white/10 min-h-[460px] md:min-h-[520px]">
           {/* Background media */}
@@ -107,7 +107,7 @@ export function SplitDarkVariant({
                 </p>
               ) : null}
               {data.title ? (
-                <h2 className="text-3xl sm:text-4xl lg:text-[44px] xl:text-52 font-medium leading-[1.08] tracking-tight">
+                <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-medium leading-[1.1] tracking-tight">
                   {data.title}
                 </h2>
               ) : null}

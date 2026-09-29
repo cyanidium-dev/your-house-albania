@@ -5,6 +5,7 @@ import { canonicalCatalogUrl } from "@/lib/routes/catalog";
 import { dealRouteSegmentToQueryValue } from "@/lib/routes/catalogPathPrimitives";
 import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
 import { SectionHeader, SectionCtaLink } from "@/components/landing/sectionPrimitives";
+import { Section, SPLIT, SPLIT_ASIDE, SPLIT_MAIN } from "@/components/shared/layout";
 import { EntityCard } from "./EntityCard";
 
 export type PropertyTypesData = {
@@ -55,24 +56,27 @@ const PropertyTypes: React.FC<{
   if (types.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-        <div className="grid lg:grid-cols-2 gap-10">
-          <div className="flex flex-col gap-10">
+    <Section>
+        <div className={SPLIT}>
+          <div className={`${SPLIT_ASIDE} flex flex-col gap-10`}>
             <SectionHeader
               variant="left"
               eyebrowText={shortLine}
               title={title}
               subtitle={subtitle}
               eyebrowRowClassName="gap-2.5"
-              titleClassName="text-3xl sm:text-4xl lg:text-40 xl:text-52 mt-4 mb-2 font-medium leading-[1.2] text-dark dark:text-white"
-              subtitleClassName="text-base text-dark/50 dark:text-white/50 whitespace-pre-line"
+              titleClassName="mt-4 break-words"
             />
             {ctaLabel && href ? (
               <SectionCtaLink href={href} label={ctaLabel} />
             ) : null}
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6">
+          {/* Three types in two columns left the third alone on a row. */}
+          <div
+            className={`${SPLIT_MAIN} grid gap-3 sm:gap-5 md:gap-6 ${
+              types.length % 3 === 0 && types.length % 2 !== 0 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"
+            }`}
+          >
             {types.map((type, index) => (
               <EntityCard
                 key={type._id ?? (type.slug || `property-type-${index}`)}
@@ -86,8 +90,7 @@ const PropertyTypes: React.FC<{
             ))}
           </div>
         </div>
-      </div>
-    </section>
+    </Section>
   );
 };
 

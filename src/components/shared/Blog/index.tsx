@@ -109,7 +109,7 @@ const BlogSmall: React.FC<{
   const ctaLabel = cta?.label || t("readAllArticles");
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <SectionHeader
           variant="split"

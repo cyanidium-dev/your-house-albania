@@ -1,10 +1,5 @@
 import { useTranslations } from "next-intl";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { FaqAccordion } from "@/components/shared/faq/FaqAccordion";
 import { FaqJsonLd } from "@/components/shared/FaqJsonLd";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 
@@ -56,20 +51,14 @@ export function BlogFaq({ faq, locale, emitJsonLd = true }: Props) {
   if (items.length === 0) return null;
 
   return (
-    <section className="mt-12">
-      <h2 className="text-dark dark:text-white text-2xl font-semibold mb-6">
+    <section className="mt-14">
+      <h2 className="text-dark dark:text-white text-2xl sm:text-3xl font-semibold tracking-tight mb-6">
         {t("faqTitle")}
       </h2>
-      <Accordion type="single" collapsible className="w-full">
-        {items.map((item, i) => (
-          <AccordionItem key={i} value={`faq-${i}`}>
-            <AccordionTrigger className="text-start">{item.question}</AccordionTrigger>
-            <AccordionContent>
-              <p className="text-dark/75 dark:text-white/75 leading-relaxed">{item.answer}</p>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <FaqAccordion
+        idPrefix="blog-faq"
+        items={items.map((item) => ({ question: item.question, answer: <p>{item.answer}</p> }))}
+      />
       {emitJsonLd && <FaqJsonLd items={items} />}
     </section>
   );

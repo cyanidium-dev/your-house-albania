@@ -13,12 +13,7 @@ import { resolveLocalizedString, resolveLocalizedContent } from "@/lib/sanity/lo
 import { collectHeadings } from "@/lib/blog/headingAnchors";
 import { ZoneStatsEmbed, type ZoneStatsEmbedValue } from "./blocks/ZoneStatsEmbed";
 import { TrackerEmbed, type TrackerEmbedValue } from "./blocks/TrackerEmbed";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { FaqAccordion } from "@/components/shared/faq/FaqAccordion";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 
 type BlogArticleContentProps = {
@@ -110,21 +105,21 @@ function createSharedPortableTextComponents(
     },
     list: {
       bullet: ({ children }) => (
-        <ul className="mt-4 flex flex-col gap-2 list-none pl-0">{children}</ul>
+        <ul className="mt-5 flex flex-col gap-2.5 list-none pl-0">{children}</ul>
       ),
       number: ({ children }) => (
-        <ol className="mt-4 flex flex-col gap-2 list-decimal pl-6">{children}</ol>
+        <ol className="mt-5 flex flex-col gap-2.5 list-decimal pl-6 marker:text-dark/45 dark:marker:text-white/45">{children}</ol>
       ),
     },
     listItem: {
       bullet: ({ children }) => (
-        <li className="flex items-start gap-2 text-dark/75 dark:text-white/75 text-base">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-          {children}
+        <li className="flex items-start gap-3 text-dark/80 dark:text-white/80 text-[17px] leading-[1.7]">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-[0.7rem]" />
+          <span className="min-w-0">{children}</span>
         </li>
       ),
       number: ({ children }) => (
-        <li className="text-dark/75 dark:text-white/75 text-base">{children}</li>
+        <li className="pl-1 text-dark/80 dark:text-white/80 text-[17px] leading-[1.7]">{children}</li>
       ),
     },
   };
@@ -149,14 +144,14 @@ function createBlogComponents(
 ): PortableTextComponents {
   const blockComponents: PortableTextComponents["block"] = {
     h1: ({ children }) => (
-      <h2 className="text-dark dark:text-white text-2xl font-semibold mt-10 first:mt-0">
+      <h2 className="text-dark dark:text-white text-2xl sm:text-3xl font-semibold tracking-tight mt-14 mb-1 first:mt-0">
         {children}
       </h2>
     ),
     h2: ({ children, value }) => (
       <h3
         id={headingIds.get(String((value as { _key?: unknown })?._key ?? "")) || undefined}
-        className="text-dark dark:text-white text-xl font-medium mt-8 first:mt-0 scroll-mt-28"
+        className="text-dark dark:text-white text-xl sm:text-2xl font-semibold tracking-tight mt-12 mb-1 first:mt-0 scroll-mt-28"
       >
         {children}
       </h3>
@@ -164,13 +159,13 @@ function createBlogComponents(
     h3: ({ children, value }) => (
       <h4
         id={headingIds.get(String((value as { _key?: unknown })?._key ?? "")) || undefined}
-        className="text-dark dark:text-white text-lg font-medium mt-6 first:mt-0 scroll-mt-28"
+        className="text-dark dark:text-white text-lg sm:text-xl font-semibold mt-9 mb-1 first:mt-0 scroll-mt-28"
       >
         {children}
       </h4>
     ),
     normal: ({ children }) => (
-      <p className="text-dark/75 dark:text-white/75 text-base leading-relaxed mt-4 first:mt-0">
+      <p className="text-dark/80 dark:text-white/80 text-[17px] leading-[1.75] mt-5 first:mt-0">
         {children}
       </p>
     ),
@@ -353,8 +348,10 @@ function createBlogComponents(
                 {blockTitle}
               </h3>
             )}
-            <Accordion type="single" collapsible className="w-full">
-              {items.map((item, i) => {
+            <FaqAccordion
+              idPrefix={`faq-block-${(value as { _key?: string })?._key ?? "x"}`}
+              defaultOpen={-1}
+              items={items.map((item) => {
                 const q = item.question?.[locale] ?? item.question?.en ?? "";
                 const aRaw = item.answer;
                 const resolvedBlocks = resolveLocalizedContent(
@@ -371,30 +368,23 @@ function createBlogComponents(
                     : typeof aRaw === "object" && aRaw !== null && !Array.isArray(aRaw)
                       ? resolveLocalizedString(aRaw as never, locale)
                       : "";
-                return (
-                  <AccordionItem key={i} value={`faq-${i}`}>
-                    <AccordionTrigger className="text-left text-dark dark:text-white">
-                      {q}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      {answerBlocks.length > 0 ? (
-                        <PortableText
-                          value={answerBlocks}
-                          components={{
-                            block: blockComponents,
-                            ...sharedPortable,
-                          }}
-                        />
-                      ) : (
-                        <span className="text-dark/75 dark:text-white/75">
-                          {answerString}
-                        </span>
-                      )}
-                    </AccordionContent>
-                  </AccordionItem>
-                );
+                return {
+                  question: q,
+                  answer:
+                    answerBlocks.length > 0 ? (
+                      <PortableText
+                        value={answerBlocks}
+                        components={{
+                          block: blockComponents,
+                          ...sharedPortable,
+                        }}
+                      />
+                    ) : (
+                      <p>{answerString}</p>
+                    ),
+                };
               })}
-            </Accordion>
+            />
           </div>
         );
       },

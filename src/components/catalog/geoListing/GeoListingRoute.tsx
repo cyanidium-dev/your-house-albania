@@ -542,21 +542,14 @@ export async function GeoListingPage({ params, search }: Props) {
   const placeIn = districtLabel ? `${districtLabel}, ${cityIn}` : cityIn;
   const hasQuery = listingUrlHasQueryParams(search);
 
-  // The blocks under the grid are for the pages we ask Google to index: a city
-  // or a district the registry indexes in this locale, at its bare URL. A
-  // filtered or noindexed listing skips the queries and the markup.
+  // The blocks under the grid (what homes cost here, the districts, the
+  // questions, what buying costs) belong to every city and district page at
+  // its bare URL. They used to render only where the registry indexes the
+  // page, so a small city like Shëngjin ended at two cards and one generic
+  // sentence: a reader who had just chosen the place learned nothing about
+  // it. Filtered and faceted listings still skip them.
   const depthFamily = !facet && !typeSlug && !dealType ? (pathDistrict ? "district" : "city") : null;
-  const depthIndexable =
-    geo.mode === "fullGeo" && depthFamily && !hasQuery
-      ? (
-          await registryIndexing({
-            locale,
-            countrySlug: geo.listingCountrySlug,
-            citySlug: geo.listingCitySlug,
-            district: pathDistrict || undefined,
-          })
-        ).indexable
-      : false;
+  const showDepth = geo.mode === "fullGeo" && Boolean(depthFamily) && !hasQuery;
 
   const breadcrumbCountry: string | undefined =
     geo.mode === "fullGeo" ? geo.listingCountrySlug : undefined;
@@ -573,7 +566,7 @@ export async function GeoListingPage({ params, search }: Props) {
         deal={dealType || undefined}
         footer={
           geo.mode === "fullGeo" ? (
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-start gap-3">
               <ListingFactsLine
                 locale={locale}
                 filters={{
@@ -650,7 +643,7 @@ export async function GeoListingPage({ params, search }: Props) {
             : undefined
         }
       />
-      {depthIndexable && depthFamily && geo.mode === "fullGeo" ? (
+      {showDepth && depthFamily && geo.mode === "fullGeo" ? (
         <ListingDepthSections
           locale={locale}
           countrySlug={geo.listingCountrySlug}

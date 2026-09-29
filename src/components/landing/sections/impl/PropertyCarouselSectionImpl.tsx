@@ -1,5 +1,5 @@
 import type { PropertyHomes } from '@/types/propertyHomes'
-import { SectionHeader } from '@/components/landing/sectionPrimitives'
+import { CONTAINER, SECTION_Y, SectionHeading } from '@/components/shared/layout'
 import { TopOffersCarouselClient, type TopOffersGroup } from './TopOffersCarouselClient'
 
 type PropertiesData = { badge?: string; title?: string; description?: string } | null;
@@ -12,7 +12,6 @@ const Properties: React.FC<{
   initialGroup?: TopOffersGroup;
 }> = async ({ locale, propertiesData, propertyItems, topOffersGroups, initialGroup }) => {
   const debug = process.env.NODE_ENV === 'development'
-  const badge = propertiesData?.badge
   const title = propertiesData?.title
   const description = propertiesData?.description
 
@@ -63,24 +62,18 @@ const Properties: React.FC<{
     })
   }
   return (
-    <section className="py-10 md:py-24">
-      <div className='container max-w-8xl mx-auto px-5 2xl:px-0'>
-        {/* On a phone the 40px centred heading took four lines and most of a
-            screen before the first listing; tablets and desktops keep it. */}
-        <SectionHeader
-          variant="center"
-          eyebrowText={badge}
-          title={title}
-          subtitle={description}
-          className="mb-6 gap-2 md:mb-16 md:gap-3"
-          titleClassName="text-[1.625rem] leading-[1.15] md:text-40 md:leading-11 mb-0 md:mb-2"
-          subtitleClassName="text-sm md:text-xm"
-        />
+    <section className={SECTION_Y}>
+      <div className={CONTAINER}>
         <TopOffersCarouselClient
           locale={locale}
           groups={groups}
           initialGroup={initialGroup}
           showTabs={Boolean(topOffersGroups && Object.keys(topOffersGroups).length > 0)}
+          header={
+            title || description ? (
+              <SectionHeading title={title} lead={description} className="mb-0 md:mb-0" />
+            ) : undefined
+          }
         />
       </div>
     </section>

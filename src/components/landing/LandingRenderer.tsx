@@ -8,6 +8,7 @@ import { formatBlogDate } from '@/lib/date/formatLocale'
 import { asSections } from './sectionRenderers/helpers'
 import { renderLandingSection } from './sectionRenderers/registry'
 import type { LinkedZone } from './sectionRenderers/handlers/types'
+import { CONTAINER, PAGE_TOP } from '@/components/shared/layout'
 
 export type LandingPageDoc = {
   _id?: string
@@ -120,6 +121,17 @@ export async function LandingRenderer({
     )
     const heroFirst = sections[0]?._type === 'heroSection' && nodes.length > 0
     nodes.splice(heroFirst ? 1 : 0, 0, badge)
+  }
+
+  // A landing without a hero (privacy, terms) had nowhere to put its
+  // breadcrumb, so it was dropped, and its first section sat under the fixed
+  // header. It gets its own strip at the top of the page instead.
+  if (breadcrumb && sections[0]?._type !== 'heroSection') {
+    nodes.unshift(
+      <div key="landing-breadcrumb" className={`${CONTAINER} ${PAGE_TOP}`}>
+        {breadcrumb}
+      </div>,
+    )
   }
 
   return <main>{nodes}</main>

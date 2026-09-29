@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { Icon } from "@/components/shared/Icon";
 import { resolveCta, resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
+import { Section, SECTION_LEAD, SECTION_TITLE } from '@/components/shared/layout'
 import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'
 
 export type CtaSectionProps = {
@@ -74,26 +74,23 @@ export function CtaSection({
 
   if (!eyebrow && !title?.trim() && !description?.trim() && !showCtas) return null
 
+  // A closing panel on the page grid: the question on the left, the actions
+  // on the right. It used to be a centred column of loose text on the page
+  // background, the one block on a landing that did not start at the left
+  // edge. The eyebrow (the place name again, above a title that already
+  // names the place) is no longer shown.
   return (
-    <section className="py-16 md:py-24" data-lead-placement="landing">
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-        <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
-          {eyebrow ? (
-            <p className="text-dark/75 dark:text-white/75 text-base font-semibold flex items-center justify-center gap-2">
-              <Icon icon="ph:house-simple-fill" className="text-2xl text-primary shrink-0" aria-hidden />
-              <span>{eyebrow}</span>
-            </p>
-          ) : null}
-          {title?.trim() ? (
-            <h2 className="text-dark dark:text-white text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.15]">
-              {title}
-            </h2>
-          ) : null}
-          {description?.trim() ? (
-            <p className="text-dark/60 dark:text-white/60 text-base md:text-lg leading-relaxed whitespace-pre-line">{description}</p>
-          ) : null}
+    <Section data-lead-placement="landing">
+      <div className="rounded-3xl bg-primary/[0.07] ring-1 ring-primary/20 dark:bg-primary/[0.12] dark:ring-primary/25 p-6 sm:p-10 lg:p-12">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-16">
+          <div className="min-w-0 lg:col-span-7">
+            {title?.trim() ? <h2 className={SECTION_TITLE}>{title}</h2> : null}
+            {description?.trim() ? (
+              <p className={`${SECTION_LEAD} ${title?.trim() ? 'mt-4' : ''}`}>{description}</p>
+            ) : null}
+          </div>
           {showCtas ? (
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center w-full mt-2">
+            <div className="min-w-0 lg:col-span-5 flex flex-col sm:flex-row flex-wrap gap-3 lg:justify-end">
               {primary ? (
                 <CtaButton href={primary.href} label={primary.label} locale={locale} variant="primary" />
               ) : null}
@@ -104,6 +101,6 @@ export function CtaSection({
           ) : null}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

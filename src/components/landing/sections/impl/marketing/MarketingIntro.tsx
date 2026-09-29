@@ -91,8 +91,8 @@ export function MarketingIntro({
         <h2
           className={`font-medium leading-[1.2] ${
             isDark
-              ? "text-white lg:text-52 md:text-40 text-3xl max-w-3xl"
-              : "text-dark dark:text-white lg:text-52 md:text-40 text-3xl"
+              ? "text-white text-3xl sm:text-4xl lg:text-[2.75rem] max-w-3xl"
+              : "text-dark dark:text-white text-3xl sm:text-4xl lg:text-[2.75rem]"
           } ${textAlign}`}
         >
           {title}

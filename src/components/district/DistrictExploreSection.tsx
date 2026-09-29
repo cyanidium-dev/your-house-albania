@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { balancedGridClass, Section, SECTION_TITLE } from "@/components/shared/layout";
 import { EntityCard } from "@/components/landing/sections/impl/EntityCard";
 import { fetchPublishedDistrictsByCity } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
@@ -41,11 +42,8 @@ export async function DistrictExploreSection({
   const cityInfoHref = cityInfoPath(locale, citySlug, countrySlug);
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-        <h2 className="lg:text-52 text-40 leading-[1.2] font-medium text-dark dark:text-white">
-          {t("exploreTitle")}
-        </h2>
+    <Section>
+        <h2 className={SECTION_TITLE}>{t("exploreTitle")}</h2>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href={propertiesHref}
@@ -66,7 +64,7 @@ export async function DistrictExploreSection({
             <h3 className="text-xl font-semibold text-dark dark:text-white">
               {t("otherDistricts", { city: cityLabel })}
             </h3>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={`mt-6 ${balancedGridClass(siblings.length)}`}>
               {siblings.map((d) => {
                 const title =
                   resolveLocalizedString(d.title as never, locale) || d.slug || "";
@@ -82,13 +80,13 @@ export async function DistrictExploreSection({
                     }
                     count={d.propertiesCount}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    compact
                   />
                 );
               })}
             </div>
           </div>
         ) : null}
-      </div>
-    </section>
+    </Section>
   );
 }

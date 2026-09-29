@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { PortableText } from '@portabletext/react'
+import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { BreadcrumbJsonLd } from '@/components/shared/BreadcrumbJsonLd'
@@ -14,6 +14,39 @@ import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
 import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from '@/lib/seo/envSeo'
 import { toBreadcrumbJsonLdItems } from '@/lib/routes/breadcrumbs'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import {
+  BODY_TEXT,
+  CONTAINER,
+  MEASURE,
+  PANEL,
+  SECTION_LEAD,
+  SPLIT,
+  SPLIT_ASIDE,
+  SPLIT_MAIN,
+} from '@/components/shared/layout'
+
+/** Portable Text on knowledge pages: the body scale used by every prose block. */
+const knowledgeBodyComponents: PortableTextComponents = {
+  block: {
+    normal: ({ children }) => <p className={`${BODY_TEXT} mt-4 first:mt-0`}>{children}</p>,
+    h3: ({ children }) => (
+      <h3 className="mt-8 text-xl font-semibold text-dark dark:text-white">{children}</h3>
+    ),
+  },
+  list: {
+    bullet: ({ children }) => <ul className="mt-4 flex flex-col gap-2 pl-0 list-none">{children}</ul>,
+    number: ({ children }) => <ol className="mt-4 flex flex-col gap-2 pl-6 list-decimal">{children}</ol>,
+  },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className={`flex items-start gap-3 ${BODY_TEXT}`}>
+        <span aria-hidden className="mt-[0.65rem] h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+        <span className="min-w-0">{children}</span>
+      </li>
+    ),
+    number: ({ children }) => <li className={BODY_TEXT}>{children}</li>,
+  },
+}
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -108,146 +141,156 @@ export default async function KnowledgeArticlePage({ params }: Props) {
 
   return (
     <main>
+      {/* Page grid: the article on the wide side of the split, the facts
+          about it (period, confidence, open questions, the assistant) on the
+          narrow side. It used to be a 1024px column of its own, centred,
+          with heading sizes the theme does not define (text-36, text-46,
+          text-24) and `prose` classes from a plugin that is not installed,
+          so headings and paragraphs rendered at browser defaults. */}
       <section className="pt-32 md:pt-40 pb-16 md:pb-24">
-        <div className="container mx-auto max-w-5xl px-5 2xl:px-0">
+        <div className={CONTAINER}>
           <BreadcrumbJsonLd
             items={toBreadcrumbJsonLdItems(crumbs, `/${locale}/knowledge/${slug}`)}
             baseUrl={baseUrl}
           />
           <Breadcrumb items={crumbs} />
 
-          <header className="mt-6">
-            <h1 className="text-36 md:text-46 leading-[1.15] font-bold text-dark dark:text-white">
+          <header className={`mt-6 ${MEASURE}`}>
+            <h1 className="text-4xl md:text-5xl leading-[1.1] tracking-tight font-bold text-dark dark:text-white text-balance">
               {article.title}
             </h1>
             {article.summary ? (
-              <p className="mt-5 text-lg leading-relaxed text-dark/75 dark:text-white/75">
-                {article.summary}
-              </p>
+              <p className={`mt-5 ${SECTION_LEAD}`}>{article.summary}</p>
             ) : null}
-
-            <dl className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-dark/60 dark:text-white/60">
-              {article.dataPeriod ? (
-                <div className="flex gap-1.5">
-                  <dt className="font-medium">{t('period')}:</dt>
-                  <dd>{article.dataPeriod}</dd>
-                </div>
-              ) : null}
-              {article.lastUpdated ? (
-                <div className="flex gap-1.5">
-                  <dt className="font-medium">{t('updated')}:</dt>
-                  <dd>{article.lastUpdated}</dd>
-                </div>
-              ) : null}
-              {article.confidence ? (
-                <div className="flex gap-1.5">
-                  <dt className="font-medium">{t('confidence')}:</dt>
-                  <dd>{article.confidence}</dd>
-                </div>
-              ) : null}
-              {article.exchangeRateNote ? (
-                <div className="flex gap-1.5">
-                  <dt className="font-medium">{t('exchangeRate')}:</dt>
-                  <dd>{article.exchangeRateNote}</dd>
-                </div>
-              ) : null}
-            </dl>
           </header>
 
-          {faqEntries.length > 0 ? (
-            <section className="mt-10 rounded-2xl border border-dark/10 p-5 md:p-6 dark:border-white/15">
-              <h2 className="text-lg font-semibold text-dark dark:text-white">
-                {t('questionsHeading')}
-              </h2>
-              <ul className="mt-3 space-y-1.5 text-dark/75 dark:text-white/75">
-                {faqEntries.map((question, index) => (
-                  <li key={`q-${index}`} className="flex gap-2">
-                    <Icon
-                      icon="ph:question"
-                      width={16}
-                      height={16}
-                      className="mt-1 shrink-0 text-primary"
-                      aria-hidden
+          <div className={`mt-12 ${SPLIT}`}>
+            <div className={SPLIT_MAIN}>
+              {(article.sections ?? []).map((section) => (
+                <section key={section.sectionKey} id={section.sectionKey} className="mt-12 first:mt-0 scroll-mt-28">
+                  <h2 className="text-2xl md:text-[1.75rem] leading-tight tracking-tight font-bold text-dark dark:text-white">
+                    {section.heading}
+                  </h2>
+                  {Array.isArray(section.body) && section.body.length > 0 ? (
+                    <div className="mt-4">
+                      <PortableText value={section.body as PortableTextBlock[]} components={knowledgeBodyComponents} />
+                    </div>
+                  ) : null}
+                  {(section.tables ?? []).map((table) => (
+                    <KnowledgeTable
+                      key={table.tableId}
+                      table={table}
+                      labels={tableLabels}
+                      anchors={rowAnchors}
                     />
-                    <span>{question}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          {(article.sections ?? []).map((section) => (
-            <section key={section.sectionKey} id={section.sectionKey} className="mt-12 scroll-mt-28">
-              <h2 className="text-24 md:text-28 font-bold text-dark dark:text-white">
-                {section.heading}
-              </h2>
-              {Array.isArray(section.body) && section.body.length > 0 ? (
-                <div className="prose prose-lg mt-4 max-w-none text-dark/80 dark:prose-invert dark:text-white/80">
-                  <PortableText value={section.body as PortableTextBlock[]} />
-                </div>
-              ) : null}
-              {(section.tables ?? []).map((table) => (
-                <KnowledgeTable
-                  key={table.tableId}
-                  table={table}
-                  labels={tableLabels}
-                  anchors={rowAnchors}
-                />
+                  ))}
+                </section>
               ))}
-            </section>
-          ))}
 
-          {(article.gaps ?? []).length > 0 ? (
-            <section className="mt-12 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 md:p-6">
-              <h2 className="text-lg font-semibold text-dark dark:text-white">{t('gapsHeading')}</h2>
-              <p className="mt-1 text-sm text-dark/65 dark:text-white/65">{t('gapsIntro')}</p>
-              <ul className="mt-3 space-y-1.5 text-sm text-dark/75 dark:text-white/75">
-                {article.gaps.map((gap, index) => (
-                  <li key={gap.gapId ?? `gap-${index}`} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" aria-hidden />
-                    <span>
-                      {gap.description}
-                      {gap.priority ? (
-                        <span className="ml-2 text-xs uppercase tracking-wide text-dark/45 dark:text-white/45">
-                          {gap.priority}
+              {(article.gaps ?? []).length > 0 ? (
+                <section className="mt-12 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 md:p-6">
+                  <h2 className="text-lg font-semibold text-dark dark:text-white">{t('gapsHeading')}</h2>
+                  <p className="mt-1 text-sm text-dark/65 dark:text-white/65">{t('gapsIntro')}</p>
+                  <ul className="mt-3 space-y-1.5 text-sm text-dark/75 dark:text-white/75">
+                    {article.gaps.map((gap, index) => (
+                      <li key={gap.gapId ?? `gap-${index}`} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" aria-hidden />
+                        <span>
+                          {gap.description}
+                          {gap.priority ? (
+                            <span className="ml-2 text-xs uppercase tracking-wide text-dark/45 dark:text-white/45">
+                              {gap.priority}
+                            </span>
+                          ) : null}
                         </span>
-                      ) : null}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+            </div>
 
-          <section className="mt-12 rounded-2xl bg-primary/8 p-6">
-            <h2 className="text-lg font-semibold text-dark dark:text-white">{t('askHeading')}</h2>
-            <p className="mt-1 text-dark/70 dark:text-white/70">{t('askIntro')}</p>
-            <Link
-              href={`/${locale}/ai-search`}
-              className={brandButtonClass('primary', 'mt-4', 'sm')}
-            >
-              <Icon icon="ph:sparkle" width={16} height={16} aria-hidden />
-              {t('askCta')}
-            </Link>
-          </section>
+            <aside className={`${SPLIT_ASIDE} lg:sticky lg:top-28 lg:self-start flex flex-col gap-6`}>
+              {article.dataPeriod || article.lastUpdated || article.confidence || article.exchangeRateNote ? (
+                <dl className={`${PANEL} p-6 grid gap-3 text-sm`}>
+                  {article.dataPeriod ? (
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-dark/55 dark:text-white/55">{t('period')}</dt>
+                      <dd className="text-right font-medium text-dark dark:text-white">{article.dataPeriod}</dd>
+                    </div>
+                  ) : null}
+                  {article.lastUpdated ? (
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-dark/55 dark:text-white/55">{t('updated')}</dt>
+                      <dd className="text-right font-medium text-dark dark:text-white">{article.lastUpdated}</dd>
+                    </div>
+                  ) : null}
+                  {article.confidence ? (
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-dark/55 dark:text-white/55">{t('confidence')}</dt>
+                      <dd className="text-right font-medium text-dark dark:text-white">{article.confidence}</dd>
+                    </div>
+                  ) : null}
+                  {article.exchangeRateNote ? (
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-dark/55 dark:text-white/55">{t('exchangeRate')}</dt>
+                      <dd className="text-right font-medium text-dark dark:text-white">{article.exchangeRateNote}</dd>
+                    </div>
+                  ) : null}
+                </dl>
+              ) : null}
 
-          {(article.relatedArticles ?? []).length > 0 ? (
-            <section className="mt-12">
-              <h2 className="text-lg font-semibold text-dark dark:text-white">{t('related')}</h2>
-              <ul className="mt-3 space-y-1.5">
-                {article.relatedArticles.map((related) => (
-                  <li key={related.slug}>
-                    <Link
-                      href={`/${locale}/knowledge/${related.slug}`}
-                      className="text-primary hover:underline"
-                    >
-                      {related.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
+              {faqEntries.length > 0 ? (
+                <section className={`${PANEL} p-6`}>
+                  <h2 className="text-lg font-semibold text-dark dark:text-white">{t('questionsHeading')}</h2>
+                  <ul className="mt-3 space-y-2 text-dark/75 dark:text-white/75">
+                    {faqEntries.map((question, index) => (
+                      <li key={`q-${index}`} className="flex gap-2">
+                        <Icon
+                          icon="ph:question"
+                          width={16}
+                          height={16}
+                          className="mt-1 shrink-0 text-primary"
+                          aria-hidden
+                        />
+                        <span>{question}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+
+              <section className="rounded-3xl bg-primary/[0.08] ring-1 ring-primary/20 p-6">
+                <h2 className="text-lg font-semibold text-dark dark:text-white">{t('askHeading')}</h2>
+                <p className="mt-1 text-dark/70 dark:text-white/70">{t('askIntro')}</p>
+                <Link
+                  href={`/${locale}/ai-search`}
+                  className={brandButtonClass('primary', 'mt-4', 'sm')}
+                >
+                  <Icon icon="ph:sparkle" width={16} height={16} aria-hidden />
+                  {t('askCta')}
+                </Link>
+              </section>
+
+              {(article.relatedArticles ?? []).length > 0 ? (
+                <section>
+                  <h2 className="text-lg font-semibold text-dark dark:text-white">{t('related')}</h2>
+                  <ul className="mt-3 space-y-2">
+                    {article.relatedArticles.map((related) => (
+                      <li key={related.slug}>
+                        <Link
+                          href={`/${locale}/knowledge/${related.slug}`}
+                          className="text-primary hover:underline underline-offset-4"
+                        >
+                          {related.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+            </aside>
+          </div>
         </div>
       </section>
 

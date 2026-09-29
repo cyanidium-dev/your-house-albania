@@ -142,7 +142,7 @@ export function HeroSearchWidget({
   return (
     <div
       className={cn(
-        "w-full max-w-3xl mx-auto",
+        "w-full max-w-3xl mx-auto md:mx-0",
         "rounded-2xl border border-white/20 dark:border-dark/20",
         "bg-white/90 dark:bg-dark/80 backdrop-blur-md shadow-3xl",
         "p-3 sm:p-4"

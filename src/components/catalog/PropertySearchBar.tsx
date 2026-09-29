@@ -101,6 +101,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
           pill={
             <CatalogFilterCompactBar filters={f} onExpand={expandCompactFilters} />
           }
+          align={props.collapsedByDefault ? "start" : "center"}
         />
       </div>
       {clientMounted &&

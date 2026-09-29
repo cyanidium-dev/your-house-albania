@@ -5,6 +5,7 @@ import { SourcesList, type SourcesListItem } from '@/components/landing/sections
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { formatMetric, resolveSelectedMetrics, type MetricKey } from '@/lib/zoneMetrics/metrics'
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics'
+import { BODY_TEXT } from '@/components/shared/layout'
 
 /** Same string in every locale: the value is already translated at this point. */
 const loc = (value: string) => ({ en: value, uk: value, ru: value, sq: value, it: value })
@@ -74,28 +75,27 @@ export function ZoneStatsAutoSection({
     (s): s is SourcesListItem => Boolean(s?.url && s?.label),
   )
 
+  const aside =
+    notes || (showSources && sources.length > 0) ? (
+      <>
+        {notes ? <p className={BODY_TEXT}>{notes}</p> : null}
+        {showSources && sources.length > 0 ? (
+          <div className={notes ? 'mt-6' : undefined}>
+            <SourcesList items={sources} locale={locale} />
+          </div>
+        ) : null}
+      </>
+    ) : undefined
+
   return (
-    <>
-      <StatsBandSection
-        locale={locale}
-        section={{
-          title: titleOverride ? loc(titleOverride) : undefined,
-          items,
-          sourceNote: noteParts.length ? loc(noteParts.join(' · ')) : undefined,
-        }}
-      />
-      {(notes || (showSources && sources.length > 0)) ? (
-        <div className="container max-w-8xl mx-auto -mt-10 px-5 pb-16 md:pb-24 2xl:px-0">
-          {notes ? (
-            <p className="max-w-3xl text-sm text-dark/60 dark:text-white/60">{notes}</p>
-          ) : null}
-          {showSources && sources.length > 0 ? (
-            <div className="mt-4 max-w-3xl">
-              <SourcesList items={sources} locale={locale} />
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-    </>
+    <StatsBandSection
+      locale={locale}
+      section={{
+        title: titleOverride ? loc(titleOverride) : undefined,
+        items,
+        sourceNote: noteParts.length ? loc(noteParts.join(' · ')) : undefined,
+      }}
+      aside={aside}
+    />
   )
 }

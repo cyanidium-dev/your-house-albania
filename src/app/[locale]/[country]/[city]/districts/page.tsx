@@ -4,6 +4,7 @@ import {getTranslations, setRequestLocale} from "next-intl/server";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
 import { ItemListJsonLd } from "@/components/shared/ItemListJsonLd";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { balancedGridClass } from "@/components/shared/layout";
 import { EntityCard } from "@/components/landing/sections/impl/EntityCard";
 import {
   fetchCityCountrySlugByCitySlug,
@@ -111,7 +112,7 @@ export default async function DistrictsHubPage({ params }: Props) {
             {t("hubDescription", { city: cityGenitive })}
           </p>
         </div>
-        <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`mt-10 md:mt-12 ${balancedGridClass(districts.length)}`}>
           {districts.map((d) => {
             const title = resolveLocalizedString(d.title as never, locale) || d.slug || "";
             return (
@@ -126,6 +127,7 @@ export default async function DistrictsHubPage({ params }: Props) {
                 }
                 count={d.propertiesCount}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                compact
               />
             );
           })}

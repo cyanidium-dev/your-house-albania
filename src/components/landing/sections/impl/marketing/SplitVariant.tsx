@@ -22,7 +22,7 @@ export function SplitVariant({
 
   if (!showMediaColumn) {
     return (
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-16">
         <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
           <div className="max-w-3xl">
             <MarketingIntro
@@ -96,7 +96,7 @@ export function SplitVariant({
       </div>
     );
     return (
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-16">
         <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
           <div className="grid lg:grid-cols-2 gap-10">
             <div
@@ -181,7 +181,7 @@ export function SplitVariant({
   );
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="grid lg:grid-cols-2 gap-10">
           <div

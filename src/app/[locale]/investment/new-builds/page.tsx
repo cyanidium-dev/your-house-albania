@@ -83,7 +83,7 @@ export default async function NewBuildsPage({ params, searchParams }: Props) {
     return (
       <>
         {hero}
-        <section className="py-16 md:py-24">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
             <p className="max-w-3xl text-base md:text-lg leading-relaxed text-dark/70 dark:text-white/70">
               {t("empty")}

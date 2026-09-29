@@ -117,52 +117,18 @@ h1, h2, h3, h4,
   /* Firefox */
 }
 
-.blog-details p, .blog-details hr {
-  @apply mb-8;
-}
-
-.blog-details strong {
-  @apply font-bold dark:text-white;
-}
-
-.blog-details ul {
-  @apply list-none space-y-3 mb-10;
-}
-
-.blog-details ul li {
-  @apply mb-0 pl-4 text-base leading-[1.2];
-}
-
-.blog-details ol {
-  @apply mb-8 list-inside list-decimal space-y-3;
-}
-
-.blog-details ol li {
-  @apply mb-0
-}
-
-.blog-details h1 {
-  @apply mb-8 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.28];
-}
-
-.blog-details h2 {
-  @apply mb-2 text-2xl font-bold text-dark dark:text-white sm:text-3xl md:text-[35px] md:leading-[1.28];
-}
-
-.blog-details h3 {
-  @apply mb-6 text-2xl text-dark dark:text-white sm:leading-[40px];
-}
-
-.blog-details h4 {
-  @apply mb-6 text-xl leading-[1.2] text-dark dark:text-white;
-}
-
-.blog-details hr {
-  @apply border-white
-}
-
-.blog-details p {
-  @apply text-dark dark:text-white text-xm leading-[1.2]
+/* Blog article body. Only the things Portable Text components cannot set on
+   their own elements live here, and inside @layer components so the
+   components' utilities win. The old unlayered rules (p at 18px, pure white,
+   line-height 1.2, 32px bottom margins) overrode every class the article
+   components set, which is why posts read as one dense block. */
+@layer components {
+  .blog-details strong {
+    @apply font-semibold text-dark dark:text-white;
+  }
+  .blog-details hr {
+    @apply my-10 border-dark/10 dark:border-white/10;
+  }
 }
 
 /* Footer CTA phone input – dark theme and spacing */

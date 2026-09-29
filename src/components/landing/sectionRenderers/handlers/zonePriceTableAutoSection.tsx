@@ -19,6 +19,7 @@ export const zonePriceTableAutoSectionHandler: SectionHandler = async ({
   locale,
   section,
   citySlug,
+  linkedZone,
 }) => {
   if (section.enabled === false) return null
 
@@ -53,6 +54,7 @@ export const zonePriceTableAutoSectionHandler: SectionHandler = async ({
       sortBy={sortBy}
       linkRows={section.linkRows !== false}
       showSources={section.showSources !== false}
+      currentZoneId={linkedZone?.id}
     />
   )
 
