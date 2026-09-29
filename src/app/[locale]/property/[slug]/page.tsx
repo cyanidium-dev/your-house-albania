@@ -394,8 +394,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     gallery: what and where on the left, how much and what to do
                     next on the right. The price used to appear only in the
                     sidebar below the gallery, one full screen down on desktop. */}
-                <div className="grid grid-cols-12 items-start gap-6 lg:gap-10">
-                    <div className="lg:col-span-8 col-span-12 min-w-0">
+                {/* One column below lg: twelve columns with fixed gaps need more
+                    room than a phone has (11 × 32px of gap alone on the grid
+                    below), which pushed the text and cards past the right
+                    margin. */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 items-start gap-6 lg:gap-10">
+                    <div className="lg:col-span-8 min-w-0">
                         <h1 className='text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-dark dark:text-white text-balance'>{title}</h1>
                         <div className="mt-2 flex items-center gap-2">
                             <Icon icon="ph:map-pin" width={20} height={20} className="shrink-0 text-dark/50 dark:text-white/50" />
@@ -429,7 +433,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           />
                         </div>
                     </div>
-                    <div className="lg:col-span-4 col-span-12 lg:border-l lg:border-dark/10 lg:dark:border-white/10 lg:pl-10">
+                    <div className="lg:col-span-4 min-w-0 lg:border-l lg:border-dark/10 lg:dark:border-white/10 lg:pl-10">
                         <div className="flex items-start justify-between gap-4">
                             <div className="min-w-0">
                                 <p className='text-3xl lg:text-[2rem] font-semibold leading-none tracking-tight text-dark dark:text-white tabular-nums'>
@@ -477,8 +481,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />
-                <div className="grid grid-cols-12 gap-8 mt-10 items-start">
-                    <div className="lg:col-span-8 col-span-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10 items-start">
+                    <div className="lg:col-span-8 min-w-0">
                         {amenities.length > 0 && (
                         <PropertyAmenitiesSection
                           amenities={amenities}
@@ -488,14 +492,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         />
                         )}
                         {sanityFields.description ? (
-                          <p className='text-dark dark:text-white text-xm whitespace-pre-line'>
+                          <p className='text-dark/85 dark:text-white/85 text-[17px] leading-relaxed whitespace-pre-line'>
                             {sanityFields.description}
                           </p>
                         ) : null}
                         {propertyOffers.length > 0 && (
                         <div className="py-8 mt-8 border-t border-dark/5 dark:border-white/15">
                             <h3 className='text-xl font-medium'>{tPropertyDetail('whatThisPropertyOffers')}</h3>
-                            <div className="grid grid-cols-3 mt-5 gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 mt-5 gap-x-6 gap-y-4">
                                 {propertyOffers.map((item) => (
                                   <div key={item.key} className="flex items-center gap-2.5">
                                     {item.customIconUrl ? (
@@ -545,7 +549,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           <AiPropertyPanel locale={locale} propertySlug={keySlug} />
                         ) : null}
                     </div>
-                    <div className="lg:col-span-4 col-span-12 lg:sticky lg:top-30">
+                    <div className="lg:col-span-4 min-w-0 lg:sticky lg:top-30">
                         <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <div className="flex items-center justify-between gap-4 mb-2">
                               <h4 className='text-dark text-3xl font-medium dark:text-white'>
@@ -608,11 +612,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     </div>
                 </div>
                 {similarItems.length > 0 && (
+                  // Already inside the page container: a second one here set the
+                  // block 20px in from everything above it.
                   <section className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20">
-                    <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-                      <h2 className="text-xl font-medium mb-6">{tPropertyDetail('similarProperties')}</h2>
-                      <SimilarPropertiesCarousel items={similarItems} locale={locale} />
-                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-dark dark:text-white mb-6">{tPropertyDetail('similarProperties')}</h2>
+                    <SimilarPropertiesCarousel items={similarItems} locale={locale} />
                   </section>
                 )}
                 <PropertyArticlesSection locale={locale} section={articlesSection} />
