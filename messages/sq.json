@@ -819,7 +819,8 @@
       "whatsapp": "Na shkruani në WhatsApp",
       "phone": "Na telefononi",
       "email": "Na dërgoni email"
-    }
+    },
+    "orWrite": "Ose na shkruani menjëherë:"
   },
   "ContactBar": {
     "ask": "Pyet",

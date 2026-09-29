@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { FilterSelect, type FilterOption } from '@/components/catalog/FilterSelect'
 import { cn } from '@/lib/utils'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
 import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 
 const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
@@ -243,6 +244,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
         >
           {submitting ? t('submitting') : t('submit')}
         </button>
+        <LeadMessengerRow locale={locale} className="mt-2" />
         <p className="text-center text-sm font-medium leading-relaxed text-dark/75 dark:text-white/70">
           {t('footnote')}
         </p>

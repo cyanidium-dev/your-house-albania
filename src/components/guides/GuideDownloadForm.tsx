@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
 import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'
 import { GUIDE_ID } from '@/lib/guides/durresGuide'
 
@@ -155,6 +156,7 @@ export function GuideDownloadForm({ locale, propertySlug, subject }: Props) {
           {error}
         </p>
       ) : null}
+      <LeadMessengerRow locale={locale} className="mt-1" />
     </form>
   )
 }

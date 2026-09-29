@@ -616,19 +616,6 @@ export async function GeoListingPage({ params, search }: Props) {
           />
         }
       />
-      {geo.mode === "fullGeo" && !typeSlug ? (
-        <ListingFacetNav
-          locale={locale}
-          countrySlug={geo.listingCountrySlug}
-          citySlug={geo.listingCitySlug}
-          districtSlug={pathDistrict || undefined}
-          currentFacet={facet}
-          placeLabel={
-            (districtLabel ? `${districtLabel}, ` : "") +
-            (options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label || geo.listingCitySlug)
-          }
-        />
-      ) : null}
       <PropertiesListing
         locale={locale}
         pathCity={geo.listingCitySlug}
@@ -641,6 +628,21 @@ export async function GeoListingPage({ params, search }: Props) {
           geo.mode === "fullGeo"
             ? { place: placeName, placeIn, filtered: Boolean(facet || typeSlug || dealType || hasQuery) }
             : undefined
+        }
+        afterFilters={
+          geo.mode === "fullGeo" && !typeSlug ? (
+            <ListingFacetNav
+              locale={locale}
+              countrySlug={geo.listingCountrySlug}
+              citySlug={geo.listingCitySlug}
+              districtSlug={pathDistrict || undefined}
+              currentFacet={facet}
+              placeLabel={
+                (districtLabel ? `${districtLabel}, ` : "") +
+                (options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label || geo.listingCitySlug)
+              }
+            />
+          ) : null
         }
       />
       {showDepth && depthFamily && geo.mode === "fullGeo" ? (

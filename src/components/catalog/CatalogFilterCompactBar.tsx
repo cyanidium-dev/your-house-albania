@@ -59,6 +59,12 @@ export function CatalogFilterCompactBar({
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium text-dark dark:text-white">
+        {/* Named, so the condensed pill reads as the filters it hides and not
+            as a search box (owner, 2026-09-29). */}
+        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-dark/5 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-dark/70 dark:bg-white/10 dark:text-white/70">
+          <Icon icon="ph:sliders-horizontal" width={14} height={14} aria-hidden />
+          {t("filtersShort")}
+        </span>
         {segments.map((seg, i) => (
           <React.Fragment key={i}>
             {i > 0 && (

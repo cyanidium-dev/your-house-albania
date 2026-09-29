@@ -819,7 +819,8 @@
       "whatsapp": "Scrivici su WhatsApp",
       "phone": "Chiamaci",
       "email": "Scrivici una email"
-    }
+    },
+    "orWrite": "Oppure scrivici subito:"
   },
   "ContactBar": {
     "ask": "Chiedi",

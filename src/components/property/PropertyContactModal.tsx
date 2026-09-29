@@ -7,6 +7,7 @@ import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/an
 import type { LeadPlacement } from '@/lib/leads/types'
 import { useContactModalFlag } from '@/lib/contacts/useContactModalFlag'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
 
 type Props = {
   locale: string
@@ -246,6 +247,7 @@ export function PropertyContactButton({
                 >
                   {submitting ? t('formSubmitting') : t('formSubmit')}
                 </button>
+                <LeadMessengerRow locale={locale} className="mt-3" />
               </form>
             )}
           </div>

@@ -819,7 +819,8 @@
       "whatsapp": "Write on WhatsApp",
       "phone": "Call us",
       "email": "Send an email"
-    }
+    },
+    "orWrite": "Or write to us right away:"
   },
   "ContactBar": {
     "ask": "Ask",

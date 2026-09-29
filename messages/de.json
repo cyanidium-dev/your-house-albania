@@ -819,7 +819,8 @@
       "whatsapp": "Über WhatsApp schreiben",
       "phone": "Rufen Sie uns an",
       "email": "E-Mail senden"
-    }
+    },
+    "orWrite": "Oder schreiben Sie uns direkt:"
   },
   "ContactBar": {
     "ask": "Anfragen",

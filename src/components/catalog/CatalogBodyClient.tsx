@@ -62,6 +62,8 @@ export type CatalogFilterProps = {
 };
 
 export type CatalogBodyClientProps = {
+  /** Rendered between the sticky filter bar and the grid (facet chips). */
+  afterFilters?: React.ReactNode;
   filterProps: CatalogFilterProps;
   /** Filtered catalog page. Map + list use this. */
   pageItems: PropertyHomes[];
@@ -186,6 +188,7 @@ function composeCatalogFlowItems(args: {
  */
 export function CatalogBodyClient({
   filterProps,
+  afterFilters,
   pageItems,
   banners = [],
   locale,
@@ -460,6 +463,7 @@ export function CatalogBodyClient({
           getCurrentView={getCurrentView}
         />
       </div>
+      {afterFilters ? <div className="min-w-0 pb-5 md:pb-6">{afterFilters}</div> : null}
       <div className="min-w-0 min-h-0 pb-12 sm:pb-16 md:pb-20">
         <div className={gridClass}>
           {composedItems.map((entry) => {

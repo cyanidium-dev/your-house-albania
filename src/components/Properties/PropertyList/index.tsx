@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 import { CatalogBodyClient } from '@/components/catalog/CatalogBodyClient'
 import { CatalogSeoText } from '@/components/catalog/CatalogSeoText'
@@ -51,6 +52,7 @@ async function PropertiesListing({
   urlSearch,
   catalogSeo,
   heading,
+  afterFilters,
 }: {
   locale: string
   pathAgentSlug?: string
@@ -75,6 +77,8 @@ async function PropertiesListing({
    * The national hub has no place to name and passes its two lines ready-made.
    */
   heading?: { place: string; placeIn: string; filtered: boolean } | { text: (count: number) => string; aboutText: string }
+  /** Rendered between the filter bar and the card grid: the place's facet chips. */
+  afterFilters?: ReactNode
 }) {
   const [filterOptions, siteSettings, areaBoundsFromData] = await Promise.all([
     fetchCatalogFilterOptions(locale),
@@ -300,7 +304,9 @@ async function PropertiesListing({
     initialAmenities: amenitiesFilter,
     initialPageSize: String(pageSize),
     initialView: viewMode,
-    collapsedByDefault: Boolean(pathCity),
+    // Open by default since 2026-09-29: a page that opened on the condensed
+    // pill read as a search box, and the owner could not tell it hid filters.
+    collapsedByDefault: false,
   }
 
   const tDepth = heading && !('text' in heading) ? await getTranslations({ locale, namespace: 'Catalog.depth' }) : null
@@ -347,6 +353,7 @@ async function PropertiesListing({
             pageSize={pageSize}
             loadMoreQuery={loadMoreQuery}
             serverSearch={serverSearch}
+            afterFilters={afterFilters}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (

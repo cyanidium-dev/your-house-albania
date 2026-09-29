@@ -89,20 +89,24 @@ export async function ListingFacetNav({ locale, countrySlug, citySlug, placeLabe
   if (rows.length === 0) return null;
 
   return (
-    <nav aria-label={t("label", { place: placeLabel })} className="container max-w-8xl mx-auto px-5 2xl:px-0 pt-6 pb-2">
-      <dl className="grid gap-3">
+    <nav aria-label={t("label", { place: placeLabel })} className="min-w-0">
+      {/* One wrapping row under the filter bar: each group is its label and
+          its chips, groups flow after one another. It used to be five
+          labelled rows between the hero and the heading, which read as a
+          second filter panel piled on the first (2026-09-29). */}
+      <dl className="flex flex-wrap items-center gap-x-6 gap-y-3">
         {rows.map((row) => (
-          <div key={row.key} className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-            <dt className="text-xs font-semibold uppercase tracking-wide text-dark/50 dark:text-white/50 min-w-20">
+          <div key={row.key} className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+            <dt className="text-xs font-semibold uppercase tracking-wide text-dark/50 dark:text-white/50">
               {row.heading}
             </dt>
-            <dd className="flex flex-wrap gap-2">
+            <dd className="flex flex-wrap gap-1.5">
               {row.chips.map((chip) =>
                 chip.current ? (
                   <span
                     key={chip.href}
                     aria-current="page"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-sm font-medium text-white"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-sm font-medium text-white"
                   >
                     {chip.label}
                     <span className="text-white/80 tabular-nums">{chip.count}</span>
@@ -111,7 +115,7 @@ export async function ListingFacetNav({ locale, countrySlug, citySlug, placeLabe
                   <Link
                     key={chip.href}
                     href={chip.href}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3 py-1.5 text-sm font-medium text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3 py-1 text-sm font-medium text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
                   >
                     {chip.label}
                     <span className="text-dark/50 dark:text-white/50 tabular-nums">{chip.count}</span>

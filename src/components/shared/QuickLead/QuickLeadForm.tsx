@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 import type { LeadPlacement } from '@/lib/leads/types'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
 
 type Props = {
   locale: string
@@ -154,6 +155,7 @@ export function QuickLeadForm({
         </p>
       ) : null}
 
+      <LeadMessengerRow locale={locale} />
       <p className="text-xs text-dark/50 dark:text-white/50">{t('consent')}</p>
     </form>
   )
