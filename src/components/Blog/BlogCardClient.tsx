@@ -38,13 +38,13 @@ export function BlogCardClient({
     categorySlug ? (
       <Link
         href={`/${locale}/blog?category=${encodeURIComponent(categorySlug)}`}
-        className="order-1 sm:order-2 py-2.5 px-5 bg-dark/5 rounded-full dark:bg-white/15 hover:bg-primary/10 active:bg-primary/15 transition-colors shrink-0 w-fit"
+        className="py-1.5 px-3.5 bg-dark/5 rounded-full dark:bg-white/15 hover:bg-primary/10 active:bg-primary/15 transition-colors shrink-0 w-fit"
       >
-        <span className="text-sm font-semibold text-dark dark:text-white">{categoryLabel}</span>
+        <span className="text-xs font-semibold text-dark dark:text-white">{categoryLabel}</span>
       </Link>
     ) : (
-      <div className="order-1 sm:order-2 py-2.5 px-5 bg-dark/5 rounded-full dark:bg-white/15 shrink-0 w-fit opacity-75 cursor-default">
-        <span className="text-sm font-semibold text-dark/70 dark:text-white/70">{categoryLabel}</span>
+      <div className="py-1.5 px-3.5 bg-dark/5 rounded-full dark:bg-white/15 shrink-0 w-fit opacity-75 cursor-default">
+        <span className="text-xs font-semibold text-dark/70 dark:text-white/70">{categoryLabel}</span>
       </div>
     )
   );
@@ -72,8 +72,11 @@ export function BlogCardClient({
           )}
         </div>
       </Link>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
-        <Link href={articleUrl} aria-label={t("ariaLabel")} className="order-2 sm:order-1 min-w-0 flex-1 block">
+      {/* The category sits above the title. Beside it, in the 320px blog
+          sidebar, it left the title a column of three words per line. */}
+      <div className="flex flex-col gap-3">
+        {categoryPill}
+        <Link href={articleUrl} aria-label={t("ariaLabel")} className="min-w-0 block">
           <h3 className="text-lg sm:text-xl font-medium text-dark dark:text-white group-hover:text-primary">
             {title}
           </h3>
@@ -99,7 +102,6 @@ export function BlogCardClient({
             {t("readMore")}
           </span>
         </Link>
-        {categoryPill}
       </div>
     </div>
   );

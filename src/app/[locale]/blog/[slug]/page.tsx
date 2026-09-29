@@ -342,14 +342,24 @@ export default async function Post({ params }: Props) {
       </section>
       <section className="pt-12 pb-16">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+          {/* Text at a reading measure (7 of 12 columns), sidebar on the same
+              grid. The text column used to take all the room the 320px
+              sidebar left, ~100 characters a line; without a sidebar it was a
+              768px column centred under a left-aligned title. */}
           <div
             className={
               finalRelatedPosts.length > 0 || detail.properties.length > 0
-                ? "grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16 lg:items-start"
-                : "max-w-3xl mx-auto"
+                ? "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 lg:items-start"
+                : undefined
             }
           >
-            <div className="min-w-0">
+            <div
+              className={
+                finalRelatedPosts.length > 0 || detail.properties.length > 0
+                  ? "min-w-0 lg:col-span-7"
+                  : "min-w-0 max-w-3xl"
+              }
+            >
               <BlogTableOfContents content={detail.contentBlocks} />
               <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} />
@@ -361,7 +371,7 @@ export default async function Post({ params }: Props) {
               <BlogQuoteCta locale={locale} sourceLabel={detail.slug} />
             </div>
             {(finalRelatedPosts.length > 0 || detail.properties.length > 0) && (
-              <aside className="space-y-10">
+              <aside className="space-y-10 lg:col-span-4 lg:col-start-9">
                 {finalRelatedPosts.length > 0 && (
                   <div>
                     <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
