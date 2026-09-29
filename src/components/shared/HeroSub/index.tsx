@@ -1,9 +1,9 @@
 import React, { FC, ReactNode } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Icon } from "@/components/shared/Icon";
 import { ALBANIA_PHOTOS, DEFAULT_ALBANIA_PHOTO, type AlbaniaPhotoKey } from "@/lib/media/albaniaPhotos";
 import { PhotoHeroFlag } from "@/components/shared/PhotoHeroFlag";
+import { HERO_LABEL, HERO_LEAD, HERO_TITLE } from "@/components/shared/layout";
 
 interface HeroSubProps {
     title: string;
@@ -28,7 +28,7 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey, breadc
 
     return (
         <>
-            <section className="relative text-center !pt-32 md:!pt-40 pb-20 overflow-x-hidden">
+            <section className="relative text-left !pt-32 md:!pt-40 pb-20 overflow-x-hidden">
                 <PhotoHeroFlag />
                 <div className="absolute inset-0 z-0">
                     <Image
@@ -50,21 +50,7 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey, breadc
                     {breadcrumb ? (
                         <div className="mb-6 text-left [&_nav]:mb-0">{breadcrumb}</div>
                     ) : null}
-                    {badge ? (
-                        <div className='flex gap-2.5 items-center justify-center'>
-                            <span>
-                                <Icon
-                                    icon={'ph:house-simple-fill'}
-                                    width={20}
-                                    height={20}
-                                    className='text-primary'
-                                />
-                            </span>
-                            <p className='text-base font-semibold text-white/90'>
-                                {badge}
-                            </p>
-                        </div>
-                    ) : null}
+                    {badge ? <p className={`${HERO_LABEL} mb-3 md:mb-4`}>{badge}</p> : null}
                     {/*
                       The page's main heading, so h1 — it was an h2, which left
                       /blog with no h1 at all in any locale, plus every
@@ -72,10 +58,8 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey, breadc
                       crawl of 2026-09-10). The other caller is the home page's
                       no-landing fallback, where this is also the only heading.
                     */}
-                    <h1 className="text-40 md:text-52 relative font-bold text-balance">{title}</h1>
-                    <p className="mx-auto mt-3 max-w-3xl text-lg text-white/85 font-normal whitespace-pre-line text-pretty">
-                        {description}
-                    </p>
+                    <h1 className={`${HERO_TITLE} relative md:max-w-[75%]`}>{title}</h1>
+                    <p className={`${HERO_LEAD} mt-4 max-w-2xl text-pretty`}>{description}</p>
                 </div>
             </section>
         </>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
-import { SectionHeader } from '@/components/landing/sectionPrimitives'
+import { Section, SectionHeading } from '@/components/shared/layout'
 
 /**
  * `linkedGallerySection` — captioned photographs that link somewhere.
@@ -18,6 +18,22 @@ import { SectionHeader } from '@/components/landing/sectionPrimitives'
  * The old fields are not kept as a fallback: they exist in no document, and a
  * dead branch here is what let the mismatch go unnoticed.
  */
+/**
+ * Column span of photo `index` of `count` on a 12-column grid, filling the
+ * last row: three across, but the last two share a row as halves and a
+ * leftover fourth turns the last four into a 2×2. Four photos used to lay
+ * out as three and one alone under them.
+ */
+export function galleryItemClass(index: number, count: number): string {
+  if (count <= 1) return 'col-span-12'
+  if (count === 2) return 'col-span-12 sm:col-span-6'
+  const rest = count % 3
+  const lg =
+    (rest === 2 && index >= count - 2) || (rest === 1 && index >= count - 4) ? 'lg:col-span-6' : 'lg:col-span-4'
+  const sm = count % 2 === 1 && index === count - 1 ? 'sm:col-span-12' : 'sm:col-span-6'
+  return `col-span-12 ${sm} ${lg}`
+}
+
 type GalleryItem = {
   _key?: string
   title?: unknown
@@ -45,39 +61,25 @@ export function LinkedGallerySection({
     resolveLocalizedString(section.description as never, locale) ||
     resolveLocalizedString(section.subtitle as never, locale) ||
     ''
-  const eyebrow = resolveLocalizedString(section.shortLine as never, locale) || ''
 
   const items = ((section.items ?? []) as GalleryItem[]).filter((item) =>
     Boolean(item?.image?.asset?.url),
   )
   if (items.length === 0) return null
 
-  const hasHeader = Boolean(title || subtitle || eyebrow)
+  const hasHeader = Boolean(title || subtitle)
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-        {hasHeader ? (
-          <div className="mb-10 md:mb-12">
-            <SectionHeader
-              variant="left"
-              eyebrowText={eyebrow || undefined}
-              title={title || undefined}
-              subtitle={subtitle || undefined}
-              titleClassName="lg:text-52 text-40 font-medium text-dark dark:text-white leading-[1.2] mt-4 mb-2"
-              subtitleClassName="text-dark/50 dark:text-white/50 text-lg leading-snug whitespace-pre-line max-w-3xl"
-            />
-          </div>
-        ) : null}
+    <Section>
+        {hasHeader ? <SectionHeading title={title || undefined} lead={subtitle || undefined} /> : null}
 
         <ul className="grid grid-cols-12 gap-4 md:gap-6">
           {items.map((item, index) => {
             const url = item.image!.asset!.url!
             const caption = resolveLocalizedString(item.title as never, locale) || ''
             // A two-slide gallery — the comparison pages — reads best as an
-            // even pair; longer ones tile three across.
-            const span =
-              items.length === 2 ? 'col-span-12 md:col-span-6' : 'col-span-12 sm:col-span-6 lg:col-span-4'
+            // even pair; longer ones tile three across with a full last row.
+            const span = galleryItemClass(index, items.length)
 
             const media = (
               <div className="group relative rounded-2xl overflow-hidden aspect-[16/10] bg-dark/5 dark:bg-white/5">
@@ -113,7 +115,6 @@ export function LinkedGallerySection({
             )
           })}
         </ul>
-      </div>
-    </section>
+    </Section>
   )
 }

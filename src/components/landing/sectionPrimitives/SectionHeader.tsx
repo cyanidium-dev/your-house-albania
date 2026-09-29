@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Icon } from "@/components/shared/Icon";
 import { cn } from '@/lib/utils'
+import { SECTION_LEAD, SECTION_TITLE } from '@/components/shared/layout'
 
 export type SectionHeaderProps = {
   variant: 'center' | 'left' | 'split'
@@ -21,15 +22,15 @@ export type SectionHeaderProps = {
   className?: string
 }
 
-const titleCenter =
-  'text-40 lg:text-52 font-medium text-black dark:text-white text-center tracking-tight leading-11 mb-2'
-const subtitleCenter = 'text-xm font-normal text-black/50 dark:text-white/50 text-center'
+// One heading scale for every section (see components/shared/layout).
+const titleCenter = cn(SECTION_TITLE, 'text-center mb-2')
+const subtitleCenter = cn(SECTION_LEAD, 'text-center')
 
-const titleLeft = 'lg:text-52 text-40 leading-[1.2] font-medium text-dark dark:text-white'
-const subtitleLeft = 'text-dark/50 dark:text-white/50'
+const titleLeft = SECTION_TITLE
+const subtitleLeft = cn(SECTION_LEAD, 'mt-3 max-w-3xl')
 
-const titleSplit = 'lg:text-52 text-40 font-medium dark:text-white'
-const subtitleSplit = 'text-dark/50 dark:text-white/50 text-xm'
+const titleSplit = SECTION_TITLE
+const subtitleSplit = cn(SECTION_LEAD, 'max-w-3xl')
 
 export function SectionHeader({
   variant,

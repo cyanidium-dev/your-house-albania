@@ -17,12 +17,12 @@ export function CalcSectionShell({
   children: React.ReactNode
 }) {
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         {(title || subtitle) && (
           <div className="mb-10 max-w-3xl">
             {title ? (
-              <h2 className="text-3xl sm:text-4xl lg:text-52 font-medium text-dark dark:text-white leading-[1.15]">
+              <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-medium text-dark dark:text-white leading-[1.15]">
                 {title}
               </h2>
             ) : null}

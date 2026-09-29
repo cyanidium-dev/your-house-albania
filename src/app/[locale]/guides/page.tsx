@@ -12,6 +12,9 @@ import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/lib/seo/envSeo";
+import { NoPhotoPlate } from "@/components/shared/NoPhotoPlate";
+import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
+import { balancedGridClass, Section, SectionHeading } from "@/components/shared/layout";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -50,6 +53,14 @@ export default async function GuidesIndexPage({ params }: Props) {
   const baseUrl = await getBaseUrl();
   const jsonLdItems = toBreadcrumbJsonLdItems(items, `/${locale}/guides`);
 
+  // Twenty "X or Y" comparisons used to be interleaved with the handful of
+  // core guides; they are a set of their own.
+  const isComparison = (slug?: string | null) => typeof slug === "string" && slug.includes("-vs-");
+  const groups = [
+    { key: "guides", title: t("sectionGuides"), entries: entries.filter((e) => !isComparison(e.slug)) },
+    { key: "comparisons", title: t("sectionComparisons"), entries: entries.filter((e) => isComparison(e.slug)) },
+  ];
+
   return (
     <main>
       <BreadcrumbJsonLd items={jsonLdItems} baseUrl={baseUrl} />
@@ -61,54 +72,65 @@ export default async function GuidesIndexPage({ params }: Props) {
         photoKey="durres"
         breadcrumb={<Breadcrumb items={items} overHero />}
       />
-      <section className="pt-4 pb-16 md:pb-24">
-        <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-
-          {entries.length === 0 ? (
-            <p className="mt-6 text-dark/60 dark:text-white/60">{t("empty")}</p>
-          ) : (
-            <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {entries.map((entry) => {
-                const title = resolveLocalizedString(entry.title as never, locale) || entry.slug;
-                const description = resolveLocalizedString(
-                  entry.cardDescription as never,
-                  locale,
-                );
-                const imageUrl = entry.cardImage?.asset?.url;
-                return (
-                  <li key={entry._id ?? entry.slug}>
-                    <Link
-                      href={`/${locale}/guides/${entry.slug}`}
-                      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark/10 dark:border-white/15 transition-colors hover:border-primary"
-                    >
-                      {imageUrl ? (
-                        <span className="relative block aspect-[16/10] w-full overflow-hidden">
-                          <Image
-                            src={imageUrl}
-                            alt={title ?? ""}
-                            fill
-                            className="object-cover will-change-transform transition-transform duration-300 ease-out group-hover:scale-105"
-                          />
+      {entries.length === 0 ? (
+        <Section>
+          <p className="text-dark/60 dark:text-white/60">{t("empty")}</p>
+        </Section>
+      ) : (
+        groups.map((group) =>
+          group.entries.length > 0 ? (
+            <Section key={group.key}>
+              <SectionHeading title={group.title} />
+              <ul className={balancedGridClass(group.entries.length)}>
+                {group.entries.map((entry) => {
+                  const title = resolveLocalizedString(entry.title as never, locale) || entry.slug || "";
+                  const description = resolveLocalizedString(entry.cardDescription as never, locale);
+                  // A guide without a cover gets the photo its own page hero
+                  // falls back to; a comparison gets the two place names.
+                  const imageUrl =
+                    entry.cardImage?.asset?.url ||
+                    (group.key === "guides" ? heroPhotoFor({ slug: entry.slug }).src : undefined);
+                  return (
+                    <li key={entry._id ?? entry.slug}>
+                      <Link
+                        href={`/${locale}/guides/${entry.slug}`}
+                        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark/10 dark:border-white/15 transition-colors hover:border-primary"
+                      >
+                        {/* Every card has the picture slot, photographed or
+                            not: text-only cards next to photo cards made rows
+                            of three different heights. */}
+                        <span className="relative block aspect-[16/10] w-full overflow-hidden bg-dark/5 dark:bg-white/5">
+                          {imageUrl ? (
+                            <Image
+                              src={imageUrl}
+                              alt={title}
+                              fill
+                              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                              className="object-cover will-change-transform transition-transform duration-300 ease-out group-hover:scale-105"
+                            />
+                          ) : (
+                            <NoPhotoPlate label={title.split(":")[0]} />
+                          )}
                         </span>
-                      ) : null}
-                      <span className="flex flex-1 flex-col gap-2 p-5">
-                        <span className="font-display text-xl font-semibold text-dark dark:text-white">
-                          {title}
-                        </span>
-                        {description ? (
-                          <span className="text-sm text-dark/65 dark:text-white/65">
-                            {description}
+                        <span className="flex flex-1 flex-col gap-2 p-5">
+                          <span className="font-display text-xl font-semibold tracking-tight text-dark dark:text-white">
+                            {title}
                           </span>
-                        ) : null}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-      </section>
+                          {description ? (
+                            <span className="text-sm leading-relaxed text-dark/65 dark:text-white/65 line-clamp-3">
+                              {description}
+                            </span>
+                          ) : null}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Section>
+          ) : null,
+        )
+      )}
     </main>
   );
 }

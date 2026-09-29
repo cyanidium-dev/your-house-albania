@@ -6,6 +6,18 @@ import { Icon } from "@/components/shared/Icon";
 import { getTranslations } from 'next-intl/server';
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 import { brandButtonClass } from '@/components/shared/BrandButton';
+import { cn } from '@/lib/utils';
+import {
+  BODY_TEXT,
+  CONTAINER,
+  MEASURE,
+  PANEL,
+  SECTION_TITLE,
+  SECTION_Y,
+  SPLIT,
+  SPLIT_ASIDE,
+  SPLIT_MAIN,
+} from '@/components/shared/layout';
 
 export type SeoTextData =
   | { content: unknown[] | string; isPlainText: boolean }
@@ -198,21 +210,6 @@ function SeoTextCta({ href, label, locale }: { href: string; label: string; loca
   );
 }
 
-function estimateTextLength(content: unknown[] | string | undefined, isPlainText: boolean): number {
-  if (isPlainText && typeof content === 'string') return content.trim().length;
-  if (!Array.isArray(content)) return 0;
-  let n = 0;
-  for (const block of content) {
-    if (!block || typeof block !== 'object') continue;
-    const b = block as { _type?: string; children?: Array<{ text?: string }> };
-    if (b._type !== 'block') continue;
-    for (const child of b.children ?? []) {
-      if (typeof child?.text === 'string') n += child.text.length;
-    }
-  }
-  return n;
-}
-
 function isFlowingProse(content: unknown[] | string | undefined, isPlainText: boolean): boolean {
   if (isPlainText) return true;
   if (!Array.isArray(content)) return false;
@@ -224,11 +221,6 @@ function isFlowingProse(content: unknown[] | string | undefined, isPlainText: bo
     if (b.style && b.style !== 'normal') return false;
   }
   return true;
-}
-
-function shouldUseTwoColumns(content: unknown[] | string | undefined, isPlainText: boolean): boolean {
-  if (!isFlowingProse(content, isPlainText)) return false;
-  return estimateTextLength(content, isPlainText) > 600;
 }
 
 /**
@@ -325,7 +317,6 @@ const SeoText: React.FC<{
 
   const fallbackMsg = t('contentMissing');
   const showVideo = videoUrl && safeHttpUrl(videoUrl);
-  const twoCols = shouldUseTwoColumns(content, isPlainText);
   // Flowing prose (only `normal` paragraphs, no headings/lists) — render as
   // plain text so we control paragraph splitting and lead-paragraph styling.
   const flowing = isFlowingProse(content, isPlainText);
@@ -343,203 +334,155 @@ const SeoText: React.FC<{
   const showHeader = Boolean(category || readingTimeMinutes);
   const readLabel = READ_LABEL_BY_LOCALE[locale] ?? READ_LABEL_BY_LOCALE.en;
   const photo = imageUrl?.trim() ? imageUrl.trim() : null;
-  // A column of prose sized for reading looks stranded on a page built at
-  // `max-w-8xl`. With a photograph beside it the block fills the page the way
-  // the sections above and below it do, so it is widened only in that case —
-  // text-only blocks keep the measure that makes them readable.
-  const shellClass = photo
-    ? 'container mx-auto max-w-8xl px-5 2xl:px-0'
-    : 'container mx-auto max-w-4xl px-5 2xl:px-0';
+
+  // Editorial split: the heading (and the photograph or figures that belong
+  // to it) on the narrow side, the text on the wide side at a reading measure.
+  // The block used to sit in a centred 896px box of its own, so it started
+  // 250px to the right of every section around it, and long plain text broke
+  // into two CSS columns that never balanced — one sentence alone at the top
+  // of the second column on /durres/info.
+  const hasAside = Boolean(heading || showHeader || showAuthor || photo || showStats);
+
+  const aside = hasAside ? (
+    <div className={cn(SPLIT_ASIDE, 'lg:sticky lg:top-28 lg:self-start')}>
+      {showHeader ? (
+        <div className="mb-4 flex items-center gap-3 text-xs">
+          {category ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/12 text-primary px-3 py-1 font-semibold tracking-wide">
+              <Icon icon="ph:house-simple-fill" width={12} height={12} aria-hidden />
+              {category}
+            </span>
+          ) : null}
+          {readingTimeMinutes ? (
+            <span className="text-dark/45 dark:text-white/45">
+              {category ? '· ' : ''}
+              {readingTimeMinutes} {readLabel}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
+      {heading ? <HeadingTag className={SECTION_TITLE}>{heading}</HeadingTag> : null}
+
+      {showAuthor ? (
+        <div className="mt-6 flex items-center gap-3">
+          {author?.avatarUrl ? (
+            <Image
+              src={author.avatarUrl}
+              alt={author.name || 'Author'}
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full ring-1 ring-primary/40 object-cover"
+            />
+          ) : author?.initials ? (
+            <div className="h-10 w-10 rounded-full bg-primary/20 ring-1 ring-primary/40 flex items-center justify-center">
+              <span className="text-primary font-semibold text-sm">{author.initials}</span>
+            </div>
+          ) : null}
+          {author?.name || author?.role ? (
+            <div className="min-w-0">
+              {author?.name ? (
+                <p className="text-sm font-semibold text-dark dark:text-white truncate">{author.name}</p>
+              ) : null}
+              {author?.role ? (
+                <p className="text-xs text-dark/55 dark:text-white/55 truncate">{author.role}</p>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {photo ? (
+        <figure
+          className={cn(
+            'relative aspect-[16/10] lg:aspect-[4/3] overflow-hidden rounded-3xl bg-dark/5 dark:bg-white/5',
+            heading || showAuthor || showHeader ? 'mt-8' : '',
+          )}
+        >
+          <Image
+            src={photo}
+            alt={imageAlt || heading || ''}
+            fill
+            sizes="(max-width: 1023px) 100vw, 560px"
+            className="object-cover object-center"
+          />
+        </figure>
+      ) : null}
+
+      {showStats ? (
+        <dl
+          className={cn(
+            PANEL,
+            'mt-8 grid gap-5 p-6',
+            stats!.length === 1 ? 'grid-cols-1' : stats!.length === 2 ? 'grid-cols-2' : 'grid-cols-3',
+          )}
+        >
+          {stats!.map((s, i) => (
+            <div key={i} className={i > 0 ? 'border-l border-dark/10 dark:border-white/10 pl-5' : ''}>
+              <dd className="text-primary text-2xl lg:text-3xl font-semibold tabular-nums">{s.value}</dd>
+              <dt className="mt-1 text-xs text-dark/55 dark:text-white/55">{s.label}</dt>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+    </div>
+  ) : null;
+
+  const body = !hasContent ? (
+    <p className="text-amber-600 dark:text-amber-400 text-sm font-medium bg-amber-50 dark:bg-amber-950/30 py-4 px-4 rounded-lg border border-amber-200 dark:border-amber-800">
+      {fallbackMsg}
+    </p>
+  ) : renderAsPlain ? (
+    (() => {
+      const paragraphs = splitPlainTextParagraphs(plainBody!);
+      if (paragraphs.length === 0) return null;
+      return (
+        <>
+          {/* Lead paragraph: larger and full-contrast, sets the rhythm. */}
+          <p className="text-dark dark:text-white text-[17px] leading-[1.65] sm:text-xl sm:leading-[1.55] sm:font-medium">
+            {paragraphs[0]}
+          </p>
+          {paragraphs.slice(1).map((para, i) => (
+            <p key={i} className={cn(BODY_TEXT, 'mt-5')}>
+              {para}
+            </p>
+          ))}
+        </>
+      );
+    })()
+  ) : (
+    <PortableText
+      value={((content as unknown[]) ?? []) as PortableTextBlock[]}
+      components={portableComponentsFor(locale)}
+    />
+  );
 
   return (
-    <section className="py-16 md:py-24">
-      <div className={shellClass}>
-        {photo ? (
-          <figure className="relative mb-10 md:mb-12 aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-3xl bg-dark/5 dark:bg-white/5">
-            <Image
-              src={photo}
-              alt={imageAlt || heading || ''}
-              fill
-              sizes="(max-width: 1024px) 100vw, 1280px"
-              className="object-cover object-center"
-            />
-          </figure>
-        ) : null}
-        <div className={photo ? 'max-w-4xl' : ''}>
-        {/* Header chip strip */}
-        {showHeader ? (
-          <div className="flex items-center gap-3 text-xs">
-            {category ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/12 text-primary px-3 py-1 font-semibold tracking-wide">
-                <Icon icon="ph:house-simple-fill" width={12} height={12} aria-hidden />
-                {category}
-              </span>
-            ) : null}
-            {readingTimeMinutes ? (
-              <span className="text-dark/45 dark:text-white/45">
-                {category ? '· ' : ''}
-                {readingTimeMinutes} {readLabel}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
+    <section className={SECTION_Y}>
+      <div className={CONTAINER}>
+        <div className={hasAside ? SPLIT : undefined}>
+          {aside}
+          <div className={hasAside ? SPLIT_MAIN : MEASURE}>
+            {showVideo ? <SeoTextVideo url={videoUrl!} title={t('videoTitle')} /> : null}
+            <article className={showVideo ? 'mt-8' : undefined}>{body}</article>
 
-        {heading ? (
-          <HeadingTag className="mt-5 text-3xl sm:text-4xl lg:text-[44px] xl:text-[56px] font-medium leading-[1.04] tracking-tight text-dark dark:text-white">
-            {heading}
-          </HeadingTag>
-        ) : null}
-
-        {/* Author byline */}
-        {showAuthor ? (
-          <div className="mt-7 mb-10 flex items-center gap-3 pb-7 border-b border-dark/10 dark:border-white/10">
-            {author?.avatarUrl ? (
-              <Image
-                src={author.avatarUrl}
-                alt={author.name || 'Author'}
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full ring-1 ring-primary/40 object-cover"
-              />
-            ) : author?.initials ? (
-              <div className="h-10 w-10 rounded-full bg-primary/20 ring-1 ring-primary/40 flex items-center justify-center">
-                <span className="text-primary font-semibold text-sm">{author.initials}</span>
-              </div>
-            ) : null}
-            {author?.name || author?.role ? (
-              <div className="min-w-0">
-                {author?.name ? (
-                  <p className="text-sm font-semibold text-dark dark:text-white truncate">{author.name}</p>
+            {pullQuote ? (
+              <blockquote className="mt-10 relative pl-6 border-l-2 border-primary">
+                <p className="text-2xl lg:text-[26px] font-medium leading-snug text-dark dark:text-white">
+                  «{pullQuote.text}»
+                </p>
+                {pullQuote.author ? (
+                  <footer className="mt-3 text-sm text-dark/55 dark:text-white/55">— {pullQuote.author}</footer>
                 ) : null}
-                {author?.role ? (
-                  <p className="text-xs text-dark/55 dark:text-white/55 truncate">{author.role}</p>
-                ) : null}
+              </blockquote>
+            ) : null}
+
+            {cta ? (
+              <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-8 border-t border-dark/10 dark:border-white/10">
+                <SeoTextCta href={cta.href} label={cta.label} locale={locale} />
               </div>
             ) : null}
           </div>
-        ) : null}
-
-        {/* Stat strip */}
-        {showStats ? (
-          <div
-            className={
-              'grid gap-4 mb-10 rounded-2xl p-5 bg-[#f7f6f3] ring-1 ring-dark/[0.05] dark:bg-white/[0.04] dark:ring-white/[0.06] ' +
-              (stats!.length === 1 ? 'grid-cols-1' : stats!.length === 2 ? 'grid-cols-2' : 'grid-cols-3')
-            }
-          >
-            {stats!.map((s, i) => (
-              <div
-                key={i}
-                className={
-                  i > 0 ? 'border-l border-dark/10 dark:border-white/10 pl-4' : ''
-                }
-              >
-                <p className="text-primary text-2xl lg:text-3xl font-semibold">{s.value}</p>
-                <p className="mt-1 text-xs text-dark/55 dark:text-white/55">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        {/* Video (when set) */}
-        {showVideo ? <SeoTextVideo url={videoUrl!} title={t('videoTitle')} /> : null}
-
-        {/* Body */}
-        <article
-          className={
-            // When nothing else (no header / heading / author / stats / video) sits above
-            // the body, wrap the prose in a soft branded card so it doesn't read as a
-            // raw wall of text.
-            !showHeader && !heading && !showAuthor && !showStats && !showVideo
-              ? 'relative overflow-hidden rounded-3xl border border-dark/5 dark:border-white/10 bg-gradient-to-br from-dark/[0.02] via-transparent to-primary/[0.04] dark:from-white/[0.03] dark:via-transparent dark:to-primary/10 p-6 sm:p-10 lg:p-12'
-              : ''
-          }
-        >
-          {!showHeader && !heading && !showAuthor && !showStats && !showVideo ? (
-            <>
-              <div
-                aria-hidden
-                className="absolute inset-y-10 left-0 w-1 rounded-r-full bg-primary hidden md:block"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -top-6 -right-6 text-primary/10 dark:text-primary/20"
-              >
-                <Icon icon="ph:buildings-fill" width={140} height={140} />
-              </div>
-              <span
-                aria-hidden
-                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary mb-5"
-              >
-                <Icon icon="ph:house-simple-fill" width={20} height={20} />
-              </span>
-            </>
-          ) : null}
-
-          {!hasContent ? (
-            <p className="text-amber-600 dark:text-amber-400 text-sm font-medium bg-amber-50 dark:bg-amber-950/30 py-4 px-4 rounded-lg border border-amber-200 dark:border-amber-800">
-              {fallbackMsg}
-            </p>
-          ) : renderAsPlain ? (
-            (() => {
-              const paragraphs = splitPlainTextParagraphs(plainBody!);
-              if (paragraphs.length === 0) return null;
-              return (
-                <div className="relative">
-                  {/* Lead paragraph — larger, dark-toned, sets the editorial rhythm */}
-                  <p className="text-dark dark:text-white text-lg sm:text-xl leading-[1.55] font-medium first-letter:text-primary first-letter:text-[2.4em] first-letter:font-semibold first-letter:float-left first-letter:mr-2 first-letter:leading-none first-letter:mt-1">
-                    {paragraphs[0]}
-                  </p>
-                  {paragraphs.length > 1 ? (
-                    <div
-                      className={
-                        'relative mt-6 ' +
-                        (twoCols
-                          ? 'lg:columns-2 lg:gap-12 [&>p]:break-inside-avoid'
-                          : '')
-                      }
-                    >
-                      {paragraphs.slice(1).map((para, i) => (
-                        <p
-                          key={i}
-                          className="text-dark/72 dark:text-white/72 text-[17px] leading-relaxed mt-5 first:mt-0"
-                        >
-                          {para}
-                        </p>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-              );
-            })()
-          ) : (
-            <div className={twoCols ? 'lg:columns-2 lg:gap-12 [&_p]:break-inside-avoid' : ''}>
-              <PortableText
-                value={((content as unknown[]) ?? []) as PortableTextBlock[]}
-                components={portableComponentsFor(locale)}
-              />
-            </div>
-          )}
-        </article>
-
-        {/* Pull quote */}
-        {pullQuote ? (
-          <blockquote className="my-10 relative pl-6 border-l-2 border-primary">
-            <p className="text-2xl lg:text-[26px] font-medium leading-snug text-dark dark:text-white">
-              «{pullQuote.text}»
-            </p>
-            {pullQuote.author ? (
-              <footer className="mt-3 text-sm text-dark/55 dark:text-white/55">— {pullQuote.author}</footer>
-            ) : null}
-          </blockquote>
-        ) : null}
-
-        {/* Footer CTA */}
-        {cta ? (
-          <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-8 border-t border-dark/10 dark:border-white/10">
-            <SeoTextCta href={cta.href} label={cta.label} locale={locale} />
-          </div>
-        ) : null}
         </div>
       </div>
     </section>

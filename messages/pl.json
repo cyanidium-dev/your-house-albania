@@ -311,7 +311,9 @@
     "confidenceHigh": "Wysoka wiarygodność",
     "confidenceMedium": "Średnia wiarygodność",
     "confidenceLow": "Niska wiarygodność",
-    "methodology": "Metodologia"
+    "methodology": "Metodologia",
+    "confidence": "Wiarygodność",
+    "versus": "{diff} vs {other}"
   },
   "ZoneMetrics": {
     "priceNew": "Nowe budownictwo, €/m²",
@@ -717,7 +719,9 @@
     "title": "Poradniki zakupu nieruchomości w Albanii",
     "description": "Porównania miast, ceny według dzielnic, kroki prawne i koszty: poradniki dla kupujących w Albanii, przede wszystkim w Durrës.",
     "empty": "Nie opublikowano jeszcze żadnych poradników.",
-    "breadcrumbHome": "Strona główna"
+    "breadcrumbHome": "Strona główna",
+    "sectionGuides": "Poradniki",
+    "sectionComparisons": "Porównania: co wybrać"
   },
   "ImageCredits": {
     "title": "Źródła zdjęć",

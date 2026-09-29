@@ -311,7 +311,9 @@
     "confidenceHigh": "Besueshmëri e lartë",
     "confidenceMedium": "Besueshmëri mesatare",
     "confidenceLow": "Besueshmëri e ulët",
-    "methodology": "Metodologjia"
+    "methodology": "Metodologjia",
+    "confidence": "Besueshmëria",
+    "versus": "{diff} vs {other}"
   },
   "ZoneMetrics": {
     "priceNew": "Ndërtim i ri, €/m²",
@@ -717,7 +719,9 @@
     "title": "Udhëzues për blerjen e pronës në Shqipëri",
     "description": "Krahasime qytetesh, çmime sipas zonave, hapat ligjorë dhe kostot: udhëzues për blerjen në Shqipëri, në radhë të parë në Durrës.",
     "empty": "Ende nuk ka udhëzues të publikuar.",
-    "breadcrumbHome": "Kryefaqja"
+    "breadcrumbHome": "Kryefaqja",
+    "sectionGuides": "Udhëzues",
+    "sectionComparisons": "Krahasime: cilin të zgjidhni"
   },
   "ImageCredits": {
     "title": "Kreditet e fotove",

@@ -23,8 +23,11 @@ export function TopOffersCarouselClient({
   groups,
   initialGroup = "popular",
   showTabs = true,
+  header,
 }: {
   locale: string;
+  /** Section heading, set on the left of the arrows row. */
+  header?: React.ReactNode;
   groups: Record<TopOffersGroup, PropertyHomes[]>;
   initialGroup?: TopOffersGroup;
   /**
@@ -67,43 +70,49 @@ export function TopOffersCarouselClient({
     el.scrollBy({ left: dir * cardWidth, behavior: "smooth" });
   };
 
+  const tabs = (
+    <div
+      className={segmentedTrackClass(!showTabs ? 'hidden' : undefined)}
+    >
+      {GROUPS.map((g) => {
+        const activeTab = g === active;
+        const label =
+          g === "popular"
+            ? t("tabs.popular")
+            : g === "new"
+              ? t("tabs.new")
+              : t("tabs.highDemand");
+        return (
+          <button
+            key={g}
+            type="button"
+            onClick={() => setActive(g)}
+            className={segmentedItemClass(activeTab)}
+          >
+            <span className="block max-w-full truncate">{label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className="min-w-0">
       <div
         className={cn(
-          'flex items-center gap-3 min-w-0',
-          showTabs ? 'justify-between' : 'justify-end'
+          'flex gap-3 min-w-0',
+          header ? 'items-end justify-between' : 'items-center',
+          !header && (showTabs ? 'justify-between' : 'justify-end')
         )}
       >
-        <div
-          className={segmentedTrackClass(!showTabs ? 'hidden' : undefined)}
-        >
-          {GROUPS.map((g) => {
-            const activeTab = g === active;
-            const label =
-              g === "popular"
-                ? t("tabs.popular")
-                : g === "new"
-                  ? t("tabs.new")
-                  : t("tabs.highDemand");
-            return (
-              <button
-                key={g}
-                type="button"
-                onClick={() => setActive(g)}
-                className={segmentedItemClass(activeTab)}
-              >
-                <span className="block max-w-full truncate">{label}</span>
-              </button>
-            );
-          })}
-        </div>
-
+        {header ? <div className="min-w-0 flex-1">{header}</div> : null}
+        {!header ? tabs : null}
         <div className="hidden md:flex items-center gap-2 shrink-0">
           <CarouselArrowButton direction="prev" onClick={() => scrollByCards(-1)} label={t("prev")} />
           <CarouselArrowButton direction="next" onClick={() => scrollByCards(1)} label={t("next")} />
         </div>
       </div>
+      {header && showTabs ? <div className="mt-6">{tabs}</div> : null}
 
       <div className="mt-6 min-w-0">
         <div

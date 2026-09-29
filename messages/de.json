@@ -311,7 +311,9 @@
     "confidenceHigh": "Hohe Zuverlässigkeit",
     "confidenceMedium": "Mittlere Zuverlässigkeit",
     "confidenceLow": "Geringe Zuverlässigkeit",
-    "methodology": "Methodik"
+    "methodology": "Methodik",
+    "confidence": "Verlässlichkeit",
+    "versus": "{diff} vs {other}"
   },
   "ZoneMetrics": {
     "priceNew": "Neubau, €/m²",
@@ -717,7 +719,9 @@
     "title": "Ratgeber zum Immobilienkauf in Albanien",
     "description": "Städtevergleiche, Preise nach Stadtteil, rechtliche Schritte und Kosten: Ratgeber für den Kauf in Albanien, Durrës zuerst.",
     "empty": "Noch keine Ratgeber veröffentlicht.",
-    "breadcrumbHome": "Startseite"
+    "breadcrumbHome": "Startseite",
+    "sectionGuides": "Ratgeber",
+    "sectionComparisons": "Vergleiche: was wählen"
   },
   "ImageCredits": {
     "title": "Bildnachweise",

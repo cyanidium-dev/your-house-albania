@@ -311,7 +311,9 @@
     "confidenceHigh": "Affidabilità alta",
     "confidenceMedium": "Affidabilità media",
     "confidenceLow": "Affidabilità bassa",
-    "methodology": "Metodologia"
+    "methodology": "Metodologia",
+    "confidence": "Affidabilità",
+    "versus": "{diff} vs {other}"
   },
   "ZoneMetrics": {
     "priceNew": "Nuovo, €/m²",
@@ -717,7 +719,9 @@
     "title": "Guide all'acquisto di immobili in Albania",
     "description": "Confronti tra città, prezzi per zona, passaggi legali e costi: guide per comprare in Albania, Durazzo per prima.",
     "empty": "Nessuna guida pubblicata per ora.",
-    "breadcrumbHome": "Home"
+    "breadcrumbHome": "Home",
+    "sectionGuides": "Guide",
+    "sectionComparisons": "Confronti: quale scegliere"
   },
   "ImageCredits": {
     "title": "Crediti fotografici",

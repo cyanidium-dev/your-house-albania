@@ -60,6 +60,7 @@ export function ZonePriceTableAutoSection({
   sortBy = 'price',
   linkRows = true,
   showSources = true,
+  currentZoneId,
 }: {
   locale: string
   records: ZoneMetricsDoc[]
@@ -69,6 +70,8 @@ export function ZonePriceTableAutoSection({
   sortBy?: ZoneTableSort
   linkRows?: boolean
   showSources?: boolean
+  /** The page's own zone: its row is marked so the reader finds it among the neighbours. */
+  currentZoneId?: string
 }) {
   const t = useTranslations('ZoneMetrics')
 
@@ -91,7 +94,9 @@ export function ZonePriceTableAutoSection({
       label: loc(zoneLabel),
       cells: columnKeys.map((key) => loc(formatMetric(record, key, locale) ?? '—')),
       confidence: record.confidence,
-      ...(href ? { href } : {}),
+      current: Boolean(currentZoneId && record.zone?._id === currentZoneId),
+      // No link from a row to the page it is on.
+      ...(href && !(currentZoneId && record.zone?._id === currentZoneId) ? { href } : {}),
     }
   })
 
@@ -99,29 +104,21 @@ export function ZonePriceTableAutoSection({
   const sources = mergeSources(sorted).filter((s): s is SourcesListItem => Boolean(s?.url && s?.label))
 
   return (
-    <>
-      <PriceTableSection
-        locale={locale}
-        section={{
-          title: titleOverride ? loc(titleOverride) : undefined,
-          subtitle: subtitleOverride ? loc(subtitleOverride) : undefined,
-          // `columns` describes the value columns only — the row label has its
-          // own header slot. Prepending "zone" here shifted every heading one
-          // column right, so each price sat under the wrong label.
-          labelHeader: loc(t('zone')),
-          columns: columnKeys.map((key) => loc(t(key))),
-          rows: tableRows,
-          confidenceEnabled: true,
-          sourceNote: period ? loc(period) : undefined,
-        }}
-      />
-      {showSources && sources.length > 0 ? (
-        <div className="container max-w-8xl mx-auto -mt-10 px-5 pb-16 md:pb-24 2xl:px-0">
-          <div className="max-w-3xl">
-            <SourcesList items={sources} locale={locale} />
-          </div>
-        </div>
-      ) : null}
-    </>
+    <PriceTableSection
+      locale={locale}
+      section={{
+        title: titleOverride ? loc(titleOverride) : undefined,
+        subtitle: subtitleOverride ? loc(subtitleOverride) : undefined,
+        // `columns` describes the value columns only — the row label has its
+        // own header slot. Prepending "zone" here shifted every heading one
+        // column right, so each price sat under the wrong label.
+        labelHeader: loc(t('zone')),
+        columns: columnKeys.map((key) => loc(t(key))),
+        rows: tableRows,
+        confidenceEnabled: true,
+        sourceNote: period ? loc(period) : undefined,
+      }}
+      aside={showSources && sources.length > 0 ? <SourcesList items={sources} locale={locale} /> : undefined}
+    />
   )
 }

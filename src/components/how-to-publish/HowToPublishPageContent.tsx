@@ -18,7 +18,8 @@ export async function HowToPublishPageContent({ locale, videoUrl }: Props) {
 
   return (
     <>
-      <section className="py-16 md:py-24">
+      {/* First block on the page, under the fixed header. */}
+      <section className="pt-28 md:pt-36 pb-12 md:pb-16">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <div
             className={

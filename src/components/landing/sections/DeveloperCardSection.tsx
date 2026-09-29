@@ -24,7 +24,7 @@ export async function DeveloperCardSection({
   const title = resolveLocalizedString(section.title as never, locale)
 
   return (
-    <section className="py-10 md:py-14">
+    <section className="py-12 md:py-16">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
         <div className="max-w-2xl">
           {title ? (

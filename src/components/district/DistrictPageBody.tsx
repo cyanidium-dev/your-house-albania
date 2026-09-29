@@ -1,13 +1,9 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
-import { SectionHeader } from "@/components/landing/sectionPrimitives";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import FAQ from "@/components/landing/sections/impl/FaqSectionImpl";
+import { galleryItemClass } from "@/components/landing/sections/LinkedGallerySection";
+import { CONTAINER, MEASURE, Section, SectionHeading, SECTION_LEAD } from "@/components/shared/layout";
 import type { DistrictDoc } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
@@ -69,7 +65,7 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
     <>
       {/* Hero */}
       <section className="pt-20 md:pt-32">
-        <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+        <div className={CONTAINER}>
           <DistrictsBreadcrumb
             locale={locale}
             country={countrySlug}
@@ -77,7 +73,7 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
             district={district.slug}
             districtLabel={districtLabel}
           />
-          <div className="max-w-3xl">
+          <div className={MEASURE}>
             {shortLine ? (
               <p className="text-dark/75 dark:text-white/75 text-base font-semibold">
                 {shortLine}
@@ -122,8 +118,8 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
       {/* Description */}
       {description ? (
         <section className="pt-12 md:pt-16">
-          <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-            <p className="max-w-3xl text-base sm:text-lg leading-relaxed text-dark/70 dark:text-white/70 whitespace-pre-line">
+          <div className={CONTAINER}>
+            <p className={`${MEASURE} text-lg sm:text-xl leading-relaxed text-dark/80 dark:text-white/80 whitespace-pre-line`}>
               {description}
             </p>
           </div>
@@ -132,74 +128,48 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
 
       {/* Gallery */}
       {galleryImages.length > 0 ? (
-        <section className="pt-16 md:pt-24">
-          <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-            {galleryTitle || gallerySubtitle ? (
-              <div className="mb-10 md:mb-12">
-                <SectionHeader
-                  variant="left"
-                  title={galleryTitle || undefined}
-                  subtitle={gallerySubtitle || undefined}
-                  titleClassName="lg:text-52 text-40 font-medium text-dark dark:text-white leading-[1.2] mb-2"
-                  subtitleClassName="text-dark/50 dark:text-white/50 text-lg leading-snug whitespace-pre-line max-w-3xl"
+        <Section>
+          <SectionHeading title={galleryTitle || undefined} lead={gallerySubtitle || undefined} />
+          <ul className="grid grid-cols-12 gap-4 md:gap-6">
+            {galleryImages.map((img, idx) => (
+              <li
+                key={img._key ?? idx}
+                className={`group relative rounded-2xl overflow-hidden aspect-[4/3] bg-dark/5 dark:bg-white/5 ${galleryItemClass(idx, galleryImages.length)}`}
+              >
+                <Image
+                  src={img.asset!.url!}
+                  alt={img.alt || img.label || title}
+                  fill
+                  className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-              </div>
-            ) : null}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {galleryImages.map((img, idx) => (
-                <div
-                  key={img._key ?? idx}
-                  className="group relative rounded-2xl overflow-hidden aspect-[4/3] bg-dark/5 dark:bg-white/5"
-                >
-                  <Image
-                    src={img.asset!.url!}
-                    alt={img.alt || img.label || title}
-                    fill
-                    className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  {img.label ? (
-                    <span className="absolute bottom-3 left-3 inline-flex items-center rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white/90">
-                      {img.label}
-                    </span>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+                {img.label ? (
+                  <span className="absolute bottom-3 left-3 inline-flex items-center rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white/90">
+                    {img.label}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </Section>
       ) : null}
 
-      {/* FAQ */}
+      {/* FAQ: the same block as on every landing */}
       {faqItems.length > 0 ? (
-        <section className="pt-16 md:pt-24">
-          <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-            <h2 className="lg:text-52 text-40 leading-[1.2] font-medium text-dark dark:text-white mb-8">
-              {faqTitle}
-            </h2>
-            <Accordion type="single" collapsible className="flex flex-col gap-3">
-              {faqItems.map((item, idx) => (
-                <AccordionItem key={item.key ?? idx} value={`faq-${idx}`}>
-                  <AccordionTrigger>{item.question}</AccordionTrigger>
-                  <AccordionContent className="whitespace-pre-line">
-                    {item.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        </section>
+        <FAQ
+          locale={locale}
+          faqData={{
+            title: faqTitle,
+            items: faqItems.map((item) => ({ question: item.question, answer: item.answer })),
+          }}
+        />
       ) : null}
 
       {/* SEO text */}
       {seoText ? (
-        <section className="pt-16 md:pt-24">
-          <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-            <p className="text-sm leading-relaxed text-dark/50 dark:text-white/50 whitespace-pre-line">
-              {seoText}
-            </p>
-          </div>
-        </section>
+        <Section>
+          <p className={`${MEASURE} ${SECTION_LEAD} text-base`}>{seoText}</p>
+        </Section>
       ) : null}
     </>
   );

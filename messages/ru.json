@@ -311,7 +311,9 @@
     "confidenceHigh": "Высокая достоверность",
     "confidenceMedium": "Средняя достоверность",
     "confidenceLow": "Низкая достоверность",
-    "methodology": "Методология"
+    "methodology": "Методология",
+    "confidence": "Надёжность",
+    "versus": "{diff} vs {other}"
   },
   "ZoneMetrics": {
     "priceNew": "Новостройка, €/м²",
@@ -717,7 +719,9 @@
     "title": "Гайды по покупке недвижимости в Албании",
     "description": "Сравнения городов, цены по районам, юридические шаги и расходы: гайды по покупке в Албании, прежде всего в Дурресе.",
     "empty": "Гайдов пока нет.",
-    "breadcrumbHome": "Главная"
+    "breadcrumbHome": "Главная",
+    "sectionGuides": "Гайды",
+    "sectionComparisons": "Сравнения: что выбрать"
   },
   "ImageCredits": {
     "title": "Авторство изображений",
