@@ -69,3 +69,20 @@ export function sanityCache<Args extends unknown[], T>(
     tags: [SANITY_TAGS.all, ...opts.tags],
   });
 }
+
+/**
+ * Image asset projection that drops the demo seed uploads.
+ *
+ * The seed script that bootstrapped the dataset uploaded 150 stock
+ * photographs at 800×600 (`seed-district-*.jpg`, `seed-prop-*`,
+ * `placeholder.jpg`): a motel sign for Blloku, a desert for Sarandë, a highland
+ * cow for Gjuhadol, the Statue of Liberty for Uji i Ftohtë. Fifteen landing
+ * heroes and fourteen district cards still pointed at them on 2026-09-28. A
+ * seed image projects as a null asset, so the page falls back to what it shows
+ * for "no photo" — the city's own photograph in a hero, the name plate on a
+ * card — until a real photograph is uploaded in the Studio.
+ *
+ * Use as `image { ${REAL_IMAGE_ASSET}, alt }` in place of `asset-> { url }`.
+ */
+export const REAL_IMAGE_ASSET =
+  '"asset": select(string::startsWith(asset->originalFilename, "seed-") || asset->originalFilename == "placeholder.jpg" => null, asset->{ url })';

@@ -1,4 +1,4 @@
-import { getClient, sanityCache, SANITY_TAGS } from './_core';
+import { getClient, sanityCache, SANITY_TAGS, REAL_IMAGE_ASSET } from './_core';
 import { landingPageSectionsProjection } from './landing';
 import { resolveLocalizedString } from '@/lib/sanity/localized';
 
@@ -45,17 +45,17 @@ const DISTRICT_DOC_PROJECTION = `{
   heroTitle,
   heroSubtitle,
   heroShortLine,
-  heroImage { asset-> { url }, alt },
+  heroImage { ${REAL_IMAGE_ASSET}, alt },
   heroCta,
   shortDescription,
   description,
   galleryTitle,
   gallerySubtitle,
-  "gallery": gallery[] { _key, asset-> { url }, alt, label },
+  "gallery": gallery[] { _key, ${REAL_IMAGE_ASSET}, alt, label },
   faqTitle,
   faqItems,
   seoText,
-  seo { ..., ogImage { asset-> { url }, alt } },
+  seo { ..., ogImage { ${REAL_IMAGE_ASSET}, alt } },
   "city": city-> {
     title,
     "slug": slug.current,
@@ -237,7 +237,7 @@ export async function fetchPublishedDistrictsByCity(citySlug: string): Promise<D
     "slug": slug.current,
     title,
     shortDescription,
-    heroImage { asset-> { url }, alt },
+    heroImage { ${REAL_IMAGE_ASSET}, alt },
     "propertiesCount": count(*[_type == "property" && district._ref == ^._id && isPublished == true])
   }`;
       try {

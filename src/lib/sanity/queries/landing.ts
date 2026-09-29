@@ -1,6 +1,6 @@
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding';
 import { dealTypeToLandingDocumentSlug } from '@/lib/sanity/dealLandingSlug';
-import { getClient, sanityCache, SANITY_TAGS } from './_core';
+import { getClient, sanityCache, SANITY_TAGS, REAL_IMAGE_ASSET } from './_core';
 import { blogListingProjection } from './blog';
 import { resolveLocalizedString } from '../localized';
 
@@ -41,7 +41,7 @@ export async function fetchCityLandingByCitySlug(citySlug: string): Promise<{
     "linkedCity": linkedCity->{
       title,
       shortDescription,
-      heroImage { asset-> { url } }
+      heroImage { ${REAL_IMAGE_ASSET} }
     },
     "linkedZoneId": linkedCity._ref,
     "linkedZoneType": "city",
@@ -98,7 +98,7 @@ export const landingPageSectionsProjection = `{
     capEur,
     note,
     image {
-      asset-> { url },
+      ${REAL_IMAGE_ASSET},
       alt
     }
   },
@@ -123,7 +123,7 @@ export const landingPageSectionsProjection = `{
     title,
     "slug": slug.current,
     shortDescription,
-    image { asset-> { url }, alt }
+    image { ${REAL_IMAGE_ASSET}, alt }
   },
   headings,
   rows,
@@ -182,9 +182,9 @@ export const landingPageSectionsProjection = `{
   groupedMediaMode,
   "images": images[] {
     _key,
-    asset-> { url },
+    ${REAL_IMAGE_ASSET},
     alt,
-    image { asset-> { url }, alt }
+    image { ${REAL_IMAGE_ASSET}, alt }
   },
   "contentGroups": contentGroups[] {
     _key,
@@ -230,18 +230,18 @@ export const landingPageSectionsProjection = `{
     label,
     description
   },
-  image { asset-> { url }, alt },
-  primaryImage { asset-> { url }, alt },
-  secondaryImage { asset-> { url }, alt },
+  image { ${REAL_IMAGE_ASSET}, alt },
+  primaryImage { ${REAL_IMAGE_ASSET}, alt },
+  secondaryImage { ${REAL_IMAGE_ASSET}, alt },
   imageMode,
-  backgroundImage { asset-> { url }, alt },
+  backgroundImage { ${REAL_IMAGE_ASSET}, alt },
   "cities": cities[]-> {
     _id,
     title,
     "slug": slug.current,
     shortDescription,
     vibe,
-    heroImage { asset-> { url }, alt, label },
+    heroImage { ${REAL_IMAGE_ASSET}, alt, label },
     "countrySlug": country->slug.current,
     "propertiesCount": count(*[_type=="property" && city._ref==^._id && isPublished==true])
   },
@@ -253,7 +253,7 @@ export const landingPageSectionsProjection = `{
       "slug": slug.current,
       shortDescription,
       vibe,
-      heroImage { asset-> { url }, alt, label },
+      heroImage { ${REAL_IMAGE_ASSET}, alt, label },
       "countrySlug": country->slug.current,
       "city": city-> { "slug": slug.current, "countrySlug": country->slug.current },
       "propertiesCount": select(
@@ -269,7 +269,7 @@ export const landingPageSectionsProjection = `{
       "slug": slug.current,
       shortDescription,
       vibe,
-      heroImage { asset-> { url }, alt, label },
+      heroImage { ${REAL_IMAGE_ASSET}, alt, label },
       "countrySlug": country->slug.current,
       "city": city-> { "slug": slug.current, "countrySlug": country->slug.current }
     }
@@ -278,8 +278,8 @@ export const landingPageSectionsProjection = `{
     _id,
     name,
     "slug": slug.current,
-    photo { alt, asset-> { url } },
-    agentLogo { alt, asset-> { url } },
+    photo { alt, ${REAL_IMAGE_ASSET} },
+    agentLogo { alt, ${REAL_IMAGE_ASSET} },
     telegramUrl,
     instagramUrl,
     facebookUrl,
@@ -293,7 +293,7 @@ export const landingPageSectionsProjection = `{
       title,
       cardTitle,
       cardDescription,
-      cardImage { asset-> { url }, alt },
+      cardImage { ${REAL_IMAGE_ASSET}, alt },
       "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current },
       "linkedDistrict": linkedDistrict-> {
         "slug": slug.current,
@@ -308,7 +308,7 @@ export const landingPageSectionsProjection = `{
       title,
       cardTitle,
       cardDescription,
-      cardImage { asset-> { url }, alt },
+      cardImage { ${REAL_IMAGE_ASSET}, alt },
       "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current },
       "linkedDistrict": linkedDistrict-> {
         "slug": slug.current,
@@ -535,7 +535,7 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
     "slug": slug.current,
     title,
     cardDescription,
-    cardImage { asset-> { url } },
+    cardImage { ${REAL_IMAGE_ASSET} },
     "pageSections": pageSections[]${landingPageSectionsProjection},
     topicTags,
     contentUpdatedAt,
@@ -591,7 +591,7 @@ export async function fetchUniqueLandingBySlug(slug: string): Promise<{
     "slug": slug.current,
     title,
     cardDescription,
-    cardImage { asset-> { url } },
+    cardImage { ${REAL_IMAGE_ASSET} },
     "pageSections": pageSections[]${landingPageSectionsProjection},
     topicTags,
     contentUpdatedAt,
@@ -628,8 +628,8 @@ const RELATED_CARD_PROJECTION = `{
   title,
   cardTitle,
   cardDescription,
-  cardImage { asset-> { url }, alt },
-  "zoneHeroImage": linkedDistrict->heroImage { asset-> { url }, alt },
+  cardImage { ${REAL_IMAGE_ASSET}, alt },
+  "zoneHeroImage": linkedDistrict->heroImage { ${REAL_IMAGE_ASSET}, alt },
   "linkedCity": linkedCity-> { "slug": slug.current, "countrySlug": country->slug.current },
   "linkedDistrict": linkedDistrict-> {
     "slug": slug.current,
