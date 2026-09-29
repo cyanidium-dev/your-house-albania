@@ -306,7 +306,12 @@ export default async function Post({ params }: Props) {
           alt={detail.title || detail.coverImageAlt || ""}
           width={1170}
           height={766}
-          quality={100}
+          // The cover fills 45% of the row from lg and the viewport below it;
+          // without sizes Next served the 1920/2560 px renditions at q=100
+          // (500 KB for a 570 px slot, 30.09). The photos themselves are phone
+          // shots, so a higher quality setting never made them sharper.
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          quality={75}
           priority
           className="h-full w-full object-cover object-center"
         />
