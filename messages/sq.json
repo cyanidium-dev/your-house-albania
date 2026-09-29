@@ -346,6 +346,17 @@
       "wholeCity": "Gjithë {city}",
       "note": "Shpalljet e Domlivo, rifreskim çdo orë",
       "versusMarket": "Dy tabelat matin gjëra të ndryshme, prandaj shifrat ndryshojnë: ajo më sipër raporton studime të publikuara të tregut, shpesh si interval; kjo tregon medianën e çmimeve të apartamenteve të listuara këtu sot."
+    },
+    "priceAnswer": {
+      "title": "{city}: çmimet reale të kërkuara, {month}",
+      "intro": "Nga {count} apartamente dhe studio në shitje në Domlivo më {date}: intervali është nga përqindësi i 20-të deri te i 80-ti i çmimit të kërkuar për metër katror, me medianën përbri.",
+      "wholeCity": "I gjithë qyteti {city}",
+      "completed": "Banesa të përfunduara (rishitje dhe ndërtime të dorëzuara)",
+      "newBuild": "Ndërtime të reja në ndërtim ose në projekt",
+      "range": "{from}–{to} €/m²",
+      "median": "mediana {value} €",
+      "flats": "{count, plural, one {# apartament} other {# apartamente}}",
+      "note": "Çmime të kërkuara nga njoftimet aktive, jo çmime transaksionesh; rillogariten çdo orë. Tabela e plotë sipas lagjeve është më poshtë në faqe."
     }
   },
   "Calculators": {

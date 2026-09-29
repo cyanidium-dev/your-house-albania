@@ -346,6 +346,17 @@
       "wholeCity": "Całe miasto {city}",
       "note": "Oferty Domlivo, aktualizacja co godzinę",
       "versusMarket": "Obie tabele mierzą co innego, dlatego liczby się różnią: ta wyżej podaje opublikowane badania rynku, często jako przedział; ta pokazuje medianę cen ofertowych mieszkań wystawionych u nas dzisiaj."
+    },
+    "priceAnswer": {
+      "title": "{city}: realne ceny mieszkań, {month}",
+      "intro": "Na podstawie {count} mieszkań i kawalerek wystawionych na sprzedaż na Domlivo na dzień {date}: przedział to 20.–80. percentyl ceny ofertowej za metr kwadratowy, obok mediana.",
+      "wholeCity": "Całe miasto {city}",
+      "completed": "Mieszkania gotowe (rynek wtórny i oddane nowe budynki)",
+      "newBuild": "Nowe budownictwo w budowie lub w planie",
+      "range": "{from}–{to} €/m²",
+      "median": "mediana {value} €",
+      "flats": "{count, plural, one {# mieszkanie} few {# mieszkania} other {# mieszkań}}",
+      "note": "Ceny ofertowe z aktywnych ogłoszeń, nie ceny transakcyjne; przeliczane co godzinę. Pełna tabela według dzielnic znajduje się niżej na stronie."
     }
   },
   "Calculators": {

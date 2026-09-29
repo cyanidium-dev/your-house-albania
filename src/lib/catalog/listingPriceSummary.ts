@@ -87,3 +87,39 @@ export function groupRowsBy<T>(rows: readonly T[], keyOf: (row: T) => string | n
   }
   return out;
 }
+
+/** Linear-interpolated percentile (0–1) of a list, rounded. `null` for an empty list. */
+export function percentile(values: readonly number[], p: number): number | null {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const pos = (sorted.length - 1) * p;
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  return Math.round(sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo));
+}
+
+/**
+ * The €/m² band of a group of flats: the 20th and 80th percentiles around the
+ * median. "Prices range from X to Y" should mean this, not the two outliers
+ * at the ends; a mis-typed 50 €/m² does not move it.
+ */
+export type FlatPriceBand = {
+  flatCount: number;
+  /** Flats with a usable €/m² figure. */
+  pricedCount: number;
+  p20: number | null;
+  median: number | null;
+  p80: number | null;
+};
+
+export function flatPriceBand(rows: readonly ListingPriceRow[]): FlatPriceBand {
+  const flats = rows.filter(isFlatRow);
+  const perSqm = pricesPerSqm(flats);
+  return {
+    flatCount: flats.length,
+    pricedCount: perSqm.length,
+    p20: percentile(perSqm, 0.2),
+    median: median(perSqm),
+    p80: percentile(perSqm, 0.8),
+  };
+}

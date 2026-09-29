@@ -346,6 +346,17 @@
       "wholeCity": "Tutta {city}",
       "note": "Annunci Domlivo, aggiornati ogni ora",
       "versusMarket": "Le due tabelle misurano cose diverse, perciò le cifre non coincidono: quella sopra riporta ricerche di mercato pubblicate, spesso come intervallo; questa è la mediana dei prezzi richiesti per gli appartamenti in vendita qui oggi."
+    },
+    "priceAnswer": {
+      "title": "{city}: prezzi reali richiesti, {month}",
+      "intro": "Da {count} appartamenti e monolocali in vendita su Domlivo al {date}: la fascia va dal 20° all’80° percentile del prezzo richiesto al metro quadro, con la mediana accanto.",
+      "wholeCity": "Tutta la città di {city}",
+      "completed": "Case pronte (usato e nuove costruzioni consegnate)",
+      "newBuild": "Nuove costruzioni in cantiere o su carta",
+      "range": "{from}–{to} €/m²",
+      "median": "mediana {value} €",
+      "flats": "{count, plural, one {# appartamento} other {# appartamenti}}",
+      "note": "Prezzi richiesti dagli annunci attivi, non prezzi di compravendita; ricalcolati ogni ora. La tabella completa per quartiere è più in basso nella pagina."
     }
   },
   "Calculators": {

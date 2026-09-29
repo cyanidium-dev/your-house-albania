@@ -346,6 +346,17 @@
       "wholeCity": "Ganz {city}",
       "note": "Domlivo-Angebote, stündlich aktualisiert",
       "versusMarket": "Die beiden Tabellen messen Verschiedenes, deshalb weichen die Zahlen ab: Die obere gibt veröffentlichte Marktstudien wieder, oft als Spanne; diese zeigt den Median der Angebotspreise der heute hier inserierten Wohnungen."
+    },
+    "priceAnswer": {
+      "title": "{city}: reale Angebotspreise, {month}",
+      "intro": "Aus {count} Wohnungen und Studios, die am {date} auf Domlivo zum Verkauf standen: die Spanne ist das 20. bis 80. Perzentil des Angebotspreises pro Quadratmeter, daneben der Median.",
+      "wholeCity": "Ganz {city}",
+      "completed": "Fertige Wohnungen (Bestand und übergebene Neubauten)",
+      "newBuild": "Neubauten im Bau oder in Planung",
+      "range": "{from}–{to} €/m²",
+      "median": "Median {value} €",
+      "flats": "{count, plural, one {# Wohnung} other {# Wohnungen}}",
+      "note": "Angebotspreise aus aktiven Inseraten, keine Transaktionspreise; stündlich neu berechnet. Die vollständige Tabelle nach Stadtteilen steht weiter unten."
     }
   },
   "Calculators": {

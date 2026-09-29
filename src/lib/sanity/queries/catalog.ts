@@ -14,6 +14,8 @@ import {
   pricesPerSqm,
   summarizeFlatPrices,
   totalPrices,
+  flatPriceBand,
+  type FlatPriceBand,
   type FlatPriceSummary,
 } from '@/lib/catalog/listingPriceSummary';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
@@ -401,6 +403,60 @@ export const fetchCityListingPriceIndex = sanityCache(
     }
   },
   ['sanity-city-listing-price-index'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+);
+
+export type CityPriceBands = {
+  /** Sale listings of every type in the city. */
+  listingCount: number;
+  city: FlatPriceBand;
+  /** Off-plan or under construction. */
+  newBuild: FlatPriceBand;
+  /** Everything else: completed stock, resale and handed-over new builds. */
+  completed: FlatPriceBand;
+  /** Published districts, most flats first. */
+  districts: Array<FlatPriceBand & { districtSlug: string; districtTitle?: unknown }>;
+};
+
+const NEW_BUILD_STAGES: readonly string[] = ['off-plan', 'under-construction'];
+
+/**
+ * The answer a buyer wants before the tables: what a square metre asks in
+ * this city, as a 20–80% band, for the whole city, for new builds against
+ * completed stock, and per district. Same filter and arithmetic as
+ * `fetchCityListingPriceIndex`; the split by construction stage is the only
+ * addition. Renders as `CityPriceAnswer` under the city page's hero.
+ */
+export const fetchCityPriceBands = sanityCache(
+  async (citySlug: string): Promise<CityPriceBands | null> => {
+    const client = getClient();
+    if (!client || !citySlug) return null;
+    const { where, params } = buildCatalogWhereClause({ city: citySlug });
+    type Row = { price?: number; priceUnit?: string; area?: number; type?: string; stage?: string; d?: string; dt?: unknown; dp?: boolean };
+    try {
+      const rows = await client.fetch<Row[]>(
+        `*[${where}]{price, priceUnit, area, "type": type->slug.current, "stage": constructionStage,
+          "d": district->slug.current, "dt": district->title, "dp": district->isPublished != false}`,
+        params,
+      );
+      if (!Array.isArray(rows) || rows.length === 0) return null;
+      const isNew = (r: Row) => typeof r.stage === 'string' && NEW_BUILD_STAGES.includes(r.stage);
+      const districts = [...groupRowsBy(rows, (r) => (r.dp ? r.d : null)).entries()]
+        .map(([districtSlug, items]) => ({ districtSlug, districtTitle: items[0]?.dt, ...flatPriceBand(items) }))
+        .sort((a, b) => b.flatCount - a.flatCount || a.districtSlug.localeCompare(b.districtSlug));
+      return {
+        listingCount: rows.length,
+        city: flatPriceBand(rows),
+        newBuild: flatPriceBand(rows.filter(isNew)),
+        completed: flatPriceBand(rows.filter((r) => !isNew(r))),
+        districts,
+      };
+    } catch (err) {
+      console.warn('[Sanity] fetchCityPriceBands failed:', err);
+      return null;
+    }
+  },
+  ['sanity-city-price-bands'],
   { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 

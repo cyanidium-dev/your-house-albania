@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
 import { CityLandingBreadcrumb } from "@/components/shared/CityLandingBreadcrumb";
 import { CityDistrictsHubLink } from "@/components/city/CityDistrictsHubLink";
+import { CityPriceAnswer } from "@/components/city/CityPriceAnswer";
 import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { fetchCityLandingByCitySlug } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
@@ -29,6 +30,10 @@ export async function CityLandingPageBody({ locale, citySlug }: Props) {
   const districtsHubLink = (
     <CityDistrictsHubLink locale={locale} citySlug={citySlug} cityLabel={cityLabel} />
   );
+  // The answer before the tables: €/m² bands from the live listings, right
+  // under the headline, so the number a searcher came for is in the first
+  // screen and quotable (2026-09-29, see docs/seo/PLAN-2026-Q4.md).
+  const priceAnswer = <CityPriceAnswer locale={locale} citySlug={citySlug} cityLabel={cityLabel} />;
 
   if (hasDedicatedHero) {
     return (
@@ -38,6 +43,7 @@ export async function CityLandingPageBody({ locale, citySlug }: Props) {
           landing={landing as never}
           citySlug={citySlug}
           breadcrumb={<CityLandingBreadcrumb locale={locale} city={citySlug} overHero />}
+          afterHero={priceAnswer}
         />
         {districtsHubLink}
       </>
@@ -51,7 +57,7 @@ export async function CityLandingPageBody({ locale, citySlug }: Props) {
           <CityLandingBreadcrumb locale={locale} city={citySlug} />
         </div>
       </section>
-      <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} />
+      <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} afterHero={priceAnswer} />
       {districtsHubLink}
     </>
   );

@@ -346,6 +346,17 @@
       "wholeCity": "All of {city}",
       "note": "Domlivo listings, updated hourly",
       "versusMarket": "The two tables measure different things, so their figures differ: the one above reports published market research, often as a range; this one is the median asking price of the flats listed here today."
+    },
+    "priceAnswer": {
+      "title": "{city}: real asking prices, {month}",
+      "intro": "From {count} flats and studios listed for sale on Domlivo on {date}: the band is the 20th to 80th percentile of asking prices per square metre, with the median beside it.",
+      "wholeCity": "Whole city of {city}",
+      "completed": "Completed homes (resale and handed-over new builds)",
+      "newBuild": "New builds under construction or off-plan",
+      "range": "{from}–{to} €/m²",
+      "median": "median {value} €",
+      "flats": "{count, plural, one {# flat} other {# flats}}",
+      "note": "Asking prices from live listings, not transaction prices; recomputed every hour. The full table by district is further down the page."
     }
   },
   "Calculators": {

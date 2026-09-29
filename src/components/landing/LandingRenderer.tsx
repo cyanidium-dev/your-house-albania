@@ -55,6 +55,7 @@ export async function LandingRenderer({
   landing,
   citySlug,
   breadcrumb,
+  afterHero,
   propertiesDeal: propertiesDealOverride,
 }: {
   locale: string
@@ -62,6 +63,11 @@ export async function LandingRenderer({
   citySlug?: string
   /** Rendered inside the first section when it is heroSection (avoids white gap above hero) */
   breadcrumb?: React.ReactNode
+  /**
+   * Rendered right after the hero (or first, on a landing without one), before
+   * the CMS sections: the city page's price answer block lives here.
+   */
+  afterHero?: React.ReactNode
   /** When set, wins over inferring `deal` from landing pageType/slug for property-type card links. */
   propertiesDeal?: PropertiesDealParam
 }) {
@@ -105,6 +111,11 @@ export async function LandingRenderer({
       landingCtx: { id: landing?._id, slug: landing?.slug, pageType: landing?.pageType, topicTags: landing?.topicTags },
     })
     if (node) nodes.push(node)
+  }
+
+  if (afterHero) {
+    const heroFirst = sections[0]?._type === 'heroSection' && nodes.length > 0
+    nodes.splice(heroFirst ? 1 : 0, 0, <React.Fragment key="after-hero">{afterHero}</React.Fragment>)
   }
 
   // Freshness badge: right after the hero when the page opens with one,
