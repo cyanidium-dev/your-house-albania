@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon } from "@/components/shared/SpriteIcon";
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
@@ -219,7 +219,7 @@ export function PropertyCardGallery({
                   isList && 'ml-2'
                 )}
               >
-                <Icon icon="solar:alt-arrow-left-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                <SpriteIcon icon="solar:alt-arrow-left-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
               </span>
             </button>
             {/* Правая tappable-зона */}
@@ -239,7 +239,7 @@ export function PropertyCardGallery({
                   isList && 'mr-2'
                 )}
               >
-                <Icon icon="solar:alt-arrow-right-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                <SpriteIcon icon="solar:alt-arrow-right-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
               </span>
             </button>
           </>
@@ -262,7 +262,7 @@ export function PropertyCardGallery({
               isList && 'right-2 bottom-2',
             )}
           >
-            <Icon
+            <SpriteIcon
               icon="solar:maximize-square-minimalistic-linear"
               width={view === 'large' ? 18 : 14}
               height={view === 'large' ? 18 : 14}

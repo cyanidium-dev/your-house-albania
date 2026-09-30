@@ -1,4 +1,4 @@
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon } from "@/components/shared/SpriteIcon";
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
@@ -58,7 +58,7 @@ export function PropertyCardMeta({
               metaItemClass
             )}
           >
-            <Icon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
+            <SpriteIcon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
             <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
               {t('bedroomsCount', { count: beds })}
             </span>
@@ -71,7 +71,7 @@ export function PropertyCardMeta({
               metaItemClass
             )}
           >
-            <Icon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
+            <SpriteIcon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
             <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
               {t('bathroomsCount', { count: baths })}
             </span>
@@ -88,7 +88,7 @@ export function PropertyCardMeta({
             metaItemClass
           )}
         >
-          <Icon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
+          <SpriteIcon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
           <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
             {area}{t('areaUnit')}
           </span>
@@ -104,7 +104,7 @@ export function PropertyCardMeta({
           )}
           title={plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
         >
-          <Icon icon="solar:map-linear" width={iconSize} height={iconSize} className="shrink-0" />
+          <SpriteIcon icon="solar:map-linear" width={iconSize} height={iconSize} className="shrink-0" />
           <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
             {plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
           </span>

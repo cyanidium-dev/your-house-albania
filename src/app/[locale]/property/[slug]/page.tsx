@@ -5,7 +5,7 @@ import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates 
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapPropertyAmenityDisplayItems, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
 import { Icon } from "@/components/shared/Icon";
-import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
+import { PropertyLocationMapLazy } from '@/components/catalog/map/PropertyLocationMapLazy';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 import { buildPropertyGalleryImages } from '@/lib/property/propertyGalleryImages';
@@ -599,7 +599,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             </div>
                         </div>
                         <div className="mt-10">
-                          <PropertyLocationMap
+                          <PropertyLocationMapLazy
                             coordinates={resolvedCoordinates}
                             mapHeightClassName="h-[210px]"
                           />

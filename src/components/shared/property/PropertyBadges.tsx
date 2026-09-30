@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from 'react'
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon } from "@/components/shared/SpriteIcon";
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'
@@ -101,7 +101,7 @@ export function PropertyBadges({
             badge.className
           )}
         >
-          <Icon
+          <SpriteIcon
             icon={badge.icon}
             width={badgeIconSize}
             height={badgeIconSize}

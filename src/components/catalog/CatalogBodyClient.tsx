@@ -210,6 +210,31 @@ export function CatalogBodyClient({
   const shouldScrollToActiveRef = React.useRef(false);
   const prevActiveSlugRef = React.useRef<string | null>(null);
   const mapCardRef = React.useRef<HTMLDivElement | null>(null);
+  // maplibre-gl is 1 MB of script; on a phone the map slot sits below the
+  // filters and the first cards, and parsing the library before the visitor
+  // reaches it cost 3.7 s of main thread on /en/albania/durres (Lighthouse,
+  // 2026-09-30). The library loads once the slot is within 400 px of the
+  // viewport; on wide screens that is immediately, since the map is in view.
+  const [mapNearViewport, setMapNearViewport] = React.useState(false);
+  React.useEffect(() => {
+    const el = mapCardRef.current;
+    if (!el || mapNearViewport) return;
+    if (!("IntersectionObserver" in window)) {
+      setMapNearViewport(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setMapNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [mapNearViewport]);
   const previewRef = React.useRef<HTMLDivElement | null>(null);
 
   // ── "Show more" state (see PropertyPagination) ─────────────────────────
@@ -477,16 +502,20 @@ export function CatalogBodyClient({
             if (entry.kind === "map") {
               return (
                 <div key={entry.key} className={cn(mapListItemClassName, "relative", mapSlotClassName)} ref={mapCardRef}>
-                  <PropertiesMap
-                    items={mapItems}
-                    activeSlug={activeSlug}
-                    onActiveSlugChange={handleActiveSlugFromMap}
-                    mapHeightClassName={mapHeightClassName}
-                    className={(viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
-                    selectedCitySlug={filterProps.initialCity || undefined}
-                    selectedDistrictSlug={filterProps.initialDistrict || undefined}
-                    selectedDealType={filterProps.initialDealType || undefined}
-                  />
+                  {mapNearViewport ? (
+                    <PropertiesMap
+                      items={mapItems}
+                      activeSlug={activeSlug}
+                      onActiveSlugChange={handleActiveSlugFromMap}
+                      mapHeightClassName={mapHeightClassName}
+                      className={(viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
+                      selectedCitySlug={filterProps.initialCity || undefined}
+                      selectedDistrictSlug={filterProps.initialDistrict || undefined}
+                      selectedDealType={filterProps.initialDealType || undefined}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
+                  )}
                   {previewItem && (
                     <div
                       ref={previewRef}

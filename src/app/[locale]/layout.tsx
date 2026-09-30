@@ -6,6 +6,8 @@ import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
+import { pickClientMessages } from "@/lib/i18n/clientMessages";
+import { IconSprite } from "@/components/shared/IconSprite";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -176,6 +178,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${display.variable} ${sans.variable}`}>
       <body className="font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip">
+        <IconSprite />
         {analyticsEnabled && (
           <>
             {/* Consent Mode v2 + Clarity bootstrap: default denied, then
@@ -236,7 +239,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         />
         <NextTopLoader color="#078660" />
         <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider messages={pickClientMessages(messages)}>
             <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
         <ConsentProvider locale={locale} policyHref={policyHref} active={analyticsEnabled}>
           {/* Visit journey + contact-link leads. Not gated on analytics: it
