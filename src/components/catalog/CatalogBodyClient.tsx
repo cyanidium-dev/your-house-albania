@@ -216,6 +216,36 @@ export function CatalogBodyClient({
   // 2026-09-30). The library loads once the slot is within 400 px of the
   // viewport; on wide screens that is immediately, since the map is in view.
   const [mapNearViewport, setMapNearViewport] = React.useState(false);
+  // On phones the slot is in view from the start, so proximity alone would
+  // still parse the library before the first paint. Wait for the window's
+  // load event and an idle moment too: the hero and the first cards paint
+  // first, the map fills its placeholder a second later.
+  const [pageSettled, setPageSettled] = React.useState(false);
+  React.useEffect(() => {
+    let cancelled = false;
+    let idleHandle: number | undefined;
+    const settle = () => {
+      if (cancelled) return;
+      const done = () => {
+        if (!cancelled) setPageSettled(true);
+      };
+      idleHandle =
+        typeof window.requestIdleCallback === "function"
+          ? window.requestIdleCallback(done, { timeout: 2000 })
+          : window.setTimeout(done, 500);
+    };
+    if (document.readyState === "complete") settle();
+    else window.addEventListener("load", settle, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", settle);
+      if (idleHandle !== undefined) {
+        if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleHandle);
+        window.clearTimeout(idleHandle);
+      }
+    };
+  }, []);
+  const showMap = mapNearViewport && pageSettled;
   React.useEffect(() => {
     const el = mapCardRef.current;
     if (!el || mapNearViewport) return;
@@ -502,7 +532,7 @@ export function CatalogBodyClient({
             if (entry.kind === "map") {
               return (
                 <div key={entry.key} className={cn(mapListItemClassName, "relative", mapSlotClassName)} ref={mapCardRef}>
-                  {mapNearViewport ? (
+                  {showMap ? (
                     <PropertiesMap
                       items={mapItems}
                       activeSlug={activeSlug}
