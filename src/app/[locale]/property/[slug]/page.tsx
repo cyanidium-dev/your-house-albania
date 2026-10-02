@@ -44,7 +44,7 @@ import { PropertyArticlesSection } from '@/components/property/PropertyArticlesS
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 // `catalogPath` already returns a locale-prefixed path, so this uses next/link
 // rather than the i18n Link, which would prefix the locale a second time.
-import Link from 'next/link';
+import Link from "@/components/shared/Link";
 import { catalogPath } from '@/lib/routes/catalog';
 import { brandButtonClass } from '@/components/shared/BrandButton';
 import { propertyPath, propertyUrlSlug, type LocalizedSlug } from '@/lib/property/propertyUrl';

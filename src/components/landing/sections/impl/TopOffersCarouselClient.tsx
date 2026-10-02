@@ -5,7 +5,7 @@ import PropertyCard from "@/components/shared/property/PropertyCard";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { usePathname } from "next/navigation";
 import { catalogPath } from "@/lib/routes/catalog";
 import { currentCityListingHref } from "@/lib/routes/currentCityListing";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb";
 import { Icon } from "@/components/shared/Icon";

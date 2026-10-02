@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { displayStatusLabel } from "@/lib/property/cardFormatters";

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { Metadata } from "next";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 import "./globals.css";

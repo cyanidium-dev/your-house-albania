@@ -1,6 +1,6 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useTranslations } from "next-intl";
 import { BlogCardClient } from "./BlogCardClient";
 import { BlogContentImage } from "./BlogContentImage";

@@ -1,7 +1,7 @@
 'use client'
 
 import { Icon } from "@/components/shared/Icon";
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { useTranslations } from 'next-intl'
 import { aiSearchPath } from '@/lib/ai/routes'
 

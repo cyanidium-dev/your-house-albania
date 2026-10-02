@@ -1,7 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { usePathname } from 'next/navigation'
 import { useId } from 'react'
 import { Icon } from '@/components/shared/Icon'

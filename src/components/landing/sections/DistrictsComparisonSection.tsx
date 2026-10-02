@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { resolveCta, resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'

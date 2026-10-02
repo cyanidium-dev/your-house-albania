@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import Link from 'next/link';
+import Link from "@/components/shared/Link";
 
 interface BreadcrumbProps {
     links: { href: string; text: string }[];    

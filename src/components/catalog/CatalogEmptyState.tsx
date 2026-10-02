@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useTranslations } from "next-intl";
 import { catalogPath } from "@/lib/routes/catalog";
 import { brandButtonClass } from "@/components/shared/BrandButton";

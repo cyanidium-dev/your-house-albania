@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { balancedGridClass, CONTAINER } from '@/components/shared/layout'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "@/components/shared/Link";
 import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';

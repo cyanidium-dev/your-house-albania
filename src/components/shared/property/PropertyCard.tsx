@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { PropertyHomes } from '@/types/propertyHomes'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { cn } from '@/lib/utils'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import type { ViewMode } from '@/lib/catalog/viewMode'

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useTranslations } from "next-intl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 

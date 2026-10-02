@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useTranslations } from "next-intl";
 import type { BlogListItem } from "@/lib/sanity/blogAdapter";
 import { formatBlogDate } from "@/lib/date/formatLocale";

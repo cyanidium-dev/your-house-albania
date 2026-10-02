@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
 import AiSearchChat from '@/components/ai/AiSearchChat'
 import { brandButtonClass } from '@/components/shared/BrandButton'

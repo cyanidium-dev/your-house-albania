@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { Icon } from "@/components/shared/Icon";
 import { getTranslations } from "next-intl/server";
 import { formatBlogDate } from "@/lib/date/formatLocale";

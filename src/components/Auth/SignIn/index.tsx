@@ -1,6 +1,6 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import SocialSignIn from "../SocialSignIn";

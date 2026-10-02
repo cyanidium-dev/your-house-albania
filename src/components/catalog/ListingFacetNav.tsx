@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { getTranslations } from "next-intl/server";
 import { fetchDistrictListingCounts, fetchSeoPageDecisions } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";

@@ -2,7 +2,7 @@ import React from "react";
 import BlogCard from "@/components/shared/Blog/blogCard";
 import { NumberedPagination } from "@/components/shared/NumberedPagination";
 import type { BlogListItem } from "@/lib/sanity/blogAdapter";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 
 type BlogListProps = {
   locale: string;

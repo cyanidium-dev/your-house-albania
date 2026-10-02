@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { getTranslations } from "next-intl/server";
 import { MarketMoney } from "@/components/shared/property/MarketMoney";
 import { BuyingCostsSection } from "@/components/catalog/geoListing/BuyingCostsSection";

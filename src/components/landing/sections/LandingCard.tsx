@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { NoPhotoPlate } from '@/components/shared/NoPhotoPlate'

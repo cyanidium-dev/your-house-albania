@@ -1,6 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { cn } from "@/lib/utils";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 

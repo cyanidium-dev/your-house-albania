@@ -1,7 +1,7 @@
 'use client'
 
 import { Icon } from "@/components/shared/Icon";
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import PropertyCard from '@/components/shared/property/PropertyCard'

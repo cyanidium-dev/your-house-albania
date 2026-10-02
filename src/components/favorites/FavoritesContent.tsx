@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useEffect, useState, useRef } from "react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useTranslations } from "next-intl";

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
 import { fetchCatalogFilterOptions, fetchSiteSettings } from '@/lib/sanity/client'
 import { HeroSearchWidget } from '@/components/catalog/widgets/HeroSearchWidget'

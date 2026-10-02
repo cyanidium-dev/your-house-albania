@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
 import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'

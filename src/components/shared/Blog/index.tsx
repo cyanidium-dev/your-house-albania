@@ -1,7 +1,7 @@
 import React from "react";
 import BlogCard from "@/components/shared/Blog/blogCard";
 import { SectionHeader } from "@/components/landing/sectionPrimitives";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { getTranslations } from "next-intl/server";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { brandButtonClass } from "@/components/shared/BrandButton";

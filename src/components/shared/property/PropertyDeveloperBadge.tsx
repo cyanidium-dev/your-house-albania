@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import {

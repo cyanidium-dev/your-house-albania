@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
 import { districtInfoPath } from '@/lib/routes/catalog'
 import { fetchCityCountrySlugByCitySlug, fetchDistrictBySlugs } from '@/lib/sanity/client'

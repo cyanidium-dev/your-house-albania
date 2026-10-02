@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { Icon } from "@/components/shared/Icon";
 import { cn } from '@/lib/utils'
 import { brandButtonClass, type BrandButtonSize, type BrandButtonVariant } from '@/components/shared/BrandButton'

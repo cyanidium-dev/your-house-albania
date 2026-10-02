@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import Image from "next/image";
 import {getTranslations, setRequestLocale} from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";

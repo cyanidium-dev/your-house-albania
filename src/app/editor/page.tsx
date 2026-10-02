@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "@/components/shared/Link";
 import { redirect } from 'next/navigation';
 import { getEditorSession } from '@/features/editor/auth/getEditorSession';
 import { listLandingsForEditor } from '@/features/editor/data/listLandings';

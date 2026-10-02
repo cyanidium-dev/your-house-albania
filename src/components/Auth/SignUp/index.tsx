@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import SocialSignUp from "../SocialSignUp";

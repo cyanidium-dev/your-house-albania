@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { useState } from 'react'
 import { Icon } from '@/components/shared/Icon'
 import { cn } from '@/lib/utils'

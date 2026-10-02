@@ -50,11 +50,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       // `/api/og` renders a 1200x630 card at ~0.6s of CPU each, and crawlers
       // were fetching it 3.2K times a day as if it were page content.
-      { userAgent: "*", allow: "/", disallow: "/api/" },
+      // `?_rsc=` is the payload Next.js fetches for client navigations and
+      // link prefetches; Googlebot's renderer prefetched every link on every
+      // page it rendered and then kept re-crawling those URLs: 34.3K of the
+      // 48.9K crawl requests in the 90 days to 2026-10-02 (Search Console,
+      // "other file type"). The HTML carries the whole page, so nothing is
+      // lost by keeping crawlers out of them. components/shared/Link stops
+      // the prefetches at the source; this stops the re-crawls.
+      { userAgent: "*", allow: "/", disallow: ["/api/", "/*?_rsc=", "/*&_rsc="] },
       { userAgent: PREVIEW_BOTS, allow: "/" },
       // Kept, since the site's own Ahrefs data depends on it, but slowed: it
       // was a quarter of all traffic.
-      { userAgent: "AhrefsBot", allow: "/", disallow: "/api/", crawlDelay: 30 },
+      { userAgent: "AhrefsBot", allow: "/", disallow: ["/api/", "/*?_rsc=", "/*&_rsc="], crawlDelay: 30 },
       { userAgent: BLOCKED_BOTS, disallow: "/" },
     ],
     // The priority file first: it is the crawler's starting point (see

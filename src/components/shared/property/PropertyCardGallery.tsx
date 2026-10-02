@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SpriteIcon } from "@/components/shared/SpriteIcon";
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from "@/components/shared/Link";
 import { useTranslations } from 'next-intl'
 import { FavoriteButton } from '@/components/shared/FavoriteButton'
 import { ImageLightbox } from '@/components/shared/ImageLightbox'
