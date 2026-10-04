@@ -60,6 +60,21 @@ const nextConfig: NextConfig = {
         destination: "https://www.domlivo.com/:path",
         permanent: true,
       },
+      // The four demo listings of 4 May 2026 (three in Vlorë, one in Sarandë)
+      // were deleted on 30.09.2026 after collecting clicks under every locale's
+      // slug. Each old address goes to its city's listing page instead of a
+      // 404, so the clicks and whatever Google credited them with stay with
+      // the site. Drop these once Search Console stops showing the old URLs.
+      {
+        source: "/:locale(en|uk|ru|sq|it|pl|de)/property/:slug(prodaetsya-bolshaya-kvartira-1-1-vo-vlere|wohnung-1-1-stadtzentrum-vlora-74m2|apartment-1-1-city-center-vlore-74m2|appartamento-1-1-centro-citta-valona-74m2|mieszkanie-1-1-centrum-miasta-vlora-74m2|kvartira-1-1-tsentr-vlera-74m2|apartament-1-1-city-center-vlore-74m2|kvartyra-1-1-tsentr-vlora-74m2|prodazha-doma-vo-vlere|haus-stadtzentrum-vlora-109m2|house-city-center-vlore-109m2|casa-centro-citta-valona-109m2|dom-centrum-miasta-vlora-109m2|dom-tsentr-vlera-109m2|shtepi-city-center-vlore-109m2|budynok-tsentr-vlora-109m2|prodazha-uyutnoy-kvartiry-1-1-u-gory|wohnung-1-1-stadtzentrum-vlora-49m2|apartment-1-1-city-center-vlore-49m2|appartamento-1-1-centro-citta-valona-49m2|mieszkanie-1-1-centrum-miasta-vlora-49m2|kvartira-1-1-tsentr-vlera-49m2|apartament-1-1-city-center-vlore-49m2|kvartyra-1-1-tsentr-vlora-49m2)",
+        destination: "/:locale/albania/vlore",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|uk|ru|sq|it|pl|de)/property/:slug(prodazha-novostroya-investicionnyy-obekt-v-sarande|wohnung-2-1-stadtzentrum-saranda-117m2|apartment-2-1-city-center-sarande-117m2|appartamento-2-1-centro-citta-saranda-117m2|mieszkanie-2-1-centrum-miasta-saranda-117m2|kvartira-2-1-tsentr-saranda-117m2|apartament-2-1-city-center-sarande-117m2|kvartyra-2-1-tsentr-saranda-117m2)",
+        destination: "/:locale/albania/sarande",
+        permanent: true,
+      },
     ];
   },
   // IndexNow verifies ownership by reading a plain-text file on the host. The
