@@ -323,7 +323,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   })();
   const dealTypeLabel = tPropertyDetail(dealTypeKey);
 
-  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string } | null }).agent ?? null;
+  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string; noPublicLink?: boolean } | null }).agent ?? null;
 
   // Platform messengers next to the inquiry form, Telegram first for ru/uk.
   // The listing carries no lister contact of its own (the agent projection is
@@ -444,14 +444,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                   <p className='mt-1 text-sm text-dark/60 dark:text-white/70'>
                                     {tPropertyDetail.rich('listedBy', {
                                       name: propertyAgent.name,
-                                      link: (chunks) => (
-                                        <Link
-                                          href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
-                                          className='underline underline-offset-2 hover:text-primary duration-300'
-                                        >
-                                          {chunks}
-                                        </Link>
-                                      ),
+                                      link: (chunks) =>
+                                        // A partner we route leads for ourselves is named, not linked
+                                        // (agent.noPublicLink): the name says whose flat it is, nothing leads away.
+                                        propertyAgent.noPublicLink ? (
+                                          <span>{chunks}</span>
+                                        ) : (
+                                          <Link
+                                            href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
+                                            className='underline underline-offset-2 hover:text-primary duration-300'
+                                          >
+                                            {chunks}
+                                          </Link>
+                                        ),
                                     })}
                                   </p>
                                 ) : null}
@@ -566,14 +571,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               <p className='text-sm text-dark/60 dark:text-white/70 mt-2'>
                                 {tPropertyDetail.rich('listedBy', {
                                   name: propertyAgent.name,
-                                  link: (chunks) => (
-                                    <Link
-                                      href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
-                                      className='underline underline-offset-2 hover:text-primary duration-300'
-                                    >
-                                      {chunks}
-                                    </Link>
-                                  ),
+                                  link: (chunks) =>
+                                        // A partner we route leads for ourselves is named, not linked
+                                        // (agent.noPublicLink): the name says whose flat it is, nothing leads away.
+                                        propertyAgent.noPublicLink ? (
+                                          <span>{chunks}</span>
+                                        ) : (
+                                          <Link
+                                            href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
+                                            className='underline underline-offset-2 hover:text-primary duration-300'
+                                          >
+                                            {chunks}
+                                          </Link>
+                                        ),
                                 })}
                               </p>
                             ) : null}

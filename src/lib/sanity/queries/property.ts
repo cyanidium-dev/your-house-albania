@@ -66,7 +66,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     },
     "agent": agent-> {
       name,
-      "slug": slug.current
+      "slug": slug.current,
+      noPublicLink
     },
     gallery[] {
       asset-> { _id, url, metadata },
