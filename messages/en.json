@@ -165,6 +165,9 @@
       "imageFullscreenView": "Image fullscreen view",
       "viewImageFullscreen": "View image fullscreen"
     },
+    "map": {
+      "approximateLegend": "≈ approximate location: the pin marks the district or a nearby landmark, not the building"
+    },
     "propertyDetail": {
       "propertyDetails": "Property details",
       "checkAllAmenities": "Check all amenities",
@@ -195,7 +198,7 @@
       "goToImage": "Go to image {n}",
       "hideThumbnails": "Hide thumbnails",
       "showThumbnails": "Show thumbnails",
-      "approximateLocation": "Approximate location — the pin marks the district, not the exact building.",
+      "approximateLocation": "Approximate location — the highlighted area is the district or a nearby landmark, not the exact building.",
       "plotArea": "Plot {value} m²",
       "plotAreaUnknown": "Plot area: not specified",
       "seaDistance": "{m} m to the sea",

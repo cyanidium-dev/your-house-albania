@@ -154,6 +154,9 @@
       "contentMissing": "Treść SEO jest niedostępna.",
       "videoTitle": "Wideo"
     },
+    "map": {
+      "approximateLegend": "≈ lokalizacja przybliżona: pinezka wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie budynek"
+    },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",
       "checkAllAmenities": "Zobacz wszystkie udogodnienia",
@@ -184,7 +187,7 @@
       "goToImage": "Przejdź do zdjęcia {n}",
       "hideThumbnails": "Ukryj miniatury",
       "showThumbnails": "Pokaż miniatury",
-      "approximateLocation": "Lokalizacja przybliżona — pinezka wskazuje dzielnicę, a nie konkretny budynek.",
+      "approximateLocation": "Lokalizacja przybliżona — zaznaczony obszar wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie konkretny budynek.",
       "plotArea": "Działka {value} m²",
       "plotAreaUnknown": "Powierzchnia działki: nie podano",
       "seaDistance": "{m} m do morza",

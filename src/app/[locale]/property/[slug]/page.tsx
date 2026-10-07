@@ -611,6 +611,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         <div className="mt-10">
                           <PropertyLocationMapLazy
                             coordinates={resolvedCoordinates}
+                            approximate={locationIsApproximate}
                             mapHeightClassName="h-[210px]"
                           />
                           {resolvedCoordinates && locationIsApproximate ? (

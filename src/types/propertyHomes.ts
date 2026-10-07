@@ -47,6 +47,8 @@ export type PropertyHomes = {
 
   /** Optional map coordinates (Sanity `coordinates.lat/lng`). */
   coordinates?: { lat?: number; lng?: number } | null
+  /** 'approximate' when the pin marks the district or a nearby landmark, not the building. */
+  locationPrecision?: 'exact' | 'approximate'
 
   /** Optional internal: used to enable full-card link overlay. */
   _href?: string

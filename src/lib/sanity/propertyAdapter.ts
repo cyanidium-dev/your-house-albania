@@ -322,6 +322,7 @@ type SanityProperty = {
   documentation?: 'certificate' | 'in-process';
   coordinatesLat?: number | null;
   coordinatesLng?: number | null;
+  locationPrecision?: 'exact' | 'approximate' | null;
   city?: {
     title?: unknown;
     slug?: string;
@@ -406,6 +407,8 @@ export function mapSanityPropertyToCard(
     plotArea: normalizePlotArea(p.plotArea) ?? undefined,
     teaser: localizedDescription || undefined,
     coordinates: lat !== undefined || lng !== undefined ? { lat, lng } : undefined,
+    locationPrecision:
+      p.locationPrecision === 'exact' || p.locationPrecision === 'approximate' ? p.locationPrecision : undefined,
   };
 }
 
@@ -430,6 +433,7 @@ export function mapCatalogPropertyToCard(
       description: p.description,
       coordinatesLat: p.coordinatesLat ?? null,
       coordinatesLng: p.coordinatesLng ?? null,
+      locationPrecision: p.locationPrecision ?? null,
       price: p.price,
       priceUnit: p.priceUnit,
       currency: p.currency,

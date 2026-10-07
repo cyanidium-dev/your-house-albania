@@ -270,6 +270,7 @@ const cachedFetchCatalogProperties = sanityCache(
     documentation,
     coordinatesLat,
     coordinatesLng,
+    locationPrecision,
     "city": city-> {
       _id,
       title,

@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import maplibregl from 'maplibre-gl'
+import { useTranslations } from 'next-intl'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
@@ -31,6 +32,8 @@ const OSM_DETAILED_STYLE: maplibregl.StyleSpecification = {
 export type PropertiesMapItem = {
   slug: string
   coordinates?: { lat?: number; lng?: number } | null
+  /** 'approximate': the pin is the district or a nearby landmark, not the building. */
+  locationPrecision?: 'exact' | 'approximate'
   price?: number
   currency?: string
   rate?: string
@@ -90,6 +93,7 @@ export function PropertiesMap({
   selectedDealType?: string
 }) {
   const { formatFromEur } = useCurrency()
+  const tMap = useTranslations('Shared.map')
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const mapRef = React.useRef<MapLibreMap | null>(null)
   const resizeRafRef = React.useRef<number | null>(null)
@@ -141,14 +145,17 @@ export function PropertiesMap({
         const dealText = normalizeDeal(it.status)
         const markerLabel = selectedDeal ? priceText : [priceText, dealText].filter(Boolean).join(' ')
 
+        const approximate = it.locationPrecision === 'approximate'
+
         return {
           slug: it.slug,
           lat,
           lng,
           markerLabel,
+          approximate,
         }
       })
-      .filter(Boolean) as Array<{ slug: string; lat: number; lng: number; markerLabel: string }>
+      .filter(Boolean) as Array<{ slug: string; lat: number; lng: number; markerLabel: string; approximate: boolean }>
   }, [items, selectedDealType, formatFromEur])
 
   React.useEffect(() => {
@@ -178,6 +185,8 @@ export function PropertiesMap({
     })
   }, [items, validPoints.length, activeSlug])
 
+  const hasApproximate = React.useMemo(() => validPoints.some((p) => p.approximate), [validPoints])
+
   const geojson = React.useMemo(() => {
     return {
       type: 'FeatureCollection' as const,
@@ -187,6 +196,7 @@ export function PropertiesMap({
         properties: {
           slug: p.slug,
           markerLabel: p.markerLabel,
+          approximate: p.approximate,
         },
         geometry: {
           type: 'Point' as const,
@@ -215,8 +225,11 @@ export function PropertiesMap({
     htmlMarkersRef.current.clear()
   }, [])
 
+  // An approximate pin reads differently from an exact one: dashed outline and
+  // a "≈" before the price, with the legend under the map explaining it. Most
+  // partner listings arrive without an address, so this is the common case.
   const styleMarkerElement = React.useCallback(
-    (el: HTMLDivElement, isSelected: boolean) => {
+    (el: HTMLDivElement, isSelected: boolean, approximate = false) => {
       el.style.display = 'inline-flex'
       el.style.alignItems = 'center'
       el.style.justifyContent = 'center'
@@ -227,8 +240,12 @@ export function PropertiesMap({
       el.style.lineHeight = '1.1'
       el.style.whiteSpace = 'nowrap'
       el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.18)'
-      el.style.border = isSelected ? '1px solid #078660' : '1px solid rgba(0,0,0,0.18)'
-      el.style.background = isSelected ? '#078660' : '#ffffff'
+      el.style.border = isSelected
+        ? '1px solid #078660'
+        : approximate
+          ? '1px dashed rgba(0,0,0,0.45)'
+          : '1px solid rgba(0,0,0,0.18)'
+      el.style.background = isSelected ? '#078660' : approximate ? '#f7f7f5' : '#ffffff'
       el.style.color = isSelected ? '#ffffff' : '#111111'
       el.style.cursor = 'pointer'
       el.style.userSelect = 'none'
@@ -253,8 +270,10 @@ export function PropertiesMap({
       const props = (f.properties || {}) as Record<string, unknown>
       const slug = String(props.slug ?? '').trim()
       if (!slug) continue
-      const markerLabel = String(props.markerLabel ?? '').trim()
-      if (!markerLabel) continue
+      const rawLabel = String(props.markerLabel ?? '').trim()
+      if (!rawLabel) continue
+      const approximate = props.approximate === true || props.approximate === 'true'
+      const markerLabel = approximate ? `≈ ${rawLabel}` : rawLabel
 
       const coords = (f.geometry as { coordinates?: unknown })?.coordinates
       if (!Array.isArray(coords) || coords.length < 2) continue
@@ -268,14 +287,14 @@ export function PropertiesMap({
       if (existing) {
         const el = existing.getElement() as HTMLDivElement
         el.textContent = markerLabel
-        styleMarkerElement(el, isSelected)
+        styleMarkerElement(el, isSelected, approximate)
         existing.setLngLat([lng, lat])
         continue
       }
 
       const el = document.createElement('div')
       el.textContent = markerLabel
-      styleMarkerElement(el, isSelected)
+      styleMarkerElement(el, isSelected, approximate)
       el.addEventListener('click', (ev) => {
         ev.stopPropagation()
         onActiveSlugChange(slug)
@@ -617,6 +636,14 @@ export function PropertiesMap({
       )}
     >
       <div ref={containerRef} className={cn('w-full relative overflow-hidden', mapHeightClassName)} />
+      {hasApproximate ? (
+        <div
+          className="pointer-events-none absolute left-2 top-2 z-10 rounded-md border border-black/10 bg-white/85 px-2 py-1 text-[11px] leading-tight text-dark/80 backdrop-blur-[1px] dark:border-white/20 dark:bg-black/60 dark:text-white/80"
+          aria-live="polite"
+        >
+          {tMap('approximateLegend')}
+        </div>
+      ) : null}
     </div>
   )
 }

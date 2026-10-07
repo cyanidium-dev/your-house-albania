@@ -165,6 +165,9 @@
       "imageFullscreenView": "Bild in Vollbildansicht",
       "viewImageFullscreen": "Bild im Vollbild ansehen"
     },
+    "map": {
+      "approximateLegend": "≈ ungefähre Lage: die Markierung zeigt den Stadtteil oder einen nahen Orientierungspunkt, nicht das Gebäude"
+    },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",
       "checkAllAmenities": "Alle Ausstattungsmerkmale ansehen",
@@ -195,7 +198,7 @@
       "goToImage": "Zu Bild {n} wechseln",
       "hideThumbnails": "Vorschaubilder ausblenden",
       "showThumbnails": "Vorschaubilder anzeigen",
-      "approximateLocation": "Ungefähre Lage – die Markierung zeigt den Stadtteil, nicht das genaue Gebäude.",
+      "approximateLocation": "Ungefähre Lage – der markierte Bereich zeigt den Stadtteil oder einen nahen Orientierungspunkt, nicht das genaue Gebäude.",
       "plotArea": "Grundstück {value} m²",
       "plotAreaUnknown": "Grundstücksfläche: nicht angegeben",
       "seaDistance": "{m} m zum Meer",

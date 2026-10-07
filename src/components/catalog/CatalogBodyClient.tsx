@@ -451,6 +451,7 @@ export function CatalogBodyClient({
         rate: p.rate,
         status: p.status,
         coordinates: p.coordinates,
+        locationPrecision: p.locationPrecision,
       })),
     [allItems]
   )

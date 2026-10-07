@@ -165,6 +165,9 @@
       "imageFullscreenView": "Pamje e plotë e fotos",
       "viewImageFullscreen": "Shiko foton në ekran të plotë"
     },
+    "map": {
+      "approximateLegend": "≈ vendndodhje e përafërt: shenja tregon lagjen ose një pikë orientimi afër, jo ndërtesën"
+    },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",
       "checkAllAmenities": "Shiko të gjitha pajisjet",
@@ -195,7 +198,7 @@
       "goToImage": "Shko te foto {n}",
       "hideThumbnails": "Fsheh miniaturat",
       "showThumbnails": "Shfaq miniaturat",
-      "approximateLocation": "Vendndodhje e përafërt — shenja tregon lagjen, jo ndërtesën e saktë.",
+      "approximateLocation": "Vendndodhje e përafërt — zona e theksuar tregon lagjen ose një pikë orientimi afër, jo ndërtesën e saktë.",
       "plotArea": "Truall {value} m²",
       "plotAreaUnknown": "Sipërfaqja e truallit: nuk është specifikuar",
       "seaDistance": "{m} m nga deti",

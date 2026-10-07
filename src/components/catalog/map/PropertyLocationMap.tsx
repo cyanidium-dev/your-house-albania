@@ -9,6 +9,22 @@ import { cn } from '@/lib/utils'
 /** Default center when property coordinates are missing. Matches PropertiesMap fallback. */
 export const DEFAULT_MAP_CENTER: [number, number] = [20.05, 41.15]
 const DEFAULT_ZOOM = 14
+const APPROXIMATE_ZOOM = 13.4
+/**
+ * Circle radius in pixels per zoom for a ~300 m radius at Albania's latitude
+ * (7.0 m per pixel at zoom 14; doubles with every zoom level down).
+ */
+const APPROXIMATE_RADIUS_PX: maplibregl.ExpressionSpecification = [
+  'interpolate',
+  ['exponential', 2],
+  ['zoom'],
+  10,
+  2.7,
+  14,
+  43,
+  18,
+  690,
+]
 
 const OSM_STYLE: maplibregl.StyleSpecification = {
   version: 8,
@@ -30,6 +46,12 @@ const OSM_STYLE: maplibregl.StyleSpecification = {
 export type PropertyLocationMapProps = {
   /** lat/lng. When null, uses DEFAULT_MAP_CENTER. */
   coordinates: { lat: number; lng: number } | null
+  /**
+   * The coordinates are the district or a nearby landmark, not the building.
+   * Drawn as a ~300 m circle instead of a dot, so the map does not promise a
+   * precision the data does not have.
+   */
+  approximate?: boolean
   className?: string
   mapHeightClassName?: string
 }
@@ -45,6 +67,7 @@ function resolveCenter(coords: { lat: number; lng: number } | null): [number, nu
 
 export function PropertyLocationMap({
   coordinates,
+  approximate = false,
   className,
   mapHeightClassName = 'h-[420px]',
 }: PropertyLocationMapProps) {
@@ -66,7 +89,7 @@ export function PropertyLocationMap({
       container: containerRef.current,
       style: OSM_STYLE,
       center,
-      zoom: DEFAULT_ZOOM,
+      zoom: approximate ? APPROXIMATE_ZOOM : DEFAULT_ZOOM,
       attributionControl: false,
     })
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
@@ -75,6 +98,31 @@ export function PropertyLocationMap({
     const addMarker = () => {
       if (!hasValidCoords || !coordinates) return
       markerRef.current?.remove()
+      if (approximate) {
+        if (map.getSource('approximate-area')) return
+        map.addSource('approximate-area', {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            properties: {},
+            geometry: { type: 'Point', coordinates: [coordinates.lng, coordinates.lat] },
+          },
+        })
+        map.addLayer({
+          id: 'approximate-area',
+          type: 'circle',
+          source: 'approximate-area',
+          paint: {
+            'circle-color': '#078660',
+            'circle-opacity': 0.16,
+            'circle-stroke-color': '#078660',
+            'circle-stroke-opacity': 0.85,
+            'circle-stroke-width': 2,
+            'circle-radius': APPROXIMATE_RADIUS_PX,
+          },
+        })
+        return
+      }
       const el = document.createElement('div')
       el.className = 'w-6 h-6 bg-primary rounded-full border-2 border-white shadow-md'
       el.setAttribute('aria-hidden', 'true')
@@ -94,7 +142,7 @@ export function PropertyLocationMap({
       map.remove()
       mapRef.current = null
     }
-  }, [center, hasValidCoords, coordinates])
+  }, [center, hasValidCoords, coordinates, approximate])
 
   return (
     <div

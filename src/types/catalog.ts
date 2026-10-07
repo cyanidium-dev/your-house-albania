@@ -56,6 +56,8 @@ export type CatalogProperty = {
   /** Source coordinates in Studio (flat fields). */
   coordinatesLat?: number | null;
   coordinatesLng?: number | null;
+  /** 'approximate' when the pin is the district or a landmark nearby, not the building. */
+  locationPrecision?: 'exact' | 'approximate' | null;
   price?: number;
   /** Whether `price` is a total or a per-m2 rate. Absent means total. */
   priceUnit?: 'total' | 'per-sqm';

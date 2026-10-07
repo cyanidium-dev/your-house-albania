@@ -165,6 +165,9 @@
       "imageFullscreenView": "Visualizzazione immagine a schermo intero",
       "viewImageFullscreen": "Visualizza immagine a schermo intero"
     },
+    "map": {
+      "approximateLegend": "≈ posizione approssimativa: il segnaposto indica il quartiere o un punto di riferimento vicino, non l’edificio"
+    },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",
       "checkAllAmenities": "Vedi tutte le caratteristiche",
@@ -195,7 +198,7 @@
       "goToImage": "Vai all'immagine {n}",
       "hideThumbnails": "Nascondi miniature",
       "showThumbnails": "Mostra miniature",
-      "approximateLocation": "Posizione approssimativa: il segnaposto indica il quartiere, non l’edificio esatto.",
+      "approximateLocation": "Posizione approssimativa: l’area evidenziata indica il quartiere o un punto di riferimento vicino, non l’edificio esatto.",
       "plotArea": "Terreno {value} m²",
       "plotAreaUnknown": "Superficie del terreno: non specificata",
       "seaDistance": "{m} m dal mare",
