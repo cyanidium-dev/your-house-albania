@@ -12,6 +12,8 @@ export type LeadProperty = {
   title?: string
   agentId?: string
   agentSlug?: string
+  /** The agent's own Telegram lead group (`agent.telegramLeadChatId`), when set. */
+  agentLeadChatId?: string
 }
 
 type LocalizedTitle = Partial<Record<'en' | 'ru' | 'uk' | 'sq' | 'it' | 'pl' | 'de', string>> | string | null
@@ -31,9 +33,10 @@ export async function lookupLeadProperty(slug: string): Promise<LeadProperty | n
       title?: LocalizedTitle
       agentId?: string
       agentSlug?: string
+      agentLeadChatId?: string
     } | null>(
       `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && !(_id in path("drafts.**"))][0]{
-        _id, "slug": slug.current, title, "agentId": agent._ref, "agentSlug": agent->slug.current
+        _id, "slug": slug.current, title, "agentId": agent._ref, "agentSlug": agent->slug.current, "agentLeadChatId": agent->telegramLeadChatId
       }`,
       { slug }
     )
@@ -47,6 +50,7 @@ export async function lookupLeadProperty(slug: string): Promise<LeadProperty | n
       ...(title ? { title: title.slice(0, 200) } : {}),
       ...(row.agentId ? { agentId: row.agentId } : {}),
       ...(row.agentSlug ? { agentSlug: row.agentSlug } : {}),
+      ...(row.agentLeadChatId?.trim() ? { agentLeadChatId: row.agentLeadChatId.trim() } : {}),
     }
   } catch (err) {
     console.error('[leads] property lookup failed', err instanceof Error ? err.message : err)

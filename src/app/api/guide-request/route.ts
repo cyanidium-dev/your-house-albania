@@ -12,6 +12,7 @@ import {
 } from '@/lib/notifications/agentContact/routing'
 import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { formatGuideLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
+import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 export const runtime = 'nodejs'
@@ -74,10 +75,13 @@ export async function POST(req: NextRequest) {
   const property = request.propertySlug ? await lookupLeadProperty(request.propertySlug) : null
 
   const botToken = resolveTelegramBotToken()
-  const chatId = resolveAgentContactTelegramRouting().generalChatId
+  const chatIds = leadRecipientChatIds({
+    generalChatId: resolveAgentContactTelegramRouting().generalChatId,
+    agentChatId: property?.agentLeadChatId,
+  })
   const telegram = async () => {
-    if (!botToken || !chatId) {
-      console.error('[guide-request] Telegram not configured', { hasBotToken: !!botToken, hasChatId: !!chatId })
+    if (!botToken || chatIds.length === 0) {
+      console.error('[guide-request] Telegram not configured', { hasBotToken: !!botToken, chats: chatIds.length })
       return { ok: false as const, reason: 'Telegram not configured' }
     }
     const text = formatGuideLeadTelegram({
@@ -96,7 +100,10 @@ export async function POST(req: NextRequest) {
           }
         : {}),
     })
-    return sendTelegramTextMessage({ botToken, chatId, text })
+    const results = await Promise.all(chatIds.map((chatId) => sendTelegramTextMessage({ botToken, chatId, text })))
+    // The main group is first; its delivery is the one that decides success.
+    for (const r of results.slice(1)) if (!r.ok) console.error('[guide-request] agent group delivery failed', r.reason)
+    return results[0]
   }
 
   const [lead, delivery] = await Promise.all([

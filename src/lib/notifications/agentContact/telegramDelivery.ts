@@ -1,4 +1,5 @@
 import { withTestPrefix } from '@/lib/notifications/leads/formatLeadTelegram'
+import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
 import { formatAgentContactTelegramMessage } from './formatTelegramAgentContact'
 import { resolveTelegramBotToken } from './routing'
 import { sendTelegramTextMessage } from './telegramBotSend'
@@ -21,8 +22,8 @@ function debugShouldFail(kind: NormalizedAgentContactSubmission['submissionKind'
 /**
  * Delivers contact notifications via the Telegram Bot API. Both submission
  * kinds — `'general'` (/contacts form) and `'agent'` (property-page contact
- * modal) — go to the SAME general chat (`TELEGRAM_GENERAL_CHAT_ID`);
- * per-agent chat routing is future work (ids expected from Sanity).
+ * modal) — go to the general chat (`TELEGRAM_GENERAL_CHAT_ID`), and a lead
+ * on a listing whose agent has their own group goes there as well.
  */
 export async function deliverAgentContactTelegram(
   normalized: NormalizedAgentContactSubmission,
@@ -32,6 +33,11 @@ export async function deliverAgentContactTelegram(
     appendix?: string
     /** Internal (owner) traffic: the message is prefixed `[ТЕСТ]`. */
     internal?: boolean
+    /**
+     * The listing agent's own lead group (`agent.telegramLeadChatId`). Gets a
+     * copy; its failure is logged but does not fail the submission.
+     */
+    agentChatId?: string | null
   } = {}
 ): Promise<TelegramSendResult> {
   const botToken = resolveTelegramBotToken()
@@ -65,5 +71,11 @@ export async function deliverAgentContactTelegram(
     textLength: text.length,
   })
 
-  return sendTelegramTextMessage({ botToken, chatId, text })
+  const extra = leadRecipientChatIds({ generalChatId: chatId, agentChatId: options.agentChatId }).slice(1)
+  const [main, ...copies] = await Promise.all([
+    sendTelegramTextMessage({ botToken, chatId, text }),
+    ...extra.map((agentChat) => sendTelegramTextMessage({ botToken, chatId: agentChat, text })),
+  ])
+  for (const c of copies) if (!c.ok) console.error('[contact-agent] agent group delivery failed', c.reason)
+  return main
 }

@@ -7,6 +7,7 @@ import { formatLeadAnalyticsBlock } from '@/lib/notifications/leads/formatLeadTe
 import { formatMinMaxLabel } from '@/lib/notifications/agentContact/formatTelegramAgentContact'
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
 import { deliverAgentContactTelegram } from '@/lib/notifications/agentContact/telegramDelivery'
+import { fetchAgentLeadChatId } from '@/lib/notifications/leads/leadRecipients'
 import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agentContact/types'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
@@ -249,6 +250,7 @@ export async function POST(request: Request) {
   const hasAgent = normalized.agentSlug !== '—' && normalized.agentSlug !== 'unassigned'
 
   const routing = resolveAgentContactTelegramRouting()
+  const agentChatId = hasAgent ? await fetchAgentLeadChatId(normalized.agentSlug) : null
   const [delivery, lead] = await Promise.all([
     deliverAgentContactTelegram(normalized, routing, {
       appendix: formatLeadAnalyticsBlock({
@@ -257,6 +259,7 @@ export async function POST(request: Request) {
         ...(leadLocale ? { locale: leadLocale } : {}),
       }),
       internal: context?.internal === true,
+      agentChatId,
     }),
     createLead({
       type: leadType,

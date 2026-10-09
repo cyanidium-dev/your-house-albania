@@ -10,6 +10,7 @@ import {
 } from '@/lib/notifications/agentContact/routing'
 import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { formatClickLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
+import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 export const runtime = 'nodejs'
@@ -62,11 +63,14 @@ export async function POST(req: NextRequest) {
     const property = body.propertySlug ? await lookupLeadProperty(body.propertySlug) : null
 
     const botToken = resolveTelegramBotToken()
-    const chatId = resolveAgentContactTelegramRouting().generalChatId
+    const chatIds = leadRecipientChatIds({
+      generalChatId: resolveAgentContactTelegramRouting().generalChatId,
+      agentChatId: property?.agentLeadChatId,
+    })
 
     const telegram = async () => {
-      if (!botToken || !chatId) {
-        console.error('[leads/click] Telegram not configured', { hasBotToken: !!botToken, hasChatId: !!chatId })
+      if (!botToken || chatIds.length === 0) {
+        console.error('[leads/click] Telegram not configured', { hasBotToken: !!botToken, chats: chatIds.length })
         return
       }
       const text = formatClickLeadTelegram({
@@ -85,8 +89,8 @@ export async function POST(req: NextRequest) {
             }
           : {}),
       })
-      const result = await sendTelegramTextMessage({ botToken, chatId, text })
-      if (!result.ok) console.error('[leads/click] Telegram delivery failed', result.reason)
+      const results = await Promise.all(chatIds.map((chatId) => sendTelegramTextMessage({ botToken, chatId, text })))
+      for (const result of results) if (!result.ok) console.error('[leads/click] Telegram delivery failed', result.reason)
     }
 
     const [lead] = await Promise.all([
