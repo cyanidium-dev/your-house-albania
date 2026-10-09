@@ -5,6 +5,30 @@ import type { CatalogProperty } from '@/types/catalog';
 import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl';
 
 /**
+ * A hidden listing marked as a duplicate of another (`duplicateOf`) answers
+ * with the original's address, so its URL can 301 there instead of 404ing.
+ * Partner imports overlap (Cactus listed flats get.al already had); the copy
+ * is unpublished and its address keeps its value for the original.
+ */
+export async function fetchPropertyDuplicateTarget(
+  slug: string,
+): Promise<{ slug: string; localizedSlug?: Partial<Record<string, string | null>> | null } | null> {
+  const client = getClient();
+  if (!client) return null;
+  try {
+    const t = await client.fetch<{ slug?: string; isPublished?: boolean; localizedSlug?: Partial<Record<string, string | null>> | null } | null>(
+      `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && defined(duplicateOf) && !(_id in path("drafts.**"))][0].duplicateOf->{
+        "slug": slug.current, localizedSlug, isPublished
+      }`,
+      { slug },
+    );
+    return t?.slug && t.isPublished === true ? { slug: t.slug, localizedSlug: t.localizedSlug ?? null } : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fetch a single property by any slug it answers to — its key or one of its
  * per-locale addresses (see lib/property/propertyUrl). Returns null if not
  * found or client not configured.

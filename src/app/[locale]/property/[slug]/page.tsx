@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { notFound, permanentRedirect } from 'next/navigation';
-import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
+import { fetchPropertyBySlug, fetchPropertyDuplicateTarget, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapPropertyAmenityDisplayItems, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
 import { Icon } from "@/components/shared/Icon";
@@ -87,6 +87,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   ]);
 
   if (!sanityProperty) {
+    const original = await fetchPropertyDuplicateTarget(slug);
+    if (original) permanentRedirect(propertyPath(locale, original.slug, original.localizedSlug ?? undefined));
     return {};
   }
 
@@ -173,6 +175,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
     fetchSiteSettings(),
   ]);
   if (sanityProperty == null) {
+    const original = await fetchPropertyDuplicateTarget(slug);
+    if (original) permanentRedirect(propertyPath(locale, original.slug, original.localizedSlug ?? undefined));
     notFound();
   }
 
