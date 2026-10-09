@@ -275,6 +275,40 @@ export function CatalogBodyClient({
   }, [mapNearViewport]);
   const previewRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Full-screen map. Opening adds a history entry, so the phone's Back button
+  // closes the map instead of leaving the catalogue. `?view=map` (the
+  // installed app's Map tab) opens it straight away.
+  const [mapExpanded, setMapExpanded] = React.useState(false);
+  React.useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("view") !== "map") return;
+    setMapExpanded(true);
+    setMapNearViewport(true);
+  }, []);
+  React.useEffect(() => {
+    const onPop = () => setMapExpanded(Boolean(window.history.state?.domlivoMap));
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  const handleMapExpandedChange = React.useCallback((next: boolean) => {
+    if (next) {
+      window.history.pushState({ ...window.history.state, domlivoMap: true }, "");
+      setMapExpanded(true);
+      return;
+    }
+    if (window.history.state?.domlivoMap) {
+      window.history.back();
+      return;
+    }
+    // Opened by `?view=map`: drop the flag so a reload shows the catalogue.
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("view") === "map") {
+      url.searchParams.delete("view");
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+    setMapExpanded(false);
+  }, []);
+
   // ── "Show more" state (see PropertyPagination) ─────────────────────────
   const [allItems, setAllItems] = React.useState<PropertyHomes[]>(pageItems);
   const [nextPage, setNextPage] = React.useState(currentPage + 1);
@@ -557,7 +591,8 @@ export function CatalogBodyClient({
         ? "min-h-[220px] sm:min-h-[235px] md:min-h-0"
         : "min-h-[330px] md:min-h-0";
 
-  const isSmallMode = viewMode === 'small'
+  // The side preview card suits the small grid's narrow map only, not full screen.
+  const isSmallMode = viewMode === 'small' && !mapExpanded
   React.useEffect(() => {
     const resolveTier = () => {
       if (typeof window === "undefined") return "mobile" as LayoutTier;
@@ -614,16 +649,27 @@ export function CatalogBodyClient({
             if (entry.kind === "map") {
               return (
                 <div key={entry.key} className={cn(mapListItemClassName, "relative", mapSlotClassName)} ref={mapCardRef}>
+                  {/* The slot keeps its place in the grid; the map inside it
+                      fills the slot, or the whole screen when expanded. */}
+                  <div
+                    className={cn(
+                      mapExpanded
+                        ? "fixed inset-0 z-[80] bg-white dark:bg-black pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]"
+                        : "absolute inset-0"
+                    )}
+                  >
                   {showMap ? (
                     <PropertiesMap
                       items={mapItems}
                       activeSlug={activeSlug}
                       onActiveSlugChange={handleActiveSlugFromMap}
                       mapHeightClassName={mapHeightClassName}
-                      className={(viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
+                      className={(mapExpanded || viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
                       selectedCitySlug={filterProps.initialCity || undefined}
                       selectedDistrictSlug={filterProps.initialDistrict || undefined}
                       selectedDealType={filterProps.initialDealType || undefined}
+                      expanded={mapExpanded}
+                      onExpandedChange={handleMapExpandedChange}
                     />
                   ) : (
                     <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
@@ -636,7 +682,9 @@ export function CatalogBodyClient({
                         // SMALL mode: compact vertical side card to preserve map area
                         isSmallMode
                           ? "right-3 top-3 bottom-3 w-[198px] p-0 flex flex-col"
-                          : "left-3 right-3 bottom-3 p-0"
+                          : mapExpanded
+                            ? "left-3 right-3 bottom-[calc(env(safe-area-inset-bottom,0px)+12px)] p-0 sm:left-1/2 sm:right-auto sm:w-[420px] sm:-translate-x-1/2"
+                            : "left-3 right-3 bottom-3 p-0"
                       )}
                     >
                       <button
@@ -715,6 +763,7 @@ export function CatalogBodyClient({
                       )}
                     </div>
                   )}
+                  </div>
                 </div>
               );
             }

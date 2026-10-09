@@ -166,7 +166,10 @@
       "viewImageFullscreen": "Bild im Vollbild ansehen"
     },
     "map": {
-      "approximateLegend": "≈ ungefähre Lage: die Markierung zeigt den Stadtteil oder einen nahen Orientierungspunkt, nicht das Gebäude"
+      "approximateLegend": "≈ ungefähre Lage: die Markierung zeigt den Stadtteil oder einen nahen Orientierungspunkt, nicht das Gebäude",
+      "enterFullscreen": "Karte im Vollbild öffnen",
+      "exitFullscreen": "Vollbildkarte schließen",
+      "viewMode": "Kartenansicht"
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",

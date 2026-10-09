@@ -166,7 +166,10 @@
       "viewImageFullscreen": "Shiko foton në ekran të plotë"
     },
     "map": {
-      "approximateLegend": "≈ vendndodhje e përafërt: shenja tregon lagjen ose një pikë orientimi afër, jo ndërtesën"
+      "approximateLegend": "≈ vendndodhje e përafërt: shenja tregon lagjen ose një pikë orientimi afër, jo ndërtesën",
+      "enterFullscreen": "Hap hartën në ekran të plotë",
+      "exitFullscreen": "Mbyll hartën në ekran të plotë",
+      "viewMode": "Pamja e hartës"
     },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",

@@ -7,26 +7,33 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { cn } from '@/lib/utils'
+import { buildingPolygonAt } from './buildingPolygonAt'
 
-const OSM_DETAILED_STYLE: maplibregl.StyleSpecification = {
-  version: 8,
-  glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-  sources: {
-    osm: {
-      type: 'raster',
-      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-      tileSize: 256,
-      attribution: '&copy; OpenStreetMap contributors',
-      maxzoom: 19,
-    },
-  },
-  layers: [
-    {
-      id: 'osm',
-      type: 'raster',
-      source: 'osm',
-    },
-  ],
+// OpenFreeMap's vector "Liberty" style: free, no key, OpenStreetMap data with
+// building heights, so the map can tilt into 3D (`building-3d` is its
+// fill-extrusion layer from zoom 14). Its glyph server serves Noto Sans only.
+const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty'
+const MAP_FONT = ['Noto Sans Bold']
+const PITCH_3D = 55
+const BEARING_3D = -17
+// Buildings start at zoom 14 in the style; the listing highlight follows.
+const BUILDINGS_MIN_ZOOM = 14
+const LISTING_BUILDING_COLOR = '#078660'
+const MODE_STORAGE_KEY = 'domlivo:map-mode'
+
+type MapMode = '2d' | '3d'
+
+function initialMapMode(): MapMode {
+  if (typeof window === 'undefined') return '2d'
+  try {
+    const saved = window.localStorage.getItem(MODE_STORAGE_KEY)
+    if (saved === '2d' || saved === '3d') return saved
+  } catch {
+    // storage blocked: fall through to the default
+  }
+  // Phones start flat: a tilted map is harder to pan with one thumb and draws
+  // more on a weaker GPU. Wider screens start in 3D. The switch is on the map.
+  return window.matchMedia('(min-width: 768px)').matches ? '3d' : '2d'
 }
 
 export type PropertiesMapItem = {
@@ -82,6 +89,8 @@ export function PropertiesMap({
   selectedCitySlug,
   selectedDistrictSlug,
   selectedDealType,
+  expanded = false,
+  onExpandedChange,
 }: {
   items: PropertiesMapItem[]
   activeSlug?: string | null
@@ -91,6 +100,9 @@ export function PropertiesMap({
   selectedCitySlug?: string
   selectedDistrictSlug?: string
   selectedDealType?: string
+  /** Full-screen state is owned by the caller, which also positions the preview card. */
+  expanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
 }) {
   const { formatFromEur } = useCurrency()
   const tMap = useTranslations('Shared.map')
@@ -99,6 +111,7 @@ export function PropertiesMap({
   const resizeRafRef = React.useRef<number | null>(null)
   const htmlMarkersRef = React.useRef<Map<string, maplibregl.Marker>>(new Map())
   const [ready, setReady] = React.useState(false)
+  const [mode, setMode] = React.useState<MapMode>(initialMapMode)
   const prevActiveSlugRef = React.useRef<string | null>(null)
 
   const scheduleMapResize = React.useCallback(() => {
@@ -265,6 +278,13 @@ export function PropertiesMap({
       return typeof props.point_count !== 'number'
     })
 
+    // A tilted map shows kilometres of coast towards the horizon, and every
+    // pin out there becomes an unreadable price pill on top of the others.
+    // Keep the pins in the nearer part of the view; the far ones come back as
+    // the visitor pans towards them.
+    const pitched = map.getPitch() > 20
+    const farEdgeY = map.getCanvas().clientHeight * 0.3
+
     const next = new Set<string>()
     for (const f of unclustered) {
       const props = (f.properties || {}) as Record<string, unknown>
@@ -280,6 +300,7 @@ export function PropertiesMap({
       const lng = Number(coords[0])
       const lat = Number(coords[1])
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue
+      if (pitched && slug !== activeSlug && map.project([lng, lat]).y < farEdgeY) continue
 
       next.add(slug)
       const isSelected = activeSlug === slug
@@ -339,12 +360,18 @@ export function PropertiesMap({
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: OSM_DETAILED_STYLE,
+      style: MAP_STYLE_URL,
       center: [initialCenter.lng, initialCenter.lat],
       zoom: 6.5,
+      pitch: mode === '3d' ? PITCH_3D : 0,
+      bearing: mode === '3d' ? BEARING_3D : 0,
+      maxPitch: 70,
       attributionControl: false,
     })
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
+    // Zoom buttons and a compass that also shows the tilt; a tap on the
+    // compass turns the map back north.
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right')
 
     mapRef.current = map
 
@@ -388,10 +415,10 @@ export function PropertiesMap({
         layout: {
           'text-field': '{point_count_abbreviated}',
           'text-size': 12,
-          // Only stacks the glyph server has: "Open Sans Bold" answered 404
-          // for every range and the browser drew the counts from local fonts
-          // after a failed request per cluster (console, 2026-09-27).
-          'text-font': ['Open Sans Semibold'],
+          // Only stacks the style's glyph server has (Noto Sans): an unknown
+          // stack answers 404 for every range and the counts fall back to
+          // local fonts after a failed request per cluster.
+          'text-font': MAP_FONT,
           'text-allow-overlap': true,
           'text-ignore-placement': true,
         },
@@ -399,6 +426,42 @@ export function PropertiesMap({
           'text-color': '#0b0b0b',
         },
       })
+
+      // Buildings that hold a listing with an exact address, drawn over the
+      // style's grey extrusions in the brand colour. The footprints come from
+      // the tiles themselves (see the highlight effect below): an invisible
+      // flat copy of the building layer is what the pins are tested against.
+      map.addLayer(
+        {
+          id: 'listing-building-footprints',
+          type: 'fill',
+          source: 'openmaptiles',
+          'source-layer': 'building',
+          minzoom: BUILDINGS_MIN_ZOOM,
+          paint: { 'fill-opacity': 0 },
+        },
+        'clusters'
+      )
+      map.addSource('listing-buildings', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+      })
+      map.addLayer(
+        {
+          id: 'listing-buildings',
+          type: 'fill-extrusion',
+          source: 'listing-buildings',
+          minzoom: BUILDINGS_MIN_ZOOM,
+          paint: {
+            'fill-extrusion-color': LISTING_BUILDING_COLOR,
+            'fill-extrusion-opacity': 0.85,
+            'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+            // A building with no height in OpenStreetMap still stands out.
+            'fill-extrusion-height': ['max', ['coalesce', ['get', 'render_height'], 0], 9],
+          },
+        },
+        'clusters'
+      )
 
       setReady(true)
       scheduleMapResize()
@@ -497,6 +560,98 @@ export function PropertiesMap({
       map.off('moveend', onMoveEnd)
     }
   }, [ready])
+
+  // 2D / 3D: tilt and turn the camera. The buildings are in the style either
+  // way, seen from straight above in 2D.
+  const firstModeRunRef = React.useRef(true)
+  React.useEffect(() => {
+    try {
+      window.localStorage.setItem(MODE_STORAGE_KEY, mode)
+    } catch {
+      // storage blocked: the choice lasts for this page only
+    }
+    const map = mapRef.current
+    if (!ready || !map) return
+    if (firstModeRunRef.current) {
+      firstModeRunRef.current = false
+      return
+    }
+    map.easeTo({
+      pitch: mode === '3d' ? PITCH_3D : 0,
+      bearing: mode === '3d' ? BEARING_3D : 0,
+      duration: 600,
+    })
+  }, [mode, ready])
+
+  // Highlight the building under every exact pin in view. The tiles carry the
+  // footprints and heights; a pin is tested against the invisible flat copy of
+  // the building layer at its screen position, which holds at any tilt.
+  // Approximate pins are skipped: they mark a district, not a house.
+  const exactPointsRef = React.useRef<Array<{ lng: number; lat: number }>>([])
+  React.useEffect(() => {
+    exactPointsRef.current = validPoints.filter((p) => !p.approximate).map((p) => ({ lng: p.lng, lat: p.lat }))
+  }, [validPoints])
+  React.useEffect(() => {
+    if (!ready || !mapRef.current) return
+    const map = mapRef.current
+    let lastKey = ''
+    const update = () => {
+      const src = map.getSource('listing-buildings') as maplibregl.GeoJSONSource | undefined
+      if (!src) return
+      const features: GeoJSON.Feature[] = []
+      const seen = new Set<string>()
+      if (map.getZoom() >= BUILDINGS_MIN_ZOOM) {
+        const bounds = map.getBounds()
+        for (const p of exactPointsRef.current) {
+          if (!bounds.contains([p.lng, p.lat])) continue
+          const hit = map.queryRenderedFeatures(map.project([p.lng, p.lat]), {
+            layers: ['listing-building-footprints'],
+          })[0]
+          if (!hit) continue
+          const geometry = buildingPolygonAt(hit.geometry, p.lng, p.lat)
+          if (!geometry) continue
+          const key = JSON.stringify(geometry.coordinates[0])
+          if (seen.has(key)) continue
+          seen.add(key)
+          features.push({
+            type: 'Feature',
+            geometry,
+            properties: {
+              render_height: hit.properties?.render_height,
+              render_min_height: hit.properties?.render_min_height,
+            },
+          })
+        }
+      }
+      // `idle` follows every settled frame, including the one this setData
+      // causes; only a different set of buildings is worth a redraw.
+      const key = [...seen].join('|')
+      if (key === lastKey) return
+      lastKey = key
+      src.setData({ type: 'FeatureCollection', features })
+    }
+    map.on('idle', update)
+    update()
+    return () => {
+      map.off('idle', update)
+    }
+  }, [ready])
+
+  // Full screen: Escape closes it, and the page behind does not scroll.
+  React.useEffect(() => {
+    scheduleMapResize()
+    if (!expanded || !onExpandedChange) return
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') onExpandedChange(false)
+    }
+    const prevOverflow = document.documentElement.style.overflow
+    document.documentElement.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.documentElement.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [expanded, onExpandedChange, scheduleMapResize])
 
   // Fly/fit map when results change.
   React.useEffect(() => {
@@ -637,7 +792,8 @@ export function PropertiesMap({
   return (
     <div
       className={cn(
-        'w-full relative rounded-2xl overflow-hidden border border-dark/10 dark:border-white/20',
+        'w-full relative overflow-hidden',
+        expanded ? 'h-full' : 'rounded-2xl border border-dark/10 dark:border-white/20',
         className,
         'bg-white dark:bg-black',
         '[&_.maplibregl-ctrl-bottom-right]:right-1 [&_.maplibregl-ctrl-bottom-right]:bottom-1',
@@ -651,7 +807,48 @@ export function PropertiesMap({
         '[&_.maplibregl-ctrl-attrib.maplibregl-compact-show]:p-0'
       )}
     >
-      <div ref={containerRef} className={cn('w-full relative overflow-hidden', mapHeightClassName)} />
+      <div ref={containerRef} className={cn('w-full relative overflow-hidden', expanded ? 'h-full' : mapHeightClassName)} />
+      <div className="absolute right-2 top-2 z-10 flex flex-col items-end gap-2">
+        {onExpandedChange ? (
+          <button
+            type="button"
+            onClick={() => onExpandedChange(!expanded)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-black/10 bg-white/95 text-dark shadow-md hover:bg-white dark:border-white/20 dark:bg-black/80 dark:text-white"
+            aria-label={expanded ? tMap('exitFullscreen') : tMap('enterFullscreen')}
+            title={expanded ? tMap('exitFullscreen') : tMap('enterFullscreen')}
+          >
+            {expanded ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3" />
+              </svg>
+            )}
+          </button>
+        ) : null}
+        <div
+          role="group"
+          aria-label={tMap('viewMode')}
+          className="flex overflow-hidden rounded-lg border border-black/10 bg-white/95 text-xs font-semibold shadow-md dark:border-white/20 dark:bg-black/80"
+        >
+          {(['2d', '3d'] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              aria-pressed={mode === m}
+              className={cn(
+                'h-9 w-10 transition-colors',
+                mode === m ? 'bg-primary text-white' : 'text-dark hover:bg-dark/5 dark:text-white dark:hover:bg-white/10'
+              )}
+            >
+              {m.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
       {hasApproximate ? (
         <div
           className="pointer-events-none absolute left-2 top-2 z-10 rounded-md border border-black/10 bg-white/85 px-2 py-1 text-[11px] leading-tight text-dark/80 backdrop-blur-[1px] dark:border-white/20 dark:bg-black/60 dark:text-white/80"

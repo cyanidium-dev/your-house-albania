@@ -166,7 +166,10 @@
       "viewImageFullscreen": "View image fullscreen"
     },
     "map": {
-      "approximateLegend": "≈ approximate location: the pin marks the district or a nearby landmark, not the building"
+      "approximateLegend": "≈ approximate location: the pin marks the district or a nearby landmark, not the building",
+      "enterFullscreen": "Open the map full screen",
+      "exitFullscreen": "Close the full-screen map",
+      "viewMode": "Map view"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",

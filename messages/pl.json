@@ -155,7 +155,10 @@
       "videoTitle": "Wideo"
     },
     "map": {
-      "approximateLegend": "≈ lokalizacja przybliżona: pinezka wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie budynek"
+      "approximateLegend": "≈ lokalizacja przybliżona: pinezka wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie budynek",
+      "enterFullscreen": "Otwórz mapę na pełnym ekranie",
+      "exitFullscreen": "Zamknij mapę pełnoekranową",
+      "viewMode": "Widok mapy"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",
