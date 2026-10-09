@@ -48,5 +48,7 @@ describe("the site's Link", () => {
       .filter((f) => /from ['"]next\/link['"]/.test(readFileSync(f, "utf8")))
       .map((f) => path.relative(src, f).split(path.sep).join("/"));
     expect(offenders).toEqual(["components/shared/Link.tsx"]);
-  });
+    // Reads every source file; under a full parallel run that took over the
+    // default 5 s on Windows (2026-10-09).
+  }, 30_000);
 });

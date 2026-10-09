@@ -100,10 +100,7 @@ export async function POST(req: NextRequest) {
           }
         : {}),
     })
-    const results = await Promise.all(chatIds.map((chatId) => sendTelegramTextMessage({ botToken, chatId, text })))
-    // The main group is first; its delivery is the one that decides success.
-    for (const r of results.slice(1)) if (!r.ok) console.error('[guide-request] agent group delivery failed', r.reason)
-    return results[0]
+    return sendTelegramTextMessage({ botToken, chatId: chatIds[0], text })
   }
 
   const [lead, delivery] = await Promise.all([

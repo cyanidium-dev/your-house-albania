@@ -334,14 +334,55 @@ export function CatalogBodyClient({
   }, [isLoadingMore, hasMore, nextPage, locale, pageSize, totalCount, loadMoreQuery]);
 
 
+  // Every listing under the filters, not only this page's cards: the page
+  // carries 24, the map wants all of them (Durrës: ~650). Fetched once the map
+  // mounts, cached at the edge for an hour; the cards on screen are drawn
+  // straight away and the rest join when the answer arrives.
+  type MapPoint = {
+    slug: string
+    href: string
+    lat: number
+    lng: number
+    price?: number
+    priceUnit?: string
+    status?: string
+    approximate?: boolean
+  }
+  const [mapPoints, setMapPoints] = React.useState<MapPoint[]>([])
+  React.useEffect(() => {
+    if (!showMap) return
+    const controller = new AbortController()
+    const params = new URLSearchParams(loadMoreQuery)
+    params.delete('page')
+    params.delete('pageSize')
+    params.delete('sort')
+    params.set('locale', locale)
+    fetch(`/api/catalog/map-points?${params.toString()}`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : { points: [] }))
+      .then((data: { points?: MapPoint[] }) => setMapPoints(Array.isArray(data.points) ? data.points : []))
+      .catch(() => {
+        // The page's own cards are still on the map.
+      })
+    return () => controller.abort()
+  }, [showMap, loadMoreQuery, locale])
+
+  const mapPointHref = React.useMemo(() => new Map(mapPoints.map((p) => [p.slug, p.href])), [mapPoints])
+
   const handleActiveSlugFromMap = React.useCallback(
     (slug: string) => {
+      // A pin for a listing that is not among the loaded cards has no preview
+      // card to show: open the listing itself.
+      if (!allItems.some((p) => p.slug === slug)) {
+        const href = mapPointHref.get(slug);
+        if (href) window.location.assign(href);
+        return;
+      }
       // Marker click: select marker and show preview, but do NOT scroll list.
       shouldScrollToActiveRef.current = false;
       setActiveSlug(slug);
       setPreviewSlug(slug);
     },
-    [setActiveSlug]
+    [setActiveSlug, allItems, mapPointHref]
   );
 
   const gridClass = cn(
@@ -442,19 +483,31 @@ export function CatalogBodyClient({
     })
   }, [allItems, activeSlug])
 
-  const mapItems = React.useMemo(
-    () =>
-      allItems.map((p) => ({
+  const mapItems = React.useMemo(() => {
+    const loaded = allItems.map((p) => ({
+      slug: p.slug,
+      price: p.price,
+      currency: p.currency,
+      rate: p.rate,
+      status: p.status,
+      coordinates: p.coordinates,
+      locationPrecision: p.locationPrecision,
+    }))
+    const seen = new Set(loaded.map((p) => p.slug))
+    const rest = mapPoints
+      .filter((p) => !seen.has(p.slug))
+      .map((p) => ({
         slug: p.slug,
-        price: p.price,
-        currency: p.currency,
-        rate: p.rate,
+        // A per-m² rate is not a total; leave the pin without a price rather
+        // than print "€1,800" on a whole building.
+        price: p.priceUnit === 'per-sqm' ? undefined : p.price,
+        currency: 'EUR',
         status: p.status,
-        coordinates: p.coordinates,
-        locationPrecision: p.locationPrecision,
-      })),
-    [allItems]
-  )
+        coordinates: { lat: p.lat, lng: p.lng },
+        locationPrecision: p.approximate ? ('approximate' as const) : ('exact' as const),
+      }))
+    return [...loaded, ...rest]
+  }, [allItems, mapPoints])
 
   // List: fixed height. Grid modes: fixed on mobile; md+ use h-full so map matches row height.
   const mapHeightClassName =

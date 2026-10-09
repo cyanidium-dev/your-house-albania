@@ -326,6 +326,50 @@ export async function fetchCatalogProperties(
   return cachedFetchCatalogProperties(filters);
 }
 
+export type CatalogMapPoint = {
+  slug: string;
+  localizedSlug?: LocalizedSlug | null;
+  lat: number;
+  lng: number;
+  price?: number;
+  priceUnit?: 'total' | 'per-sqm';
+  status?: string;
+  locationPrecision?: 'exact' | 'approximate' | null;
+};
+
+/** Upper bound on pins per map; the whole catalogue is ~1,100 listings. */
+const MAP_POINTS_LIMIT = 3000;
+
+/**
+ * Every listing under the page's filters that has coordinates — for the map.
+ *
+ * The map used to draw only the cards of the current page (24 at a time), so
+ * Durrës with 650 listings showed 24 pins. This returns the lot with only what
+ * a pin needs, so the payload stays around 100 bytes a listing.
+ */
+export const fetchCatalogMapPoints = sanityCache(
+  async (filters: CatalogFilters): Promise<CatalogMapPoint[] | null> => {
+    const client = getClient();
+    if (!client) return null;
+    const { where, params } = buildCatalogWhereClause({ ...filters, excludedPropertyIds: undefined });
+    try {
+      const rows = await client.fetch<CatalogMapPoint[]>(
+        `*[${where} && defined(coordinatesLat) && defined(coordinatesLng)][0...${MAP_POINTS_LIMIT}]{
+          "slug": slug.current, localizedSlug, "lat": coordinatesLat, "lng": coordinatesLng,
+          price, priceUnit, status, locationPrecision
+        }`,
+        params,
+      );
+      return Array.isArray(rows) ? rows.filter((r) => r.slug && Number.isFinite(r.lat) && Number.isFinite(r.lng)) : null;
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogMapPoints failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-map-points'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+);
+
 export type CatalogListingStats = {
   count: number;
   /** Lowest total price; per-m² rates are not totals and are left out. */

@@ -22,8 +22,8 @@ function debugShouldFail(kind: NormalizedAgentContactSubmission['submissionKind'
 /**
  * Delivers contact notifications via the Telegram Bot API. Both submission
  * kinds — `'general'` (/contacts form) and `'agent'` (property-page contact
- * modal) — go to the general chat (`TELEGRAM_GENERAL_CHAT_ID`), and a lead
- * on a listing whose agent has their own group goes there as well.
+ * modal) — go to the general chat (`TELEGRAM_GENERAL_CHAT_ID`); a lead on a
+ * listing whose agent has their own group goes to that group instead.
  */
 export async function deliverAgentContactTelegram(
   normalized: NormalizedAgentContactSubmission,
@@ -34,20 +34,20 @@ export async function deliverAgentContactTelegram(
     /** Internal (owner) traffic: the message is prefixed `[ТЕСТ]`. */
     internal?: boolean
     /**
-     * The listing agent's own lead group (`agent.telegramLeadChatId`). Gets a
-     * copy; its failure is logged but does not fail the submission.
+     * The listing agent's own lead group (`agent.telegramLeadChatId`). When
+     * set, the lead goes there instead of the general chat.
      */
     agentChatId?: string | null
   } = {}
 ): Promise<TelegramSendResult> {
   const botToken = resolveTelegramBotToken()
-  const chatId = routing.generalChatId
+  const [chatId] = leadRecipientChatIds({ generalChatId: routing.generalChatId, agentChatId: options.agentChatId })
 
   if (!botToken || !chatId) {
     console.error('[contact-agent] Telegram not configured', {
       kind: normalized.submissionKind,
       hasBotToken: !!botToken,
-      hasGeneralChatId: !!chatId,
+      hasChatId: !!chatId,
     })
     return { ok: false, reason: 'Telegram is not configured' }
   }
@@ -71,11 +71,5 @@ export async function deliverAgentContactTelegram(
     textLength: text.length,
   })
 
-  const extra = leadRecipientChatIds({ generalChatId: chatId, agentChatId: options.agentChatId }).slice(1)
-  const [main, ...copies] = await Promise.all([
-    sendTelegramTextMessage({ botToken, chatId, text }),
-    ...extra.map((agentChat) => sendTelegramTextMessage({ botToken, chatId: agentChat, text })),
-  ])
-  for (const c of copies) if (!c.ok) console.error('[contact-agent] agent group delivery failed', c.reason)
-  return main
+  return sendTelegramTextMessage({ botToken, chatId, text })
 }

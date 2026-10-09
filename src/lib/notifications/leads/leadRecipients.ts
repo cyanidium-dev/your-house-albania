@@ -3,22 +3,26 @@ import { getClient } from '@/lib/sanity/queries/_core'
 /**
  * Where a lead's Telegram message goes.
  *
- * Every lead goes to the main group (`TELEGRAM_GENERAL_CHAT_ID`), which the
- * owner's team watches. A lead on a listing whose agent has their own group
- * (`agent.telegramLeadChatId` in Sanity) goes there too — and only that
- * agent's leads do, so a partner agency never sees another agency's leads.
- * Same bot for every group; the bot only has to be a member.
+ * A lead on a listing whose agent has their own group
+ * (`agent.telegramLeadChatId` in Sanity) goes to that group only — not to the
+ * main group (owner's decision, 2026-10-09: the agency handles its own leads).
+ * Every other lead goes to the main group (`TELEGRAM_GENERAL_CHAT_ID`). A
+ * partner agency therefore sees its own leads and nobody else's. Same bot for
+ * every group (@domlivobot); it only has to be a member. The lead itself is
+ * still saved in Sanity either way.
  */
 export function leadRecipientChatIds(params: {
   generalChatId?: string
   agentChatId?: string | null
 }): string[] {
-  const out: string[] = []
-  for (const id of [params.generalChatId, params.agentChatId]) {
+  const valid = (id: string | null | undefined) => {
     const v = typeof id === 'string' ? id.trim() : ''
-    if (v && /^-?\d{5,20}$/.test(v) && !out.includes(v)) out.push(v)
+    return v && /^-?\d{5,20}$/.test(v) ? v : ''
   }
-  return out
+  const agent = valid(params.agentChatId)
+  if (agent) return [agent]
+  const general = valid(params.generalChatId)
+  return general ? [general] : []
 }
 
 /** The agent's own lead group, looked up by agent slug; null when none is set. */
