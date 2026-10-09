@@ -605,16 +605,32 @@ export function PropertiesMap({
         })
     }
 
+    // One marker pass per frame at most. `data` fires for every raster tile
+    // that arrives (dozens on a pan), and each pass queries all pins — with
+    // the whole city on the map (600+) that kept the main thread busy.
+    let frame: number | null = null
+    const scheduleSync = () => {
+      if (frame != null) return
+      frame = requestAnimationFrame(() => {
+        frame = null
+        syncHtmlMarkers()
+      })
+    }
+    const onData = (e: maplibregl.MapDataEvent & { sourceId?: string }) => {
+      if (e.dataType === 'source' && e.sourceId === 'properties') scheduleSync()
+    }
+
     map.on('click', 'clusters', onClusterClick)
-    map.on('moveend', syncHtmlMarkers)
-    map.on('zoomend', syncHtmlMarkers)
-    map.on('data', syncHtmlMarkers)
+    map.on('moveend', scheduleSync)
+    map.on('zoomend', scheduleSync)
+    map.on('data', onData)
 
     return () => {
+      if (frame != null) cancelAnimationFrame(frame)
       map.off('click', 'clusters', onClusterClick)
-      map.off('moveend', syncHtmlMarkers)
-      map.off('zoomend', syncHtmlMarkers)
-      map.off('data', syncHtmlMarkers)
+      map.off('moveend', scheduleSync)
+      map.off('zoomend', scheduleSync)
+      map.off('data', onData)
     }
   }, [ready, syncHtmlMarkers])
 

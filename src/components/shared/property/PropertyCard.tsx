@@ -213,29 +213,26 @@ function PropertyCard({
         </p>
       )}
 
-      {/* property type */}
-      {typeLine && (
-        <p
-          className={cn(
-            'font-medium text-black/80 dark:text-white/80 truncate',
-            isSmall ? 'text-xs' : 'text-sm'
-          )}
-        >
-          {typeLine}
-        </p>
-      )}
+      {/* property type — the line is kept (empty) when missing so the title
+          and the rows below line up across the cards of one grid row */}
+      <p
+        className={cn(
+          'font-medium text-black/80 dark:text-white/80 truncate',
+          isSmall ? 'text-xs' : 'text-sm'
+        )}
+      >
+        {typeLine || ' '}
+      </p>
 
-      {/* location */}
-      {displayLocation && (
-        <p
-          className={cn(
-            'font-normal text-black/50 dark:text-white/50 truncate',
-            isSmall ? 'text-xs' : 'text-sm'
-          )}
-        >
-          {displayLocation}
-        </p>
-      )}
+      {/* location — same */}
+      <p
+        className={cn(
+          'font-normal text-black/50 dark:text-white/50 truncate',
+          isSmall ? 'text-xs' : 'text-sm'
+        )}
+      >
+        {displayLocation || ' '}
+      </p>
 
       {/* property title – min-h reserves 2-line space for even card height */}
       {name && (
@@ -390,8 +387,13 @@ function PropertyCard({
           ) : (
             <>
               {topBlock}
-              {metaBlock}
-              {requestBlock}
+              {/* Pinned to the bottom when the card fills its grid cell, so the
+                  button sits on one line across the row even when a card has
+                  no rooms/area row. */}
+              <div className={cn(fillHeight && 'mt-auto')}>
+                {metaBlock}
+                {requestBlock}
+              </div>
             </>
           )}
         </div>

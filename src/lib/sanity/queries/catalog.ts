@@ -208,44 +208,8 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
   return { where, params };
 }
 
-const cachedFetchCatalogProperties = sanityCache(
-  async (filters: CatalogFilters): Promise<CatalogResult | null> => {
-  const client = getClient();
-  if (!client) return null;
-
-  const { sort = 'newest', page = 1, pageSize = 12 } = filters;
-
-  const safePage = Number.isFinite(page) && page > 0 ? page : 1;
-  const safePageSize =
-    Number.isFinite(pageSize) && pageSize > 0 && pageSize <= 48
-      ? pageSize
-      : 12;
-  const start = (safePage - 1) * safePageSize;
-  const end = start + safePageSize;
-
-  const { where, params } = buildCatalogWhereClause(filters);
-
-  // Numeric ranks: promoted vs not; tier (premium > top > sale); featuredOrder with missing last in tier.
-  const promotionOrder =
-    'select(promoted == true => 1, 0) desc, select(promotionType == "premium" => 3, promotionType == "top" => 2, promotionType == "sale" => 1, 0) desc, coalesce(featuredOrder, 999999) asc';
-  let order = `| order(${promotionOrder}, _createdAt desc)`;
-  if (sort === 'priceAsc') order = `| order(${promotionOrder}, price asc)`;
-  else if (sort === 'priceDesc') order = `| order(${promotionOrder}, price desc)`;
-  else if (sort === 'areaAsc') order = `| order(${promotionOrder}, area asc)`;
-  else if (sort === 'areaDesc') order = `| order(${promotionOrder}, area desc)`;
-  else if (sort === 'handoverAsc') {
-    // Soonest keys first. Year and quarter fold into one sortable number, and a
-    // missing handover sorts last rather than pretending to be the year 0 —
-    // a finished building has no handover date and belongs at the end here.
-    const handover = 'coalesce(handoverYear, 9999) * 10 + coalesce(handoverQuarter, 0)';
-    order = `| order(${promotionOrder}, ${handover} asc)`;
-  } else order = `| order(${promotionOrder}, _createdAt desc)`;
-
-  const baseFilter = `*${where ? `[${where}]` : ''}`;
-  const orderedSelector = `${baseFilter} ${order}`;
-
-  const countQuery = `count(${baseFilter})`;
-  const pageQuery = `${orderedSelector}[${start}...${end}] {
+/** What a catalogue card needs; shared by the page query and single-card lookups. */
+const CATALOG_CARD_PROJECTION = `{
     _id,
     _type,
     title,
@@ -292,6 +256,45 @@ const cachedFetchCatalogProperties = sanityCache(
     "galleryUrls": gallery[].asset->url
   }`;
 
+const cachedFetchCatalogProperties = sanityCache(
+  async (filters: CatalogFilters): Promise<CatalogResult | null> => {
+  const client = getClient();
+  if (!client) return null;
+
+  const { sort = 'newest', page = 1, pageSize = 12 } = filters;
+
+  const safePage = Number.isFinite(page) && page > 0 ? page : 1;
+  const safePageSize =
+    Number.isFinite(pageSize) && pageSize > 0 && pageSize <= 48
+      ? pageSize
+      : 12;
+  const start = (safePage - 1) * safePageSize;
+  const end = start + safePageSize;
+
+  const { where, params } = buildCatalogWhereClause(filters);
+
+  // Numeric ranks: promoted vs not; tier (premium > top > sale); featuredOrder with missing last in tier.
+  const promotionOrder =
+    'select(promoted == true => 1, 0) desc, select(promotionType == "premium" => 3, promotionType == "top" => 2, promotionType == "sale" => 1, 0) desc, coalesce(featuredOrder, 999999) asc';
+  let order = `| order(${promotionOrder}, _createdAt desc)`;
+  if (sort === 'priceAsc') order = `| order(${promotionOrder}, price asc)`;
+  else if (sort === 'priceDesc') order = `| order(${promotionOrder}, price desc)`;
+  else if (sort === 'areaAsc') order = `| order(${promotionOrder}, area asc)`;
+  else if (sort === 'areaDesc') order = `| order(${promotionOrder}, area desc)`;
+  else if (sort === 'handoverAsc') {
+    // Soonest keys first. Year and quarter fold into one sortable number, and a
+    // missing handover sorts last rather than pretending to be the year 0 —
+    // a finished building has no handover date and belongs at the end here.
+    const handover = 'coalesce(handoverYear, 9999) * 10 + coalesce(handoverQuarter, 0)';
+    order = `| order(${promotionOrder}, ${handover} asc)`;
+  } else order = `| order(${promotionOrder}, _createdAt desc)`;
+
+  const baseFilter = `*${where ? `[${where}]` : ''}`;
+  const orderedSelector = `${baseFilter} ${order}`;
+
+  const countQuery = `count(${baseFilter})`;
+  const pageQuery = `${orderedSelector}[${start}...${end}] ${CATALOG_CARD_PROJECTION}`;
+
   try {
     const [totalCount, items] = await Promise.all([
       client.fetch<number>(countQuery, params),
@@ -325,6 +328,30 @@ export async function fetchCatalogProperties(
 ): Promise<CatalogResult | null> {
   return cachedFetchCatalogProperties(filters);
 }
+
+/**
+ * One catalogue card by slug, for the map: a pin whose listing is not among
+ * the page's loaded cards opens a preview card instead of leaving the page.
+ */
+export const fetchCatalogCardBySlug = sanityCache(
+  async (slug: string): Promise<CatalogProperty | null> => {
+    const client = getClient();
+    if (!client) return null;
+    const { where, params } = buildCatalogWhereClause({});
+    try {
+      const row = await client.fetch<CatalogProperty | null>(
+        `*[${where} && slug.current == $cardSlug][0] ${CATALOG_CARD_PROJECTION}`,
+        { ...params, cardSlug: slug },
+      );
+      return row ?? null;
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogCardBySlug failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-card-by-slug'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property] },
+);
 
 export type CatalogMapPoint = {
   slug: string;

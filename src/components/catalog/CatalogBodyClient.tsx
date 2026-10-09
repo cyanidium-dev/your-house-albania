@@ -234,8 +234,16 @@ export function CatalogBodyClient({
           ? window.requestIdleCallback(done, { timeout: 2000 })
           : window.setTimeout(done, 500);
     };
-    if (document.readyState === "complete") settle();
+    // On wide screens the map is in the first view and is what the visitor
+    // looks at: waiting for every card photo to load (the window's load event,
+    // ~5.5 s on /en/albania/durres) left an empty grey box. Start it once the
+    // page has hydrated; phones keep waiting for load (see above).
+    const wide = window.matchMedia("(min-width: 1024px)").matches;
+    if (wide || document.readyState === "complete") settle();
     else window.addEventListener("load", settle, { once: true });
+    // Fetch the map library's code in parallel with the rest, so mounting
+    // does not start with a 270 kB download.
+    if (wide) void import("@/components/catalog/map/PropertiesMap");
     return () => {
       cancelled = true;
       window.removeEventListener("load", settle);
@@ -350,7 +358,8 @@ export function CatalogBodyClient({
   }
   const [mapPoints, setMapPoints] = React.useState<MapPoint[]>([])
   React.useEffect(() => {
-    if (!showMap) return
+    // Not gated on showMap: the points download while the map library loads,
+    // instead of after it.
     const controller = new AbortController()
     const params = new URLSearchParams(loadMoreQuery)
     params.delete('page')
@@ -364,25 +373,42 @@ export function CatalogBodyClient({
         // The page's own cards are still on the map.
       })
     return () => controller.abort()
-  }, [showMap, loadMoreQuery, locale])
+  }, [loadMoreQuery, locale])
 
   const mapPointHref = React.useMemo(() => new Map(mapPoints.map((p) => [p.slug, p.href])), [mapPoints])
+  // Cards fetched for pins beyond the loaded page (see handleActiveSlugFromMap).
+  const [extraCards, setExtraCards] = React.useState<Record<string, PropertyHomes>>({})
+  const previewPool = React.useMemo(() => [...allItems, ...Object.values(extraCards)], [allItems, extraCards])
 
   const handleActiveSlugFromMap = React.useCallback(
     (slug: string) => {
-      // A pin for a listing that is not among the loaded cards has no preview
-      // card to show: open the listing itself.
-      if (!allItems.some((p) => p.slug === slug)) {
-        const href = mapPointHref.get(slug);
-        if (href) window.location.assign(href);
-        return;
-      }
       // Marker click: select marker and show preview, but do NOT scroll list.
       shouldScrollToActiveRef.current = false;
+      if (allItems.some((p) => p.slug === slug) || extraCards[slug]) {
+        setActiveSlug(slug);
+        setPreviewSlug(slug);
+        return;
+      }
+      // A pin for a listing beyond the loaded page: fetch its card and show the
+      // same preview. Only if that fails does the click open the listing.
       setActiveSlug(slug);
-      setPreviewSlug(slug);
+      fetch(`/api/catalog/card?slug=${encodeURIComponent(slug)}&locale=${locale}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data: { item?: PropertyHomes | null } | null) => {
+          if (data?.item) {
+            setExtraCards((prev) => ({ ...prev, [slug]: data.item as PropertyHomes }));
+            setPreviewSlug(slug);
+          } else {
+            const href = mapPointHref.get(slug);
+            if (href) window.location.assign(href);
+          }
+        })
+        .catch(() => {
+          const href = mapPointHref.get(slug);
+          if (href) window.location.assign(href);
+        });
     },
-    [setActiveSlug, allItems, mapPointHref]
+    [setActiveSlug, allItems, extraCards, mapPointHref, locale]
   );
 
   const gridClass = cn(
@@ -404,7 +430,9 @@ export function CatalogBodyClient({
 
   React.useEffect(() => {
     if (!activeSlug) return
-    const activeItem = allItems.find((p) => p.slug === activeSlug)
+    // A pin beyond the loaded page is active while its card is being fetched.
+    if (mapPointHref.has(activeSlug) && !previewPool.some((p) => p.slug === activeSlug)) return
+    const activeItem = previewPool.find((p) => p.slug === activeSlug)
     if (!activeItem) {
       setActiveSlug(null)
       return
@@ -419,7 +447,7 @@ export function CatalogBodyClient({
       Number.isFinite(lng)
 
     if (!hasValidCoords) setActiveSlug(null)
-  }, [activeSlug, allItems])
+  }, [activeSlug, previewPool, mapPointHref])
 
   React.useEffect(() => {
     if (activeSlug == null) {
@@ -429,9 +457,9 @@ export function CatalogBodyClient({
 
   React.useEffect(() => {
     if (!previewSlug) return
-    const exists = allItems.some((p) => p.slug === previewSlug)
+    const exists = previewPool.some((p) => p.slug === previewSlug)
     if (!exists) setPreviewSlug(null)
-  }, [previewSlug, allItems])
+  }, [previewSlug, previewPool])
 
   React.useEffect(() => {
     const onPointerDown = (ev: PointerEvent) => {
@@ -549,8 +577,8 @@ export function CatalogBodyClient({
   }, [viewMode, layoutTier, allItems, banners]);
 
   const previewItem = React.useMemo(
-    () => (previewSlug ? allItems.find((p) => p.slug === previewSlug) ?? null : null),
-    [previewSlug, allItems]
+    () => (previewSlug ? previewPool.find((p) => p.slug === previewSlug) ?? null : null),
+    [previewSlug, previewPool]
   )
 
   const previewHref = React.useMemo(() => {
@@ -695,13 +723,16 @@ export function CatalogBodyClient({
             return (
               <div
                 key={entry.key}
-                className={cn("min-w-0", isActive && "rounded-2xl ring-2 ring-primary/40")}
+                className={cn("min-w-0", viewMode !== "list" && "h-full", isActive && "rounded-2xl ring-2 ring-primary/40")}
                 ref={(el) => {
                   if (!item.slug) return;
                   cardRefs.current[item.slug] = el;
                 }}
               >
-                <PropertyCard item={item} locale={locale} view={viewMode} />
+                {/* Every card in a row takes the row's height and keeps its
+                    button on the bottom edge, even when a listing has no price,
+                    no rooms or no area to show (partner projects often don't). */}
+                <PropertyCard item={item} locale={locale} view={viewMode} fillHeight={viewMode !== "list"} />
               </div>
             );
           })}
