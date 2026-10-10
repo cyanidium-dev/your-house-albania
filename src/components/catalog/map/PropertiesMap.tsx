@@ -155,7 +155,7 @@ export function PropertiesMap({
     })
   }, [])
 
-  const validPoints = React.useMemo(() => {
+  const computedPoints = React.useMemo(() => {
     const selectedDeal = (selectedDealType || '').trim().toLowerCase()
 
 
@@ -197,6 +197,21 @@ export function PropertiesMap({
         pill: boolean
       }>
   }, [items, selectedDealType, currency, rates, locale, tDeal])
+
+  // Same content, same array: a re-render of the page around the map (the
+  // header, the filter bar, a translator function with a new identity) must
+  // not hand the map "new" points, which re-clustered every pin and re-fitted
+  // the camera, a visible flicker.
+  const pointsKeyRef = React.useRef('')
+  const pointsRef = React.useRef(computedPoints)
+  const validPoints = React.useMemo(() => {
+    const key = JSON.stringify(computedPoints)
+    if (key !== pointsKeyRef.current) {
+      pointsKeyRef.current = key
+      pointsRef.current = computedPoints
+    }
+    return pointsRef.current
+  }, [computedPoints])
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'development') {

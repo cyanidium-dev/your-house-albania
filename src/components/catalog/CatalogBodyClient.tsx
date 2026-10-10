@@ -163,6 +163,8 @@ function composeCatalogFlowItems(args: {
 const MAP_HIDDEN_STORAGE_KEY = "domlivo:catalog-map-hidden";
 /** Header height from md up (the filter bar's sticky offset). */
 const HEADER_OFFSET_PX = 84;
+/** The condensed filter pill with its bottom margin (md+), as it sits while scrolled. */
+const COMPACT_FILTER_BAR_PX = 72;
 
 /**
  * Client boundary: reads viewMode from context, renders filters (with getCurrentView)
@@ -232,18 +234,6 @@ export function CatalogBodyClient({
   // No results, no map: an empty country beside "nothing found" said nothing.
   const split = !mapHidden && pageItems.length > 0;
 
-  // The filter bar is sticky and its height changes (collapsed pill, open
-  // form); the map panel sticks right under it.
-  const filterBarRef = React.useRef<HTMLDivElement | null>(null);
-  const [filterBarHeight, setFilterBarHeight] = React.useState(72);
-  React.useEffect(() => {
-    const el = filterBarRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(() => setFilterBarHeight(el.offsetHeight));
-    ro.observe(el);
-    setFilterBarHeight(el.offsetHeight);
-    return () => ro.disconnect();
-  }, []);
 
   // maplibre-gl is 1 MB of script: parsing it before the visitor wants the
   // map cost 3.7 s of main thread on a phone (Lighthouse, 2026-09-30). The
@@ -653,15 +643,17 @@ export function CatalogBodyClient({
     return previewItem._href ?? `/${locale}/property/${previewItem.slug}`
   }, [previewItem, locale])
 
-  // The panel sticks under the header and the filter bar and fills the rest
-  // of the window; its size is set in CSS before the map loads (no shift).
-  const panelTop = HEADER_OFFSET_PX + filterBarHeight + 12;
+  // The panel sticks under the header and the compact filter pill and fills
+  // the rest of the window; its size is set in CSS before the map loads (no
+  // shift). A fixed offset, not the filter bar's live height: the bar animates
+  // between the pill and the full form, and following it resized the map on
+  // every frame of that animation, which flickered like a re-render.
+  const panelTop = HEADER_OFFSET_PX + COMPACT_FILTER_BAR_PX + 12;
 
   return (
     <>
       {/* Filters: sticky below fixed header (z-50); z-40 above property card overlays (z-30). Background lives on PropertySearchBar only — no second white shell. */}
       <div
-        ref={filterBarRef}
         className={cn(
           "sticky z-40 min-w-0 [contain:layout]",
           "top-[calc(env(safe-area-inset-top,0px)+72px)] md:top-[84px]"
