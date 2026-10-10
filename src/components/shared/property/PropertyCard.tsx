@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from 'react'
 import { useTranslations } from 'next-intl'
 import { PropertyHomes } from '@/types/propertyHomes'
 import Link from "@/components/shared/Link";
@@ -402,4 +403,12 @@ function PropertyCard({
   )
 }
 
-export default PropertyCard
+/**
+ * Memoised: a listing grid re-renders as a whole for things that do not touch
+ * its cards — the window width it reads after mount, the card under the
+ * pointer (which lights the card's pin on the map), the map's state. The
+ * cards' props are the same objects across those renders, so without this
+ * every one of the 24 cards rendered again on hydration and on every hover.
+ * The active currency still reaches them through its context.
+ */
+export default memo(PropertyCard)
