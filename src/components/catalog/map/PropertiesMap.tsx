@@ -23,6 +23,20 @@ const MODE_STORAGE_KEY = 'domlivo:map-mode'
 
 type MapMode = '2d' | '3d'
 
+/** Radius of the "somewhere around here" zone drawn for a picked approximate listing. */
+const APPROX_ZONE_M = 350
+
+function circlePolygon(lng: number, lat: number, metres: number, steps = 64): GeoJSON.Polygon {
+  const ring: number[][] = []
+  const dLat = metres / 111_320
+  const dLng = metres / (111_320 * Math.cos((lat * Math.PI) / 180))
+  for (let i = 0; i <= steps; i++) {
+    const a = (i / steps) * 2 * Math.PI
+    ring.push([lng + dLng * Math.cos(a), lat + dLat * Math.sin(a)])
+  }
+  return { type: 'Polygon', coordinates: [ring] }
+}
+
 function initialMapMode(): MapMode {
   if (typeof window === 'undefined') return '2d'
   try {
@@ -468,6 +482,28 @@ export function PropertiesMap({
         },
       })
 
+      // A picked approximate listing has no building; the zone it is in is
+      // drawn instead (see the selection effect).
+      map.addSource('approx-zone', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
+      map.addLayer(
+        {
+          id: 'approx-zone-fill',
+          type: 'fill',
+          source: 'approx-zone',
+          paint: { 'fill-color': LISTING_BUILDING_COLOR, 'fill-opacity': 0.12 },
+        },
+        'clusters'
+      )
+      map.addLayer(
+        {
+          id: 'approx-zone-line',
+          type: 'line',
+          source: 'approx-zone',
+          paint: { 'line-color': LISTING_BUILDING_COLOR, 'line-width': 1.5, 'line-dasharray': [2, 2] },
+        },
+        'clusters'
+      )
+
       // Buildings that hold a listing with an exact address, drawn over the
       // style's grey extrusions in the brand colour. The footprints come from
       // the tiles themselves (see the highlight effect below): an invisible
@@ -512,6 +548,9 @@ export function PropertiesMap({
       clearHtmlMarkers()
       map.remove()
       mapRef.current = null
+      // A remount (Fast Refresh, Strict Mode) builds a new map whose style
+      // has not loaded yet; effects must wait for its own 'load'.
+      setReady(false)
       if (resizeRafRef.current != null) {
         cancelAnimationFrame(resizeRafRef.current)
         resizeRafRef.current = null
@@ -762,6 +801,16 @@ export function PropertiesMap({
     if (prev && hasPrev) {
       map.setFeatureState({ source: 'properties', id: prev }, { selected: false })
     }
+
+    const zone = map.getSource('approx-zone') as maplibregl.GeoJSONSource | undefined
+    const activePoint = activeSlug ? validPoints.find((p) => p.slug === activeSlug) : undefined
+    zone?.setData({
+      type: 'FeatureCollection',
+      features:
+        activePoint?.approximate
+          ? [{ type: 'Feature', properties: {}, geometry: circlePolygon(activePoint.lng, activePoint.lat, APPROX_ZONE_M) }]
+          : [],
+    })
 
     if (activeSlug && hasActive) {
       map.setFeatureState({ source: 'properties', id: activeSlug }, { selected: true })
