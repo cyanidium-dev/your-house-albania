@@ -172,7 +172,9 @@
       "viewMode": "Вигляд карти",
       "mapButton": "Карта · {count}",
       "showMap": "Показати карту",
-      "hideMap": "Сховати карту"
+      "hideMap": "Сховати карту",
+      "openListing": "Відкрити об’єкт",
+      "approximateShort": "розташування приблизне: район, а не сам будинок"
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",

@@ -1,21 +1,19 @@
 "use client";
 
 import * as React from "react";
-import Link from "@/components/shared/Link";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { displayStatusLabel } from "@/lib/property/cardFormatters";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
-import { useCurrency } from "@/contexts/CurrencyContext";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+import { MapListingSheet } from "@/components/catalog/map/MapListingSheet";
 
 const PropertiesMap = dynamic(
   () =>
@@ -182,9 +180,6 @@ export function CatalogBodyClient({
   serverSearch = "",
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
-  const { formatFromEur } = useCurrency();
-  const tCard = useTranslations("Shared.propertyCard");
-  const tDealType = useTranslations("Shared.propertyDetail");
   const tMap = useTranslations("Shared.map");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
@@ -335,6 +330,26 @@ export function CatalogBodyClient({
     }
     setMapExpanded(false);
   }, []);
+
+  // The installed app's tab bar (components/pwa/AppTabBar) opens and closes
+  // this map in place rather than reloading the page: it reads the state from
+  // `data-catalog-map` on <html> and asks through a window event.
+  React.useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.catalogMap = mapExpanded ? "open" : "closed";
+    window.dispatchEvent(new CustomEvent("domlivo:catalog-map", { detail: { open: mapExpanded } }));
+  }, [mapExpanded]);
+  React.useEffect(() => {
+    const onRequest = (ev: Event) => {
+      const open = Boolean((ev as CustomEvent<{ open?: boolean }>).detail?.open);
+      handleMapExpandedChange(open);
+    };
+    window.addEventListener("domlivo:catalog-map-request", onRequest);
+    return () => {
+      window.removeEventListener("domlivo:catalog-map-request", onRequest);
+      delete document.documentElement.dataset.catalogMap;
+    };
+  }, [handleMapExpandedChange]);
 
   // ── "Show more" state (see PropertyPagination) ─────────────────────────
   const [allItems, setAllItems] = React.useState<PropertyHomes[]>(pageItems);
@@ -722,7 +737,9 @@ export function CatalogBodyClient({
               ref={mapCardRef}
               className={cn(
                 mapExpanded
-                  ? "fixed inset-0 z-[80] bg-white dark:bg-black pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]"
+                  ? // Above the installed app's tab bar, which stays usable; below
+                    // dialogs (z-60), so an enquiry from the map opens on top.
+                    "fixed inset-x-0 top-0 bottom-[var(--app-tabbar-offset,0px)] z-[55] bg-white dark:bg-black pt-[env(safe-area-inset-top,0px)] pb-[var(--app-bottom-inset,0px)]"
                   : "relative h-full"
               )}
             >
@@ -743,54 +760,19 @@ export function CatalogBodyClient({
               ) : (
                 <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
               )}
-              {previewItem && (
-                <div
-                  ref={previewRef}
-                  className={cn(
-                    "absolute z-20 rounded-xl border border-dark/10 dark:border-white/20 bg-white/95 dark:bg-black/90 shadow-lg backdrop-blur-sm overflow-visible p-0",
-                    mapExpanded
-                      ? "left-3 right-3 bottom-[calc(env(safe-area-inset-bottom,0px)+12px)] sm:left-1/2 sm:right-auto sm:w-[420px] sm:-translate-x-1/2"
-                      : "left-3 right-3 bottom-3"
-                  )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setPreviewSlug(null)}
-                    className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/95 dark:bg-black/85 border border-dark/15 dark:border-white/25 text-dark dark:text-white text-sm cursor-pointer shadow-md"
-                    aria-label={tCard('closePreview')}
-                  >
-                    ×
-                  </button>
-                  <Link href={previewHref} className="block p-3 pr-10">
-                    <div className="flex gap-3 items-start">
-                      <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0 bg-dark/5 dark:bg-white/10">
-                        {previewItem.images?.[0]?.src ? (
-                          <img
-                            src={previewItem.images[0].src}
-                            alt={previewItem.name || tCard('propertyFallback')}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : null}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs text-dark/60 dark:text-white/60 truncate">
-                          {previewItem.propertyType || displayStatusLabel(previewItem.status, tDealType) || tCard('propertyFallback')}
-                        </p>
-                        <p className="text-sm font-semibold text-dark dark:text-white truncate">
-                          {previewItem.price != null && Number.isFinite(previewItem.price)
-                            ? formatFromEur(previewItem.price)
-                            : previewItem.rate /* legacy fallback when price missing */}
-                        </p>
-                        <p className="text-sm text-dark dark:text-white truncate">{previewItem.name}</p>
-                        <p className="text-xs text-dark/60 dark:text-white/60 truncate">{previewItem.location}</p>
-                        <p className="text-[11px] text-dark/70 dark:text-white/70 mt-1">
-                          {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
+              {previewItem ? (
+                // `contents`: the ref only marks "inside the preview" for the
+                // outside-tap handler; the sheet positions itself.
+                <div ref={previewRef} className="contents">
+                  <MapListingSheet
+                    item={previewItem}
+                    href={previewHref}
+                    locale={locale}
+                    variant={mapExpanded ? "sheet" : "panel"}
+                    onClose={() => setPreviewSlug(null)}
+                  />
                 </div>
-              )}
+              ) : null}
             </div>
           </aside>
         </div>
@@ -806,7 +788,7 @@ export function CatalogBodyClient({
             "fixed left-1/2 z-[45] inline-flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-dark px-5 text-sm font-semibold text-white shadow-lg hover:bg-primary dark:bg-white dark:text-dark",
             // Above the listing contact bar on phones (it pads the page by its
             // own height) and the installed app's tab bar.
-            "bottom-[calc(max(env(safe-area-inset-bottom,0px),var(--mobile-sticky-bar-height,0px))+var(--app-tabbar-offset,0px)+12px)]",
+            "bottom-[calc(var(--app-tabbar-offset,0px)+max(var(--app-bottom-inset,0px),var(--mobile-sticky-bar-height,0px))+12px)]",
             split && "lg:hidden"
           )}
         >

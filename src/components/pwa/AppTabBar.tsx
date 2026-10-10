@@ -123,6 +123,12 @@ export default function AppTabBar({ locale, aiSearchEnabled }: { locale: string;
   useEffect(() => {
     setMapView(new URLSearchParams(window.location.search).get("view") === "map");
   }, [pathname]);
+  // The catalogue's full-screen map reports its state (CatalogBodyClient).
+  useEffect(() => {
+    const onMap = (ev: Event) => setMapView(Boolean((ev as CustomEvent<{ open?: boolean }>).detail?.open));
+    window.addEventListener("domlivo:catalog-map", onMap);
+    return () => window.removeEventListener("domlivo:catalog-map", onMap);
+  }, []);
 
   // iOS home-screen apps that only report `navigator.standalone` do not match
   // the CSS media query; this attribute reserves the bar's room for them.
@@ -197,6 +203,22 @@ export default function AppTabBar({ locale, aiSearchEnabled }: { locale: string;
             <li key={tab.key} className="min-w-0">
               <Link
                 href={tab.href}
+                onClick={(ev) => {
+                  // On the catalogue page itself, Map and Search open and close
+                  // its map in place: a navigation to the same page would not.
+                  if (tab.key !== "map" && tab.key !== "search") return;
+                  const state = document.documentElement.dataset.catalogMap;
+                  if (!state) return;
+                  const target = new URL(tab.href, window.location.href);
+                  if (target.pathname !== window.location.pathname) return;
+                  const open = tab.key === "map";
+                  if (open === (state === "open")) {
+                    ev.preventDefault();
+                    return;
+                  }
+                  ev.preventDefault();
+                  window.dispatchEvent(new CustomEvent("domlivo:catalog-map-request", { detail: { open } }));
+                }}
                 aria-current={tab.active ? "page" : undefined}
                 aria-label={tab.key === "favorites" && count > 0 ? tHeader("favoritesCount", { count }) : undefined}
                 className={cn(

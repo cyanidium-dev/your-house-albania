@@ -172,7 +172,9 @@
       "viewMode": "Pamja e hartës",
       "mapButton": "Harta · {count}",
       "showMap": "Shfaq hartën",
-      "hideMap": "Fshih hartën"
+      "hideMap": "Fshih hartën",
+      "openListing": "Shiko pronën",
+      "approximateShort": "vendndodhje e përafërt: zona, jo vetë ndërtesa"
     },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",

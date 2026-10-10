@@ -33,6 +33,7 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
   footer: 'подвал сайта',
   property: 'страница объекта',
   'property-card': 'карточка объекта в списке',
+  map: 'окно объекта на карте',
   catalog: 'каталог',
   agent: 'блок агента',
   'quick-contact': 'плавающая кнопка связи',

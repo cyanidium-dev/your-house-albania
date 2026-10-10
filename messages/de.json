@@ -172,7 +172,9 @@
       "viewMode": "Kartenansicht",
       "mapButton": "Karte · {count}",
       "showMap": "Karte anzeigen",
-      "hideMap": "Karte ausblenden"
+      "hideMap": "Karte ausblenden",
+      "openListing": "Inserat öffnen",
+      "approximateShort": "ungefähre Lage: die Gegend, nicht das Gebäude"
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",

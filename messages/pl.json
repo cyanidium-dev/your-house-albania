@@ -161,7 +161,9 @@
       "viewMode": "Widok mapy",
       "mapButton": "Mapa · {count}",
       "showMap": "Pokaż mapę",
-      "hideMap": "Ukryj mapę"
+      "hideMap": "Ukryj mapę",
+      "openListing": "Zobacz ofertę",
+      "approximateShort": "lokalizacja przybliżona: okolica, a nie sam budynek"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",

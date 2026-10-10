@@ -683,7 +683,8 @@ export function PropertiesMap({
     scheduleMapResize()
     if (!expanded || !onExpandedChange) return
     const onKey = (ev: KeyboardEvent) => {
-      if (ev.key === 'Escape') onExpandedChange(false)
+      // Escape in an enquiry dialog opened from the map closes the dialog only.
+      if (ev.key === 'Escape' && !document.documentElement.dataset.contactModal) onExpandedChange(false)
     }
     const prevOverflow = document.documentElement.style.overflow
     document.documentElement.style.overflow = 'hidden'
@@ -767,8 +768,15 @@ export function PropertiesMap({
 
       const active = validPoints.find((p) => p.slug === activeSlug)
       if (active) {
-          // Ensure the selected point becomes unclustered and clickable.
-          map.easeTo({ center: [active.lng, active.lat], zoom: 15, duration: 450 })
+          // Close enough for the point to leave its cluster, never further out
+          // than the visitor already is; and centred in the upper part of the
+          // map, since the listing window covers the lower part.
+          map.easeTo({
+            center: [active.lng, active.lat],
+            zoom: Math.max(map.getZoom(), 15),
+            offset: [0, -Math.round(map.getContainer().clientHeight * 0.22)],
+            duration: 450,
+          })
       }
     }
 

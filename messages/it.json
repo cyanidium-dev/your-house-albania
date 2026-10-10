@@ -172,7 +172,9 @@
       "viewMode": "Vista della mappa",
       "mapButton": "Mappa · {count}",
       "showMap": "Mostra la mappa",
-      "hideMap": "Nascondi la mappa"
+      "hideMap": "Nascondi la mappa",
+      "openListing": "Apri l’annuncio",
+      "approximateShort": "posizione approssimativa: la zona, non l’edificio"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",

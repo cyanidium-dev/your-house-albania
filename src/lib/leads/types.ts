@@ -39,6 +39,8 @@ export const LEAD_PLACEMENTS = [
   'footer',
   'property',
   'property-card',
+  // The listing window over the catalogue map.
+  'map',
   'catalog',
   'agent',
   'quick-contact',

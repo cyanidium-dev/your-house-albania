@@ -172,7 +172,9 @@
       "viewMode": "Map view",
       "mapButton": "Map · {count}",
       "showMap": "Show map",
-      "hideMap": "Hide map"
+      "hideMap": "Hide map",
+      "openListing": "View listing",
+      "approximateShort": "approximate location, the area rather than the building"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",
