@@ -37,8 +37,15 @@ export function PropertyCardMeta({
     'flex flex-col font-normal text-black dark:text-white',
     isList && 'gap-0.5 text-xs',
     isSmall && !isList && 'gap-0.5 text-[11px]',
-    !isSmall && !isList && 'gap-1.5 text-sm mobile:text-base'
+    // A step down from lg, where large cards sit two to a row beside the map
+    // or four to a row without it, about 320 px wide: "2 Bedrooms" and
+    // "Plot: not specified" were cut to "2 Bedr…" at 16 px.
+    !isSmall && !isList && 'gap-1.5 text-sm mobile:text-base lg:text-sm'
   )
+  // Large cards wrap a long label onto a second line instead of cutting it.
+  const labelClass = !isSmall && !isList
+    ? 'max-w-full text-center leading-tight [overflow-wrap:anywhere]'
+    : 'truncate max-w-full'
 
   return (
     <div
@@ -59,7 +66,7 @@ export function PropertyCardMeta({
             )}
           >
             <SpriteIcon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
-            <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
+            <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
               {t('bedroomsCount', { count: beds })}
             </span>
           </div>
@@ -72,7 +79,7 @@ export function PropertyCardMeta({
             )}
           >
             <SpriteIcon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
-            <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
+            <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
               {t('bathroomsCount', { count: baths })}
             </span>
           </div>
@@ -89,7 +96,7 @@ export function PropertyCardMeta({
           )}
         >
           <SpriteIcon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
-          <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
+          <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
             {area}{t('areaUnit')}
           </span>
         </div>
@@ -105,7 +112,7 @@ export function PropertyCardMeta({
           title={plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
         >
           <SpriteIcon icon="solar:map-linear" width={iconSize} height={iconSize} className="shrink-0" />
-          <span className={cn('truncate max-w-full', isSmall && !isList && 'min-w-0')}>
+          <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
             {plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
           </span>
         </div>

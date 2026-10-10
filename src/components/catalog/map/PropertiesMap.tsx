@@ -298,6 +298,7 @@ export function PropertiesMap({
   )
 
   const highlightRef = React.useRef<string | null>(null)
+  const hoverMarkerRef = React.useRef<maplibregl.Marker | null>(null)
 
   const syncHtmlMarkers = React.useCallback(() => {
     const map = mapRef.current
@@ -991,7 +992,27 @@ export function PropertiesMap({
       if (marker) styleMarkerElement(marker.getElement() as HTMLDivElement, activeSlug === slug, point.approximate, on)
       if (!point.pill) map.setFeatureState({ source: 'properties', id: slug }, { hover: on })
     }
+
+    // At the opening zoom every pin is inside a cluster and a hovered card lit
+    // nothing. Show the hovered listing as a temporary pin over its cluster.
+    hoverMarkerRef.current?.remove()
+    hoverMarkerRef.current = null
+    const point = known(next)
+    if (next && point && !htmlMarkersRef.current.has(next)) {
+      const el = document.createElement('div')
+      el.textContent = point.markerLabel ? (point.approximate ? `≈ ${point.markerLabel}` : point.markerLabel) : '•'
+      styleMarkerElement(el, false, point.approximate, true)
+      el.style.pointerEvents = 'none'
+      el.style.zIndex = '3'
+      hoverMarkerRef.current = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([point.lng, point.lat]).addTo(map)
+    }
   }, [highlightSlug, ready, validPoints, activeSlug, styleMarkerElement])
+  React.useEffect(
+    () => () => {
+      hoverMarkerRef.current?.remove()
+    },
+    []
+  )
 
   return (
     <div
