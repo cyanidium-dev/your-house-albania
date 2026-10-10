@@ -1,19 +1,31 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import dynamic from 'next/dynamic'
 import { SpriteIcon } from "@/components/shared/SpriteIcon";
 import Image from 'next/image'
 import Link from "@/components/shared/Link";
 import { useTranslations } from 'next-intl'
 import { FavoriteButton } from '@/components/shared/FavoriteButton'
-import { ImageLightbox } from '@/components/shared/ImageLightbox'
+import { useNearViewport } from '@/hooks/useNearViewport'
 import { PropertyContactButton } from '@/components/property/PropertyContactModal'
 import { cn } from '@/lib/utils'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import type { ViewMode } from '@/lib/catalog/viewMode'
 import { PropertyBadges } from './PropertyBadges'
 import { withImageSeoName } from '@/lib/images/propertyImageUrl'
+
+/**
+ * The full-screen viewer is code for a tap that most visits never make; it
+ * loads when the expand button is pointed at, touched or focused, and the
+ * click then finds it ready.
+ */
+const loadLightbox = () => import('@/components/shared/ImageLightbox')
+const ImageLightbox = dynamic(() => loadLightbox().then((m) => m.ImageLightbox), { ssr: false })
+const preloadLightbox = () => {
+  void loadLightbox()
+}
 
 export function PropertyCardGallery({
   images,
@@ -84,13 +96,21 @@ export function PropertyCardGallery({
    * A card carousel used to put every photograph of the listing in the markup,
    * and a listing page holds two dozen cards: 283 `<img>` tags, 422 KB of
    * `srcset` strings — over half the HTML document, for slides nobody had
-   * swiped to. The slide boxes still all render, so the translateX maths is
-   * unchanged; only the photograph waits until it is a swipe away.
+   * swiped to. Only the photographs a swipe away are mounted (`slideTrack`
+   * below shows how the strip still lines up).
+   *
+   * The next slide's photograph waits, too, until the card is near the
+   * screen. Server-rendered, it sat in every card, and the browser's lazy
+   * loading fetched it for the first half-dozen cards straight away —
+   * photographs nobody sees until they swipe, downloading alongside the
+   * page's hero (Lighthouse mobile, 2026-10-10). The card now arrives with
+   * its cover alone and adds the neighbour as it scrolls within reach.
    */
-  const isSlideNearby = (idx: number) => Math.abs(idx - imageIndex) <= 1
+  const rootRef = useRef<HTMLDivElement>(null)
+  const nearViewport = useNearViewport(rootRef, hasMultipleImages)
+  const isSlideNearby = (idx: number) =>
+    idx === imageIndex || (nearViewport && Math.abs(idx - imageIndex) <= 1)
   const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
 
   /**
    * The whole card is a link, and on `fullClickable` cards an invisible anchor
@@ -181,8 +201,49 @@ export function PropertyCardGallery({
     e.preventDefault()
   }
 
+  const imageSizes = isList
+    ? '208px'
+    : isSmall
+      ? '(min-width: 640px) 50vw, 280px'
+      : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+
+  /**
+   * The strip of photographs. Only the slides that hold a photograph are in
+   * the DOM, each placed at its own offset (`left: idx × 100%`), so moving the
+   * strip by `-imageIndex × 100%` shows the same slide the old row of
+   * full-width flex boxes did. That row kept an empty box for every photo of
+   * the listing — ten or so per card, two hundred elements on a listing page
+   * that the browser laid out and React hydrated for nothing.
+   */
+  const slideTrack =
+    displayImages.length > 0 ? (
+      <div className="relative h-full w-full overflow-hidden">
+        <div
+          className={cn(
+            'relative h-full w-full',
+            !singleImage && isDragging && 'transition-none',
+            !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
+          )}
+          style={
+            singleImage
+              ? undefined
+              : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
+          }
+        >
+          {displayImages.map((img, idx) =>
+            isSlideNearby(idx) ? (
+              <div key={idx} className="absolute inset-y-0 w-full" style={{ left: `${idx * 100}%` }}>
+                <Image src={img.src} alt={imageAlt} fill sizes={imageSizes} className={imageClass} />
+              </div>
+            ) : null
+          )}
+        </div>
+      </div>
+    ) : null
+
   return (
     <div
+      ref={rootRef}
       className={cn(imageWrapper, 'relative')}
       onTouchStart={singleImage ? undefined : handleTouchStart}
       onTouchMove={singleImage ? undefined : handleTouchMove}
@@ -251,6 +312,9 @@ export function PropertyCardGallery({
           <button
             type="button"
             onClick={openLightbox}
+            onPointerEnter={preloadLightbox}
+            onTouchStart={preloadLightbox}
+            onFocus={preloadLightbox}
             aria-label={tLightbox('viewImageFullscreen')}
             className={cn(
               'absolute z-30 inline-flex items-center justify-center rounded-full',
@@ -285,76 +349,17 @@ export function PropertyCardGallery({
         )}
       </div>
       {fullClickable ? (
-        <div className={cn('block group/image h-full w-full')}>
-          {displayImages.length > 0 && (
-            <div className="relative h-full w-full overflow-hidden">
-              <div
-                className={cn(
-                  'flex h-full w-full',
-                  !singleImage && isDragging && 'transition-none',
-                  !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
-                )}
-                style={
-                  singleImage
-                    ? undefined
-                    : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
-                }
-              >
-                {displayImages.map((img, idx) => (
-                  <div key={idx} className="relative h-full w-full shrink-0">
-                    {isSlideNearby(idx) ? (
-                      <Image
-                        src={img.src}
-                        alt={imageAlt}
-                        fill
-                        sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
-                        className={imageClass}
-                      />
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <div className={cn('block group/image h-full w-full')}>{slideTrack}</div>
       ) : (
         <Link href={href} className={cn('block group/image h-full w-full')}>
-        {displayImages.length > 0 && (
-          <div className="relative h-full w-full overflow-hidden">
-            <div
-              className={cn(
-                'flex h-full w-full',
-                !singleImage && isDragging && 'transition-none',
-                !singleImage && !isDragging && 'transition-transform duration-300 ease-out'
-              )}
-              style={
-                singleImage
-                  ? undefined
-                  : { transform: `translateX(calc(${-imageIndex * 100}% + ${slideOffset}px))` }
-              }
-            >
-              {displayImages.map((img, idx) => (
-                <div key={idx} className="relative h-full w-full shrink-0">
-                  {isSlideNearby(idx) ? (
-                    <Image
-                      src={img.src}
-                      alt={imageAlt}
-                      fill
-                      sizes={isList ? '208px' : isSmall ? '(min-width: 640px) 50vw, 280px' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
-                      className={imageClass}
-                    />
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          {slideTrack}
         </Link>
       )}
       {/* Portalled to the body: the card wrapper clips its overflow, and a card
           can sit inside a scroller or a future transformed carousel, either of
-          which would trap a fixed-position overlay rendered in place. */}
-      {mounted && lightboxOpen
+          which would trap a fixed-position overlay rendered in place. Only a
+          click opens it, so `document` is always there by then. */}
+      {lightboxOpen
         ? createPortal(
             <ImageLightbox
               images={imageList.map((img) => ({ url: img.src, alt: imageAlt }))}
