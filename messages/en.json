@@ -1053,5 +1053,21 @@
   },
   "Legal": {
     "operatorNotice": "This site is operated by the Domlivo team. You can reach us at {email}, on {whatsapp} or on {telegram}."
+  },
+  "Pwa": {
+    "installTitle": "Install the Domlivo app",
+    "installText": "Saved listings, the map and the assistant one tap from your home screen. Full screen, no browser bar.",
+    "installAction": "Install",
+    "installNotNow": "Not now",
+    "installClose": "Close",
+    "installIos": "Tap <share></share> Share in Safari, then “Add to Home Screen”.",
+    "installIosShare": "Share",
+    "menuInstall": "Install the app",
+    "tabsLabel": "App navigation",
+    "tabSearch": "Search",
+    "tabMap": "Map",
+    "tabFavorites": "Favorites",
+    "tabAssistant": "Assistant",
+    "tabContact": "Contact"
   }
 }

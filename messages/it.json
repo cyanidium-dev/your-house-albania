@@ -1053,5 +1053,21 @@
   },
   "Legal": {
     "operatorNotice": "Questo sito è gestito dal team di Domlivo. Puoi scriverci a {email}, su {whatsapp} o su {telegram}."
+  },
+  "Pwa": {
+    "installTitle": "Installa l’app Domlivo",
+    "installText": "Immobili salvati, mappa e assistente a un tocco dalla schermata Home. A schermo intero, senza la barra del browser.",
+    "installAction": "Installa",
+    "installNotNow": "Non ora",
+    "installClose": "Chiudi",
+    "installIos": "Tocca <share></share> Condividi in Safari, poi “Aggiungi alla schermata Home”.",
+    "installIosShare": "Condividi",
+    "menuInstall": "Installa l’app",
+    "tabsLabel": "Navigazione dell’app",
+    "tabSearch": "Cerca",
+    "tabMap": "Mappa",
+    "tabFavorites": "Preferiti",
+    "tabAssistant": "Assistente",
+    "tabContact": "Contatti"
   }
 }

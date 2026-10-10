@@ -28,6 +28,7 @@ export const CLIENT_MESSAGE_NAMESPACES = [
   "Home",
   "Landing",
   "PropertyMarketPosition",
+  "Pwa",
   "QuickContact",
   "QuickLead",
   "Register",

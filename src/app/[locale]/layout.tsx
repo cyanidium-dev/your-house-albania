@@ -1,5 +1,5 @@
 import { indexableRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
@@ -30,6 +30,9 @@ import { LeadTracker } from "@/components/analytics/LeadTracker";
 import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
 import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
 import { BUSINESS_TELEGRAM_URL, BUSINESS_WHATSAPP_URL } from "@/lib/contacts/businessContacts";
+import PwaRoot from "@/components/pwa/PwaRoot";
+import { PWA_EARLY_CAPTURE_SCRIPT } from "@/lib/pwa/earlyCapture";
+import { isAiSearchEnabled } from "@/lib/ai/config";
 // Hidden 2026-09-02 together with its mount below.
 // import { QuickContact } from "@/components/shared/QuickContact/QuickContact";
 
@@ -85,12 +88,23 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  // Home-screen app on iOS (the manifest covers everything else). The
+  // `default` status bar keeps the page below the clock: the header is white
+  // on most pages and a translucent bar would put the logo under the notch.
+  appleWebApp: {
+    capable: true,
+    title: SITE_NAME,
+    statusBarStyle: "default",
+  },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  viewportFit: "cover" as const,
+  viewportFit: "cover",
+  // The manifest's colour, so the installed app's status bar and task-switcher
+  // card match its icon.
+  themeColor: "#078660",
 };
 
 /** The six locales are the whole route space, so prerender all of them. */
@@ -178,6 +192,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${display.variable} ${sans.variable}`}>
       <body className="font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip">
+        {/* Holds Chromium's install event for the engagement-gated invitation;
+            see lib/pwa/earlyCapture. Must run before the event can fire. */}
+        <script dangerouslySetInnerHTML={{ __html: PWA_EARLY_CAPTURE_SCRIPT }} />
         <IconSprite />
         {analyticsEnabled && (
           <>
@@ -254,6 +271,9 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             initialCities={footerCities}
             initialCountrySlug={LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG}
           />
+          {/* Installed-app layer: service worker, install invitation, and the
+              bottom tab bar shown only in a standalone window. */}
+          <PwaRoot locale={locale} aiSearchEnabled={isAiSearchEnabled()} />
           {/*
             Floating contact widget hidden 2026-09-02: its channels are direct
             `tel:`/`mailto:`/messenger links, so every lead it produced left the

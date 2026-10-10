@@ -1053,5 +1053,21 @@
   },
   "Legal": {
     "operatorNotice": "Serwis prowadzi zespół Domlivo. Możesz napisać do nas na {email}, przez {whatsapp} lub {telegram}."
+  },
+  "Pwa": {
+    "installTitle": "Zainstaluj aplikację Domlivo",
+    "installText": "Zapisane oferty, mapa i asystent jednym dotknięciem z ekranu głównego. Na pełnym ekranie, bez paska przeglądarki.",
+    "installAction": "Zainstaluj",
+    "installNotNow": "Nie teraz",
+    "installClose": "Zamknij",
+    "installIos": "Stuknij <share></share> Udostępnij w Safari, a potem „Do ekranu początkowego”.",
+    "installIosShare": "Udostępnij",
+    "menuInstall": "Zainstaluj aplikację",
+    "tabsLabel": "Nawigacja aplikacji",
+    "tabSearch": "Szukaj",
+    "tabMap": "Mapa",
+    "tabFavorites": "Ulubione",
+    "tabAssistant": "Asystent",
+    "tabContact": "Kontakt"
   }
 }

@@ -15,6 +15,7 @@ import HeaderBurgerButton from './HeaderBurgerButton'
 import HeaderMobileDrawer from './HeaderMobileDrawer'
 import HeaderVisualState from './HeaderVisualState'
 import HeaderMobileController from './HeaderMobileController'
+import InstallMenuButton from '@/components/pwa/InstallMenuButton'
 import Image from 'next/image'
 import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
 import { catalogPath } from '@/lib/routes/catalog'
@@ -220,6 +221,8 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     >
                       {t.nav.addProperty}
                     </Link>
+                    {/* Only where installing works, and never in the app itself. */}
+                    <InstallMenuButton onSelect={onClose} />
                   </div>
                 </div>
               </HeaderMobileDrawer>

@@ -12,7 +12,7 @@
  */
 
 export const bannerClass =
-  "fixed inset-x-0 bottom-0 z-[90] border-t border-dark/10 bg-white/95 backdrop-blur-md px-4 sm:px-8 lg:px-12 py-3 sm:py-5 dark:border-white/10 dark:bg-dark/95";
+  "fixed inset-x-0 bottom-[var(--app-tabbar-offset,0px)] z-[90] border-t border-dark/10 bg-white/95 backdrop-blur-md px-4 sm:px-8 lg:px-12 py-3 sm:py-5 dark:border-white/10 dark:bg-dark/95";
 
 export const bannerInnerClass =
   "container mx-auto max-w-8xl flex flex-col gap-2.5 sm:gap-4 lg:flex-row lg:items-center lg:justify-between";
