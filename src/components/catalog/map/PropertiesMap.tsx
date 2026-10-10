@@ -25,6 +25,8 @@ type MapMode = '2d' | '3d'
 
 /** Radius of the "somewhere around here" zone drawn for a picked approximate listing. */
 const APPROX_ZONE_M = 350
+/** Radius of the pad drawn for an exact address with no building in the map data. */
+const EXACT_PAD_M = 9
 
 function circlePolygon(lng: number, lat: number, metres: number, steps = 64): GeoJSON.Polygon {
   const ring: number[][] = []
@@ -533,8 +535,13 @@ export function PropertiesMap({
             'fill-extrusion-color': LISTING_BUILDING_COLOR,
             'fill-extrusion-opacity': 0.85,
             'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
-            // A building with no height in OpenStreetMap still stands out.
-            'fill-extrusion-height': ['max', ['coalesce', ['get', 'render_height'], 0], 9],
+            // A building with no height in OpenStreetMap still stands out; the
+            // pad for an unmapped building stays low.
+            'fill-extrusion-height': [
+              'max',
+              ['coalesce', ['get', 'render_height'], 0],
+              ['case', ['==', ['get', 'render_height'], 3], 3, 9],
+            ],
           },
         },
         'clusters'
@@ -684,12 +691,26 @@ export function PropertiesMap({
         const bounds = map.getBounds()
         for (const p of exactPointsRef.current) {
           if (!bounds.contains([p.lng, p.lat])) continue
-          const hit = map.queryRenderedFeatures(map.project([p.lng, p.lat]), {
+          // Every building feature under the pin, not just the first: the
+          // first can be a merged block whose part under the pin is elsewhere.
+          const hits = map.queryRenderedFeatures(map.project([p.lng, p.lat]), {
             layers: ['listing-building-footprints'],
-          })[0]
-          if (!hit) continue
-          const geometry = buildingPolygonAt(hit.geometry, p.lng, p.lat)
-          if (!geometry) continue
+          })
+          let geometry: GeoJSON.Polygon | null = null
+          let props: Record<string, unknown> | null = null
+          for (const hit of hits) {
+            geometry = buildingPolygonAt(hit.geometry, p.lng, p.lat)
+            if (geometry) {
+              props = hit.properties ?? {}
+              break
+            }
+          }
+          // An exact address in a building OpenStreetMap does not have yet
+          // (most new builds): a small green pad on the spot instead.
+          if (!geometry) {
+            geometry = circlePolygon(p.lng, p.lat, EXACT_PAD_M, 24)
+            props = { render_height: 3, render_min_height: 0 }
+          }
           const key = JSON.stringify(geometry.coordinates[0])
           if (seen.has(key)) continue
           seen.add(key)
@@ -697,8 +718,8 @@ export function PropertiesMap({
             type: 'Feature',
             geometry,
             properties: {
-              render_height: hit.properties?.render_height,
-              render_min_height: hit.properties?.render_min_height,
+              render_height: props?.render_height,
+              render_min_height: props?.render_min_height,
             },
           })
         }
