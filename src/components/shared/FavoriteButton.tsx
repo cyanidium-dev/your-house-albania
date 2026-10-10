@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Icon } from "@/components/shared/Icon";
-import { useFavorites } from "@/hooks/useFavorites";
+import { SpriteIcon } from "@/components/shared/SpriteIcon";
+import { useFavoriteSlugs } from "@/hooks/useFavorites";
+import { toggleFavorite } from "@/lib/favorites";
 import { FavoritesFlyAnimation } from "@/components/shared/FavoritesFlyAnimation";
 import { cn } from "@/lib/utils";
 
@@ -19,8 +20,10 @@ const ANIMATION_DURATION_MS = 800;
 
 export function FavoriteButton({ slug, name, variant = "overlay", size = "default", imageUrl, className }: Props) {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const { isFavorite, toggle, mounted } = useFavorites();
-  const active = mounted && isFavorite(slug);
+  // Read from the shared store: a card's heart renders once on hydration and
+  // again only if this visitor has saved something (see useFavoriteSlugs).
+  const active = useFavoriteSlugs().includes(slug);
+  const toggle = toggleFavorite;
 
   const [animationKey, setAnimationKey] = useState<number | null>(null);
   const [startPos, setStartPos] = useState<{ top: number; left: number } | null>(null);
@@ -95,7 +98,9 @@ export function FavoriteButton({ slug, name, variant = "overlay", size = "defaul
         className
       )}
     >
-      <Icon
+      {/* From the page sprite: two dozen cards each carried the full heart
+          path and an Iconify component to hydrate. */}
+      <SpriteIcon
         icon={active ? "ph:heart-fill" : "ph:heart"}
         width={iconSize}
         height={iconSize}

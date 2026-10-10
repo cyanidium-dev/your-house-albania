@@ -31,23 +31,54 @@ type Props = {
  * "Get in touch" CTA on the property page: opens a contact modal that posts to
  * `/api/contact-agent` with `submissionKind: 'agent'` and the property context,
  * delivered to the team's Telegram chat. Success is shown inline.
+ *
+ * The button is all that renders until the first click. Every property card
+ * carries one, and the form's dozen hooks and its post-mount re-render used to
+ * run for each of the 24 cards while a phone hydrated the listing page. The
+ * dialog mounts on first open and then stays mounted (rendering nothing while
+ * closed), so a half-typed enquiry survives closing and reopening as before.
  */
-export function PropertyContactButton({
+export function PropertyContactButton({ label, ariaLabel, className, ...dialogProps }: Props) {
+  const [open, setOpen] = React.useState(false)
+  const [opened, setOpened] = React.useState(false)
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          setOpened(true)
+          setOpen(true)
+        }}
+        aria-label={ariaLabel}
+        className={className}
+      >
+        {label}
+      </button>
+      {opened ? <PropertyContactDialog {...dialogProps} open={open} setOpen={setOpen} /> : null}
+    </>
+  )
+}
+
+type DialogProps = Omit<Props, 'label' | 'ariaLabel' | 'className'> & {
+  open: boolean
+  setOpen: (open: boolean) => void
+}
+
+function PropertyContactDialog({
   locale,
   propertySlug,
   propertyTitle,
   agentSlug,
   agentName,
-  label,
-  ariaLabel,
-  className,
   placement = 'property',
   analytics,
-}: Props) {
+  open,
+  setOpen,
+}: DialogProps) {
   const t = useTranslations('Contacts')
   const tp = useTranslations('Shared.propertyDetail')
 
-  const [open, setOpen] = React.useState(false)
   const [name, setName] = React.useState('')
   const [phone, setPhone] = React.useState('')
   const [email, setEmail] = React.useState('')
@@ -55,8 +86,6 @@ export function PropertyContactButton({
   /** Honeypot — leave empty; must be submitted for server checks. */
   const [companyWebsite, setCompanyWebsite] = React.useState('')
   const [submitting, setSubmitting] = React.useState(false)
-  const [mounted, setMounted] = React.useState(false)
-  React.useEffect(() => setMounted(true), [])
   const [error, setError] = React.useState<string | null>(null)
   const [sent, setSent] = React.useState(false)
 
@@ -66,7 +95,7 @@ export function PropertyContactButton({
     if (submitting) return
     setOpen(false)
     setError(null)
-  }, [submitting])
+  }, [submitting, setOpen])
 
   React.useEffect(() => {
     if (!open) return
@@ -130,18 +159,12 @@ export function PropertyContactButton({
   const textareaClass =
     'min-h-[100px] w-full rounded-2xl border border-black/10 bg-transparent px-6 py-3.5 outline-primary focus:outline dark:border-white/10'
 
-  return (
-    <>
-      <button type="button" onClick={() => setOpen(true)} aria-label={ariaLabel} className={className}>
-        {label}
-      </button>
-
-      {/* Portalled to the body, and above the header's z-50. On a listing card
-          the dialog would otherwise render inside the results container, whose
-          own stacking context traps it under the sticky filter bar however high
-          its z-index climbs. */}
-      {open && mounted ? (
-        createPortal(
+  // Portalled to the body, and above the header's z-50. On a listing card the
+  // dialog would otherwise render inside the results container, whose own
+  // stacking context traps it under the sticky filter bar however high its
+  // z-index climbs. Only ever mounted after a click, so `document` exists.
+  return open
+    ? createPortal(
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center p-4"
           role="dialog"
@@ -253,8 +276,6 @@ export function PropertyContactButton({
           </div>
         </div>,
         document.body,
-        )
-      ) : null}
-    </>
-  )
+      )
+    : null
 }

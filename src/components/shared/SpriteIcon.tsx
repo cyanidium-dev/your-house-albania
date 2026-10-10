@@ -1,7 +1,8 @@
 import type { SVGProps } from "react";
 
 import { Icon } from "@/components/shared/Icon";
-import { SPRITE_ICONS, spriteSymbolId } from "@/lib/icons/sprite";
+import { spriteSymbolId } from "@/lib/icons/sprite";
+import { SPRITE_VIEWBOXES } from "@/lib/icons/spriteViewBoxes";
 
 type SpriteIconProps = Omit<SVGProps<SVGSVGElement>, "width" | "height"> & {
   icon: string;
@@ -21,15 +22,17 @@ type SpriteIconProps = Omit<SVGProps<SVGSVGElement>, "width" | "height"> & {
  * work for its icons.
  */
 export function SpriteIcon({ icon, width = 24, height = 24, className, ...rest }: SpriteIconProps) {
-  const data = SPRITE_ICONS[icon];
-  if (!data) return <Icon icon={icon} width={width} height={height} className={className} />;
+  // The viewBox map rather than SPRITE_ICONS: this component ships inside the
+  // card's client bundle, and the symbol bodies belong to the server sprite.
+  const viewBox = SPRITE_VIEWBOXES[icon];
+  if (!viewBox) return <Icon icon={icon} width={width} height={height} className={className} />;
   return (
     <svg
       aria-hidden="true"
       role="img"
       width={width}
       height={height}
-      viewBox={`${data.left} ${data.top} ${data.width} ${data.height}`}
+      viewBox={viewBox}
       className={className}
       {...rest}
     >

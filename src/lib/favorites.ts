@@ -3,7 +3,8 @@
  * Storage format: JSON array of property slugs.
  */
 
-const STORAGE_KEY = "favorites";
+export const FAVORITES_STORAGE_KEY = "favorites";
+const STORAGE_KEY = FAVORITES_STORAGE_KEY;
 
 export function getFavorites(): string[] {
   if (typeof window === "undefined") return [];
