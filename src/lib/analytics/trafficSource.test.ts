@@ -8,6 +8,13 @@ describe('classifyTraffic', () => {
     expect(classifyTraffic(base)).toEqual({ source: '(direct)', medium: '(none)', channel: 'direct' })
   })
 
+  it('gives a launch of the installed app its own source', () => {
+    expect(classifyTraffic({ ...base, appLaunch: 'pwa' })).toEqual({ source: 'pwa', medium: 'app', channel: 'direct' })
+    expect(classifyTraffic({ ...base, appLaunch: 'pwa-shortcut' }).source).toBe('pwa-shortcut')
+    // A campaign link opened inside the app still names its campaign.
+    expect(classifyTraffic({ ...base, appLaunch: 'pwa', utmSource: 'newsletter', utmMedium: 'email' }).channel).toBe('email')
+  })
+
   it('treats our own host as direct, not a referral', () => {
     expect(classifyTraffic({ ...base, referrerHost: 'domlivo.com' }).channel).toBe('direct')
     expect(classifyTraffic({ ...base, referrerHost: 'www.domlivo.com' }).channel).toBe('direct')

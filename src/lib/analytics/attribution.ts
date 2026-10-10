@@ -154,6 +154,7 @@ function touchFromCurrentUrl(now: number): TouchPoint {
   const utmContent = cap(params.get('utm_content'))
   const utmTerm = cap(params.get('utm_term'))
   const hasGclid = params.has('gclid')
+  const sourceParam = params.get('source')
   const traffic = classifyTraffic({
     referrerHost,
     selfHost: window.location.host,
@@ -161,6 +162,7 @@ function touchFromCurrentUrl(now: number): TouchPoint {
     utmMedium,
     utmCampaign,
     hasGclid,
+    appLaunch: sourceParam === 'pwa' || sourceParam === 'pwa-shortcut' ? sourceParam : undefined,
   })
 
   const host = normalizeHost(referrerHost)

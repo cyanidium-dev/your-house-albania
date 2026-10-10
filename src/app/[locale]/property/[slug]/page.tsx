@@ -640,7 +640,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 room at the end of the document — see MobileStickyBar. */}
             <MobileStickyBar placement="property" propertySlug={keySlug} label={tContactBar('barLabel')}>
               <div className='flex items-center gap-2 px-4 py-3 bg-primary/50'
-                style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}>
+                style={{ paddingBottom: 'max(0.75rem, var(--app-bottom-inset, env(safe-area-inset-bottom, 0px)))' }}>
                 <div className="min-w-0 flex-1">
                   <h4 className="text-dark dark:text-white text-lg font-semibold leading-tight truncate">
                     <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />

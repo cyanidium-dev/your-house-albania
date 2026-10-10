@@ -107,6 +107,25 @@ export type AnalyticsEvent =
       beds?: string
       amenities_count?: number
     }
+  /**
+   * A page load inside the installed app, once per app session. `source` is
+   * `pwa` so Clarity tags the recording; `entry` says how it was opened.
+   */
+  | {
+      event: 'pwa_launch'
+      source: 'pwa'
+      display_mode: 'standalone' | 'ios-standalone'
+      entry: 'icon' | 'shortcut' | 'other'
+    }
+  /** The install invitation was shown, accepted or turned down. */
+  | {
+      event: 'pwa_install_prompt'
+      action: 'shown' | 'accepted' | 'dismissed'
+      platform: 'chromium' | 'ios'
+      trigger: 'favorite' | 'property_views' | 'time' | 'menu'
+    }
+  /** The browser reports the app was installed (`appinstalled`, Chromium only). */
+  | { event: 'pwa_installed' }
 
 /**
  * GTM keeps every key ever pushed in its data model, so a `property_slug` from

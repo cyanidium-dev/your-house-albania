@@ -52,11 +52,16 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
     let frame = 0
     let timer: ReturnType<typeof setTimeout> | undefined
 
+    // In the installed app the bar sits on top of the tab bar, so the room it
+    // reserves adds to the tab bar's (`--app-tabbar-offset`, 0 in a browser).
+    // The height is also published for the install invitation to sit above.
+    const root = document.documentElement
     const measure = () => {
       const height = el.offsetHeight
-      document.body.style.paddingBottom = height > 0 ? `${height}px` : ''
+      document.body.style.paddingBottom = height > 0 ? `calc(${height}px + var(--app-tabbar-offset, 0px))` : ''
       // Other floating controls (the catalogue's Map button) sit above it.
-      document.documentElement.style.setProperty('--sticky-bar-height', `${height}px`)
+      if (height > 0) root.style.setProperty('--mobile-sticky-bar-height', `${height}px`)
+      else root.style.removeProperty('--mobile-sticky-bar-height')
     }
 
     /**
@@ -96,7 +101,7 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
       window.removeEventListener('resize', schedule)
       window.removeEventListener('orientationchange', schedule)
       document.body.style.paddingBottom = ''
-      document.documentElement.style.removeProperty('--sticky-bar-height')
+      root.style.removeProperty('--mobile-sticky-bar-height')
     }
   }, [minWidth])
 
@@ -106,7 +111,7 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
       {...(label ? { role: 'region', 'aria-label': label } : {})}
       {...(placement ? { 'data-lead-placement': placement } : {})}
       {...(propertySlug ? { 'data-property-slug': propertySlug } : {})}
-      className={`${hidden} fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20 print:hidden [[data-contact-modal]_&]:invisible`}
+      className={`${hidden} fixed bottom-[var(--app-tabbar-offset,0px)] left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20 print:hidden [[data-contact-modal]_&]:invisible`}
     >
       {children}
     </div>

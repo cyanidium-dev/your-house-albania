@@ -18,6 +18,12 @@ export type ArrivalSignals = {
   utmMedium?: string
   utmCampaign?: string
   hasGclid: boolean
+  /**
+   * `?source=pwa` / `?source=pwa-shortcut`: opened from the installed app's
+   * home-screen icon or one of its shortcuts. Such a launch has no referrer, so
+   * without this it would read as direct.
+   */
+  appLaunch?: 'pwa' | 'pwa-shortcut'
 }
 
 export type TrafficSource = {
@@ -108,6 +114,12 @@ export function classifyTraffic(signals: ArrivalSignals): TrafficSource {
 
   if (signals.hasGclid) {
     return withCampaign({ source: 'google', medium: 'cpc', channel: 'paid_search' })
+  }
+
+  // A visitor opening the installed app: direct in kind, but worth its own
+  // source so visits and leads from the app can be counted.
+  if (signals.appLaunch) {
+    return withCampaign({ source: signals.appLaunch, medium: 'app', channel: 'direct' })
   }
 
   const host = normalizeHost(signals.referrerHost)

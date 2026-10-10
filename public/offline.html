@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#078660">
+<title>Domlivo — offline</title>
+<style>
+  :root { color-scheme: light dark; --ink: #172023; --muted: #172023a6; --ground: #ffffff; --line: #17202322; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #ffffff; --muted: #ffffffa6; --ground: #000000; --line: #ffffff26; } }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--ground); color: var(--ink); }
+  body {
+    font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100dvh; display: flex; align-items: center;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  main { width: 100%; max-width: 30rem; margin: 0 auto; }
+  img { display: block; width: 56px; height: 56px; border-radius: 14px; }
+  h1 { margin: 24px 0 8px; font-size: 1.5rem; line-height: 1.25; letter-spacing: -0.02em; }
+  p { margin: 0; color: var(--muted); }
+  button {
+    margin-top: 24px; min-height: 44px; padding: 10px 28px; border: 0; border-radius: 999px;
+    background: #078660; color: #fff; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button:hover { background: #172023; }
+  button:focus-visible { outline: 2px solid #078660; outline-offset: 3px; }
+  .note { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 0.875rem; }
+</style>
+</head>
+<body>
+<main>
+  <img src="/icons/icon-192.png" alt="" width="56" height="56">
+  <h1 id="title">You are offline</h1>
+  <p id="body">This page needs a connection. Pages you opened recently still work without one.</p>
+  <button id="retry" type="button" onclick="location.reload()">Try again</button>
+  <p class="note" id="note">Domlivo reconnects on its own as soon as the network is back.</p>
+</main>
+<script>
+  // The worker serves this file in place of the page that failed, so the
+  // address bar still holds that page's URL, and its first segment is the
+  // visitor's language.
+  (function () {
+    var copy = {
+      en: ["You are offline", "This page needs a connection. Pages you opened recently still work without one.", "Try again", "Domlivo reconnects on its own as soon as the network is back.", "Domlivo — offline"],
+      uk: ["Немає з’єднання", "Ця сторінка потребує інтернету. Сторінки, які ви нещодавно відкривали, працюють і без нього.", "Спробувати ще раз", "Domlivo підключиться сам, щойно мережа з’явиться.", "Domlivo — немає з’єднання"],
+      ru: ["Нет соединения", "Этой странице нужен интернет. Страницы, которые вы недавно открывали, работают и без него.", "Попробовать снова", "Domlivo подключится сам, как только появится сеть.", "Domlivo — нет соединения"],
+      sq: ["Jeni jashtë linje", "Kjo faqe kërkon lidhje interneti. Faqet që keni hapur së fundmi funksionojnë edhe pa të.", "Provo përsëri", "Domlivo rilidhet vetë sapo të kthehet rrjeti.", "Domlivo — jashtë linje"],
+      it: ["Sei offline", "Questa pagina richiede una connessione. Le pagine aperte di recente funzionano anche senza.", "Riprova", "Domlivo si ricollega da solo appena torna la rete.", "Domlivo — offline"],
+      pl: ["Jesteś offline", "Ta strona wymaga połączenia. Ostatnio otwierane strony działają także bez niego.", "Spróbuj ponownie", "Domlivo połączy się samo, gdy tylko wróci sieć.", "Domlivo — offline"],
+      de: ["Sie sind offline", "Diese Seite braucht eine Verbindung. Kürzlich geöffnete Seiten funktionieren auch ohne.", "Erneut versuchen", "Domlivo verbindet sich von selbst, sobald das Netz wieder da ist.", "Domlivo — offline"]
+    };
+    var fromPath = (location.pathname.split("/")[1] || "").toLowerCase();
+    var fromBrowser = (navigator.language || "en").slice(0, 2).toLowerCase();
+    var lang = copy[fromPath] ? fromPath : copy[fromBrowser] ? fromBrowser : "en";
+    var t = copy[lang];
+    document.documentElement.lang = lang;
+    document.getElementById("title").textContent = t[0];
+    document.getElementById("body").textContent = t[1];
+    document.getElementById("retry").textContent = t[2];
+    document.getElementById("note").textContent = t[3];
+    document.title = t[4];
+    // Back online: load the page the visitor actually asked for.
+    window.addEventListener("online", function () { location.reload(); });
+  })();
+</script>
+</body>
+</html>

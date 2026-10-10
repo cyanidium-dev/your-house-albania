@@ -1059,5 +1059,21 @@
   },
   "Legal": {
     "operatorNotice": "Сайтом управляет команда Domlivo. Связаться с нами можно по адресу {email}, в {whatsapp} или в {telegram}."
+  },
+  "Pwa": {
+    "installTitle": "Установите приложение Domlivo",
+    "installText": "Избранные объекты, карта и ассистент в одно касание с главного экрана. На весь экран, без строки браузера.",
+    "installAction": "Установить",
+    "installNotNow": "Не сейчас",
+    "installClose": "Закрыть",
+    "installIos": "Нажмите <share></share> «Поделиться» в Safari, затем «На экран „Домой“».",
+    "installIosShare": "Поделиться",
+    "menuInstall": "Установить приложение",
+    "tabsLabel": "Навигация приложения",
+    "tabSearch": "Поиск",
+    "tabMap": "Карта",
+    "tabFavorites": "Избранное",
+    "tabAssistant": "Ассистент",
+    "tabContact": "Контакты"
   }
 }

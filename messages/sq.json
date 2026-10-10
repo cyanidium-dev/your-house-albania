@@ -1059,5 +1059,21 @@
   },
   "Legal": {
     "operatorNotice": "Kjo faqe administrohet nga ekipi i Domlivo. Mund të na shkruani në {email}, në {whatsapp} ose në {telegram}."
+  },
+  "Pwa": {
+    "installTitle": "Instaloni aplikacionin Domlivo",
+    "installText": "Pronat e ruajtura, harta dhe asistenti me një prekje nga ekrani kryesor. Në ekran të plotë, pa shiritin e shfletuesit.",
+    "installAction": "Instalo",
+    "installNotNow": "Jo tani",
+    "installClose": "Mbyll",
+    "installIos": "Prekni <share></share> Share në Safari, pastaj “Add to Home Screen” (Shto në ekranin bazë).",
+    "installIosShare": "Shpërndaj",
+    "menuInstall": "Instaloni aplikacionin",
+    "tabsLabel": "Navigimi i aplikacionit",
+    "tabSearch": "Kërko",
+    "tabMap": "Harta",
+    "tabFavorites": "Preferuarat",
+    "tabAssistant": "Asistenti",
+    "tabContact": "Kontakt"
   }
 }

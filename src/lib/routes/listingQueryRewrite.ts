@@ -60,9 +60,10 @@ export const NON_LISTING_THIRD_SEGMENTS: ReadonlySet<string> = new Set(["info", 
  * Parameters that say where a visit came from and change nothing on the page.
  * A URL carrying only these is served the cached page (its canonical already
  * points at the bare path); rendering per request for every ad click would
- * spend the CPU the cache exists to save.
+ * spend the CPU the cache exists to save. `source` is the installed app's own
+ * marker: `?source=pwa` in the manifest's start_url and shortcuts.
  */
-const TRACKING_PARAM = /^(utm_[a-z_]+|gclid|gbraid|wbraid|gad_source|gad_campaignid|fbclid|msclkid|yclid|ysclid|srsltid|_gl|mc_cid|mc_eid)$/i;
+const TRACKING_PARAM = /^(utm_[a-z_]+|source|gclid|gbraid|wbraid|gad_source|gad_campaignid|fbclid|msclkid|yclid|ysclid|srsltid|_gl|mc_cid|mc_eid)$/i;
 
 export function isTrackingQueryParam(name: string): boolean {
   return TRACKING_PARAM.test(name);

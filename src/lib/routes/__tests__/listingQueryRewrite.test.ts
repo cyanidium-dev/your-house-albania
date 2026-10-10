@@ -36,6 +36,8 @@ describe("listingQueryRewritePathname", () => {
   it("serves the cached page to a visit that only carries tracking parameters", () => {
     expect(listingQueryRewritePathname("/en/albania/durres", q("utm_source=x&utm_medium=cpc&gclid=abc"), LOCALES)).toBeNull();
     expect(listingQueryRewritePathname("/en/albania/durres", q("fbclid=1&page=2"), LOCALES)).not.toBeNull();
+    // The installed app's launch marker (manifest start_url and shortcuts).
+    expect(listingQueryRewritePathname("/en/albania/durres", q("source=pwa-shortcut"), LOCALES)).toBeNull();
   });
 
   it("ignores empty values, as the page's noindex rule does", () => {

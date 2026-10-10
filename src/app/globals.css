@@ -97,6 +97,47 @@ html.gallery-open body {
   background-color: #000 !important;
 }
 
+/* Installed app (PWA): room for the bottom tab bar (components/pwa/AppTabBar).
+
+   The bar exists only in a standalone window below `lg`; the website in a
+   browser tab never gets it, so both variables are 0 there and every rule
+   built on them is a no-op.
+
+   - `--app-tabbar-offset` is the full height the bar covers, home indicator
+     included. Fixed bottom elements (cookie banner, listing contact bar)
+     sit at `bottom: var(--app-tabbar-offset)` and the page reserves it as
+     bottom padding, so nothing ends up under the bar.
+   - `--app-bottom-inset` is the home-indicator inset a fixed bottom element
+     still has to pad for itself: the system's inset in a browser, 0 above
+     the bar, which already pays it.
+
+   Driven by the media query, so the room is there from the first paint, with
+   `data-pwa-standalone` (set by AppTabBar) for iOS versions whose home-screen
+   apps report only `navigator.standalone`. */
+:root {
+  --app-tabbar-row: 3.5rem;
+  --app-tabbar-offset: 0px;
+  --app-bottom-inset: env(safe-area-inset-bottom, 0px);
+}
+
+@media (max-width: 1023.98px) and (display-mode: standalone) {
+  :root {
+    --app-tabbar-offset: calc(var(--app-tabbar-row) + env(safe-area-inset-bottom, 0px));
+    --app-bottom-inset: 0px;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  :root[data-pwa-standalone] {
+    --app-tabbar-offset: calc(var(--app-tabbar-row) + env(safe-area-inset-bottom, 0px));
+    --app-bottom-inset: 0px;
+  }
+}
+
+body {
+  padding-bottom: var(--app-tabbar-offset);
+}
+
 /* Headings take the display face; body copy stays on the text face. */
 h1, h2, h3, h4,
 .font-display {

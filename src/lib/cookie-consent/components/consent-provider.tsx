@@ -22,6 +22,11 @@ export type ConsentContextValue = {
   /** True for "necessary" always; otherwise the stored choice (false when unset). */
   isGranted: (category: ConsentCategory) => boolean;
   openPreferences: () => void;
+  /**
+   * The banner or the preferences dialog is on screen. Other bottom-anchored
+   * prompts (the app install invitation) wait for it rather than stack on it.
+   */
+  promptOpen: boolean;
   copy: ConsentCopy;
   locale: string;
 };
@@ -72,12 +77,13 @@ export function ConsentProvider({
     [consent],
   );
 
-  const value = useMemo<ConsentContextValue>(
-    () => ({ consent, isGranted, openPreferences, copy, locale }),
-    [consent, isGranted, openPreferences, copy, locale],
-  );
-
   const showBanner = active && ready && consent === null && !preferencesOpen;
+  const promptOpen = showBanner || (active && preferencesOpen);
+
+  const value = useMemo<ConsentContextValue>(
+    () => ({ consent, isGranted, openPreferences, promptOpen, copy, locale }),
+    [consent, isGranted, openPreferences, promptOpen, copy, locale],
+  );
 
   return (
     <ConsentContext.Provider value={value}>

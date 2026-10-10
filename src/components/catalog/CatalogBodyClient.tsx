@@ -806,7 +806,7 @@ export function CatalogBodyClient({
             "fixed left-1/2 z-[45] inline-flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-dark px-5 text-sm font-semibold text-white shadow-lg hover:bg-primary dark:bg-white dark:text-dark",
             // Above the listing contact bar on phones (it pads the page by its
             // own height) and the installed app's tab bar.
-            "bottom-[calc(max(env(safe-area-inset-bottom,0px),var(--sticky-bar-height,0px))+var(--bottom-nav-height,0px)+12px)]",
+            "bottom-[calc(max(env(safe-area-inset-bottom,0px),var(--mobile-sticky-bar-height,0px))+var(--app-tabbar-offset,0px)+12px)]",
             split && "lg:hidden"
           )}
         >
