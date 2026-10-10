@@ -359,6 +359,16 @@ export function PropertiesMap({
         ev.stopPropagation()
         onActiveSlugChange(slug)
       })
+      // Reachable from the keyboard: Tab to a pin, Enter or Space opens it.
+      el.tabIndex = 0
+      el.setAttribute('role', 'button')
+      el.setAttribute('aria-label', markerLabel)
+      el.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault()
+          onActiveSlugChange(slug)
+        }
+      })
 
       const marker = new maplibregl.Marker({
         element: el,

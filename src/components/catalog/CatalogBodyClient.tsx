@@ -229,7 +229,8 @@ export function CatalogBodyClient({
       return !hidden;
     });
   }, []);
-  const split = !mapHidden;
+  // No results, no map: an empty country beside "nothing found" said nothing.
+  const split = !mapHidden && pageItems.length > 0;
 
   // The filter bar is sticky and its height changes (collapsed pill, open
   // form); the map panel sticks right under it.
