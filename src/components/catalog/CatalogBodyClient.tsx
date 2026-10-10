@@ -183,6 +183,14 @@ export function CatalogBodyClient({
   const tMap = useTranslations("Shared.map");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
+  // A pin whose card is still being fetched: the window opens at once with a
+  // placeholder instead of nothing for half a second.
+  const [pendingSlug, setPendingSlug] = React.useState<string | null>(null);
+  const pendingSlugRef = React.useRef<string | null>(null);
+  const setPending = React.useCallback((slug: string | null) => {
+    pendingSlugRef.current = slug;
+    setPendingSlug(slug);
+  }, []);
   const [hoveredSlug, setHoveredSlug] = React.useState<string | null>(null);
   const cardRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
   const shouldScrollToActiveRef = React.useRef(false);
@@ -465,18 +473,26 @@ export function CatalogBodyClient({
       if (allItems.some((p) => p.slug === slug) || extraCards[slug]) {
         setActiveSlug(slug);
         setPreviewSlug(slug);
+        setPending(null);
         return;
       }
       // A pin for a listing beyond the loaded page: fetch its card and show the
       // same preview. Only if that fails does the click open the listing.
       setActiveSlug(slug);
+      setPreviewSlug(null);
+      setPending(slug);
       fetch(`/api/catalog/card?slug=${encodeURIComponent(slug)}&locale=${locale}`)
         .then((res) => (res.ok ? res.json() : null))
         .then((data: { item?: PropertyHomes | null } | null) => {
           if (data?.item) {
             setExtraCards((prev) => ({ ...prev, [slug]: data.item as PropertyHomes }));
-            setPreviewSlug(slug);
+            // Only if the visitor has not picked another pin meanwhile.
+            if (pendingSlugRef.current === slug) {
+              setPreviewSlug(slug);
+              setPending(null);
+            }
           } else {
+            setPending(null);
             const href = mapPointHref.get(slug);
             if (href) window.location.assign(href);
           }
@@ -486,7 +502,7 @@ export function CatalogBodyClient({
           if (href) window.location.assign(href);
         });
     },
-    [setActiveSlug, allItems, extraCards, mapPointHref, locale]
+    [setActiveSlug, allItems, extraCards, mapPointHref, locale, setPending]
   );
 
   // Keep in step with `columnCount`. With the map beside them the cards get
@@ -760,6 +776,15 @@ export function CatalogBodyClient({
               ) : (
                 <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
               )}
+              {!previewItem && pendingSlug ? (
+                <MapListingSheet
+                  item={null}
+                  href="#"
+                  locale={locale}
+                  variant={mapExpanded ? "sheet" : "panel"}
+                  onClose={() => setPending(null)}
+                />
+              ) : null}
               {previewItem ? (
                 // `contents`: the ref only marks "inside the preview" for the
                 // outside-tap handler; the sheet positions itself.

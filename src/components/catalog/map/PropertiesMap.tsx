@@ -788,22 +788,30 @@ export function PropertiesMap({
     if (!ready || !mapRef.current) return
     const map = mapRef.current
 
-    // Cluster click: zoom in.
+    // Cluster click: show its listings. Fitting their bounds rather than
+    // zooming on the cluster's centre: along the coast that centre is an
+    // average of points on a curve and sits out at sea, leaving half the view
+    // water. Falls back to the expansion zoom when the leaves are unavailable.
     const onClusterClick = (e: maplibregl.MapLayerMouseEvent) => {
       const f = e.features?.[0]
       if (!f) return
-      const clusterId = (f.properties as any)?.cluster_id as number | undefined
+      const clusterId = (f.properties as { cluster_id?: number } | null)?.cluster_id
       if (clusterId == null) return
       const src = map.getSource('properties') as maplibregl.GeoJSONSource
+      const center = (f.geometry as GeoJSON.Point).coordinates as [number, number]
       src
-        .getClusterExpansionZoom(clusterId as any)
-        .then((zoom) => {
-          if (typeof zoom !== 'number') return
-          // Keep zoom high enough so unclustered markers become available.
-          const z = Math.max(zoom, 15)
-          map.easeTo({ center: (f.geometry as any).coordinates as [number, number], zoom: z, duration: 450 })
-          requestAnimationFrame(() => syncHtmlMarkers())
+        .getClusterLeaves(clusterId, 5000, 0)
+        .then((leaves) => {
+          const bounds = new maplibregl.LngLatBounds()
+          for (const leaf of leaves) bounds.extend((leaf.geometry as GeoJSON.Point).coordinates as [number, number])
+          if (bounds.isEmpty()) throw new Error('no leaves')
+          map.fitBounds(bounds, { padding: 48, maxZoom: 16, duration: 500 })
         })
+        .catch(() =>
+          src.getClusterExpansionZoom(clusterId).then((zoom) => {
+            map.easeTo({ center, zoom: Math.max(zoom, 15), duration: 450 })
+          })
+        )
         .catch(() => {
           // ignore cluster zoom failures
         })

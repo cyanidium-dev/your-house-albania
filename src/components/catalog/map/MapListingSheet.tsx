@@ -29,19 +29,57 @@ const CLOSE_DRAG_PX = 90
  * `sheet`: a bottom sheet over the full-screen map; drag the handle down or
  * tap × to close. `panel`: the same card inside the desktop map panel.
  */
-export function MapListingSheet({
+type SheetProps = {
+  href: string
+  locale: string
+  variant: 'sheet' | 'panel'
+  onClose: () => void
+}
+
+/** `item: null` while the listing is still loading: the same window, as a placeholder. */
+export function MapListingSheet({ item, ...props }: SheetProps & { item: PropertyHomes | null }) {
+  if (!item) return <SheetPlaceholder variant={props.variant} onClose={props.onClose} />
+  return <ListingSheet item={item} {...props} />
+}
+
+function SheetPlaceholder({ variant, onClose }: Pick<SheetProps, 'variant' | 'onClose'>) {
+  const tCard = useTranslations('Shared.propertyCard')
+  const isSheet = variant === 'sheet'
+  return (
+    <div
+      aria-busy="true"
+      className={cn(
+        'absolute z-20 overflow-hidden bg-white shadow-2xl dark:bg-dark',
+        isSheet
+          ? 'inset-x-0 bottom-0 rounded-t-3xl px-3 pb-4 pt-6 sm:inset-x-auto sm:left-1/2 sm:w-[440px] sm:-translate-x-1/2'
+          : 'inset-x-3 bottom-3 flex h-[200px] rounded-2xl border border-dark/10 dark:border-white/15'
+      )}
+    >
+      <div className={cn('animate-pulse bg-dark/10 dark:bg-white/10', isSheet ? 'aspect-[16/10] rounded-2xl' : 'w-[44%]')} />
+      <div className={cn('flex-1 space-y-2', isSheet ? 'px-1 pt-3' : 'p-3')}>
+        <div className="h-5 w-1/3 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+        <div className="h-4 w-4/5 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={tCard('closePreview')}
+        className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-lg leading-none text-dark shadow-sm dark:bg-dark/90 dark:text-white"
+      >
+        ×
+      </button>
+    </div>
+  )
+}
+
+function ListingSheet({
   item,
   href,
   locale,
   variant,
   onClose,
-}: {
-  item: PropertyHomes
-  href: string
-  locale: string
-  variant: 'sheet' | 'panel'
-  onClose: () => void
-}) {
+}: SheetProps & { item: PropertyHomes }) {
   const tCard = useTranslations('Shared.propertyCard')
   const tDeal = useTranslations('Shared.propertyDetail')
   const tMap = useTranslations('Shared.map')
