@@ -61,8 +61,13 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
     // reserves adds to the tab bar's (`--app-tabbar-offset`, 0 in a browser).
     // The height is also published for the install invitation to sit above.
     const root = document.documentElement
+    // Writes only on a change: each write to <html> restyles the whole page,
+    // and the measure runs on mount, a frame later and 200 ms later.
+    let lastHeight = -1
     const measure = () => {
       const height = el.offsetHeight
+      if (height === lastHeight) return
+      lastHeight = height
       document.body.style.paddingBottom = height > 0 ? `calc(${height}px + var(--app-tabbar-offset, 0px))` : ''
       // Other floating controls (the catalogue's Map button) sit above it.
       if (height > 0) root.style.setProperty('--mobile-sticky-bar-height', `${height}px`)

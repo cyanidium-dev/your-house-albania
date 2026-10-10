@@ -13,7 +13,11 @@ import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
-import { MapListingSheet } from "@/components/catalog/map/MapListingSheet";
+// Only once a pin is picked; nobody needs it at load.
+const MapListingSheet = dynamic(
+  () => import("@/components/catalog/map/MapListingSheet").then((m) => m.MapListingSheet),
+  { ssr: false }
+);
 
 const PropertiesMap = dynamic(
   () =>
@@ -277,6 +281,11 @@ export function CatalogBodyClient({
     };
   }, []);
   const showMap = mapNearViewport && pageSettled;
+  // The listing window's code, fetched once the map is up, so the first pin
+  // tap does not wait for it.
+  React.useEffect(() => {
+    if (showMap) void import("@/components/catalog/map/MapListingSheet");
+  }, [showMap]);
   React.useEffect(() => {
     const el = mapCardRef.current;
     if (!el || mapNearViewport) return;
