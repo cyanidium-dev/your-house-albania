@@ -169,7 +169,10 @@
       "approximateLegend": "≈ приблизне розташування: мітка показує район або найближчий орієнтир, а не саму будівлю",
       "enterFullscreen": "Відкрити карту на весь екран",
       "exitFullscreen": "Закрити повноекранну карту",
-      "viewMode": "Вигляд карти"
+      "viewMode": "Вигляд карти",
+      "mapButton": "Карта · {count}",
+      "showMap": "Показати карту",
+      "hideMap": "Сховати карту"
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",

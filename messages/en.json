@@ -169,7 +169,10 @@
       "approximateLegend": "≈ approximate location: the pin marks the district or a nearby landmark, not the building",
       "enterFullscreen": "Open the map full screen",
       "exitFullscreen": "Close the full-screen map",
-      "viewMode": "Map view"
+      "viewMode": "Map view",
+      "mapButton": "Map · {count}",
+      "showMap": "Show map",
+      "hideMap": "Hide map"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",

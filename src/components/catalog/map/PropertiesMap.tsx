@@ -31,9 +31,9 @@ function initialMapMode(): MapMode {
   } catch {
     // storage blocked: fall through to the default
   }
-  // Phones start flat: a tilted map is harder to pan with one thumb and draws
-  // more on a weaker GPU. Wider screens start in 3D. The switch is on the map.
-  return window.matchMedia('(min-width: 768px)').matches ? '3d' : '2d'
+  // Flat by default (research 2026-10-10): a tilted map is harder to pan and
+  // to read prices on, and draws more on a weaker GPU. 3D is one tap away.
+  return '2d'
 }
 
 export type PropertiesMapItem = {
@@ -45,6 +45,8 @@ export type PropertiesMapItem = {
   currency?: string
   rate?: string
   status?: string
+  /** false: a dot instead of a price pill (listings not among the loaded cards). Default true. */
+  pill?: boolean
 }
 
 type ScopeViewport = {
@@ -89,6 +91,7 @@ export function PropertiesMap({
   selectedCitySlug,
   selectedDistrictSlug,
   selectedDealType,
+  highlightSlug,
   expanded = false,
   onExpandedChange,
 }: {
@@ -100,6 +103,8 @@ export function PropertiesMap({
   selectedCitySlug?: string
   selectedDistrictSlug?: string
   selectedDealType?: string
+  /** The listing whose card the pointer is on; its pin or dot lights up. */
+  highlightSlug?: string | null
   /** Full-screen state is owned by the caller, which also positions the preview card. */
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
@@ -166,9 +171,17 @@ export function PropertiesMap({
           lng,
           markerLabel,
           approximate,
+          pill: it.pill !== false,
         }
       })
-      .filter(Boolean) as Array<{ slug: string; lat: number; lng: number; markerLabel: string; approximate: boolean }>
+      .filter(Boolean) as Array<{
+        slug: string
+        lat: number
+        lng: number
+        markerLabel: string
+        approximate: boolean
+        pill: boolean
+      }>
   }, [items, selectedDealType, formatFromEur])
 
   React.useEffect(() => {
@@ -210,6 +223,7 @@ export function PropertiesMap({
           slug: p.slug,
           markerLabel: p.markerLabel,
           approximate: p.approximate,
+          pill: p.pill,
         },
         geometry: {
           type: 'Point' as const,
@@ -242,7 +256,7 @@ export function PropertiesMap({
   // a "≈" before the price, with the legend under the map explaining it. Most
   // partner listings arrive without an address, so this is the common case.
   const styleMarkerElement = React.useCallback(
-    (el: HTMLDivElement, isSelected: boolean, approximate = false) => {
+    (el: HTMLDivElement, isSelected: boolean, approximate = false, highlighted = false) => {
       el.style.display = 'inline-flex'
       el.style.alignItems = 'center'
       el.style.justifyContent = 'center'
@@ -255,16 +269,21 @@ export function PropertiesMap({
       el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.18)'
       el.style.border = isSelected
         ? '1px solid #078660'
-        : approximate
+        : highlighted
+          ? '2px solid #078660'
+          : approximate
           ? '1px dashed rgba(0,0,0,0.45)'
           : '1px solid rgba(0,0,0,0.18)'
-      el.style.background = isSelected ? '#078660' : approximate ? '#f7f7f5' : '#ffffff'
+      el.style.background = isSelected ? '#078660' : highlighted ? '#e8f5ef' : approximate ? '#f7f7f5' : '#ffffff'
+      el.style.zIndex = isSelected || highlighted ? '2' : ''
       el.style.color = isSelected ? '#ffffff' : '#111111'
       el.style.cursor = 'pointer'
       el.style.userSelect = 'none'
     },
     []
   )
+
+  const highlightRef = React.useRef<string | null>(null)
 
   const syncHtmlMarkers = React.useCallback(() => {
     const map = mapRef.current
@@ -293,6 +312,10 @@ export function PropertiesMap({
       const rawLabel = String(props.markerLabel ?? '').trim()
       if (!rawLabel) continue
       const approximate = props.approximate === true || props.approximate === 'true'
+      // Listings beyond the loaded cards are dots (the `points-dot` layer)
+      // until one is picked.
+      const pill = props.pill !== false && props.pill !== 'false'
+      if (!pill && slug !== activeSlug) continue
       const markerLabel = approximate ? `≈ ${rawLabel}` : rawLabel
 
       const coords = (f.geometry as { coordinates?: unknown })?.coordinates
@@ -304,18 +327,19 @@ export function PropertiesMap({
 
       next.add(slug)
       const isSelected = activeSlug === slug
+      const highlighted = highlightRef.current === slug
       const existing = htmlMarkersRef.current.get(slug)
       if (existing) {
         const el = existing.getElement() as HTMLDivElement
         el.textContent = markerLabel
-        styleMarkerElement(el, isSelected, approximate)
+        styleMarkerElement(el, isSelected, approximate, highlighted)
         existing.setLngLat([lng, lat])
         continue
       }
 
       const el = document.createElement('div')
       el.textContent = markerLabel
-      styleMarkerElement(el, isSelected, approximate)
+      styleMarkerElement(el, isSelected, approximate, highlighted)
       el.addEventListener('click', (ev) => {
         ev.stopPropagation()
         onActiveSlugChange(slug)
@@ -424,6 +448,23 @@ export function PropertiesMap({
         },
         paint: {
           'text-color': '#0b0b0b',
+        },
+      })
+
+      // Every listing in the filter that is not among the loaded cards: a dot,
+      // not a price pill (research 2026-10-10: hundreds of overlapping pills
+      // on the Durrës front were unreadable). Grey for approximate places.
+      map.addLayer({
+        id: 'points-dot',
+        type: 'circle',
+        source: 'properties',
+        filter: ['all', ['!', ['has', 'point_count']], ['==', ['get', 'pill'], false]],
+        paint: {
+          'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 8, 5],
+          'circle-color': ['case', ['==', ['get', 'approximate'], true], '#8a9490', LISTING_BUILDING_COLOR],
+          'circle-opacity': ['case', ['==', ['get', 'approximate'], true], 0.8, 1],
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 1.5,
         },
       })
 
@@ -775,7 +816,23 @@ export function PropertiesMap({
       if (e.dataType === 'source' && e.sourceId === 'properties') scheduleSync()
     }
 
+    const onDotClick = (e: maplibregl.MapLayerMouseEvent) => {
+      const slug = String((e.features?.[0]?.properties as { slug?: unknown } | undefined)?.slug ?? '')
+      if (slug) onActiveSlugChange(slug)
+    }
+    const pointer = () => {
+      map.getCanvas().style.cursor = 'pointer'
+    }
+    const noPointer = () => {
+      map.getCanvas().style.cursor = ''
+    }
+
     map.on('click', 'clusters', onClusterClick)
+    map.on('click', 'points-dot', onDotClick)
+    map.on('mouseenter', 'points-dot', pointer)
+    map.on('mouseleave', 'points-dot', noPointer)
+    map.on('mouseenter', 'clusters', pointer)
+    map.on('mouseleave', 'clusters', noPointer)
     map.on('moveend', scheduleSync)
     map.on('zoomend', scheduleSync)
     map.on('data', onData)
@@ -783,11 +840,35 @@ export function PropertiesMap({
     return () => {
       if (frame != null) cancelAnimationFrame(frame)
       map.off('click', 'clusters', onClusterClick)
+      map.off('click', 'points-dot', onDotClick)
+      map.off('mouseenter', 'points-dot', pointer)
+      map.off('mouseleave', 'points-dot', noPointer)
+      map.off('mouseenter', 'clusters', pointer)
+      map.off('mouseleave', 'clusters', noPointer)
       map.off('moveend', scheduleSync)
       map.off('zoomend', scheduleSync)
       map.off('data', onData)
     }
-  }, [ready, syncHtmlMarkers])
+  }, [ready, syncHtmlMarkers, onActiveSlugChange])
+
+  // Card hover: light up that listing's pill, or its dot. Restyles the two
+  // markers involved instead of a full marker pass on every pointer move.
+  React.useEffect(() => {
+    const map = mapRef.current
+    const prev = highlightRef.current
+    const next = highlightSlug ?? null
+    highlightRef.current = next
+    if (!ready || !map || prev === next) return
+    const known = (slug: string | null) => (slug ? validPoints.find((p) => p.slug === slug) : undefined)
+    for (const slug of [prev, next]) {
+      const point = known(slug)
+      if (!slug || !point) continue
+      const on = slug === next
+      const marker = htmlMarkersRef.current.get(slug)
+      if (marker) styleMarkerElement(marker.getElement() as HTMLDivElement, activeSlug === slug, point.approximate, on)
+      if (!point.pill) map.setFeatureState({ source: 'properties', id: slug }, { hover: on })
+    }
+  }, [highlightSlug, ready, validPoints, activeSlug, styleMarkerElement])
 
   return (
     <div
@@ -851,7 +932,7 @@ export function PropertiesMap({
       </div>
       {hasApproximate ? (
         <div
-          className="pointer-events-none absolute left-2 top-2 z-10 rounded-md border border-black/10 bg-white/85 px-2 py-1 text-[11px] leading-tight text-dark/80 backdrop-blur-[1px] dark:border-white/20 dark:bg-black/60 dark:text-white/80"
+          className="pointer-events-none absolute left-2 right-14 top-2 z-10 sm:right-auto sm:max-w-[65%] rounded-md border border-black/10 bg-white/85 px-2 py-1 text-[11px] leading-tight text-dark/80 backdrop-blur-[1px] dark:border-white/20 dark:bg-black/60 dark:text-white/80"
           aria-live="polite"
         >
           {tMap('approximateLegend')}

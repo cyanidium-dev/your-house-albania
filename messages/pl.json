@@ -158,7 +158,10 @@
       "approximateLegend": "≈ lokalizacja przybliżona: pinezka wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie budynek",
       "enterFullscreen": "Otwórz mapę na pełnym ekranie",
       "exitFullscreen": "Zamknij mapę pełnoekranową",
-      "viewMode": "Widok mapy"
+      "viewMode": "Widok mapy",
+      "mapButton": "Mapa · {count}",
+      "showMap": "Pokaż mapę",
+      "hideMap": "Ukryj mapę"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",

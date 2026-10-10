@@ -169,7 +169,10 @@
       "approximateLegend": "≈ posizione approssimativa: il segnaposto indica il quartiere o un punto di riferimento vicino, non l’edificio",
       "enterFullscreen": "Apri la mappa a schermo intero",
       "exitFullscreen": "Chiudi la mappa a schermo intero",
-      "viewMode": "Vista della mappa"
+      "viewMode": "Vista della mappa",
+      "mapButton": "Mappa · {count}",
+      "showMap": "Mostra la mappa",
+      "hideMap": "Nascondi la mappa"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",

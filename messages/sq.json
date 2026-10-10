@@ -169,7 +169,10 @@
       "approximateLegend": "≈ vendndodhje e përafërt: shenja tregon lagjen ose një pikë orientimi afër, jo ndërtesën",
       "enterFullscreen": "Hap hartën në ekran të plotë",
       "exitFullscreen": "Mbyll hartën në ekran të plotë",
-      "viewMode": "Pamja e hartës"
+      "viewMode": "Pamja e hartës",
+      "mapButton": "Harta · {count}",
+      "showMap": "Shfaq hartën",
+      "hideMap": "Fshih hartën"
     },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",

@@ -24,9 +24,7 @@ const PropertiesMap = dynamic(
     ),
   {
     ssr: false,
-    // Fills the slot the list item reserves (see `mapSlotClassName`); with
-    // `h-full` alone it was 0 px tall on phones, where the item has no height
-    // of its own until the map mounts.
+    // Fills the panel, which has its size before the map arrives.
     loading: () => (
       <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10 animate-pulse" />
     ),
@@ -80,50 +78,37 @@ export type CatalogBodyClientProps = {
   serverSearch?: string;
 };
 
-type LayoutTier = "mobile" | "md" | "xl";
-type BannerSlot = "beforeMap" | "afterMap" | { afterProperty: number };
+type BannerSlot = "top" | { afterProperty: number };
 type ComposedItem =
   | { kind: "banner"; banner: PropertyCatalogBanner; key: string }
-  | { kind: "map"; key: string }
   | { kind: "property"; item: PropertyHomes; key: string };
 
 /**
- * Grid cells the map takes in the "large" view so the last row of cards is
- * full. A page holds 24 cards; with the map as one more cell that is 25, and
- * every full catalogue page ended on one card alone. The map instead takes
- * what the row count needs at each breakpoint (2, 3 and 4 columns) — a 2×2
- * block at four columns when a whole row is missing. Only without banners:
- * their slots assume the one-cell map.
+ * Cards per row for the view mode, the window width and whether the map
+ * panel takes the right of the results (lg and up). Mirrors the grid classes
+ * below; banners go after whole rows only.
  */
-const MAP_SPAN_SM: Record<number, string> = { 0: "sm:col-span-2", 1: "sm:col-span-1" };
-const MAP_SPAN_LG: Record<number, string> = { 0: "lg:col-span-3", 1: "lg:col-span-2", 2: "lg:col-span-1" };
-const MAP_SPAN_XL: Record<number, string> = {
-  0: "xl:col-span-2 xl:row-span-2",
-  1: "xl:col-span-3",
-  2: "xl:col-span-2",
-  3: "xl:col-span-1",
-};
-function largeMapSpan(cards: number): string {
-  if (cards <= 0) return "";
-  // A map alone on its row has no card to take its height from.
-  return cn(MAP_SPAN_SM[cards % 2], MAP_SPAN_LG[cards % 3], MAP_SPAN_XL[cards % 4], "lg:min-h-[22rem]");
+function columnCount(viewMode: ViewMode, width: number, split: boolean): number {
+  if (viewMode === "list") return 1;
+  if (viewMode === "large") {
+    if (split && width >= 1024) return 2;
+    if (width >= 1280) return 4;
+    if (width >= 1024) return 3;
+    if (width >= 640) return 2;
+    return 1;
+  }
+  if (split && width >= 1024) return 3;
+  if (width >= 1280) return 4;
+  if (width >= 768) return 3;
+  return 2;
 }
 
-function getBannerSlots(viewMode: ViewMode, tier: LayoutTier): BannerSlot[] {
-  if (viewMode === "list") {
-    return ["afterMap", { afterProperty: 4 }, { afterProperty: 8 }];
-  }
-
-  if (viewMode === "large") {
-    if (tier === "xl") return ["beforeMap", { afterProperty: 2 }, { afterProperty: 5 }];
-    if (tier === "md") return ["beforeMap", { afterProperty: 3 }, { afterProperty: 7 }];
-    return ["afterMap", { afterProperty: 4 }, { afterProperty: 8 }];
-  }
-
-  // viewMode === "small"
-  if (tier === "xl") return ["beforeMap", { afterProperty: 2 }, { afterProperty: 6 }];
-  if (tier === "md") return ["beforeMap", { afterProperty: 4 }, { afterProperty: 7 }];
-  return ["afterMap", { afterProperty: 4 }, { afterProperty: 8 }];
+function getBannerSlots(columns: number): BannerSlot[] {
+  const row = Math.max(columns, 1);
+  // After about 4 and 8 cards, rounded up to whole rows so no row is cut short.
+  const first = row * Math.ceil(4 / row);
+  const second = Math.max(row * Math.ceil(8 / row), first + row);
+  return ["top", { afterProperty: first }, { afterProperty: second }];
 }
 
 function composeCatalogFlowItems(args: {
@@ -134,20 +119,15 @@ function composeCatalogFlowItems(args: {
   const { pageItems, banners, slots } = args;
   const selectedSlots = slots.slice(0, banners.length);
 
-  const beforeMap: PropertyCatalogBanner[] = [];
-  const afterMap: PropertyCatalogBanner[] = [];
+  const top: PropertyCatalogBanner[] = [];
   const afterProperty = new Map<number, PropertyCatalogBanner[]>();
 
   for (let i = 0; i < selectedSlots.length; i++) {
     const slot = selectedSlots[i];
     const banner = banners[i];
     if (!banner) continue;
-    if (slot === "beforeMap") {
-      beforeMap.push(banner);
-      continue;
-    }
-    if (slot === "afterMap") {
-      afterMap.push(banner);
+    if (slot === "top") {
+      top.push(banner);
       continue;
     }
     const count = slot.afterProperty;
@@ -157,9 +137,7 @@ function composeCatalogFlowItems(args: {
   }
 
   const out: ComposedItem[] = [];
-  for (const b of beforeMap) out.push({ kind: "banner", banner: b, key: `banner-before-map-${b.key}` });
-  out.push({ kind: "map", key: "catalog-map" });
-  for (const b of afterMap) out.push({ kind: "banner", banner: b, key: `banner-after-map-${b.key}` });
+  for (const b of top) out.push({ kind: "banner", banner: b, key: `banner-top-${b.key}` });
 
   let propertyCount = 0;
   for (let i = 0; i < pageItems.length; i++) {
@@ -180,6 +158,10 @@ function composeCatalogFlowItems(args: {
 
   return out;
 }
+
+const MAP_HIDDEN_STORAGE_KEY = "domlivo:catalog-map-hidden";
+/** Header height from md up (the filter bar's sticky offset). */
+const HEADER_OFFSET_PX = 84;
 
 /**
  * Client boundary: reads viewMode from context, renders filters (with getCurrentView)
@@ -203,23 +185,67 @@ export function CatalogBodyClient({
   const { formatFromEur } = useCurrency();
   const tCard = useTranslations("Shared.propertyCard");
   const tDealType = useTranslations("Shared.propertyDetail");
+  const tMap = useTranslations("Shared.map");
   const [activeSlug, setActiveSlug] = React.useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = React.useState<string | null>(null);
-  const [layoutTier, setLayoutTier] = React.useState<LayoutTier>("mobile");
+  const [hoveredSlug, setHoveredSlug] = React.useState<string | null>(null);
   const cardRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
   const shouldScrollToActiveRef = React.useRef(false);
   const prevActiveSlugRef = React.useRef<string | null>(null);
   const mapCardRef = React.useRef<HTMLDivElement | null>(null);
-  // maplibre-gl is 1 MB of script; on a phone the map slot sits below the
-  // filters and the first cards, and parsing the library before the visitor
-  // reaches it cost 3.7 s of main thread on /en/albania/durres (Lighthouse,
-  // 2026-09-30). The library loads once the slot is within 400 px of the
-  // viewport; on wide screens that is immediately, since the map is in view.
+
+  // Layout (research: docs/ux/MAP-LIST-RESEARCH-2026-10-10.md). From lg up
+  // the results are a split: cards on the left, a sticky map on the right,
+  // which the visitor can hide (remembered on the device). Below lg there is
+  // no map in the page; a floating button opens it full screen.
+  const [windowWidth, setWindowWidth] = React.useState(0);
+  React.useEffect(() => {
+    const onResize = () => setWindowWidth(window.innerWidth);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  const [mapHidden, setMapHidden] = React.useState(false);
+  React.useEffect(() => {
+    try {
+      setMapHidden(window.localStorage.getItem(MAP_HIDDEN_STORAGE_KEY) === "1");
+    } catch {
+      // storage blocked: the map stays on
+    }
+  }, []);
+  const toggleMapHidden = React.useCallback(() => {
+    setMapHidden((hidden) => {
+      try {
+        window.localStorage.setItem(MAP_HIDDEN_STORAGE_KEY, hidden ? "0" : "1");
+      } catch {
+        // storage blocked: the choice lasts for this page only
+      }
+      return !hidden;
+    });
+  }, []);
+  const split = !mapHidden;
+
+  // The filter bar is sticky and its height changes (collapsed pill, open
+  // form); the map panel sticks right under it.
+  const filterBarRef = React.useRef<HTMLDivElement | null>(null);
+  const [filterBarHeight, setFilterBarHeight] = React.useState(72);
+  React.useEffect(() => {
+    const el = filterBarRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setFilterBarHeight(el.offsetHeight));
+    ro.observe(el);
+    setFilterBarHeight(el.offsetHeight);
+    return () => ro.disconnect();
+  }, []);
+
+  // maplibre-gl is 1 MB of script: parsing it before the visitor wants the
+  // map cost 3.7 s of main thread on a phone (Lighthouse, 2026-09-30). The
+  // library loads once the panel is within 400 px of the viewport (desktop:
+  // straight away) or when the visitor opens the full-screen map (phones,
+  // where the panel is not displayed and never intersects).
   const [mapNearViewport, setMapNearViewport] = React.useState(false);
-  // On phones the slot is in view from the start, so proximity alone would
-  // still parse the library before the first paint. Wait for the window's
-  // load event and an idle moment too: the hero and the first cards paint
-  // first, the map fills its placeholder a second later.
+  // Wait for the window's load event and an idle moment too, so the hero and
+  // the first cards paint first.
   const [pageSettled, setPageSettled] = React.useState(false);
   React.useEffect(() => {
     let cancelled = false;
@@ -294,6 +320,7 @@ export function CatalogBodyClient({
     if (next) {
       window.history.pushState({ ...window.history.state, domlivoMap: true }, "");
       setMapExpanded(true);
+      setMapNearViewport(true);
       return;
     }
     if (window.history.state?.domlivoMap) {
@@ -392,8 +419,10 @@ export function CatalogBodyClient({
   }
   const [mapPoints, setMapPoints] = React.useState<MapPoint[]>([])
   React.useEffect(() => {
-    // Not gated on showMap: the points download while the map library loads,
-    // instead of after it.
+    // Gated on the panel being near (or the map opened), not on the library:
+    // the points download while the library loads, instead of after it. A
+    // phone visitor who never opens the map never downloads them.
+    if (!mapNearViewport) return
     const controller = new AbortController()
     const params = new URLSearchParams(loadMoreQuery)
     params.delete('page')
@@ -407,7 +436,7 @@ export function CatalogBodyClient({
         // The page's own cards are still on the map.
       })
     return () => controller.abort()
-  }, [loadMoreQuery, locale])
+  }, [loadMoreQuery, locale, mapNearViewport])
 
   const mapPointHref = React.useMemo(() => new Map(mapPoints.map((p) => [p.slug, p.href])), [mapPoints])
   // Cards fetched for pins beyond the loaded page (see handleActiveSlugFromMap).
@@ -445,21 +474,20 @@ export function CatalogBodyClient({
     [setActiveSlug, allItems, extraCards, mapPointHref, locale]
   );
 
+  // Keep in step with `columnCount`. With the map beside them the cards get
+  // 7 of 12 columns from lg: two large cards or three small ones per row.
   const gridClass = cn(
     viewMode === "list" && "flex flex-col gap-3 min-w-0",
     viewMode === "small" &&
-      "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 min-w-0",
+      cn(
+        "grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 min-w-0",
+        !split && "xl:grid-cols-4"
+      ),
     viewMode === "large" &&
-      "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 min-w-0"
-  );
-
-  // Map item: in-flow with cards. Grid modes use stretch + h-full so map matches row height.
-  const mapListItemClassName = cn(
-    "min-w-0",
-    viewMode === "list" && "self-start w-full",
-    viewMode === "small" && "col-span-2",
-    viewMode === "large" && banners.length === 0 && largeMapSpan(allItems.length),
-    (viewMode === "small" || viewMode === "large") && "min-h-0"
+      cn(
+        "grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6 min-w-0",
+        !split && "lg:grid-cols-3 xl:grid-cols-4"
+      )
   );
 
   React.useEffect(() => {
@@ -554,6 +582,8 @@ export function CatalogBodyClient({
       status: p.status,
       coordinates: p.coordinates,
       locationPrecision: p.locationPrecision,
+      // Cards in the list get price pills; the rest of the filter is dots.
+      pill: true,
     }))
     const seen = new Set(loaded.map((p) => p.slug))
     const rest = mapPoints
@@ -567,49 +597,16 @@ export function CatalogBodyClient({
         status: p.status,
         coordinates: { lat: p.lat, lng: p.lng },
         locationPrecision: p.approximate ? ('approximate' as const) : ('exact' as const),
+        pill: false,
       }))
     return [...loaded, ...rest]
   }, [allItems, mapPoints])
 
-  // List: fixed height. Grid modes: fixed on mobile; md+ use h-full so map matches row height.
-  const mapHeightClassName =
-    viewMode === "list"
-      ? "h-[250px] md:h-[270px]"
-      : viewMode === "small"
-        ? "h-[220px] sm:h-[235px] md:h-full md:min-h-[200px]"
-        : "h-[330px] md:h-full md:min-h-[200px]";
-
-  // The map is client-only (`ssr: false`), so in the server HTML its list item
-  // had no height on phones and every card below it sat 330 px higher than
-  // after hydration: a 0.16 layout shift on /catalog, the top entry page
-  // (measured 2026-09-27; Clarity reported CLS 0.31 in the field). The item
-  // reserves the map's phone height itself; md+ keeps the row-height rule.
-  const mapSlotClassName =
-    viewMode === "list"
-      ? "min-h-[250px] md:min-h-[270px]"
-      : viewMode === "small"
-        ? "min-h-[220px] sm:min-h-[235px] md:min-h-0"
-        : "min-h-[330px] md:min-h-0";
-
-  // The side preview card suits the small grid's narrow map only, not full screen.
-  const isSmallMode = viewMode === 'small' && !mapExpanded
-  React.useEffect(() => {
-    const resolveTier = () => {
-      if (typeof window === "undefined") return "mobile" as LayoutTier;
-      if (window.matchMedia("(min-width: 1280px)").matches) return "xl";
-      if (window.matchMedia("(min-width: 768px)").matches) return "md";
-      return "mobile";
-    };
-    const onResize = () => setLayoutTier(resolveTier());
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  const composedItems = React.useMemo(() => {
-    const slots = getBannerSlots(viewMode, layoutTier);
-    return composeCatalogFlowItems({ pageItems: allItems, banners, slots });
-  }, [viewMode, layoutTier, allItems, banners]);
+  const columns = columnCount(viewMode, windowWidth, split);
+  const composedItems = React.useMemo(
+    () => composeCatalogFlowItems({ pageItems: allItems, banners, slots: getBannerSlots(columns) }),
+    [columns, allItems, banners]
+  );
 
   const previewItem = React.useMemo(
     () => (previewSlug ? previewPool.find((p) => p.slug === previewSlug) ?? null : null),
@@ -621,10 +618,15 @@ export function CatalogBodyClient({
     return previewItem._href ?? `/${locale}/property/${previewItem.slug}`
   }, [previewItem, locale])
 
+  // The panel sticks under the header and the filter bar and fills the rest
+  // of the window; its size is set in CSS before the map loads (no shift).
+  const panelTop = HEADER_OFFSET_PX + filterBarHeight + 12;
+
   return (
     <>
       {/* Filters: sticky below fixed header (z-50); z-40 above property card overlays (z-30). Background lives on PropertySearchBar only — no second white shell. */}
       <div
+        ref={filterBarRef}
         className={cn(
           "sticky z-40 min-w-0 [contain:layout]",
           "top-[calc(env(safe-area-inset-top,0px)+72px)] md:top-[84px]"
@@ -637,177 +639,190 @@ export function CatalogBodyClient({
       </div>
       {afterFilters ? <div className="min-w-0 pb-5 md:pb-6">{afterFilters}</div> : null}
       <div className="min-w-0 min-h-0 pb-12 sm:pb-16 md:pb-20">
-        <div className={gridClass}>
-          {composedItems.map((entry) => {
-            if (entry.kind === "banner") {
-              return (
-                <div key={entry.key} className="min-w-0 col-span-full">
-                  <PropertyCatalogBannerCard banner={entry.banner} />
-                </div>
-              );
-            }
-            if (entry.kind === "map") {
-              return (
-                <div key={entry.key} className={cn(mapListItemClassName, "relative", mapSlotClassName)} ref={mapCardRef}>
-                  {/* The slot keeps its place in the grid; the map inside it
-                      fills the slot, or the whole screen when expanded. */}
-                  <div
-                    className={cn(
-                      mapExpanded
-                        ? "fixed inset-0 z-[80] bg-white dark:bg-black pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]"
-                        : "absolute inset-0"
-                    )}
-                  >
-                  {showMap ? (
-                    <PropertiesMap
-                      items={mapItems}
-                      activeSlug={activeSlug}
-                      onActiveSlugChange={handleActiveSlugFromMap}
-                      mapHeightClassName={mapHeightClassName}
-                      className={(mapExpanded || viewMode === "small" || viewMode === "large") ? "h-full" : undefined}
-                      selectedCitySlug={filterProps.initialCity || undefined}
-                      selectedDistrictSlug={filterProps.initialDistrict || undefined}
-                      selectedDealType={filterProps.initialDealType || undefined}
-                      expanded={mapExpanded}
-                      onExpandedChange={handleMapExpandedChange}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
-                  )}
-                  {previewItem && (
-                    <div
-                      ref={previewRef}
-                      className={cn(
-                        "absolute z-20 rounded-xl border border-dark/10 dark:border-white/20 bg-white/95 dark:bg-black/90 shadow-lg backdrop-blur-sm overflow-visible",
-                        // SMALL mode: compact vertical side card to preserve map area
-                        isSmallMode
-                          ? "right-3 top-3 bottom-3 w-[198px] p-0 flex flex-col"
-                          : mapExpanded
-                            ? "left-3 right-3 bottom-[calc(env(safe-area-inset-bottom,0px)+12px)] p-0 sm:left-1/2 sm:right-auto sm:w-[420px] sm:-translate-x-1/2"
-                            : "left-3 right-3 bottom-3 p-0"
-                      )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setPreviewSlug(null)}
-                        className={cn(
-                          "absolute z-30 w-7 h-7 rounded-full bg-white/95 dark:bg-black/85 border border-dark/15 dark:border-white/25 text-dark dark:text-white text-sm cursor-pointer shadow-md",
-                          isSmallMode ? "-top-2 -right-2" : "top-2 right-2"
-                        )}
-                        aria-label={tCard('closePreview')}
-                      >
-                        ×
-                      </button>
-                      {isSmallMode ? (
-                        <Link href={previewHref} className="block h-full p-2.5 pr-3">
-                          <div className="h-full flex flex-col gap-3">
-                            <div className="w-full h-[44%] min-h-[92px] rounded-lg overflow-hidden bg-dark/5 dark:bg-white/10">
-                              {previewItem.images?.[0]?.src ? (
-                                <img
-                                  src={previewItem.images[0].src}
-                                  alt={previewItem.name || tCard('propertyFallback')}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : null}
-                            </div>
-                            <div className="min-w-0 flex-1 flex flex-col justify-between">
-                              <div className="min-w-0">
-                                <p className="text-[11px] text-dark/60 dark:text-white/60 truncate">
-                                  {previewItem.propertyType || displayStatusLabel(previewItem.status, tDealType) || tCard('propertyFallback')}
-                                </p>
-                                <p className="text-sm font-semibold text-dark dark:text-white truncate">
-                                  {previewItem.price != null && Number.isFinite(previewItem.price)
-                                    ? formatFromEur(previewItem.price)
-                                    : previewItem.rate /* legacy fallback when price missing */}
-                                </p>
-                                <p className="text-xs text-dark dark:text-white truncate">{previewItem.name}</p>
-                                <p className="text-[11px] text-dark/60 dark:text-white/60 truncate mt-0.5">
-                                  {previewItem.location}
-                                </p>
-                              </div>
-                              <p className="text-[11px] text-dark/70 dark:text-white/70 mt-2 truncate">
-                                {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
-                              </p>
-                            </div>
-                          </div>
-                        </Link>
-                      ) : (
-                        <Link href={previewHref} className="block p-3 pr-10">
-                          <div className="flex gap-3 items-start">
-                            <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0 bg-dark/5 dark:bg-white/10">
-                              {previewItem.images?.[0]?.src ? (
-                                <img
-                                  src={previewItem.images[0].src}
-                                  alt={previewItem.name || tCard('propertyFallback')}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : null}
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs text-dark/60 dark:text-white/60 truncate">
-                                {previewItem.propertyType || displayStatusLabel(previewItem.status, tDealType) || tCard('propertyFallback')}
-                              </p>
-                              <p className="text-sm font-semibold text-dark dark:text-white truncate">
-                                {previewItem.price != null && Number.isFinite(previewItem.price)
-                                  ? formatFromEur(previewItem.price)
-                                  : previewItem.rate /* legacy fallback when price missing */}
-                              </p>
-                              <p className="text-sm text-dark dark:text-white truncate">{previewItem.name}</p>
-                              <p className="text-xs text-dark/60 dark:text-white/60 truncate">{previewItem.location}</p>
-                              <p className="text-[11px] text-dark/70 dark:text-white/70 mt-1">
-                                {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
-                              </p>
-                            </div>
-                          </div>
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                  </div>
-                </div>
-              );
-            }
-            const item = entry.item;
-            const isActive = activeSlug === item.slug;
-            return (
-              <div
-                key={entry.key}
-                className={cn("min-w-0", viewMode !== "list" && "h-full", isActive && "rounded-2xl ring-2 ring-primary/40")}
-                ref={(el) => {
-                  if (!item.slug) return;
-                  cardRefs.current[item.slug] = el;
-                }}
-              >
-                {/* Every card in a row takes the row's height and keeps its
-                    button on the bottom edge, even when a listing has no price,
-                    no rooms or no area to show (partner projects often don't). */}
-                <PropertyCard item={item} locale={locale} view={viewMode} fillHeight={viewMode !== "list"} />
+        <div className={cn(split && "lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start")}>
+          <div className={cn("min-w-0", split && "lg:col-span-7")}>
+            {allItems.length > 0 ? (
+              <div className="mb-3 hidden justify-end lg:flex">
+                <button
+                  type="button"
+                  onClick={toggleMapHidden}
+                  aria-pressed={!mapHidden}
+                  className="inline-flex h-9 items-center gap-2 rounded-full border border-dark/15 px-4 text-sm font-medium text-dark hover:border-primary hover:text-primary dark:border-white/20 dark:text-white"
+                >
+                  <MapIcon />
+                  {mapHidden ? tMap("showMap") : tMap("hideMap")}
+                </button>
               </div>
-            );
-          })}
-        </div>
-        {allItems.length === 0 ? (
-          <CatalogEmptyState locale={locale} />
-        ) : (
-          <>
-            {/* One control: a link to the next page for crawlers, an in-place
-                append for people. See PropertyPagination. */}
-            {totalPages > 1 && (
-              <PropertyPagination
-                currentPage={currentPage}
-                nextPage={nextPage}
-                hasMore={hasMore}
-                isLoading={isLoadingMore}
-                onShowMore={loadMore}
-                from={(currentPage - 1) * pageSize + 1}
-                to={Math.min(totalCount, (currentPage - 1) * pageSize + allItems.length)}
-                total={totalCount}
-                serverSearch={serverSearch}
-              />
+            ) : null}
+            <div className={gridClass}>
+              {composedItems.map((entry) => {
+                if (entry.kind === "banner") {
+                  return (
+                    <div key={entry.key} className="min-w-0 col-span-full">
+                      <PropertyCatalogBannerCard banner={entry.banner} />
+                    </div>
+                  );
+                }
+                const item = entry.item;
+                const isActive = activeSlug === item.slug;
+                return (
+                  <div
+                    key={entry.key}
+                    className={cn("min-w-0", viewMode !== "list" && "h-full", isActive && "rounded-2xl ring-2 ring-primary/40")}
+                    ref={(el) => {
+                      if (!item.slug) return;
+                      cardRefs.current[item.slug] = el;
+                    }}
+                    // The card's pin lights up on the map while the pointer is on it.
+                    onMouseEnter={() => setHoveredSlug(item.slug)}
+                    onMouseLeave={() => setHoveredSlug((s) => (s === item.slug ? null : s))}
+                  >
+                    {/* Every card in a row takes the row's height and keeps its
+                        button on the bottom edge, even when a listing has no price,
+                        no rooms or no area to show (partner projects often don't). */}
+                    <PropertyCard item={item} locale={locale} view={viewMode} fillHeight={viewMode !== "list"} />
+                  </div>
+                );
+              })}
+            </div>
+            {allItems.length === 0 ? (
+              <CatalogEmptyState locale={locale} />
+            ) : (
+              <>
+                {/* One control: a link to the next page for crawlers, an in-place
+                    append for people. See PropertyPagination. */}
+                {totalPages > 1 && (
+                  <PropertyPagination
+                    currentPage={currentPage}
+                    nextPage={nextPage}
+                    hasMore={hasMore}
+                    isLoading={isLoadingMore}
+                    onShowMore={loadMore}
+                    from={(currentPage - 1) * pageSize + 1}
+                    to={Math.min(totalCount, (currentPage - 1) * pageSize + allItems.length)}
+                    total={totalCount}
+                    serverSearch={serverSearch}
+                  />
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+
+          {/* The map: a sticky panel beside the cards from lg up, full screen
+              when expanded (the only way to it below lg). One instance, so the
+              camera and the loaded points survive switching between the two. */}
+          <aside
+            className={cn(
+              mapExpanded ? "block" : split ? "hidden lg:block" : "hidden",
+              split && "lg:col-span-5 lg:sticky lg:top-[var(--map-top)] lg:h-[calc(100dvh-var(--map-top)-16px)] lg:min-h-[420px]"
+            )}
+            style={{ "--map-top": `${panelTop}px` } as React.CSSProperties}
+          >
+            <div
+              ref={mapCardRef}
+              className={cn(
+                mapExpanded
+                  ? "fixed inset-0 z-[80] bg-white dark:bg-black pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]"
+                  : "relative h-full"
+              )}
+            >
+              {showMap ? (
+                <PropertiesMap
+                  items={mapItems}
+                  activeSlug={activeSlug}
+                  highlightSlug={hoveredSlug}
+                  onActiveSlugChange={handleActiveSlugFromMap}
+                  mapHeightClassName="h-full"
+                  className="h-full"
+                  selectedCitySlug={filterProps.initialCity || undefined}
+                  selectedDistrictSlug={filterProps.initialDistrict || undefined}
+                  selectedDealType={filterProps.initialDealType || undefined}
+                  expanded={mapExpanded}
+                  onExpandedChange={handleMapExpandedChange}
+                />
+              ) : (
+                <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
+              )}
+              {previewItem && (
+                <div
+                  ref={previewRef}
+                  className={cn(
+                    "absolute z-20 rounded-xl border border-dark/10 dark:border-white/20 bg-white/95 dark:bg-black/90 shadow-lg backdrop-blur-sm overflow-visible p-0",
+                    mapExpanded
+                      ? "left-3 right-3 bottom-[calc(env(safe-area-inset-bottom,0px)+12px)] sm:left-1/2 sm:right-auto sm:w-[420px] sm:-translate-x-1/2"
+                      : "left-3 right-3 bottom-3"
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setPreviewSlug(null)}
+                    className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/95 dark:bg-black/85 border border-dark/15 dark:border-white/25 text-dark dark:text-white text-sm cursor-pointer shadow-md"
+                    aria-label={tCard('closePreview')}
+                  >
+                    ×
+                  </button>
+                  <Link href={previewHref} className="block p-3 pr-10">
+                    <div className="flex gap-3 items-start">
+                      <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0 bg-dark/5 dark:bg-white/10">
+                        {previewItem.images?.[0]?.src ? (
+                          <img
+                            src={previewItem.images[0].src}
+                            alt={previewItem.name || tCard('propertyFallback')}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : null}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-dark/60 dark:text-white/60 truncate">
+                          {previewItem.propertyType || displayStatusLabel(previewItem.status, tDealType) || tCard('propertyFallback')}
+                        </p>
+                        <p className="text-sm font-semibold text-dark dark:text-white truncate">
+                          {previewItem.price != null && Number.isFinite(previewItem.price)
+                            ? formatFromEur(previewItem.price)
+                            : previewItem.rate /* legacy fallback when price missing */}
+                        </p>
+                        <p className="text-sm text-dark dark:text-white truncate">{previewItem.name}</p>
+                        <p className="text-xs text-dark/60 dark:text-white/60 truncate">{previewItem.location}</p>
+                        <p className="text-[11px] text-dark/70 dark:text-white/70 mt-1">
+                          {tCard('bedroomsCount', { count: previewItem.beds })} • {tCard('bathroomsCount', { count: previewItem.baths })} • {previewItem.area}{tCard('areaUnit')}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
       </div>
+
+      {/* Phones and tablets (and desktop with the map hidden): a floating
+          button opens the full-screen map. */}
+      {!mapExpanded && allItems.length > 0 ? (
+        <button
+          type="button"
+          onClick={() => handleMapExpandedChange(true)}
+          className={cn(
+            "fixed left-1/2 z-[45] inline-flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-dark px-5 text-sm font-semibold text-white shadow-lg hover:bg-primary dark:bg-white dark:text-dark",
+            // Above the listing contact bar on phones (it pads the page by its
+            // own height) and the installed app's tab bar.
+            "bottom-[calc(max(env(safe-area-inset-bottom,0px),var(--sticky-bar-height,0px))+var(--bottom-nav-height,0px)+12px)]",
+            split && "lg:hidden"
+          )}
+        >
+          <MapIcon />
+          {tMap("mapButton", { count: totalCount })}
+        </button>
+      ) : null}
     </>
+  );
+}
+
+function MapIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" />
+      <path d="M9 4v14M15 6v14" />
+    </svg>
   );
 }

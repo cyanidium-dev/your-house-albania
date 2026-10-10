@@ -55,6 +55,8 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
     const measure = () => {
       const height = el.offsetHeight
       document.body.style.paddingBottom = height > 0 ? `${height}px` : ''
+      // Other floating controls (the catalogue's Map button) sit above it.
+      document.documentElement.style.setProperty('--sticky-bar-height', `${height}px`)
     }
 
     /**
@@ -94,6 +96,7 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
       window.removeEventListener('resize', schedule)
       window.removeEventListener('orientationchange', schedule)
       document.body.style.paddingBottom = ''
+      document.documentElement.style.removeProperty('--sticky-bar-height')
     }
   }, [minWidth])
 

@@ -169,7 +169,10 @@
       "approximateLegend": "≈ ungefähre Lage: die Markierung zeigt den Stadtteil oder einen nahen Orientierungspunkt, nicht das Gebäude",
       "enterFullscreen": "Karte im Vollbild öffnen",
       "exitFullscreen": "Vollbildkarte schließen",
-      "viewMode": "Kartenansicht"
+      "viewMode": "Kartenansicht",
+      "mapButton": "Karte · {count}",
+      "showMap": "Karte anzeigen",
+      "hideMap": "Karte ausblenden"
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",
