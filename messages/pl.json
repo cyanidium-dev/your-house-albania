@@ -163,7 +163,11 @@
       "showMap": "Pokaż mapę",
       "hideMap": "Ukryj mapę",
       "openListing": "Zobacz ofertę",
-      "approximateShort": "lokalizacja przybliżona: okolica, a nie sam budynek"
+      "approximateShort": "lokalizacja przybliżona: okolica, a nie sam budynek",
+      "zoomIn": "Przybliż",
+      "zoomOut": "Oddal",
+      "resetBearing": "Obróć mapę na północ",
+      "offline": "Mapa wymaga połączenia z internetem. Oferty poniżej działają też offline."
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",

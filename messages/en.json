@@ -174,7 +174,11 @@
       "showMap": "Show map",
       "hideMap": "Hide map",
       "openListing": "View listing",
-      "approximateShort": "approximate location, the area rather than the building"
+      "approximateShort": "approximate location, the area rather than the building",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "resetBearing": "Turn the map back north",
+      "offline": "The map needs an internet connection. The listings below work offline."
     },
     "propertyDetail": {
       "propertyDetails": "Property details",

@@ -174,7 +174,11 @@
       "showMap": "Karte anzeigen",
       "hideMap": "Karte ausblenden",
       "openListing": "Inserat öffnen",
-      "approximateShort": "ungefähre Lage: die Gegend, nicht das Gebäude"
+      "approximateShort": "ungefähre Lage: die Gegend, nicht das Gebäude",
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "resetBearing": "Karte nach Norden ausrichten",
+      "offline": "Die Karte braucht eine Internetverbindung. Die Inserate darunter funktionieren auch offline."
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",

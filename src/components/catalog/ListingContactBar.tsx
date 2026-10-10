@@ -24,7 +24,7 @@ export async function ListingContactBar({ locale }: { locale: string }) {
   )
 
   return (
-    <MobileStickyBar hideFrom="md" placement="catalog" label={t('barLabel')}>
+    <MobileStickyBar hideFrom="md" hideInApp placement="catalog" label={t('barLabel')}>
       <div
         className="flex items-center gap-2 bg-primary/50 px-4 py-3"
         style={{ paddingBottom: 'max(0.75rem, var(--app-bottom-inset, env(safe-area-inset-bottom, 0px)))' }}

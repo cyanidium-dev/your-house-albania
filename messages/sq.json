@@ -174,7 +174,11 @@
       "showMap": "Shfaq hartën",
       "hideMap": "Fshih hartën",
       "openListing": "Shiko pronën",
-      "approximateShort": "vendndodhje e përafërt: zona, jo vetë ndërtesa"
+      "approximateShort": "vendndodhje e përafërt: zona, jo vetë ndërtesa",
+      "zoomIn": "Zmadho",
+      "zoomOut": "Zvogëlo",
+      "resetBearing": "Ktheje hartën nga veriu",
+      "offline": "Harta ka nevojë për internet. Njoftimet më poshtë punojnë edhe pa lidhje."
     },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",

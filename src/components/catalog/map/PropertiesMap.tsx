@@ -2,8 +2,11 @@
 
 import * as React from 'react'
 import maplibregl from 'maplibre-gl'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useCurrency } from '@/contexts/CurrencyContext'
+import { formatMoney } from '@/lib/currency/format'
+import { convertFromBaseEur } from '@/lib/currency/convert'
+import { displayDealLabel } from '@/lib/property/cardFormatters'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { cn } from '@/lib/utils'
@@ -125,8 +128,10 @@ export function PropertiesMap({
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
 }) {
-  const { formatFromEur } = useCurrency()
+  const { currency, rates } = useCurrency()
+  const locale = useLocale()
   const tMap = useTranslations('Shared.map')
+  const tDeal = useTranslations('Shared.propertyDetail')
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const mapRef = React.useRef<MapLibreMap | null>(null)
   const resizeRafRef = React.useRef<number | null>(null)
@@ -153,14 +158,6 @@ export function PropertiesMap({
   const validPoints = React.useMemo(() => {
     const selectedDeal = (selectedDealType || '').trim().toLowerCase()
 
-    const normalizeDeal = (status?: string) => {
-      const s = (status || '').trim().toLowerCase()
-      if (s === 'sale') return 'sale'
-      if (s === 'rent') return 'rent'
-      if (s === 'short-term' || s === 'shortterm') return 'short rent'
-      if (s === 'long-term' || s === 'longterm') return 'long rent'
-      return ''
-    }
 
     return items
       .map((it) => {
@@ -170,14 +167,15 @@ export function PropertiesMap({
         if (typeof lat !== 'number' || typeof lng !== 'number') return null
         if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null
 
+        // Formatted like the cards (locale and currency), and in the page's
+        // language: the pills printed "83 000 € sale" in every locale. Zero is
+        // "price on request", never "0 €": such a listing gets a dot.
         const priceText =
-          typeof it.price === 'number' && Number.isFinite(it.price)
-            ? formatFromEur(it.price)
-            : it.rate /* legacy fallback when price missing */
-              ? it.rate
-              : ''
-        const dealText = normalizeDeal(it.status)
-        const markerLabel = selectedDeal ? priceText : [priceText, dealText].filter(Boolean).join(' ')
+          typeof it.price === 'number' && Number.isFinite(it.price) && it.price > 0
+            ? formatMoney(convertFromBaseEur(it.price, currency, rates), currency, locale)
+            : ''
+        const dealText = it.status ? displayDealLabel(it.status, tDeal, { compact: true }) : ''
+        const markerLabel = !priceText ? '' : selectedDeal ? priceText : [priceText, dealText].filter(Boolean).join(' · ')
 
         const approximate = it.locationPrecision === 'approximate'
 
@@ -187,7 +185,7 @@ export function PropertiesMap({
           lng,
           markerLabel,
           approximate,
-          pill: it.pill !== false,
+          pill: it.pill !== false && markerLabel !== '',
         }
       })
       .filter(Boolean) as Array<{
@@ -198,7 +196,7 @@ export function PropertiesMap({
         approximate: boolean
         pill: boolean
       }>
-  }, [items, selectedDealType, formatFromEur])
+  }, [items, selectedDealType, currency, rates, locale, tDeal])
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -407,6 +405,12 @@ export function PropertiesMap({
       bearing: mode === '3d' ? BEARING_3D : 0,
       maxPitch: 70,
       attributionControl: false,
+      // The control tooltips in the page's language (they were English).
+      locale: {
+        'NavigationControl.ZoomIn': tMap('zoomIn'),
+        'NavigationControl.ZoomOut': tMap('zoomOut'),
+        'NavigationControl.ResetBearing': tMap('resetBearing'),
+      },
     })
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
     // Zoom buttons and a compass that also shows the tilt; a tap on the
@@ -420,7 +424,9 @@ export function PropertiesMap({
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 14,
+        // Clusters hold out a zoom level longer than before: at 14 the beach
+        // front became a wall of overlapping pills.
+        clusterMaxZoom: 15,
         clusterRadius: 50,
         promoteId: 'slug',
       })
@@ -755,18 +761,46 @@ export function PropertiesMap({
     }
   }, [expanded, onExpandedChange, scheduleMapResize])
 
+  // Once the visitor has moved the map, new points (the full set arriving,
+  // "Show more") must not throw the camera back; a new place resets that.
+  const userMovedRef = React.useRef(false)
+  React.useEffect(() => {
+    userMovedRef.current = false
+  }, [selectedCitySlug, selectedDistrictSlug, selectedDealType])
+  React.useEffect(() => {
+    const map = mapRef.current
+    if (!ready || !map) return
+    const onMoveStart = (e: { originalEvent?: unknown }) => {
+      if (e.originalEvent) userMovedRef.current = true
+    }
+    map.on('movestart', onMoveStart)
+    return () => {
+      map.off('movestart', onMoveStart)
+    }
+  }, [ready])
+
   // Fly/fit map when results change.
   React.useEffect(() => {
     if (!ready || !mapRef.current) return
     if (activeSlug) return // active selection always has priority
+    if (userMovedRef.current) return
 
     const map = mapRef.current
 
-    // 1) Selected city/district scope (if known).
-    if (selectedScope) {
+    // 1) A city or district: fit its listings (every city, not only those
+    // with a preset; Shëngjin opened on the whole country). Points more than
+    // 25 km from the median are left out of the fit, so one misplaced pin
+    // cannot zoom a city out to half of Albania.
+    if (selectedScope || selectedCitySlug || selectedDistrictSlug) {
       if (validPoints.length > 1) {
+        const median = (xs: number[]) => xs.slice().sort((a, b) => a - b)[Math.floor(xs.length / 2)]
+        const mLat = median(validPoints.map((p) => p.lat))
+        const mLng = median(validPoints.map((p) => p.lng))
+        const near = validPoints.filter(
+          (p) => Math.abs(p.lat - mLat) * 111 < 25 && Math.abs(p.lng - mLng) * 111 * Math.cos((mLat * Math.PI) / 180) < 25
+        )
         const bounds = new maplibregl.LngLatBounds()
-        for (const p of validPoints) bounds.extend([p.lng, p.lat] as any)
+        for (const p of near.length ? near : validPoints) bounds.extend([p.lng, p.lat])
         map.fitBounds(bounds, {
           padding: 56,
           duration: 500,
@@ -780,12 +814,14 @@ export function PropertiesMap({
         map.easeTo({ center: [p.lng, p.lat], zoom: 13.6, duration: 450 })
         return
       }
-      map.easeTo({
-        center: selectedScope.center,
-        zoom: selectedScope.zoom,
-        duration: 450,
-      })
-      return
+      if (selectedScope) {
+        map.easeTo({
+          center: selectedScope.center,
+          zoom: selectedScope.zoom,
+          duration: 450,
+        })
+        return
+      }
     }
 
     // 2) No selected city/district -> Albania overview.
@@ -867,6 +903,7 @@ export function PropertiesMap({
       if (!f) return
       const clusterId = (f.properties as { cluster_id?: number } | null)?.cluster_id
       if (clusterId == null) return
+      userMovedRef.current = true
       const src = map.getSource('properties') as maplibregl.GeoJSONSource
       const center = (f.geometry as GeoJSON.Point).coordinates as [number, number]
       src
@@ -965,6 +1002,9 @@ export function PropertiesMap({
         'bg-white dark:bg-black',
         '[&_.maplibregl-ctrl-bottom-right]:right-1 [&_.maplibregl-ctrl-bottom-right]:bottom-1',
         '[&_.maplibregl-ctrl.maplibregl-ctrl-attrib]:m-0',
+        // Zoom/compass buttons follow the site's dark theme.
+        'dark:[&_.maplibregl-ctrl-group]:bg-dark dark:[&_.maplibregl-ctrl-group]:border dark:[&_.maplibregl-ctrl-group]:border-white/20',
+        'dark:[&_.maplibregl-ctrl-group_button+button]:border-white/20 dark:[&_.maplibregl-ctrl-icon]:invert',
         '[&_.maplibregl-ctrl-attrib]:rounded-md [&_.maplibregl-ctrl-attrib]:border [&_.maplibregl-ctrl-attrib]:border-black/10 dark:[&_.maplibregl-ctrl-attrib]:border-white/20',
         '[&_.maplibregl-ctrl-attrib]:bg-white/70 dark:[&_.maplibregl-ctrl-attrib]:bg-black/60',
         '[&_.maplibregl-ctrl-attrib]:backdrop-blur-[1px]',
@@ -1018,10 +1058,13 @@ export function PropertiesMap({
       </div>
       {hasApproximate ? (
         <div
-          className="pointer-events-none absolute left-2 right-14 top-2 z-10 sm:right-auto sm:max-w-[65%] rounded-md border border-black/10 bg-white/85 px-2 py-1 text-[11px] leading-tight text-dark/80 backdrop-blur-[1px] dark:border-white/20 dark:bg-black/60 dark:text-white/80"
-          aria-live="polite"
+          // One line: the two-line version covered a strip of the map. The
+          // full sentence is the tooltip and the accessible text.
+          className="absolute left-2 top-2 z-10 max-w-[calc(100%-4.5rem)] truncate rounded-md border border-black/10 bg-white/85 px-2 py-1 text-[11px] leading-tight text-dark/80 backdrop-blur-[1px] dark:border-white/20 dark:bg-black/60 dark:text-white/80 sm:max-w-[65%]"
+          title={tMap('approximateLegend')}
+          aria-label={tMap('approximateLegend')}
         >
-          {tMap('approximateLegend')}
+          ≈ {tMap('approximateShort')}
         </div>
       ) : null}
     </div>

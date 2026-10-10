@@ -174,7 +174,11 @@
       "showMap": "Mostra la mappa",
       "hideMap": "Nascondi la mappa",
       "openListing": "Apri l’annuncio",
-      "approximateShort": "posizione approssimativa: la zona, non l’edificio"
+      "approximateShort": "posizione approssimativa: la zona, non l’edificio",
+      "zoomIn": "Ingrandisci",
+      "zoomOut": "Riduci",
+      "resetBearing": "Riporta la mappa a nord",
+      "offline": "La mappa richiede una connessione a internet. Gli annunci qui sotto funzionano anche offline."
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",

@@ -17,9 +17,12 @@ import { MapListingSheet } from "@/components/catalog/map/MapListingSheet";
 
 const PropertiesMap = dynamic(
   () =>
-    import("@/components/catalog/map/PropertiesMap").then(
-      (m) => m.PropertiesMap
-    ),
+    import("@/components/catalog/map/PropertiesMap")
+      .then((m) => m.PropertiesMap)
+      // Offline in the installed app the map's code may never have been
+      // fetched (phones load it only when the map opens); a failed chunk took
+      // the whole page down with "Application error". Show a note instead.
+      .catch(() => MapUnavailable),
   {
     ssr: false,
     // Fills the panel, which has its size before the map arrives.
@@ -745,6 +748,10 @@ export function CatalogBodyClient({
           <aside
             className={cn(
               mapExpanded ? "block" : split ? "hidden lg:block" : "hidden",
+              // The sticky aside is its own stacking context: without a z-index
+              // of its own the expanded map inside it stayed under the header
+              // (z-50) and the card controls on desktop, its × unclickable.
+              mapExpanded && "z-[55]",
               split && "lg:col-span-5 lg:sticky lg:top-[var(--map-top)] lg:h-[calc(100dvh-var(--map-top)-16px)] lg:min-h-[420px]"
             )}
             style={{ "--map-top": `${panelTop}px` } as React.CSSProperties}
@@ -814,7 +821,9 @@ export function CatalogBodyClient({
             // Above the listing contact bar on phones (it pads the page by its
             // own height) and the installed app's tab bar.
             "bottom-[calc(var(--app-tabbar-offset,0px)+max(var(--app-bottom-inset,0px),var(--mobile-sticky-bar-height,0px))+12px)]",
-            split && "lg:hidden"
+            split && "lg:hidden",
+            // The installed app has a Map tab for this.
+            "[@media(display-mode:standalone)]:hidden [[data-pwa-standalone]_&]:hidden"
           )}
         >
           <MapIcon />
@@ -831,5 +840,14 @@ function MapIcon() {
       <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" />
       <path d="M9 4v14M15 6v14" />
     </svg>
+  );
+}
+
+function MapUnavailable() {
+  const t = useTranslations("Shared.map");
+  return (
+    <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-dark/5 p-6 text-center text-sm text-dark/70 dark:bg-white/10 dark:text-white/70">
+      {t("offline")}
+    </div>
   );
 }

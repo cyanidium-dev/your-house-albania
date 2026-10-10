@@ -23,9 +23,9 @@ import { cn } from "@/lib/utils";
  *
  * The room it takes is reserved in CSS (`--app-tabbar-offset` in globals.css),
  * from the first paint, and the site's other fixed bottom elements sit above
- * it. `z-[35]`: above the page and its card overlays (z-30), below the menu
- * backdrop (z-40), dialogs (z-50+) and the cookie banner (z-90), which all
- * cover it.
+ * it. `z-[45]`: above the page, its card overlays (z-30) and the sticky filter
+ * bar (z-40); below the menu (z-50), the full-screen map (z-55, which ends
+ * above the bar), dialogs (z-60) and the cookie banner (z-90).
  */
 
 const STANDALONE_QUERY = "(display-mode: standalone)";
@@ -184,7 +184,10 @@ export default function AppTabBar({ locale, aiSearchEnabled }: { locale: string;
     <nav
       aria-label={t("tabsLabel")}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-[35] lg:hidden print:hidden",
+        // z-45: above the catalogue's sticky filter bar (z-40), which scrolls
+        // through the bottom of the screen at the top of a listing and took
+        // the taps meant for the tabs; the phone menu (z-50) still covers it.
+        "fixed inset-x-0 bottom-0 z-[45] lg:hidden print:hidden",
         "border-t border-dark/10 bg-white/95 backdrop-blur-md dark:border-white/15 dark:bg-dark/95",
         "pb-[env(safe-area-inset-bottom,0px)]",
         // A contact dialog's backdrop is translucent; tabs showing through it

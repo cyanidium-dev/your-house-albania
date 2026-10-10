@@ -39,9 +39,14 @@ type Props = {
   propertySlug?: string
   /** Accessible name of the bar. */
   label?: string
+  /**
+   * Not in the installed app, whose tab bar has its own Contact tab: the
+   * catalogue's bar there only duplicated it and took a fifth of the screen.
+   */
+  hideInApp?: boolean
 }
 
-export default function MobileStickyBar({ children, hideFrom = 'lg', placement, propertySlug, label }: Props) {
+export default function MobileStickyBar({ children, hideFrom = 'lg', placement, propertySlug, label, hideInApp = false }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const { hidden, minWidth } = BREAKPOINT[hideFrom]
 
@@ -111,7 +116,7 @@ export default function MobileStickyBar({ children, hideFrom = 'lg', placement, 
       {...(label ? { role: 'region', 'aria-label': label } : {})}
       {...(placement ? { 'data-lead-placement': placement } : {})}
       {...(propertySlug ? { 'data-property-slug': propertySlug } : {})}
-      className={`${hidden} fixed bottom-[var(--app-tabbar-offset,0px)] left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20 print:hidden [[data-contact-modal]_&]:invisible`}
+      className={`${hidden} ${hideInApp ? '[@media(display-mode:standalone)]:hidden [[data-pwa-standalone]_&]:hidden' : ''} fixed bottom-[var(--app-tabbar-offset,0px)] left-0 right-0 z-40 bg-white dark:bg-dark border-t border-dark/10 dark:border-white/20 print:hidden [[data-contact-modal]_&]:invisible`}
     >
       {children}
     </div>
