@@ -107,7 +107,8 @@
       },
       "ctaAll": "Переглянути всі об'єкти",
       "prev": "Попередні",
-      "next": "Наступні"
+      "next": "Наступні",
+      "seeAllCount": "Переглянути всі оголошення ({count, number})"
     },
     "featured": {
       "badge": "Рекомендований об'єкт",
@@ -328,7 +329,15 @@
     "confidenceLow": "Низька достовірність",
     "methodology": "Методологія",
     "confidence": "Надійність",
-    "versus": "{diff} vs {other}"
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Оголошення",
+      "fromPrice": "Найнижча ціна",
+      "medianPricePerSqm": "Медіанна ціна за м²",
+      "nearSeaShare": "До моря не далі 300 м",
+      "newBuildShare": "Новобудови (на етапі проєкту чи будівництва)",
+      "note": "Ціни пропозиції за відповідними оголошеннями на Domlivo, оновлюються щогодини."
+    }
   },
   "ZoneMetrics": {
     "priceNew": "Новобудова, €/м²",
@@ -806,7 +815,12 @@
     "successTitle": "Заявку прийнято",
     "successBody": "Передзвонимо протягом години в робочий час.",
     "error": "Не вдалося надіслати. Спробуйте ще раз або напишіть нам у Telegram.",
-    "consent": "Надсилаючи форму, ви погоджуєтесь на звʼязок щодо вашого запиту."
+    "consent": "Надсилаючи форму, ви погоджуєтесь на звʼязок щодо вашого запиту.",
+    "budgetPlaceholder": "Бюджет",
+    "messagePlaceholder": "Що ви шукаєте? (необов’язково)",
+    "budgetUpTo": "до {amount}",
+    "budgetRange": "{from} – {to}",
+    "budgetOver": "понад {amount}"
   },
   "DurresGuide": {
     "badge": "Безкоштовний PDF",

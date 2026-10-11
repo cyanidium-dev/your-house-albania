@@ -5,6 +5,8 @@ import { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from '@/lib/seo/listingIndexPolic
 import { isIndexedSeoStatus, seoPagePath, type SeoPageKey } from '@/lib/seo/pages';
 import { agentBioText, isAgentPageIndexable } from '@/lib/seo/agentIndexPolicy';
 import {
+  landingRowLocales,
+  mergeLandingLocaleScopes,
   resolveLandingPathForSitemap,
   type LandingPageSitemapRow,
 } from '../landingSitemapPaths';
@@ -91,7 +93,8 @@ export async function fetchAllAgentSlugsForSitemap(): Promise<AgentSitemapEntry[
   }
 }
 
-export type LandingPathSitemapEntry = { path: string; lastModified?: Date };
+/** `locales`: the landing's scope (`landingPage.locales`); empty = every locale. */
+export type LandingPathSitemapEntry = { path: string; lastModified?: Date; locales: string[] };
 
 /**
  * A landing's date: an individual save, else the editor's own
@@ -124,6 +127,7 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
     contentUpdatedAt,
     pageType,
     seo,
+    locales,
     "linkedCitySlug": linkedCity->slug.current,
     "linkedCityCountrySlug": linkedCity->country->slug.current
   }`;
@@ -131,15 +135,21 @@ export async function fetchAllLandingPathsForSitemap(): Promise<LandingPathSitem
     const rows = await client.fetch<LandingPageSitemapRow[]>(query);
     if (!Array.isArray(rows)) return [];
     const bulk = bulkTouchTimestamps(rows);
-    const best = new Map<string, Date | undefined>();
+    const best = new Map<string, { lastModified: Date | undefined; locales: string[] }>();
     for (const row of rows) {
       const path = resolveLandingPathForSitemap(row);
       if (!path) continue;
       const lm = landingLastmod(row, bulk);
-      if (!best.has(path)) best.set(path, lm);
-      else best.set(path, latestDate(best.get(path), lm));
+      const scope = landingRowLocales(row);
+      const prev = best.get(path);
+      best.set(
+        path,
+        prev
+          ? { lastModified: latestDate(prev.lastModified, lm), locales: mergeLandingLocaleScopes(prev.locales, scope) }
+          : { lastModified: lm, locales: scope },
+      );
     }
-    return Array.from(best.entries()).map(([path, lastModified]) => ({ path, lastModified }));
+    return Array.from(best.entries()).map(([path, v]) => ({ path, ...v }));
   } catch (err) {
     console.warn('[Sanity] fetchAllLandingPathsForSitemap failed:', err);
     return [];

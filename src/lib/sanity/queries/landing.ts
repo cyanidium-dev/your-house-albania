@@ -150,14 +150,29 @@ export const landingPageSectionsProjection = `{
   zone,
   zones,
   city,
+  // propertyCarouselSection auto mode and inventorySummarySection share this
+  // filter shape (lib/landing/listingFilter); references arrive as slugs.
   "filters": filters {
     "city": city->slug.current,
+    "cities": cities[]->slug.current,
     "district": district->slug.current,
     "propertyType": propertyType->slug.current,
+    "propertyTypes": propertyTypes[]->slug.current,
     deal,
     stage,
-    investment
+    investment,
+    minPrice,
+    maxPrice,
+    nearSea
   },
+  seeAllLabel,
+  // leadFormSection
+  submitLabel,
+  showBudget,
+  budgetOptions,
+  showMessage,
+  messengerCta,
+  anchorId,
   autoMode,
   metrics,
   showSources,
@@ -570,6 +585,10 @@ export async function fetchUniqueLandingBySlug(slug: string): Promise<{
   cardDescription?: unknown;
   cardImage?: { asset?: { url?: string } };
   pageSections?: unknown[];
+  topicTags?: string[];
+  contentUpdatedAt?: string;
+  /** `landingPage.locales` — the page exists only in these locales (empty = all). */
+  locales?: string[];
   seo?: unknown;
 } | null> {
   const trimmed = typeof slug === 'string' ? slug.trim() : '';
@@ -595,6 +614,7 @@ export async function fetchUniqueLandingBySlug(slug: string): Promise<{
     "pageSections": pageSections[]${landingPageSectionsProjection},
     topicTags,
     contentUpdatedAt,
+    locales,
     seo
   }`;
       try {

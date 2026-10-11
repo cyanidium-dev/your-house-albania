@@ -107,7 +107,8 @@
       },
       "ctaAll": "Смотреть все объекты",
       "prev": "Предыдущие",
-      "next": "Следующие"
+      "next": "Следующие",
+      "seeAllCount": "Смотреть все объявления ({count, number})"
     },
     "featured": {
       "badge": "Рекомендуемый объект",
@@ -328,7 +329,15 @@
     "confidenceLow": "Низкая достоверность",
     "methodology": "Методология",
     "confidence": "Надёжность",
-    "versus": "{diff} vs {other}"
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Объявления",
+      "fromPrice": "Самая низкая цена",
+      "medianPricePerSqm": "Медианная цена за м²",
+      "nearSeaShare": "До моря не дальше 300 м",
+      "newBuildShare": "Новостройки (на этапе проекта или строительства)",
+      "note": "Цены предложения по подходящим объявлениям на Domlivo, обновляются каждый час."
+    }
   },
   "ZoneMetrics": {
     "priceNew": "Новостройка, €/м²",
@@ -806,7 +815,12 @@
     "successTitle": "Заявка принята",
     "successBody": "Перезвоним в течение часа в рабочее время.",
     "error": "Не удалось отправить. Попробуйте ещё раз или напишите нам в Telegram.",
-    "consent": "Отправляя форму, вы соглашаетесь на связь по вашему запросу."
+    "consent": "Отправляя форму, вы соглашаетесь на связь по вашему запросу.",
+    "budgetPlaceholder": "Бюджет",
+    "messagePlaceholder": "Что вы ищете? (необязательно)",
+    "budgetUpTo": "до {amount}",
+    "budgetRange": "{from} – {to}",
+    "budgetOver": "более {amount}"
   },
   "DurresGuide": {
     "badge": "Бесплатный PDF",

@@ -67,8 +67,13 @@ export function formatAgentContactTelegramMessage(
       `Phone: ${data.phone}`,
       `Name: ${emptyToDash(data.customerName)}`,
       `Language: ${languageLabel(data.locale)}`,
+      // A landing form also asks for a budget and a free-text wish, and names
+      // the landing so the operator knows which page (and language) sold it.
+      ...(data.budgetLabel ? [`Budget: ${data.budgetLabel}`] : []),
       `Placement: ${emptyToDash(data.sourceLabel)}`,
+      ...(data.landingSlug ? [`Landing: ${data.landingSlug}`] : []),
       `Page: ${emptyToDash(data.sourceUrl)}`,
+      ...(data.message ? ['', 'Message:', data.message] : []),
     ].join('\n')
   }
 

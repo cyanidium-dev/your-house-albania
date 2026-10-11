@@ -9,6 +9,8 @@ import { asSections } from './sectionRenderers/helpers'
 import { renderLandingSection } from './sectionRenderers/registry'
 import type { LinkedZone } from './sectionRenderers/handlers/types'
 import { CONTAINER, PAGE_TOP } from '@/components/shared/layout'
+import { fetchCatalogInventorySummary } from '@/lib/sanity/queries/catalog'
+import { liveTokenScope, liveTokenValues, localizedHasLiveTokens, type LiveTokenValues } from '@/lib/landing/liveTokens'
 
 export type LandingPageDoc = {
   _id?: string
@@ -95,6 +97,15 @@ export async function LandingRenderer({
   const faqJsonLd = { emitted: false }
   const linkedZone = resolveLinkedZone(landing)
 
+  // `{count}` / `{fromPrice}` / `{medianPricePerSqm}` in the hero copy: filled
+  // from the page's inventory band (or feed) filter, fetched only when used.
+  let liveTokens: LiveTokenValues | null = null
+  const hero = sections[0]?._type === 'heroSection' ? sections[0] : undefined
+  if (hero && localizedHasLiveTokens([hero.title, hero.subtitle, hero.shortLine], locale)) {
+    const scope = liveTokenScope(sections, { linkedZone, citySlug })
+    if (scope) liveTokens = liveTokenValues(await fetchCatalogInventorySummary(scope), locale)
+  }
+
   const nodes: React.ReactNode[] = []
 
   for (let i = 0; i < sections.length; i++) {
@@ -108,6 +119,7 @@ export async function LandingRenderer({
       propertiesDeal,
       linkedZone,
       faqJsonLd,
+      liveTokens,
       landingCtx: { id: landing?._id, slug: landing?.slug, pageType: landing?.pageType, topicTags: landing?.topicTags },
     })
     if (node) nodes.push(node)

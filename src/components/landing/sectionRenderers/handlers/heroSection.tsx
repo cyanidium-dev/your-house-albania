@@ -3,6 +3,7 @@ import HeroSection from '@/components/landing/sections/impl/HeroSectionImpl'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { urlFor } from '@/lib/sanity/imageUrl'
 import { heroTabsFromSection } from '../helpers'
+import { fillLiveTokens } from '@/lib/landing/liveTokens'
 import type { SectionHandler } from './types'
 
 export const heroSectionHandler: SectionHandler = ({
@@ -13,7 +14,9 @@ export const heroSectionHandler: SectionHandler = ({
   linkedZone,
   propertiesDeal,
   landingCtx,
+  liveTokens,
 }) => {
+  const live = (text: string) => (text ? fillLiveTokens(text, liveTokens) : text)
   const bg = (section as { backgroundImage?: { asset?: { url?: string }; alt?: string } } | null)?.backgroundImage
   const backgroundImageUrl = bg ? urlFor(bg) : undefined
   // Sanity asset URLs carry the original size ("…-800x600.jpg").
@@ -23,9 +26,9 @@ export const heroSectionHandler: SectionHandler = ({
     : undefined
   const secondary = (section as { secondaryCta?: { href?: string; label?: unknown } }).secondaryCta
   const heroData = {
-    shortLine: resolveLocalizedString(section.shortLine as never, locale) || undefined,
-    title: resolveLocalizedString(section.title as never, locale) || undefined,
-    subtitle: resolveLocalizedString(section.subtitle as never, locale) || undefined,
+    shortLine: live(resolveLocalizedString(section.shortLine as never, locale)) || undefined,
+    title: live(resolveLocalizedString(section.title as never, locale)) || undefined,
+    subtitle: live(resolveLocalizedString(section.subtitle as never, locale)) || undefined,
     ctaLabel: resolveLocalizedString(section.cta?.label as never, locale) || undefined,
     ctaHref: section.cta?.href,
     secondaryCtaLabel: resolveLocalizedString(secondary?.label as never, locale) || undefined,

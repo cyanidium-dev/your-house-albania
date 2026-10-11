@@ -30,6 +30,10 @@ export type NormalizedAgentContactSubmission = {
   sourceLabel?: string
   /** Quote submissions: absolute URL of the page the request came from. */
   sourceUrl?: string
+  /** Quote submissions from a landing form: the budget the visitor picked. */
+  budgetLabel?: string
+  /** Quote submissions from a landing form: the CMS landing's slug. */
+  landingSlug?: string
 }
 
 /** Resolved routing for Telegram (IDs from env until CMS per-agent mapping exists). */

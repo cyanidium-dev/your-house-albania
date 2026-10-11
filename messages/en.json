@@ -107,7 +107,8 @@
       },
       "ctaAll": "View all properties",
       "prev": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "seeAllCount": "See all listings ({count, number})"
     },
     "featured": {
       "badge": "Featured property",
@@ -328,7 +329,15 @@
     "confidenceLow": "Low confidence",
     "methodology": "Methodology",
     "confidence": "Confidence",
-    "versus": "{diff} vs {other}"
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Listings",
+      "fromPrice": "Lowest price",
+      "medianPricePerSqm": "Median price per m²",
+      "nearSeaShare": "Within 300 m of the sea",
+      "newBuildShare": "New builds (off-plan or under construction)",
+      "note": "Asking prices of the listings on Domlivo that match this page, updated hourly."
+    }
   },
   "ZoneMetrics": {
     "priceNew": "New build, €/m²",
@@ -806,7 +815,12 @@
     "successTitle": "Request received",
     "successBody": "We will call you back within an hour during working hours.",
     "error": "Could not send. Please try again or write to us on Telegram.",
-    "consent": "By submitting you agree to be contacted about your request."
+    "consent": "By submitting you agree to be contacted about your request.",
+    "budgetPlaceholder": "Budget",
+    "messagePlaceholder": "What are you looking for? (optional)",
+    "budgetUpTo": "up to {amount}",
+    "budgetRange": "{from} – {to}",
+    "budgetOver": "over {amount}"
   },
   "DurresGuide": {
     "badge": "Free PDF",

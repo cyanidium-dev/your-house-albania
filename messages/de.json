@@ -107,7 +107,8 @@
       },
       "ctaAll": "Alle Immobilien ansehen",
       "prev": "Zurück",
-      "next": "Weiter"
+      "next": "Weiter",
+      "seeAllCount": "Alle Angebote ansehen ({count, number})"
     },
     "featured": {
       "badge": "Top-Immobilie",
@@ -328,7 +329,15 @@
     "confidenceLow": "Geringe Zuverlässigkeit",
     "methodology": "Methodik",
     "confidence": "Verlässlichkeit",
-    "versus": "{diff} vs {other}"
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Angebote",
+      "fromPrice": "Niedrigster Preis",
+      "medianPricePerSqm": "Medianpreis pro m²",
+      "nearSeaShare": "Bis 300 m vom Meer",
+      "newBuildShare": "Neubauten (in Planung oder im Bau)",
+      "note": "Angebotspreise der passenden Inserate auf Domlivo, stündlich aktualisiert."
+    }
   },
   "ZoneMetrics": {
     "priceNew": "Neubau, €/m²",
@@ -806,7 +815,12 @@
     "successTitle": "Anfrage eingegangen",
     "successBody": "Wir rufen Sie innerhalb einer Stunde während der Geschäftszeiten zurück.",
     "error": "Senden nicht möglich. Bitte versuchen Sie es erneut oder schreiben Sie uns auf Telegram.",
-    "consent": "Mit dem Absenden stimmen Sie zu, zu Ihrer Anfrage kontaktiert zu werden."
+    "consent": "Mit dem Absenden stimmen Sie zu, zu Ihrer Anfrage kontaktiert zu werden.",
+    "budgetPlaceholder": "Budget",
+    "messagePlaceholder": "Wonach suchen Sie? (optional)",
+    "budgetUpTo": "bis {amount}",
+    "budgetRange": "{from} – {to}",
+    "budgetOver": "über {amount}"
   },
   "DurresGuide": {
     "badge": "Kostenloses PDF",

@@ -2,6 +2,7 @@ import * as React from 'react'
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
 import type { LandingSectionBase } from './types'
 import type { SectionHandler, LinkedZone } from './handlers/types'
+import type { LiveTokenValues } from '@/lib/landing/liveTokens'
 import { heroSectionHandler } from './handlers/heroSection'
 import { propertyCarouselSectionHandler } from './handlers/propertyCarouselSection'
 import { locationCarouselSectionHandler } from './handlers/locationCarouselSection'
@@ -28,6 +29,8 @@ import { developerCardSectionHandler } from './handlers/developerCardSection'
 import { zoneStatsAutoSectionHandler } from './handlers/zoneStatsAutoSection'
 import { zonePriceTableAutoSectionHandler } from './handlers/zonePriceTableAutoSection'
 import { relatedPagesAutoSectionHandler } from './handlers/relatedPagesAutoSection'
+import { leadFormSectionHandler } from './handlers/leadFormSection'
+import { inventorySummarySectionHandler } from './handlers/inventorySummarySection'
 
 const registry: Record<string, SectionHandler> = {
   heroSection: heroSectionHandler,
@@ -60,6 +63,8 @@ const registry: Record<string, SectionHandler> = {
   zoneStatsAutoSection: zoneStatsAutoSectionHandler,
   zonePriceTableAutoSection: zonePriceTableAutoSectionHandler,
   relatedPagesAutoSection: relatedPagesAutoSectionHandler,
+  leadFormSection: leadFormSectionHandler,
+  inventorySummarySection: inventorySummarySectionHandler,
 }
 
 export async function renderLandingSection(input: {
@@ -74,6 +79,8 @@ export async function renderLandingSection(input: {
   faqJsonLd?: { emitted: boolean }
   /** Host landing context for the related-pages auto modes (see handler types). */
   landingCtx?: { id?: string; slug?: string; pageType?: string; topicTags?: string[] }
+  /** Live figures for `{count}`-style tokens in hero copy (see handler types). */
+  liveTokens?: LiveTokenValues | null
 }): Promise<React.ReactNode | null> {
   const type = input.section?._type
   if (!type) return null

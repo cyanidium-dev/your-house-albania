@@ -114,4 +114,21 @@ describe('countryFromHeaders', () => {
     expect(countryFromHeaders(new Headers({ 'x-forwarded-for': '1.2.3.4' }))).toBeUndefined()
     expect(countryFromHeaders(new Headers({ 'x-vercel-ip-country': 'XXX' }))).toBeUndefined()
   })
+
+  it('names the landing a form sat on without touching the entry page', () => {
+    const doc = buildLeadDocument({
+      type: 'contact_form',
+      placement: 'landing',
+      locale: 'pl',
+      context: sampleContext(),
+      contact: { phone: '+48 600 000 000' },
+      interest: { budget: '50 000 € – 100 000 €' },
+      formLabel: 'Landing: nieruchomosci-albania-nad-morzem',
+      landingSlug: 'nieruchomosci-albania-nad-morzem',
+      now,
+    })
+    expect(doc.landingSlug).toBe('nieruchomosci-albania-nad-morzem')
+    expect(doc.landingPage).toBe(sampleContext().session.landingPage)
+    expect(doc.interest).toEqual({ budget: '50 000 € – 100 000 €' })
+  })
 })

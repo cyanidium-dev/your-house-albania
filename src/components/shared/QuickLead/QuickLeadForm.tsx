@@ -20,12 +20,26 @@ type Props = {
   className?: string
   /** Called after a successful send (used by the widget to auto-close). */
   onSent?: () => void
+  /** Button text; the dictionary's when empty. */
+  submitLabel?: string
+  /** Budget choices; a select appears when there are any. Sent as `budget`. */
+  budgetOptions?: string[]
+  /** Optional free-text "what are you looking for" field. */
+  withMessage?: boolean
+  /** WhatsApp / Telegram row under the form (on by default). */
+  showMessengers?: boolean
+  /** CMS landing slug, so the lead and the Telegram message name the landing. */
+  landingSlug?: string
 }
 
 const inputClass =
   'w-full rounded-full border border-black/10 bg-white px-6 py-3.5 text-dark outline-primary placeholder:text-dark/40 focus:outline dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40'
 
 const buttonClass = brandButtonClass('primary')
+
+/** A chevron for the budget select, drawn in the muted text colour of both themes. */
+const SELECT_CHEVRON =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23888'%3E%3Cpath d='M5.3 7.3a1 1 0 0 1 1.4 0L10 10.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4z'/%3E%3C/svg%3E\")"
 
 /**
  * One-field callback form: the visitor leaves a phone number and we promise a
@@ -41,11 +55,19 @@ export function QuickLeadForm({
   stacked = false,
   className,
   onSent,
+  submitLabel,
+  budgetOptions,
+  withMessage = false,
+  showMessengers = true,
+  landingSlug,
 }: Props) {
   const t = useTranslations('QuickLead')
 
   const [phone, setPhone] = React.useState('')
   const [name, setName] = React.useState('')
+  const [budget, setBudget] = React.useState('')
+  const [message, setMessage] = React.useState('')
+  const budgets = (budgetOptions ?? []).map((b) => b.trim()).filter(Boolean)
   /** Honeypot — real users never fill this. */
   const [companyWebsite, setCompanyWebsite] = React.useState('')
   const [submitting, setSubmitting] = React.useState(false)
@@ -67,6 +89,9 @@ export function QuickLeadForm({
           companyWebsite,
           phone: phone.trim(),
           name: name.trim() || undefined,
+          budget: budget || undefined,
+          message: message.trim() || undefined,
+          landingSlug: landingSlug || undefined,
           sourceLabel,
           sourcePath: typeof window === 'undefined' ? undefined : window.location.pathname,
           placement,
@@ -144,8 +169,37 @@ export function QuickLeadForm({
           required
           className={inputClass}
         />
+        {budgets.length > 0 ? (
+          <select
+            name="quoteBudget"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+            aria-label={t('budgetPlaceholder')}
+            className={`${inputClass} appearance-none bg-[length:16px] bg-[right_1.25rem_center] bg-no-repeat pr-12 ${budget ? '' : 'text-dark/40 dark:text-white/40'}`}
+            style={{ backgroundImage: SELECT_CHEVRON }}
+          >
+            <option value="">{t('budgetPlaceholder')}</option>
+            {budgets.map((b) => (
+              <option key={b} value={b} className="text-dark">
+                {b}
+              </option>
+            ))}
+          </select>
+        ) : null}
+        {withMessage ? (
+          <textarea
+            name="quoteMessage"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={3}
+            maxLength={2000}
+            placeholder={t('messagePlaceholder')}
+            aria-label={t('messagePlaceholder')}
+            className={`${inputClass} rounded-3xl resize-y min-h-24`}
+          />
+        ) : null}
         <button type="submit" disabled={submitting || phone.trim().length < 5} className={buttonClass}>
-          {submitting ? t('submitting') : t('submit')}
+          {submitting ? t('submitting') : submitLabel?.trim() || t('submit')}
         </button>
       </div>
 
@@ -155,7 +209,7 @@ export function QuickLeadForm({
         </p>
       ) : null}
 
-      <LeadMessengerRow locale={locale} />
+      {showMessengers ? <LeadMessengerRow locale={locale} /> : null}
       <p className="text-xs text-dark/50 dark:text-white/50">{t('consent')}</p>
     </form>
   )

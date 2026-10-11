@@ -107,7 +107,8 @@
       },
       "ctaAll": "Zobacz wszystkie nieruchomości",
       "prev": "Poprzednie",
-      "next": "Następne"
+      "next": "Następne",
+      "seeAllCount": "Zobacz wszystkie oferty ({count, number})"
     },
     "featured": {
       "badge": "Wyróżniona nieruchomość",
@@ -328,7 +329,15 @@
     "confidenceLow": "Niska wiarygodność",
     "methodology": "Metodologia",
     "confidence": "Wiarygodność",
-    "versus": "{diff} vs {other}"
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Oferty",
+      "fromPrice": "Najniższa cena",
+      "medianPricePerSqm": "Mediana ceny za m²",
+      "nearSeaShare": "Do 300 m od morza",
+      "newBuildShare": "Nowe budynki (w planach lub w budowie)",
+      "note": "Ceny ofertowe pasujących ogłoszeń na Domlivo, aktualizowane co godzinę."
+    }
   },
   "ZoneMetrics": {
     "priceNew": "Nowe budownictwo, €/m²",
@@ -806,7 +815,12 @@
     "successTitle": "Zgłoszenie przyjęte",
     "successBody": "Oddzwonimy w ciągu godziny w godzinach pracy.",
     "error": "Nie udało się wysłać. Spróbuj ponownie lub napisz do nas na Telegramie.",
-    "consent": "Wysyłając formularz, zgadzasz się na kontakt w sprawie zgłoszenia."
+    "consent": "Wysyłając formularz, zgadzasz się na kontakt w sprawie zgłoszenia.",
+    "budgetPlaceholder": "Budżet",
+    "messagePlaceholder": "Czego szukasz? (opcjonalnie)",
+    "budgetUpTo": "do {amount}",
+    "budgetRange": "{from} – {to}",
+    "budgetOver": "powyżej {amount}"
   },
   "DurresGuide": {
     "badge": "Bezpłatny PDF",

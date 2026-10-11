@@ -5,6 +5,7 @@ import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
 import { getTranslations } from "next-intl/server";
 import {
+  fetchCatalogInventorySummary,
   fetchCatalogSeoPageByCity,
   fetchCatalogSeoPageRoot,
   fetchCityCountrySlugByCitySlug,
@@ -13,6 +14,15 @@ import {
   resolveCatalogSeoPage,
 } from "@/lib/sanity/client";
 import { LandingRenderer } from "@/components/landing/LandingRenderer";
+import { LandingBreadcrumb } from "@/components/shared/LandingBreadcrumb";
+import { isLandingInLocale, landingLocales } from "@/lib/landing/localeScope";
+import {
+  fillSeoLiveTokens,
+  liveTokenScope,
+  liveTokenValues,
+  localizedHasLiveTokens,
+  seoLiveTokenFields,
+} from "@/lib/landing/liveTokens";
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
@@ -183,16 +193,29 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     // (route family "unique"; statics + geo/deal/type segments win — ROUTING.md).
     const landing = await fetchUniqueLandingBySlug(normalizeSegmentForLanding(country));
     if (!landing) return {};
+    // A locale-scoped landing (landingPage.locales) 404s outside its locales,
+    // and its hreflang names only the locales it exists in.
+    if (!isLandingInLocale(landing, locale)) return {};
+    const scopedLocales = landingLocales(landing);
     const siteSettings = await fetchSiteSettings();
+    // `{count}` / `{fromPrice}` in the title or description: the same live
+    // figures the hero shows (lib/landing/liveTokens).
+    let seo = (landing as { seo?: unknown }).seo
+    if (localizedHasLiveTokens(seoLiveTokenFields(seo), locale)) {
+      const scope = liveTokenScope((landing.pageSections ?? []) as never);
+      const values = scope ? liveTokenValues(await fetchCatalogInventorySummary(scope), locale) : null;
+      seo = fillSeoLiveTokens(seo, locale, values);
+    }
     const meta = buildLandingMetadata(
-      (landing as { seo?: unknown }).seo as never,
+      seo as never,
       (siteSettings as { defaultSeo?: unknown })?.defaultSeo as never,
       locale,
       {
         itemTitle: resolveLocalizedString(landing.title as never, locale) || landing.slug,
         itemOgImageUrl: landing.cardImage?.asset?.url,
         pathnameForAlternates: landing.slug ?? "",
-        contentUpdatedAt: (landing as { contentUpdatedAt?: string }).contentUpdatedAt,
+        alternateLocales: scopedLocales.length ? scopedLocales : undefined,
+        contentUpdatedAt: landing.contentUpdatedAt,
       },
     );
     // Landings take no query params — same policy as listings/blog: any query
@@ -216,7 +239,17 @@ export default async function TopLevelSingleFilterPage({ params, searchParams }:
   if (!resolved) {
     const landing = await fetchUniqueLandingBySlug(normalizeSegmentForLanding(country));
     if (!landing) notFound();
-    return <LandingRenderer locale={locale} landing={landing as never} />;
+    if (!isLandingInLocale(landing, locale)) notFound();
+    const slug = landing.slug ?? normalizeSegmentForLanding(country);
+    const title = resolveLocalizedString(landing.title as never, locale) || slug;
+    const heroFirst = (landing.pageSections as Array<{ _type?: string }> | undefined)?.[0]?._type === "heroSection";
+    return (
+      <LandingRenderer
+        locale={locale}
+        landing={landing as never}
+        breadcrumb={<LandingBreadcrumb locale={locale} title={title} path={slug} overHero={heroFirst} />}
+      />
+    );
   }
   if (resolved.kind === "country" && (await isOnlyCatalogCountryHub(resolved.slug))) {
     permanentRedirect(`${canonicalNonGeoDealListingPath(locale, "sale")}${queryString(search)}`);
