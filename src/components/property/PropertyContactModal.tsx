@@ -8,6 +8,7 @@ import type { LeadPlacement } from '@/lib/leads/types'
 import { useContactModalFlag } from '@/lib/contacts/useContactModalFlag'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
+import { isPlausibleEmail, isPlausiblePhone } from '@/lib/contacts/validate'
 
 type Props = {
   locale: string
@@ -114,6 +115,16 @@ function PropertyContactDialog({
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    // Checked here, in the reader's language: the API answered "Invalid
+    // email" in English on every locale, and accepted "abc" as a phone.
+    if (phone.trim() && !isPlausiblePhone(phone)) {
+      setError(t('errorInvalidPhone'))
+      return
+    }
+    if (email.trim() && !isPlausibleEmail(email)) {
+      setError(t('errorInvalidEmail'))
+      return
+    }
     setSubmitting(true)
     try {
       const res = await fetch('/api/contact-agent', {
@@ -137,7 +148,7 @@ function PropertyContactDialog({
       })
       const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null
       if (!res.ok || !data || data.ok !== true) {
-        setError(data?.error ?? t('errorSubmit'))
+        setError(t('errorSubmit'))
         return
       }
       trackFormLead({

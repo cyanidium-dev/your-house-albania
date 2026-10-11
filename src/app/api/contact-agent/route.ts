@@ -7,9 +7,10 @@ import { formatLeadAnalyticsBlock } from '@/lib/notifications/leads/formatLeadTe
 import { formatMinMaxLabel } from '@/lib/notifications/agentContact/formatTelegramAgentContact'
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
 import { deliverAgentContactTelegram } from '@/lib/notifications/agentContact/telegramDelivery'
-import { fetchAgentLeadChatId } from '@/lib/notifications/leads/leadRecipients'
+import { fetchAgentLeadChatId, fetchPropertyAgent } from '@/lib/notifications/leads/leadRecipients'
 import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agentContact/types'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
+import { isPlausibleEmail, isPlausiblePhone } from '@/lib/contacts/validate'
 
 const MAX_MESSAGE = 8000
 const MAX_TITLE = 200
@@ -92,6 +93,9 @@ export async function POST(request: Request) {
   // name/email/message requirements the two full forms enforce below.
   if (!isNonEmptyString(body.phone)) {
     return jsonError(400, 'Missing phone')
+  }
+  if (!isPlausiblePhone(body.phone)) {
+    return jsonError(400, 'Invalid phone')
   }
 
   let email = ''
@@ -192,7 +196,8 @@ export async function POST(request: Request) {
       return jsonError(400, 'Missing agent')
     }
 
-    const agentName =
+    let agentSlug = body.agentSlug.trim()
+    let agentName =
       typeof body.agentName === 'string' && body.agentName.trim() ? body.agentName.trim() : '—'
 
     let propertySlug: string | undefined
@@ -202,6 +207,15 @@ export async function POST(request: Request) {
         return jsonError(400, 'Invalid property')
       }
       propertySlug = s
+    }
+    // Card and map buttons don't know the listing's agent; look it up, so the
+    // lead reaches the agency's own group like one from the listing page.
+    if ((agentSlug === 'unassigned' || agentSlug === '—') && propertySlug) {
+      const agent = await fetchPropertyAgent(propertySlug)
+      if (agent) {
+        agentSlug = agent.slug
+        if (agentName === '—' && agent.name) agentName = agent.name
+      }
     }
     const propertyTitle =
       typeof body.propertyTitle === 'string' && body.propertyTitle.trim()
@@ -214,7 +228,7 @@ export async function POST(request: Request) {
 
     normalized = {
       submissionKind: 'agent',
-      agentSlug: body.agentSlug.trim(),
+      agentSlug,
       agentName,
       locale,
       location: body.city?.trim() || undefined,

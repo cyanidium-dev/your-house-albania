@@ -669,7 +669,9 @@
       "body": "Se sei proprietario di un immobile o rappresenti un'agenzia e vuoi pubblicarlo su Domlivo, scrivici su WhatsApp o Telegram. Ti spieghiamo come funziona la pubblicazione e quali dati servono.",
       "howTo": "Come funziona la pubblicazione",
       "register": "Invia una richiesta di pubblicazione"
-    }
+    },
+    "errorInvalidPhone": "Controlla il numero di telefono.",
+    "errorInvalidEmail": "Controlla l’indirizzo e-mail."
   },
   "ContactThankYou": {
     "metaTitle": "Grazie",
@@ -754,7 +756,9 @@
     "thankYouTitle": "Grazie",
     "thankYouDescription": "Abbiamo ricevuto la tua richiesta e ti contatteremo a breve.",
     "thankYouCta": "Torna alla home",
-    "thankYouImageAlt": "Foto interni"
+    "thankYouImageAlt": "Foto interni",
+    "errorInvalidPhone": "Controlla il numero di telefono.",
+    "errorInvalidEmail": "Controlla l’indirizzo e-mail."
   },
   "Guides": {
     "title": "Guide all'acquisto di immobili in Albania",
@@ -826,7 +830,8 @@
     "messagePlaceholder": "Cosa cerchi? (facoltativo)",
     "budgetUpTo": "fino a {amount}",
     "budgetRange": "{from} – {to}",
-    "budgetOver": "oltre {amount}"
+    "budgetOver": "oltre {amount}",
+    "errorInvalidPhone": "Controlla il numero di telefono."
   },
   "DurresGuide": {
     "badge": "PDF gratuito",

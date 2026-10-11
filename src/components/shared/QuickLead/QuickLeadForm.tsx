@@ -6,6 +6,7 @@ import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents
 import type { LeadPlacement } from '@/lib/leads/types'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
+import { isPlausibleEmail, isPlausiblePhone } from '@/lib/contacts/validate'
 
 type Props = {
   locale: string
@@ -78,6 +79,10 @@ export function QuickLeadForm({
     e.preventDefault()
     if (submitting) return
     setError(null)
+    if (!isPlausiblePhone(phone)) {
+      setError(t('errorInvalidPhone'))
+      return
+    }
     setSubmitting(true)
     try {
       const res = await fetch('/api/contact-agent', {
@@ -198,7 +203,7 @@ export function QuickLeadForm({
             className={`${inputClass} rounded-3xl resize-y min-h-24`}
           />
         ) : null}
-        <button type="submit" disabled={submitting || phone.trim().length < 5} className={buttonClass}>
+        <button type="submit" disabled={submitting} className={buttonClass}>
           {submitting ? t('submitting') : submitLabel?.trim() || t('submit')}
         </button>
       </div>

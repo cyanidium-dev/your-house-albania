@@ -40,7 +40,7 @@ export async function AddPropertyNote({ locale, messengers }: Props) {
             <MessengerButtons
               messengers={messengers}
               ariaLabels={{ whatsapp: tQuick('channel.whatsapp'), telegram: tQuick('channel.telegram') }}
-              className="flex gap-3 [&>a]:h-12 [&>a]:text-base"
+              className="flex flex-wrap gap-3 [&>a]:h-12 [&>a]:text-base"
             />
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
               <Link

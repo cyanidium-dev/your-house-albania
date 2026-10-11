@@ -669,7 +669,9 @@
       "body": "Nëse jeni pronar i një prone ose përfaqësoni një agjenci dhe doni ta shtoni pronën në Domlivo, na shkruani në WhatsApp ose Telegram. Ju shpjegojmë si bëhet publikimi dhe cilat të dhëna nevojiten.",
       "howTo": "Si bëhet publikimi",
       "register": "Dërgo kërkesë për publikim"
-    }
+    },
+    "errorInvalidPhone": "Kontrolloni numrin e telefonit.",
+    "errorInvalidEmail": "Kontrolloni adresën e e-mailit."
   },
   "ContactThankYou": {
     "metaTitle": "Faleminderit",
@@ -754,7 +756,9 @@
     "thankYouTitle": "Faleminderit",
     "thankYouDescription": "Kemi marrë kërkesën tuaj dhe do t’ju kontaktojmë së shpejti.",
     "thankYouCta": "Kthehu në faqen kryesore",
-    "thankYouImageAlt": "Foto e brendshme"
+    "thankYouImageAlt": "Foto e brendshme",
+    "errorInvalidPhone": "Kontrolloni numrin e telefonit.",
+    "errorInvalidEmail": "Kontrolloni adresën e e-mailit."
   },
   "Guides": {
     "title": "Udhëzues për blerjen e pronës në Shqipëri",
@@ -826,7 +830,8 @@
     "messagePlaceholder": "Çfarë kërkoni? (opsionale)",
     "budgetUpTo": "deri në {amount}",
     "budgetRange": "{from} – {to}",
-    "budgetOver": "mbi {amount}"
+    "budgetOver": "mbi {amount}",
+    "errorInvalidPhone": "Kontrolloni numrin e telefonit."
   },
   "DurresGuide": {
     "badge": "PDF falas",

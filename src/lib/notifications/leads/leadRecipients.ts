@@ -42,3 +42,27 @@ export async function fetchAgentLeadChatId(agentSlug: string | undefined): Promi
     return null
   }
 }
+
+/**
+ * The agent of a listing, by its slug. Card and map enquiry buttons do not
+ * know the agent and send "unassigned"; without this a card lead on a Cactus
+ * flat skipped the agency's own group (QA 2026-10-11).
+ */
+export async function fetchPropertyAgent(
+  propertySlug: string | undefined
+): Promise<{ slug: string; name: string | null } | null> {
+  const slug = propertySlug?.trim()
+  if (!slug) return null
+  const client = getClient()
+  if (!client) return null
+  try {
+    const row = await client.fetch<{ slug?: string | null; name?: string | null } | null>(
+      `*[_type == "property" && slug.current == $slug && !(_id in path("drafts.**"))][0].agent->{"slug": slug.current, name}`,
+      { slug }
+    )
+    return row?.slug ? { slug: row.slug, name: row.name ?? null } : null
+  } catch (err) {
+    console.error('[leads] property agent lookup failed', err instanceof Error ? err.message : err)
+    return null
+  }
+}

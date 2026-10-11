@@ -669,7 +669,9 @@
       "body": "Если вы собственник объекта или представляете агентство и хотите добавить недвижимость на Domlivo, напишите нам в WhatsApp или Telegram. Расскажем, как проходит публикация, и подскажем, какие данные понадобятся.",
       "howTo": "Как проходит публикация",
       "register": "Оставить заявку на размещение"
-    }
+    },
+    "errorInvalidPhone": "Проверьте номер телефона.",
+    "errorInvalidEmail": "Проверьте адрес e-mail."
   },
   "ContactThankYou": {
     "metaTitle": "Спасибо",
@@ -754,7 +756,9 @@
     "thankYouTitle": "Спасибо",
     "thankYouDescription": "Мы получили вашу заявку и свяжемся с вами в ближайшее время.",
     "thankYouCta": "На главную",
-    "thankYouImageAlt": "Фото интерьера"
+    "thankYouImageAlt": "Фото интерьера",
+    "errorInvalidPhone": "Проверьте номер телефона.",
+    "errorInvalidEmail": "Проверьте адрес e-mail."
   },
   "Guides": {
     "title": "Гайды по покупке недвижимости в Албании",
@@ -826,7 +830,8 @@
     "messagePlaceholder": "Что вы ищете? (необязательно)",
     "budgetUpTo": "до {amount}",
     "budgetRange": "{from} – {to}",
-    "budgetOver": "более {amount}"
+    "budgetOver": "более {amount}",
+    "errorInvalidPhone": "Проверьте номер телефона."
   },
   "DurresGuide": {
     "badge": "Бесплатный PDF",

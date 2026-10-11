@@ -12,6 +12,7 @@ import {
 } from '@/lib/notifications/agentContact/routing'
 import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { formatTelegramRegistrationRequestMessage } from '@/lib/notifications/registrationRequest/formatTelegramRegistrationRequest'
+import { isPlausiblePhone } from '@/lib/contacts/validate'
 // Sanity persistence is temporarily disabled in POST — see comments below and
 // docs/registration-request-sanity-frontend-contract.md
 // import { createRegistrationRequest } from '@/lib/sanity/writeClient'
@@ -65,6 +66,9 @@ export async function POST(request: Request) {
   }
   if (!isNonEmptyString(body.phone)) {
     return jsonError(400, 'Missing phone')
+  }
+  if (!isPlausiblePhone(body.phone)) {
+    return jsonError(400, 'Invalid phone')
   }
   if (typeof body.language !== 'string' || !ALLOWED_LANGUAGES.has(body.language)) {
     return jsonError(400, 'Invalid language')

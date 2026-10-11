@@ -669,7 +669,9 @@
       "body": "Wenn Sie Eigentümer einer Immobilie sind oder eine Agentur vertreten und auf Domlivo inserieren möchten, schreiben Sie uns per WhatsApp oder Telegram. Wir erklären, wie die Veröffentlichung abläuft und welche Angaben wir brauchen.",
       "howTo": "So läuft die Veröffentlichung",
       "register": "Anfrage zum Inserieren senden"
-    }
+    },
+    "errorInvalidPhone": "Bitte die Telefonnummer prüfen.",
+    "errorInvalidEmail": "Bitte die E-Mail-Adresse prüfen."
   },
   "ContactThankYou": {
     "metaTitle": "Vielen Dank",
@@ -754,7 +756,9 @@
     "thankYouTitle": "Vielen Dank",
     "thankYouDescription": "Wir haben Ihre Anfrage erhalten und melden uns in Kürze bei Ihnen.",
     "thankYouCta": "Zurück zur Startseite",
-    "thankYouImageAlt": "Innenaufnahme"
+    "thankYouImageAlt": "Innenaufnahme",
+    "errorInvalidPhone": "Bitte die Telefonnummer prüfen.",
+    "errorInvalidEmail": "Bitte die E-Mail-Adresse prüfen."
   },
   "Guides": {
     "title": "Ratgeber zum Immobilienkauf in Albanien",
@@ -826,7 +830,8 @@
     "messagePlaceholder": "Wonach suchen Sie? (optional)",
     "budgetUpTo": "bis {amount}",
     "budgetRange": "{from} – {to}",
-    "budgetOver": "über {amount}"
+    "budgetOver": "über {amount}",
+    "errorInvalidPhone": "Bitte die Telefonnummer prüfen."
   },
   "DurresGuide": {
     "badge": "Kostenloses PDF",

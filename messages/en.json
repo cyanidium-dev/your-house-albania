@@ -669,7 +669,9 @@
       "body": "If you own a property or represent an agency and want to list it on Domlivo, message us on WhatsApp or Telegram. We will explain how publishing works and what details we need.",
       "howTo": "How publishing works",
       "register": "Send a listing request"
-    }
+    },
+    "errorInvalidPhone": "Please check the phone number.",
+    "errorInvalidEmail": "Please check the e-mail address."
   },
   "ContactThankYou": {
     "metaTitle": "Thank you",
@@ -754,7 +756,9 @@
     "thankYouTitle": "Thank you",
     "thankYouDescription": "We have received your request and will contact you shortly.",
     "thankYouCta": "Back to home",
-    "thankYouImageAlt": "Interior photo"
+    "thankYouImageAlt": "Interior photo",
+    "errorInvalidPhone": "Please check the phone number.",
+    "errorInvalidEmail": "Please check the e-mail address."
   },
   "Guides": {
     "title": "Guides to buying property in Albania",
@@ -826,7 +830,8 @@
     "messagePlaceholder": "What are you looking for? (optional)",
     "budgetUpTo": "up to {amount}",
     "budgetRange": "{from} – {to}",
-    "budgetOver": "over {amount}"
+    "budgetOver": "over {amount}",
+    "errorInvalidPhone": "Please check the phone number."
   },
   "DurresGuide": {
     "badge": "Free PDF",

@@ -669,7 +669,9 @@
       "body": "Jeśli jesteś właścicielem nieruchomości lub reprezentujesz agencję i chcesz dodać ofertę na Domlivo, napisz do nas na WhatsApp lub Telegram. Wyjaśnimy, jak przebiega publikacja i jakie dane będą potrzebne.",
       "howTo": "Jak przebiega publikacja",
       "register": "Wyślij zgłoszenie oferty"
-    }
+    },
+    "errorInvalidPhone": "Sprawdź numer telefonu.",
+    "errorInvalidEmail": "Sprawdź adres e-mail."
   },
   "ContactThankYou": {
     "metaTitle": "Dziękujemy",
@@ -754,7 +756,9 @@
     "thankYouTitle": "Dziękujemy",
     "thankYouDescription": "Otrzymaliśmy Twoje zgłoszenie i wkrótce się z Tobą skontaktujemy.",
     "thankYouCta": "Powrót do strony głównej",
-    "thankYouImageAlt": "Zdjęcie wnętrza"
+    "thankYouImageAlt": "Zdjęcie wnętrza",
+    "errorInvalidPhone": "Sprawdź numer telefonu.",
+    "errorInvalidEmail": "Sprawdź adres e-mail."
   },
   "Guides": {
     "title": "Poradniki zakupu nieruchomości w Albanii",
@@ -826,7 +830,8 @@
     "messagePlaceholder": "Czego szukasz? (opcjonalnie)",
     "budgetUpTo": "do {amount}",
     "budgetRange": "{from} – {to}",
-    "budgetOver": "powyżej {amount}"
+    "budgetOver": "powyżej {amount}",
+    "errorInvalidPhone": "Sprawdź numer telefonu."
   },
   "DurresGuide": {
     "badge": "Bezpłatny PDF",
