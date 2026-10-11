@@ -31,6 +31,8 @@ export function useCatalogFilterChrome({ startCollapsed = false }: { startCollap
   // a short window after each flip so that self-induced scroll can't reverse it.
   const toggleAtRef = React.useRef(0);
   const advancedInnerRef = React.useRef<HTMLDivElement>(null);
+  const showAdvancedRef = React.useRef(false);
+  showAdvancedRef.current = showAdvanced;
   const [advancedHeight, setAdvancedHeight] = React.useState(0);
 
   React.useEffect(() => {
@@ -43,6 +45,19 @@ export function useCatalogFilterChrome({ startCollapsed = false }: { startCollap
     function handleScroll() {
       const y = window.scrollY;
       const compact = y > 50;
+      // Someone working in the form — advanced filters open, or a select /
+      // dropdown inside the bar focused — scrolls to reach a list that opened
+      // below the fold. Condensing then folded the form and took the open list
+      // with it (QA 2026-10-11). Hold the form open until they leave it.
+      const working =
+        showAdvancedRef.current ||
+        !!(document.activeElement as HTMLElement | null)?.closest?.("[data-catalog-filters]");
+      if (working && compact) {
+        wasCompactRef.current = compact;
+        setIsCompact(compact);
+        lastScrollYRef.current = y;
+        return;
+      }
       // Collapse advanced only on transition into compact scroll state (not on every scroll while open).
       if (compact && !wasCompactRef.current) {
         setShowAdvanced(false);

@@ -99,6 +99,19 @@ export function FilterSelect({
     setOpen(false);
   };
 
+  // Opens upward when the space below the trigger is too short (advanced
+  // filters near the bottom of a laptop screen: the District list ran 140 px
+  // past the window, QA 2026-10-11); the list never gets taller than the room.
+  const [placement, setPlacement] = React.useState<{ up: boolean; max: number }>({ up: false, max: 256 })
+  React.useLayoutEffect(() => {
+    if (!open || !containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const below = window.innerHeight - rect.bottom - 16
+    const above = rect.top - 16 - 96 // header and sticky bar
+    const up = below < 220 && above > below
+    setPlacement({ up, max: Math.max(160, Math.min(256, up ? above : below)) })
+  }, [open])
+
   return (
     <div ref={containerRef} className="min-w-0 relative">
       <label className="block text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
@@ -142,13 +155,14 @@ export function FilterSelect({
             role="listbox"
             aria-label={label}
             className={cn(
-              "absolute left-0 right-0 top-full mt-2 z-[110]",
+              placement.up ? "absolute left-0 right-0 bottom-full mb-2 z-[110]" : "absolute left-0 right-0 top-full mt-2 z-[110]",
               "rounded-2xl border border-dark/10 dark:border-white/10 shadow-3xl",
               "bg-white dark:bg-dark",
-              "py-1 text-sm max-h-64 overflow-y-auto",
+              "py-1 text-sm overflow-y-auto",
               "animate-in fade-in-0 zoom-in-95 slide-in-from-top-2",
               contentClassName
             )}
+            style={{ maxHeight: placement.max }}
           >
             {includeAnyOption ? (
               <button
