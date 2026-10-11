@@ -297,6 +297,8 @@ async function PropertiesListing({
     initialType: typeFilter,
     initialDealType: dealFilter,
     initialStage: stageFilter,
+    initialNearSea: !!nearSeaFilter,
+    initialBedsExact: bedsExactFilter ? String(bedsExactFilter) : '',
     initialMinPrice: typeof searchParams.minPrice === 'string' ? searchParams.minPrice : '',
     initialMaxPrice: typeof searchParams.maxPrice === 'string' ? searchParams.maxPrice : '',
     initialMinArea: typeof searchParams.minArea === 'string' ? searchParams.minArea : '',

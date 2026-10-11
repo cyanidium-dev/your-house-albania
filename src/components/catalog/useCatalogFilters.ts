@@ -48,6 +48,9 @@ export type PropertySearchBarProps = {
   initialType?: string;
   initialDealType?: string;
   initialStage?: string;
+  /** Facets of the current page that the form has no control for. */
+  initialNearSea?: boolean;
+  initialBedsExact?: string;
   initialMinPrice?: string;
   initialMaxPrice?: string;
   initialMinArea?: string;
@@ -79,6 +82,8 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
     initialType = "",
     initialDealType = "",
     initialStage = "",
+    initialNearSea = false,
+    initialBedsExact = "",
     initialMinPrice = "",
     initialMaxPrice = "",
     initialMinArea = "",
@@ -275,6 +280,8 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
       initialAgentSlug,
       initialCountrySlug,
       locations,
+      keepNearSea: initialNearSea,
+      keepBedsExact: initialBedsExact,
     });
     const dealRange = priceRangesByDeal[effectiveDeal || "any"] || priceRangesByDeal.any;
     trackFilterApply({

@@ -140,7 +140,8 @@ function PropertyCard({
 
   const numericArea = typeof area === 'number' ? area : NaN
   const pricePerSqm =
-    !isRate && Number.isFinite(basePriceEur) && Number.isFinite(numericArea) && numericArea > 0
+    // Zero is "price on request": no "€0 / m²" next to it (QA 2026-10-11).
+    !isRate && Number.isFinite(basePriceEur) && (basePriceEur as number) > 0 && Number.isFinite(numericArea) && numericArea > 0
       ? Math.round((basePriceEur as number) / numericArea)
       : null
   const formattedPricePerSqm =

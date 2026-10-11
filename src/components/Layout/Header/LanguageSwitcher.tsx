@@ -35,7 +35,12 @@ export default function LanguageSwitcher({
       setOpen(false);
       return;
     }
-    router.replace(pathname, { locale: newLocale });
+    // Keep the query: on a catalogue page it holds the filters, and switching
+    // language used to drop every one of them (QA 2026-10-11). Read at click
+    // time rather than through useSearchParams, which would make every page
+    // with the header bail out of static rendering.
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    router.replace(`${pathname}${search}`, { locale: newLocale });
     setOpen(false);
   };
 

@@ -26,6 +26,9 @@ export type CatalogFilterUrlState = {
   initialAgentSlug: string;
   initialCountrySlug: string;
   locations: { value: string; countrySlug?: string }[];
+  /** The page's own facets the form has no control for (near-the-sea and exact-rooms pages). */
+  keepNearSea?: boolean;
+  keepBedsExact?: string;
 };
 
 export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
@@ -83,6 +86,17 @@ export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
 
   if (beds && beds !== "any") params.set("beds", beds);
   else params.delete("beds");
+
+  // Filters the form does not show must not outlive a submit that changes
+  // the same dimension: ?types=apartment,studio plus Type=Villa returned
+  // nothing (QA 2026-10-11). The form's type replaces `types`, its rooms
+  // replace `bedsExact`, its city replaces `cities`. A facet page's own
+  // filter (near the sea, exact rooms) is kept when the form leaves it alone.
+  if (type) params.delete("types");
+  if (city) params.delete("cities");
+  if (beds && beds !== "any") params.delete("bedsExact");
+  else if (state.keepBedsExact) params.set("bedsExact", state.keepBedsExact);
+  if (state.keepNearSea) params.set("nearSea", "1");
 
   if (stage && stage !== "any") params.set("stage", stage);
   else params.delete("stage");

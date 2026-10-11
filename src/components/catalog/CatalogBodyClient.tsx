@@ -57,6 +57,8 @@ export type CatalogFilterProps = {
   initialType: string;
   initialDealType: string;
   initialStage: string;
+  initialNearSea?: boolean;
+  initialBedsExact?: string;
   initialMinPrice: string;
   initialMaxPrice: string;
   initialMinArea: string;
@@ -318,7 +320,10 @@ export function CatalogBodyClient({
   const [mapExpanded, setMapExpanded] = React.useState(false);
   React.useEffect(() => {
     const url = new URL(window.location.href);
-    if (url.searchParams.get("view") !== "map") return;
+    // Back from a listing opened on the full-screen map lands on the entry
+    // the map pushed: open the map again, so that Back closes it. It used to
+    // show the list with that entry left dead (QA 2026-10-11).
+    if (url.searchParams.get("view") !== "map" && !window.history.state?.domlivoMap) return;
     setMapExpanded(true);
     setMapNearViewport(true);
   }, []);
@@ -476,6 +481,7 @@ export function CatalogBodyClient({
   const mapPointHref = React.useMemo(() => new Map(mapPoints.map((p) => [p.slug, p.href])), [mapPoints])
   // Cards fetched for pins beyond the loaded page (see handleActiveSlugFromMap).
   const [extraCards, setExtraCards] = React.useState<Record<string, PropertyHomes>>({})
+  const previewPool = React.useMemo(() => [...allItems, ...Object.values(extraCards)], [allItems, extraCards])
 
   // An area bubble (a district's listings without a published address): its
   // cards come from the catalogue API filtered to the district; a bubble with
@@ -503,14 +509,38 @@ export function CatalogBodyClient({
     },
     [loadMoreQuery, locale]
   )
+  // Several listings on one point (units of one building): the same strip,
+  // filled with their cards.
+  const openStack = React.useCallback(
+    (slugs: string[], at: { lat: number; lng: number }) => {
+      setPreviewSlug(null)
+      const area: MapArea = { key: `stack:${slugs[0]}`, name: '', count: slugs.length, lat: at.lat, lng: at.lng }
+      setAreaSheet({ area, items: null })
+      const pool = new Map(previewPool.map((p) => [p.slug, p]))
+      Promise.all(
+        slugs.slice(0, 12).map((slug) =>
+          pool.get(slug)
+            ? Promise.resolve(pool.get(slug) as PropertyHomes)
+            : fetch(`/api/catalog/card?slug=${encodeURIComponent(slug)}&locale=${locale}`)
+                .then((r) => (r.ok ? r.json() : null))
+                .then((d: { item?: PropertyHomes | null } | null) => d?.item ?? null)
+                .catch(() => null)
+        )
+      ).then((items) =>
+        setAreaSheet((cur) =>
+          cur && cur.area.key === area.key ? { area, items: items.filter((x): x is PropertyHomes => !!x) } : cur
+        )
+      )
+    },
+    [previewPool, locale]
+  )
   const areaSeeAllHref = React.useMemo(() => {
-    if (!areaSheet || areaSheet.area.key.startsWith('cell:') || typeof window === 'undefined') return null
+    if (!areaSheet || !/^[a-z0-9-]+$/.test(areaSheet.area.key) || typeof window === 'undefined') return null
     const url = new URL(window.location.href)
     url.searchParams.set('district', areaSheet.area.key)
     url.searchParams.delete('view')
     return `${url.pathname}?${url.searchParams.toString()}`
   }, [areaSheet])
-  const previewPool = React.useMemo(() => [...allItems, ...Object.values(extraCards)], [allItems, extraCards])
 
   const handleActiveSlugFromMap = React.useCallback(
     (slug: string) => {
@@ -834,6 +864,7 @@ export function CatalogBodyClient({
                   expanded={mapExpanded}
                   onExpandedChange={handleMapExpandedChange}
                   onAreaClick={openArea}
+                  onStackClick={openStack}
                 />
               ) : (
                 <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />

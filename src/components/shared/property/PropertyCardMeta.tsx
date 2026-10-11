@@ -28,7 +28,11 @@ export function PropertyCardMeta({
   const isSmall = view === 'small'
   // No area on record → no "0 m²" tile; the row simply has one cell fewer.
   const showArea = typeof area === 'number' && area > 0
-  const columns = (showRooms ? 2 : 0) + (showArea ? 1 : 0) + (showPlot ? 1 : 0)
+  // Zero rooms is "not stated" (studios, plots, many partner houses), never
+  // a fact worth a tile: cards printed "0 Bedrooms" (QA 2026-10-11).
+  const showBeds = showRooms && typeof beds === 'number' && beds > 0
+  const showBaths = showRooms && typeof baths === 'number' && baths > 0
+  const columns = (showBeds ? 1 : 0) + (showBaths ? 1 : 0) + (showArea ? 1 : 0) + (showPlot ? 1 : 0)
   if (columns === 0) return null
 
   const iconSize = isList ? 18 : isSmall ? 16 : 20
@@ -55,8 +59,7 @@ export function PropertyCardMeta({
         isList && 'mt-1 pt-1.5 border-t border-black/5 dark:border-white/10'
       )}
     >
-      {showRooms && (
-        <>
+      {showBeds && (
           <div
             className={cn(
               'flex border-e border-black/10 dark:border-white/20 items-center',
@@ -70,6 +73,8 @@ export function PropertyCardMeta({
               {t('bedroomsCount', { count: beds })}
             </span>
           </div>
+      )}
+      {showBaths && (
           <div
             className={cn(
               'flex border-e border-black/10 dark:border-white/20 items-center',
@@ -83,7 +88,6 @@ export function PropertyCardMeta({
               {t('bathroomsCount', { count: baths })}
             </span>
           </div>
-        </>
       )}
       {showArea && (
         <div

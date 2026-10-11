@@ -148,6 +148,7 @@ export function PropertiesMap({
   expanded = false,
   onExpandedChange,
   onAreaClick,
+  onStackClick,
 }: {
   items: PropertiesMapItem[]
   activeSlug?: string | null
@@ -164,6 +165,8 @@ export function PropertiesMap({
   onExpandedChange?: (expanded: boolean) => void
   /** An area bubble (a district's approximate listings) was clicked. */
   onAreaClick?: (area: MapArea) => void
+  /** A cluster of listings on one spot (units of one building) was clicked. */
+  onStackClick?: (slugs: string[], at: { lat: number; lng: number }) => void
 }) {
   const { currency, rates } = useCurrency()
   const locale = useLocale()
@@ -334,6 +337,8 @@ export function PropertiesMap({
   }, [validPoints, areas])
   const onAreaClickRef = React.useRef(onAreaClick)
   onAreaClickRef.current = onAreaClick
+  const onStackClickRef = React.useRef(onStackClick)
+  onStackClickRef.current = onStackClick
 
   const geojson = React.useMemo(() => {
     return {
@@ -1100,6 +1105,18 @@ export function PropertiesMap({
           const bounds = new maplibregl.LngLatBounds()
           for (const leaf of leaves) bounds.extend((leaf.geometry as GeoJSON.Point).coordinates as [number, number])
           if (bounds.isEmpty()) throw new Error('no leaves')
+          // Units of one building share a point: no zoom separates them
+          // (11 listings on one spot in Golem, QA 2026-10-11). List them.
+          const sw = bounds.getSouthWest()
+          const ne = bounds.getNorthEast()
+          const spanM = Math.max((ne.lat - sw.lat) * 111_320, (ne.lng - sw.lng) * 111_320 * Math.cos((sw.lat * Math.PI) / 180))
+          if (spanM < 25 && onStackClickRef.current) {
+            const slugs = leaves
+              .map((l) => String((l.properties as { slug?: unknown } | null)?.slug ?? ''))
+              .filter(Boolean)
+            onStackClickRef.current(slugs, { lat: center[1], lng: center[0] })
+            return
+          }
           map.fitBounds(bounds, { padding: 48, maxZoom: 16, duration: 500 })
         })
         .catch(() =>
