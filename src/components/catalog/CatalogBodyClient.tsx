@@ -13,7 +13,12 @@ import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+import type { MapArea } from "@/components/catalog/map/PropertiesMap";
 // Only once a pin is picked; nobody needs it at load.
+const MapAreaSheet = dynamic(
+  () => import("@/components/catalog/map/MapAreaSheet").then((m) => m.MapAreaSheet),
+  { ssr: false }
+);
 const MapListingSheet = dynamic(
   () => import("@/components/catalog/map/MapListingSheet").then((m) => m.MapListingSheet),
   { ssr: false }
@@ -442,6 +447,8 @@ export function CatalogBodyClient({
     priceUnit?: string
     status?: string
     approximate?: boolean
+    district?: string
+    districtName?: string
   }
   const [mapPoints, setMapPoints] = React.useState<MapPoint[]>([])
   React.useEffect(() => {
@@ -467,6 +474,40 @@ export function CatalogBodyClient({
   const mapPointHref = React.useMemo(() => new Map(mapPoints.map((p) => [p.slug, p.href])), [mapPoints])
   // Cards fetched for pins beyond the loaded page (see handleActiveSlugFromMap).
   const [extraCards, setExtraCards] = React.useState<Record<string, PropertyHomes>>({})
+
+  // An area bubble (a district's listings without a published address): its
+  // cards come from the catalogue API filtered to the district; a bubble with
+  // no district (a few listings outside any) shows the cards of its points.
+  const [areaSheet, setAreaSheet] = React.useState<{ area: MapArea; items: PropertyHomes[] | null } | null>(null)
+  const openArea = React.useCallback(
+    (area: MapArea) => {
+      setPreviewSlug(null)
+      setAreaSheet({ area, items: null })
+      const done = (items: PropertyHomes[]) =>
+        setAreaSheet((cur) => (cur && cur.area.key === area.key ? { area, items } : cur))
+      if (!area.key.startsWith('cell:')) {
+        const params = new URLSearchParams(loadMoreQuery)
+        params.delete('page')
+        params.set('page', '1')
+        params.set('district', area.key)
+        params.set('locale', locale)
+        fetch(`/api/catalog/properties?${params.toString()}`)
+          .then((r) => (r.ok ? r.json() : { items: [] }))
+          .then((d: { items?: PropertyHomes[] }) => done(Array.isArray(d.items) ? d.items.slice(0, 12) : []))
+          .catch(() => done([]))
+      } else {
+        done([])
+      }
+    },
+    [loadMoreQuery, locale]
+  )
+  const areaSeeAllHref = React.useMemo(() => {
+    if (!areaSheet || areaSheet.area.key.startsWith('cell:') || typeof window === 'undefined') return null
+    const url = new URL(window.location.href)
+    url.searchParams.set('district', areaSheet.area.key)
+    url.searchParams.delete('view')
+    return `${url.pathname}?${url.searchParams.toString()}`
+  }, [areaSheet])
   const previewPool = React.useMemo(() => [...allItems, ...Object.values(extraCards)], [allItems, extraCards])
 
   const handleActiveSlugFromMap = React.useCallback(
@@ -610,12 +651,15 @@ export function CatalogBodyClient({
   const mapItems = React.useMemo(() => {
     const loaded = allItems.map((p) => ({
       slug: p.slug,
-      price: p.price,
+      // A per-m² rate is not a total (off-plan units): no price pill.
+      price: p.priceUnit === 'per-sqm' ? undefined : p.price,
       currency: p.currency,
       rate: p.rate,
       status: p.status,
       coordinates: p.coordinates,
       locationPrecision: p.locationPrecision,
+      district: p.districtSlug,
+      districtName: p.district,
       // Cards in the list get price pills; the rest of the filter is dots.
       pill: true,
     }))
@@ -631,6 +675,8 @@ export function CatalogBodyClient({
         status: p.status,
         coordinates: { lat: p.lat, lng: p.lng },
         locationPrecision: p.approximate ? ('approximate' as const) : ('exact' as const),
+        district: p.district,
+        districtName: p.districtName,
         pill: false,
       }))
     return [...loaded, ...rest]
@@ -781,10 +827,26 @@ export function CatalogBodyClient({
                   selectedDealType={filterProps.initialDealType || undefined}
                   expanded={mapExpanded}
                   onExpandedChange={handleMapExpandedChange}
+                  onAreaClick={openArea}
                 />
               ) : (
                 <div className="absolute inset-0 rounded-2xl bg-dark/5 dark:bg-white/10" aria-hidden />
               )}
+              {areaSheet && !previewItem && !pendingSlug ? (
+                <MapAreaSheet
+                  area={areaSheet.area}
+                  items={areaSheet.items}
+                  locale={locale}
+                  seeAllHref={areaSeeAllHref}
+                  variant={mapExpanded ? "sheet" : "panel"}
+                  onPick={(item) => {
+                    setExtraCards((prev) => ({ ...prev, [item.slug]: item }));
+                    setActiveSlug(item.slug);
+                    setPreviewSlug(item.slug);
+                  }}
+                  onClose={() => setAreaSheet(null)}
+                />
+              ) : null}
               {!previewItem && pendingSlug ? (
                 <MapListingSheet
                   item={null}

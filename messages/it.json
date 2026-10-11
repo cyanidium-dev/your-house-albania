@@ -179,7 +179,11 @@
       "zoomIn": "Ingrandisci",
       "zoomOut": "Riduci",
       "resetBearing": "Riporta la mappa a nord",
-      "offline": "La mappa richiede una connessione a internet. Gli annunci qui sotto funzionano anche offline."
+      "offline": "La mappa richiede una connessione a internet. Gli annunci qui sotto funzionano anche offline.",
+      "areaTitle": "{name}: {count} annunci",
+      "areaNote": "L’agenzia non ha pubblicato l’indirizzo esatto di questi annunci: sono mostrati per zona, non come punti.",
+      "areaSeeAll": "Vedi tutti i {count} a {name}",
+      "areaFallbackName": "questa zona"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",

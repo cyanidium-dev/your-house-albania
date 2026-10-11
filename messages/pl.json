@@ -168,7 +168,11 @@
       "zoomIn": "Przybliż",
       "zoomOut": "Oddal",
       "resetBearing": "Obróć mapę na północ",
-      "offline": "Mapa wymaga połączenia z internetem. Oferty poniżej działają też offline."
+      "offline": "Mapa wymaga połączenia z internetem. Oferty poniżej działają też offline.",
+      "areaTitle": "{name}: {count} ofert",
+      "areaNote": "Agencja nie podała dokładnego adresu tych ofert, dlatego pokazujemy je dla okolicy, a nie jako punkty.",
+      "areaSeeAll": "Zobacz wszystkie {count} – {name}",
+      "areaFallbackName": "ta okolica"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",

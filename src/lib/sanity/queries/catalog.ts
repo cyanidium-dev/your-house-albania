@@ -411,6 +411,9 @@ export type CatalogMapPoint = {
   priceUnit?: 'total' | 'per-sqm';
   status?: string;
   locationPrecision?: 'exact' | 'approximate' | null;
+  /** District of the listing: approximate listings are grouped by it on the map. */
+  districtSlug?: string | null;
+  districtTitle?: Record<string, string | undefined> | null;
 };
 
 /** Upper bound on pins per map; the whole catalogue is ~1,100 listings. */
@@ -432,7 +435,8 @@ export const fetchCatalogMapPoints = sanityCache(
       const rows = await client.fetch<CatalogMapPoint[]>(
         `*[${where} && defined(coordinatesLat) && defined(coordinatesLng)][0...${MAP_POINTS_LIMIT}]{
           "slug": slug.current, localizedSlug, "lat": coordinatesLat, "lng": coordinatesLng,
-          price, priceUnit, status, locationPrecision
+          price, priceUnit, status, locationPrecision,
+          "districtSlug": district->slug.current, "districtTitle": district->title
         }`,
         params,
       );

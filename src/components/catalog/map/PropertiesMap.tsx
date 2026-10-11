@@ -66,7 +66,13 @@ export type PropertiesMapItem = {
   status?: string
   /** false: a dot instead of a price pill (listings not among the loaded cards). Default true. */
   pill?: boolean
+  /** District slug and name: approximate listings are shown per district, not as pins. */
+  district?: string
+  districtName?: string
 }
+
+/** One district's approximate listings, drawn as a single area bubble. */
+export type MapArea = { key: string; name: string; count: number; lat: number; lng: number }
 
 type ScopeViewport = {
   center: [number, number]
@@ -113,6 +119,7 @@ export function PropertiesMap({
   highlightSlug,
   expanded = false,
   onExpandedChange,
+  onAreaClick,
 }: {
   items: PropertiesMapItem[]
   activeSlug?: string | null
@@ -127,6 +134,8 @@ export function PropertiesMap({
   /** Full-screen state is owned by the caller, which also positions the preview card. */
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
+  /** An area bubble (a district's approximate listings) was clicked. */
+  onAreaClick?: (area: MapArea) => void
 }) {
   const { currency, rates } = useCurrency()
   const locale = useLocale()
@@ -186,6 +195,8 @@ export function PropertiesMap({
           markerLabel,
           approximate,
           pill: it.pill !== false && markerLabel !== '',
+          district: it.district ?? '',
+          districtName: it.districtName ?? '',
         }
       })
       .filter(Boolean) as Array<{
@@ -195,6 +206,8 @@ export function PropertiesMap({
         markerLabel: string
         approximate: boolean
         pill: boolean
+        district: string
+        districtName: string
       }>
   }, [items, selectedDealType, currency, rates, locale, tDeal])
 
@@ -242,10 +255,52 @@ export function PropertiesMap({
 
   const hasApproximate = React.useMemo(() => validPoints.some((p) => p.approximate), [validPoints])
 
+  // A listing whose agency gave no address has a point scattered around its
+  // district's anchor: as a pin it stood on beaches and roads, five flats on
+  // one empty spot (owner, 2026-10-11). Such listings are not pins at all:
+  // each district's are one area bubble with a count, at the centre of their
+  // points; only listings with a real address are pins.
+  const areas = React.useMemo<MapArea[]>(() => {
+    const groups = new Map<string, { name: string; lat: number; lng: number; n: number }>()
+    for (const p of validPoints) {
+      if (!p.approximate) continue
+      // Without a district, nearby points share a bubble (about 2 km cells).
+      const key = p.district || `cell:${p.lat.toFixed(2)},${p.lng.toFixed(2)}`
+      const g = groups.get(key) ?? { name: p.districtName || '', lat: 0, lng: 0, n: 0 }
+      g.lat += p.lat
+      g.lng += p.lng
+      g.n += 1
+      groups.set(key, g)
+    }
+    return [...groups.entries()].map(([key, g]) => ({ key, name: g.name, count: g.n, lat: g.lat / g.n, lng: g.lng / g.n }))
+  }, [validPoints])
+  const areaGeojson = React.useMemo(
+    () => ({
+      type: 'FeatureCollection' as const,
+      features: areas.map((a) => ({
+        type: 'Feature' as const,
+        properties: { key: a.key, name: a.name, count: a.count, label: `≈ ${a.count}` },
+        geometry: { type: 'Point' as const, coordinates: [a.lng, a.lat] as [number, number] },
+      })),
+    }),
+    [areas]
+  )
+  const areaOfSlug = React.useMemo(() => {
+    const m = new Map<string, MapArea>()
+    for (const p of validPoints) {
+      if (!p.approximate) continue
+      const a = areas.find((x) => x.key === (p.district || `cell:${p.lat.toFixed(2)},${p.lng.toFixed(2)}`))
+      if (a) m.set(p.slug, a)
+    }
+    return m
+  }, [validPoints, areas])
+  const onAreaClickRef = React.useRef(onAreaClick)
+  onAreaClickRef.current = onAreaClick
+
   const geojson = React.useMemo(() => {
     return {
       type: 'FeatureCollection' as const,
-      features: validPoints.map((p) => ({
+      features: validPoints.filter((p) => !p.approximate).map((p) => ({
         type: 'Feature' as const,
         id: p.slug,
         properties: {
@@ -516,6 +571,54 @@ export function PropertiesMap({
         },
       })
 
+      // Area bubbles: a district's approximate listings, one circle with a
+      // count (see `areas`). Under the exact pins and clusters.
+      map.addSource('areas', { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, promoteId: 'key' })
+      map.addLayer(
+        {
+          id: 'area-circle',
+          type: 'circle',
+          source: 'areas',
+          paint: {
+            'circle-radius': [
+              '+',
+              ['interpolate', ['linear'], ['get', 'count'], 1, 15, 20, 21, 100, 28, 300, 36],
+              ['case', ['boolean', ['feature-state', 'hover'], false], 4, 0],
+            ],
+            'circle-color': LISTING_BUILDING_COLOR,
+            'circle-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.28, 0.14],
+            'circle-stroke-color': LISTING_BUILDING_COLOR,
+            'circle-stroke-width': 1.5,
+            'circle-stroke-opacity': 0.7,
+          },
+        },
+        'clusters'
+      )
+      map.addLayer(
+        {
+          id: 'area-count',
+          type: 'symbol',
+          source: 'areas',
+          layout: {
+            'text-field': [
+              'format',
+              ['get', 'label'],
+              {},
+              String.fromCharCode(10),
+              {},
+              ['get', 'name'],
+              { 'font-scale': 0.78 },
+            ],
+            'text-size': 12,
+            'text-font': MAP_FONT,
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
+          },
+          paint: { 'text-color': '#0b3d2c', 'text-halo-color': 'rgba(255,255,255,0.85)', 'text-halo-width': 1.2 },
+        },
+        'clusters'
+      )
+
       // A picked approximate listing has no building; the zone it is in is
       // drawn instead (see the selection effect).
       map.addSource('approx-zone', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
@@ -601,6 +704,12 @@ export function PropertiesMap({
     // Intentionally only init once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearHtmlMarkers, scheduleMapResize])
+
+  React.useEffect(() => {
+    if (!ready || !mapRef.current) return
+    const src = mapRef.current.getSource('areas') as maplibregl.GeoJSONSource | undefined
+    src?.setData(areaGeojson as any)
+  }, [ready, areaGeojson])
 
   // Update source data when filtered results change.
   React.useEffect(() => {
@@ -891,15 +1000,24 @@ export function PropertiesMap({
 
     const zone = map.getSource('approx-zone') as maplibregl.GeoJSONSource | undefined
     const activePoint = activeSlug ? validPoints.find((p) => p.slug === activeSlug) : undefined
+    const activeArea = activePoint?.approximate ? areaOfSlug.get(activePoint.slug) : undefined
     zone?.setData({
       type: 'FeatureCollection',
-      features:
-        activePoint?.approximate
-          ? [{ type: 'Feature', properties: {}, geometry: circlePolygon(activePoint.lng, activePoint.lat, APPROX_ZONE_M) }]
-          : [],
+      features: activeArea
+        ? [{ type: 'Feature', properties: {}, geometry: circlePolygon(activeArea.lng, activeArea.lat, APPROX_ZONE_M) }]
+        : [],
     })
+    if (activeArea) {
+      // No pin for it: centre the listing's area instead.
+      map.easeTo({
+        center: [activeArea.lng, activeArea.lat],
+        zoom: Math.max(map.getZoom(), 13.5),
+        offset: [0, -Math.round(map.getContainer().clientHeight * 0.22)],
+        duration: 450,
+      })
+    }
 
-    if (activeSlug && hasActive) {
+    if (activeSlug && hasActive && !activePoint?.approximate) {
       map.setFeatureState({ source: 'properties', id: activeSlug }, { selected: true })
 
       const active = validPoints.find((p) => p.slug === activeSlug)
@@ -917,7 +1035,7 @@ export function PropertiesMap({
     }
 
     prevActiveSlugRef.current = activeSlug ?? null
-  }, [ready, activeSlug, validPoints])
+  }, [ready, activeSlug, validPoints, areaOfSlug])
 
   // Marker click handler.
   React.useEffect(() => {
@@ -982,6 +1100,16 @@ export function PropertiesMap({
 
     map.on('click', 'clusters', onClusterClick)
     map.on('click', 'points-dot', onDotClick)
+    const onAreaLayerClick = (e: maplibregl.MapLayerMouseEvent) => {
+      const key = String((e.features?.[0]?.properties as { key?: unknown } | undefined)?.key ?? '')
+      const area = areas.find((a) => a.key === key)
+      if (!area) return
+      userMovedRef.current = true
+      onAreaClickRef.current?.(area)
+    }
+    map.on('click', 'area-circle', onAreaLayerClick)
+    map.on('mouseenter', 'area-circle', pointer)
+    map.on('mouseleave', 'area-circle', noPointer)
     map.on('mouseenter', 'points-dot', pointer)
     map.on('mouseleave', 'points-dot', noPointer)
     map.on('mouseenter', 'clusters', pointer)
@@ -996,6 +1124,9 @@ export function PropertiesMap({
       map.off('click', 'points-dot', onDotClick)
       map.off('mouseenter', 'points-dot', pointer)
       map.off('mouseleave', 'points-dot', noPointer)
+      map.off('click', 'area-circle', onAreaLayerClick)
+      map.off('mouseenter', 'area-circle', pointer)
+      map.off('mouseleave', 'area-circle', noPointer)
       map.off('mouseenter', 'clusters', pointer)
       map.off('mouseleave', 'clusters', noPointer)
       map.off('moveend', scheduleSync)
@@ -1019,7 +1150,9 @@ export function PropertiesMap({
       const on = slug === next
       const marker = htmlMarkersRef.current.get(slug)
       if (marker) styleMarkerElement(marker.getElement() as HTMLDivElement, activeSlug === slug, point.approximate, on)
-      if (!point.pill) map.setFeatureState({ source: 'properties', id: slug }, { hover: on })
+      const area = point.approximate ? areaOfSlug.get(slug) : undefined
+      if (area) map.setFeatureState({ source: 'areas', id: area.key }, { hover: on })
+      else if (!point.pill) map.setFeatureState({ source: 'properties', id: slug }, { hover: on })
     }
 
     // At the opening zoom every pin is inside a cluster and a hovered card lit

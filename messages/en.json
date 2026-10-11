@@ -179,7 +179,11 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "resetBearing": "Turn the map back north",
-      "offline": "The map needs an internet connection. The listings below work offline."
+      "offline": "The map needs an internet connection. The listings below work offline.",
+      "areaTitle": "{name}: {count} listings",
+      "areaNote": "The agency has not published the exact address of these listings, so they are shown for the area, not as pins.",
+      "areaSeeAll": "See all {count} in {name}",
+      "areaFallbackName": "this area"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",

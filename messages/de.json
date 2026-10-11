@@ -179,7 +179,11 @@
       "zoomIn": "Vergrößern",
       "zoomOut": "Verkleinern",
       "resetBearing": "Karte nach Norden ausrichten",
-      "offline": "Die Karte braucht eine Internetverbindung. Die Inserate darunter funktionieren auch offline."
+      "offline": "Die Karte braucht eine Internetverbindung. Die Inserate darunter funktionieren auch offline.",
+      "areaTitle": "{name}: {count} Angebote",
+      "areaNote": "Die Agentur hat die genaue Adresse dieser Angebote nicht veröffentlicht, daher erscheinen sie für die Gegend, nicht als Punkte.",
+      "areaSeeAll": "Alle {count} in {name} ansehen",
+      "areaFallbackName": "diese Gegend"
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",
