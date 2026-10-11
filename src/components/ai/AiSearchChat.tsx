@@ -153,6 +153,8 @@ export default function AiSearchChat({
     track({ event: 'ai_search_open', entry })
   }, [entry])
 
+  const lastQuestionRef = useRef('')
+
   const send = useCallback(
     async (text: string) => {
       const question = text.trim().slice(0, AI_MAX_MESSAGE_CHARS)
@@ -161,12 +163,28 @@ export default function AiSearchChat({
       setErrorCode(null)
       setBusy(true)
       setDraft('')
+      lastQuestionRef.current = question
+      // Stored before the answer streams: a reload mid-answer used to lose the
+      // whole conversation, question included (saveChat ran only at the end).
+      saveChat(
+        [
+          ...turns.map((turn): StoredTurn =>
+            turn.role === 'user'
+              ? { role: 'user', text: turn.text }
+              : { role: 'assistant', text: turn.text, cards: turn.cards, citations: turn.citations },
+          ),
+          { role: 'user', text: question },
+        ],
+        propertySlug,
+      )
       track({
         event: 'ai_search_query',
         queryLength: question.length,
         turn: turns.filter((t) => t.role === 'user').length + 1,
       })
       let cardsThisTurn = 0
+      let sawDone = false
+      let sawError = false
 
       // The model only needs the prose of the conversation: cards it produced
       // are described by the text around them, and replaying tool blocks would
@@ -208,8 +226,12 @@ export default function AiSearchChat({
           signal: controller.signal,
         })
 
-        if (!response.body) {
-          setErrorCode('failed')
+        // An HTML error page (a 500, or Vercel's 504 after maxDuration) has a
+        // body too; reading it as a stream left the question with no answer
+        // and no message.
+        if (!response.ok || !response.body) {
+          sawError = true
+          setErrorCode(response.status === 429 ? 'rate_limited' : 'failed')
           return
         }
 
@@ -273,11 +295,16 @@ export default function AiSearchChat({
                   })),
                 )
               } else if (event.type === 'error') {
+                sawError = true
                 setErrorCode(event.code)
+              } else if (event.type === 'done') {
+                sawDone = true
               }
             }
           }
         }
+        // The stream ended without its closing event: the answer was cut off.
+        if (!sawDone && !sawError) setErrorCode('interrupted')
       } catch (err) {
         if ((err as Error)?.name !== 'AbortError') setErrorCode('failed')
       } finally {
@@ -311,6 +338,17 @@ export default function AiSearchChat({
     if (!question || autoSentRef.current) return
     autoSentRef.current = true
     void send(question)
+    // The question came in the URL (?q= from the home search). Drop it, so a
+    // reload does not send it again — a second paid request.
+    try {
+      const url = new URL(window.location.href)
+      if (url.searchParams.has('q')) {
+        url.searchParams.delete('q')
+        window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`)
+      }
+    } catch {
+      // ignore
+    }
     // `send` closes over `turns`, which is empty on mount — exactly what the
     // first message needs. Re-running on its identity would resend the query.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -320,6 +358,28 @@ export default function AiSearchChat({
     event.preventDefault()
     void send(draft)
   }
+
+  // Try again after an error: the failed question and its empty answer are
+  // taken out of the conversation and the question is sent once more.
+  const [retryQuestion, setRetryQuestion] = useState<string | null>(null)
+  function retry() {
+    const question = lastQuestionRef.current
+    if (!question) return
+    setErrorCode(null)
+    setTurns((prev) => {
+      const next = [...prev]
+      if (next.at(-1)?.role === 'assistant') next.pop()
+      if (next.at(-1)?.role === 'user') next.pop()
+      return next
+    })
+    setRetryQuestion(question)
+  }
+  useEffect(() => {
+    if (!retryQuestion || busy) return
+    const question = retryQuestion
+    setRetryQuestion(null)
+    void send(question)
+  }, [retryQuestion, busy, send])
 
   function restart() {
     abortRef.current?.abort()
@@ -434,7 +494,29 @@ export default function AiSearchChat({
           className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-700 dark:text-red-300"
         >
           {t(`errors.${errorCode}`)}
+          {errorCode === 'failed' || errorCode === 'interrupted' || errorCode === 'rate_limited' ? (
+            <button
+              type="button"
+              onClick={retry}
+              className="ml-3 inline-flex min-h-[44px] items-center font-semibold underline underline-offset-2"
+            >
+              {t('retry')}
+            </button>
+          ) : null}
         </p>
+      ) : null}
+
+      {turns.length > 0 && !limitReached ? (
+        <div className="-mb-3 flex justify-end">
+          <button
+            type="button"
+            onClick={restart}
+            disabled={busy}
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-3 text-sm font-medium text-dark/60 hover:text-primary disabled:opacity-40 dark:text-white/60"
+          >
+            {t('newChat')}
+          </button>
+        </div>
       ) : null}
 
       {/* z-40 so the composer stays above the property cards it scrolls

@@ -691,7 +691,9 @@
     "emptyDescription": "Przeglądaj nieruchomości i dotknij serca, aby dodać je tutaj.",
     "browseProperties": "Przeglądaj nieruchomości",
     "noDataTitle": "Nie znaleziono danych nieruchomości",
-    "noDataDescription": "Niektóre ulubione mogą już nie istnieć."
+    "noDataDescription": "Niektóre ulubione mogą już nie istnieć.",
+    "addAria": "Dodaj {name} do ulubionych",
+    "removeAria": "Usuń {name} z ulubionych"
   },
   "HowToPublish": {
     "metaTitle": "Jak publikować na Domlivo",
@@ -947,7 +949,7 @@
       "searching": "Przeglądam oferty…"
     },
     "seeAllInCatalog": "Zobacz wszystkie w katalogu",
-    "chatPlaceholder": "Zapytaj o cokolwiek dotyczące tych ofert",
+    "chatPlaceholder": "Opisz, czego szukasz",
     "disclaimer": "Asystent może się mylić. Ceny i dostępność potwierdza agent.",
     "restart": "Zacznij od nowa",
     "errors": {
@@ -956,7 +958,8 @@
       "too_long": "Wiadomość jest za długa — spróbuj krócej.",
       "too_many_turns": "Rozmowa zrobiła się długa. Zacznij nową, aby kontynuować.",
       "failed": "Coś poszło nie tak. Spróbuj wysłać ponownie.",
-      "budget_exhausted": "Wyszukiwanie AI jest dziś wstrzymane z powodu dużego obciążenia. Pełny katalog działa jak zwykle."
+      "budget_exhausted": "Wyszukiwanie AI jest dziś wstrzymane z powodu dużego obciążenia. Pełny katalog działa jak zwykle.",
+      "interrupted": "Odpowiedź została przerwana. Spróbuj wysłać ponownie."
     },
     "property": {
       "heading": "Zapytaj o tę nieruchomość",
@@ -978,7 +981,9 @@
       "heading": "Źródła",
       "verified": "zweryfikowano",
       "mayHaveChanged": "mogło się zmienić"
-    }
+    },
+    "retry": "Spróbuj ponownie",
+    "newChat": "Nowy czat"
   },
   "Knowledge": {
     "title": "Baza wiedzy",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { SpriteIcon } from "@/components/shared/SpriteIcon";
 import { useFavoriteSlugs } from "@/hooks/useFavorites";
 import { toggleFavorite } from "@/lib/favorites";
@@ -19,6 +20,7 @@ type Props = {
 const ANIMATION_DURATION_MS = 800;
 
 export function FavoriteButton({ slug, name, variant = "overlay", size = "default", imageUrl, className }: Props) {
+  const tFav = useTranslations("Favorites");
   const buttonRef = useRef<HTMLButtonElement>(null);
   // Read from the shared store: a card's heart renders once on hydration and
   // again only if this visitor has saved something (see useFavoriteSlugs).
@@ -89,7 +91,7 @@ export function FavoriteButton({ slug, name, variant = "overlay", size = "defaul
         ref={buttonRef}
         type="button"
         onClick={handleClick}
-        aria-label={active ? `Remove ${name || slug} from favorites` : `Add ${name || slug} to favorites`}
+        aria-label={active ? tFav('removeAria', { name: name || slug }) : tFav('addAria', { name: name || slug })}
       className={cn(
         base,
         variant === "overlay" ? overlayStyles : inlineStyles,

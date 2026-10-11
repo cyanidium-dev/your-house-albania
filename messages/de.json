@@ -691,7 +691,9 @@
     "emptyDescription": "Stöbern Sie in den Immobilien und tippen Sie auf das Herz, um sie hier zu speichern.",
     "browseProperties": "Immobilien ansehen",
     "noDataTitle": "Keine Immobiliendaten gefunden",
-    "noDataDescription": "Einige Favoriten sind möglicherweise nicht mehr verfügbar."
+    "noDataDescription": "Einige Favoriten sind möglicherweise nicht mehr verfügbar.",
+    "addAria": "{name} zu den Favoriten hinzufügen",
+    "removeAria": "{name} aus den Favoriten entfernen"
   },
   "HowToPublish": {
     "metaTitle": "So veröffentlichen Sie auf Domlivo",
@@ -947,7 +949,7 @@
       "searching": "Durchsucht die Angebote…"
     },
     "seeAllInCatalog": "Alle im Katalog ansehen",
-    "chatPlaceholder": "Fragen Sie alles zu diesen Angeboten",
+    "chatPlaceholder": "Beschreiben Sie, was Sie suchen",
     "disclaimer": "Der Assistent kann Fehler machen. Preise und Verfügbarkeit werden von einem Makler bestätigt.",
     "restart": "Neu beginnen",
     "errors": {
@@ -956,7 +958,8 @@
       "too_long": "Diese Nachricht ist zu lang — versuchen Sie es kürzer.",
       "too_many_turns": "Dieses Gespräch ist lang geworden. Beginnen Sie ein neues, um fortzufahren.",
       "failed": "Etwas ist schiefgelaufen. Senden Sie es erneut.",
-      "budget_exhausted": "Die KI-Suche ist heute wegen hoher Auslastung pausiert. Der vollständige Katalog ist wie gewohnt geöffnet."
+      "budget_exhausted": "Die KI-Suche ist heute wegen hoher Auslastung pausiert. Der vollständige Katalog ist wie gewohnt geöffnet.",
+      "interrupted": "Die Antwort wurde abgebrochen. Bitte erneut senden."
     },
     "property": {
       "heading": "Fragen Sie zu dieser Immobilie",
@@ -978,7 +981,9 @@
       "heading": "Quellen",
       "verified": "geprüft",
       "mayHaveChanged": "kann sich geändert haben"
-    }
+    },
+    "retry": "Erneut versuchen",
+    "newChat": "Neuer Chat"
   },
   "Knowledge": {
     "title": "Wissensdatenbank",

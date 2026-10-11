@@ -28,6 +28,8 @@ export type AiErrorCode =
   /** The month's spend ceiling is reached; the assistant is off until it resets. */
   | 'budget_exhausted'
   | 'failed'
+  /** Client-side only: the stream ended without its closing event. */
+  | 'interrupted'
 
 export type AiStreamEvent =
   /** A chunk of the answer, appended as it arrives. */

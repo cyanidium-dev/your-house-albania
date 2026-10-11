@@ -691,7 +691,9 @@
     "emptyDescription": "Browse properties and tap the heart to add them here.",
     "browseProperties": "Browse properties",
     "noDataTitle": "No property data found",
-    "noDataDescription": "Some favorites may no longer exist."
+    "noDataDescription": "Some favorites may no longer exist.",
+    "addAria": "Add {name} to favorites",
+    "removeAria": "Remove {name} from favorites"
   },
   "HowToPublish": {
     "metaTitle": "How to publish on Domlivo",
@@ -947,7 +949,7 @@
       "searching": "Looking through the listings…"
     },
     "seeAllInCatalog": "See all in the catalog",
-    "chatPlaceholder": "Ask anything about these listings",
+    "chatPlaceholder": "Describe what you are looking for",
     "disclaimer": "The assistant can make mistakes. Prices and availability are confirmed by an agent.",
     "restart": "Start over",
     "errors": {
@@ -956,7 +958,8 @@
       "too_long": "That message is too long — try a shorter one.",
       "too_many_turns": "This conversation has got long. Start a new one to continue.",
       "failed": "Something went wrong. Try sending it again.",
-      "budget_exhausted": "AI search is paused because of heavy load today. The full catalog is open as usual."
+      "budget_exhausted": "AI search is paused because of heavy load today. The full catalog is open as usual.",
+      "interrupted": "The answer was cut off. Try sending it again."
     },
     "property": {
       "heading": "Ask about this property",
@@ -978,7 +981,9 @@
       "heading": "Sources",
       "verified": "verified",
       "mayHaveChanged": "may have changed"
-    }
+    },
+    "retry": "Try again",
+    "newChat": "New chat"
   },
   "Knowledge": {
     "title": "Knowledge base",

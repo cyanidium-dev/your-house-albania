@@ -691,7 +691,9 @@
     "emptyDescription": "Shfletoni pronat dhe shtypni zemrën për t'i shtuar këtu.",
     "browseProperties": "Shfletoni pronat",
     "noDataTitle": "Nuk u gjetën të dhëna për pronat",
-    "noDataDescription": "Disa nga të preferuarat ndoshta nuk ekzistojnë më."
+    "noDataDescription": "Disa nga të preferuarat ndoshta nuk ekzistojnë më.",
+    "addAria": "Shto {name} te të preferuarat",
+    "removeAria": "Hiq {name} nga të preferuarat"
   },
   "HowToPublish": {
     "metaTitle": "Si të publikoni në Domlivo",
@@ -947,7 +949,7 @@
       "searching": "Po shoh pronat…"
     },
     "seeAllInCatalog": "Shiko të gjitha në katalog",
-    "chatPlaceholder": "Pyesni çfarëdo për këto prona",
+    "chatPlaceholder": "Përshkruani çfarë kërkoni",
     "disclaimer": "Asistenti mund të gabojë. Çmimet dhe disponueshmëria konfirmohen nga agjenti.",
     "restart": "Fillo nga e para",
     "errors": {
@@ -956,7 +958,8 @@
       "too_long": "Mesazhi është shumë i gjatë — provoni një më të shkurtër.",
       "too_many_turns": "Biseda u zgjat. Filloni një të re për të vazhduar.",
       "failed": "Diçka shkoi keq. Provoni ta dërgoni sërish.",
-      "budget_exhausted": "Kërkimi me AI është pezulluar sot për shkak të ngarkesës së lartë. Katalogu i plotë është i hapur si zakonisht."
+      "budget_exhausted": "Kërkimi me AI është pezulluar sot për shkak të ngarkesës së lartë. Katalogu i plotë është i hapur si zakonisht.",
+      "interrupted": "Përgjigjja u ndërpre. Provoni ta dërgoni përsëri."
     },
     "property": {
       "heading": "Pyesni për këtë pronë",
@@ -978,7 +981,9 @@
       "heading": "Burimet",
       "verified": "verifikuar",
       "mayHaveChanged": "mund të ketë ndryshuar"
-    }
+    },
+    "retry": "Provo përsëri",
+    "newChat": "Bisedë e re"
   },
   "Knowledge": {
     "title": "Baza e njohurive",

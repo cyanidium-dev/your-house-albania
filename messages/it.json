@@ -691,7 +691,9 @@
     "emptyDescription": "Sfoglia le proprietà e clicca sul cuore per aggiungerle qui.",
     "browseProperties": "Sfoglia proprietà",
     "noDataTitle": "Nessun dato trovato",
-    "noDataDescription": "Alcuni preferiti potrebbero non esistere più."
+    "noDataDescription": "Alcuni preferiti potrebbero non esistere più.",
+    "addAria": "Aggiungi {name} ai preferiti",
+    "removeAria": "Rimuovi {name} dai preferiti"
   },
   "HowToPublish": {
     "metaTitle": "Come pubblicare su Domlivo",
@@ -947,7 +949,7 @@
       "searching": "Sto guardando gli immobili…"
     },
     "seeAllInCatalog": "Vedi tutti nel catalogo",
-    "chatPlaceholder": "Chieda qualsiasi cosa su questi immobili",
+    "chatPlaceholder": "Descrivi cosa stai cercando",
     "disclaimer": "L'assistente può sbagliare. Prezzi e disponibilità sono confermati da un agente.",
     "restart": "Ricomincia",
     "errors": {
@@ -956,7 +958,8 @@
       "too_long": "Il messaggio è troppo lungo — ne provi uno più breve.",
       "too_many_turns": "La conversazione si è allungata. Ne inizi una nuova per continuare.",
       "failed": "Qualcosa è andato storto. Provi a inviare di nuovo.",
-      "budget_exhausted": "La ricerca AI è sospesa oggi per carico elevato. Il catalogo completo è aperto come sempre."
+      "budget_exhausted": "La ricerca AI è sospesa oggi per carico elevato. Il catalogo completo è aperto come sempre.",
+      "interrupted": "La risposta si è interrotta. Prova a inviarla di nuovo."
     },
     "property": {
       "heading": "Chieda di questo immobile",
@@ -978,7 +981,9 @@
       "heading": "Fonti",
       "verified": "verificato",
       "mayHaveChanged": "potrebbe essere cambiato"
-    }
+    },
+    "retry": "Riprova",
+    "newChat": "Nuova chat"
   },
   "Knowledge": {
     "title": "Base di conoscenza",
