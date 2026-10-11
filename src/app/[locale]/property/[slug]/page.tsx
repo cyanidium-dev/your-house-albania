@@ -431,7 +431,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                   ...(galleryFacts.beachfront
                                     ? [{ key: 'sea', icon: 'ph:waves', label: tPropertyDetail('beachfront') }]
                                     : typeof galleryFacts.seaDistanceMeters === 'number' && galleryFacts.seaDistanceMeters > 0
-                                      ? [{ key: 'sea', icon: 'ph:waves', label: tPropertyDetail('seaDistance', { m: galleryFacts.seaDistanceMeters }) }]
+                                      // From an approximate pin the distance is approximate too
+                                      // (most are measured from the pin to the shoreline).
+                                      ? [{ key: 'sea', icon: 'ph:waves', label: `${locationIsApproximate ? '≈ ' : ''}${tPropertyDetail('seaDistance', { m: galleryFacts.seaDistanceMeters })}` }]
                                       : []),
                               ]}
                           />
