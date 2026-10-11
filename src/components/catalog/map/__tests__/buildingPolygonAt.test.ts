@@ -30,3 +30,16 @@ describe('buildingPolygonAt', () => {
     expect(buildingPolygonAt({ type: 'Point', coordinates: [0, 0] }, 0, 0)).toBeNull()
   })
 })
+
+describe('inflatePolygon', () => {
+  it('pushes every vertex of a 20 m square about 0.8 m further from the centre', async () => {
+    const { inflatePolygon } = await import('../buildingPolygonAt')
+    const d = 10 / 111_320
+    const sq: GeoJSON.Polygon = { type: 'Polygon', coordinates: [[[-d, -d], [d, -d], [d, d], [-d, d], [-d, -d]]] }
+    const out = inflatePolygon(sq, 0.8).coordinates[0]
+    expect(out).toHaveLength(5)
+    const r0 = Math.hypot(d, d) * 111_320
+    const r1 = Math.hypot(out[0][0], out[0][1]) * 111_320
+    expect(r1 - r0).toBeCloseTo(0.8, 2)
+  })
+})

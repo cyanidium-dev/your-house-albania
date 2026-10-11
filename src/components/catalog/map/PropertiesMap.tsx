@@ -10,7 +10,7 @@ import { displayDealLabel } from '@/lib/property/cardFormatters'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { cn } from '@/lib/utils'
-import { buildingPolygonAt } from './buildingPolygonAt'
+import { buildingPolygonAt, inflatePolygon } from './buildingPolygonAt'
 
 // OpenFreeMap's vector "Liberty" style: free, no key, OpenStreetMap data with
 // building heights, so the map can tilt into 3D (`building-3d` is its
@@ -565,14 +565,17 @@ export function PropertiesMap({
           minzoom: BUILDINGS_MIN_ZOOM,
           paint: {
             'fill-extrusion-color': LISTING_BUILDING_COLOR,
-            'fill-extrusion-opacity': 0.85,
+            // Opaque enough that the grey building inside does not show through
+            // (translucent green over grey read as a texture inside a texture).
+            'fill-extrusion-opacity': 0.95,
             'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
             // A building with no height in OpenStreetMap still stands out; the
-            // pad for an unmapped building stays low.
+            // pad for an unmapped building stays low. +1.5 m: the roof sits
+            // above the grey one instead of on the same plane (z-fighting).
             'fill-extrusion-height': [
-              'max',
-              ['coalesce', ['get', 'render_height'], 0],
-              ['case', ['==', ['get', 'render_height'], 3], 3, 9],
+              '+',
+              ['max', ['coalesce', ['get', 'render_height'], 0], ['case', ['==', ['get', 'render_height'], 3], 3, 9]],
+              1.5,
             ],
           },
         },
@@ -748,7 +751,8 @@ export function PropertiesMap({
           seen.add(key)
           features.push({
             type: 'Feature',
-            geometry,
+            // Slightly larger than the grey building it covers, see inflatePolygon.
+            geometry: inflatePolygon(geometry, 0.8),
             properties: {
               render_height: props?.render_height,
               render_min_height: props?.render_min_height,
