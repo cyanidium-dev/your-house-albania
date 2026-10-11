@@ -38,6 +38,10 @@ type SnapshotRow = {
   district?: { slug?: string; title?: unknown }
   type?: { slug?: string; title?: unknown }
   amenities?: (string | null)[]
+  priceUnit?: 'total' | 'per-sqm' | null
+  seaDistanceMeters?: number | null
+  beachfront?: boolean | null
+  constructionStage?: string | null
 }
 
 export type CatalogFacets = {
@@ -108,25 +112,48 @@ function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
     )
     amenities.forEach((a) => amenityVocabulary.add(a))
 
-    const price = typeof row.price === 'number' && row.price > 0 ? Math.round(row.price) : 0
+    // Off-plan units are quoted as a rate per m², not a total: the model read
+    // "1200 EUR" as the price of a flat and offered €140k units as "under
+    // €100k" (QA 2026-10-11). A rate is labelled as one and stays out of the
+    // price range.
+    const isRate = row.priceUnit === 'per-sqm'
+    const rawPrice = typeof row.price === 'number' && row.price > 0 ? Math.round(row.price) : 0
+    const price = isRate ? 0 : rawPrice
     const area = typeof row.area === 'number' && row.area > 0 ? Math.round(row.area) : 0
     if (price > 0) {
       priceMin = Math.min(priceMin, price)
       priceMax = Math.max(priceMax, price)
     }
-    const perM2 = price > 0 && area > 0 ? Math.round(price / area) : 0
+    const perM2 = isRate ? rawPrice : price > 0 && area > 0 ? Math.round(price / area) : 0
+    const sea = row.beachfront
+      ? 'beachfront'
+      : typeof row.seaDistanceMeters === 'number' && row.seaDistanceMeters >= 0
+        ? `${Math.round(row.seaDistanceMeters)}m to sea`
+        : 'sea distance n/a'
+    const stage =
+      row.constructionStage === 'under-construction' || row.constructionStage === 'off-plan'
+        ? 'new build, not finished'
+        : row.constructionStage === 'completed'
+          ? 'finished'
+          : ''
 
     const cells = [
       slug,
       [districtLabel, cityLabel].filter(Boolean).join('/') || '—',
       typeSlug || '—',
       row.status ?? '—',
-      price > 0 ? `${price} EUR` : 'price n/a',
+      isRate && rawPrice > 0
+        ? `rate ${rawPrice} EUR/m2, total depends on the unit${area > 0 ? ` (≈${Math.round((rawPrice * area) / 1000)}k EUR for ${area}m2)` : ''}`
+        : price > 0
+          ? `${price} EUR`
+          : 'price n/a',
       area > 0 ? `${area}m2` : 'area n/a',
       typeof row.plotArea === 'number' && row.plotArea > 0 ? `plot ${Math.round(row.plotArea)}m2` : '',
       `${row.bedrooms ?? 0}bd/${row.bathrooms ?? 0}ba`,
       row.yearBuilt ? `built ${row.yearBuilt}` : 'year n/a',
       perM2 > 0 ? `${perM2} EUR/m2` : '',
+      sea,
+      stage,
       amenities.join(',') || '',
       compactText(resolveLocalizedString(row.description as never, 'en'), TEASER_CHARS),
     ]
@@ -189,7 +216,11 @@ async function fetchCatalogSnapshot(): Promise<CatalogSnapshot> {
     "city": city-> { "slug": slug.current, title },
     "district": district-> { "slug": slug.current, title },
     "type": type-> { "slug": slug.current, title },
-    "amenities": amenitiesRefs[@->needsReview != true]->slug.current
+    "amenities": amenitiesRefs[@->needsReview != true]->slug.current,
+    priceUnit,
+    seaDistanceMeters,
+    beachfront,
+    constructionStage
   }`
 
   try {

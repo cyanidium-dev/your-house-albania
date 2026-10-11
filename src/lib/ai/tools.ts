@@ -102,6 +102,7 @@ const CARD_PROJECTION = `{
   localizedSlug,
   description,
   price,
+  priceUnit,
   currency,
   area,
   bedrooms,
