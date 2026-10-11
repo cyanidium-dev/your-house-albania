@@ -12,6 +12,8 @@ type RouteFilterParams = {
 export type ParsedCatalogFilters = {
   agentSlug: string;
   city: string;
+  /** `cities=durres,vlore`: any of these cities (landing "see all" links). */
+  cities: string[];
   district: string;
   type: string;
   deal: string;
@@ -100,6 +102,8 @@ export function parseCatalogFilters(
   const maxArea = Number(pickSearchString(searchParams, "maxArea")) || 0;
   const beds = Number(pickSearchString(searchParams, "beds")) || 0;
   const bedsExact = Number(pickSearchString(searchParams, "bedsExact")) || 0;
+  const citiesRaw = pickSearchString(searchParams, "cities", true);
+  const cities = citiesRaw ? citiesRaw.split(",").map((c) => c.trim()).filter(Boolean) : [];
   const typesRaw = pickSearchString(searchParams, "types", true);
   const types = typesRaw ? typesRaw.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const nearSeaRaw = pickSearchString(searchParams, "nearSea", true);
@@ -109,6 +113,7 @@ export function parseCatalogFilters(
   return {
     agentSlug,
     city,
+    cities,
     district,
     type,
     deal,

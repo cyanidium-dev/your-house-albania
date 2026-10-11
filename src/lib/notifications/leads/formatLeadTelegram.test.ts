@@ -151,3 +151,42 @@ describe('formatClickLeadTelegram', () => {
     )
   })
 })
+
+describe('landing quote message', () => {
+  const quote = {
+    submissionKind: 'quote' as const,
+    agentSlug: '—',
+    agentName: '—',
+    locale: 'pl',
+    location: undefined,
+    propertyType: undefined,
+    dealType: undefined,
+    priceRangeLabel: '—',
+    areaRangeLabel: '—',
+    customerName: 'Anna',
+    phone: '+48 600 000 000',
+    email: '—',
+    message: '',
+    sourceLabel: 'Landing: nieruchomosci-albania-nad-morzem',
+    sourceUrl: 'https://www.domlivo.com/pl/nieruchomosci-albania-nad-morzem',
+  }
+
+  it('names the landing and carries the budget and the wish', () => {
+    const text = formatAgentContactTelegramMessage({
+      ...quote,
+      message: 'Dwa pokoje, blisko plaży',
+      budgetLabel: '50 000 € – 100 000 €',
+      landingSlug: 'nieruchomosci-albania-nad-morzem',
+    })
+    expect(text).toContain('Budget: 50 000 € – 100 000 €')
+    expect(text).toContain('Landing: nieruchomosci-albania-nad-morzem')
+    expect(text.endsWith('\n\nMessage:\nDwa pokoje, blisko plaży')).toBe(true)
+  })
+
+  it('a one-field callback reads as before', () => {
+    const text = formatAgentContactTelegramMessage(quote)
+    expect(text).not.toContain('Budget:')
+    expect(text).not.toContain('Message:')
+    expect(text).not.toContain('\nLanding:')
+  })
+})

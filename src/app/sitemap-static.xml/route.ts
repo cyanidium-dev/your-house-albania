@@ -8,6 +8,7 @@ import {
   fetchAllLandingPathsForSitemap,
 } from "@/lib/sanity/client";
 import { buildUrlsetXml, type SitemapUrl } from "@/lib/seo/sitemapXml";
+import { landingSitemapLocales } from "@/lib/sanity/landingSitemapPaths";
 import { buildStaticCodePageEntries } from "@/lib/seo/staticCodePages";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
@@ -63,11 +64,13 @@ export async function GET() {
       push(`${base}${path}`, lastModified);
     }
 
-    for (const { path, lastModified } of landings) {
+    for (const { path, lastModified, locales } of landings) {
+      // A locale-scoped landing (`landingPage.locales`, e.g. a Polish-only
+      // lead landing) exists only in its locales; anywhere else it is a 404.
+      if (!landingSitemapLocales(locales, routing.locales).includes(locale)) continue;
       // City listing shorthand URLs live in sitemap-cities.xml / sitemap-types; city editorial uses `{country}/{city}/info`.
       if (path.startsWith("cities/")) continue;
-      // Guides belong to sitemap-landings.xml, which is the only one of the two
-      // that reads `landingPage.locales`. Emitting them here as well listed all
+      // Guides belong to sitemap-landings.xml. Emitting them here as well listed all
       // 123 guide URLs in two sitemaps at once, and — because this loop pairs
       // every landing with every locale — put the nine Polish-only guides under
       // all six, so 45 of the URLs Google was handed returned 404.

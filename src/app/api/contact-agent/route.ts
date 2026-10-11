@@ -14,6 +14,7 @@ import { getSiteBaseUrl } from '@/lib/siteUrl'
 const MAX_MESSAGE = 8000
 const MAX_TITLE = 200
 const SLUG_REGEX = /^[a-z0-9-]+$/
+const MAX_LANDING_SLUG = 120
 
 type Body = {
   submissionKind?: 'agent' | 'general' | 'quote'
@@ -39,6 +40,9 @@ type Body = {
   /** Quote submissions: same-site path the widget was on, and a short placement label. */
   sourcePath?: string
   sourceLabel?: string
+  /** Quote submissions from a landing form: picked budget and the landing slug (`message` is shared). */
+  budget?: string
+  landingSlug?: string
   /** Optional visit journey from `getLeadContext()`; validated, never trusted. */
   context?: unknown
   /** Optional placement of the form on the page (`LeadPlacement`). */
@@ -124,6 +128,16 @@ export async function POST(request: Request) {
 
   if (isQuote) {
     const urlLocale = /^[a-z]{2}$/.test(locale) ? locale : 'en'
+    // Landing forms add an optional budget and wish to the phone number. Both
+    // are optional, so the one-field widgets keep working unchanged.
+    if (isNonEmptyString(body.message)) {
+      if (body.message.length > MAX_MESSAGE) return jsonError(400, 'Message too long')
+      messageText = body.message.trim()
+    }
+    const quoteBudget = isNonEmptyString(body.budget) ? body.budget.trim().slice(0, MAX_TITLE) : undefined
+    const rawLanding = isNonEmptyString(body.landingSlug) ? body.landingSlug.trim().toLowerCase() : ''
+    const quoteLandingSlug =
+      rawLanding && rawLanding.length <= MAX_LANDING_SLUG && SLUG_REGEX.test(rawLanding) ? rawLanding : undefined
     const rawPath = typeof body.sourcePath === 'string' ? body.sourcePath.trim() : ''
     // Only same-site paths — never echo an attacker-supplied absolute URL.
     const safePath = rawPath.startsWith('/') && !rawPath.startsWith('//') ? rawPath : `/${urlLocale}`
@@ -141,11 +155,13 @@ export async function POST(request: Request) {
       customerName: isNonEmptyString(body.name) ? body.name.trim().slice(0, MAX_TITLE) : '—',
       phone: body.phone.trim(),
       email: '—',
-      message: '',
+      message: messageText,
       sourceLabel: isNonEmptyString(body.sourceLabel)
         ? body.sourceLabel.trim().slice(0, MAX_TITLE)
         : undefined,
       sourceUrl: `${getSiteBaseUrl()}${safePath}`,
+      ...(quoteBudget ? { budgetLabel: quoteBudget } : {}),
+      ...(quoteLandingSlug ? { landingSlug: quoteLandingSlug } : {}),
     }
   } else if (isGeneral) {
     normalized = {
@@ -276,6 +292,10 @@ export async function POST(request: Request) {
         ...(normalized.email !== '—' ? { email: normalized.email } : {}),
         ...(normalized.message ? { message: normalized.message } : {}),
       },
+      ...(normalized.submissionKind === 'quote' && normalized.budgetLabel
+        ? { interest: { budget: normalized.budgetLabel } }
+        : {}),
+      ...(normalized.landingSlug ? { landingSlug: normalized.landingSlug } : {}),
       ...(normalized.submissionKind === 'general'
         ? {
             interest: {

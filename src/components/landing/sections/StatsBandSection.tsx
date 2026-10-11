@@ -12,9 +12,12 @@ import {
   type ConfidenceLevel,
 } from '@/components/landing/sections/impl/ConfidenceDot'
 
-type StatsBandItem = {
+export type StatsBandItem = {
   _key?: string
+  /** The figure as text; also what the comparison badge parses. */
   value?: string
+  /** Rendered in place of `value` when set (a live amount in the visitor's currency). */
+  display?: React.ReactNode
   label?: unknown
   sublabel?: unknown
   trend?: string
@@ -65,7 +68,7 @@ function Figure({
             large ? 'text-4xl sm:text-5xl' : 'text-[1.75rem] sm:text-3xl',
           )}
         >
-          {item.value}
+          {item.display ?? item.value}
         </span>
         {item.trend ? <TrendIcon trend={item.trend} /> : null}
         {confidence ? <ConfidenceDot level={confidence} label={confidenceLabel(confidence)} /> : null}
@@ -164,7 +167,13 @@ export function StatsBandSection({
         ? 'grid-cols-2 lg:grid-cols-3'
         : items.length === 4
           ? 'grid-cols-2 lg:grid-cols-4'
-          : 'grid-cols-2 md:grid-cols-3'
+          : items.length === 5
+            ? 'grid-cols-2 lg:grid-cols-5'
+            : 'grid-cols-2 md:grid-cols-3'
+  // Three or five figures in two phone columns would leave one alone on the
+  // last row; the first (the headline figure) takes the full row instead.
+  const leadSpan = (i: number) =>
+    i === 0 && (items.length === 3 || items.length === 5) ? 'col-span-2 lg:col-span-1' : undefined
 
   // Two single figures in the same unit are a comparison (the /guides/*-vs-*
   // pages): the second panel says how far apart they are, so the reader does
@@ -186,7 +195,7 @@ export function StatsBandSection({
       <SectionHeading title={title || undefined} />
       <div className={cn('grid gap-4 md:gap-6', cols)}>
         {items.map((it, i) => (
-          <div key={it._key ?? i} className={cn(PANEL, 'p-6 sm:p-8')}>
+          <div key={it._key ?? i} className={cn(PANEL, 'p-6 sm:p-8', leadSpan(i))}>
             <Figure item={it} locale={locale} large={items.length <= 2} confidenceLabel={confidenceLabel} />
             {i === 1 && diffPct !== null && diffPct !== 0 && firstLabel ? (
               <p className="mt-4 inline-flex items-center rounded-full bg-primary/12 px-3 py-1 text-sm font-semibold text-primary tabular-nums">

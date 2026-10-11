@@ -10,56 +10,14 @@ import {
 } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard, mapSanityPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { attachMarketPositionToCards } from '@/lib/property/marketPosition'
+import { fetchCityCountrySlugByCitySlug } from '@/lib/sanity/client'
+import {
+  landingScopeCatalogHref,
+  normalizeLandingListingFilter,
+  resolveLandingListingScope,
+} from '@/lib/landing/listingFilter'
+import type { CatalogSort } from '@/types/catalog'
 import type { SectionHandler } from './types'
-import type { ConstructionStageFilter } from '@/types/catalog'
-
-type CarouselScope = {
-  city?: string
-  district?: string
-  type?: string
-  deal?: string
-  stage?: ConstructionStageFilter
-  investment?: boolean
-}
-
-/**
- * Catalog scope for auto mode, most specific first: filters set on the section
- * win, otherwise the carousel follows the page — and on a district landing that
- * means the district, not its whole city. Without this a district page shows
- * other districts' properties, which is worse than showing none.
- */
-function resolveScope(
-  filters: { city?: string; district?: string; propertyType?: string; deal?: string; stage?: ConstructionStageFilter; investment?: boolean } | undefined,
-  linkedZone: { type: 'district' | 'city'; slug?: string; citySlug?: string } | undefined,
-  citySlug: string | undefined,
-): CarouselScope | null {
-  const f = filters ?? {}
-  const base: CarouselScope = {}
-  if (f.propertyType) base.type = f.propertyType
-  if (f.deal) base.deal = f.deal
-  // A stage or investment filter is what turns this carousel into a new-builds
-  // block, so it counts as scope on its own — without it the section would
-  // fall through to the unfiltered top-offers branch and show finished flats.
-  if (f.stage) base.stage = f.stage
-  if (f.investment) base.investment = true
-
-  if (f.district) return { ...base, district: f.district, city: f.city }
-  if (f.city) return { ...base, city: f.city }
-  if (base.type || base.deal || base.stage || base.investment) {
-    // A type/deal filter with no place still scopes to the page's own place.
-    const city = linkedZone?.citySlug ?? citySlug
-    if (linkedZone?.type === 'district' && linkedZone.slug) {
-      return { ...base, district: linkedZone.slug, city }
-    }
-    return city ? { ...base, city } : base
-  }
-
-  if (linkedZone?.type === 'district' && linkedZone.slug) {
-    return { district: linkedZone.slug, city: linkedZone.citySlug ?? citySlug }
-  }
-  const city = linkedZone?.citySlug ?? citySlug
-  return city ? { city } : null
-}
 
 export const propertyCarouselSectionHandler: SectionHandler = async ({
   locale,
@@ -111,6 +69,13 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
     requestedSortRaw === 'areaDesc'
       ? requestedSortRaw
       : 'newest'
+  // €/m² exists for the filtered catalogue query only (the top-offer groups
+  // and a hand-picked list keep their own orders).
+  const scopedSort: CatalogSort =
+    requestedSortRaw === 'pricePerSqmAsc' ? 'pricePerSqmAsc' : requestedSort
+
+  /** "See all N" under a filtered feed: the catalogue page with the same filter. */
+  let seeAll: { href: string; count: number } | null = null
 
   let propertyItems: PropertyHomes[] | null = null
   let topOffersGroups: { popular: PropertyHomes[]; new: PropertyHomes[]; highDemand: PropertyHomes[] } | null = null
@@ -139,26 +104,29 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
       })
     }
   } else {
-    const scope = resolveScope(
-      (section as { filters?: { city?: string; district?: string; propertyType?: string; deal?: string; stage?: ConstructionStageFilter; investment?: boolean } })
-        .filters,
-      linkedZone,
-      citySlug,
+    const scope = resolveLandingListingScope(
+      normalizeLandingListingFilter((section as { filters?: unknown }).filters),
+      { linkedZone, citySlug },
     )
 
     if (scope) {
       if (debug) console.log('[Landing][propertyCarouselSection] auto branch: scoped fetch', scope)
-      const catalogSort =
-        requestedSort === 'priceAsc' || requestedSort === 'priceDesc' ||
-        requestedSort === 'areaAsc' || requestedSort === 'areaDesc'
-          ? requestedSort
-          : 'newest'
-      const result = await fetchCatalogProperties({
-        ...scope,
-        pageSize: requestedLimit,
-        sort: catalogSort,
-        page: 1,
-      })
+      const [result, countrySlug] = await Promise.all([
+        fetchCatalogProperties({
+          ...scope,
+          pageSize: requestedLimit,
+          sort: scopedSort,
+          page: 1,
+        }),
+        scope.city ? fetchCityCountrySlugByCitySlug(scope.city) : Promise.resolve(null),
+      ])
+      const total = result?.totalCount ?? 0
+      if (total > 0) {
+        seeAll = {
+          href: landingScopeCatalogHref(locale, scope, { countrySlug, sort: scopedSort }),
+          count: total,
+        }
+      }
       const items = result?.items ?? []
       propertyItems = items.map((p) => mapCatalogPropertyToCard(p as CatalogProperty, locale)).slice(0, requestedLimit)
       if (debug) {
@@ -232,6 +200,13 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
     })
   }
 
+  // The label may carry `{count}`; without one the dictionary's "See all N".
+  const seeAllLabel = seeAll
+    ? (resolveLocalizedString((section as { seeAllLabel?: unknown }).seeAllLabel as never, locale) || '')
+        .trim()
+        .replace(/\{count\}/g, String(seeAll.count)) || undefined
+    : undefined
+
   return (
     <PropertyCarouselSection
       key={section._key ?? 'properties'}
@@ -240,6 +215,10 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
       propertyItems={propertyItems}
       topOffersGroups={topOffersGroups}
       initialGroup={sortAsGroup}
+      seeAll={seeAll ? { ...seeAll, label: seeAllLabel } : undefined}
+      // A filtered or hand-picked feed is a list of these properties; the
+      // global top offers on the home page are not one list.
+      itemListJsonLd={!topOffersGroups}
     />
   )
 }

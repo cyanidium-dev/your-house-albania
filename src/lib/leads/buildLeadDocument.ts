@@ -64,6 +64,8 @@ export type LeadDocument = {
     area?: string
   }
   formLabel?: string
+  /** Slug of the CMS landing whose form sent the lead (`placement: landing`). */
+  landingSlug?: string
 }
 
 export type LeadInput = {
@@ -80,6 +82,12 @@ export type LeadInput = {
   interest?: LeadDocument['interest']
   /** Free placement label a form already sends (quote widgets). */
   formLabel?: string
+  /**
+   * The CMS landing a form sat on. Not `landingPage`: that field is the
+   * session's entry path (attribution), and a visitor who entered on the blog
+   * and converted on a landing must keep both facts.
+   */
+  landingSlug?: string
   now: Date
 }
 
@@ -177,6 +185,7 @@ export function buildLeadDocument(input: LeadInput): LeadDocument {
     ...(contact ?? {}),
     interest: interest && Object.keys(interest).length > 0 ? interest : undefined,
     formLabel: input.formLabel,
+    landingSlug: input.landingSlug,
   })
 }
 

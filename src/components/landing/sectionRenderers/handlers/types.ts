@@ -1,6 +1,7 @@
 import type * as React from 'react'
 import type { PropertiesDealParam } from '@/lib/catalog/propertiesDealFromLanding'
 import type { LandingSectionBase } from '../types'
+import type { LiveTokenValues } from '@/lib/landing/liveTokens'
 
 /** The zone a landing is about, resolved once by `LandingRenderer`. */
 export type LinkedZone = {
@@ -42,5 +43,11 @@ export type SectionHandler = (input: {
    * no linked zone at all (`apartment-tirana`, `short-term-rent`, …).
    */
   landingCtx?: { id?: string; slug?: string; pageType?: string; topicTags?: string[] }
+  /**
+   * Values for `{count}`, `{fromPrice}`, `{medianPricePerSqm}` in the hero's
+   * copy, computed once by `LandingRenderer` (lib/landing/liveTokens). `null`
+   * when the hero has no tokens or nothing matched.
+   */
+  liveTokens?: LiveTokenValues | null
 }) => Promise<React.ReactNode | null> | React.ReactNode | null
 

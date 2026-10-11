@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
   const result = await fetchCatalogProperties({
     agentSlug: parsed.agentSlug || undefined,
     city: parsed.city || undefined,
+    cities: parsed.cities.length ? parsed.cities : undefined,
     district: parsed.district || undefined,
     type: parsed.type || undefined,
     deal: parsed.deal || undefined,

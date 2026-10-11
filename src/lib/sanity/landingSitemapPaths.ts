@@ -20,7 +20,38 @@ export type LandingPageSitemapRow = {
   seo?: { noIndex?: boolean };
   linkedCitySlug?: string | null;
   linkedCityCountrySlug?: string | null;
+  /** `landingPage.locales` — the page exists only in these locales (empty/absent = all). */
+  locales?: string[] | null;
 };
+
+/** A landing's locale scope, normalised: lower-case, unique, empty = every locale. */
+export function landingRowLocales(row: Pick<LandingPageSitemapRow, "locales">): string[] {
+  const raw = Array.isArray(row.locales) ? row.locales : [];
+  const out: string[] = [];
+  for (const l of raw) {
+    const v = typeof l === "string" ? l.trim().toLowerCase() : "";
+    if (v && !out.includes(v)) out.push(v);
+  }
+  return out;
+}
+
+/**
+ * Two documents resolving to one path (a city landing and a stray duplicate)
+ * share the entry: the union of their scopes, and an unscoped one opens it to
+ * every locale. `[]` means every locale.
+ */
+export function mergeLandingLocaleScopes(a: readonly string[], b: readonly string[]): string[] {
+  if (a.length === 0 || b.length === 0) return [];
+  return [...new Set([...a, ...b])];
+}
+
+/**
+ * The locales a landing's URL is listed under: its scope, or all of them.
+ * A Polish-only landing listed under /en, /de … would hand Google six 404s.
+ */
+export function landingSitemapLocales(scope: readonly string[], allLocales: readonly string[]): string[] {
+  return scope.length ? allLocales.filter((l) => scope.includes(l)) : [...allLocales];
+}
 
 /**
  * Resolves a single landing document to a path under `[locale]`, or `null` if it should

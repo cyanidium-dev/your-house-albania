@@ -9,6 +9,7 @@ import { PUBLISHED_PROPERTY_FILTER, publishedPropertyFilter } from '../groq/prop
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes';
 import { NEAR_SEA_MAX_METERS } from '@/lib/catalog/listingFacets';
 import {
+  MIN_PLAUSIBLE_AREA_SQM,
   groupRowsBy,
   median,
   pricesPerSqm,
@@ -18,6 +19,7 @@ import {
   type FlatPriceBand,
   type FlatPriceSummary,
 } from '@/lib/catalog/listingPriceSummary';
+import { summarizeInventory, type InventoryRow, type InventorySummary } from '@/lib/catalog/inventorySummary';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 
@@ -71,6 +73,7 @@ function buildCatalogPredicateParts(
     CatalogFilters,
     | 'agentSlug'
     | 'city'
+    | 'cities'
     | 'district'
     | 'type'
     | 'deal'
@@ -91,6 +94,7 @@ function buildCatalogPredicateParts(
   const {
     agentSlug,
     city,
+    cities,
     district,
     type,
     deal,
@@ -115,6 +119,9 @@ function buildCatalogPredicateParts(
   }
   if (city) {
     parts.push(`${prefix}city->slug.current == $city`);
+  }
+  if (Array.isArray(cities) && cities.length > 0) {
+    parts.push(`${prefix}city->slug.current in $cities`);
   }
   if (district) {
     parts.push(`${prefix}district->slug.current == $district`);
@@ -189,6 +196,7 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
   const params: Record<string, unknown> = {
     agentSlug: filters.agentSlug,
     city: filters.city,
+    cities: filters.cities,
     district: filters.district,
     type: filters.type,
     deal: filters.deal,
@@ -207,6 +215,19 @@ function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
 
   return { where, params };
 }
+
+/**
+ * EUR/m² as a sort key: the stated rate for per-m² listings, total ÷ area when
+ * the area is plausible (same 15 m² floor as `pricesPerSqm`). Land, and
+ * anything without a usable figure, sorts after every home — a plot at
+ * €15/m² would otherwise head every "cheapest per m²" feed.
+ */
+const PRICE_PER_SQM_ORDER = `select(
+    type->slug.current == "land" => 1e12,
+    priceUnit == "per-sqm" && price > 0 => price,
+    price > 0 && area >= ${MIN_PLAUSIBLE_AREA_SQM} => price / area,
+    1e12
+  )`;
 
 /** What a catalogue card needs; shared by the page query and single-card lookups. */
 const CATALOG_CARD_PROJECTION = `{
@@ -287,6 +308,8 @@ const cachedFetchCatalogProperties = sanityCache(
     // a finished building has no handover date and belongs at the end here.
     const handover = 'coalesce(handoverYear, 9999) * 10 + coalesce(handoverQuarter, 0)';
     order = `| order(${promotionOrder}, ${handover} asc)`;
+  } else if (sort === 'pricePerSqmAsc') {
+    order = `| order(${promotionOrder}, ${PRICE_PER_SQM_ORDER} asc, price asc)`;
   } else order = `| order(${promotionOrder}, _createdAt desc)`;
 
   const baseFilter = `*${where ? `[${where}]` : ''}`;
@@ -328,6 +351,32 @@ export async function fetchCatalogProperties(
 ): Promise<CatalogResult | null> {
   return cachedFetchCatalogProperties(filters);
 }
+
+/**
+ * The inventory band of a landing: count, lowest price, median EUR/m², and
+ * the near-sea and new-build shares for exactly the filter of the landing's
+ * feed. Same where-clause as the grid, so the band never disagrees with the
+ * cards under it.
+ */
+export const fetchCatalogInventorySummary = sanityCache(
+  async (filters: CatalogFilters): Promise<InventorySummary | null> => {
+    const client = getClient();
+    if (!client) return null;
+    const { where, params } = buildCatalogWhereClause({ ...filters, excludedPropertyIds: undefined });
+    try {
+      const rows = await client.fetch<InventoryRow[]>(
+        `*[${where}]{price, priceUnit, area, seaDistanceMeters, beachfront, constructionStage}`,
+        params,
+      );
+      return Array.isArray(rows) ? summarizeInventory(rows) : null;
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogInventorySummary failed:', err);
+      return null;
+    }
+  },
+  ['sanity-catalog-inventory-summary'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+);
 
 /**
  * One catalogue card by slug, for the map: a pin whose listing is not among

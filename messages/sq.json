@@ -107,7 +107,8 @@
       },
       "ctaAll": "Shiko të gjitha pronat",
       "prev": "Më parë",
-      "next": "Më pas"
+      "next": "Më pas",
+      "seeAllCount": "Shiko të gjitha njoftimet ({count, number})"
     },
     "featured": {
       "badge": "Pronë e zgjedhur",
@@ -328,7 +329,15 @@
     "confidenceLow": "Besueshmëri e ulët",
     "methodology": "Metodologjia",
     "confidence": "Besueshmëria",
-    "versus": "{diff} vs {other}"
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Njoftime",
+      "fromPrice": "Çmimi më i ulët",
+      "medianPricePerSqm": "Çmimi mesatar (mediana) për m²",
+      "nearSeaShare": "Deri në 300 m nga deti",
+      "newBuildShare": "Ndërtime të reja (në projekt ose në ndërtim)",
+      "note": "Çmimet e kërkuara të njoftimeve në Domlivo që përputhen me këtë faqe, përditësohen çdo orë."
+    }
   },
   "ZoneMetrics": {
     "priceNew": "Ndërtim i ri, €/m²",
@@ -806,7 +815,12 @@
     "successTitle": "Kërkesa u pranua",
     "successBody": "Ju kontaktojmë brenda një ore gjatë orarit të punës.",
     "error": "Dërgimi dështoi. Provoni sërish ose na shkruani në Telegram.",
-    "consent": "Duke dërguar formularin, pranoni të kontaktoheni për kërkesën tuaj."
+    "consent": "Duke dërguar formularin, pranoni të kontaktoheni për kërkesën tuaj.",
+    "budgetPlaceholder": "Buxheti",
+    "messagePlaceholder": "Çfarë kërkoni? (opsionale)",
+    "budgetUpTo": "deri në {amount}",
+    "budgetRange": "{from} – {to}",
+    "budgetOver": "mbi {amount}"
   },
   "DurresGuide": {
     "badge": "PDF falas",

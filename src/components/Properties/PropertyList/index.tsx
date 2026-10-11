@@ -124,6 +124,7 @@ async function PropertiesListing({
   const bedsExactFilter = parsedFilters.bedsExact
   const typesFilter = parsedFilters.types
   const nearSeaFilter = parsedFilters.nearSea
+  const citiesFilter = parsedFilters.cities
   const stageFilter = parsedFilters.stage
   const investmentFilter = parsedFilters.investment
   const viewMode = parseViewMode(searchParams.view)
@@ -163,6 +164,7 @@ async function PropertiesListing({
     (await fetchCatalogProperties({
       agentSlug: agentSlugFilter || undefined,
       city: cityFilter || undefined,
+      cities: citiesFilter.length ? citiesFilter : undefined,
       district: districtFilter || undefined,
       type: typeFilter || undefined,
       deal: dealFilter || undefined,
@@ -244,6 +246,7 @@ async function PropertiesListing({
     Object.entries({
       agent: agentSlugFilter,
       city: cityFilter,
+      cities: citiesFilter.join(','),
       district: districtFilter,
       type: typeFilter,
       types: typesFilter.join(','),

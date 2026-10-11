@@ -5,7 +5,12 @@ export type CatalogSort =
   | 'areaAsc'
   | 'areaDesc'
   /** Soonest handover first. Only meaningful alongside an unfinished-stage filter. */
-  | 'handoverAsc';
+  | 'handoverAsc'
+  /**
+   * Cheapest per m² first: the stated rate, or total ÷ area. Land and listings
+   * without a plausible area sort last — a plot's €/m² is not a flat's.
+   */
+  | 'pricePerSqmAsc';
 
 /**
  * Where a building is in its life. `unfinished` is not a stored value — it is
@@ -18,6 +23,8 @@ export type ConstructionStageFilter = ConstructionStage | 'unfinished';
 export type CatalogFilters = {
   agentSlug?: string;
   city?: string;
+  /** Any of these cities (OR). `city` still narrows to one. */
+  cities?: string[];
   district?: string;
   type?: string;
   deal?: string;

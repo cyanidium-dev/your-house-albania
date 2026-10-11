@@ -1,6 +1,10 @@
 import { getClient } from "@/lib/sanity/queries/_core";
 import { localizedUrls } from "@/lib/seo/indexNow";
-import { resolveLandingPathForSitemap } from "@/lib/sanity/landingSitemapPaths";
+import {
+  landingRowLocales,
+  landingSitemapLocales,
+  resolveLandingPathForSitemap,
+} from "@/lib/sanity/landingSitemapPaths";
 import { propertyPath, type LocalizedSlug } from "@/lib/property/propertyUrl";
 import { isLocalePathIndexable } from "@/lib/seo/localeIndexing";
 import { isPropertyLocaleIndexable } from "@/lib/seo/propertyLocaleExperiment";
@@ -97,6 +101,7 @@ export async function urlsForMutatedDocument(
             _updatedAt,
             pageType,
             seo,
+            locales,
             "linkedCitySlug": linkedCity->slug.current,
             "linkedCityCountrySlug": linkedCity->country->slug.current,
             "linkedDistrictSlug": linkedDistrict->slug.current,
@@ -126,7 +131,11 @@ export async function urlsForMutatedDocument(
         // The same resolver the sitemaps use, so a landing is announced at the
         // URL it is actually listed under — or not at all, when it is noindex.
         const path = resolveLandingPathForSitemap(row as never);
-        return path ? localizedUrls(path) : [];
+        if (!path) return [];
+        // A locale-scoped landing is announced only where it exists.
+        const scope = landingSitemapLocales(landingRowLocales(row as never), routing.locales);
+        const base = getSiteBaseUrl().replace(/\/$/, "");
+        return localizedUrls(path).filter((url) => scope.some((l) => url.startsWith(`${base}/${l}/`)));
       }
 
       case "zoneMetrics": {

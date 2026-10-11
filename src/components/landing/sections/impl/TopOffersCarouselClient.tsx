@@ -24,6 +24,7 @@ export function TopOffersCarouselClient({
   initialGroup = "popular",
   showTabs = true,
   header,
+  seeAll,
 }: {
   locale: string;
   /** Section heading, set on the left of the arrows row. */
@@ -36,6 +37,11 @@ export function TopOffersCarouselClient({
    * properties and then show the same eight cards.
    */
   showTabs?: boolean;
+  /**
+   * A filtered feed's own catalogue link ("See all 312"). Without it the
+   * button leads to the page's city listing, or the whole catalogue.
+   */
+  seeAll?: { href: string; count: number; label?: string };
 }) {
   const debug = process.env.NODE_ENV === "development";
   const t = useTranslations("Home.topOffers");
@@ -136,8 +142,8 @@ export function TopOffersCarouselClient({
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Link href={allHref} className={brandButtonClass("primary")}>
-          {t("ctaAll")}
+        <Link href={seeAll?.href ?? allHref} className={brandButtonClass("primary")}>
+          {seeAll ? seeAll.label || t("seeAllCount", { count: seeAll.count }) : t("ctaAll")}
         </Link>
       </div>
     </div>
