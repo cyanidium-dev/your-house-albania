@@ -1242,6 +1242,9 @@ export function PropertiesMap({
         'bg-white dark:bg-black',
         '[&_.maplibregl-ctrl-bottom-right]:right-1 [&_.maplibregl-ctrl-bottom-right]:bottom-1',
         '[&_.maplibregl-ctrl.maplibregl-ctrl-attrib]:m-0',
+        // Phones zoom with two fingers; the zoom buttons there only sat under
+        // the listing sheet (QA 2026-10-11). The compass stays (3D bearing).
+        'max-sm:[&_.maplibregl-ctrl-zoom-in]:hidden max-sm:[&_.maplibregl-ctrl-zoom-out]:hidden',
         // Zoom/compass buttons follow the site's dark theme.
         'dark:[&_.maplibregl-ctrl-group]:bg-dark dark:[&_.maplibregl-ctrl-group]:border dark:[&_.maplibregl-ctrl-group]:border-white/20',
         'dark:[&_.maplibregl-ctrl-group_button+button]:border-white/20 dark:[&_.maplibregl-ctrl-icon]:invert',

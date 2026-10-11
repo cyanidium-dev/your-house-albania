@@ -390,7 +390,7 @@ export default function Footer({
               The three-paragraph note with the developer's own Telegram and
               WhatsApp read, on every page, as the marketplace disclaiming its
               own listings (audit 27.09). Technical contact lives on /contacts. */}
-          <p data-lead-ignore className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/40 sm:text-left md:text-xs">
+          <p data-lead-ignore className="mt-4 max-w-3xl text-center text-[13px] leading-relaxed text-white/60 sm:text-left md:text-xs">
             {t("developer.note")}
           </p>
         </div>
