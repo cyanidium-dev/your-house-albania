@@ -257,7 +257,12 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           searchUrlTemplate={`/${locale}/catalog?q={search_term_string}`}
         />
         <NextTopLoader color="#078660" />
-        <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light">
+        {/* `value` is not optional in practice: next-themes 0.4.5's pre-paint
+            script calls classList.add(value[theme] || theme) and, with the map
+            left null, throws inside its own try/catch — the class arrived only
+            at hydration and dark-mode visitors saw the light page flash for
+            1-2.5 s on every load (QA 2026-10-11). */}
+        <ThemeProvider attribute="class" enableSystem={true} defaultTheme="light" value={{ light: "light", dark: "dark" }}>
           <NextIntlClientProvider messages={pickClientMessages(messages)}>
             <Providers currencyRates={currencyRates} displayCurrencies={displayCurrencies}>
         <ConsentProvider locale={locale} policyHref={policyHref} active={analyticsEnabled}>
