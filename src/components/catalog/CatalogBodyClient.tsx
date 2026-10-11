@@ -449,6 +449,8 @@ export function CatalogBodyClient({
     approximate?: boolean
     district?: string
     districtName?: string
+    beds?: number
+    area?: number
   }
   const [mapPoints, setMapPoints] = React.useState<MapPoint[]>([])
   React.useEffect(() => {
@@ -660,6 +662,8 @@ export function CatalogBodyClient({
       locationPrecision: p.locationPrecision,
       district: p.districtSlug,
       districtName: p.district,
+      beds: p.beds,
+      area: typeof p.area === 'number' ? p.area : undefined,
       // Cards in the list get price pills; the rest of the filter is dots.
       pill: true,
     }))
@@ -677,6 +681,8 @@ export function CatalogBodyClient({
         locationPrecision: p.approximate ? ('approximate' as const) : ('exact' as const),
         district: p.district,
         districtName: p.districtName,
+        beds: p.beds,
+        area: p.area,
         pill: false,
       }))
     return [...loaded, ...rest]

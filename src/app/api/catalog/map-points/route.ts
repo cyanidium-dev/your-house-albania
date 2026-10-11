@@ -49,6 +49,8 @@ export async function GET(req: NextRequest) {
     ...(r.priceUnit ? { priceUnit: r.priceUnit } : {}),
     ...(r.status ? { status: r.status } : {}),
     approximate: r.locationPrecision === 'approximate',
+    ...(typeof r.bedrooms === 'number' && r.bedrooms > 0 ? { beds: r.bedrooms } : {}),
+    ...(typeof r.area === 'number' && r.area > 0 ? { area: Math.round(r.area) } : {}),
     ...(r.districtSlug
       ? {
           district: r.districtSlug,

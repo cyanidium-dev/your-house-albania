@@ -69,7 +69,13 @@ export type PropertiesMapItem = {
   /** District slug and name: approximate listings are shown per district, not as pins. */
   district?: string
   districtName?: string
+  /** Rooms and area for the detailed pill at street zoom. */
+  beds?: number
+  area?: number
 }
+
+/** Zoom from which a pill also shows rooms and area. */
+const DETAIL_ZOOM = 16
 
 /** One district's approximate listings, drawn as a single area bubble. */
 export type MapArea = { key: string; name: string; count: number; lat: number; lng: number }
@@ -107,6 +113,28 @@ const DISTRICT_SCOPE_PRESETS: Record<string, ScopeViewport> = {
   plazh: { center: [19.45, 41.30], zoom: 13.0 },
 }
 
+/** Price on the first line; rooms and area on a second, smaller one at street zoom. */
+function setPillContent(el: HTMLDivElement, label: string, detail: string) {
+  const key = `${label}|${detail}`
+  if (el.dataset.content === key) return
+  el.dataset.content = key
+  el.replaceChildren()
+  const price = document.createElement('span')
+  price.textContent = label
+  el.appendChild(price)
+  if (detail) {
+    const extra = document.createElement('span')
+    extra.textContent = detail
+    extra.style.fontSize = '10.5px'
+    extra.style.fontWeight = '500'
+    extra.style.opacity = '0.75'
+    el.appendChild(extra)
+  }
+  el.style.flexDirection = detail ? 'column' : 'row'
+  el.style.lineHeight = detail ? '1.15' : '1.1'
+  el.style.borderRadius = detail ? '12px' : '9999px'
+}
+
 export function PropertiesMap({
   items,
   activeSlug,
@@ -141,6 +169,7 @@ export function PropertiesMap({
   const locale = useLocale()
   const tMap = useTranslations('Shared.map')
   const tDeal = useTranslations('Shared.propertyDetail')
+  const tCard = useTranslations('Shared.propertyCard')
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const mapRef = React.useRef<MapLibreMap | null>(null)
   const resizeRafRef = React.useRef<number | null>(null)
@@ -194,7 +223,15 @@ export function PropertiesMap({
           lng,
           markerLabel,
           approximate,
-          pill: it.pill !== false && markerLabel !== '',
+          // Every listing with an address and a price is a price pill (the
+          // owner asked for prices, not dots); a dot only when there is no price.
+          pill: markerLabel !== '',
+          detail: [
+            typeof it.beds === 'number' && it.beds > 0 ? tCard('bedroomsCount', { count: it.beds }) : '',
+            typeof it.area === 'number' && it.area > 0 ? `${Math.round(it.area)} m²` : '',
+          ]
+            .filter(Boolean)
+            .join(' · '),
           district: it.district ?? '',
           districtName: it.districtName ?? '',
         }
@@ -206,10 +243,11 @@ export function PropertiesMap({
         markerLabel: string
         approximate: boolean
         pill: boolean
+        detail: string
         district: string
         districtName: string
       }>
-  }, [items, selectedDealType, currency, rates, locale, tDeal])
+  }, [items, selectedDealType, currency, rates, locale, tDeal, tCard])
 
   // Same content, same array: a re-render of the page around the map (the
   // header, the filter bar, a translator function with a new identity) must
@@ -308,6 +346,7 @@ export function PropertiesMap({
           markerLabel: p.markerLabel,
           approximate: p.approximate,
           pill: p.pill,
+          detail: p.detail,
         },
         geometry: {
           type: 'Point' as const,
@@ -345,10 +384,8 @@ export function PropertiesMap({
       el.style.alignItems = 'center'
       el.style.justifyContent = 'center'
       el.style.padding = '4px 8px'
-      el.style.borderRadius = '9999px'
       el.style.fontSize = '12px'
       el.style.fontWeight = '600'
-      el.style.lineHeight = '1.1'
       el.style.whiteSpace = 'nowrap'
       el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.18)'
       el.style.border = isSelected
@@ -387,6 +424,8 @@ export function PropertiesMap({
     // Keep the pins in the nearer part of the view; the far ones come back as
     // the visitor pans towards them.
     const pitched = map.getPitch() > 20
+    // Close in, the pill also says rooms and area.
+    const detailed = map.getZoom() >= DETAIL_ZOOM
     const farEdgeY = map.getCanvas().clientHeight * 0.3
 
     const next = new Set<string>()
@@ -402,6 +441,7 @@ export function PropertiesMap({
       const pill = props.pill !== false && props.pill !== 'false'
       if (!pill && slug !== activeSlug) continue
       const markerLabel = approximate ? `≈ ${rawLabel}` : rawLabel
+      const detail = detailed ? String(props.detail ?? '').trim() : ''
 
       const coords = (f.geometry as { coordinates?: unknown })?.coordinates
       if (!Array.isArray(coords) || coords.length < 2) continue
@@ -416,14 +456,14 @@ export function PropertiesMap({
       const existing = htmlMarkersRef.current.get(slug)
       if (existing) {
         const el = existing.getElement() as HTMLDivElement
-        el.textContent = markerLabel
+        setPillContent(el, markerLabel, detail)
         styleMarkerElement(el, isSelected, approximate, highlighted)
         existing.setLngLat([lng, lat])
         continue
       }
 
       const el = document.createElement('div')
-      el.textContent = markerLabel
+      setPillContent(el, markerLabel, detail)
       styleMarkerElement(el, isSelected, approximate, highlighted)
       el.addEventListener('click', (ev) => {
         ev.stopPropagation()
@@ -1162,7 +1202,7 @@ export function PropertiesMap({
     const point = known(next)
     if (next && point && !htmlMarkersRef.current.has(next)) {
       const el = document.createElement('div')
-      el.textContent = point.markerLabel ? (point.approximate ? `≈ ${point.markerLabel}` : point.markerLabel) : '•'
+      setPillContent(el, point.markerLabel || '•', '')
       styleMarkerElement(el, false, point.approximate, true)
       el.style.pointerEvents = 'none'
       el.style.zIndex = '3'
