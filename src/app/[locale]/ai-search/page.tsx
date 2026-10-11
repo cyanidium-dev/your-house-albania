@@ -8,6 +8,7 @@ import { AI_MAX_MESSAGE_CHARS } from '@/lib/ai/limits'
 import { catalogPath } from '@/lib/routes/catalog'
 import { indexingDisabledRobots, isIndexingEnabled } from '@/lib/seo/envSeo'
 import { withBrand } from '@/lib/seo/brandTitle'
+import { CONTAINER, MEASURE } from '@/components/shared/layout'
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -49,7 +50,11 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
   const entry = initialQuery ? 'hero' : firstParam(query.from) === 'header' ? 'header' : 'direct'
 
   return (
-    <div className="container max-w-4xl mx-auto px-5 2xl:px-0 pt-24 md:pt-32 pb-14 md:pb-20">
+    // The site container with a start-aligned reading measure: the page used
+    // its own centred max-w-4xl box, 250 px off the grid at 1440 (QA
+    // 2026-10-11; CLAUDE.md layout rule).
+    <div className={`${CONTAINER} pt-24 md:pt-32 pb-14 md:pb-20`}>
+      <div className={MEASURE}>
       <div className="mb-8">
         <h1 className="text-4xl sm:text-52 font-medium tracking-tighter text-dark dark:text-white mb-3">
           {t('title')}
@@ -70,6 +75,7 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
           </Link>
         </div>
       )}
+      </div>
     </div>
   )
 }
