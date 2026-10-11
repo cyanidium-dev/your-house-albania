@@ -3,6 +3,7 @@ import BlogCard from "@/components/shared/Blog/blogCard";
 import { NumberedPagination } from "@/components/shared/NumberedPagination";
 import type { BlogListItem } from "@/lib/sanity/blogAdapter";
 import Link from "@/components/shared/Link";
+import { getTranslations } from "next-intl/server";
 
 type BlogListProps = {
   locale: string;
@@ -13,7 +14,7 @@ type BlogListProps = {
   totalPages: number;
 };
 
-export default function BlogList({
+export default async function BlogList({
   locale,
   posts,
   categories,
@@ -21,6 +22,7 @@ export default function BlogList({
   currentPage,
   totalPages,
 }: BlogListProps) {
+  const tBlog = await getTranslations({ locale, namespace: "Blog" });
   return (
     <section className="pt-0!">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
@@ -34,7 +36,7 @@ export default function BlogList({
                   : "bg-dark/5 dark:bg-white/15 text-dark dark:text-white hover:bg-primary/10"
               }`}
             >
-              All
+              {tBlog("allCategories")}
             </Link>
             {categories.map((cat) => (
               <Link

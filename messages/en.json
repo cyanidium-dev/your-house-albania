@@ -808,7 +808,8 @@
     "zoneStatsAll": "All property",
     "zoneStatsNew": "New build",
     "zoneStatsResale": "Resale",
-    "zoneStatsYield": "Gross yield"
+    "zoneStatsYield": "Gross yield",
+    "allCategories": "All"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

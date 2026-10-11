@@ -808,7 +808,8 @@
     "zoneStatsAll": "Tutti gli immobili",
     "zoneStatsNew": "Nuove costruzioni",
     "zoneStatsResale": "Rivendita",
-    "zoneStatsYield": "Rendimento lordo"
+    "zoneStatsYield": "Rendimento lordo",
+    "allCategories": "Tutti"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

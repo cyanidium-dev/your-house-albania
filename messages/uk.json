@@ -808,7 +808,8 @@
     "zoneStatsAll": "Уся нерухомість",
     "zoneStatsNew": "Новобудови",
     "zoneStatsResale": "Вторинний ринок",
-    "zoneStatsYield": "Валова дохідність"
+    "zoneStatsYield": "Валова дохідність",
+    "allCategories": "Усі"
   },
   "PropertyMeta": {
     "areaUnit": "м²",

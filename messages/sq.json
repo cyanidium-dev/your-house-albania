@@ -808,7 +808,8 @@
     "zoneStatsAll": "Të gjitha",
     "zoneStatsNew": "Ndërtim i ri",
     "zoneStatsResale": "Rishitje",
-    "zoneStatsYield": "Yield bruto"
+    "zoneStatsYield": "Yield bruto",
+    "allCategories": "Të gjitha"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

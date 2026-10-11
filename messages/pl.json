@@ -808,7 +808,8 @@
     "zoneStatsAll": "Cała nieruchomość",
     "zoneStatsNew": "Nowe budownictwo",
     "zoneStatsResale": "Rynek wtórny",
-    "zoneStatsYield": "Rentowność brutto"
+    "zoneStatsYield": "Rentowność brutto",
+    "allCategories": "Wszystkie"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

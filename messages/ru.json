@@ -808,7 +808,8 @@
     "zoneStatsAll": "Вся недвижимость",
     "zoneStatsNew": "Новостройки",
     "zoneStatsResale": "Вторичка",
-    "zoneStatsYield": "Валовая доходность"
+    "zoneStatsYield": "Валовая доходность",
+    "allCategories": "Все"
   },
   "PropertyMeta": {
     "areaUnit": "м²",

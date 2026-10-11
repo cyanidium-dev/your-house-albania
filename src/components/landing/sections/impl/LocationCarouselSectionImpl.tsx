@@ -26,7 +26,6 @@ export type LocationData = {
   locationCards: LocationCarouselCard[];
 } | null;
 
-const BADGE = "Cities";
 
 const Cities: React.FC<{
   locale: string;
@@ -34,6 +33,7 @@ const Cities: React.FC<{
   locationData?: LocationData;
 }> = async ({ locale, citiesData, locationData }) => {
   const tCard = await getTranslations("Shared.entityCard");
+  const tCrumbs = await getTranslations("Breadcrumbs");
   const data = locationData ?? (citiesData ? {
     title: citiesData.title,
     subtitle: citiesData.subtitle,
@@ -66,7 +66,7 @@ const Cities: React.FC<{
           <div className="min-w-0">
             <SectionHeader
               variant="left"
-              eyebrowText={BADGE}
+              eyebrowText={tCrumbs("cities")}
               title={title}
               subtitle={description}
               eyebrowRowClassName="gap-2.5"

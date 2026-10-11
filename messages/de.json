@@ -808,7 +808,8 @@
     "zoneStatsAll": "Alle Immobilien",
     "zoneStatsNew": "Neubau",
     "zoneStatsResale": "Bestand",
-    "zoneStatsYield": "Bruttorendite"
+    "zoneStatsYield": "Bruttorendite",
+    "allCategories": "Alle"
   },
   "PropertyMeta": {
     "areaUnit": "m²",
