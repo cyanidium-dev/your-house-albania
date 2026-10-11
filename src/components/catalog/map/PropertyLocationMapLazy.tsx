@@ -39,7 +39,8 @@ export function PropertyLocationMapLazy(props: PropertyLocationMapProps) {
           observer.disconnect()
         }
       },
-      { rootMargin: '600px 0px' }
+      // 600 px started the 270 KB map library early on desktop.
+      { rootMargin: '200px 0px' }
     )
     observer.observe(el)
     return () => observer.disconnect()

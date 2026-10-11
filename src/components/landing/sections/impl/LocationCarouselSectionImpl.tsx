@@ -91,7 +91,7 @@ const Cities: React.FC<{
                 // as "nothing here"; the card then sells the city, not the stock.
                 count={(card.propertiesCount ?? 0) >= MIN_SHOWN_COUNT ? card.propertiesCount : undefined}
                 countLabel={tCard("propertiesCountLabel", { count: card.propertiesCount ?? 0 })}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, (max-width: 1280px) 33vw, 25vw"
               />
             ))}
           </div>

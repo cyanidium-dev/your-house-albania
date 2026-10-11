@@ -273,13 +273,29 @@ export function CatalogBodyClient({
     // ~5.5 s on /en/albania/durres) left an empty grey box. Start it once the
     // page has hydrated; phones keep waiting for load (see above).
     const wide = window.matchMedia("(min-width: 1024px)").matches;
-    if (wide || document.readyState === "complete") settle();
+    // Desktop: the map panel is in view, but starting it right after
+    // hydration put maplibre (270 kB, ~2 s of main thread) and ~2.5 MB of
+    // tiles, glyphs and sprites into the page load: desktop scores 66-89 (QA
+    // 2026-10-11). It now starts on the visitor's first move — pointer,
+    // wheel, scroll, key, touch — or 3.5 s after hydration, whichever comes
+    // first; the panel keeps its placeholder until then.
+    const INTENT_EVENTS = ["pointermove", "wheel", "scroll", "keydown", "touchstart"] as const;
+    let intentTimer: number | undefined;
+    const onIntent = () => {
+      INTENT_EVENTS.forEach((ev) => window.removeEventListener(ev, onIntent));
+      if (intentTimer !== undefined) window.clearTimeout(intentTimer);
+      void import("@/components/catalog/map/PropertiesMap");
+      settle();
+    };
+    if (wide) {
+      INTENT_EVENTS.forEach((ev) => window.addEventListener(ev, onIntent, { passive: true }));
+      intentTimer = window.setTimeout(onIntent, 3500);
+    } else if (document.readyState === "complete") settle();
     else window.addEventListener("load", settle, { once: true });
-    // Fetch the map library's code in parallel with the rest, so mounting
-    // does not start with a 270 kB download.
-    if (wide) void import("@/components/catalog/map/PropertiesMap");
     return () => {
       cancelled = true;
+      INTENT_EVENTS.forEach((ev) => window.removeEventListener(ev, onIntent));
+      if (intentTimer !== undefined) window.clearTimeout(intentTimer);
       window.removeEventListener("load", settle);
       if (idleHandle !== undefined) {
         if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleHandle);
@@ -332,6 +348,10 @@ export function CatalogBodyClient({
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+  // Opening the map is the strongest intent there is: no waiting for idle.
+  React.useEffect(() => {
+    if (mapExpanded) setPageSettled(true);
+  }, [mapExpanded]);
   const handleMapExpandedChange = React.useCallback((next: boolean) => {
     if (next) {
       window.history.pushState({ ...window.history.state, domlivoMap: true }, "");

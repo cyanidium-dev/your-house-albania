@@ -3,7 +3,9 @@
 import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import AiSearchChat from '@/components/ai/AiSearchChat'
+import dynamic from 'next/dynamic'
+// The panel starts closed: the chat's code loads when it opens.
+const AiSearchChat = dynamic(() => import('@/components/ai/AiSearchChat'), { ssr: false })
 import { track } from '@/lib/analytics/track'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 

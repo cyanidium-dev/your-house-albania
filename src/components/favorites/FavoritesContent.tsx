@@ -69,7 +69,9 @@ export function FavoritesContent({ locale }: Props) {
   };
 
   if (!mounted) {
-    return <p className="text-dark/50 dark:text-white/50">…</p>;
+    // Same height as the empty state that usually follows: the one-line "…"
+    // made the footer jump 250 px (CLS up to 0.2, QA 2026-10-11).
+    return <div aria-hidden className="min-h-[300px] rounded-2xl border border-dark/10 dark:border-white/10" />;
   }
 
   if (favorites.length === 0) {

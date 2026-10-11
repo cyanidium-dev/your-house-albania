@@ -37,7 +37,10 @@ const HeroSub: FC<HeroSubProps> = ({ title, description, badge, photoKey, breadc
                         fill
                         sizes="100vw"
                         className="object-cover object-center"
-                        priority={false}
+                        // The LCP element of /blog, /guides and other sub-pages:
+                        // lazy, it cost 0.5-0.8 s of mobile LCP (QA 2026-10-11).
+                        priority
+                        fetchPriority="high"
                     />
                 </div>
                 {/* Scrim, so the copy reads whatever the photograph's brightness. */}

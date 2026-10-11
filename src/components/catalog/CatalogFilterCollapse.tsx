@@ -107,8 +107,11 @@ export function CatalogFilterCollapse({
 
   return (
     <div
-      className={cn("relative", mounted && `transition-[height] ${ease}`)}
-      style={mounted ? { height: reserveH } : undefined}
+      // Height and its transition only once the form is measured: mounted with
+      // formH still 0, the wrapper collapsed to 0 and grew back over 450 ms —
+      // the results jumped 192 px (desktop CLS 0.07-0.13, QA 2026-10-11).
+      className={cn("relative", mounted && formH > 0 && `transition-[height] ${ease}`)}
+      style={mounted && formH > 0 ? { height: reserveH } : undefined}
     >
       {/* Persistent glass surface — animates height only (constant radius), never fades. */}
       <div

@@ -54,7 +54,7 @@ export function EntityCard({
             src={imageUrl}
             alt={imageAlt || title}
             fill
-            sizes={sizes ?? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"}
+            sizes={sizes ?? "(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 25vw"}
             className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.06]"
           />
         ) : (
