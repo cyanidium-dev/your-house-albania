@@ -154,6 +154,11 @@
       "badge": "Отзывы",
       "title": "Что говорят наши клиенты",
       "goToSlide": "Перейти к слайду {num}"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# объект} few {# объекта} many {# объектов} other {# объекта}} от {fromPrice}",
+      "all": "Смотреть все",
+      "label": "Объекты в продаже"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Источники",
       "verified": "проверено",
       "mayHaveChanged": "могло измениться"
-    }
+    },
+    "heroChip": "Спросить ассистента"
   },
   "Knowledge": {
     "title": "База знаний",

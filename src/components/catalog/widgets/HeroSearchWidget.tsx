@@ -175,7 +175,10 @@ export function HeroSearchWidget({
         onSubmit={handleSubmit}
         className={cn(
           "grid sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto] gap-3 items-end min-w-0 [&>*]:min-w-0",
-          compact ? "grid-cols-2 gap-2.5 sm:gap-3" : "grid-cols-1",
+          // Compact (the homepage on a phone): one row, the location and the
+          // button. The type and price wait for the catalogue's own filters;
+          // the row is what keeps the listings below inside the first screen.
+          compact ? "grid-cols-[minmax(0,1fr)_auto] gap-2.5 sm:gap-3" : "grid-cols-1",
           (tabs.length > 1 || !compact) && "mt-3"
         )}
       >
@@ -186,13 +189,15 @@ export function HeroSearchWidget({
           options={locationOptions}
           anyLabel={tFilters("anyLocation")}
         />
-        <FilterSelect
-          label={tFilters("propertyType")}
-          value={type}
-          onValueChange={setType}
-          options={propertyTypeOptions}
-          anyLabel={tFilters("anyType")}
-        />
+        <div className={cn("min-w-0", compact && "hidden sm:block")}>
+          <FilterSelect
+            label={tFilters("propertyType")}
+            value={type}
+            onValueChange={setType}
+            options={propertyTypeOptions}
+            anyLabel={tFilters("anyType")}
+          />
+        </div>
 
         <div className={cn("min-w-0", compact && "hidden sm:block")}>
           <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
@@ -221,7 +226,7 @@ export function HeroSearchWidget({
           type="submit"
           className={brandButtonClass(
             "primary",
-            cn("w-full lg:w-auto", compact && "col-span-2 sm:col-span-1")
+            cn("w-full lg:w-auto", compact && "w-auto sm:w-full lg:w-auto")
           )}
         >
           {tFilters("search")}

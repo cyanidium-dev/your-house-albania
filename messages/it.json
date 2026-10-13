@@ -154,6 +154,11 @@
       "badge": "Testimonianze",
       "title": "Cosa dicono i nostri clienti",
       "goToSlide": "Vai alla slide {num}"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# immobile} other {# immobili}} da {fromPrice}",
+      "all": "Vedi tutti",
+      "label": "Immobili in vendita"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Fonti",
       "verified": "verificato",
       "mayHaveChanged": "potrebbe essere cambiato"
-    }
+    },
+    "heroChip": "Chiedi all'assistente"
   },
   "Knowledge": {
     "title": "Base di conoscenza",

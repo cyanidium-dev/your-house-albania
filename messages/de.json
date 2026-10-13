@@ -154,6 +154,11 @@
       "badge": "Kundenstimmen",
       "title": "Das sagen unsere Kunden",
       "goToSlide": "Zu Slide {num} wechseln"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# Immobilie} other {# Immobilien}} ab {fromPrice}",
+      "all": "Alle ansehen",
+      "label": "Immobilien zum Kauf"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Quellen",
       "verified": "geprüft",
       "mayHaveChanged": "kann sich geändert haben"
-    }
+    },
+    "heroChip": "Assistent fragen"
   },
   "Knowledge": {
     "title": "Wissensdatenbank",

@@ -154,6 +154,11 @@
       "badge": "Відгуки",
       "title": "Що кажуть наші клієнти",
       "goToSlide": "Перейти до слайду {num}"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# об'єкт} few {# об'єкти} many {# об'єктів} other {# об'єкта}} від {fromPrice}",
+      "all": "Дивитися всі",
+      "label": "Об'єкти у продажу"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Джерела",
       "verified": "перевірено",
       "mayHaveChanged": "могло змінитися"
-    }
+    },
+    "heroChip": "Запитати асистента"
   },
   "Knowledge": {
     "title": "База знань",

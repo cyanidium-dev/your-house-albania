@@ -154,6 +154,11 @@
       "badge": "Opinie",
       "title": "Co mówią nasi klienci",
       "goToSlide": "Przejdź do slajdu {num}"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}} od {fromPrice}",
+      "all": "Zobacz wszystkie",
+      "label": "Oferty na sprzedaż"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Źródła",
       "verified": "zweryfikowano",
       "mayHaveChanged": "mogło się zmienić"
-    }
+    },
+    "heroChip": "Zapytaj asystenta"
   },
   "Knowledge": {
     "title": "Baza wiedzy",

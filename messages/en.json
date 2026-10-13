@@ -154,6 +154,11 @@
       "badge": "Testimonials",
       "title": "What our clients say",
       "goToSlide": "Go to slide {num}"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# property} other {# properties}} from {fromPrice}",
+      "all": "See all",
+      "label": "Properties for sale"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Sources",
       "verified": "verified",
       "mayHaveChanged": "may have changed"
-    }
+    },
+    "heroChip": "Ask the assistant"
   },
   "Knowledge": {
     "title": "Knowledge base",

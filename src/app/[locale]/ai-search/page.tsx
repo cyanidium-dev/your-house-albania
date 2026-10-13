@@ -46,7 +46,9 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
   const t = await getTranslations({ locale, namespace: 'AiSearch' })
   const initialQuery = firstParam(query.q)?.trim().slice(0, AI_MAX_MESSAGE_CHARS)
   // Where the visitor came from, for the analytics event the chat fires on mount.
-  const entry = initialQuery ? 'hero' : firstParam(query.from) === 'header' ? 'header' : 'direct'
+  const from = firstParam(query.from)
+  // `from=hero` is the homepage chip on phones, which opens the page empty.
+  const entry = initialQuery || from === 'hero' ? 'hero' : from === 'header' ? 'header' : 'direct'
 
   return (
     <div className="container max-w-4xl mx-auto px-5 2xl:px-0 pt-24 md:pt-32 pb-14 md:pb-20">

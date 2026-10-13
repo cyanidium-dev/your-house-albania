@@ -154,6 +154,11 @@
       "badge": "Dëshmi",
       "title": "Çfarë thonë klientët tanë",
       "goToSlide": "Shko te rrëshqitja {num}"
+    },
+    "heroStrip": {
+      "summary": "{count, plural, one {# pronë} other {# prona}} nga {fromPrice}",
+      "all": "Shiko të gjitha",
+      "label": "Prona në shitje"
     }
   },
   "Shared": {
@@ -980,7 +985,8 @@
       "heading": "Burimet",
       "verified": "verifikuar",
       "mayHaveChanged": "mund të ketë ndryshuar"
-    }
+    },
+    "heroChip": "Pyet asistentin"
   },
   "Knowledge": {
     "title": "Baza e njohurive",

@@ -12,6 +12,9 @@ import { isAiSearchEnabled } from '@/lib/ai/config'
 import { cn } from '@/lib/utils'
 import { HERO_LABEL, HERO_TITLE } from '@/components/shared/layout'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import { Icon } from '@/components/shared/Icon'
+import { aiSearchPath } from '@/lib/ai/routes'
+import HomeListingStrip from './HomeListingStrip'
 
 export type HeroData = {
   shortLine?: string;
@@ -53,6 +56,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
   if (heroData?.enabled === false) return null
 
   const tPhoto = await getTranslations('AlbaniaPhotos')
+  const tAi = await getTranslations('AiSearch')
   // The theme's demo strings ("Palm springs, CA", "Futuristic Haven") used to
   // stand in for an empty CMS field and were live above the H1 of two guides.
   // An empty eyebrow renders nothing; a landing without a title has no H1 text
@@ -240,17 +244,20 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               </div>
             ) : null}
             {aiSearchVisible ? (
-              <div className={cn('md:mt-8 flex justify-center md:justify-start', isHome ? 'order-4 mt-4' : 'mt-8')}>
+              // On a phone the assistant is a chip, not a second search box:
+              // the field and its hint took 90px of the first screen that now
+              // goes to listings (HomeListingStrip).
+              <div className={cn('md:mt-8 justify-center md:justify-start', isHome ? 'hidden md:flex' : 'flex mt-8')}>
                 <AiSearchInput locale={locale} />
               </div>
             ) : null}
-            {isHome && primaryCta ? (
+            {isHome && aiSearchVisible ? (
               <Link
-                href={primaryCta.href}
-                className="order-5 mt-3 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-white underline-offset-4 hover:underline md:hidden"
+                href={`${aiSearchPath(locale)}?from=hero`}
+                className="order-4 mt-3 inline-flex items-center gap-2 self-start rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25 md:hidden"
               >
-                {primaryCta.label}
-                <span aria-hidden>→</span>
+                <Icon icon="ph:sparkle" width={16} height={16} aria-hidden />
+                {tAi('heroChip')}
               </Link>
             ) : null}
             {searchEnabled ? (
@@ -266,6 +273,7 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
                 />
               </div>
             ) : null}
+            {isHome ? <HomeListingStrip locale={locale} /> : null}
           </div>
         </div>
       </div>
