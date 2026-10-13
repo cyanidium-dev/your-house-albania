@@ -5,6 +5,7 @@ import { getLegacyFallbackCatalogCountrySlug } from "./lib/routes/catalog";
 import { isSitePathIndexable, PARTIAL_LOCALE_ROBOTS_HEADER } from "./lib/seo/localeIndexing";
 import { listingQueryPublicPathname, listingQueryRewritePathname } from "./lib/routes/listingQueryRewrite";
 import { defaultLocaleRedirectTarget } from "./lib/routes/localelessRedirect";
+import { LOCALE_COOKIE_NAME, negotiateRootLocale } from "./lib/i18n/rootLocale";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -43,6 +44,13 @@ export default function middleware(request: NextRequest) {
   if (/[A-Z]/.test(url.pathname)) {
     url.pathname = url.pathname.replace(/[A-Z]/g, (c) => c.toLowerCase());
     return NextResponse.redirect(url, 308);
+  }
+  // The bare domain with no remembered choice: the browser's language when the
+  // site has it, English otherwise (next-intl would fall back to Albanian). A
+  // remembered choice goes through next-intl, which honours the cookie.
+  if (url.pathname === "/" && !LOCALES.includes(request.cookies.get(LOCALE_COOKIE_NAME)?.value ?? "")) {
+    url.pathname = `/${negotiateRootLocale(request.headers.get("accept-language"), LOCALES, "en")}`;
+    return NextResponse.redirect(url, 307);
   }
   // A deep path with no locale gets a permanent 308 to the default locale
   // rather than next-intl's 307 — see lib/routes/localelessRedirect.

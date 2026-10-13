@@ -26,6 +26,7 @@ import { LEGACY_FALLBACK_CATALOG_COUNTRY_SLUG } from "@/lib/routes/catalogPathPr
 import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
+import LanguageOfferBar from "@/components/i18n/LanguageOfferBar";
 import { LeadTracker } from "@/components/analytics/LeadTracker";
 import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
 import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
@@ -266,6 +267,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
               a contact link, and then goes only to our own API. */}
           <LeadTracker />
           <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
+          <LanguageOfferBar />
           {children}
           <Footer
             siteSettings={siteSettings}

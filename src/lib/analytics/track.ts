@@ -126,6 +126,22 @@ export type AnalyticsEvent =
     }
   /** The browser reports the app was installed (`appinstalled`, Chromium only). */
   | { event: 'pwa_installed' }
+  /**
+   * The "this page is in your language" bar on a deep page: shown, taken or
+   * turned down. `from` is the page's locale, `to` the browser's.
+   */
+  | { event: 'language_offer'; action: 'shown' | 'accepted' | 'dismissed'; from: string; to: string }
+  /**
+   * The next page of a listing was appended, by scrolling near the end
+   * (`auto`) or by the button. `page` is the page just loaded.
+   */
+  | { event: 'catalog_load_more'; page: number; auto: boolean }
+  /**
+   * The catalogue map on a wide screen: opened, hidden, or a pin tapped. The
+   * evidence for whether the map earns its 40% of the screen (audit 2026-10-13,
+   * review 2026-11-10).
+   */
+  | { event: 'catalog_map'; action: 'open' | 'hide' | 'pin_click'; layout: 'split' | 'fullscreen' }
 
 /**
  * GTM keeps every key ever pushed in its data model, so a `property_slug` from

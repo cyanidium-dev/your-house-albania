@@ -1,10 +1,12 @@
 "use client";
 
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { useRouter } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { Icon } from "@/components/shared/Icon";
+import { localeSwitchHref, rememberLocale } from "@/lib/i18n/localeSwitch";
 import {
   headerSwitcherCaretClass,
   headerSwitcherPillClass,
@@ -35,7 +37,8 @@ export default function LanguageSwitcher({
       setOpen(false);
       return;
     }
-    router.replace(pathname, { locale: newLocale });
+    rememberLocale(newLocale);
+    router.replace(localeSwitchHref(newLocale, pathname));
     setOpen(false);
   };
 
