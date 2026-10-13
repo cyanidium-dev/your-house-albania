@@ -30,7 +30,13 @@
     "favoritesCount": "Избранное ({count})",
     "selectLanguage": "Выбрать язык",
     "closeMobileMenu": "Закрыть мобильное меню",
-    "mainNavigation": "Основная навигация"
+    "mainNavigation": "Основная навигация",
+    "settings": {
+      "currency": "Валюта",
+      "theme": "Тема",
+      "light": "Светлая",
+      "dark": "Тёмная"
+    }
   },
   "Currency": {
     "switchTo": "Сменить валюту на {currency}"

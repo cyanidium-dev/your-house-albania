@@ -9,6 +9,7 @@ import { ADD_PROPERTY_HREF, type BuyMenuData } from '@/data/navConfig'
 import LanguageSwitcher from './LanguageSwitcher'
 import CurrencySwitcher from './CurrencySwitcher'
 import HeaderThemeToggle from './HeaderThemeToggle'
+import DrawerSettings from './DrawerSettings'
 import HeaderAiSearchLink from './HeaderAiSearchLink'
 import HeaderFavoritesLink from './HeaderFavoritesLink'
 import HeaderBurgerButton from './HeaderBurgerButton'
@@ -79,7 +80,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
           {({ open: navbarOpen, onClose, onToggle }) => (
             <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 ${shrink ? "md:h-16" : "md:h-24"} md:py-1`}>
               <div className="h-full min-w-0 px-4 lg:px-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-0">
-                <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
+                <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-dark/90 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
                     {/* The logo never shrinks: the row's spare width goes to
                         the nav (lg+) and, below that, stays empty. `max-w-[45%]`
@@ -96,7 +97,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                                 alt={siteSettings?.siteName || 'logo'}
                                 width={150}
                                 height={68}
-                                className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
+                                className={`object-contain object-left h-7 w-[150px] max-w-full sm:h-8 transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
                               />
                             </>
                           ) : (
@@ -107,7 +108,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                                 width={150}
                                 height={68}
                                 unoptimized={true}
-                                className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
+                                className={`object-contain object-left h-7 w-[150px] max-w-full sm:h-8 transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "block dark:hidden" : "hidden" : sticky ? "block dark:hidden" : "block dark:hidden"}`}
                               />
                               <Image
                                 src={'/images/header/logo.svg'}
@@ -115,7 +116,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                                 width={150}
                                 height={68}
                                 unoptimized={true}
-                                className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
+                                className={`object-contain object-left h-7 w-[150px] max-w-full sm:h-8 transition-[height,width] duration-300 ease-out ${logoSizeClass} ${overHero ? sticky ? "hidden dark:block" : "block" : sticky ? "dark:block hidden" : "dark:block hidden"}`}
                               />
                             </>
                           )}
@@ -131,8 +132,13 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     </div>
                     <div className='flex items-center gap-1 sm:gap-3 xl:gap-4 min-w-0 shrink-0'>
                       <LanguageSwitcher overHero={overHero} sticky={sticky} />
-                      <CurrencySwitcher overHero={overHero} sticky={sticky} />
-                      <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
+                      {/* On a phone these two live in the menu (DrawerSettings):
+                          with five controls in the bar the logo was squeezed to
+                          66px, and both are set once, not every visit. */}
+                      <div className="hidden md:flex items-center gap-3 xl:gap-4">
+                        <CurrencySwitcher overHero={overHero} sticky={sticky} />
+                        <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
+                      </div>
                       {aiSearchEnabled ? (
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
                       ) : null}
@@ -205,6 +211,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                   </div>
 
                   <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                    <DrawerSettings />
                     <Link
                       href={propertiesHref}
                       className={brandButtonClass('primary', 'w-fit', 'md')}

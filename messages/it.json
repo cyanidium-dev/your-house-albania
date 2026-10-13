@@ -30,7 +30,13 @@
     "favoritesCount": "Preferiti ({count})",
     "selectLanguage": "Seleziona lingua",
     "closeMobileMenu": "Chiudi il menu mobile",
-    "mainNavigation": "Navigazione principale"
+    "mainNavigation": "Navigazione principale",
+    "settings": {
+      "currency": "Valuta",
+      "theme": "Tema",
+      "light": "Chiaro",
+      "dark": "Scuro"
+    }
   },
   "Currency": {
     "switchTo": "Cambia valuta in {currency}"

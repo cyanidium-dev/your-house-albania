@@ -18,6 +18,14 @@ type CurrencySwitcherProps = {
   sticky?: boolean
 }
 
+/** Persist the currency in the URL so a shared link opens in the same one. */
+export function writeCurrencyToUrl(code: string) {
+  if (typeof window === 'undefined') return
+  const params = new URLSearchParams(window.location.search)
+  params.set('currency', code)
+  window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
+}
+
 export default function CurrencySwitcher({
   overHero = false,
   sticky = false,
@@ -33,12 +41,7 @@ export default function CurrencySwitcher({
   const handleSelect = (newCurrency: string) => {
     setCurrency(newCurrency as never)
     setOpen(false)
-    // Persist currency in URL so links can be shared with a specific currency
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      params.set('currency', newCurrency)
-      window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
-    }
+    writeCurrencyToUrl(newCurrency)
   }
 
   return (

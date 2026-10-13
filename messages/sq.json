@@ -30,7 +30,13 @@
     "favoritesCount": "Të preferuarat ({count})",
     "selectLanguage": "Zgjidh gjuhën",
     "closeMobileMenu": "Mbyll menynë celulare",
-    "mainNavigation": "Navigimi kryesor"
+    "mainNavigation": "Navigimi kryesor",
+    "settings": {
+      "currency": "Monedha",
+      "theme": "Pamja",
+      "light": "E çelët",
+      "dark": "E errët"
+    }
   },
   "Currency": {
     "switchTo": "Ndrysho monedhën në {currency}"
