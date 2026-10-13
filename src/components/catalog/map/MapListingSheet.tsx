@@ -33,16 +33,56 @@ type SheetProps = {
   href: string
   locale: string
   variant: 'sheet' | 'panel'
+  /** The listing is one of several on its point (flats of one building): a pager. */
+  stack?: SheetStack | null
   onClose: () => void
 }
 
-/** `item: null` while the listing is still loading: the same window, as a placeholder. */
-export function MapListingSheet({ item, ...props }: SheetProps & { item: PropertyHomes | null }) {
-  if (!item) return <SheetPlaceholder variant={props.variant} onClose={props.onClose} />
-  return <ListingSheet item={item} {...props} />
+/** Where the picked listing sits among those sharing its point. */
+export type SheetStack = {
+  /** 0-based. */
+  index: number
+  count: number
+  /** A shared approximate point is a place, not a building. */
+  approximate: boolean
+  onStep: (dir: 1 | -1) => void
 }
 
-function SheetPlaceholder({ variant, onClose }: Pick<SheetProps, 'variant' | 'onClose'>) {
+/** `item: null` while the listing is still loading: the same window, as a placeholder. */
+export function MapListingSheet({ item, busy, ...props }: SheetProps & { item: PropertyHomes | null; busy?: boolean }) {
+  if (!item) return <SheetPlaceholder variant={props.variant} stack={props.stack} onClose={props.onClose} />
+  return <ListingSheet item={item} busy={busy} {...props} />
+}
+
+/**
+ * "‹ 2 / 11 in this building ›". At the bottom edge of the window, which is
+ * the edge pinned to the map: the window's height follows each listing, and a
+ * pager on top moved under the finger from one step to the next.
+ */
+function StackPager({ stack, className }: { stack: SheetStack; className?: string }) {
+  const tMap = useTranslations('Shared.map')
+  const text = tMap(stack.approximate ? 'stackPagerPlace' : 'stackPager', {
+    index: stack.index + 1,
+    count: stack.count,
+  })
+  const button =
+    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dark/15 text-lg leading-none text-dark transition-colors hover:border-primary hover:text-primary dark:border-white/20 dark:text-white'
+  return (
+    <div className={cn('flex items-center gap-2 border-t border-dark/10 bg-white px-3 py-2 dark:border-white/15 dark:bg-dark', className)}>
+      <button type="button" onClick={() => stack.onStep(-1)} aria-label={tMap('stackPrevious')} className={button}>
+        ‹
+      </button>
+      <span aria-live="polite" className="min-w-0 flex-1 truncate text-center text-xs font-medium tabular-nums text-dark/70 dark:text-white/70">
+        {text}
+      </span>
+      <button type="button" onClick={() => stack.onStep(1)} aria-label={tMap('stackNext')} className={button}>
+        ›
+      </button>
+    </div>
+  )
+}
+
+function SheetPlaceholder({ variant, stack, onClose }: Pick<SheetProps, 'variant' | 'stack' | 'onClose'>) {
   const tCard = useTranslations('Shared.propertyCard')
   const isSheet = variant === 'sheet'
   return (
@@ -51,15 +91,22 @@ function SheetPlaceholder({ variant, onClose }: Pick<SheetProps, 'variant' | 'on
       className={cn(
         'absolute z-20 overflow-hidden bg-white shadow-2xl dark:bg-dark',
         isSheet
-          ? 'inset-x-0 bottom-0 rounded-t-3xl px-3 pb-4 pt-6 sm:inset-x-auto sm:left-1/2 sm:w-[440px] sm:-translate-x-1/2'
+          ? cn(
+              'inset-x-0 bottom-0 rounded-t-3xl px-3 pt-6 sm:inset-x-auto sm:left-1/2 sm:w-[440px] sm:-translate-x-1/2',
+              // With a pager the bottom edge is the pager's, as in the window.
+              stack ? 'pb-[var(--app-bottom-inset,0px)]' : 'pb-4'
+            )
           : 'inset-x-3 bottom-3 flex h-[200px] rounded-2xl border border-dark/10 dark:border-white/15'
       )}
     >
       <div className={cn('animate-pulse bg-dark/10 dark:bg-white/10', isSheet ? 'aspect-[16/10] rounded-2xl' : 'w-[44%]')} />
-      <div className={cn('flex-1 space-y-2', isSheet ? 'px-1 pt-3' : 'p-3')}>
-        <div className="h-5 w-1/3 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
-        <div className="h-4 w-4/5 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
-        <div className="h-3 w-1/2 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+      <div className={cn('min-w-0 flex-1', !isSheet && 'flex flex-col')}>
+        <div className={cn('space-y-2', isSheet ? cn('px-1 pt-3', stack && 'pb-4') : 'flex-1 p-3')}>
+          <div className="h-5 w-1/3 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+          <div className="h-4 w-4/5 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+          <div className="h-3 w-1/2 animate-pulse rounded bg-dark/10 dark:bg-white/10" />
+        </div>
+        {stack ? <StackPager stack={stack} className={isSheet ? '-mx-3' : undefined} /> : null}
       </div>
       <button
         type="button"
@@ -78,8 +125,10 @@ function ListingSheet({
   href,
   locale,
   variant,
+  stack,
+  busy = false,
   onClose,
-}: SheetProps & { item: PropertyHomes }) {
+}: SheetProps & { item: PropertyHomes; busy?: boolean }) {
   const tCard = useTranslations('Shared.propertyCard')
   const tDeal = useTranslations('Shared.propertyDetail')
   const tMap = useTranslations('Shared.map')
@@ -158,6 +207,7 @@ function ListingSheet({
     <div
       role="dialog"
       aria-label={item.name || tCard('propertyFallback')}
+      aria-busy={busy || undefined}
       className={cn(
         'absolute z-20 overflow-hidden bg-white text-dark shadow-2xl dark:bg-dark dark:text-white',
         'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
@@ -189,7 +239,10 @@ function ListingSheet({
               onScroll={onStripScroll}
               className={cn(
                 'flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
-                isSheet ? 'aspect-[16/10]' : 'absolute inset-0'
+                isSheet ? 'aspect-[16/10]' : 'absolute inset-0',
+                // The next listing of a building still loading: this one stays, dimmed.
+                'transition-opacity',
+                busy && 'opacity-50'
               )}
             >
               {photos.map((img, i) => (
@@ -250,52 +303,63 @@ function ListingSheet({
         </div>
       </div>
 
-      <div className={cn('min-w-0 space-y-2', isSheet ? 'px-4 pb-4 pt-3' : 'flex-1 overflow-y-auto p-3')}>
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span className="text-lg font-semibold leading-tight">{priceText}</span>
-          {perSqm ? <span className="text-xs text-dark/55 dark:text-white/55">{perSqm}</span> : null}
-          {item.status ? (
-            <span className="ml-auto rounded-full border border-primary/70 px-2.5 py-0.5 text-xs text-primary">
-              {displayDealLabel(item.status, tDeal, { compact: true })}
-            </span>
-          ) : null}
-        </div>
-        <Link
-          href={href}
-          className={cn('block font-medium leading-snug hover:text-primary line-clamp-2', isSheet ? 'text-[15px]' : 'text-sm')}
+      {/* Details, then the building's pager as a footer: in the panel below
+          the scrolling details, in the sheet held to the bottom while it scrolls. */}
+      <div className={cn('min-w-0', !isSheet && 'flex flex-1 flex-col')}>
+        <div
+          className={cn(
+            'min-w-0 space-y-2 transition-opacity',
+            isSheet ? 'px-4 pb-4 pt-3' : 'min-h-0 flex-1 overflow-y-auto p-3',
+            busy && 'opacity-50'
+          )}
         >
-          {item.name}
-        </Link>
-        <p className="truncate text-xs text-dark/60 dark:text-white/60">
-          {[item.propertyType, item.location].filter(Boolean).join(' · ')}
-        </p>
-        {approximate ? (
-          <p className="text-[11px] leading-snug text-dark/55 dark:text-white/55">≈ {tMap('approximateShort')}</p>
-        ) : null}
-        <PropertyCardMeta
-          view="small"
-          beds={item.beds}
-          baths={item.baths}
-          area={item.area}
-          plotArea={item.plotArea}
-          showPlot={showsPlotArea(item.propertyTypeSlug)}
-          showRooms={showsRooms(item.propertyTypeSlug)}
-        />
-        <div className="grid grid-cols-2 gap-2 pt-1">
-          <PropertyContactButton
-            locale={locale}
-            propertySlug={item.slug}
-            propertyTitle={item.name}
-            agentSlug={null}
-            agentName={null}
-            placement="map"
-            label={tCard('requestInfo')}
-            className={brandButtonClass('primaryOutline', 'w-full', 'sm')}
-          />
-          <Link href={href} className={brandButtonClass('primary', 'w-full', 'sm')}>
-            {tMap('openListing')}
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="text-lg font-semibold leading-tight">{priceText}</span>
+            {perSqm ? <span className="text-xs text-dark/55 dark:text-white/55">{perSqm}</span> : null}
+            {item.status ? (
+              <span className="ml-auto rounded-full border border-primary/70 px-2.5 py-0.5 text-xs text-primary">
+                {displayDealLabel(item.status, tDeal, { compact: true })}
+              </span>
+            ) : null}
+          </div>
+          <Link
+            href={href}
+            className={cn('block font-medium leading-snug hover:text-primary line-clamp-2', isSheet ? 'text-[15px]' : 'text-sm')}
+          >
+            {item.name}
           </Link>
+          <p className="truncate text-xs text-dark/60 dark:text-white/60">
+            {[item.propertyType, item.location].filter(Boolean).join(' · ')}
+          </p>
+          {approximate ? (
+            <p className="text-[11px] leading-snug text-dark/55 dark:text-white/55">≈ {tMap('approximateShort')}</p>
+          ) : null}
+          <PropertyCardMeta
+            view="small"
+            beds={item.beds}
+            baths={item.baths}
+            area={item.area}
+            plotArea={item.plotArea}
+            showPlot={showsPlotArea(item.propertyTypeSlug)}
+            showRooms={showsRooms(item.propertyTypeSlug)}
+          />
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <PropertyContactButton
+              locale={locale}
+              propertySlug={item.slug}
+              propertyTitle={item.name}
+              agentSlug={null}
+              agentName={null}
+              placement="map"
+              label={tCard('requestInfo')}
+              className={brandButtonClass('primaryOutline', 'w-full', 'sm')}
+            />
+            <Link href={href} className={brandButtonClass('primary', 'w-full', 'sm')}>
+              {tMap('openListing')}
+            </Link>
+          </div>
         </div>
+        {stack ? <StackPager stack={stack} className={isSheet ? 'sticky bottom-0' : 'shrink-0'} /> : null}
       </div>
     </div>
   )

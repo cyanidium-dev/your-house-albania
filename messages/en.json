@@ -179,7 +179,14 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "resetBearing": "Turn the map back north",
-      "offline": "The map needs an internet connection. The listings below work offline."
+      "offline": "The map needs an internet connection. The listings below work offline.",
+      "buildingStack": "{count, plural, one {# flat} other {# flats}}",
+      "placeStack": "{count, plural, one {# listing} other {# listings}}",
+      "stackFrom": "from {price}",
+      "stackPager": "{index} / {count} in this building",
+      "stackPagerPlace": "{index} / {count} at this spot",
+      "stackPrevious": "Previous listing",
+      "stackNext": "Next listing"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",

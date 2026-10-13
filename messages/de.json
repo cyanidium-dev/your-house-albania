@@ -179,7 +179,14 @@
       "zoomIn": "Vergrößern",
       "zoomOut": "Verkleinern",
       "resetBearing": "Karte nach Norden ausrichten",
-      "offline": "Die Karte braucht eine Internetverbindung. Die Inserate darunter funktionieren auch offline."
+      "offline": "Die Karte braucht eine Internetverbindung. Die Inserate darunter funktionieren auch offline.",
+      "buildingStack": "{count, plural, one {# Wohnung} other {# Wohnungen}}",
+      "placeStack": "{count, plural, one {# Inserat} other {# Inserate}}",
+      "stackFrom": "ab {price}",
+      "stackPager": "{index} von {count} in diesem Gebäude",
+      "stackPagerPlace": "{index} von {count} an dieser Stelle",
+      "stackPrevious": "Vorheriges Inserat",
+      "stackNext": "Nächstes Inserat"
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",

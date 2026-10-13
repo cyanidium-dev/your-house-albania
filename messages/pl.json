@@ -168,7 +168,14 @@
       "zoomIn": "Przybliż",
       "zoomOut": "Oddal",
       "resetBearing": "Obróć mapę na północ",
-      "offline": "Mapa wymaga połączenia z internetem. Oferty poniżej działają też offline."
+      "offline": "Mapa wymaga połączenia z internetem. Oferty poniżej działają też offline.",
+      "buildingStack": "{count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}}",
+      "placeStack": "{count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+      "stackFrom": "od {price}",
+      "stackPager": "{index} z {count} w tym budynku",
+      "stackPagerPlace": "{index} z {count} w tym miejscu",
+      "stackPrevious": "Poprzednia oferta",
+      "stackNext": "Następna oferta"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",

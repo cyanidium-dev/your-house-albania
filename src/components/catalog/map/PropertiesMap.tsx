@@ -11,6 +11,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { cn } from '@/lib/utils'
 import { buildingPolygonAt } from './buildingPolygonAt'
+import { groupBuildingStacks, stackKeyOf, stackTotalOf } from './buildingStacks'
 
 // OpenFreeMap's vector "Liberty" style: free, no key, OpenStreetMap data with
 // building heights, so the map can tilt into 3D (`building-3d` is its
@@ -23,6 +24,15 @@ const BEARING_3D = -17
 const BUILDINGS_MIN_ZOOM = 14
 const LISTING_BUILDING_COLOR = '#078660'
 const MODE_STORAGE_KEY = 'domlivo:map-mode'
+// Clusters hold out a zoom level longer than before: at 14 the beach front
+// became a wall of overlapping pills.
+const CLUSTER_MAX_ZOOM = 15
+// The listings of one building share a point, so they stay a cluster up to
+// CLUSTER_MAX_ZOOM; one level closer the building's own marker shows.
+const STACK_ZOOM = CLUSTER_MAX_ZOOM + 1
+// A block with windows, before the label of a building's marker.
+const BUILDING_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M16 9h2a2 2 0 0 1 2 2v10"/><path d="M2 21h20"/><path d="M8 7h4M8 11h4M8 15h4"/></svg>'
 
 type MapMode = '2d' | '3d'
 
@@ -61,11 +71,54 @@ export type PropertiesMapItem = {
   /** 'approximate': the pin is the district or a nearby landmark, not the building. */
   locationPrecision?: 'exact' | 'approximate'
   price?: number
+  /** 'per-sqm': `price` is a rate, never what a building's listings start "from". */
+  priceUnit?: string
   currency?: string
   rate?: string
   status?: string
   /** false: a dot instead of a price pill (listings not among the loaded cards). Default true. */
   pill?: boolean
+}
+
+type MapPoint = {
+  slug: string
+  lat: number
+  lng: number
+  markerLabel: string
+  approximate: boolean
+  pill: boolean
+  /** Total price in base EUR, for a building's "from" (see buildingStacks). */
+  total: number | null
+  status: string
+}
+
+/** Several listings on one point, usually the flats of one building: one marker for all. */
+type MapStack = {
+  key: string
+  lat: number
+  lng: number
+  /** Cheapest first; the marker opens the first. */
+  slugs: string[]
+  label: string
+  approximate: boolean
+  /** A member is a loaded card with a price. Otherwise the dots are enough, as for one listing. */
+  pill: boolean
+}
+
+/** A building's marker: the block icon, then the label, which a later pass may change. */
+function setMarkerContent(el: HTMLDivElement, label: string, stacked: boolean) {
+  if (!stacked) {
+    if (el.textContent !== label) el.textContent = label
+    return
+  }
+  let text = el.querySelector<HTMLSpanElement>('[data-marker-label]')
+  if (!text) {
+    el.innerHTML = BUILDING_ICON
+    text = document.createElement('span')
+    text.dataset.markerLabel = ''
+    el.appendChild(text)
+  }
+  if (text.textContent !== label) text.textContent = label
 }
 
 type ScopeViewport = {
@@ -155,11 +208,10 @@ export function PropertiesMap({
     })
   }, [])
 
-  const computedPoints = React.useMemo(() => {
+  const computedMapData = React.useMemo(() => {
     const selectedDeal = (selectedDealType || '').trim().toLowerCase()
 
-
-    return items
+    const points = items
       .map((it) => {
         if (!it.slug) return null
         const lat = it.coordinates?.lat
@@ -186,32 +238,68 @@ export function PropertiesMap({
           markerLabel,
           approximate,
           pill: it.pill !== false && markerLabel !== '',
+          total: stackTotalOf(it.price, it.priceUnit),
+          status: it.status ?? '',
         }
       })
-      .filter(Boolean) as Array<{
-        slug: string
-        lat: number
-        lng: number
-        markerLabel: string
-        approximate: boolean
-        pill: boolean
-      }>
-  }, [items, selectedDealType, currency, rates, locale, tDeal])
+      .filter(Boolean) as MapPoint[]
+
+    // The flats of one block share its coordinates, and their pills sat
+    // exactly on top of each other: the visitor saw one and could reach no
+    // other. One marker per building instead, "11 flats · from 85 000 €".
+    const stackOf = groupBuildingStacks(points)
+    const stacks: MapStack[] = []
+    for (const p of points) {
+      const group = stackOf.get(p.slug)
+      // Each building once, at the member that sorts first.
+      if (!group || group[0] !== p) continue
+      const approximate = group.every((m) => m.approximate)
+      // A shared approximate point is a place, not a building: "listings" there.
+      const count = tMap(approximate ? 'placeStack' : 'buildingStack', { count: group.length })
+      const priced = group.filter((m) => m.total != null)
+      // Sale and rent in one building: "from" the monthly rent would read as
+      // the sale price. The count alone then; the window shows each price.
+      const cheapest = selectedDeal || new Set(priced.map((m) => m.status)).size <= 1 ? priced[0] : undefined
+      const from =
+        cheapest?.total != null
+          ? tMap('stackFrom', { price: formatMoney(convertFromBaseEur(cheapest.total, currency, rates), currency, locale) })
+          : ''
+      const deal = from && !selectedDeal && cheapest?.status ? displayDealLabel(cheapest.status, tDeal, { compact: true }) : ''
+      stacks.push({
+        key: stackKeyOf(p.lat, p.lng),
+        lat: p.lat,
+        lng: p.lng,
+        slugs: group.map((m) => m.slug),
+        label: [count, from, deal].filter(Boolean).join(' · '),
+        approximate,
+        pill: group.some((m) => m.pill),
+      })
+    }
+
+    return { points, stacks }
+  }, [items, selectedDealType, currency, rates, locale, tDeal, tMap])
 
   // Same content, same array: a re-render of the page around the map (the
   // header, the filter bar, a translator function with a new identity) must
   // not hand the map "new" points, which re-clustered every pin and re-fitted
   // the camera, a visible flicker.
-  const pointsKeyRef = React.useRef('')
-  const pointsRef = React.useRef(computedPoints)
-  const validPoints = React.useMemo(() => {
-    const key = JSON.stringify(computedPoints)
-    if (key !== pointsKeyRef.current) {
-      pointsKeyRef.current = key
-      pointsRef.current = computedPoints
+  const mapDataKeyRef = React.useRef('')
+  const mapDataRef = React.useRef(computedMapData)
+  const mapData = React.useMemo(() => {
+    const key = JSON.stringify(computedMapData)
+    if (key !== mapDataKeyRef.current) {
+      mapDataKeyRef.current = key
+      mapDataRef.current = computedMapData
     }
-    return pointsRef.current
-  }, [computedPoints])
+    return mapDataRef.current
+  }, [computedMapData])
+  const validPoints = mapData.points
+  const pointBySlug = React.useMemo(() => new Map(validPoints.map((p) => [p.slug, p])), [validPoints])
+  const stackBySlug = React.useMemo(() => {
+    const out = new Map<string, MapStack>()
+    for (const stack of mapData.stacks) for (const slug of stack.slugs) out.set(slug, stack)
+    return out
+  }, [mapData])
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -284,18 +372,25 @@ export function PropertiesMap({
   // An approximate pin reads differently from an exact one: dashed outline and
   // a "≈" before the price, with the legend under the map explaining it. Most
   // partner listings arrive without an address, so this is the common case.
+  // A building (`stacked`): the same pill with the block icon and a second
+  // pill peeking out behind it, up and to the right, like cards in a pile.
   const styleMarkerElement = React.useCallback(
-    (el: HTMLDivElement, isSelected: boolean, approximate = false, highlighted = false) => {
+    (el: HTMLDivElement, isSelected: boolean, approximate = false, highlighted = false, stacked = false) => {
       el.style.display = 'inline-flex'
       el.style.alignItems = 'center'
       el.style.justifyContent = 'center'
+      el.style.gap = stacked ? '4px' : ''
       el.style.padding = '4px 8px'
       el.style.borderRadius = '9999px'
       el.style.fontSize = '12px'
       el.style.fontWeight = '600'
       el.style.lineHeight = '1.1'
       el.style.whiteSpace = 'nowrap'
-      el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.18)'
+      const behindFill = highlighted && !isSelected ? '#e8f5ef' : approximate ? '#f7f7f5' : '#ffffff'
+      const behindEdge = isSelected || highlighted ? '#078660' : approximate ? 'rgba(0,0,0,0.45)' : 'rgba(0,0,0,0.25)'
+      el.style.boxShadow = stacked
+        ? `3px -3px 0 -1px ${behindFill}, 3px -3px 0 0 ${behindEdge}, 0 2px 6px rgba(0,0,0,0.18)`
+        : '0 2px 6px rgba(0,0,0,0.18)'
       el.style.border = isSelected
         ? '1px solid #078660'
         : highlighted
@@ -335,10 +430,84 @@ export function PropertiesMap({
     const farEdgeY = map.getCanvas().clientHeight * 0.3
 
     const next = new Set<string>()
+    const highlightSlug = highlightRef.current
+    const activeStack = activeSlug ? stackBySlug.get(activeSlug) : undefined
+    const litStack = highlightSlug ? stackBySlug.get(highlightSlug) : undefined
+
+    // Markers are keyed by slug, or `stack:<point>` for a building, and
+    // updated in place from one pass to the next.
+    const place = (
+      key: string,
+      lngLat: [number, number],
+      label: string,
+      target: string,
+      look: { selected: boolean; approximate: boolean; highlighted: boolean; stacked: boolean }
+    ) => {
+      next.add(key)
+      const existing = htmlMarkersRef.current.get(key)
+      const el = (existing?.getElement() as HTMLDivElement | undefined) ?? document.createElement('div')
+      setMarkerContent(el, label, look.stacked)
+      // Read on click: a building opens the listing already picked in it,
+      // otherwise its first, and that changes between passes.
+      el.dataset.slug = target
+      el.setAttribute('aria-label', label)
+      styleMarkerElement(el, look.selected, look.approximate, look.highlighted, look.stacked)
+      if (existing) {
+        existing.setLngLat(lngLat)
+        return
+      }
+
+      const open = () => {
+        if (el.dataset.slug) onActiveSlugChange(el.dataset.slug)
+      }
+      el.addEventListener('click', (ev) => {
+        ev.stopPropagation()
+        open()
+      })
+      // Reachable from the keyboard: Tab to a pin, Enter or Space opens it.
+      el.tabIndex = 0
+      el.setAttribute('role', 'button')
+      el.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault()
+          open()
+        }
+      })
+
+      const marker = new maplibregl.Marker({
+        element: el,
+        anchor: 'center',
+      })
+        .setLngLat(lngLat)
+        .addTo(map)
+
+      htmlMarkersRef.current.set(key, marker)
+    }
+
     for (const f of unclustered) {
       const props = (f.properties || {}) as Record<string, unknown>
       const slug = String(props.slug ?? '').trim()
       if (!slug) continue
+
+      const stack = stackBySlug.get(slug)
+      if (stack) {
+        const key = `stack:${stack.key}`
+        if (next.has(key)) continue
+        const selected = stack === activeStack
+        // Dots only, as for one listing beyond the loaded cards, until one of
+        // its listings is picked.
+        if (!stack.pill && !selected) continue
+        if (pitched && !selected && map.project([stack.lng, stack.lat]).y < farEdgeY) continue
+        place(
+          key,
+          [stack.lng, stack.lat],
+          stack.approximate ? `≈ ${stack.label}` : stack.label,
+          selected && activeSlug ? activeSlug : stack.slugs[0],
+          { selected, approximate: stack.approximate, highlighted: stack === litStack, stacked: true }
+        )
+        continue
+      }
+
       const rawLabel = String(props.markerLabel ?? '').trim()
       if (!rawLabel) continue
       const approximate = props.approximate === true || props.approximate === 'true'
@@ -355,44 +524,12 @@ export function PropertiesMap({
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue
       if (pitched && slug !== activeSlug && map.project([lng, lat]).y < farEdgeY) continue
 
-      next.add(slug)
-      const isSelected = activeSlug === slug
-      const highlighted = highlightRef.current === slug
-      const existing = htmlMarkersRef.current.get(slug)
-      if (existing) {
-        const el = existing.getElement() as HTMLDivElement
-        el.textContent = markerLabel
-        styleMarkerElement(el, isSelected, approximate, highlighted)
-        existing.setLngLat([lng, lat])
-        continue
-      }
-
-      const el = document.createElement('div')
-      el.textContent = markerLabel
-      styleMarkerElement(el, isSelected, approximate, highlighted)
-      el.addEventListener('click', (ev) => {
-        ev.stopPropagation()
-        onActiveSlugChange(slug)
+      place(slug, [lng, lat], markerLabel, slug, {
+        selected: activeSlug === slug,
+        approximate,
+        highlighted: highlightSlug === slug,
+        stacked: false,
       })
-      // Reachable from the keyboard: Tab to a pin, Enter or Space opens it.
-      el.tabIndex = 0
-      el.setAttribute('role', 'button')
-      el.setAttribute('aria-label', markerLabel)
-      el.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter' || ev.key === ' ') {
-          ev.preventDefault()
-          onActiveSlugChange(slug)
-        }
-      })
-
-      const marker = new maplibregl.Marker({
-        element: el,
-        anchor: 'center',
-      })
-        .setLngLat([lng, lat])
-        .addTo(map)
-
-      htmlMarkersRef.current.set(slug, marker)
     }
 
     for (const [slug, marker] of htmlMarkersRef.current.entries()) {
@@ -410,7 +547,7 @@ export function PropertiesMap({
         sample,
       })
     }
-  }, [activeSlug, onActiveSlugChange, ready, styleMarkerElement])
+  }, [activeSlug, onActiveSlugChange, ready, stackBySlug, styleMarkerElement])
 
   // Init map once.
   React.useEffect(() => {
@@ -450,9 +587,7 @@ export function PropertiesMap({
         type: 'geojson',
         data: geojson,
         cluster: true,
-        // Clusters hold out a zoom level longer than before: at 14 the beach
-        // front became a wall of overlapping pills.
-        clusterMaxZoom: 15,
+        clusterMaxZoom: CLUSTER_MAX_ZOOM,
         clusterRadius: 50,
         promoteId: 'slug',
       })
@@ -708,7 +843,17 @@ export function PropertiesMap({
   // Approximate pins are skipped: they mark a district, not a house.
   const exactPointsRef = React.useRef<Array<{ lng: number; lat: number }>>([])
   React.useEffect(() => {
-    exactPointsRef.current = validPoints.filter((p) => !p.approximate).map((p) => ({ lng: p.lng, lat: p.lat }))
+    // One test per building: its flats share the point (see buildingStacks).
+    const seen = new Set<string>()
+    exactPointsRef.current = validPoints
+      .filter((p) => {
+        if (p.approximate) return false
+        const key = stackKeyOf(p.lat, p.lng)
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+      .map((p) => ({ lng: p.lng, lat: p.lat }))
   }, [validPoints])
   React.useEffect(() => {
     if (!ready || !mapRef.current) return
@@ -905,7 +1050,7 @@ export function PropertiesMap({
           // map, since the listing window covers the lower part.
           map.easeTo({
             center: [active.lng, active.lat],
-            zoom: Math.max(map.getZoom(), 15),
+            zoom: Math.max(map.getZoom(), stackBySlug.has(activeSlug) ? STACK_ZOOM : 15),
             offset: [0, -Math.round(map.getContainer().clientHeight * 0.22)],
             duration: 450,
           })
@@ -913,7 +1058,7 @@ export function PropertiesMap({
     }
 
     prevActiveSlugRef.current = activeSlug ?? null
-  }, [ready, activeSlug, validPoints])
+  }, [ready, activeSlug, validPoints, stackBySlug])
 
   // Marker click handler.
   React.useEffect(() => {
@@ -967,7 +1112,9 @@ export function PropertiesMap({
 
     const onDotClick = (e: maplibregl.MapLayerMouseEvent) => {
       const slug = String((e.features?.[0]?.properties as { slug?: unknown } | undefined)?.slug ?? '')
-      if (slug) onActiveSlugChange(slug)
+      // A building's dots lie on one another: open its first listing, as its
+      // marker does, not whichever dot happens to be on top.
+      if (slug) onActiveSlugChange(stackBySlug.get(slug)?.slugs[0] ?? slug)
     }
     const pointer = () => {
       map.getCanvas().style.cursor = 'pointer'
@@ -998,7 +1145,7 @@ export function PropertiesMap({
       map.off('zoomend', scheduleSync)
       map.off('data', onData)
     }
-  }, [ready, syncHtmlMarkers, onActiveSlugChange])
+  }, [ready, syncHtmlMarkers, onActiveSlugChange, stackBySlug])
 
   // Card hover: light up that listing's pill, or its dot. Restyles the two
   // markers involved instead of a full marker pass on every pointer move.
@@ -1008,30 +1155,51 @@ export function PropertiesMap({
     const next = highlightSlug ?? null
     highlightRef.current = next
     if (!ready || !map || prev === next) return
-    const known = (slug: string | null) => (slug ? validPoints.find((p) => p.slug === slug) : undefined)
+    const known = (slug: string | null) => (slug ? pointBySlug.get(slug) : undefined)
+    const activeStack = activeSlug ? stackBySlug.get(activeSlug) : undefined
+    const nextStack = next ? stackBySlug.get(next) : undefined
     for (const slug of [prev, next]) {
       const point = known(slug)
       if (!slug || !point) continue
       const on = slug === next
+      // A listing in a building lights the building's marker, and all its
+      // dots, which lie on one another.
+      const stack = stackBySlug.get(slug)
+      if (stack) {
+        const lit = stack === nextStack
+        const marker = htmlMarkersRef.current.get(`stack:${stack.key}`)
+        if (marker) styleMarkerElement(marker.getElement() as HTMLDivElement, stack === activeStack, stack.approximate, lit, true)
+        for (const member of stack.slugs) {
+          if (known(member)?.pill === false) map.setFeatureState({ source: 'properties', id: member }, { hover: lit })
+        }
+        continue
+      }
       const marker = htmlMarkersRef.current.get(slug)
       if (marker) styleMarkerElement(marker.getElement() as HTMLDivElement, activeSlug === slug, point.approximate, on)
       if (!point.pill) map.setFeatureState({ source: 'properties', id: slug }, { hover: on })
     }
 
     // At the opening zoom every pin is inside a cluster and a hovered card lit
-    // nothing. Show the hovered listing as a temporary pin over its cluster.
+    // nothing. Show the hovered listing as a temporary pin over its cluster;
+    // for a building, its marker as it will look once the cluster opens.
     hoverMarkerRef.current?.remove()
     hoverMarkerRef.current = null
     const point = known(next)
-    if (next && point && !htmlMarkersRef.current.has(next)) {
+    if (next && point && !htmlMarkersRef.current.has(nextStack ? `stack:${nextStack.key}` : next)) {
       const el = document.createElement('div')
-      el.textContent = point.markerLabel ? (point.approximate ? `≈ ${point.markerLabel}` : point.markerLabel) : '•'
-      styleMarkerElement(el, false, point.approximate, true)
+      if (nextStack) {
+        setMarkerContent(el, nextStack.approximate ? `≈ ${nextStack.label}` : nextStack.label, true)
+        styleMarkerElement(el, false, nextStack.approximate, true, true)
+      } else {
+        el.textContent = point.markerLabel ? (point.approximate ? `≈ ${point.markerLabel}` : point.markerLabel) : '•'
+        styleMarkerElement(el, false, point.approximate, true)
+      }
       el.style.pointerEvents = 'none'
       el.style.zIndex = '3'
-      hoverMarkerRef.current = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([point.lng, point.lat]).addTo(map)
+      const lngLat: [number, number] = nextStack ? [nextStack.lng, nextStack.lat] : [point.lng, point.lat]
+      hoverMarkerRef.current = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat(lngLat).addTo(map)
     }
-  }, [highlightSlug, ready, validPoints, activeSlug, styleMarkerElement])
+  }, [highlightSlug, ready, pointBySlug, stackBySlug, activeSlug, styleMarkerElement])
   React.useEffect(
     () => () => {
       hoverMarkerRef.current?.remove()

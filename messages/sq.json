@@ -179,7 +179,14 @@
       "zoomIn": "Zmadho",
       "zoomOut": "Zvogëlo",
       "resetBearing": "Ktheje hartën nga veriu",
-      "offline": "Harta ka nevojë për internet. Njoftimet më poshtë punojnë edhe pa lidhje."
+      "offline": "Harta ka nevojë për internet. Njoftimet më poshtë punojnë edhe pa lidhje.",
+      "buildingStack": "{count, plural, one {# apartament} other {# apartamente}}",
+      "placeStack": "{count, plural, one {# pronë} other {# prona}}",
+      "stackFrom": "nga {price}",
+      "stackPager": "{index} nga {count} në këtë ndërtesë",
+      "stackPagerPlace": "{index} nga {count} në këtë vend",
+      "stackPrevious": "Prona e mëparshme",
+      "stackNext": "Prona tjetër"
     },
     "propertyDetail": {
       "propertyDetails": "Detajet e pronës",

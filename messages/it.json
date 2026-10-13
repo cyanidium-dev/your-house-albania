@@ -179,7 +179,14 @@
       "zoomIn": "Ingrandisci",
       "zoomOut": "Riduci",
       "resetBearing": "Riporta la mappa a nord",
-      "offline": "La mappa richiede una connessione a internet. Gli annunci qui sotto funzionano anche offline."
+      "offline": "La mappa richiede una connessione a internet. Gli annunci qui sotto funzionano anche offline.",
+      "buildingStack": "{count, plural, one {# appartamento} other {# appartamenti}}",
+      "placeStack": "{count, plural, one {# annuncio} other {# annunci}}",
+      "stackFrom": "da {price}",
+      "stackPager": "{index} di {count} in questo edificio",
+      "stackPagerPlace": "{index} di {count} in questo punto",
+      "stackPrevious": "Annuncio precedente",
+      "stackNext": "Annuncio successivo"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",

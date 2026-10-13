@@ -179,7 +179,14 @@
       "zoomIn": "Приблизить",
       "zoomOut": "Отдалить",
       "resetBearing": "Повернуть карту на север",
-      "offline": "Для карты нужен интернет. Объявления ниже доступны и офлайн."
+      "offline": "Для карты нужен интернет. Объявления ниже доступны и офлайн.",
+      "buildingStack": "{count, plural, one {# квартира} few {# квартиры} many {# квартир} other {# квартиры}}",
+      "placeStack": "{count, plural, one {# объект} few {# объекта} many {# объектов} other {# объекта}}",
+      "stackFrom": "от {price}",
+      "stackPager": "{index} из {count} в этом доме",
+      "stackPagerPlace": "{index} из {count} в этом месте",
+      "stackPrevious": "Предыдущий объект",
+      "stackNext": "Следующий объект"
     },
     "propertyDetail": {
       "propertyDetails": "Детали объекта",

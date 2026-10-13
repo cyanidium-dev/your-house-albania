@@ -8,7 +8,8 @@ import { propertyPath } from '@/lib/property/propertyUrl'
  * string the "show more" button uses). The page itself only carries the 24
  * cards it shows; the map asks for the rest here once it mounts.
  *
- * Response: `{ points: [{ slug, href, lat, lng, price?, priceUnit?, status?, approximate }] }`.
+ * Response: `{ points: [{ slug, href, lat, lng, price?, priceUnit?, status?, approximate, level? }] }`
+ * (`level`: exact | street | area | district, written by the geo tools).
  * Cached at the edge for an hour, like the catalogue pages.
  */
 export async function GET(req: NextRequest) {
@@ -49,6 +50,7 @@ export async function GET(req: NextRequest) {
     ...(r.priceUnit ? { priceUnit: r.priceUnit } : {}),
     ...(r.status ? { status: r.status } : {}),
     approximate: r.locationPrecision === 'approximate',
+    ...(r.locationLevel ? { level: r.locationLevel } : {}),
   }))
 
   return NextResponse.json(

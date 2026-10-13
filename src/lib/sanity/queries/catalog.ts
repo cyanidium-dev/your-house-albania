@@ -411,6 +411,8 @@ export type CatalogMapPoint = {
   priceUnit?: 'total' | 'per-sqm';
   status?: string;
   locationPrecision?: 'exact' | 'approximate' | null;
+  /** building / street / ~250 m area / district only (set by the geo tools, 2026-10-13) */
+  locationLevel?: 'exact' | 'street' | 'area' | 'district' | null;
 };
 
 /** Upper bound on pins per map; the whole catalogue is ~1,100 listings. */
@@ -432,7 +434,7 @@ export const fetchCatalogMapPoints = sanityCache(
       const rows = await client.fetch<CatalogMapPoint[]>(
         `*[${where} && defined(coordinatesLat) && defined(coordinatesLng)][0...${MAP_POINTS_LIMIT}]{
           "slug": slug.current, localizedSlug, "lat": coordinatesLat, "lng": coordinatesLng,
-          price, priceUnit, status, locationPrecision
+          price, priceUnit, status, locationPrecision, locationLevel
         }`,
         params,
       );

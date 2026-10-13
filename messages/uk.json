@@ -179,7 +179,14 @@
       "zoomIn": "Наблизити",
       "zoomOut": "Віддалити",
       "resetBearing": "Повернути карту на північ",
-      "offline": "Для карти потрібен інтернет. Оголошення нижче доступні й офлайн."
+      "offline": "Для карти потрібен інтернет. Оголошення нижче доступні й офлайн.",
+      "buildingStack": "{count, plural, one {# квартира} few {# квартири} many {# квартир} other {# квартири}}",
+      "placeStack": "{count, plural, one {# об’єкт} few {# об’єкти} many {# об’єктів} other {# об’єкта}}",
+      "stackFrom": "від {price}",
+      "stackPager": "{index} з {count} у цьому будинку",
+      "stackPagerPlace": "{index} з {count} у цьому місці",
+      "stackPrevious": "Попередній об’єкт",
+      "stackNext": "Наступний об’єкт"
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",

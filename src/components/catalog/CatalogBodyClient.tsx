@@ -13,6 +13,8 @@ import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+import { groupBuildingStacks, stackPointOf, type StackPoint } from "@/components/catalog/map/buildingStacks";
+import type { SheetStack } from "@/components/catalog/map/MapListingSheet";
 // Only once a pin is picked; nobody needs it at load.
 const MapListingSheet = dynamic(
   () => import("@/components/catalog/map/MapListingSheet").then((m) => m.MapListingSheet),
@@ -470,7 +472,7 @@ export function CatalogBodyClient({
   const previewPool = React.useMemo(() => [...allItems, ...Object.values(extraCards)], [allItems, extraCards])
 
   const handleActiveSlugFromMap = React.useCallback(
-    (slug: string) => {
+    (slug: string, opts?: { keepPreview?: boolean }) => {
       // Marker click: select marker and show preview, but do NOT scroll list.
       shouldScrollToActiveRef.current = false;
       if (allItems.some((p) => p.slug === slug) || extraCards[slug]) {
@@ -481,9 +483,21 @@ export function CatalogBodyClient({
       }
       // A pin for a listing beyond the loaded page: fetch its card and show the
       // same preview. Only if that fails does the click open the listing.
+      // Paging through a building keeps the current card, dimmed, until the
+      // next arrives: the placeholder in between flashed on every step.
       setActiveSlug(slug);
-      setPreviewSlug(null);
+      if (!opts?.keepPreview) setPreviewSlug(null);
       setPending(slug);
+      // A failed card opens the listing only while it is still the one the
+      // visitor is waiting for: paging through a building fires several
+      // fetches, and a late failure must not navigate away from a later pick
+      // or from a closed preview.
+      const openInstead = () => {
+        if (pendingSlugRef.current !== slug) return;
+        setPending(null);
+        const href = mapPointHref.get(slug);
+        if (href) window.location.assign(href);
+      };
       fetch(`/api/catalog/card?slug=${encodeURIComponent(slug)}&locale=${locale}`)
         .then((res) => (res.ok ? res.json() : null))
         .then((data: { item?: PropertyHomes | null } | null) => {
@@ -495,15 +509,10 @@ export function CatalogBodyClient({
               setPending(null);
             }
           } else {
-            setPending(null);
-            const href = mapPointHref.get(slug);
-            if (href) window.location.assign(href);
+            openInstead();
           }
         })
-        .catch(() => {
-          const href = mapPointHref.get(slug);
-          if (href) window.location.assign(href);
-        });
+        .catch(openInstead);
     },
     [setActiveSlug, allItems, extraCards, mapPointHref, locale, setPending]
   );
@@ -565,10 +574,12 @@ export function CatalogBodyClient({
       if (previewRef.current?.contains(target)) return
       if (!mapCardRef.current?.contains(target)) return
       setPreviewSlug(null)
+      // A building's next listing still loading must not reopen as a placeholder.
+      setPending(null)
     }
     document.addEventListener('pointerdown', onPointerDown)
     return () => document.removeEventListener('pointerdown', onPointerDown)
-  }, [previewSlug])
+  }, [previewSlug, setPending])
 
   React.useEffect(() => {
     if (!shouldScrollToActiveRef.current) return
@@ -611,6 +622,7 @@ export function CatalogBodyClient({
     const loaded = allItems.map((p) => ({
       slug: p.slug,
       price: p.price,
+      priceUnit: p.priceUnit,
       currency: p.currency,
       rate: p.rate,
       status: p.status,
@@ -635,6 +647,29 @@ export function CatalogBodyClient({
       }))
     return [...loaded, ...rest]
   }, [allItems, mapPoints])
+
+  // Flats of one building share a point and the map draws them as one marker
+  // (buildingStacks, the same grouping and order): the window steps through
+  // them, "2 / 11 in this building".
+  const buildingStacks = React.useMemo(
+    () => groupBuildingStacks(mapItems.map(stackPointOf).filter((p): p is StackPoint => p != null)),
+    [mapItems]
+  )
+  const sheetStack = React.useMemo<SheetStack | null>(() => {
+    const members = activeSlug ? buildingStacks.get(activeSlug) : undefined
+    if (!members) return null
+    const index = members.findIndex((m) => m.slug === activeSlug)
+    return {
+      index,
+      count: members.length,
+      approximate: members.every((m) => m.approximate),
+      // Round the building: past the last listing comes the first again.
+      onStep: (dir) => {
+        const target = members[(index + dir + members.length) % members.length]
+        if (target) handleActiveSlugFromMap(target.slug, { keepPreview: true })
+      },
+    }
+  }, [activeSlug, buildingStacks, handleActiveSlugFromMap])
 
   const columns = columnCount(viewMode, windowWidth, split);
   const composedItems = React.useMemo(
@@ -791,6 +826,7 @@ export function CatalogBodyClient({
                   href="#"
                   locale={locale}
                   variant={mapExpanded ? "sheet" : "panel"}
+                  stack={sheetStack}
                   onClose={() => setPending(null)}
                 />
               ) : null}
@@ -803,7 +839,12 @@ export function CatalogBodyClient({
                     href={previewHref}
                     locale={locale}
                     variant={mapExpanded ? "sheet" : "panel"}
-                    onClose={() => setPreviewSlug(null)}
+                    stack={sheetStack}
+                    busy={pendingSlug != null && pendingSlug !== previewItem.slug}
+                    onClose={() => {
+                      setPreviewSlug(null);
+                      setPending(null);
+                    }}
                   />
                 </div>
               ) : null}
