@@ -263,6 +263,10 @@ async function PropertiesListing({
       investment: investmentFilter ? '1' : '',
       sort,
       pageSize,
+      // The banner listings are left out of page 1 before slicing; page 2+
+      // must leave them out too, or every later page starts up to three
+      // listings early and repeats the banners as cards.
+      exclude: excludedBannerPropertyIds.join(','),
     })
       .filter(([, v]) => v !== '' && v !== 0 && v != null)
       .map(([k, v]) => [k, String(v)]),

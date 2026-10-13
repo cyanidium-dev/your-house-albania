@@ -13,6 +13,12 @@ import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+import { track } from "@/lib/analytics/track";
+import {
+  catalogEntryKey,
+  readCatalogSnapshot,
+  writeCatalogSnapshot,
+} from "@/lib/catalog/catalogSnapshot";
 // Only once a pin is picked; nobody needs it at load.
 const MapListingSheet = dynamic(
   () => import("@/components/catalog/map/MapListingSheet").then((m) => m.MapListingSheet),
@@ -165,6 +171,8 @@ function composeCatalogFlowItems(args: {
 }
 
 const MAP_HIDDEN_STORAGE_KEY = "domlivo:catalog-map-hidden";
+/** Pages appended automatically before "Show more" takes over. */
+const AUTO_LOADS = 2;
 /** Header height from md up (the filter bar's sticky offset). */
 const HEADER_OFFSET_PX = 84;
 /** The condensed filter pill with its bottom margin (md+), as it sits while scrolled. */
@@ -217,23 +225,32 @@ export function CatalogBodyClient({
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const [mapHidden, setMapHidden] = React.useState(false);
+  // Hidden by default since 2026-10-13 (audit, variant B): in 30 days of the
+  // split layout nobody clicked the map on desktop Durrës, most pins are
+  // approximate, and it took 40% of the width — two cards per row instead of
+  // three or four. A visitor who opens it keeps it ("0" in storage). The
+  // `catalog_map` events decide on 2026-11-10 whether it comes back by default
+  // (over 15% of desktop catalogue visitors opening it: a narrow map).
+  // Rendered hidden on the server too, so the default costs no layout shift.
+  const [mapHidden, setMapHidden] = React.useState(true);
+  const mapHiddenRef = React.useRef(true);
+  mapHiddenRef.current = mapHidden;
   React.useEffect(() => {
     try {
-      setMapHidden(window.localStorage.getItem(MAP_HIDDEN_STORAGE_KEY) === "1");
+      setMapHidden(window.localStorage.getItem(MAP_HIDDEN_STORAGE_KEY) !== "0");
     } catch {
-      // storage blocked: the map stays on
+      // storage blocked: the default stands
     }
   }, []);
   const toggleMapHidden = React.useCallback(() => {
-    setMapHidden((hidden) => {
-      try {
-        window.localStorage.setItem(MAP_HIDDEN_STORAGE_KEY, hidden ? "0" : "1");
-      } catch {
-        // storage blocked: the choice lasts for this page only
-      }
-      return !hidden;
-    });
+    const hidden = !mapHiddenRef.current;
+    track({ event: "catalog_map", action: hidden ? "hide" : "open", layout: "split" });
+    try {
+      window.localStorage.setItem(MAP_HIDDEN_STORAGE_KEY, hidden ? "1" : "0");
+    } catch {
+      // storage blocked: the choice lasts for this page only
+    }
+    setMapHidden(hidden);
   }, []);
   // No results, no map: an empty country beside "nothing found" said nothing.
   const split = !mapHidden && pageItems.length > 0;
@@ -322,8 +339,11 @@ export function CatalogBodyClient({
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+  const mapExpandedRef = React.useRef(false);
+  mapExpandedRef.current = mapExpanded;
   const handleMapExpandedChange = React.useCallback((next: boolean) => {
     if (next) {
+      track({ event: "catalog_map", action: "open", layout: "fullscreen" });
       window.history.pushState({ ...window.history.state, domlivoMap: true }, "");
       setMapExpanded(true);
       setMapNearViewport(true);
@@ -387,20 +407,113 @@ export function CatalogBodyClient({
     }
   }, []);
 
+  // Pages appended by scrolling near the end, before the button takes over.
+  // Twice (72 listings at 24 a page): enough that a phone visitor never has
+  // to find a button 18 screens down, few enough that the footer and its
+  // contacts stay reachable, which is why infinite scroll was removed before.
+  const autoLoadsRef = React.useRef(0);
+
   // Reset the appended pages when SSR re-renders with new pageItems (filter change)
   React.useEffect(() => {
     const filterKey = JSON.stringify({ pageItems: pageItems.map(p => p.slug) });
     if (filterKey !== filterKeyRef.current) {
       filterKeyRef.current = filterKey;
+      autoLoadsRef.current = 0;
       setAllItems(pageItems);
       setNextPage(currentPage + 1);
       setHasMore(currentPage < totalPages);
     }
   }, [pageItems, currentPage, totalPages]);
 
-  const loadMore = React.useCallback(async () => {
+  // Back from a listing restores what was appended and where the visitor was.
+  // Next renders this entry again with the server's page only, so a visitor
+  // who had loaded three pages and opened a card came back to the first 24.
+  // Keyed by the history entry: a fresh visit to the same URL starts clean.
+  const entryKeyRef = React.useRef<string | null>(null);
+  // While the restored position is being applied nothing is saved: the first
+  // save would otherwise record the top of the page as where the visitor was.
+  const restoringRef = React.useRef(false);
+  React.useEffect(() => {
+    const key = catalogEntryKey();
+    entryKeyRef.current = key;
+    const snapshot = readCatalogSnapshot(key, window.location.pathname + window.location.search);
+    if (!snapshot || snapshot.items.length <= pageItems.length) return;
+    restoringRef.current = true;
+    filterKeyRef.current = JSON.stringify({ pageItems: pageItems.map(p => p.slug) });
+    autoLoadsRef.current = snapshot.autoLoads;
+    setAllItems(snapshot.items);
+    setNextPage(snapshot.nextPage);
+    setHasMore(snapshot.hasMore);
+    // Once the restored cards are laid out, and again shortly after: the
+    // router settles its own scroll after a Back, and images above the
+    // position may still be sizing. Stops as soon as the visitor scrolls.
+    let userScrolled = false;
+    const onUserScroll = () => {
+      userScrolled = true;
+    };
+    window.addEventListener("wheel", onUserScroll, { passive: true, once: true });
+    window.addEventListener("touchmove", onUserScroll, { passive: true, once: true });
+    // `instant`: the page has `scroll-behavior: smooth`, and a smooth
+    // scroll from the top through 70 cards is not "back where you were".
+    const apply = () => {
+      if (!userScrolled) window.scrollTo({ top: snapshot.scrollY, behavior: "instant" });
+    };
+    const timers = [0, 120, 400].map((ms) =>
+      window.setTimeout(() => requestAnimationFrame(apply), ms)
+    );
+    const done = window.setTimeout(() => {
+      restoringRef.current = false;
+      window.removeEventListener("wheel", onUserScroll);
+      window.removeEventListener("touchmove", onUserScroll);
+    }, 600);
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.clearTimeout(done);
+      restoringRef.current = false;
+      window.removeEventListener("wheel", onUserScroll);
+      window.removeEventListener("touchmove", onUserScroll);
+    };
+    // Once, on mount: this is the entry's own state, not a reaction to props.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep the snapshot current: the appended cards on every change, the scroll
+  // position when the visitor leaves (opening a card is a client-side
+  // navigation, so `pagehide` alone would miss it).
+  const snapshotStateRef = React.useRef({ allItems, nextPage, hasMore });
+  snapshotStateRef.current = { allItems, nextPage, hasMore };
+  const saveSnapshot = React.useCallback(() => {
+    const key = entryKeyRef.current;
+    if (!key || restoringRef.current) return;
+    const { allItems: items, nextPage: next, hasMore: more } = snapshotStateRef.current;
+    if (items.length <= pageItems.length) return;
+    writeCatalogSnapshot(key, {
+      url: window.location.pathname + window.location.search,
+      items,
+      nextPage: next,
+      hasMore: more,
+      autoLoads: autoLoadsRef.current,
+      scrollY: window.scrollY,
+    });
+  }, [pageItems.length]);
+  React.useEffect(() => {
+    saveSnapshot();
+  }, [allItems, saveSnapshot]);
+  React.useEffect(() => {
+    const onLeave = () => saveSnapshot();
+    // Capture phase: runs before the link's own navigation handler.
+    document.addEventListener("click", onLeave, true);
+    window.addEventListener("pagehide", onLeave);
+    return () => {
+      document.removeEventListener("click", onLeave, true);
+      window.removeEventListener("pagehide", onLeave);
+    };
+  }, [saveSnapshot]);
+
+  const loadMore = React.useCallback(async (auto = false) => {
     if (isLoadingMore || !hasMore) return;
     setIsLoadingMore(true);
+    track({ event: 'catalog_load_more', page: nextPage, auto });
     try {
       const params = new URLSearchParams(loadMoreQuery);
       params.set('page', String(nextPage));
@@ -427,6 +540,28 @@ export function CatalogBodyClient({
       setIsLoadingMore(false);
     }
   }, [isLoadingMore, hasMore, nextPage, locale, pageSize, totalCount, loadMoreQuery]);
+
+  // The trigger for the automatic pages: a line at the end of the list,
+  // watched from a screen away. Observed again after every append, so a
+  // visitor still near the end gets the second page too; after AUTO_LOADS it
+  // is the button only.
+  const autoLoadSentinelRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    const el = autoLoadSentinelRef.current;
+    if (!el || !hasMore || isLoadingMore || autoLoadsRef.current >= AUTO_LOADS) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        if (autoLoadsRef.current >= AUTO_LOADS) return;
+        observer.disconnect();
+        autoLoadsRef.current += 1;
+        void loadMore(true);
+      },
+      { rootMargin: "0px 0px 900px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, isLoadingMore, loadMore, allItems.length]);
 
 
   // Every listing under the filters, not only this page's cards: the page
@@ -471,6 +606,7 @@ export function CatalogBodyClient({
 
   const handleActiveSlugFromMap = React.useCallback(
     (slug: string) => {
+      track({ event: "catalog_map", action: "pin_click", layout: mapExpandedRef.current ? "fullscreen" : "split" });
       // Marker click: select marker and show preview, but do NOT scroll list.
       shouldScrollToActiveRef.current = false;
       if (allItems.some((p) => p.slug === slug) || extraCards[slug]) {
@@ -727,13 +863,14 @@ export function CatalogBodyClient({
               <>
                 {/* One control: a link to the next page for crawlers, an in-place
                     append for people. See PropertyPagination. */}
+                <div ref={autoLoadSentinelRef} aria-hidden className="h-px w-full" />
                 {totalPages > 1 && (
                   <PropertyPagination
                     currentPage={currentPage}
                     nextPage={nextPage}
                     hasMore={hasMore}
                     isLoading={isLoadingMore}
-                    onShowMore={loadMore}
+                    onShowMore={() => void loadMore(false)}
                     from={(currentPage - 1) * pageSize + 1}
                     to={Math.min(totalCount, (currentPage - 1) * pageSize + allItems.length)}
                     total={totalCount}

@@ -3,8 +3,12 @@ import { fetchCatalogProperties } from '@/lib/sanity/client'
 import { mapCatalogPropertyToCard } from '@/lib/sanity/propertyAdapter'
 import { parseCatalogFilters } from '@/lib/catalog/parseCatalogFilters'
 import type { CatalogSort } from '@/lib/sanity/client'
+import { attachMarketPositionToCards } from '@/lib/property/marketPosition'
 
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
+/** Sanity document ids, as the banner exclusions carry them. */
+const DOCUMENT_ID = /^[A-Za-z0-9._-]{1,128}$/
+const MAX_EXCLUDED = 10
 const DEFAULT_PAGE_SIZE = 24
 
 export async function GET(req: NextRequest) {
@@ -13,6 +17,10 @@ export async function GET(req: NextRequest) {
 
   const parsed = parseCatalogFilters({}, searchParams)
   const pageSize = PAGE_SIZE_OPTIONS.includes(parsed.pageSize) ? parsed.pageSize : DEFAULT_PAGE_SIZE
+  const excluded = (typeof searchParams.exclude === 'string' ? searchParams.exclude.split(',') : [])
+    .map((id) => id.trim())
+    .filter((id) => DOCUMENT_ID.test(id))
+    .slice(0, MAX_EXCLUDED)
 
   const result = await fetchCatalogProperties({
     agentSlug: parsed.agentSlug || undefined,
@@ -35,13 +43,17 @@ export async function GET(req: NextRequest) {
     sort: parsed.sort as CatalogSort,
     page: parsed.page,
     pageSize,
+    excludedPropertyIds: excluded.length ? excluded : undefined,
   })
 
   if (!result) {
     return NextResponse.json({ items: [], totalCount: 0 }, { status: 500 })
   }
 
-  const items = (result.items ?? []).map((item) => mapCatalogPropertyToCard(item, locale))
+  // The same "below / above market" badge the server-rendered first page has.
+  const items = await attachMarketPositionToCards(
+    (result.items ?? []).map((item) => mapCatalogPropertyToCard(item, locale)),
+  )
 
   return NextResponse.json({ items, totalCount: result.totalCount ?? 0 })
 }
