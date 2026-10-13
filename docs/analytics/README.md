@@ -29,6 +29,10 @@ track() ─ dataLayer (GTM → GA4) + window.clarity("event")
 | `src/app/api/leads/click/route.ts` | Click leads |
 | domlivo-admin `schemaTypes/documents/lead.ts` | Studio schema + "Leads" desk list |
 
+Visits, page views and Search Console rows are also counted in our own
+database and shown next to these leads at `/editor/analytics`: see
+[OWN-ANALYTICS.md](./OWN-ANALYTICS.md).
+
 ## Events
 
 All events go to `window.dataLayer` (GTM decides what reaches GA4, under

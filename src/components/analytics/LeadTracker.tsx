@@ -9,6 +9,7 @@ import {
   syncInternalFlag,
   updatePageTitle,
 } from '@/lib/analytics/attribution'
+import { sendHit } from '@/lib/analytics/hitBeacon'
 import { trackContactClick } from '@/lib/analytics/leadEvents'
 import { markInternalTraffic } from '@/lib/analytics/track'
 import { classifyContactHref, isLeadPlacement, type LeadPlacement } from '@/lib/leads/types'
@@ -17,8 +18,9 @@ import { classifyContactHref, isLeadPlacement, type LeadPlacement } from '@/lib/
 const CLICK_DEDUPE_MS = 2000
 
 /**
- * Records the visitor journey and turns clicks on WhatsApp, Telegram, phone and email
- * links into leads. Mounted once in the locale layout; renders nothing.
+ * Records the visitor journey, counts the page view in our own analytics store
+ * (`hitBeacon`), and turns clicks on WhatsApp, Telegram, phone and email links
+ * into leads. Mounted once in the locale layout; renders nothing.
  *
  * Contact links need no wiring of their own: one capture-phase listener on the
  * document sees every click before the browser leaves for the app. Context
@@ -30,9 +32,11 @@ export function LeadTracker() {
 
   useEffect(() => {
     if (!pathname) return
-    syncInternalFlag()
+    const internal = syncInternalFlag()
     markInternalTraffic()
-    recordPageView(pathname, document.title)
+    const view = recordPageView(pathname, document.title)
+    // Our own visit counter; the owner's flagged browser is not a visitor.
+    if (!internal) sendHit(view)
     // The App Router swaps `<title>` just after the route changes.
     const timer = window.setTimeout(() => updatePageTitle(pathname, document.title), 800)
     return () => window.clearTimeout(timer)

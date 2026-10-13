@@ -26,6 +26,12 @@ export default async function EditorIndexPage() {
               its sections.
             </p>
           </div>
+          <Link
+            href="/editor/analytics"
+            className="inline-flex h-9 items-center rounded-full border border-neutral-200 bg-white px-4 text-sm font-medium text-neutral-800 transition hover:border-neutral-400"
+          >
+            Analytics →
+          </Link>
         </div>
 
         {landings.length === 0 ? (

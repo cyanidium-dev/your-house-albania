@@ -102,7 +102,9 @@ export function classifyTraffic(signals: ArrivalSignals): TrafficSource {
       channel = 'ai'
     } else if (medium === 'email' || medium === 'newsletter') {
       channel = 'email'
-    } else if (medium === 'social' || knownName(SOCIAL_RULES, source)) {
+    } else if (medium === 'social' || medium === 'messenger' || knownName(SOCIAL_RULES, source)) {
+      // `messenger` is what the panel's link builder puts on WhatsApp and
+      // Telegram links: a social channel, not an unnamed campaign.
       channel = 'social'
     } else if (medium === 'organic' && knownName(SEARCH_RULES, source)) {
       channel = 'organic_search'

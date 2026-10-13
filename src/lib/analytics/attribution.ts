@@ -242,19 +242,32 @@ function currentSession(now: number): StoredSession {
   return stored
 }
 
+/** What `recordPageView` did, for the visit beacon. */
+export type PageViewRecord = {
+  /** `false` when the same path came twice in a row and was not counted again. */
+  counted: boolean
+  /** The first page of this session: a visit starts here. */
+  entry: boolean
+  /** The session's source, medium and campaign. */
+  touch: TouchPoint
+}
+
 /**
  * Records one page view. Called by `LeadTracker` on every pathname change; the
  * same path twice in a row (a re-render, a query-only change) counts once.
+ * Returns `null` on the server or when storage misbehaves.
  */
-export function recordPageView(path: string, title: string): void {
-  if (!isBrowser()) return
+export function recordPageView(path: string, title: string): PageViewRecord | null {
+  if (!isBrowser()) return null
   try {
     const now = Date.now()
     const session = currentSession(now)
     const last = session.pages[session.pages.length - 1]
+    let counted = false
     if (last?.path !== path) {
       session.pages = [...session.pages, { path: path.slice(0, 300), title: title.slice(0, 200) }].slice(-MAX_PAGES)
       session.pagesCount += 1
+      counted = true
     }
     const slug = propertySlugFromPath(path)
     if (slug && !session.slugs.includes(slug)) {
@@ -262,8 +275,12 @@ export function recordPageView(path: string, title: string): void {
     }
     session.updatedAt = now
     saveSession(session)
+    // A tab continued from another one carries its count over, so only the
+    // page that started the session reads as 1 here.
+    return { counted, entry: counted && session.pagesCount === 1, touch: session.touch }
   } catch {
     // Attribution is best effort.
+    return null
   }
 }
 

@@ -101,6 +101,15 @@ describe('classifyTraffic', () => {
     expect(classifyTraffic({ ...base, utmSource: 'instagram', utmMedium: 'story' }).channel).toBe('social')
   })
 
+  it('reads messenger links from the panel link builder as social', () => {
+    expect(classifyTraffic({ ...base, utmSource: 'whatsapp', utmMedium: 'messenger' })).toEqual({
+      source: 'whatsapp',
+      medium: 'messenger',
+      channel: 'social',
+    })
+    expect(classifyTraffic({ ...base, utmSource: 'telegram', utmMedium: 'messenger' }).channel).toBe('social')
+  })
+
   it('reads a gclid without UTMs as Google Ads', () => {
     expect(classifyTraffic({ ...base, referrerHost: 'www.google.com', hasGclid: true })).toEqual({
       source: 'google',
