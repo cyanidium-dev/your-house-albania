@@ -6,6 +6,9 @@ export const consentCopyUk: ConsentCopy = {
     body: "Використовуємо cookies для аналітики та маркетингу, щоб покращувати сайт. Необхідні cookies працюють завжди.",
     policyLead: "Деталі — у",
     policyLinkLabel: "Політиці конфіденційності",
+    /** Phones: the banner is one strip, so the body and the link are shortened. */
+    bodyShort: "Cookies для аналітики та маркетингу.",
+    policyShort: "Докладніше",
     accept: "Прийняти всі",
     reject: "Відхилити всі",
     customise: "Налаштувати",

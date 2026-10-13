@@ -5,17 +5,18 @@
  * desktop keeps one inline line; Accept and Reject share size and weight —
  * GDPR requires rejecting to be as easy and as prominent as accepting.
  *
- * Phones get a compact banner: at full size it covered the bottom 40% of the
- * homepage and was the most-tapped element there (Clarity, 2026-09). The
- * title is visual only below `sm` — the body says the same — and the three
- * actions share one row.
+ * Phones get a strip: at full size the banner covered the bottom 40% of the
+ * homepage and was the most-tapped element there (Clarity, 2026-09), and the
+ * first compact version still took a fifth of the screen (2026-10-13). Below
+ * `sm` it is one short sentence with the policy and "Customise" as links,
+ * beside Reject and Accept at equal size.
  */
 
 export const bannerClass =
-  "fixed inset-x-0 bottom-[var(--app-tabbar-offset,0px)] z-[90] border-t border-dark/10 bg-white/95 backdrop-blur-md px-4 sm:px-8 lg:px-12 py-3 sm:py-5 dark:border-white/10 dark:bg-dark/95";
+  "fixed inset-x-0 bottom-[var(--app-tabbar-offset,0px)] z-[90] border-t border-dark/10 bg-white/95 backdrop-blur-md px-3 sm:px-8 lg:px-12 py-2.5 sm:py-5 pb-[max(0.625rem,env(safe-area-inset-bottom))] sm:pb-5 dark:border-white/10 dark:bg-dark/95";
 
 export const bannerInnerClass =
-  "container mx-auto max-w-8xl flex flex-col gap-2.5 sm:gap-4 lg:flex-row lg:items-center lg:justify-between";
+  "container mx-auto max-w-8xl flex flex-row items-center gap-3 sm:flex-col sm:items-stretch sm:gap-4 lg:flex-row lg:items-center lg:justify-between";
 
 export const bannerTitleClass = "hidden sm:block text-[15px] font-semibold text-dark dark:text-white";
 
@@ -26,10 +27,14 @@ export const bannerActionsClass =
   "flex flex-row items-center gap-2 sm:gap-3 shrink-0";
 
 export const bannerChoiceRowClass =
-  "flex gap-2 sm:gap-3 flex-1 lg:flex-none [&>button]:flex-1 lg:[&>button]:flex-none";
+  "flex gap-2 sm:gap-3 sm:flex-1 lg:flex-none sm:[&>button]:flex-1 lg:[&>button]:flex-none";
+
+/** "Customise" inside the phone strip's sentence, styled as its link. */
+export const bannerInlineButtonClass =
+  "cursor-pointer bg-transparent p-0 text-primary underline underline-offset-2 hover:text-primary/80";
 
 export const buttonBaseClass =
-  "inline-flex h-10 sm:h-11 items-center justify-center whitespace-nowrap rounded-full px-3 sm:px-5 text-[13px] sm:text-[13.5px] font-semibold transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+  "inline-flex h-9 sm:h-11 items-center justify-center whitespace-nowrap rounded-full px-3 sm:px-5 text-[13px] sm:text-[13.5px] font-semibold transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export const buttonPrimaryClass = "bg-primary text-white hover:bg-primary/85";
 

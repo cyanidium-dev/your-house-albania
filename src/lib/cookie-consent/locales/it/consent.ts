@@ -6,6 +6,9 @@ export const consentCopyIt: ConsentCopy = {
     body: "Usiamo i cookie per analisi e marketing per migliorare il sito. I cookie necessari sono sempre attivi.",
     policyLead: "Consulta la",
     policyLinkLabel: "Privacy Policy",
+    /** Phones: the banner is one strip, so the body and the link are shortened. */
+    bodyShort: "Cookie per analisi e marketing.",
+    policyShort: "Dettagli",
     accept: "Accetta tutti",
     reject: "Rifiuta tutti",
     customise: "Personalizza",

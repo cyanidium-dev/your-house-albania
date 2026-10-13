@@ -6,6 +6,9 @@ export const consentCopySq: ConsentCopy = {
     body: "Përdorim cookies për analitikë dhe marketing për të përmirësuar faqen. Cookies e nevojshme janë gjithmonë aktive.",
     policyLead: "Shihni",
     policyLinkLabel: "Politikën e Privatësisë",
+    /** Phones: the banner is one strip, so the body and the link are shortened. */
+    bodyShort: "Cookies për analitikë dhe marketing.",
+    policyShort: "Më shumë",
     accept: "Prano të gjitha",
     reject: "Refuzo të gjitha",
     customise: "Personalizo",

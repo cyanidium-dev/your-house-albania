@@ -6,6 +6,9 @@ export const consentCopyDe: ConsentCopy = {
     body: "Wir verwenden Cookies für Analyse und Marketing, um die Website zu verbessern. Notwendige Cookies sind immer aktiv.",
     policyLead: "Mehr dazu in der",
     policyLinkLabel: "Datenschutzerklärung",
+    /** Phones: the banner is one strip, so the body and the link are shortened. */
+    bodyShort: "Cookies für Analyse und Marketing.",
+    policyShort: "Details",
     accept: "Alle akzeptieren",
     reject: "Alle ablehnen",
     customise: "Anpassen",

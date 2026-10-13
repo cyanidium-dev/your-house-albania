@@ -4,6 +4,9 @@ export const consentCopyEn = {
     body: "We use cookies for analytics and marketing to improve the site. Necessary cookies are always on.",
     policyLead: "See our",
     policyLinkLabel: "Privacy Policy",
+    /** Phones: the banner is one strip, so the body and the link are shortened. */
+    bodyShort: "We use cookies for analytics and marketing.",
+    policyShort: "Details",
     accept: "Accept all",
     reject: "Reject all",
     customise: "Customise",
@@ -48,6 +51,9 @@ export type ConsentCopy = {
     /** Lead-in of the policy sentence ("See our") — rendered on its own line on desktop. */
     policyLead: string;
     policyLinkLabel: string;
+    /** Phone strip: the purpose in one short sentence, and a one-word policy link. */
+    bodyShort: string;
+    policyShort: string;
     accept: string;
     reject: string;
     customise: string;

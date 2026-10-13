@@ -4,6 +4,9 @@ export const consentCopyPl = {
     body: "Używamy plików cookie do analityki i marketingu, aby ulepszać stronę. Niezbędne pliki cookie są zawsze włączone.",
     policyLead: "Zobacz naszą",
     policyLinkLabel: "Politykę prywatności",
+    /** Phones: the banner is one strip, so the body and the link are shortened. */
+    bodyShort: "Pliki cookie do analityki i marketingu.",
+    policyShort: "Szczegóły",
     accept: "Akceptuj wszystkie",
     reject: "Odrzuć wszystkie",
     customise: "Dostosuj",
