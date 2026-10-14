@@ -144,7 +144,8 @@ function buildCatalogPredicateParts(
     parts.push(`${prefix}price >= $minPrice && ${prefix}priceUnit != "per-sqm"`);
   }
   if (typeof maxPrice === 'number' && maxPrice > 0) {
-    parts.push(`${prefix}price <= $maxPrice && ${prefix}priceUnit != "per-sqm"`);
+    // "Under €50,000" must not list "price on request" (stored as 0).
+    parts.push(`${prefix}price > 0 && ${prefix}price <= $maxPrice && ${prefix}priceUnit != "per-sqm"`);
   }
   if (typeof minArea === 'number' && minArea > 0) {
     parts.push(`${prefix}area >= $minArea`);
@@ -229,6 +230,19 @@ const PRICE_PER_SQM_ORDER = `select(
     1e12
   )`;
 
+/**
+ * The total as a sort key: a per-m² rate times the area when both are known.
+ * "Price on request" (0) and a rate without an area sort after every priced
+ * listing in both directions — a 0 used to head every "cheapest first" feed,
+ * and a €1,300/m² rate used to rank as a €1,300 flat.
+ */
+const PRICE_TOTAL_KEY = `select(
+    !(price > 0) => null,
+    priceUnit == "per-sqm" => select(area >= ${MIN_PLAUSIBLE_AREA_SQM} => price * area, null),
+    price
+  )`;
+const PRICE_UNKNOWN_LAST = `select(defined(${PRICE_TOTAL_KEY}) => 0, 1) asc`;
+
 /** What a catalogue card needs; shared by the page query and single-card lookups. */
 const CATALOG_CARD_PROJECTION = `{
     _id,
@@ -298,8 +312,8 @@ const cachedFetchCatalogProperties = sanityCache(
   const promotionOrder =
     'select(promoted == true => 1, 0) desc, select(promotionType == "premium" => 3, promotionType == "top" => 2, promotionType == "sale" => 1, 0) desc, coalesce(featuredOrder, 999999) asc';
   let order = `| order(${promotionOrder}, _createdAt desc)`;
-  if (sort === 'priceAsc') order = `| order(${promotionOrder}, price asc)`;
-  else if (sort === 'priceDesc') order = `| order(${promotionOrder}, price desc)`;
+  if (sort === 'priceAsc') order = `| order(${promotionOrder}, ${PRICE_UNKNOWN_LAST}, ${PRICE_TOTAL_KEY} asc)`;
+  else if (sort === 'priceDesc') order = `| order(${promotionOrder}, ${PRICE_UNKNOWN_LAST}, ${PRICE_TOTAL_KEY} desc)`;
   else if (sort === 'areaAsc') order = `| order(${promotionOrder}, area asc)`;
   else if (sort === 'areaDesc') order = `| order(${promotionOrder}, area desc)`;
   else if (sort === 'handoverAsc') {
