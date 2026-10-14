@@ -19,7 +19,14 @@
       "openBuyMenu": "Apri il menu Acquista",
       "closeBuyMenu": "Chiudi il menu Acquista",
       "expandPrices": "Espandi prezzi per città",
-      "collapsePrices": "Comprimi prezzi per città"
+      "collapsePrices": "Comprimi prezzi per città",
+      "openGuidesMenu": "Apri il menu Guide",
+      "closeGuidesMenu": "Chiudi il menu Guide",
+      "guideTopics": "Argomenti",
+      "latestGuides": "Ultimi articoli",
+      "allGuides": "Tutte le guide",
+      "allArticles": "Tutti gli articoli",
+      "propertyTypes": "Tipi di immobile"
     },
     "cta": {
       "viewProperties": "Vedi immobili"
@@ -30,10 +37,31 @@
     "favoritesCount": "Preferiti ({count})",
     "selectLanguage": "Seleziona lingua",
     "closeMobileMenu": "Chiudi il menu mobile",
-    "mainNavigation": "Navigazione principale"
+    "mainNavigation": "Navigazione principale",
+    "guideTopics": {
+      "investing": "Investire",
+      "buying": "Acquisto e aspetti legali",
+      "market": "Prezzi e mercato",
+      "places": "Città e quartieri",
+      "living": "Vivere in Albania",
+      "comparisons": "Confronti"
+    },
+    "drawer": {
+      "title": "Menu",
+      "more": "Altro",
+      "settings": "Impostazioni",
+      "language": "Lingua",
+      "currency": "Valuta",
+      "theme": "Tema",
+      "themeLight": "Chiaro",
+      "themeDark": "Scuro",
+      "getHelp": "Contatti e aiuto",
+      "viewAll": "Vedi tutti"
+    }
   },
   "Currency": {
-    "switchTo": "Cambia valuta in {currency}"
+    "switchTo": "Cambia valuta in {currency}",
+    "current": "Valuta: {currency}"
   },
   "Footer": {
     "columns": {
@@ -804,7 +832,9 @@
     "zoneStatsAll": "Tutti gli immobili",
     "zoneStatsNew": "Nuove costruzioni",
     "zoneStatsResale": "Rivendita",
-    "zoneStatsYield": "Rendimento lordo"
+    "zoneStatsYield": "Rendimento lordo",
+    "filterAll": "Tutti",
+    "filterLabel": "Argomenti degli articoli"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

@@ -19,7 +19,14 @@
       "openBuyMenu": "Hap menunë Bli",
       "closeBuyMenu": "Mbyll menunë Bli",
       "expandPrices": "Zgjero çmimet sipas qyteteve",
-      "collapsePrices": "Mbyll çmimet sipas qyteteve"
+      "collapsePrices": "Mbyll çmimet sipas qyteteve",
+      "openGuidesMenu": "Hap menynë e udhëzuesve",
+      "closeGuidesMenu": "Mbyll menynë e udhëzuesve",
+      "guideTopics": "Temat",
+      "latestGuides": "Artikujt më të rinj",
+      "allGuides": "Të gjithë udhëzuesit",
+      "allArticles": "Të gjithë artikujt",
+      "propertyTypes": "Llojet e pronave"
     },
     "cta": {
       "viewProperties": "Shiko pronat"
@@ -30,10 +37,31 @@
     "favoritesCount": "Të preferuarat ({count})",
     "selectLanguage": "Zgjidh gjuhën",
     "closeMobileMenu": "Mbyll menynë celulare",
-    "mainNavigation": "Navigimi kryesor"
+    "mainNavigation": "Navigimi kryesor",
+    "guideTopics": {
+      "investing": "Investime",
+      "buying": "Blerja dhe ligji",
+      "market": "Çmimet dhe tregu",
+      "places": "Qytete dhe lagje",
+      "living": "Jeta në Shqipëri",
+      "comparisons": "Krahasime"
+    },
+    "drawer": {
+      "title": "Menyja",
+      "more": "Më shumë",
+      "settings": "Cilësimet",
+      "language": "Gjuha",
+      "currency": "Monedha",
+      "theme": "Pamja",
+      "themeLight": "E çelët",
+      "themeDark": "E errët",
+      "getHelp": "Kontakte dhe ndihmë",
+      "viewAll": "Shiko të gjitha"
+    }
   },
   "Currency": {
-    "switchTo": "Ndrysho monedhën në {currency}"
+    "switchTo": "Ndrysho monedhën në {currency}",
+    "current": "Monedha: {currency}"
   },
   "Footer": {
     "columns": {
@@ -804,7 +832,9 @@
     "zoneStatsAll": "Të gjitha",
     "zoneStatsNew": "Ndërtim i ri",
     "zoneStatsResale": "Rishitje",
-    "zoneStatsYield": "Yield bruto"
+    "zoneStatsYield": "Yield bruto",
+    "filterAll": "Të gjitha",
+    "filterLabel": "Temat e artikujve"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

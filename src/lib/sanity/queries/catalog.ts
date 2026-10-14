@@ -948,6 +948,8 @@ export type FooterCityNavItem = {
   slug: string;
   label: string;
   countrySlug?: string;
+  /** Public listings in the city; the header menus print it beside the name. */
+  count?: number;
 };
 
 /**
@@ -995,14 +997,14 @@ export async function fetchFooterCitiesByCountry(
               typeof r.countrySlug === 'string' && r.countrySlug.trim()
                 ? r.countrySlug.trim().toLowerCase()
                 : undefined;
-            return { slug: r.slug, label, countrySlug: cs };
+            return { slug: r.slug, label, countrySlug: cs, count: r.propertiesCount ?? 0 };
           });
       } catch (err) {
         console.warn('[Sanity] fetchFooterCitiesByCountry failed:', err);
         return [];
       }
     },
-    ['sanity-footer-cities-by-count', key, locale, String(safeLimit)],
+    ['sanity-footer-cities-by-count-v2', key, locale, String(safeLimit)],
     { revalidate: 3600, tags: [SANITY_TAGS.city, SANITY_TAGS.property] }
   )();
 }

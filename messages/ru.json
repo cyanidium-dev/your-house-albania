@@ -19,7 +19,14 @@
       "openBuyMenu": "Открыть меню Купить",
       "closeBuyMenu": "Закрыть меню Купить",
       "expandPrices": "Развернуть цены по городам",
-      "collapsePrices": "Свернуть цены по городам"
+      "collapsePrices": "Свернуть цены по городам",
+      "openGuidesMenu": "Открыть меню гайдов",
+      "closeGuidesMenu": "Закрыть меню гайдов",
+      "guideTopics": "Темы",
+      "latestGuides": "Новые статьи",
+      "allGuides": "Все гайды",
+      "allArticles": "Все статьи",
+      "propertyTypes": "Типы недвижимости"
     },
     "cta": {
       "viewProperties": "Смотреть объекты"
@@ -30,10 +37,31 @@
     "favoritesCount": "Избранное ({count})",
     "selectLanguage": "Выбрать язык",
     "closeMobileMenu": "Закрыть мобильное меню",
-    "mainNavigation": "Основная навигация"
+    "mainNavigation": "Основная навигация",
+    "guideTopics": {
+      "investing": "Инвестиции",
+      "buying": "Покупка и право",
+      "market": "Цены и рынок",
+      "places": "Города и районы",
+      "living": "Жизнь в Албании",
+      "comparisons": "Сравнения"
+    },
+    "drawer": {
+      "title": "Меню",
+      "more": "Ещё",
+      "settings": "Настройки",
+      "language": "Язык",
+      "currency": "Валюта",
+      "theme": "Тема",
+      "themeLight": "Светлая",
+      "themeDark": "Тёмная",
+      "getHelp": "Контакты и помощь",
+      "viewAll": "Смотреть все"
+    }
   },
   "Currency": {
-    "switchTo": "Сменить валюту на {currency}"
+    "switchTo": "Сменить валюту на {currency}",
+    "current": "Валюта: {currency}"
   },
   "Footer": {
     "columns": {
@@ -804,7 +832,9 @@
     "zoneStatsAll": "Вся недвижимость",
     "zoneStatsNew": "Новостройки",
     "zoneStatsResale": "Вторичка",
-    "zoneStatsYield": "Валовая доходность"
+    "zoneStatsYield": "Валовая доходность",
+    "filterAll": "Все",
+    "filterLabel": "Темы статей"
   },
   "PropertyMeta": {
     "areaUnit": "м²",

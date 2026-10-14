@@ -19,7 +19,14 @@
       "openBuyMenu": "Open the Buy menu",
       "closeBuyMenu": "Close the Buy menu",
       "expandPrices": "Expand prices by city",
-      "collapsePrices": "Collapse prices by city"
+      "collapsePrices": "Collapse prices by city",
+      "openGuidesMenu": "Open the Guides menu",
+      "closeGuidesMenu": "Close the Guides menu",
+      "guideTopics": "Topics",
+      "latestGuides": "Latest articles",
+      "allGuides": "All guides",
+      "allArticles": "All articles",
+      "propertyTypes": "Property types"
     },
     "cta": {
       "viewProperties": "View properties"
@@ -30,10 +37,31 @@
     "favoritesCount": "Favorites ({count})",
     "selectLanguage": "Select language",
     "closeMobileMenu": "Close mobile menu",
-    "mainNavigation": "Main navigation"
+    "mainNavigation": "Main navigation",
+    "guideTopics": {
+      "investing": "Investing",
+      "buying": "Buying & legal",
+      "market": "Prices & market",
+      "places": "Cities & districts",
+      "living": "Living in Albania",
+      "comparisons": "Comparisons"
+    },
+    "drawer": {
+      "title": "Menu",
+      "more": "More",
+      "settings": "Settings",
+      "language": "Language",
+      "currency": "Currency",
+      "theme": "Theme",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "getHelp": "Contacts and help",
+      "viewAll": "View all"
+    }
   },
   "Currency": {
-    "switchTo": "Switch currency to {currency}"
+    "switchTo": "Switch currency to {currency}",
+    "current": "Currency: {currency}"
   },
   "Footer": {
     "columns": {
@@ -804,7 +832,9 @@
     "zoneStatsAll": "All property",
     "zoneStatsNew": "New build",
     "zoneStatsResale": "Resale",
-    "zoneStatsYield": "Gross yield"
+    "zoneStatsYield": "Gross yield",
+    "filterAll": "All",
+    "filterLabel": "Article topics"
   },
   "PropertyMeta": {
     "areaUnit": "m²",

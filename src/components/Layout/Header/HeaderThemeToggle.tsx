@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Icon } from "@/components/shared/Icon";
 import { useTheme } from 'next-themes'
+import { cn } from '@/lib/utils'
+import { HEADER_HIT_AREA, headerIconColorClass } from './headerSwitcherStyles'
 
 type HeaderThemeToggleProps = {
   overHero: boolean
@@ -29,27 +31,12 @@ export default function HeaderThemeToggle({
   return (
     <button
       type="button"
-      className='hover:cursor-pointer transition-colors duration-300 ease-out p-1 md:p-0'
+      className={cn(HEADER_HIT_AREA, headerIconColorClass(overHero, sticky))}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       aria-label={isDark ? lightModeLabel : darkModeLabel}
     >
-      <Icon
-        icon={'solar:sun-bold'}
-        width={24}
-        height={24}
-        className={`dark:hidden block w-6 h-6 md:w-8 md:h-8 ${overHero
-          ? sticky
-            ? 'text-dark'
-            : 'text-white'
-          : 'text-dark'
-          }`}
-      />
-      <Icon
-        icon={'solar:moon-bold'}
-        width={24}
-        height={24}
-        className='dark:block hidden text-white w-6 h-6 md:w-8 md:h-8'
-      />
+      <Icon icon={'solar:sun-bold'} width={24} height={24} aria-hidden className="block h-6 w-6 dark:hidden md:h-7 md:w-7" />
+      <Icon icon={'solar:moon-bold'} width={24} height={24} aria-hidden className="hidden h-6 w-6 dark:block md:h-7 md:w-7" />
     </button>
   )
 }

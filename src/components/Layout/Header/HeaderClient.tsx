@@ -1,11 +1,11 @@
 'use client'
 
 import Link from "@/components/shared/Link";
-import { useState } from 'react'
+import { useId, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import DrawerNavList from './Navigation/DrawerNavList'
 import DesktopNav from './Navigation/DesktopNav'
-import { ADD_PROPERTY_HREF, type BuyMenuData } from '@/data/navConfig'
+import { ADD_PROPERTY_HREF, type BuyMenuData, type GuidesMenuData } from '@/data/navConfig'
 import LanguageSwitcher from './LanguageSwitcher'
 import CurrencySwitcher from './CurrencySwitcher'
 import HeaderThemeToggle from './HeaderThemeToggle'
@@ -15,14 +15,13 @@ import HeaderBurgerButton from './HeaderBurgerButton'
 import HeaderMobileDrawer from './HeaderMobileDrawer'
 import HeaderVisualState from './HeaderVisualState'
 import HeaderMobileController from './HeaderMobileController'
-import InstallMenuButton from '@/components/pwa/InstallMenuButton'
 import Image from 'next/image'
 import type { ResolvedSiteSettings } from '@/lib/sanity/siteSettingsAdapter'
 import { catalogPath } from '@/lib/routes/catalog'
 import { currentCityListingHref } from '@/lib/routes/currentCityListing'
 import { routing } from '@/i18n/routing'
-import { cn } from '@/lib/utils'
 import { brandButtonClass } from '@/components/shared/BrandButton'
+import { CONTAINER } from '@/components/shared/layout'
 
 export type HeaderTranslations = {
   menu: string
@@ -42,6 +41,7 @@ type HeaderClientProps = {
   countrySlugs: string[]
   translations: HeaderTranslations
   buyMenu: BuyMenuData
+  guidesMenu: GuidesMenuData
   /** Hides the assistant entry point when the API key is not configured. */
   aiSearchEnabled?: boolean
 }
@@ -52,9 +52,12 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
   countrySlugs,
   translations: t,
   buyMenu,
+  guidesMenu,
   aiSearchEnabled = false,
 }) => {
-  const [drawerPricesOpen, setDrawerPricesOpen] = useState(false)
+  const drawerId = useId()
+  const drawerTitleId = useId()
+  const burgerRef = useRef<HTMLButtonElement>(null)
   // Inside a city — its listing, a district, its /info page — "View
   // properties" means that city's, not a jump out to the whole country.
   const pathname = usePathname()
@@ -78,8 +81,14 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
         <HeaderMobileController>
           {({ open: navbarOpen, onClose, onToggle }) => (
             <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 ${shrink ? "md:h-16" : "md:h-24"} md:py-1`}>
-              <div className="h-full min-w-0 px-4 lg:px-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-0">
-                <nav className={`container mx-auto max-w-8xl min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-2 px-3 md:py-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark md:px-4 bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
+              {/* The bar's content box is the page container (CONTAINER), so
+                  the logo and the last control line up with every section's
+                  edges at every width. The bar's background, once it has one,
+                  bleeds 8px (16px from md) past them. It used to add its own
+                  padding on top of the gutter and sat 7 to 27px off the grid
+                  (QA 2026-10-11). */}
+              <div className={`${CONTAINER} h-full min-w-0 pt-[max(0.5rem,env(safe-area-inset-top))] md:pt-0`}>
+                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 px-2 md:py-2 md:px-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
                     {/* The logo never shrinks: the row's spare width goes to
                         the nav (lg+) and, below that, stays empty. `max-w-[45%]`
@@ -87,7 +96,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                         shared a flex group with the nav, that 45% was of the
                         squeezed group, not the row, and the logo went to 31px. */}
                     <div className="flex min-w-0 flex-1 items-center gap-4 xl:gap-6">
-                      <div className="ml-0.5 md:ml-[14px] min-w-0 shrink">
+                      <div className="min-w-0 shrink">
                         <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
                           {siteSettings?.logoUrl ? (
                             <>
@@ -124,22 +133,31 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       <DesktopNav
                         locale={locale}
                         buyMenu={buyMenu}
+                        guidesMenu={guidesMenu}
                         nav={t.nav}
                         onPhoto={logoOnPhoto}
                         ariaLabel={t.mainNavigation}
                       />
                     </div>
-                    <div className='flex items-center gap-1 sm:gap-3 xl:gap-4 min-w-0 shrink-0'>
+                    {/* Every control is a 44px hit area with its old-size
+                        visual inside. Below `sm` the currency and the theme
+                        live in the drawer's settings row: five 44px targets
+                        and the logo is all a 360px phone holds. */}
+                    <div className='flex items-center gap-0 sm:gap-1 xl:gap-1.5 min-w-0 shrink-0 -mr-px'>
                       <LanguageSwitcher overHero={overHero} sticky={sticky} />
-                      <CurrencySwitcher overHero={overHero} sticky={sticky} />
-                      <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
+                      <div className="hidden sm:flex">
+                        <CurrencySwitcher overHero={overHero} sticky={sticky} />
+                      </div>
+                      <div className="hidden sm:flex">
+                        <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
+                      </div>
                       {aiSearchEnabled ? (
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
                       ) : null}
                       <HeaderFavoritesLink locale={locale} overHero={overHero} sticky={sticky} />
                       {/* Tablets keep the button next to the burger; at lg the bar
                           gains its links and loses the room, xl has both. */}
-                      <div className="hidden md:block lg:hidden xl:block">
+                      <div className="hidden md:block lg:hidden xl:block md:ml-2">
                         <Link
                           href={propertiesHref}
                           className={brandButtonClass('light', 'shadow-sm whitespace-nowrap', 'md')}
@@ -147,13 +165,15 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                           {t.cta.viewProperties}
                         </Link>
                       </div>
-                      <div className="lg:hidden">
+                      <div className="flex lg:hidden md:ml-1">
                         <HeaderBurgerButton
+                          ref={burgerRef}
                           onClick={onToggle}
                           overHero={overHero}
                           sticky={sticky}
-                          menuLabel={t.menu}
                           ariaLabel={t.toggleMobileMenu}
+                          expanded={navbarOpen}
+                          controls={drawerId}
                         />
                       </div>
                     </div>
@@ -161,70 +181,26 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                 </nav>
               </div>
 
-              <HeaderMobileDrawer open={navbarOpen} onClose={onClose}>
-                <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden px-8 sm:px-16 md:px-20">
-                  <div className="shrink-0 pt-[max(0.5rem,env(safe-area-inset-top))]">
-                    <div className="flex w-full items-center justify-end py-4 md:py-5">
-                      <button
-                        onClick={onClose}
-                        aria-label={t.closeMobileMenu}
-                        className="rounded-full bg-white p-3 hover:cursor-pointer"
-                        type="button"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          aria-hidden
-                        >
-                          <path
-                            fill="none"
-                            stroke="black"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
-                    <nav className="flex min-h-0 flex-col items-start gap-2 sm:gap-2.5 pb-4" aria-label={t.mainNavigation}>
-                      <DrawerNavList
-                        locale={locale}
-                        buyMenu={buyMenu}
-                        translations={{ nav: t.nav }}
-                        onNavigate={onClose}
-                        pricesOpen={drawerPricesOpen}
-                        onPricesOpenChange={setDrawerPricesOpen}
-                      />
-                    </nav>
-                  </div>
-
-                  <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-                    <Link
-                      href={propertiesHref}
-                      className={brandButtonClass('primary', 'w-fit', 'md')}
-                      onClick={onClose}
-                    >
-                      {t.cta.viewProperties}
-                    </Link>
-                    {/* The owner's and the agency's way in: a note on the
-                        contact page, not a section of the menu. */}
-                    <Link
-                      href={addPropertyHref}
-                      className="text-sm font-medium text-white/55 underline-offset-4 transition-colors hover:text-white hover:underline"
-                      onClick={onClose}
-                    >
-                      {t.nav.addProperty}
-                    </Link>
-                    {/* Only where installing works, and never in the app itself. */}
-                    <InstallMenuButton onSelect={onClose} />
-                  </div>
-                </div>
+              <HeaderMobileDrawer
+                id={drawerId}
+                open={navbarOpen}
+                onClose={onClose}
+                labelledBy={drawerTitleId}
+                returnFocusRef={burgerRef}
+              >
+                <DrawerNavList
+                  locale={locale}
+                  buyMenu={buyMenu}
+                  guidesMenu={guidesMenu}
+                  nav={t.nav}
+                  onNavigate={onClose}
+                  titleId={drawerTitleId}
+                  closeLabel={t.closeMobileMenu}
+                  propertiesHref={propertiesHref}
+                  viewPropertiesLabel={t.cta.viewProperties}
+                  addPropertyHref={addPropertyHref}
+                  aiSearchEnabled={aiSearchEnabled}
+                />
               </HeaderMobileDrawer>
             </header>
           )}

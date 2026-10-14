@@ -1,17 +1,40 @@
 import { cn } from '@/lib/utils'
 
 /**
- * Shared pill styling for the language and currency switchers.
+ * Shared styling for the header's controls.
  *
- * The two sit side by side in the header and have to stay identical; they used
- * to carry the same class string copied into both files, which is exactly how a
- * pair like this drifts apart.
+ * Hit area vs. what you see (QA 2026-10-11): the tap targets on a phone were
+ * 24 to 34px — the AI and heart icons 24×24, the burger 34×34, the language
+ * and currency pills 32px tall. Every control is now a 44×44 (or taller)
+ * button or link, and the visible part — the icon, the pill, the burger
+ * circle — sits inside it at its old size, so the bar does not get heavier.
  *
  * Floating over a photo hero, before the bar gets its own background, the
- * dark-on-light pill is dark grey on a darkened photograph. On a phone the pair
- * read as two empty gaps next to the logo. The icons beside them already knock
- * themselves out to white there, in BOTH themes — the photo is the ground, not
- * the page — and these follow the same rule.
+ * controls knock themselves out to white in BOTH themes: the photo is the
+ * ground, not the page.
+ */
+
+/** The 44px hit area every header control gets. */
+export const HEADER_HIT_AREA =
+  'group relative inline-flex h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none'
+
+/** Text/icon colour of the bare icon controls (AI, favourites, theme). */
+export function headerIconColorClass(overHero: boolean, sticky: boolean) {
+  const onPhoto = overHero && !sticky
+  return cn(
+    'transition-colors duration-300 ease-out hover:text-primary focus-visible:ring-2',
+    onPhoto ? 'text-white focus-visible:ring-white/70' : 'text-dark dark:text-white focus-visible:ring-primary/50',
+  )
+}
+
+/** The button around a switcher pill: the hit area, no visual of its own. */
+export function headerSwitcherButtonClass() {
+  return HEADER_HIT_AREA
+}
+
+/**
+ * The visible pill inside the language and currency buttons. The two sit side
+ * by side and have to stay identical, so both take it from here.
  */
 export function headerSwitcherPillClass(overHero: boolean, sticky: boolean) {
   const onPhoto = overHero && !sticky
@@ -19,20 +42,20 @@ export function headerSwitcherPillClass(overHero: boolean, sticky: boolean) {
     'relative inline-flex h-8 items-center justify-between gap-1.5 rounded-full',
     'px-2.5 pr-7 sm:pr-8',
     'text-sm font-semibold',
-    'cursor-pointer transition-colors',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset',
+    'transition-colors',
+    'group-focus-visible:ring-2',
     onPhoto
       ? [
           'bg-white/15 text-white border border-white/30',
-          'hover:bg-white/25',
-          'focus-visible:ring-white/70',
+          'group-hover:bg-white/25',
+          'group-focus-visible:ring-white/70',
           '[text-shadow:0_1px_6px_rgba(0,0,0,0.35)]',
         ]
       : [
           'bg-dark/5 dark:bg-white/10',
           'text-dark/80 dark:text-white/80',
-          'hover:bg-dark/10 dark:hover:bg-white/15',
-          'focus-visible:ring-primary/40',
+          'group-hover:bg-dark/10 dark:group-hover:bg-white/15',
+          'group-focus-visible:ring-primary/40',
         ],
   )
 }
