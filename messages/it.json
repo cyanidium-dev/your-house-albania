@@ -13,6 +13,7 @@
       "prices": "Prezzi per città",
       "allListings": "Tutti gli immobili",
       "allCities": "Tutte le città",
+      "allListingsCount": "{count, plural, one {# immobile} other {# immobili}} in vendita in Albania",
       "buyCities": "Immobili per città",
       "buyPrices": "Prezzi e quartieri",
       "addProperty": "Aggiungi il tuo immobile",
@@ -805,7 +806,15 @@
     "empty": "Nessuna guida pubblicata per ora.",
     "breadcrumbHome": "Home",
     "sectionGuides": "Guide",
-    "sectionComparisons": "Confronti: quale scegliere"
+    "sectionComparisons": "Confronti: quale scegliere",
+    "searchLabel": "Cerca nelle guide",
+    "searchPlaceholder": "Cerca guide e articoli: costi, Durazzo, residenza…",
+    "all": "Tutti",
+    "noResults": "Nessun risultato. Prova un'altra parola o scegli un tema.",
+    "showAll": "Mostra tutti ({count})",
+    "kindGuide": "Guida",
+    "kindArticle": "Articolo",
+    "clearSearch": "Cancella ricerca"
   },
   "ImageCredits": {
     "title": "Crediti fotografici",

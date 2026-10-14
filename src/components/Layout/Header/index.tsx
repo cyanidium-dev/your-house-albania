@@ -144,9 +144,13 @@ export default async function Header({ siteSettings, locale, countrySlugs }: Hea
   const translations: HeaderTranslations = {
     menu: t('menu'),
     cta: { viewProperties: t('cta.viewProperties') },
-    nav: Object.fromEntries(
-      NAV_TRANSLATION_KEYS.map((key) => [key, t(`nav.${key}`)]),
-    ),
+    nav: {
+      ...Object.fromEntries(NAV_TRANSLATION_KEYS.map((key) => [key, t(`nav.${key}`)])),
+      // "774 listings for sale": the Buy menu's main entry says how much is behind it.
+      allListingsCount: t('nav.allListingsCount', {
+        count: buyMenu.cities.reduce((sum, c) => sum + (typeof c.count === 'number' ? c.count : 0), 0),
+      }),
+    },
     toggleMobileMenu: t('toggleMobileMenu'),
     switchToLightMode: t('switchToLightMode'),
     switchToDarkMode: t('switchToDarkMode'),

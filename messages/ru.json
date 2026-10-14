@@ -13,6 +13,7 @@
       "prices": "Цены по городам",
       "allListings": "Все объекты",
       "allCities": "Все города",
+      "allListingsCount": "{count, plural, one {# объект} few {# объекта} many {# объектов} other {# объекта}} в продаже в Албании",
       "buyCities": "Объекты по городам",
       "buyPrices": "Цены и районы",
       "addProperty": "Добавить объект",
@@ -805,7 +806,15 @@
     "empty": "Гайдов пока нет.",
     "breadcrumbHome": "Главная",
     "sectionGuides": "Гайды",
-    "sectionComparisons": "Сравнения: что выбрать"
+    "sectionComparisons": "Сравнения: что выбрать",
+    "searchLabel": "Поиск по гайдам",
+    "searchPlaceholder": "Ищите гайды и статьи: расходы, Дуррес, ВНЖ…",
+    "all": "Все",
+    "noResults": "Ничего не нашлось. Попробуйте другое слово или выберите тему.",
+    "showAll": "Показать все ({count})",
+    "kindGuide": "Гайд",
+    "kindArticle": "Статья",
+    "clearSearch": "Очистить поиск"
   },
   "ImageCredits": {
     "title": "Авторство изображений",

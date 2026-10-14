@@ -13,6 +13,7 @@
       "prices": "Prices by city",
       "allListings": "All listings",
       "allCities": "All cities",
+      "allListingsCount": "{count, plural, one {# listing} other {# listings}} for sale in Albania",
       "buyCities": "Listings by city",
       "buyPrices": "Prices and districts",
       "addProperty": "List your property",
@@ -805,7 +806,15 @@
     "empty": "No guides published yet.",
     "breadcrumbHome": "Home",
     "sectionGuides": "Guides",
-    "sectionComparisons": "Comparisons: which to choose"
+    "sectionComparisons": "Comparisons: which to choose",
+    "searchLabel": "Search the guides",
+    "searchPlaceholder": "Search guides and articles: costs, Durrës, residence…",
+    "all": "All",
+    "noResults": "Nothing found. Try another word or pick a topic.",
+    "showAll": "Show all {count}",
+    "kindGuide": "Guide",
+    "kindArticle": "Article",
+    "clearSearch": "Clear search"
   },
   "ImageCredits": {
     "title": "Image credits",

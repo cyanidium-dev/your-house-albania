@@ -306,26 +306,58 @@ const primaryLink = cn(panelLink, 'gap-1.5 text-primary hover:text-primary dark:
 function BuyPanel({ buyMenu, nav, onNavigate }: { buyMenu: BuyMenuData; nav: Record<string, string>; onNavigate: () => void }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-1 p-1">
+      {/* The main way in, first and unmistakable: every listing. Owner, 14.10:
+          "it is not clear what to click to see the properties". */}
+      <div className="p-1">
+        <Link
+          href={buyMenu.allListingsHref}
+          className="group flex items-center gap-3 rounded-2xl bg-primary/[0.08] px-3.5 py-3 transition-colors hover:bg-primary/[0.14] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:bg-primary/20 dark:hover:bg-primary/30"
+          onClick={onNavigate}
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-white" aria-hidden>
+            <Icon icon="ph:buildings" width={20} height={20} />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[15px] font-semibold text-dark dark:text-white">{nav.allListings}</span>
+            {nav.allListingsCount ? (
+              <span className="block text-[13px] text-dark/60 dark:text-white/60">{nav.allListingsCount}</span>
+            ) : null}
+          </span>
+          <Icon
+            icon="ph:arrow-right"
+            width={18}
+            height={18}
+            className="ml-auto shrink-0 text-primary transition-transform group-hover:translate-x-0.5 dark:text-[#5fd3a9]"
+            aria-hidden
+          />
+        </Link>
+      </div>
+      <div className="grid grid-cols-[1.2fr_1fr] gap-1 p-1">
         <div>
           <p className={columnHeading}>{nav.buyCities}</p>
           <ul>
             {buyMenu.cities.map((c) => (
               <li key={c.key}>
-                <Link href={c.href} className={panelLink} onClick={onNavigate}>
+                <Link href={c.href} className={cn(panelLink, 'group')} onClick={onNavigate}>
                   <span className="min-w-0 truncate">{c.label}</span>
-                  {typeof c.count === 'number' ? <span className={countClass}>{c.count}</span> : null}
+                  {typeof c.count === 'number' ? (
+                    <span className="ml-auto shrink-0 rounded-full bg-dark/[0.06] px-2 py-0.5 text-[12px] font-semibold tabular-nums text-dark/70 transition-colors group-hover:bg-primary group-hover:text-white dark:bg-white/10 dark:text-white/75">
+                      {c.count}
+                    </span>
+                  ) : null}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
-        <div>
+        {/* Reading about a city is the second thing, so it looks second. */}
+        <div className="rounded-xl bg-dark/[0.03] dark:bg-white/[0.04]">
           <p className={columnHeading}>{nav.buyPrices}</p>
           <ul>
             {buyMenu.priceCities.map((c) => (
               <li key={c.key}>
-                <Link href={c.href} className={panelLink} onClick={onNavigate}>
+                <Link href={c.href} className={cn(panelLink, 'text-[14px] text-dark/70 dark:text-white/70')} onClick={onNavigate}>
+                  <Icon icon="ph:chart-bar" width={16} height={16} className="shrink-0 text-dark/40 dark:text-white/40" aria-hidden />
                   {c.label}
                 </Link>
               </li>
@@ -334,12 +366,9 @@ function BuyPanel({ buyMenu, nav, onNavigate }: { buyMenu: BuyMenuData; nav: Rec
         </div>
       </div>
       <div className={footerRow}>
-        <Link href={buyMenu.allListingsHref} className={primaryLink} onClick={onNavigate}>
-          {nav.allListings}
-          <Icon icon="ph:arrow-right" width={16} height={16} aria-hidden />
-        </Link>
-        <Link href={buyMenu.allCitiesHref} className={panelLink} onClick={onNavigate}>
+        <Link href={buyMenu.allCitiesHref} className={primaryLink} onClick={onNavigate}>
           {nav.allCities}
+          <Icon icon="ph:arrow-right" width={16} height={16} aria-hidden />
         </Link>
       </div>
     </>

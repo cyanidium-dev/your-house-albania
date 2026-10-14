@@ -61,3 +61,21 @@ export function postInTopic(categorySlugs: readonly (string | null | undefined)[
 export function blogTopicHref(locale: string, key: GuideTopicKey): string {
   return `/${locale}/blog?topic=${key}`
 }
+
+/**
+ * Which topic a guide landing (not a blog post) belongs to, from its slug: the
+ * landings carry no category. Order matters — the first rule that matches wins.
+ * Comparisons are their own group (isComparisonGuideSlug) and never reach this.
+ */
+const GUIDE_LANDING_RULES: ReadonlyArray<[RegExp, GuideTopicKey]> = [
+  [/invest|yield|rental|dochod/, 'investing'],
+  [/market|price|ceny|cmim|ile-kosztuje|tanie|czy-warto/, 'market'],
+  [/^(apartment|house|villa)-|mieszkania-w-|nieruchomosci-(saranda|nad-morzem)|-durres$|-tirana$|-vlore$|-sarande$/, 'places'],
+  [/living|retire|moving|family|relocat/, 'living'],
+]
+
+export function guideLandingTopic(slug?: string | null): GuideTopicKey {
+  const s = (slug ?? '').toLowerCase()
+  for (const [re, key] of GUIDE_LANDING_RULES) if (re.test(s)) return key
+  return 'buying'
+}

@@ -13,6 +13,7 @@
       "prices": "Ціни по містах",
       "allListings": "Усі об'єкти",
       "allCities": "Усі міста",
+      "allListingsCount": "{count, plural, one {# об'єкт} few {# об'єкти} many {# об'єктів} other {# об'єкта}} у продажу в Албанії",
       "buyCities": "Об'єкти за містами",
       "buyPrices": "Ціни та райони",
       "addProperty": "Додати об'єкт",
@@ -805,7 +806,15 @@
     "empty": "Гайдів поки немає.",
     "breadcrumbHome": "Головна",
     "sectionGuides": "Гайди",
-    "sectionComparisons": "Порівняння: що обрати"
+    "sectionComparisons": "Порівняння: що обрати",
+    "searchLabel": "Пошук у гайдах",
+    "searchPlaceholder": "Шукайте гайди та статті: витрати, Дуррес, посвідка…",
+    "all": "Усі",
+    "noResults": "Нічого не знайшлося. Спробуйте інше слово або оберіть тему.",
+    "showAll": "Показати всі ({count})",
+    "kindGuide": "Гайд",
+    "kindArticle": "Стаття",
+    "clearSearch": "Очистити пошук"
   },
   "ImageCredits": {
     "title": "Авторство зображень",

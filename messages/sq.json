@@ -13,6 +13,7 @@
       "prices": "Çmimet sipas qyteteve",
       "allListings": "Të gjitha pronat",
       "allCities": "Të gjitha qytetet",
+      "allListingsCount": "{count, plural, one {# pronë} other {# prona}} në shitje në Shqipëri",
       "buyCities": "Prona sipas qyteteve",
       "buyPrices": "Çmime dhe lagje",
       "addProperty": "Shtoni pronën tuaj",
@@ -805,7 +806,15 @@
     "empty": "Ende nuk ka udhëzues të publikuar.",
     "breadcrumbHome": "Kryefaqja",
     "sectionGuides": "Udhëzues",
-    "sectionComparisons": "Krahasime: cilin të zgjidhni"
+    "sectionComparisons": "Krahasime: cilin të zgjidhni",
+    "searchLabel": "Kërko në udhëzues",
+    "searchPlaceholder": "Kërkoni udhëzues dhe artikuj: kosto, Durrës, leje qëndrimi…",
+    "all": "Të gjitha",
+    "noResults": "Nuk u gjet asgjë. Provoni një fjalë tjetër ose zgjidhni një temë.",
+    "showAll": "Shfaqi të gjitha ({count})",
+    "kindGuide": "Udhëzues",
+    "kindArticle": "Artikull",
+    "clearSearch": "Pastro kërkimin"
   },
   "ImageCredits": {
     "title": "Kreditet e fotove",

@@ -13,6 +13,7 @@
       "prices": "Preise nach Stadt",
       "allListings": "Alle Immobilien",
       "allCities": "Alle Städte",
+      "allListingsCount": "{count, plural, one {# Angebot} other {# Angebote}} in Albanien",
       "buyCities": "Immobilien nach Stadt",
       "buyPrices": "Preise und Stadtteile",
       "addProperty": "Immobilie inserieren",
@@ -805,7 +806,15 @@
     "empty": "Noch keine Ratgeber veröffentlicht.",
     "breadcrumbHome": "Startseite",
     "sectionGuides": "Ratgeber",
-    "sectionComparisons": "Vergleiche: was wählen"
+    "sectionComparisons": "Vergleiche: was wählen",
+    "searchLabel": "Ratgeber durchsuchen",
+    "searchPlaceholder": "Ratgeber und Artikel durchsuchen: Kosten, Durrës, Aufenthalt…",
+    "all": "Alle",
+    "noResults": "Nichts gefunden. Versuchen Sie ein anderes Wort oder wählen Sie ein Thema.",
+    "showAll": "Alle {count} anzeigen",
+    "kindGuide": "Ratgeber",
+    "kindArticle": "Artikel",
+    "clearSearch": "Suche löschen"
   },
   "ImageCredits": {
     "title": "Bildnachweise",

@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Link from "@/components/shared/Link";
-import Image from "next/image";
 import {getTranslations, setRequestLocale} from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import HeroSub from "@/components/shared/HeroSub";
@@ -12,10 +10,24 @@ import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/lib/seo/envSeo";
-import { NoPhotoPlate } from "@/components/shared/NoPhotoPlate";
-import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
-import { balancedGridClass, Section, SectionHeading } from "@/components/shared/layout";
-import { GUIDES_SECTION_IDS, isComparisonGuideSlug } from "@/data/guideTopics";
+import { ALBANIA_PHOTOS, heroPhotoFor } from "@/lib/media/albaniaPhotos";
+
+/** One photograph per guide topic (all from the credited set in albaniaPhotos). */
+function topicPhoto(topic: string, slug: string): string {
+  const byTopic: Record<string, keyof typeof ALBANIA_PHOTOS> = {
+    investing: "durres",
+    buying: "tirana",
+    market: "vlore",
+    living: "himare",
+  };
+  const key = byTopic[topic];
+  return key ? ALBANIA_PHOTOS[key].src : heroPhotoFor({ slug }).src;
+}
+import { Section } from "@/components/shared/layout";
+import { COMPARISONS_TOPIC, GUIDE_TOPICS, guideLandingTopic, isComparisonGuideSlug, postInTopic } from "@/data/guideTopics";
+import { fetchNavGuidePosts } from "@/lib/sanity/queries/navMenu";
+import { resolveLocalizedStringStrict } from "@/lib/sanity/localized";
+import { GuidesLibrary, type LibraryItem, type LibraryTopic } from "@/components/guides/GuidesLibrary";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -54,13 +66,47 @@ export default async function GuidesIndexPage({ params }: Props) {
   const baseUrl = await getBaseUrl();
   const jsonLdItems = toBreadcrumbJsonLdItems(items, `/${locale}/guides`);
 
-  // Twenty "X or Y" comparisons used to be interleaved with the handful of
-  // core guides; they are a set of their own.
-  // The header's Guides menu links to the comparisons by section id.
-  const isComparison = isComparisonGuideSlug;
-  const groups = [
-    { key: "guides", title: t("sectionGuides"), entries: entries.filter((e) => !isComparison(e.slug)) },
-    { key: "comparisons", title: t("sectionComparisons"), entries: entries.filter((e) => isComparison(e.slug)) },
+  const [posts, tTopics] = await Promise.all([fetchNavGuidePosts(), getTranslations("Header.guideTopics")]);
+
+  // One list for the library: guide pages, comparisons and the blog's
+  // articles, each in one topic (see GuidesLibrary).
+  const libraryItems: LibraryItem[] = [];
+  for (const entry of entries) {
+    const title = resolveLocalizedString(entry.title as never, locale) || entry.slug || "";
+    if (!entry.slug || !title) continue;
+    const comparison = isComparisonGuideSlug(entry.slug);
+    libraryItems.push({
+      key: `g:${entry.slug}`,
+      href: `/${locale}/guides/${entry.slug}`,
+      title,
+      description: resolveLocalizedString(entry.cardDescription as never, locale) || undefined,
+      topic: comparison ? "comparisons" : guideLandingTopic(entry.slug),
+      kind: comparison ? "comparison" : "guide",
+      ...(comparison
+        ? {}
+        : {
+            // Until each guide has its own cover, a topic photo: the shared
+            // fallback put one beach on every card.
+            image: entry.cardImage?.asset?.url || topicPhoto(guideLandingTopic(entry.slug), entry.slug),
+          }),
+    });
+  }
+  for (const post of posts) {
+    const title = resolveLocalizedStringStrict(post.title as never, locale);
+    if (!post.slug || !title) continue;
+    const topic = GUIDE_TOPICS.find((tp) => postInTopic(post.categories, tp));
+    libraryItems.push({
+      key: `a:${post.slug}`,
+      href: `/${locale}/blog/${post.slug}`,
+      title,
+      topic: topic?.key ?? "buying",
+      kind: "article",
+      ...(post.publishedAt ? { date: post.publishedAt } : {}),
+    });
+  }
+  const libraryTopics: LibraryTopic[] = [
+    ...GUIDE_TOPICS.map((tp) => ({ key: tp.key, label: tTopics(tp.key), icon: tp.icon })),
+    { key: "comparisons", label: tTopics("comparisons"), icon: COMPARISONS_TOPIC.icon },
   ];
 
   return (
@@ -74,64 +120,27 @@ export default async function GuidesIndexPage({ params }: Props) {
         photoKey="durres"
         breadcrumb={<Breadcrumb items={items} overHero />}
       />
-      {entries.length === 0 ? (
+      {libraryItems.length === 0 ? (
         <Section>
           <p className="text-dark/60 dark:text-white/60">{t("empty")}</p>
         </Section>
       ) : (
-        groups.map((group) =>
-          group.entries.length > 0 ? (
-            <Section key={group.key} id={GUIDES_SECTION_IDS[group.key as keyof typeof GUIDES_SECTION_IDS]} className="scroll-mt-24">
-              <SectionHeading title={group.title} />
-              <ul className={balancedGridClass(group.entries.length)}>
-                {group.entries.map((entry) => {
-                  const title = resolveLocalizedString(entry.title as never, locale) || entry.slug || "";
-                  const description = resolveLocalizedString(entry.cardDescription as never, locale);
-                  // A guide without a cover gets the photo its own page hero
-                  // falls back to; a comparison gets the two place names.
-                  const imageUrl =
-                    entry.cardImage?.asset?.url ||
-                    (group.key === "guides" ? heroPhotoFor({ slug: entry.slug }).src : undefined);
-                  return (
-                    <li key={entry._id ?? entry.slug}>
-                      <Link
-                        href={`/${locale}/guides/${entry.slug}`}
-                        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark/10 dark:border-white/15 transition-colors hover:border-primary"
-                      >
-                        {/* Every card has the picture slot, photographed or
-                            not: text-only cards next to photo cards made rows
-                            of three different heights. */}
-                        <span className="relative block aspect-[16/10] w-full overflow-hidden bg-dark/5 dark:bg-white/5">
-                          {imageUrl ? (
-                            <Image
-                              src={imageUrl}
-                              alt={title}
-                              fill
-                              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                              className="object-cover will-change-transform transition-transform duration-300 ease-out group-hover:scale-105"
-                            />
-                          ) : (
-                            <NoPhotoPlate label={title.split(":")[0]} />
-                          )}
-                        </span>
-                        <span className="flex flex-1 flex-col gap-2 p-5">
-                          <span className="font-display text-xl font-semibold tracking-tight text-dark dark:text-white">
-                            {title}
-                          </span>
-                          {description ? (
-                            <span className="text-sm leading-relaxed text-dark/65 dark:text-white/65 line-clamp-3">
-                              {description}
-                            </span>
-                          ) : null}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Section>
-          ) : null,
-        )
+        <GuidesLibrary
+          items={libraryItems}
+          topics={libraryTopics}
+          locale={locale}
+          labels={{
+            searchLabel: t("searchLabel"),
+            searchPlaceholder: t("searchPlaceholder"),
+            all: t("all"),
+            noResults: t("noResults"),
+            // Raw: the "{count}" placeholder is filled in per topic by the library.
+            showAll: t.raw("showAll") as string,
+            guide: t("kindGuide"),
+            article: t("kindArticle"),
+            clear: t("clearSearch"),
+          }}
+        />
       )}
     </main>
   );
