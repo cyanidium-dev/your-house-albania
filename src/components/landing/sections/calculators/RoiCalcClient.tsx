@@ -263,16 +263,29 @@ export function RoiCalcClient({
                   {result.nightsUsed !== undefined ? (
                     <CalcBreakdownRow label={t('nightsUsed')}>{result.nightsUsed}</CalcBreakdownRow>
                   ) : null}
+                  <CalcBreakdownRow label={effective.rentalType === 'str' ? t('letCostsStr') : t('letCostsLtr')}>
+                    −<CalcMoney amountEur={result.letCostsEur} locale={locale} />
+                  </CalcBreakdownRow>
+                  {result.mgmtFeeEur > 0 ? (
+                    <CalcBreakdownRow
+                      label={`${t('managementCost')} (${formatPct(effective.mgmtFeePct, locale, 0)})`}
+                    >
+                      −<CalcMoney amountEur={result.mgmtFeeEur} locale={locale} />
+                    </CalcBreakdownRow>
+                  ) : null}
                   <CalcBreakdownRow
-                    label={`${t('managementCost')} (${formatPct(effective.mgmtFeePct, locale, 0)})`}
+                    label={effective.rentalType === 'str' ? t('runningCostsStr') : t('runningCostsLtr')}
                   >
-                    −<CalcMoney amountEur={result.mgmtFeeEur} locale={locale} />
+                    −<CalcMoney amountEur={result.runningCostsEur} locale={locale} />
                   </CalcBreakdownRow>
                   <CalcBreakdownRow label={`${t('taxCost')} (${formatPct(taxRatePct, locale, 0)})`}>
                     −<CalcMoney amountEur={result.taxEur} locale={locale} />
                   </CalcBreakdownRow>
                   <CalcBreakdownRow label={t('netIncome')} strong>
                     <CalcMoney amountEur={result.netAnnualEur} locale={locale} />
+                  </CalcBreakdownRow>
+                  <CalcBreakdownRow label={t('totalInvested')}>
+                    <CalcMoney amountEur={result.totalInvestedEur} locale={locale} />
                   </CalcBreakdownRow>
                 </dl>
               </AccordionContent>

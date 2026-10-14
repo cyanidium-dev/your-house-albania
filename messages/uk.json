@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Усі об'єкти",
+      "leadLanding": "Купити квартиру в Албанії",
       "allCities": "Усі міста",
       "blog": "Блог",
       "about": "Про нас",
@@ -180,10 +181,13 @@
       "zoomOut": "Віддалити",
       "resetBearing": "Повернути карту на північ",
       "offline": "Для карти потрібен інтернет. Оголошення нижче доступні й офлайн.",
-      "areaTitle": "{name}: {count} об’єктів",
-      "areaNote": "Агентство не опублікувало точну адресу цих об’єктів, тому вони показані для району, а не точками.",
-      "areaSeeAll": "Усі {count} у районі {name}",
-      "areaFallbackName": "цей район"
+      "buildingStack": "{count, plural, one {# квартира} few {# квартири} many {# квартир} other {# квартири}}",
+      "placeStack": "{count, plural, one {# об’єкт} few {# об’єкти} many {# об’єктів} other {# об’єкта}}",
+      "stackFrom": "від {price}",
+      "stackPager": "{index} з {count} у цьому будинку",
+      "stackPagerPlace": "{index} з {count} у цьому місці",
+      "stackPrevious": "Попередній об’єкт",
+      "stackNext": "Наступний об’єкт"
     },
     "propertyDetail": {
       "propertyDetails": "Деталі об'єкта",
@@ -319,6 +323,8 @@
   "Districts": {
     "hubTitle": "Райони міста {city}",
     "hubDescription": "Ознайомтеся з районами міста {city} та оберіть місце для нового дому.",
+    "hubMetaTitle": "Райони міста {city} 2026: ціни за м² і де жити",
+    "hubMetaDescription": "Порівняйте райони міста {city} за ціною за м² і характером, потім перегляньте актуальні обʼєкти в кожному районі.",
     "faqTitle": "Часті запитання",
     "exploreTitle": "Продовжити знайомство",
     "propertiesInDistrict": "Нерухомість у районі {district}",
@@ -419,6 +425,11 @@
     "nightsUsed": "Ночей оренди на рік",
     "managementCost": "Управління",
     "taxCost": "Податок",
+    "letCostsStr": "Комісії майданчиків і туристичний збір",
+    "letCostsLtr": "Місяць простою і комісія за здачу",
+    "runningCostsStr": "Комуналка, ремонт, страховка, податок на будівлю",
+    "runningCostsLtr": "Ремонт, страховка, податок на будівлю",
+    "totalInvested": "Вкладено (ціна + витрати на купівлю)",
     "netIncome": "Чистий річний дохід",
     "transactionCosts": "Витрати на угоду",
     "totalPurchaseCost": "Повна вартість купівлі",

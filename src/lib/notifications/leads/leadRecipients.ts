@@ -25,6 +25,28 @@ export function leadRecipientChatIds(params: {
   return general ? [general] : []
 }
 
+/**
+ * Who a lead on a listing belongs to. The listing's own agent wins over what
+ * the browser sent: catalogue cards and the map window do not carry the agent
+ * and send "unassigned", and a page cached before a re-attribution carries the
+ * old one. Until 2026-10-14 such a lead on a Cactus flat went to the main
+ * group while the saved lead (which looks the listing up) showed "cactus".
+ */
+export function resolveListingAgent(params: {
+  clientAgentSlug: string
+  clientAgentName: string
+  listing: { agentSlug?: string; agentName?: string } | null
+}): { agentSlug: string; agentName: string } {
+  const slug = params.listing?.agentSlug?.trim()
+  if (!slug) return { agentSlug: params.clientAgentSlug, agentName: params.clientAgentName }
+  const sameAgent = slug === params.clientAgentSlug
+  const name =
+    params.listing?.agentName?.trim() ||
+    (sameAgent && params.clientAgentName !== '—' ? params.clientAgentName : '') ||
+    '—'
+  return { agentSlug: slug, agentName: name }
+}
+
 /** The agent's own lead group, looked up by agent slug; null when none is set. */
 export async function fetchAgentLeadChatId(agentSlug: string | undefined): Promise<string | null> {
   const slug = agentSlug?.trim()
@@ -39,30 +61,6 @@ export async function fetchAgentLeadChatId(agentSlug: string | undefined): Promi
     return typeof id === 'string' && id.trim() ? id.trim() : null
   } catch (err) {
     console.error('[leads] agent chat lookup failed', err instanceof Error ? err.message : err)
-    return null
-  }
-}
-
-/**
- * The agent of a listing, by its slug. Card and map enquiry buttons do not
- * know the agent and send "unassigned"; without this a card lead on a Cactus
- * flat skipped the agency's own group (QA 2026-10-11).
- */
-export async function fetchPropertyAgent(
-  propertySlug: string | undefined
-): Promise<{ slug: string; name: string | null } | null> {
-  const slug = propertySlug?.trim()
-  if (!slug) return null
-  const client = getClient()
-  if (!client) return null
-  try {
-    const row = await client.fetch<{ slug?: string | null; name?: string | null } | null>(
-      `*[_type == "property" && slug.current == $slug && !(_id in path("drafts.**"))][0].agent->{"slug": slug.current, name}`,
-      { slug }
-    )
-    return row?.slug ? { slug: row.slug, name: row.name ?? null } : null
-  } catch (err) {
-    console.error('[leads] property agent lookup failed', err instanceof Error ? err.message : err)
     return null
   }
 }

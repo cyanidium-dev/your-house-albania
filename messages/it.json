@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Tutti gli immobili",
+      "leadLanding": "Comprare casa in Albania",
       "allCities": "Tutte le città",
       "blog": "Blog",
       "about": "Chi siamo",
@@ -180,10 +181,13 @@
       "zoomOut": "Riduci",
       "resetBearing": "Riporta la mappa a nord",
       "offline": "La mappa richiede una connessione a internet. Gli annunci qui sotto funzionano anche offline.",
-      "areaTitle": "{name}: {count} annunci",
-      "areaNote": "L’agenzia non ha pubblicato l’indirizzo esatto di questi annunci: sono mostrati per zona, non come punti.",
-      "areaSeeAll": "Vedi tutti i {count} a {name}",
-      "areaFallbackName": "questa zona"
+      "buildingStack": "{count, plural, one {# appartamento} other {# appartamenti}}",
+      "placeStack": "{count, plural, one {# annuncio} other {# annunci}}",
+      "stackFrom": "da {price}",
+      "stackPager": "{index} di {count} in questo edificio",
+      "stackPagerPlace": "{index} di {count} in questo punto",
+      "stackPrevious": "Annuncio precedente",
+      "stackNext": "Annuncio successivo"
     },
     "propertyDetail": {
       "propertyDetails": "Dettagli della proprietà",
@@ -319,6 +323,8 @@
   "Districts": {
     "hubTitle": "Quartieri di {city}",
     "hubDescription": "Esplora i quartieri di {city} e scegli la zona giusta per la tua prossima casa.",
+    "hubMetaTitle": "Quartieri di {city} 2026: prezzi al m² e dove vivere",
+    "hubMetaDescription": "Confronta i quartieri di {city} per prezzo al m² e carattere, poi guarda gli annunci attuali in ogni zona.",
     "faqTitle": "Domande frequenti",
     "exploreTitle": "Continua a esplorare",
     "propertiesInDistrict": "Immobili a {district}",
@@ -419,6 +425,11 @@
     "nightsUsed": "Notti affittate all'anno",
     "managementCost": "Gestione",
     "taxCost": "Imposta",
+    "letCostsStr": "Commissioni piattaforma e tassa di soggiorno",
+    "letCostsLtr": "Mese sfitto e provvigione di locazione",
+    "runningCostsStr": "Utenze, manutenzione, assicurazione, imposta sugli immobili",
+    "runningCostsLtr": "Manutenzione, assicurazione, imposta sugli immobili",
+    "totalInvested": "Investito (prezzo + costi d'acquisto)",
     "netIncome": "Reddito annuo netto",
     "transactionCosts": "Costi di transazione",
     "totalPurchaseCost": "Costo totale d'acquisto",

@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Alle Immobilien",
+      "leadLanding": "Immobilien am Meer",
       "allCities": "Alle Städte",
       "blog": "Blog",
       "about": "Über uns",
@@ -180,10 +181,13 @@
       "zoomOut": "Verkleinern",
       "resetBearing": "Karte nach Norden ausrichten",
       "offline": "Die Karte braucht eine Internetverbindung. Die Inserate darunter funktionieren auch offline.",
-      "areaTitle": "{name}: {count} Angebote",
-      "areaNote": "Die Agentur hat die genaue Adresse dieser Angebote nicht veröffentlicht, daher erscheinen sie für die Gegend, nicht als Punkte.",
-      "areaSeeAll": "Alle {count} in {name} ansehen",
-      "areaFallbackName": "diese Gegend"
+      "buildingStack": "{count, plural, one {# Wohnung} other {# Wohnungen}}",
+      "placeStack": "{count, plural, one {# Inserat} other {# Inserate}}",
+      "stackFrom": "ab {price}",
+      "stackPager": "{index} von {count} in diesem Gebäude",
+      "stackPagerPlace": "{index} von {count} an dieser Stelle",
+      "stackPrevious": "Vorheriges Inserat",
+      "stackNext": "Nächstes Inserat"
     },
     "propertyDetail": {
       "propertyDetails": "Objektdetails",
@@ -319,6 +323,8 @@
   "Districts": {
     "hubTitle": "Stadtteile von {city}",
     "hubDescription": "Entdecken Sie die Stadtteile von {city} und finden Sie die passende Lage für Ihr neues Zuhause.",
+    "hubMetaTitle": "Stadtteile von {city} 2026: Preise pro m² und Wohnlagen",
+    "hubMetaDescription": "Vergleichen Sie die Stadtteile von {city} nach Quadratmeterpreis und Charakter und sehen Sie die aktuellen Angebote in jeder Lage.",
     "faqTitle": "Häufige Fragen",
     "exploreTitle": "Weiter entdecken",
     "propertiesInDistrict": "Immobilien in {district}",
@@ -419,6 +425,11 @@
     "nightsUsed": "Vermietete Nächte pro Jahr",
     "managementCost": "Verwaltung",
     "taxCost": "Steuer",
+    "letCostsStr": "Plattformgebühren und Kurtaxe",
+    "letCostsLtr": "Leerstandsmonat und Vermittlungsgebühr",
+    "runningCostsStr": "Nebenkosten, Reparaturen, Versicherung, Gebäudesteuer",
+    "runningCostsLtr": "Reparaturen, Versicherung, Gebäudesteuer",
+    "totalInvested": "Investiert (Preis + Kaufnebenkosten)",
     "netIncome": "Nettojahreseinnahmen",
     "transactionCosts": "Kaufnebenkosten",
     "totalPurchaseCost": "Gesamtkosten des Kaufs",

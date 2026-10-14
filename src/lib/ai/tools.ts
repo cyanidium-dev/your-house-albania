@@ -319,7 +319,7 @@ export function runCalcRoi(rawInput: unknown): unknown {
   }
   return {
     ...result,
-    note: 'Gross yield ignores vacancy, repairs and purchase costs. Net applies only the management fee and tax given.',
+    note: 'Gross yield is rent ÷ price. Net takes off platform fees and tourist tax (short lets) or an empty month and the letting fee (long lets), management, utilities/repairs/insurance/building tax and 15% tax, and is divided by price plus buying costs. Say "estimate".',
   }
 }
 

@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Wszystkie oferty",
+      "leadLanding": "Nieruchomości nad morzem",
       "allCities": "Wszystkie miasta",
       "blog": "Blog",
       "about": "O nas",
@@ -169,10 +170,13 @@
       "zoomOut": "Oddal",
       "resetBearing": "Obróć mapę na północ",
       "offline": "Mapa wymaga połączenia z internetem. Oferty poniżej działają też offline.",
-      "areaTitle": "{name}: {count} ofert",
-      "areaNote": "Agencja nie podała dokładnego adresu tych ofert, dlatego pokazujemy je dla okolicy, a nie jako punkty.",
-      "areaSeeAll": "Zobacz wszystkie {count} – {name}",
-      "areaFallbackName": "ta okolica"
+      "buildingStack": "{count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}}",
+      "placeStack": "{count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+      "stackFrom": "od {price}",
+      "stackPager": "{index} z {count} w tym budynku",
+      "stackPagerPlace": "{index} z {count} w tym miejscu",
+      "stackPrevious": "Poprzednia oferta",
+      "stackNext": "Następna oferta"
     },
     "propertyDetail": {
       "propertyDetails": "Szczegóły nieruchomości",
@@ -319,6 +323,8 @@
   "Districts": {
     "hubTitle": "Dzielnice miasta {city}",
     "hubDescription": "Poznaj dzielnice miasta {city} i wybierz odpowiednią okolicę dla swojego kolejnego domu.",
+    "hubMetaTitle": "Dzielnice miasta {city} 2026: ceny za m² i gdzie mieszkać",
+    "hubMetaDescription": "Porównaj dzielnice miasta {city} pod względem ceny za m² i charakteru, a potem przejrzyj aktualne oferty w każdej okolicy.",
     "faqTitle": "Najczęściej zadawane pytania",
     "exploreTitle": "Zobacz więcej",
     "propertiesInDistrict": "Nieruchomości w dzielnicy {district}",
@@ -419,6 +425,11 @@
     "nightsUsed": "Wynajęte noce rocznie",
     "managementCost": "Zarządzanie",
     "taxCost": "Podatek",
+    "letCostsStr": "Prowizje platform i opłata miejscowa",
+    "letCostsLtr": "Miesiąc pustostanu i prowizja za najem",
+    "runningCostsStr": "Media, naprawy, ubezpieczenie, podatek od budynku",
+    "runningCostsLtr": "Naprawy, ubezpieczenie, podatek od budynku",
+    "totalInvested": "Zainwestowano (cena + koszty zakupu)",
     "netIncome": "Roczny dochód netto",
     "transactionCosts": "Koszty transakcyjne",
     "totalPurchaseCost": "Całkowity koszt zakupu",

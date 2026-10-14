@@ -15,6 +15,9 @@ import {
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { districtInfoPath } from "@/lib/routes/catalog";
+import { ZonePriceTableAutoSection } from "@/components/landing/sections";
+import { ListingPriceIndexSection } from "@/components/landing/sections/ListingPriceIndexSection";
+import { fetchLatestZoneMetricsForCityDistricts } from "@/lib/sanity/client";
 
 /**
  * ISR. Two exports, and the route needs both.
@@ -62,8 +65,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityGenitive = forms.genitive || forms.base;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
   return buildLandingMetadata(null, siteDefaultSeo as never, locale, {
-    itemTitle: t("hubTitle", { city: cityGenitive }),
-    itemDescription: t("hubDescription", { city: cityGenitive }),
+    // Searchers type "tirana districts" to compare areas; the title promises
+    // the price comparison the page now carries.
+    itemTitle: t("hubMetaTitle", { city: cityGenitive }),
+    itemDescription: t("hubMetaDescription", { city: cityGenitive }),
     pathnameForAlternates: `${cmsCountry}/${citySlug}/districts`,
   });
 }
@@ -83,9 +88,10 @@ export default async function DistrictsHubPage({ params }: Props) {
   const districts = await fetchPublishedDistrictsByCity(citySlug);
   if (districts.length === 0) notFound();
 
-  const [forms, t] = await Promise.all([
+  const [forms, t, metrics] = await Promise.all([
     fetchCityNameForms(citySlug, locale),
     getTranslations("Districts"),
+    fetchLatestZoneMetricsForCityDistricts({ slug: citySlug }),
   ]);
   const cityGenitive = forms.genitive || forms.base;
 
@@ -133,6 +139,12 @@ export default async function DistrictsHubPage({ params }: Props) {
           })}
         </div>
       </div>
+      {/* The comparison people came for: researched prices per district, then
+          what the live listings ask. */}
+      {metrics.length > 0 ? (
+        <ZonePriceTableAutoSection locale={locale} records={metrics} sortBy="price" />
+      ) : null}
+      <ListingPriceIndexSection locale={locale} citySlug={citySlug} />
     </section>
   );
 }

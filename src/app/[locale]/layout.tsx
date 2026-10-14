@@ -192,7 +192,10 @@ export default async function LocaleLayout({ children, params }: Props) {
     siteSettings.policyLinks[0]?.href;
 
   return (
-    <html lang={locale} className={`${display.variable} ${sans.variable}`}>
+    // next-themes sets the theme class and color-scheme on <html> before React
+    // hydrates (that pre-paint script is what prevents the white flash); the
+    // attribute difference is expected, as the next-themes docs say.
+    <html lang={locale} className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
       <body className="font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip">
         {/* Holds Chromium's install event for the engagement-gated invitation;
             see lib/pwa/earlyCapture. Must run before the event can fire. */}

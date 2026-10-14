@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "All listings",
+      "leadLanding": "Property by the sea",
       "allCities": "All cities",
       "blog": "Blog",
       "about": "About",
@@ -180,10 +181,13 @@
       "zoomOut": "Zoom out",
       "resetBearing": "Turn the map back north",
       "offline": "The map needs an internet connection. The listings below work offline.",
-      "areaTitle": "{name}: {count} listings",
-      "areaNote": "The agency has not published the exact address of these listings, so they are shown for the area, not as pins.",
-      "areaSeeAll": "See all {count} in {name}",
-      "areaFallbackName": "this area"
+      "buildingStack": "{count, plural, one {# flat} other {# flats}}",
+      "placeStack": "{count, plural, one {# listing} other {# listings}}",
+      "stackFrom": "from {price}",
+      "stackPager": "{index} / {count} in this building",
+      "stackPagerPlace": "{index} / {count} at this spot",
+      "stackPrevious": "Previous listing",
+      "stackNext": "Next listing"
     },
     "propertyDetail": {
       "propertyDetails": "Property details",
@@ -319,6 +323,8 @@
   "Districts": {
     "hubTitle": "Districts of {city}",
     "hubDescription": "Explore the districts of {city} and choose the right area for your next home.",
+    "hubMetaTitle": "{city} districts 2026: prices per m² and where to live",
+    "hubMetaDescription": "Compare the districts of {city} by price per m² and character, then browse the live listings in each area.",
     "faqTitle": "Frequently asked questions",
     "exploreTitle": "Keep exploring",
     "propertiesInDistrict": "Properties in {district}",
@@ -419,6 +425,11 @@
     "nightsUsed": "Nights rented per year",
     "managementCost": "Management",
     "taxCost": "Tax",
+    "letCostsStr": "Platform fees and tourist tax",
+    "letCostsLtr": "Empty month and letting fee",
+    "runningCostsStr": "Utilities, repairs, insurance, building tax",
+    "runningCostsLtr": "Repairs, insurance, building tax",
+    "totalInvested": "Invested (price + buying costs)",
     "netIncome": "Net annual income",
     "transactionCosts": "Transaction costs",
     "totalPurchaseCost": "Total purchase cost",

@@ -39,3 +39,19 @@ export const FOOTER_STABLE_NAV_ITEMS: readonly FooterNavItem[] = [
   ...FOOTER_USEFUL_ITEMS,
   ...FOOTER_COMPANY_ITEMS,
 ];
+
+/**
+ * The single-language lead landing of each locale (Sanity
+ * `landing-unique-<locale>-<slug>`, built 2026-10-11 from Ahrefs demand).
+ * Linked from the Property column so every page passes it an internal link;
+ * before this the landings were reachable only from the sitemap.
+ */
+export const FOOTER_LEAD_LANDING: Readonly<Record<string, `/${string}`>> = {
+  en: "/property-for-sale-albania-by-the-sea",
+  de: "/immobilien-albanien-am-meer",
+  pl: "/nieruchomosci-albania-nad-morzem",
+  it: "/comprare-casa-in-albania",
+  ru: "/kupit-kvartiru-v-albanii",
+  uk: "/kupyty-kvartyru-v-albanii",
+  sq: "/apartamente-ne-shitje-durres-okazion",
+};
