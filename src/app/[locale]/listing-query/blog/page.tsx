@@ -16,9 +16,14 @@ import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled } from "@/lib/seo/envSeo";
 import { BLOG_PAGE_SIZE } from "@/lib/routes/blogIndex";
+import { loadBlogTopicChips, topicFromSearch } from "@/lib/nav/blogTopics";
 
 /**
- * The blog index for URLs WITH a query string (`?category=…`, `?page=2`).
+ * The blog index for URLs WITH a query string (`?topic=…`, `?category=…`, `?page=2`).
+ *
+ * `?topic=` is a guide topic (src/data/guideTopics.ts): the header's Guides
+ * menu and the chips on this page link to it. `?category=` is one raw CMS
+ * category, still linked from article pills and breadcrumbs.
  *
  * Never linked and never visible: the middleware rewrites `/{locale}/blog?…`
  * here and redirects anyone who types this path back to the public one
@@ -68,9 +73,12 @@ export async function generateMetadata({
     categoryParam && categories.some((c) => c.slug === categoryParam)
       ? categoryParam
       : undefined;
+  const topic = validCategory ? undefined : topicFromSearch(search.topic);
   const categoryLabel = validCategory
     ? categories.find((c) => c.slug === validCategory)?.label
-    : undefined;
+    : topic
+      ? (await getTranslations("Header.guideTopics"))(topic.key)
+      : undefined;
 
   const meta = buildBlogMetadata(
     blogSeo as never,
@@ -87,7 +95,8 @@ export async function generateMetadata({
   // Same policy as catalog listings: any real query string (?category, ?page>1)
   // → noindex,follow; canonical always points at the clean /blog path.
   const pageParam = typeof search.page === "string" ? search.page.trim() : undefined;
-  const hasQuery = Boolean(categoryParam) || Boolean(pageParam && pageParam !== "1");
+  const hasQuery =
+    Boolean(categoryParam) || Boolean(topic) || Boolean(pageParam && pageParam !== "1");
   return {
     ...meta,
     alternates: { ...meta.alternates, canonical: `${baseUrl}/${locale}/blog` },
@@ -119,6 +128,8 @@ export default async function BlogQueryPage({ params, searchParams }: Props) {
     categoryParam && categories.some((c) => c.slug === categoryParam)
       ? categoryParam
       : undefined;
+  // A category link wins over a topic; the two never come together from the UI.
+  const topic = validCategory ? undefined : topicFromSearch(search.topic);
 
   const pageNum = (() => {
     const n = parseInt(pageParam ?? "1", 10);
@@ -127,6 +138,7 @@ export default async function BlogQueryPage({ params, searchParams }: Props) {
 
   const { items, totalCount } = await fetchBlogPostsPaginated({
     category: validCategory,
+    categories: topic?.categories,
     page: pageNum,
     pageSize: BLOG_PAGE_SIZE,
   });
@@ -137,6 +149,7 @@ export default async function BlogQueryPage({ params, searchParams }: Props) {
   const finalItems =
     safePage === pageNum ? items : await fetchBlogPostsPaginated({
       category: validCategory,
+      categories: topic?.categories,
       page: safePage,
       pageSize: BLOG_PAGE_SIZE,
     }).then((r) => r.items);
@@ -145,7 +158,11 @@ export default async function BlogQueryPage({ params, searchParams }: Props) {
     mapSanityBlogPostToList(p as SanityListingPost, locale)
   );
 
-  const t = await getTranslations("Listing.blogs");
+  const [t, tBlog, topics] = await Promise.all([
+    getTranslations("Listing.blogs"),
+    getTranslations("Blog"),
+    loadBlogTopicChips(locale),
+  ]);
   const currentCategoryLabel = validCategory
     ? categories.find((c) => c.slug === validCategory)?.label
     : undefined;
@@ -169,8 +186,13 @@ export default async function BlogQueryPage({ params, searchParams }: Props) {
       <BlogList
         locale={locale}
         posts={posts}
-        categories={categories}
-        currentCategory={validCategory}
+        topics={topics}
+        currentTopic={topic?.key}
+        legacyCategory={
+          validCategory ? { slug: validCategory, label: currentCategoryLabel ?? validCategory } : undefined
+        }
+        allLabel={tBlog("filterAll")}
+        filterLabel={tBlog("filterLabel")}
         currentPage={safePage}
         totalPages={totalPages}
       />

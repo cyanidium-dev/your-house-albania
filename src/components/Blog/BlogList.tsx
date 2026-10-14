@@ -3,55 +3,89 @@ import BlogCard from "@/components/shared/Blog/blogCard";
 import { NumberedPagination } from "@/components/shared/NumberedPagination";
 import type { BlogListItem } from "@/lib/sanity/blogAdapter";
 import Link from "@/components/shared/Link";
-import { getTranslations } from "next-intl/server";
+
+type FilterChip = { key: string; label: string; href: string; count?: number };
 
 type BlogListProps = {
   locale: string;
   posts: BlogListItem[];
-  categories: { slug: string; label: string }[];
-  currentCategory?: string;
+  /** Guide topics with posts (src/data/guideTopics.ts), the same as the header's Guides menu. */
+  topics: FilterChip[];
+  /** `?topic=` when it names one of `topics`. */
+  currentTopic?: string;
+  /**
+   * A raw CMS category from an old `?category=` link (article pills,
+   * breadcrumbs): shown as the active chip so the page says what it filters.
+   */
+  legacyCategory?: { slug: string; label: string };
+  allLabel: string;
+  filterLabel: string;
   currentPage: number;
   totalPages: number;
 };
 
-export default async function BlogList({
+const chipClass = (active: boolean) =>
+  `inline-flex min-h-11 items-center gap-2 py-2 px-5 rounded-full text-sm font-semibold transition-colors ${
+    active
+      ? "bg-primary text-white"
+      : "bg-dark/5 dark:bg-white/15 text-dark dark:text-white hover:bg-primary/10"
+  }`;
+
+export default function BlogList({
   locale,
   posts,
-  categories,
-  currentCategory,
+  topics,
+  currentTopic,
+  legacyCategory,
+  allLabel,
+  filterLabel,
   currentPage,
   totalPages,
 }: BlogListProps) {
-  const tBlog = await getTranslations({ locale, namespace: "Blog" });
+  const nothingSelected = !currentTopic && !legacyCategory;
   return (
     <section className="pt-0!">
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0">
-        {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            <Link
-              href={`/${locale}/blog`}
-              className={`py-2.5 px-5 rounded-full text-sm font-semibold transition-colors ${
-                !currentCategory
-                  ? "bg-primary text-white"
-                  : "bg-dark/5 dark:bg-white/15 text-dark dark:text-white hover:bg-primary/10"
-              }`}
-            >
-              {tBlog("allCategories")}
-            </Link>
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/${locale}/blog?category=${encodeURIComponent(cat.slug)}`}
-                className={`py-2.5 px-5 rounded-full text-sm font-semibold transition-colors ${
-                  currentCategory === cat.slug
-                    ? "bg-primary text-white"
-                    : "bg-dark/5 dark:bg-white/15 text-dark dark:text-white hover:bg-primary/10"
-                }`}
-              >
-                {cat.label}
-              </Link>
-            ))}
-          </div>
+        {topics.length > 0 && (
+          <nav aria-label={filterLabel} className="mb-8">
+            <ul className="flex flex-wrap gap-2">
+              <li>
+                <Link
+                  href={`/${locale}/blog`}
+                  className={chipClass(nothingSelected)}
+                  aria-current={nothingSelected ? "page" : undefined}
+                >
+                  {allLabel}
+                </Link>
+              </li>
+              {topics.map((topic) => {
+                const active = currentTopic === topic.key;
+                return (
+                  <li key={topic.key}>
+                    <Link href={topic.href} className={chipClass(active)} aria-current={active ? "page" : undefined}>
+                      {topic.label}
+                      {typeof topic.count === "number" ? (
+                        <span className={`tabular-nums text-xs ${active ? "text-white/80" : "text-dark/50 dark:text-white/55"}`}>
+                          {topic.count}
+                        </span>
+                      ) : null}
+                    </Link>
+                  </li>
+                );
+              })}
+              {legacyCategory ? (
+                <li>
+                  <Link
+                    href={`/${locale}/blog?category=${encodeURIComponent(legacyCategory.slug)}`}
+                    className={chipClass(true)}
+                    aria-current="page"
+                  >
+                    {legacyCategory.label}
+                  </Link>
+                </li>
+              ) : null}
+            </ul>
+          </nav>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {posts.map((blog) => (
@@ -74,7 +108,11 @@ export default async function BlogList({
           ))}
         </div>
         {totalPages > 1 && (
-          <NumberedPagination currentPage={currentPage} totalPages={totalPages} keepParams={{ category: currentCategory }} />
+          <NumberedPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            keepParams={{ topic: currentTopic, category: legacyCategory?.slug }}
+          />
         )}
         <div className="h-16 md:h-20" aria-hidden />
       </div>

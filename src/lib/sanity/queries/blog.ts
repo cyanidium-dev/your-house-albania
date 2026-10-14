@@ -143,6 +143,11 @@ export async function fetchBlogPosts(): Promise<unknown[] | null> {
 
 export type FetchBlogPostsPaginatedParams = {
   category?: string;
+  /**
+   * Any of these category slugs (a guide topic, src/data/guideTopics.ts).
+   * Ignored when `category` is set.
+   */
+  categories?: readonly string[];
   page?: number;
   pageSize?: number;
 };
@@ -158,13 +163,21 @@ export async function fetchBlogPostsPaginated(
 ): Promise<FetchBlogPostsPaginatedResult> {
   const client = getClient();
   if (!client) return { items: [], totalCount: 0 };
-  const { category, page = 1, pageSize = 12 } = params;
+  const { category, categories, page = 1, pageSize = 12 } = params;
   const offset = Math.max(0, (page - 1) * pageSize);
   const limit = Math.max(1, pageSize);
 
+  const topicSlugs = !category?.trim() && categories?.length ? [...categories] : null;
   const categoryFilter = category?.trim()
     ? `&& $categorySlug in categories[]->slug.current`
-    : '';
+    : topicSlugs
+      ? `&& count((categories[]->slug.current)[@ in $categorySlugs]) > 0`
+      : '';
+  const queryParams: Record<string, unknown> = category?.trim()
+    ? { categorySlug: category.trim() }
+    : topicSlugs
+      ? { categorySlugs: topicSlugs }
+      : {};
   const filter = `*[_type == "blogPost" && defined(publishedAt) && publishedAt <= now() ${categoryFilter}]`;
   const order = `| order(featured desc, publishedAt desc)`;
   const slice = `[${offset}...${offset + limit}]`;
@@ -174,8 +187,8 @@ export async function fetchBlogPostsPaginated(
 
   try {
     const [items, totalCount] = await Promise.all([
-      client.fetch<unknown[]>(query, category?.trim() ? { categorySlug: category.trim() } : {}),
-      client.fetch<number>(countQuery, category?.trim() ? { categorySlug: category.trim() } : {}),
+      client.fetch<unknown[]>(query, queryParams),
+      client.fetch<number>(countQuery, queryParams),
     ]);
     return {
       items: Array.isArray(items) ? items : [],

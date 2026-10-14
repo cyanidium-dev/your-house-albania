@@ -1,37 +1,61 @@
 'use client'
 
-import { Icon } from "@/components/shared/Icon";
+import type { Ref } from 'react'
+import { cn } from '@/lib/utils'
+import { HEADER_HIT_AREA } from './headerSwitcherStyles'
 
 type HeaderBurgerButtonProps = {
   onClick: () => void
   overHero: boolean
   sticky: boolean
-  menuLabel: string
   ariaLabel: string
+  expanded: boolean
+  /** The drawer's id. */
+  controls: string
+  ref?: Ref<HTMLButtonElement>
 }
 
+/**
+ * The menu button below `lg`: a 44px hit area around the same round, filled
+ * button as before, so it stays the recognisable three-line burger.
+ */
 export default function HeaderBurgerButton({
   onClick,
   overHero,
   sticky,
-  menuLabel,
   ariaLabel,
+  expanded,
+  controls,
+  ref,
 }: HeaderBurgerButtonProps) {
+  const onPhoto = overHero && !sticky
   return (
     <button
+      ref={ref}
+      type="button"
       onClick={onClick}
-      className={`flex items-center gap-2 md:gap-3 p-1.5 sm:px-5 sm:py-3 rounded-full font-semibold hover:cursor-pointer border transition-colors duration-300 ease-out text-sm md:text-base ${overHero
-        ? sticky
-          ? 'text-white bg-dark dark:bg-white dark:text-dark dark:hover:text-white dark:hover:bg-dark hover:text-dark hover:bg-white border-dark dark:border-white'
-          : 'text-dark bg-white dark:text-dark hover:bg-transparent hover:text-white border-white'
-        : 'bg-dark text-white hover:bg-transparent hover:text-dark dark:bg-white dark:text-dark dark:hover:bg-transparent dark:hover:text-white duration-300'
-        }`}
+      className={HEADER_HIT_AREA}
       aria-label={ariaLabel}
+      aria-expanded={expanded}
+      aria-controls={controls}
+      aria-haspopup="dialog"
+      data-header-burger=""
     >
-      <span>
-        <Icon icon={'ph:list'} width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
+      <span
+        aria-hidden
+        className={cn(
+          'flex size-9 items-center justify-center rounded-full transition-colors duration-300 ease-out md:size-10',
+          'group-focus-visible:ring-2 group-focus-visible:ring-offset-2 group-focus-visible:ring-primary/60 group-focus-visible:ring-offset-transparent',
+          onPhoto
+            ? 'bg-white text-dark group-hover:bg-white/85'
+            : 'bg-dark text-white group-hover:bg-primary dark:bg-white dark:text-dark dark:group-hover:bg-primary dark:group-hover:text-white',
+        )}
+      >
+        {/* Drawn inline so the three lines render on the first paint. */}
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+          <path d="M3.5 5.5h13M3.5 10h13M3.5 14.5h13" />
+        </svg>
       </span>
-      <span className='hidden lg:block'>{menuLabel}</span>
     </button>
   )
 }

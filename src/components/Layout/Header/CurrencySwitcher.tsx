@@ -7,9 +7,18 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import { cn } from '@/lib/utils'
 import { getCurrencyMeta } from '@/lib/currency/registry'
 import {
+  headerSwitcherButtonClass,
   headerSwitcherCaretClass,
   headerSwitcherPillClass,
 } from './headerSwitcherStyles'
+
+/** Keeps the chosen currency in the URL, so a shared link opens in it. */
+export function persistCurrencyInUrl(code: string) {
+  if (typeof window === 'undefined') return
+  const params = new URLSearchParams(window.location.search)
+  params.set('currency', code)
+  window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
+}
 
 type CurrencySwitcherProps = {
   /** Header is floating over a photo hero. */
@@ -33,12 +42,7 @@ export default function CurrencySwitcher({
   const handleSelect = (newCurrency: string) => {
     setCurrency(newCurrency as never)
     setOpen(false)
-    // Persist currency in URL so links can be shared with a specific currency
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      params.set('currency', newCurrency)
-      window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
-    }
+    persistCurrencyInUrl(newCurrency)
   }
 
   return (
@@ -46,11 +50,14 @@ export default function CurrencySwitcher({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={headerSwitcherPillClass(overHero, sticky)}
-        aria-label={t('switchTo', { currency })}
+        className={headerSwitcherButtonClass()}
+        // The selected currency, not "switch to" it (QA 2026-10-11: the label
+        // said "Switch currency to EUR" while EUR was selected).
+        aria-label={t('current', { currency })}
         aria-expanded={open}
         aria-haspopup="listbox"
       >
+        <span className={headerSwitcherPillClass(overHero, sticky)}>
         <span className="inline-flex items-center gap-1 min-w-0">
           {meta.symbol !== meta.code ? (
             <>
@@ -69,6 +76,7 @@ export default function CurrencySwitcher({
           height={14}
           className={headerSwitcherCaretClass(overHero, sticky, open)}
         />
+        </span>
       </button>
       {open && (
         <>
@@ -79,9 +87,9 @@ export default function CurrencySwitcher({
           />
           <div
             role="listbox"
-            aria-label={t('switchTo', { currency })}
+            aria-label={t('current', { currency })}
             className={cn(
-              'absolute right-0 top-full mt-2 py-1 z-50',
+              'absolute right-0 top-full mt-0.5 py-1 z-50',
               'rounded-2xl border border-dark/10 dark:border-white/10 shadow-3xl',
               'bg-white dark:bg-dark',
               'min-w-[7rem]',
@@ -100,7 +108,7 @@ export default function CurrencySwitcher({
                   aria-label={t('switchTo', { currency: c.code })}
                   onClick={() => handleSelect(c.code)}
                   className={cn(
-                    'flex items-center gap-2 w-full px-3 py-1.5 text-sm cursor-pointer outline-none',
+                    'flex items-center gap-2 w-full min-h-11 px-3 py-1.5 text-sm cursor-pointer outline-none',
                     'text-dark dark:text-white',
                     'hover:bg-primary/15 dark:hover:bg-primary/25 hover:text-primary',
                     c.code === currency && 'text-primary bg-primary/10 dark:bg-primary/25'

@@ -18,7 +18,7 @@
 
 export type NavLinkItem = {
   kind: 'link'
-  key: 'guides' | 'blog' | 'about' | 'contacts'
+  key: 'blog' | 'about' | 'contacts'
   href: `/${string}`
 }
 
@@ -29,11 +29,23 @@ export type NavBuyItem = {
   href: `/${string}`
 }
 
-export type PrimaryNavItem = NavBuyItem | NavLinkItem
+/**
+ * "Guides" opens the topics the articles are grouped into (src/data/guideTopics.ts),
+ * the latest articles and the way to /guides — the owner's request of
+ * 2026-10-11: "we write so many articles, make Guides a menu like Buy".
+ */
+export type NavGuidesItem = {
+  kind: 'guides'
+  key: 'guides'
+  /** The guides hub. */
+  href: `/${string}`
+}
+
+export type PrimaryNavItem = NavBuyItem | NavGuidesItem | NavLinkItem
 
 export const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
   { kind: 'buy', key: 'buy', href: '/sale' },
-  { kind: 'link', key: 'guides', href: '/guides' },
+  { kind: 'guides', key: 'guides', href: '/guides' },
   { kind: 'link', key: 'blog', href: '/blog' },
   { kind: 'link', key: 'about', href: '/about' },
   { kind: 'link', key: 'contacts', href: '/contacts' },
@@ -82,7 +94,14 @@ export type MenuLink = {
   key: string
   label: string
   href: string
+  /** Listings or articles behind the link, when the menu shows it. */
+  count?: number
+  /** Iconify name, for the entries that carry one. */
+  icon?: string
 }
+
+/** How many property types the drawer lists (largest first). */
+export const MAX_MENU_PROPERTY_TYPES = 6
 
 /** Everything the Buy menu renders, built once per request on the server. */
 export type BuyMenuData = {
@@ -94,4 +113,29 @@ export type BuyMenuData = {
   allListingsHref: string
   /** `/{locale}/cities` */
   allCitiesHref: string
+  /** National listings by property type (`/{locale}/sale/{type}`), largest first. */
+  types: MenuLink[]
+}
+
+/** One article in the Guides menu's "latest" column. */
+export type GuideMenuArticle = {
+  key: string
+  title: string
+  href: string
+  /** ISO date. */
+  publishedAt?: string
+  /** The date as the blog prints it, formatted on the server. */
+  dateLabel?: string
+}
+
+/** Everything the Guides menu renders, built once per request on the server. */
+export type GuidesMenuData = {
+  /** Topics with at least one article, then comparisons; each with its count. */
+  topics: MenuLink[]
+  /** The newest articles. */
+  latest: GuideMenuArticle[]
+  /** `/{locale}/guides` */
+  allGuidesHref: string
+  /** `/{locale}/blog` */
+  allArticlesHref: string
 }

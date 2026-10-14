@@ -15,6 +15,7 @@ import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/li
 import { NoPhotoPlate } from "@/components/shared/NoPhotoPlate";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { balancedGridClass, Section, SectionHeading } from "@/components/shared/layout";
+import { GUIDES_SECTION_IDS, isComparisonGuideSlug } from "@/data/guideTopics";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -55,7 +56,8 @@ export default async function GuidesIndexPage({ params }: Props) {
 
   // Twenty "X or Y" comparisons used to be interleaved with the handful of
   // core guides; they are a set of their own.
-  const isComparison = (slug?: string | null) => typeof slug === "string" && slug.includes("-vs-");
+  // The header's Guides menu links to the comparisons by section id.
+  const isComparison = isComparisonGuideSlug;
   const groups = [
     { key: "guides", title: t("sectionGuides"), entries: entries.filter((e) => !isComparison(e.slug)) },
     { key: "comparisons", title: t("sectionComparisons"), entries: entries.filter((e) => isComparison(e.slug)) },
@@ -79,7 +81,7 @@ export default async function GuidesIndexPage({ params }: Props) {
       ) : (
         groups.map((group) =>
           group.entries.length > 0 ? (
-            <Section key={group.key}>
+            <Section key={group.key} id={GUIDES_SECTION_IDS[group.key as keyof typeof GUIDES_SECTION_IDS]} className="scroll-mt-24">
               <SectionHeading title={group.title} />
               <ul className={balancedGridClass(group.entries.length)}>
                 {group.entries.map((entry) => {

@@ -26,6 +26,9 @@ function isUnder(pathname: string, base: string): boolean {
 export function isPrimaryNavItemActive(item: PrimaryNavItem, pathname: string | null, locale: string): boolean {
   const path = pathname ?? ''
   if (item.kind === 'link') return isUnder(path, resolveNavHref(item.href, locale))
+  // The Guides menu covers the hub and every guide under it; the blog keeps
+  // its own entry.
+  if (item.kind === 'guides') return isUnder(path, resolveNavHref(item.href, locale))
   if (isUnder(path, `/${locale}/sale`) || isUnder(path, `/${locale}/catalog`) || isUnder(path, `/${locale}/cities`)) {
     return true
   }

@@ -5,13 +5,12 @@ import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   fetchBlogPostsPaginated,
-  fetchBlogCategories,
   fetchBlogSettings,
   fetchSiteSettings,
 } from "@/lib/sanity/client";
+import { loadBlogTopicChips } from "@/lib/nav/blogTopics";
 import { mapSanityBlogPostToList, type SanityListingPost } from "@/lib/sanity/blogAdapter";
 import { buildBlogMetadata } from "@/lib/sanity/blogSeoAdapter";
-import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled } from "@/lib/seo/envSeo";
@@ -21,7 +20,7 @@ import { BLOG_PAGE_SIZE } from "@/lib/routes/blogIndex";
  * `/{locale}/blog` — the first page of every post, cached.
  *
  * This route reads no `searchParams`. A URL with a query string
- * (`?category=…`, `?page=2`) is rewritten by the middleware to the sibling
+ * (`?topic=…`, `?category=…`, `?page=2`) is rewritten by the middleware to the sibling
  * `listing-query/blog` route, which reads it and renders per request; see
  * `src/lib/routes/listingQueryRewrite.ts`. Until 2026-09-25 this one route
  * did both, and reading the query made it the only page on the site that
@@ -68,19 +67,7 @@ export default async function Blog({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const categoriesRaw = await fetchBlogCategories();
-
-  const categories = Array.isArray(categoriesRaw)
-    ? categoriesRaw
-        .filter((c) => c && typeof (c as { slug?: string }).slug === "string")
-        .map((c) => {
-          const cat = c as { slug: string; title?: unknown };
-          return {
-            slug: cat.slug,
-            label: resolveLocalizedString(cat.title as never, locale) || cat.slug,
-          };
-        })
-    : [];
+  const topics = await loadBlogTopicChips(locale);
 
   const { items, totalCount } = await fetchBlogPostsPaginated({
     category: undefined,
@@ -91,7 +78,7 @@ export default async function Blog({ params }: Props) {
   const totalPages = Math.max(1, Math.ceil(totalCount / BLOG_PAGE_SIZE));
   const posts = items.map((p) => mapSanityBlogPostToList(p as SanityListingPost, locale));
 
-  const t = await getTranslations("Listing.blogs");
+  const [t, tBlog] = await Promise.all([getTranslations("Listing.blogs"), getTranslations("Blog")]);
 
   return (
     <>
@@ -105,8 +92,9 @@ export default async function Blog({ params }: Props) {
       <BlogList
         locale={locale}
         posts={posts}
-        categories={categories}
-        currentCategory={undefined}
+        topics={topics}
+        allLabel={tBlog("filterAll")}
+        filterLabel={tBlog("filterLabel")}
         currentPage={1}
         totalPages={totalPages}
       />

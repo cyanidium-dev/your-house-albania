@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { Icon } from "@/components/shared/Icon";
 import {
+  headerSwitcherButtonClass,
   headerSwitcherCaretClass,
   headerSwitcherPillClass,
 } from "./headerSwitcherStyles";
@@ -53,18 +54,20 @@ export default function LanguageSwitcher({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={headerSwitcherPillClass(overHero, sticky)}
+        className={headerSwitcherButtonClass()}
         aria-label={t("selectLanguage")}
         aria-expanded={open}
         aria-haspopup="listbox"
       >
-        <span>{locale.toUpperCase()}</span>
-        <Icon
-          icon="ph:caret-down"
-          width={14}
-          height={14}
-          className={headerSwitcherCaretClass(overHero, sticky, open)}
-        />
+        <span className={headerSwitcherPillClass(overHero, sticky)}>
+          <span>{locale.toUpperCase()}</span>
+          <Icon
+            icon="ph:caret-down"
+            width={14}
+            height={14}
+            className={headerSwitcherCaretClass(overHero, sticky, open)}
+          />
+        </span>
       </button>
       {open && (
         <>
@@ -74,7 +77,7 @@ export default function LanguageSwitcher({
             onClick={() => setOpen(false)}
           />
           <div
-            className="absolute right-0 top-full mt-1 py-1 bg-white dark:bg-dark border border-dark/10 dark:border-white/10 rounded-lg shadow-lg z-50 min-w-[4rem] transition-colors duration-300 ease-out"
+            className="absolute right-0 top-full mt-0 py-1 bg-white dark:bg-dark border border-dark/10 dark:border-white/10 rounded-lg shadow-lg z-50 min-w-[4rem] transition-colors duration-300 ease-out"
             role="listbox"
           >
             {locales.map((loc) => (
@@ -84,7 +87,7 @@ export default function LanguageSwitcher({
                 role="option"
                 aria-selected={loc === locale}
                 onClick={() => handleSelect(loc)}
-                className={`block w-full text-left px-4 py-2 text-sm hover:bg-primary/10 hover:text-primary cursor-pointer ${
+                className={`block w-full min-h-11 text-left px-4 py-2 text-sm hover:bg-primary/10 hover:text-primary cursor-pointer ${
                   loc === locale ? "text-primary font-semibold" : ""
                 }`}
               >

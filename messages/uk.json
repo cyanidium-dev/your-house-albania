@@ -19,7 +19,14 @@
       "openBuyMenu": "Відкрити меню Купівля",
       "closeBuyMenu": "Закрити меню Купівля",
       "expandPrices": "Розгорнути ціни по містах",
-      "collapsePrices": "Згорнути ціни по містах"
+      "collapsePrices": "Згорнути ціни по містах",
+      "openGuidesMenu": "Відкрити меню гайдів",
+      "closeGuidesMenu": "Закрити меню гайдів",
+      "guideTopics": "Теми",
+      "latestGuides": "Нові статті",
+      "allGuides": "Усі гайди",
+      "allArticles": "Усі статті",
+      "propertyTypes": "Типи нерухомості"
     },
     "cta": {
       "viewProperties": "Переглянути об'єкти"
@@ -30,10 +37,31 @@
     "favoritesCount": "Обране ({count})",
     "selectLanguage": "Обрати мову",
     "closeMobileMenu": "Закрити мобільне меню",
-    "mainNavigation": "Основна навігація"
+    "mainNavigation": "Основна навігація",
+    "guideTopics": {
+      "investing": "Інвестиції",
+      "buying": "Купівля та право",
+      "market": "Ціни та ринок",
+      "places": "Міста й райони",
+      "living": "Життя в Албанії",
+      "comparisons": "Порівняння"
+    },
+    "drawer": {
+      "title": "Меню",
+      "more": "Ще",
+      "settings": "Налаштування",
+      "language": "Мова",
+      "currency": "Валюта",
+      "theme": "Тема",
+      "themeLight": "Світла",
+      "themeDark": "Темна",
+      "getHelp": "Контакти й допомога",
+      "viewAll": "Дивитися всі"
+    }
   },
   "Currency": {
-    "switchTo": "Змінити валюту на {currency}"
+    "switchTo": "Змінити валюту на {currency}",
+    "current": "Валюта: {currency}"
   },
   "Footer": {
     "columns": {
@@ -820,7 +848,9 @@
     "zoneStatsNew": "Новобудови",
     "zoneStatsResale": "Вторинний ринок",
     "zoneStatsYield": "Валова дохідність",
-    "allCategories": "Усі"
+    "allCategories": "Усі",
+    "filterAll": "Усі",
+    "filterLabel": "Теми статей"
   },
   "PropertyMeta": {
     "areaUnit": "м²",
