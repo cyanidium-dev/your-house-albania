@@ -11,6 +11,7 @@ import {
 } from '@/lib/sanity/queries/landing'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { SectionHandler } from './types'
+import { heroPhotoFor } from '@/lib/media/albaniaPhotos'
 
 const DEFAULT_TITLE_KEY: Record<string, 'districtsOfCity' | 'comparisons' | 'guides' | 'related'> = {
   cityDistricts: 'districtsOfCity',
@@ -71,6 +72,13 @@ export const relatedPagesAutoSectionHandler: SectionHandler = async ({
     // Generated district landings carry no cardImage — fall back to the
     // district's own photo so sibling cards keep their imagery (spec §5.1).
     .map((c) => (c.cardImage?.asset?.url ? c : { ...c, cardImage: c.zoneHeroImage }))
+    // Guides and comparisons have neither: the credited photo of the place the
+    // slug names, instead of a grey card (owner, 14.10: "Related guides").
+    .map((c) =>
+      c.cardImage?.asset?.url
+        ? c
+        : { ...c, cardImage: { asset: { url: heroPhotoFor({ slug: (c as { slug?: string }).slug }).src } } }
+    )
   if (resolvedCards.length === 0) return null
 
   let title: unknown = section.title

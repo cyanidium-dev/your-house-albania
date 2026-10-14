@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import { StatsBandSection } from '@/components/landing/sections/StatsBandSection'
 import { SourcesList, type SourcesListItem } from '@/components/landing/sections/impl/SourcesList'
-import { resolveLocalizedString } from '@/lib/sanity/localized'
+import { resolveLocalizedString, resolveLocalizedStringStrict } from '@/lib/sanity/localized'
 import { formatMetric, resolveSelectedMetrics, type MetricKey } from '@/lib/zoneMetrics/metrics'
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics'
 import { BODY_TEXT } from '@/components/shared/layout'
@@ -70,7 +70,10 @@ export function ZoneStatsAutoSection({
       : undefined,
   ].filter(Boolean)
 
-  const notes = resolveLocalizedString(record.notes as never, locale)
+  // The research note only in the reader's language: an English paragraph on
+  // a Ukrainian page read as a broken page (owner, 14.10). Figures and sources
+  // still show; the note comes back once it is translated in the CMS.
+  const notes = resolveLocalizedStringStrict(record.notes as never, locale)
   const sources = (record.sources ?? []).filter(
     (s): s is SourcesListItem => Boolean(s?.url && s?.label),
   )

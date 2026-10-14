@@ -30,7 +30,10 @@ export async function Breadcrumb({ items, separator = "/", overHero = false }: P
     >
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 list-none p-0 m-0">
         {items.map((item, idx) => (
-          <li key={idx} className="flex items-center gap-x-1.5">
+          // min-w-0 + truncate: a long current page stays on one line with an
+          // ellipsis (the H1 below repeats it) instead of wrapping beside a
+          // separator left hanging at the start of the line.
+          <li key={idx} className="flex min-w-0 max-w-full items-center gap-x-1.5">
             {idx > 0 && (
               <span className={overHero ? "text-white/60" : "text-dark/40 dark:text-white/40"} aria-hidden>
                 {separator}
@@ -45,7 +48,8 @@ export async function Breadcrumb({ items, separator = "/", overHero = false }: P
               </Link>
             ) : (
               <span
-                className="text-dark dark:text-white font-medium"
+                className="min-w-0 truncate text-dark dark:text-white font-medium"
+                title={item.label}
                 aria-current={idx === items.length - 1 ? "page" : undefined}
               >
                 {item.label}
