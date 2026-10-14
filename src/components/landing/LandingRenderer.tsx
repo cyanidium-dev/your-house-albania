@@ -101,7 +101,15 @@ export async function LandingRenderer({
   // from the page's inventory band (or feed) filter, fetched only when used.
   let liveTokens: LiveTokenValues | null = null
   const hero = sections[0]?._type === 'heroSection' ? sections[0] : undefined
-  if (hero && localizedHasLiveTokens([hero.title, hero.subtitle, hero.shortLine], locale)) {
+  // FAQ answers may carry them too ("How much is a flat here? {count} on sale
+  // from {fromPrice}…") — a price question answered with live figures.
+  const faqTokenFields = sections
+    .filter((s) => s._type === 'faqSection' && Array.isArray(s.items))
+    .flatMap((s) => (s.items as Array<{ question?: unknown; answer?: unknown }>).flatMap((it) => [it.question, it.answer]))
+  if (
+    (hero && localizedHasLiveTokens([hero.title, hero.subtitle, hero.shortLine], locale)) ||
+    localizedHasLiveTokens(faqTokenFields, locale)
+  ) {
     const scope = liveTokenScope(sections, { linkedZone, citySlug })
     if (scope) liveTokens = liveTokenValues(await fetchCatalogInventorySummary(scope), locale)
   }

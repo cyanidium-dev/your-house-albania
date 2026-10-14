@@ -5,10 +5,23 @@ import { isIndexingEnabled } from '@/lib/seo/envSeo'
 import { portableTextToPlainText } from '@/lib/sanity/portableTextPlain'
 import { resolveFaqDataFromSection } from '../helpers'
 import type { SectionHandler } from './types'
+import { fillLiveTokens } from '@/lib/landing/liveTokens'
 
-export const faqSectionHandler: SectionHandler = ({ locale, section, faqJsonLd }) => {
+export const faqSectionHandler: SectionHandler = ({ locale, section, faqJsonLd, liveTokens }) => {
   if (section.enabled === false) return null
-  const faqData = resolveFaqDataFromSection(section, locale)
+  const resolved = resolveFaqDataFromSection(section, locale)
+  // Live figures in plain-text questions and answers (lib/landing/liveTokens);
+  // the JSON-LD below reads the same filled text.
+  const faqData = resolved
+    ? {
+        ...resolved,
+        items: resolved.items.map((item) => ({
+          ...item,
+          question: fillLiveTokens(item.question, liveTokens),
+          answer: typeof item.answer === 'string' ? fillLiveTokens(item.answer, liveTokens) : item.answer,
+        })),
+      }
+    : resolved
 
   if (process.env.NODE_ENV === 'development') {
     const first = faqData?.items?.[0] as any
