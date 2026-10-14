@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Të gjitha pronat",
+      "leadLanding": "Apartamente okazion në Durrës",
       "allCities": "Të gjitha qytetet",
       "blog": "Blog",
       "about": "Rreth nesh",
@@ -322,6 +323,8 @@
   "Districts": {
     "hubTitle": "Rrethet e {city}",
     "hubDescription": "Eksploroni rrethet e {city} dhe zgjidhni zonën e duhur për shtëpinë tuaj të re.",
+    "hubMetaTitle": "Rrethet e {city} 2026: çmimet për m² dhe ku të jetoni",
+    "hubMetaDescription": "Krahasoni rrethet e {city} sipas çmimit për m² dhe karakterit, pastaj shikoni njoftimet aktuale në secilën zonë.",
     "faqTitle": "Pyetjet më të shpeshta",
     "exploreTitle": "Vazhdoni eksplorimin",
     "propertiesInDistrict": "Prona në {district}",

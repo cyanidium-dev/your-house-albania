@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Alle Immobilien",
+      "leadLanding": "Immobilien am Meer",
       "allCities": "Alle Städte",
       "blog": "Blog",
       "about": "Über uns",
@@ -322,6 +323,8 @@
   "Districts": {
     "hubTitle": "Stadtteile von {city}",
     "hubDescription": "Entdecken Sie die Stadtteile von {city} und finden Sie die passende Lage für Ihr neues Zuhause.",
+    "hubMetaTitle": "Stadtteile von {city} 2026: Preise pro m² und Wohnlagen",
+    "hubMetaDescription": "Vergleichen Sie die Stadtteile von {city} nach Quadratmeterpreis und Charakter und sehen Sie die aktuellen Angebote in jeder Lage.",
     "faqTitle": "Häufige Fragen",
     "exploreTitle": "Weiter entdecken",
     "propertiesInDistrict": "Immobilien in {district}",

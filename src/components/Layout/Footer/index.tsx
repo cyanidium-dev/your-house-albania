@@ -10,6 +10,7 @@ import type { FooterCityNavItem } from "@/lib/sanity/client";
 import type { ResolvedSiteSettings } from "@/lib/sanity/siteSettingsAdapter";
 import {
   FOOTER_COMPANY_ITEMS,
+  FOOTER_LEAD_LANDING,
   FOOTER_PROPERTY_HEAD,
   FOOTER_PROPERTY_TAIL,
   FOOTER_USEFUL_ITEMS,
@@ -195,6 +196,13 @@ export default function Footer({
                     </Link>
                   </li>
                 ))}
+                {FOOTER_LEAD_LANDING[locale] ? (
+                  <li>
+                    <Link href={resolveStableHref(FOOTER_LEAD_LANDING[locale], locale)} className={colLinkClass}>
+                      {navT("leadLanding")}
+                    </Link>
+                  </li>
+                ) : null}
                 {orderedCities.length === 0 ? (
                   <li className={colBodyClass}>{t("cities.empty")}</li>
                 ) : (

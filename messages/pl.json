@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Wszystkie oferty",
+      "leadLanding": "Nieruchomości nad morzem",
       "allCities": "Wszystkie miasta",
       "blog": "Blog",
       "about": "O nas",
@@ -322,6 +323,8 @@
   "Districts": {
     "hubTitle": "Dzielnice miasta {city}",
     "hubDescription": "Poznaj dzielnice miasta {city} i wybierz odpowiednią okolicę dla swojego kolejnego domu.",
+    "hubMetaTitle": "Dzielnice miasta {city} 2026: ceny za m² i gdzie mieszkać",
+    "hubMetaDescription": "Porównaj dzielnice miasta {city} pod względem ceny za m² i charakteru, a potem przejrzyj aktualne oferty w każdej okolicy.",
     "faqTitle": "Najczęściej zadawane pytania",
     "exploreTitle": "Zobacz więcej",
     "propertiesInDistrict": "Nieruchomości w dzielnicy {district}",

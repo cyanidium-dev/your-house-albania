@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "All listings",
+      "leadLanding": "Property by the sea",
       "allCities": "All cities",
       "blog": "Blog",
       "about": "About",
@@ -322,6 +323,8 @@
   "Districts": {
     "hubTitle": "Districts of {city}",
     "hubDescription": "Explore the districts of {city} and choose the right area for your next home.",
+    "hubMetaTitle": "{city} districts 2026: prices per m² and where to live",
+    "hubMetaDescription": "Compare the districts of {city} by price per m² and character, then browse the live listings in each area.",
     "faqTitle": "Frequently asked questions",
     "exploreTitle": "Keep exploring",
     "propertiesInDistrict": "Properties in {district}",

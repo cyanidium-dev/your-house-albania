@@ -45,6 +45,7 @@
     },
     "nav": {
       "allListings": "Tutti gli immobili",
+      "leadLanding": "Comprare casa in Albania",
       "allCities": "Tutte le città",
       "blog": "Blog",
       "about": "Chi siamo",
@@ -322,6 +323,8 @@
   "Districts": {
     "hubTitle": "Quartieri di {city}",
     "hubDescription": "Esplora i quartieri di {city} e scegli la zona giusta per la tua prossima casa.",
+    "hubMetaTitle": "Quartieri di {city} 2026: prezzi al m² e dove vivere",
+    "hubMetaDescription": "Confronta i quartieri di {city} per prezzo al m² e carattere, poi guarda gli annunci attuali in ogni zona.",
     "faqTitle": "Domande frequenti",
     "exploreTitle": "Continua a esplorare",
     "propertiesInDistrict": "Immobili a {district}",
