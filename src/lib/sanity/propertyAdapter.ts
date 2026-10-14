@@ -459,6 +459,8 @@ export function mapCatalogPropertyToCard(
     locale
   );
   base.images = catalogImages(p);
+  if (typeof p.stats?.total === 'number' && p.stats.total > 0) base.views = p.stats.total;
+  if (typeof p.stats?.favorites === 'number' && p.stats.favorites > 0) base.saves = p.stats.favorites;
   // Link to this locale's address when the listing has one; without it the
   // card falls back to `/{locale}/property/{slug}`, which is the same URL.
   if (p.slug && p.localizedSlug) base._href = propertyPath(locale, p.slug, p.localizedSlug);

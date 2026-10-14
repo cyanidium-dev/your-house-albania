@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from '@/components/shared/Icon'
 import { useState, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
@@ -46,6 +47,7 @@ export function PropertyCardGallery({
   discountPercent,
   locale,
   contactLabel,
+  stats,
 }: {
   images: { src: string }[]
   name: string
@@ -72,6 +74,8 @@ export function PropertyCardGallery({
   /** With `contactLabel`, puts the enquiry button inside the full-screen viewer. */
   locale?: string
   contactLabel?: string
+  /** "47 views · 5 saved", shown from a threshold (see CARD_STATS_MIN_*). */
+  stats?: { views?: number; saves?: number; label: string }
 }) {
   const t = useTranslations('Shared.propertyCard')
   const tLightbox = useTranslations('Shared.lightbox')
@@ -258,6 +262,29 @@ export function PropertyCardGallery({
           handoverQuarter={handoverQuarter}
           view={view}
         />
+        {stats && (stats.views || stats.saves) ? (
+          <span
+            className={cn(
+              'pointer-events-none absolute z-30 inline-flex items-center gap-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold leading-5 text-white backdrop-blur-sm',
+              view === 'large' ? 'bottom-3 left-5' : 'bottom-1.5 left-1.5',
+            )}
+            title={stats.label}
+            aria-label={stats.label}
+          >
+            {stats.views ? (
+              <span className="inline-flex items-center gap-1" aria-hidden>
+                <Icon icon="ph:eye" width={13} height={13} />
+                {stats.views}
+              </span>
+            ) : null}
+            {stats.saves ? (
+              <span className="inline-flex items-center gap-1" aria-hidden>
+                <Icon icon="ph:heart" width={13} height={13} />
+                {stats.saves}
+              </span>
+            ) : null}
+          </span>
+        ) : null}
         <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
           <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
         </div>

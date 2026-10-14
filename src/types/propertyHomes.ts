@@ -24,6 +24,9 @@ export type PropertyHomes = {
   promotionType?: 'premium' | 'top' | 'sale'
   featuredOrder?: number
   discountPercent?: number
+  /** Server-counted views and saves (see src/lib/metrics/viewCounter.ts). */
+  views?: number
+  saves?: number
   investment?: string | boolean
   /** Where the building is in its life; only unfinished stages are shown on the card. */
   constructionStage?: 'off-plan' | 'under-construction' | 'completed'

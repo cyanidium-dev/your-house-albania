@@ -69,6 +69,8 @@ export function parseCatalogFilters(
     sortRaw === "areaAsc" ||
     sortRaw === "areaDesc" ||
     sortRaw === "handoverAsc" ||
+    sortRaw === "popular" ||
+    sortRaw === "pricePerSqmAsc" ||
     sortRaw === "newest"
       ? sortRaw
       : "newest";

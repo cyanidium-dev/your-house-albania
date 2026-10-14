@@ -253,6 +253,24 @@ function PropertyCard({
     </div>
   )
 
+  // Real counts only, and only once they mean something: a "2 views" badge
+  // would advertise how quiet a listing is (audit 13.10, decision 8).
+  const shownViews = typeof item.views === 'number' && item.views >= CARD_STATS_MIN_VIEWS ? item.views : undefined
+  const shownSaves = typeof item.saves === 'number' && item.saves >= CARD_STATS_MIN_SAVES ? item.saves : undefined
+  const cardStats =
+    shownViews || shownSaves
+      ? {
+          views: shownViews,
+          saves: shownSaves,
+          label: [
+            shownViews ? tCard('statsViews', { count: shownViews }) : '',
+            shownSaves ? tCard('statsSaves', { count: shownSaves }) : '',
+          ]
+            .filter(Boolean)
+            .join(' · '),
+        }
+      : undefined
+
   const metaBlock = (
     <PropertyCardMeta
       view={view}
@@ -319,6 +337,7 @@ function PropertyCard({
           handoverQuarter={handoverQuarter}
           locale={locale}
           contactLabel={tCard('requestInfo')}
+          stats={cardStats}
         />
         <div className={contentPadding}>
           {isList ? (
@@ -412,4 +431,9 @@ function PropertyCard({
  * every one of the 24 cards rendered again on hydration and on every hover.
  * The active currency still reaches them through its context.
  */
+
+/** Thresholds for the views/saves badge on cards. */
+export const CARD_STATS_MIN_VIEWS = 10
+export const CARD_STATS_MIN_SAVES = 3
+
 export default memo(PropertyCard)

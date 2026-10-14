@@ -329,6 +329,7 @@ export function CatalogFilterForm({
                 anyLabel={t("sortNewest")}
                 anyValue="newest"
                 options={[
+                  { value: "popular", label: t("sortPopular") },
                   { value: "priceAsc", label: t("sortPriceAsc") },
                   { value: "priceDesc", label: t("sortPriceDesc") },
                   { value: "areaDesc", label: t("sortAreaDesc") },

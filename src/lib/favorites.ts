@@ -42,11 +42,27 @@ export function toggleFavorite(slug: string): boolean {
   if (idx >= 0) {
     list.splice(idx, 1);
     setFavorites(list);
+    reportFavorite(slug, false);
     return false;
   }
   list.push(slug);
   setFavorites(list);
+  reportFavorite(slug, true);
   return true;
+}
+
+/** Tells the server's counter (the "saved N times" on cards); fire and forget. */
+function reportFavorite(slug: string, on: boolean): void {
+  try {
+    void fetch("/api/metrics/favorite", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ slug, on }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // offline or blocked: the favourite itself is saved locally either way
+  }
 }
 
 export function clearAllFavorites(): void {

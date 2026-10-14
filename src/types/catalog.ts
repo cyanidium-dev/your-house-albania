@@ -10,7 +10,12 @@ export type CatalogSort =
    * Cheapest per m² first: the stated rate, or total ÷ area. Land and listings
    * without a plausible area sort last — a plot's €/m² is not a flat's.
    */
-  | 'pricePerSqmAsc';
+  | 'pricePerSqmAsc'
+  /**
+   * Most seen first: server-counted views (bots excluded) plus three per save
+   * to favourites, from the `viewCounter` documents; newest breaks ties.
+   */
+  | 'popular';
 
 /**
  * Where a building is in its life. `unfinished` is not a stored value — it is
@@ -52,6 +57,8 @@ export type CatalogFilters = {
 };
 
 export type CatalogProperty = {
+  /** Server counters (viewCounter): views since 2026-09-02, saves since 2026-10-14. */
+  stats?: { total?: number | null; favorites?: number | null } | null;
   _id: string;
   _type: 'property';
   title?: unknown;

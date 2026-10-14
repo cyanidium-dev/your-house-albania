@@ -13,6 +13,7 @@ import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+import { CatalogSortSelect } from "@/components/catalog/CatalogSortSelect";
 import { groupBuildingStacks, stackPointOf, type StackPoint } from "@/components/catalog/map/buildingStacks";
 import type { SheetStack } from "@/components/catalog/map/MapListingSheet";
 // Only once a pin is picked; nobody needs it at load.
@@ -754,12 +755,13 @@ export function CatalogBodyClient({
         <div className={cn(split && "lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start")}>
           <div className={cn("min-w-0", split && "lg:col-span-7")}>
             {allItems.length > 0 ? (
-              <div className="mb-3 hidden justify-end lg:flex">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <CatalogSortSelect initialSort={filterProps.initialSort} />
                 <button
                   type="button"
                   onClick={toggleMapHidden}
                   aria-pressed={!mapHidden}
-                  className="inline-flex h-9 items-center gap-2 rounded-full border border-dark/15 px-4 text-sm font-medium text-dark hover:border-primary hover:text-primary dark:border-white/20 dark:text-white"
+                  className="hidden h-9 items-center gap-2 rounded-full border border-dark/15 px-4 text-sm font-medium text-dark hover:border-primary hover:text-primary dark:border-white/20 dark:text-white lg:inline-flex"
                 >
                   <MapIcon />
                   {mapHidden ? tMap("showMap") : tMap("hideMap")}

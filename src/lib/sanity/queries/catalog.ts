@@ -243,9 +243,15 @@ const PRICE_TOTAL_KEY = `select(
   )`;
 const PRICE_UNKNOWN_LAST = `select(defined(${PRICE_TOTAL_KEY}) => 0, 1) asc`;
 
+/** The listing's counter document (src/lib/metrics/viewCounter.ts). */
+const LISTING_COUNTER = `*[_type == "viewCounter" && _id == "view-property-" + ^.slug.current][0]`;
+/** Views plus three per save: a save is a stronger signal than a look. */
+const POPULARITY_SCORE = `(coalesce(${LISTING_COUNTER}.total, 0) + 3 * coalesce(${LISTING_COUNTER}.favorites, 0))`;
+
 /** What a catalogue card needs; shared by the page query and single-card lookups. */
 const CATALOG_CARD_PROJECTION = `{
     _id,
+    "stats": ${LISTING_COUNTER} { total, favorites },
     _type,
     title,
     "slug": slug.current,
@@ -322,6 +328,8 @@ const cachedFetchCatalogProperties = sanityCache(
     // a finished building has no handover date and belongs at the end here.
     const handover = 'coalesce(handoverYear, 9999) * 10 + coalesce(handoverQuarter, 0)';
     order = `| order(${promotionOrder}, ${handover} asc)`;
+  } else if (sort === 'popular') {
+    order = `| order(${promotionOrder}, ${POPULARITY_SCORE} desc, _createdAt desc)`;
   } else if (sort === 'pricePerSqmAsc') {
     order = `| order(${promotionOrder}, ${PRICE_PER_SQM_ORDER} asc, price asc)`;
   } else order = `| order(${promotionOrder}, _createdAt desc)`;
