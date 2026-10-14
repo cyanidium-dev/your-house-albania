@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server'
 import { countryFromHeaders } from '@/lib/leads/buildLeadDocument'
 import { parseLeadContext } from '@/lib/leads/context'
-import { createLead } from '@/lib/leads/createLead'
 import { isLeadPlacement, type LeadPlacement, type LeadType } from '@/lib/leads/types'
 import { formatLeadAnalyticsBlock } from '@/lib/notifications/leads/formatLeadTelegram'
 import { formatMinMaxLabel } from '@/lib/notifications/agentContact/formatTelegramAgentContact'
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
 import { deliverAgentContactTelegram } from '@/lib/notifications/agentContact/telegramDelivery'
-import { fetchAgentLeadChatId } from '@/lib/notifications/leads/leadRecipients'
+import { fetchAgentLeadChatId, resolveListingAgent } from '@/lib/notifications/leads/leadRecipients'
+import { createLead, lookupLeadProperty, type LeadProperty } from '@/lib/leads/createLead'
 import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agentContact/types'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
@@ -125,6 +125,8 @@ export async function POST(request: Request) {
     typeof body.locale === 'string' && body.locale.trim() ? body.locale.trim() : '—'
 
   let normalized: NormalizedAgentContactSubmission
+  /** The listing an agent lead is about, once looked up (undefined: not looked up). */
+  let listing: LeadProperty | null | undefined
 
   if (isQuote) {
     const urlLocale = /^[a-z]{2}$/.test(locale) ? locale : 'en'
@@ -192,7 +194,7 @@ export async function POST(request: Request) {
       return jsonError(400, 'Missing agent')
     }
 
-    const agentName =
+    const clientAgentName =
       typeof body.agentName === 'string' && body.agentName.trim() ? body.agentName.trim() : '—'
 
     let propertySlug: string | undefined
@@ -203,6 +205,13 @@ export async function POST(request: Request) {
       }
       propertySlug = s
     }
+    // The listing decides whose lead this is (see resolveListingAgent).
+    listing = propertySlug ? await lookupLeadProperty(propertySlug) : null
+    const { agentSlug, agentName } = resolveListingAgent({
+      clientAgentSlug: body.agentSlug.trim(),
+      clientAgentName,
+      listing,
+    })
     const propertyTitle =
       typeof body.propertyTitle === 'string' && body.propertyTitle.trim()
         ? body.propertyTitle.trim().slice(0, MAX_TITLE)
@@ -214,7 +223,7 @@ export async function POST(request: Request) {
 
     normalized = {
       submissionKind: 'agent',
-      agentSlug: body.agentSlug.trim(),
+      agentSlug,
       agentName,
       locale,
       location: body.city?.trim() || undefined,
@@ -266,7 +275,12 @@ export async function POST(request: Request) {
   const hasAgent = normalized.agentSlug !== '—' && normalized.agentSlug !== 'unassigned'
 
   const routing = resolveAgentContactTelegramRouting()
-  const agentChatId = hasAgent ? await fetchAgentLeadChatId(normalized.agentSlug) : null
+  const agentChatId =
+    listing?.agentSlug === normalized.agentSlug && listing.agentLeadChatId
+      ? listing.agentLeadChatId
+      : hasAgent
+        ? await fetchAgentLeadChatId(normalized.agentSlug)
+        : null
   const [delivery, lead] = await Promise.all([
     deliverAgentContactTelegram(normalized, routing, {
       appendix: formatLeadAnalyticsBlock({
@@ -284,6 +298,7 @@ export async function POST(request: Request) {
       ...(context ? { context } : {}),
       ...(country ? { country } : {}),
       ...(normalized.propertySlug ? { propertySlug: normalized.propertySlug } : {}),
+      ...(listing !== undefined ? { property: listing } : {}),
       ...(normalized.propertyTitle ? { propertyTitle: normalized.propertyTitle } : {}),
       ...(hasAgent ? { agentSlug: normalized.agentSlug } : {}),
       contact: {
