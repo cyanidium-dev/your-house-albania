@@ -15,8 +15,9 @@ type Props = {
   subject?: LeadSubject
 }
 
+// 16px on a phone: a smaller input makes iOS Safari zoom in on focus.
 const inputClass =
-  'w-full rounded-full border border-black/10 bg-white px-5 py-3 text-sm text-dark outline-primary placeholder:text-dark/40 focus:outline dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40'
+  'w-full rounded-full border border-black/10 bg-white px-5 py-3 text-base md:text-sm text-dark outline-primary placeholder:text-dark/40 focus:outline dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40'
 
 const buttonClass = brandButtonClass('primary', 'shrink-0', 'sm')
 
@@ -144,7 +145,7 @@ export function GuideDownloadForm({ locale, propertySlug, subject }: Props) {
         <span>
           {t.rich('consent', {
             privacy: (chunks) => (
-              <Link href={`/${locale}/privacy`} className="underline underline-offset-2 hover:text-primary">
+              <Link href={`/${locale}/privacy`} className="tap-zone relative underline underline-offset-2 hover:text-primary">
                 {chunks}
               </Link>
             ),

@@ -8,7 +8,8 @@ import { PANEL } from "@/components/shared/layout";
  */
 export const chipClass =
   "inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3.5 py-2 text-sm font-medium text-dark dark:text-white";
-export const chipLinkClass = `${chipClass} hover:border-primary hover:text-primary transition-colors`;
+// tap-zone: the chip is 38px tall; its hit area is 44px (audit 2026-10-18 M2).
+export const chipLinkClass = `tap-zone relative ${chipClass} hover:border-primary hover:text-primary transition-colors`;
 export const countClass = "text-dark/50 dark:text-white/50 tabular-nums";
 export const textLinkClass = "text-primary font-medium underline-offset-4 hover:underline";
 export const subheadClass = "text-sm font-semibold text-dark/70 dark:text-white/70";

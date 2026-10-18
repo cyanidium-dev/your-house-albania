@@ -250,7 +250,7 @@ export function GuidesLibrary({
               {hidden > 0 ? (
                 <button
                   type="button"
-                  className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-semibold text-primary hover:underline dark:text-[#5fd3a9]"
+                  className="tap-zone relative mt-6 inline-flex items-center gap-1.5 text-[15px] font-semibold text-primary hover:underline dark:text-[#5fd3a9]"
                   onClick={() => {
                     setTopic(t.key);
                     requestAnimationFrame(() => document.getElementById(t.key)?.scrollIntoView({ block: "start" }));

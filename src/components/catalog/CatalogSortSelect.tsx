@@ -28,7 +28,7 @@ export function CatalogSortSelect({ initialSort }: { initialSort?: string }) {
   const value: Sort = (SORTS as readonly string[]).includes(initialSort ?? "") ? (initialSort as Sort) : "newest";
 
   return (
-    <label className="relative inline-flex h-9 min-w-0 items-center gap-2 rounded-full border border-dark/15 pl-3 pr-8 text-sm text-dark hover:border-primary dark:border-white/20 dark:text-white">
+    <label className="relative inline-flex h-9 min-w-0 items-center gap-2 rounded-full border border-dark/15 pl-3 pr-8 text-base text-dark md:text-sm hover:border-primary dark:border-white/20 dark:text-white">
       <Icon icon="ph:sort-ascending" width={16} height={16} className="shrink-0 text-dark/55 dark:text-white/60" aria-hidden />
       <span className="sr-only">{t("sortBy")}</span>
       <select
@@ -41,7 +41,10 @@ export function CatalogSortSelect({ initialSort }: { initialSort?: string }) {
           url.searchParams.delete("page");
           router.push(`${url.pathname}${url.search}`, { scroll: false });
         }}
-        className="min-w-0 cursor-pointer appearance-none truncate bg-transparent font-medium outline-none"
+        // 44px tall inside the 36px pill (the margins cancel the overflow), so
+        // the whole row takes a thumb; 16px text on a phone, smaller makes iOS
+        // Safari zoom in on focus (audit 2026-10-18 M2).
+        className="-my-1 h-11 min-w-0 cursor-pointer appearance-none truncate bg-transparent font-medium outline-none"
       >
         {SORTS.map((s) => (
           <option key={s} value={s}>

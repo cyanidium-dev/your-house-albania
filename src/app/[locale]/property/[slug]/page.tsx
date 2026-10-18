@@ -469,7 +469,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                         ) : (
                                           <Link
                                             href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
-                                            className='underline underline-offset-2 hover:text-primary duration-300'
+                                            className='tap-zone relative underline underline-offset-2 hover:text-primary duration-300'
                                           >
                                             {chunks}
                                           </Link>
@@ -603,7 +603,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                         ) : (
                                           <Link
                                             href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
-                                            className='underline underline-offset-2 hover:text-primary duration-300'
+                                            className='tap-zone relative underline underline-offset-2 hover:text-primary duration-300'
                                           >
                                             {chunks}
                                           </Link>

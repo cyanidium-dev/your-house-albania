@@ -265,7 +265,7 @@ export function PropertyCardGallery({
         {stats && (stats.views || stats.saves) ? (
           <span
             className={cn(
-              'pointer-events-none absolute z-30 inline-flex items-center gap-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold leading-5 text-white backdrop-blur-sm',
+              'pointer-events-none absolute z-30 inline-flex items-center gap-2 rounded-full bg-black/55 px-2 py-0.5 text-xs font-semibold leading-5 text-white backdrop-blur-sm',
               view === 'large' ? 'bottom-3 left-5' : 'bottom-1.5 left-1.5',
             )}
             title={stats.label}
@@ -344,7 +344,8 @@ export function PropertyCardGallery({
             onFocus={preloadLightbox}
             aria-label={tLightbox('viewImageFullscreen')}
             className={cn(
-              'absolute z-30 inline-flex items-center justify-center rounded-full',
+              // tap-zone: the visible circle is 26-34px; the hit area is 44px.
+              'tap-zone absolute z-30 inline-flex items-center justify-center rounded-full',
               'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
               'transition duration-200 ease-out hover:scale-105 cursor-pointer',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
