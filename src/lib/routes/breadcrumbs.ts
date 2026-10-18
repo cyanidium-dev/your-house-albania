@@ -9,7 +9,7 @@ import {
   nonGeoDealListingPath,
   singleFilterPath,
 } from "@/lib/routes/catalog";
-import { isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
+import { isSolePublicDealQuery, isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
 
 /**
  * Breadcrumb builders — one per page family.
@@ -19,7 +19,7 @@ import { isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
  * family, and a trail never changes family. Two families share URL space and
  * are therefore the two that could be confused:
  *
- *   Catalog  Home → Properties → Country → City → deal → type   (browse listings)
+ *   Catalog  Home → Property for sale → City → District → type  (browse listings)
  *   Places   Home → Cities → City → Districts → District         (read about a place)
  *
  * Guides and Blog are self-contained sections; everything else is a flat
@@ -69,6 +69,7 @@ function closeTrail(items: BreadcrumbItem[]): BreadcrumbItem[] {
 
 export type CatalogCrumbInput = {
   locale: string;
+  /** `properties` names the catalog root: "Property for sale" while sale is the only deal. */
   labels: { home: string; properties: string; agents: string };
   agent?: { slug: string; name?: string };
   /** `href` overrides the country hub link, e.g. when the hub redirects elsewhere. */
@@ -83,12 +84,26 @@ export type CatalogCrumbInput = {
 };
 
 /**
- * Home → Properties → Country → City → deal → type.
+ * Where the catalog root crumb links: `/sale` while sale is the only public
+ * deal (it is the indexable catalog), the unfiltered catalog otherwise.
+ */
+export function catalogRootPath(locale: string): string {
+  return isSolePublicDealQuery("sale") ? nonGeoDealListingPath(locale, "sale") : catalogPath(locale);
+}
+
+/**
+ * Home → Property for sale → Country → City → District → deal → type.
  *
  * One crumb per level, each linking to its own level, so a crumb drops exactly
  * the levels below it. Replaces the old facet-reset pairs ("Cities" then the
  * city, "Deal type" then the deal), which read as a filter widget rather than
  * a trail; the catalog's own filter UI is where single facets get cleared.
+ *
+ * A level that links where the crumb before it links is dropped. With one
+ * country and one deal, the country hub and the sale listing both *are*
+ * `/sale`: the trail used to read Home → Properties (`/catalog`, noindex) →
+ * Albania (`/sale`) → Durrës, a noindex step and a second name for the same
+ * page (audit 2026-10-18, S-02). Now it is Home → Property for sale → Durrës.
  */
 export function buildCatalogCrumbs(input: CatalogCrumbInput): BreadcrumbItem[] {
   const { locale, labels, agent, country, city, district, deal, type, leaf } = input;
@@ -107,7 +122,7 @@ export function buildCatalogCrumbs(input: CatalogCrumbInput): BreadcrumbItem[] {
       href: agentFilterPath({ locale, agentSlug: agent.slug }),
     });
   } else {
-    items.push({ label: labels.properties, href: catalogPath(locale) });
+    items.push({ label: labels.properties, href: catalogRootPath(locale) });
   }
 
   if (country) {
@@ -178,7 +193,12 @@ export function buildCatalogCrumbs(input: CatalogCrumbInput): BreadcrumbItem[] {
   if (type) items.push({ label: type.label });
   if (leaf) items.push({ label: leaf });
 
-  return closeTrail(items);
+  return closeTrail(withoutRepeatedLinks(items));
+}
+
+/** Drop a crumb whose link repeats the previous crumb's: one page, one level. */
+function withoutRepeatedLinks(items: BreadcrumbItem[]): BreadcrumbItem[] {
+  return items.filter((item, i) => !(i > 0 && item.href && item.href === items[i - 1].href));
 }
 
 // ---------------------------------------------------------------------------
@@ -272,14 +292,21 @@ export type BlogCrumbInput = {
   postTitle?: string;
 };
 
-/** Home → Blog → category → post. Same trail as before, moved for consistency. */
+/**
+ * Home → Blog → post, or Home → Blog → category on a filtered blog index.
+ *
+ * A post's trail has no category level: the only category page is
+ * `/blog?category=…`, a noindex filter of `/blog`, and a breadcrumb item that
+ * search engines may not index is a broken step (audit 2026-10-18, S-09). Put
+ * the level back when categories get indexable pages of their own.
+ */
 export function buildBlogCrumbs(input: BlogCrumbInput): BreadcrumbItem[] {
   const { locale, labels, categorySlug, categoryLabel, postTitle } = input;
   const items: BreadcrumbItem[] = [
     { label: labels.home, href: `/${locale}` },
     { label: labels.blog, href: `/${locale}/blog` },
   ];
-  if (categorySlug && categoryLabel) {
+  if (categorySlug && categoryLabel && !postTitle) {
     items.push({
       label: categoryLabel,
       href: `/${locale}/blog?category=${encodeURIComponent(categorySlug)}`,

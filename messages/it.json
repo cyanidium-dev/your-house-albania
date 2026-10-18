@@ -122,11 +122,6 @@
         }
       }
     },
-    "properties": {
-      "badge": "Immobili",
-      "title": "Scopri case dal design ispiratore.",
-      "description": "Case curate dove eleganza, stile e comfort si uniscono."
-    },
     "topOffers": {
       "title": "Migliori offerte",
       "description": "Annunci popolari, nuovi e più richiesti in un unico posto.",
@@ -140,19 +135,6 @@
       "next": "Successivi",
       "seeAllCount": "Vedi tutti gli annunci ({count, number})"
     },
-    "featured": {
-      "badge": "Proprietà in evidenza",
-      "title": "Villa lusso moderna",
-      "address": "20 S Aurora Ave, Miami",
-      "description": "Vivi il lusso nella villa moderna in 20 S Aurora Ave, Miami. $1.650.500, 560 m², 4 camere, 3 bagni, ampi spazi. Efficienza energetica, luce naturale, sicurezza, esterni, 2 aree bar — ideale per 8+ ospiti. Costruita nel 2025.",
-      "bedrooms": "4 Camere",
-      "bathrooms": "3 Bagni",
-      "parkingSpace": "Posto auto",
-      "barAreas": "2 Aree bar",
-      "getInTouch": "Contattaci",
-      "price": "$1.650.500",
-      "discountedPrice": "Prezzo scontato"
-    },
     "faq": {
       "badge": "FAQ",
       "title": "Tutto sulle case Domlivo",
@@ -161,12 +143,6 @@
       "q2": "2. Dove trovo le case Domlivo?",
       "q3": "3. Quali passi per acquistare?",
       "answer": "Scopri una vasta gamma di proprietà di lusso, da appartamenti eleganti a ville spaziose."
-    },
-    "contact": {
-      "title": "Un regno dove design raffinato e lusso senza tempo si incontrano.",
-      "getInTouch": "Contattaci",
-      "marquee1": "VALUTAZIONE GRATUITA DELLA TUA CASA — VENDI CON SICUREZZA!",
-      "marquee2": "SFOGLIA MIGLIAIA DI ANNUNCI IN ZONE PRESTIGIOSE A PREZZI OTTIMI!"
     },
     "blog": {
       "badge": "Blog",
@@ -346,6 +322,7 @@
     "guides": "Guide",
     "districts": "Quartieri",
     "catalog": "Immobili",
+    "saleCatalog": "Immobili in vendita",
     "agents": "Agenti",
     "propertyTypes": "Tipi di immobile",
     "contacts": "Contatti",
@@ -1097,8 +1074,8 @@
       "body2": "“Decentralizzato” qui ha un significato preciso. Il catalogo non appartiene a una sola agenzia: vi pubblicano proprietari e molte agenzie partner, ogni annuncio indica chi l'ha inserito e l'acquirente parla direttamente con lui.",
       "uspTitle": "Cosa c'è oggi sul sito",
       "usp": {
-        "item1": "Ricerca con IA: descrivi la casa con parole tue; l'assistente cerca tra gli annunci e risponde dalla base di conoscenza, citando le fonti.",
-        "item2": "Una base di conoscenza e guide in cui ogni cifra ha una fonte e una data.",
+        "item1": "Ricerca con IA: descrivi la casa con parole tue; l'assistente cerca tra gli annunci e risponde dalle ricerche di Domlivo, citando le fonti.",
+        "item2": "Guide in cui ogni cifra ha una fonte e una data.",
         "item3": "Prezzi richiesti per quartiere nelle pagine delle città, ricalcolati ogni ora dagli annunci attivi.",
         "item4": "Il riquadro “Quanto costa comprare e mantenere” nelle pagine degli annunci.",
         "item5": "Sette lingue e cambio di valuta.",

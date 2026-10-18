@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { buildOgImageArray } from "@/lib/sanity/socialMetadataResolution";
 import { ogLocale } from "@/lib/seo/ogLocale";
-import { withBrand } from "@/lib/seo/brandTitle";
+import { fitListingTitle, withBrand } from "@/lib/seo/brandTitle";
 
 /**
  * Root layout applies a `%s — Domlivo` title template. A resolved listing
@@ -12,7 +12,7 @@ import { withBrand } from "@/lib/seo/brandTitle";
 export function listingTitleField(title: string): Metadata["title"] {
   // Absolute, so the root layout's `%s — Domlivo` template stays out of it:
   // `withBrand` decides whether the brand fits (lib/seo/brandTitle).
-  return { absolute: withBrand(title) };
+  return { absolute: withBrand(fitListingTitle(title)) };
 }
 
 /**

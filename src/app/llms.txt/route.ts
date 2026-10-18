@@ -47,12 +47,11 @@ Figures on the price pages come from two places and are labelled as such: asking
 - [Durrës or Vlorë](${u('/en/guides/durres-vs-vlore')}), [Tirana or Durrës](${u('/en/guides/tirana-vs-durres')}), [Vlorë or Sarandë](${u('/en/guides/vlora-vs-saranda')}), [Sarandë or Ksamil](${u('/en/guides/saranda-vs-ksamil')}), [Golem or Plazh](${u('/en/guides/golem-vs-plazh')}): city and district comparisons
 - [Albania or Montenegro](${u('/en/guides/albania-vs-montenegro')}), [Albania or Croatia](${u('/en/guides/albania-vs-croatia')}), [Albania or Greece](${u('/en/guides/albania-vs-greece')}): country comparisons for buyers
 - [Blog](${u('/en/blog')}): legal steps, documents, taxes, rental income, district choice, market outlook
-- [Knowledge base](${u('/en/knowledge')}): reference pages on utilities, tariffs, costs of owning
 
 ## About
 
 - [About Domlivo and the team](${u('/en/about')})
-- [AI property search and assistant](${u('/en/ai-search')}): describe what you need in plain words; answers cite the knowledge base
+- [AI property search and assistant](${u('/en/ai-search')}): describe what you need in plain words; answers cite their sources
 - [Contacts](${u('/en/contacts')}): WhatsApp, Telegram, email hello@domlivo.com
 
 ## Sitemaps

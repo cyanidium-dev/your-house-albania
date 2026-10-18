@@ -20,11 +20,17 @@ export type SiteJsonLdInput = {
   /** Social profile / sameAs links. Optional, helps disambiguate the entity. */
   sameAs?: string[];
   /**
-   * Catalog URL template the SearchAction should hit, after the origin. The one
-   * value that may differ by locale (`/{locale}/catalog?q=…`), so a search
-   * lands in the visitor's language instead of on a locale redirect.
+   * Ignored. The WebSite node used to carry a SearchAction aimed at
+   * `/{locale}/catalog?q=`, a noindex page whose catalog has no `q` filter at
+   * all (audit 2026-10-18, S-01), for a sitelinks search box Google retired in
+   * November 2024. Kept only so the layout's call compiles; drop it there.
    */
   searchUrlTemplate?: string;
+  /**
+   * Locale of the canonical home page (`/{homeLocale}`), the one hreflang
+   * `x-default` names. Organization.url and WebSite.url point there.
+   */
+  homeLocale?: string;
   /** Contact email, from the CMS. */
   email?: string;
   /** Contact phone, from the CMS. Dropped when it is the seeded placeholder. */
@@ -44,7 +50,12 @@ const DEFAULT_BRAND = 'Domlivo';
  * was the site's tagline dressed as a legal entity.
  */
 const TAGLINE_NOT_A_LEGAL_NAME = /^domlivo\s*[|—–:-]/i;
-const DEFAULT_SEARCH_TEMPLATE = '/catalog?q={search_term_string}';
+/**
+ * `/` is not a page: it redirects by language (and used to land Googlebot on
+ * `/sq`). The site name and the organisation need the stable canonical home,
+ * the same URL hreflang `x-default` names (audit 2026-10-18, S-08).
+ */
+const DEFAULT_HOME_LOCALE = 'en';
 /**
  * What the organisation is, in one factual sentence. English in every locale:
  * the node has to be identical wherever it is emitted.
@@ -63,6 +74,11 @@ function abs(baseUrl: string, path: string): string {
   if (!path) return base;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   return path.startsWith('/') ? `${base}${path}` : `${base}/${path}`;
+}
+
+/** The canonical home page: `/{homeLocale}`, the hreflang `x-default`. */
+export function siteHomeUrl(baseUrl: string, homeLocale: string = DEFAULT_HOME_LOCALE): string {
+  return abs(baseUrl, `/${homeLocale}`);
 }
 
 /** `@id` of the one Organization node. Same value in every locale. */
@@ -127,7 +143,7 @@ export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, un
     name: brandName,
     ...(legalName ? { legalName } : {}),
     description: ORGANIZATION_DESCRIPTION,
-    url: abs(baseUrl, '/'),
+    url: siteHomeUrl(baseUrl, input.homeLocale),
     ...(logoUrl ? { logo: { '@type': 'ImageObject', url: abs(baseUrl, logoUrl) } } : {}),
     ...(email ? { email } : {}),
     ...(telephone ? { telephone } : {}),
@@ -142,23 +158,15 @@ export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, un
 }
 
 export function buildWebSiteNode(input: SiteJsonLdInput): Record<string, unknown> {
-  const { baseUrl, brandName = DEFAULT_BRAND, searchUrlTemplate = DEFAULT_SEARCH_TEMPLATE } = input;
+  const { baseUrl, brandName = DEFAULT_BRAND } = input;
   const languages = cleanList(input.languages);
   return {
     '@type': 'WebSite',
     '@id': websiteId(baseUrl),
     name: brandName,
-    url: abs(baseUrl, '/'),
+    url: siteHomeUrl(baseUrl, input.homeLocale),
     ...(languages.length > 0 ? { inLanguage: languages } : {}),
     publisher: { '@id': organizationId(baseUrl) },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: abs(baseUrl, searchUrlTemplate),
-      },
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 

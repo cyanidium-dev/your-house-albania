@@ -33,3 +33,17 @@ describe('mapSiteSettingsToResolved — footerGuideLinks (ТЗ-16)', () => {
     expect(mapSiteSettingsToResolved(null, 'en').footerGuideLinks).toEqual([])
   })
 })
+
+describe('mapSiteSettingsToResolved — footerApp', () => {
+  const app = { iosUrl: 'https://your-house-albania.vercel.app/en', androidUrl: ' https://x.test/a ' }
+  // The props reach a client component: a switched-off placeholder URL
+  // ended up in every page's HTML (audit 2026-10-18, C-10).
+  it('carries no URLs while the app block is switched off', () => {
+    const resolved = mapSiteSettingsToResolved({ footerApp: { enabled: false, ...app } } as never, 'en')
+    expect(resolved.footerApp).toEqual({ enabled: false, iosUrl: '', androidUrl: '' })
+  })
+  it('keeps the trimmed URLs when it is on', () => {
+    const resolved = mapSiteSettingsToResolved({ footerApp: { enabled: true, ...app } } as never, 'en')
+    expect(resolved.footerApp).toEqual({ enabled: true, iosUrl: app.iosUrl, androidUrl: 'https://x.test/a' })
+  })
+})

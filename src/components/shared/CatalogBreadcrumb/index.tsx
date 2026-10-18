@@ -77,7 +77,7 @@ export async function CatalogBreadcrumb({
   // Catalog spine: one crumb per level, each linking to its own level.
   const items = buildCatalogCrumbs({
     locale,
-    labels: {home: t("home"), properties: t("catalog"), agents: t("agents")},
+    labels: {home: t("home"), properties: t("saleCatalog"), agents: t("agents")},
     agent: agentSlug ? {slug: agentSlug, name: agentName} : undefined,
     country: countrySeg
       ? {slug: countrySeg, label: countryTitle || formatSlug(countrySeg), href: countryHref}
