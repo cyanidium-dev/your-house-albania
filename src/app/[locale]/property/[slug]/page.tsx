@@ -42,6 +42,7 @@ import { SoldSimilarRequest } from '@/components/property/SoldSimilarRequest';
 import { inactiveListingStatus } from '@/lib/property/listingStatus';
 import { MessengerButtons } from '@/components/contact/MessengerButtons';
 import { resolveMessengers } from '@/lib/contacts/messengers';
+import { messengerContext, messengerPriceLabel } from '@/lib/contacts/messengerContext';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
@@ -347,9 +348,31 @@ export default async function PropertyDetailsPage({ params }: Props) {
   // Platform messengers next to the inquiry form, Telegram first for ru/uk.
   // The listing carries no lister contact of its own (the agent projection is
   // name + slug), so these are always the platform's.
+  // WhatsApp opens with a message naming this listing; Telegram opens the bot
+  // with the listing in its start payload (see messengerLinks).
+  const [tMessengers, tPropertyCard] = await Promise.all([
+    getTranslations({ locale, namespace: 'Messengers' }),
+    getTranslations({ locale, namespace: 'Shared.propertyCard' }),
+  ]);
   const messengers = resolveMessengers(
     (siteSettings as { socialLinks?: { platform: string; url: string; channel?: string }[] } | null)?.socialLinks,
     locale,
+    messengerContext(tMessengers, {
+      locale,
+      placement: 'property',
+      property: {
+        title: title || keySlug,
+        price: messengerPriceLabel({
+          price: rawProperty.price,
+          priceUnit: rawProperty.priceUnit,
+          locale,
+          perSqm: (amount) => tPropertyCard('pricePerSqmFrom', { amount }),
+        }),
+        url: `${getSiteBaseUrl()}${propertyPath(locale, keySlug, localizedSlug)}`,
+        slug: keySlug,
+        id: (sanityProperty as { _id?: string })._id,
+      },
+    }),
   );
   const messengerAriaLabels = {
     whatsapp: tQuickContact('channel.whatsapp'),

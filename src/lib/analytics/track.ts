@@ -86,6 +86,11 @@ export type AnalyticsEvent =
   | ({ event: 'property_inquiry_submit' } & LeadEventParams)
   /** A WhatsApp / Telegram / phone / email link was clicked (the app opens outside the site). */
   | ({ event: 'click_whatsapp' | 'click_telegram' | 'click_phone' | 'click_email' } & LeadEventParams)
+  /**
+   * The app button in the messenger sheet was pressed (after `click_whatsapp`
+   * / `click_telegram` opened the sheet): the visitor really left for the chat.
+   */
+  | { event: 'messenger_open'; messenger: 'whatsapp' | 'telegram'; placement: string; web?: boolean }
   /** An explicit search from a search widget (hero). */
   | {
       event: 'search_submit'

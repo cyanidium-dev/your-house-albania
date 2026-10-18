@@ -1149,5 +1149,42 @@
     "tabFavorites": "Ulubione",
     "tabAssistant": "Asystent",
     "tabContact": "Kontakt"
+  },
+  "Messengers": {
+    "whatsappText": {
+      "property": "Dzień dobry! Interesuje mnie {title}, {price}: {url}",
+      "propertyNoPrice": "Dzień dobry! Interesuje mnie {title}: {url}",
+      "general": "Dzień dobry! Chcę znaleźć nieruchomość w Albanii"
+    },
+    "sheet": {
+      "title": {
+        "whatsapp": "Napisz na WhatsApp",
+        "telegram": "Napisz na Telegramie"
+      },
+      "hint": {
+        "whatsapp": "Wiadomość jest gotowa — wystarczy ją wysłać.",
+        "telegram": "Naciśnij przycisk na dole czatu — bot przekaże Twoje pytanie menedżerowi."
+      },
+      "open": {
+        "whatsapp": "Otwórz WhatsApp",
+        "telegram": "Otwórz Telegram"
+      },
+      "orPhone": "albo zostaw numer — napiszemy do Ciebie",
+      "close": "Zamknij"
+    }
+  },
+  "TelegramBot": {
+    "greeting": "Dzień dobry, {name}! Tu Domlivo — nieruchomości w Albanii.",
+    "greetingNoName": "Dzień dobry! Tu Domlivo — nieruchomości w Albanii.",
+    "aboutProperty": "Pytasz o tę ofertę:",
+    "askProperty": "Napisz tutaj swoje pytanie albo wyślij numer telefonu — menedżer odpowie w tym czacie.",
+    "askGeneral": "Napisz, czego szukasz — miasto, budżet, rodzaj mieszkania — albo wyślij numer telefonu. Menedżer odpowie w tym czacie.",
+    "shareContact": "📱 Wyślij mój numer",
+    "openListing": "Otwórz w Domlivo",
+    "priceOnRequest": "Cena na zapytanie",
+    "contactReceived": "Dziękujemy! Menedżer wkrótce się z Tobą skontaktuje.",
+    "commandStart": "Rozpocznij czat z menedżerem",
+    "description": "Domlivo — nieruchomości w Albanii. Zapytaj o dowolną ofertę z domlivo.com albo napisz, czego szukasz: menedżer odpowie tutaj.",
+    "shortDescription": "Nieruchomości w Albanii: zapytaj menedżera Domlivo o dowolną ofertę."
   }
 }

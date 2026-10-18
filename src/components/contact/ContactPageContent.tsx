@@ -14,6 +14,8 @@ import { iconForContactsSocialPlatform } from '@/components/contact/contactsSoci
 import { MessengerButtons } from '@/components/contact/MessengerButtons'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { nonMessengerLinks, resolveMessengers } from '@/lib/contacts/messengers'
+import { getMessengerContext } from '@/lib/contacts/messengerContext.server'
+import { getSiteBaseUrl } from '@/lib/siteUrl'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 
 type ContactPageContentProps = {
@@ -40,7 +42,8 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
   // business link when the CMS has none); the "follow" list keeps the rest.
   const messengers = resolveMessengers(
     (siteSettings as { socialLinks?: SocialLinkInput[] } | null)?.socialLinks,
-    locale
+    locale,
+    await getMessengerContext({ locale, placement: 'contact-page', pageUrl: `${getSiteBaseUrl()}/${locale}/contacts` })
   )
   const followLinks = nonMessengerLinks(manager.socialLinks)
   // The owners' address, for the day the CMS field is empty.

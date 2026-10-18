@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { MessengerButtons } from '@/components/contact/MessengerButtons'
 import { resolveMessengers } from '@/lib/contacts/messengers'
+import { messengerContext } from '@/lib/contacts/messengerContext'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -19,7 +20,14 @@ type Props = {
  */
 export function LeadMessengerRow({ locale, className }: Props) {
   const t = useTranslations('QuickContact')
-  const messengers = resolveMessengers(undefined, locale)
+  const tMessengers = useTranslations('Messengers')
+  // General message and payload; the messenger sheet adds the page and the
+  // form's real placement at the click.
+  const messengers = resolveMessengers(
+    undefined,
+    locale,
+    messengerContext((key, values) => tMessengers(key, values), { locale, placement: 'page' }),
+  )
   if (messengers.length === 0) return null
   return (
     <div className={cn('flex flex-col gap-2', className)}>

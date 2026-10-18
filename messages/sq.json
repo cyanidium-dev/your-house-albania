@@ -1149,5 +1149,42 @@
     "tabFavorites": "Preferuarat",
     "tabAssistant": "Asistenti",
     "tabContact": "Kontakt"
+  },
+  "Messengers": {
+    "whatsappText": {
+      "property": "Përshëndetje! Më intereson {title}, {price}: {url}",
+      "propertyNoPrice": "Përshëndetje! Më intereson {title}: {url}",
+      "general": "Përshëndetje! Dua të gjej një pronë në Shqipëri"
+    },
+    "sheet": {
+      "title": {
+        "whatsapp": "Shkruani në WhatsApp",
+        "telegram": "Shkruani në Telegram"
+      },
+      "hint": {
+        "whatsapp": "Mesazhi është gati — thjesht dërgojeni.",
+        "telegram": "Shtypni butonin në fund të bisedës — boti ia kalon pyetjen tuaj një menaxheri."
+      },
+      "open": {
+        "whatsapp": "Hap WhatsApp",
+        "telegram": "Hap Telegram"
+      },
+      "orPhone": "ose lini numrin — ju shkruajmë ne",
+      "close": "Mbyll"
+    }
+  },
+  "TelegramBot": {
+    "greeting": "Përshëndetje, {name}! Ky është Domlivo — prona në Shqipëri.",
+    "greetingNoName": "Përshëndetje! Ky është Domlivo — prona në Shqipëri.",
+    "aboutProperty": "Po pyesni për këtë pronë:",
+    "askProperty": "Shkruani pyetjen tuaj këtu ose dërgoni numrin e telefonit — një menaxher do t’ju përgjigjet në këtë bisedë.",
+    "askGeneral": "Na tregoni çfarë kërkoni — qytetin, buxhetin, llojin e banesës — ose dërgoni numrin e telefonit. Një menaxher do t’ju përgjigjet në këtë bisedë.",
+    "shareContact": "📱 Dërgo numrin tim",
+    "openListing": "Hape në Domlivo",
+    "priceOnRequest": "Çmimi sipas kërkesës",
+    "contactReceived": "Faleminderit! Një menaxher do t’ju kontaktojë së shpejti.",
+    "commandStart": "Fillo një bisedë me menaxherin",
+    "description": "Domlivo — prona në Shqipëri. Pyetni për çdo pronë në domlivo.com ose na tregoni çfarë kërkoni: një menaxher përgjigjet këtu.",
+    "shortDescription": "Prona në Shqipëri: pyetni një menaxher të Domlivo për çdo pronë."
   }
 }

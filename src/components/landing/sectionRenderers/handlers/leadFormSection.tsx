@@ -4,6 +4,7 @@ import { LeadFormSection } from '@/components/landing/sections/LeadFormSection'
 import { fetchSiteSettings } from '@/lib/sanity/client'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { resolveMessengers } from '@/lib/contacts/messengers'
+import { getMessengerContext } from '@/lib/contacts/messengerContext.server'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 import { formatMoney } from '@/lib/currency/format'
 import type { SectionHandler } from './types'
@@ -54,7 +55,11 @@ export const leadFormSectionHandler: SectionHandler = async ({ locale, section, 
   let messengers = null
   if (s.messengerCta) {
     const raw = await fetchSiteSettings()
-    messengers = resolveMessengers((raw as { socialLinks?: SocialLinkInput[] } | null)?.socialLinks, locale)
+    messengers = resolveMessengers(
+      (raw as { socialLinks?: SocialLinkInput[] } | null)?.socialLinks,
+      locale,
+      await getMessengerContext({ locale, placement: 'landing' }),
+    )
   }
 
   return (

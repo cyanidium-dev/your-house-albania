@@ -25,6 +25,8 @@ export async function AddPropertyNote({ locale, messengers }: Props) {
       className="scroll-mt-28 border-t border-black/5 py-12 dark:border-white/10 md:py-16"
       aria-labelledby="add-property-heading"
       data-lead-placement="contact-page-add-property"
+      /* Owners listing a property: no "I would like to find a home" message. */
+      data-messenger-plain=""
     >
       <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
         <div className="grid gap-6 rounded-2xl border border-dark/10 bg-dark/[0.03] p-6 dark:border-white/10 dark:bg-white/[0.04] md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-center md:gap-10 md:p-8">

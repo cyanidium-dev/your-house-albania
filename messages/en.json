@@ -1149,5 +1149,42 @@
     "tabFavorites": "Favorites",
     "tabAssistant": "Assistant",
     "tabContact": "Contact"
+  },
+  "Messengers": {
+    "whatsappText": {
+      "property": "Hello! I'm interested in {title}, {price}: {url}",
+      "propertyNoPrice": "Hello! I'm interested in {title}: {url}",
+      "general": "Hello! I'd like help finding property in Albania"
+    },
+    "sheet": {
+      "title": {
+        "whatsapp": "Write on WhatsApp",
+        "telegram": "Write on Telegram"
+      },
+      "hint": {
+        "whatsapp": "The message is ready — just press send.",
+        "telegram": "Press Start — the bot passes your question to a manager."
+      },
+      "open": {
+        "whatsapp": "Open WhatsApp",
+        "telegram": "Open Telegram"
+      },
+      "orPhone": "or leave your number — we'll write to you",
+      "close": "Close"
+    }
+  },
+  "TelegramBot": {
+    "greeting": "Hello, {name}! This is Domlivo — property in Albania.",
+    "greetingNoName": "Hello! This is Domlivo — property in Albania.",
+    "aboutProperty": "You're asking about this listing:",
+    "askProperty": "Write your question here or send your phone number — a manager will reply in this chat.",
+    "askGeneral": "Tell us what you're looking for — city, budget, type of home — or send your phone number. A manager will reply in this chat.",
+    "shareContact": "📱 Send my number",
+    "openListing": "Open on Domlivo",
+    "priceOnRequest": "Price on request",
+    "contactReceived": "Thank you! A manager will contact you soon.",
+    "commandStart": "Start a chat with a manager",
+    "description": "Domlivo — property in Albania. Ask about any listing on domlivo.com or tell us what you are looking for: a manager replies right here.",
+    "shortDescription": "Property in Albania: ask a Domlivo manager about any listing."
   }
 }
