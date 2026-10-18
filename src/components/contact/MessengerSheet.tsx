@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslations } from 'next-intl'
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { QuickLeadForm } from '@/components/shared/QuickLead/QuickLeadForm'
 import { track } from '@/lib/analytics/track'
