@@ -27,6 +27,7 @@ export const CLIENT_MESSAGE_NAMESPACES = [
   "Header",
   "Home",
   "Landing",
+  "Messengers",
   "PropertyMarketPosition",
   "Pwa",
   "QuickContact",

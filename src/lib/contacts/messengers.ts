@@ -9,6 +9,12 @@
 import { BUSINESS_TELEGRAM_URL, BUSINESS_WHATSAPP_URL } from "./businessContacts";
 import { partitionSocialLinks, type SocialLinkInput } from "@/lib/footer/socialChannels";
 import { classifyContactHref } from "@/lib/leads/types";
+import {
+  configuredWhatsAppNumber,
+  telegramBotUrl,
+  telegramBotUsername,
+  withWhatsAppText,
+} from "./messengerLinks";
 
 export type MessengerKey = "whatsapp" | "telegram";
 
@@ -76,15 +82,36 @@ function cmsMessengerUrl(links: SocialLinkInput[] | undefined, key: MessengerKey
   return (contact.find(usable) ?? social.find(usable))?.url ?? "";
 }
 
-/** Both messengers, in the visitor's order: the CMS link when there is one, else the business link. */
+/**
+ * What the links say when they open: the ready WhatsApp message and the
+ * Telegram bot's `start` payload. Build it with `messengerContext()`.
+ */
+export type MessengerContext = {
+  whatsappText?: string;
+  telegramStart?: string | null;
+};
+
+/**
+ * Both messengers, in the visitor's order: the CMS link when there is one, else
+ * the business link. With a context, WhatsApp carries the ready message and
+ * Telegram points at the bot (each only when configured — see messengerLinks).
+ */
 export function resolveMessengers(
   links: SocialLinkInput[] | undefined,
   locale: string,
+  context?: MessengerContext,
 ): MessengerLink[] {
-  return messengerOrder(locale).map((key) => ({
-    key,
-    url: cmsMessengerUrl(links, key) || BUSINESS_URL[key],
-  }));
+  const bot = telegramBotUsername();
+  return messengerOrder(locale).map((key) => {
+    const url = cmsMessengerUrl(links, key) || BUSINESS_URL[key];
+    if (key === "whatsapp" && context?.whatsappText) {
+      return { key, url: withWhatsAppText(url, context.whatsappText, configuredWhatsAppNumber()) };
+    }
+    if (key === "telegram" && bot && context?.telegramStart) {
+      return { key, url: telegramBotUrl(bot, context.telegramStart) };
+    }
+    return { key, url };
+  });
 }
 
 /** The links that are not messengers (Instagram, LinkedIn, …), for a "follow us" list. */

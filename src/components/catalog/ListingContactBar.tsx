@@ -3,6 +3,7 @@ import MobileStickyBar from '@/components/property/MobileStickyBar'
 import { HelpChoosingButton } from '@/components/contact/HelpChoosingButton'
 import { MessengerButtons } from '@/components/contact/MessengerButtons'
 import { resolveMessengers } from '@/lib/contacts/messengers'
+import { getMessengerContext } from '@/lib/contacts/messengerContext.server'
 import { fetchSiteSettings } from '@/lib/sanity/client'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 import { brandButtonClass } from '@/components/shared/BrandButton'
@@ -13,14 +14,17 @@ import { brandButtonClass } from '@/components/shared/BrandButton'
  * only — from there up the page has room for the header and footer contacts.
  */
 export async function ListingContactBar({ locale }: { locale: string }) {
-  const [settings, t, tQuick] = await Promise.all([
+  const [settings, t, tQuick, messengerTexts] = await Promise.all([
     fetchSiteSettings(),
     getTranslations({ locale, namespace: 'ContactBar' }),
     getTranslations({ locale, namespace: 'QuickContact' }),
+    // The listing's address is added in the browser by the messenger sheet.
+    getMessengerContext({ locale, placement: 'catalog' }),
   ])
   const messengers = resolveMessengers(
     (settings as { socialLinks?: SocialLinkInput[] } | null)?.socialLinks,
     locale,
+    messengerTexts,
   )
 
   return (

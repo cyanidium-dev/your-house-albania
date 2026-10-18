@@ -1168,5 +1168,42 @@
     "tabFavorites": "Preferiti",
     "tabAssistant": "Assistente",
     "tabContact": "Contatti"
+  },
+  "Messengers": {
+    "whatsappText": {
+      "property": "Buongiorno! Mi interessa {title}, {price}: {url}",
+      "propertyNoPrice": "Buongiorno! Mi interessa {title}: {url}",
+      "general": "Buongiorno! Vorrei trovare un immobile in Albania"
+    },
+    "sheet": {
+      "title": {
+        "whatsapp": "Scrivi su WhatsApp",
+        "telegram": "Scrivi su Telegram"
+      },
+      "hint": {
+        "whatsapp": "Il messaggio è già pronto: basta inviarlo.",
+        "telegram": "Premi il pulsante in fondo alla chat: il bot passa la tua domanda a un consulente."
+      },
+      "open": {
+        "whatsapp": "Apri WhatsApp",
+        "telegram": "Apri Telegram"
+      },
+      "orPhone": "oppure lascia il tuo numero: ti scriviamo noi",
+      "close": "Chiudi"
+    }
+  },
+  "TelegramBot": {
+    "greeting": "Buongiorno, {name}! Qui è Domlivo — immobili in Albania.",
+    "greetingNoName": "Buongiorno! Qui è Domlivo — immobili in Albania.",
+    "aboutProperty": "Ci chiedi di questo immobile:",
+    "askProperty": "Scrivi qui la tua domanda o invia il tuo numero di telefono: un consulente ti risponderà in questa chat.",
+    "askGeneral": "Raccontaci cosa cerchi — città, budget, tipo di casa — oppure invia il tuo numero di telefono. Un consulente ti risponderà in questa chat.",
+    "shareContact": "📱 Invia il mio numero",
+    "openListing": "Apri su Domlivo",
+    "priceOnRequest": "Prezzo su richiesta",
+    "contactReceived": "Grazie! Un consulente ti contatterà a breve.",
+    "commandStart": "Inizia una chat con un consulente",
+    "description": "Domlivo — immobili in Albania. Chiedi di qualsiasi annuncio su domlivo.com o raccontaci cosa cerchi: un consulente risponde qui.",
+    "shortDescription": "Immobili in Albania: chiedi a un consulente Domlivo di qualsiasi annuncio."
   }
 }

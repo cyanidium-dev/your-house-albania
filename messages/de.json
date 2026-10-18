@@ -1168,5 +1168,42 @@
     "tabFavorites": "Merkliste",
     "tabAssistant": "Assistent",
     "tabContact": "Kontakt"
+  },
+  "Messengers": {
+    "whatsappText": {
+      "property": "Hallo! Ich interessiere mich für {title}, {price}: {url}",
+      "propertyNoPrice": "Hallo! Ich interessiere mich für {title}: {url}",
+      "general": "Hallo! Ich suche eine Immobilie in Albanien"
+    },
+    "sheet": {
+      "title": {
+        "whatsapp": "Auf WhatsApp schreiben",
+        "telegram": "Auf Telegram schreiben"
+      },
+      "hint": {
+        "whatsapp": "Die Nachricht ist fertig – einfach absenden.",
+        "telegram": "Tippen Sie auf die Schaltfläche unten im Chat – der Bot leitet Ihre Frage an einen Berater weiter."
+      },
+      "open": {
+        "whatsapp": "WhatsApp öffnen",
+        "telegram": "Telegram öffnen"
+      },
+      "orPhone": "oder Nummer hinterlassen – wir schreiben Ihnen",
+      "close": "Schließen"
+    }
+  },
+  "TelegramBot": {
+    "greeting": "Hallo, {name}! Hier ist Domlivo – Immobilien in Albanien.",
+    "greetingNoName": "Hallo! Hier ist Domlivo – Immobilien in Albanien.",
+    "aboutProperty": "Sie fragen nach diesem Objekt:",
+    "askProperty": "Schreiben Sie Ihre Frage hier oder senden Sie Ihre Telefonnummer – ein Berater antwortet in diesem Chat.",
+    "askGeneral": "Schreiben Sie, was Sie suchen – Stadt, Budget, Art der Immobilie – oder senden Sie Ihre Telefonnummer. Ein Berater antwortet in diesem Chat.",
+    "shareContact": "📱 Meine Nummer senden",
+    "openListing": "Auf Domlivo öffnen",
+    "priceOnRequest": "Preis auf Anfrage",
+    "contactReceived": "Danke! Ein Berater meldet sich in Kürze bei Ihnen.",
+    "commandStart": "Chat mit einem Berater starten",
+    "description": "Domlivo – Immobilien in Albanien. Fragen Sie nach jedem Objekt auf domlivo.com oder schreiben Sie, was Sie suchen: Ein Berater antwortet direkt hier.",
+    "shortDescription": "Immobilien in Albanien: Fragen Sie einen Domlivo-Berater zu jedem Objekt."
   }
 }
