@@ -662,6 +662,14 @@
       "types": {
         "title": "Property for sale in Albania by type"
       }
+    },
+    "searchAlert": {
+      "barText": "New listings for this search, once a day in Telegram",
+      "cta": "Turn on",
+      "title": "Get new listings for this search in Telegram",
+      "body": "Once a day the Domlivo bot sends what has just appeared and matches these filters. One tap to start, /stop to end.",
+      "ctaLong": "Get alerts in Telegram",
+      "emptyTitle": "Nothing matches yet"
     }
   },
   "NewBuilds": {
@@ -1185,6 +1193,35 @@
     "contactReceived": "Thank you! A manager will contact you soon.",
     "commandStart": "Start a chat with a manager",
     "description": "Domlivo — property in Albania. Ask about any listing on domlivo.com or tell us what you are looking for: a manager replies right here.",
-    "shortDescription": "Property in Albania: ask a Domlivo manager about any listing."
+    "shortDescription": "Property in Albania: ask a Domlivo manager about any listing.",
+    "commandStop": "Stop the search alerts",
+    "search": {
+      "subscribed": "Done. New listings for this search will come here, once a day at most.",
+      "yourSearch": "Your search: {summary}",
+      "latest": "Already on Domlivo:",
+      "openSearch": "Open the search on Domlivo",
+      "stopHint": "To stop the alerts, send /stop.",
+      "stopped": "Alerts are off. Press the bell on any search on domlivo.com to turn them on again.",
+      "nothingToStop": "You have no alerts on.",
+      "askMore": "Want a manager to pick options for you? Write here or send your number.",
+      "newListings": "New on Domlivo for your search",
+      "anyListing": "all listings",
+      "dealSale": "for sale",
+      "dealRent": "for rent",
+      "priceFrom": "from {amount}",
+      "priceTo": "up to {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "from {n} m²",
+      "areaTo": "up to {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ bedrooms",
+      "bedsExact": "{n} bedrooms",
+      "nearSea": "near the sea",
+      "investment": "for investment",
+      "stageUnfinished": "still being built",
+      "stageOffPlan": "off-plan",
+      "stageUnderConstruction": "under construction",
+      "stageCompleted": "completed"
+    }
   }
 }

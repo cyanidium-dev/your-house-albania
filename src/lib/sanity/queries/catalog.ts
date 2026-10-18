@@ -187,7 +187,7 @@ function buildCatalogPredicateParts(
   return parts;
 }
 
-function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
+export function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
   const { excludedPropertyIds } = filters;
 
   const parts: string[] = ['_type == "property"', publishedPropertyFilter()];

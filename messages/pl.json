@@ -662,6 +662,14 @@
       "types": {
         "title": "Nieruchomości na sprzedaż w Albanii według rodzaju"
       }
+    },
+    "searchAlert": {
+      "barText": "Nowe oferty dla tego wyszukiwania, raz dziennie na Telegramie",
+      "cta": "Włącz",
+      "title": "Otrzymuj nowe oferty dla tego wyszukiwania na Telegramie",
+      "body": "Raz dziennie bot Domlivo wysyła to, co właśnie się pojawiło i pasuje do tych filtrów. Jedno dotknięcie, aby włączyć, /stop, aby wyłączyć.",
+      "ctaLong": "Otrzymuj na Telegramie",
+      "emptyTitle": "Na razie nic nie pasuje"
     }
   },
   "NewBuilds": {
@@ -1185,6 +1193,35 @@
     "contactReceived": "Dziękujemy! Menedżer wkrótce się z Tobą skontaktuje.",
     "commandStart": "Rozpocznij czat z menedżerem",
     "description": "Domlivo — nieruchomości w Albanii. Zapytaj o dowolną ofertę z domlivo.com albo napisz, czego szukasz: menedżer odpowie tutaj.",
-    "shortDescription": "Nieruchomości w Albanii: zapytaj menedżera Domlivo o dowolną ofertę."
+    "shortDescription": "Nieruchomości w Albanii: zapytaj menedżera Domlivo o dowolną ofertę.",
+    "commandStop": "Wyłącz powiadomienia o nowych ofertach",
+    "search": {
+      "subscribed": "Gotowe. Nowe oferty dla tego wyszukiwania będą przychodzić tutaj, najwyżej raz dziennie.",
+      "yourSearch": "Twoje wyszukiwanie: {summary}",
+      "latest": "Już na Domlivo:",
+      "openSearch": "Otwórz wyszukiwanie na Domlivo",
+      "stopHint": "Aby wyłączyć powiadomienia, wyślij /stop.",
+      "stopped": "Powiadomienia wyłączone. Naciśnij dzwonek w dowolnym wyszukiwaniu na domlivo.com, aby włączyć je ponownie.",
+      "nothingToStop": "Nie masz włączonych powiadomień.",
+      "askMore": "Chcesz, aby menedżer dobrał oferty dla Ciebie? Napisz tutaj albo wyślij numer.",
+      "newListings": "Nowe na Domlivo dla Twojego wyszukiwania",
+      "anyListing": "wszystkie oferty",
+      "dealSale": "na sprzedaż",
+      "dealRent": "na wynajem",
+      "priceFrom": "od {amount}",
+      "priceTo": "do {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "od {n} m²",
+      "areaTo": "do {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ sypialni",
+      "bedsExact": "sypialnie: {n}",
+      "nearSea": "blisko morza",
+      "investment": "pod inwestycję",
+      "stageUnfinished": "jeszcze w budowie",
+      "stageOffPlan": "na etapie projektu",
+      "stageUnderConstruction": "w budowie",
+      "stageCompleted": "ukończone"
+    }
   }
 }
