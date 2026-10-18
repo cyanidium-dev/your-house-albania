@@ -219,6 +219,10 @@
       "stackNext": "Next listing"
     },
     "propertyDetail": {
+      "sold": "Sold",
+      "soldLeadTitle": "This one is sold. We will find a similar one",
+      "soldLeadBody": "Leave your phone number and tell us what you are looking for — we will send listings like this one, with current prices.",
+      "soldFindSimilar": "Find a similar one",
       "propertyDetails": "Property details",
       "checkAllAmenities": "Check all amenities",
       "whatThisPropertyOffers": "What this property offers",

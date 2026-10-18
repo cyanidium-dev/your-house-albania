@@ -219,6 +219,10 @@
       "stackNext": "Следующий объект"
     },
     "propertyDetail": {
+      "sold": "Продано",
+      "soldLeadTitle": "Этот объект продан. Подберём похожий",
+      "soldLeadBody": "Оставьте номер и напишите, что ищете, — пришлём похожие варианты с актуальными ценами.",
+      "soldFindSimilar": "Найти похожий",
       "propertyDetails": "Детали объекта",
       "checkAllAmenities": "Все удобства",
       "whatThisPropertyOffers": "Что предлагает этот объект",

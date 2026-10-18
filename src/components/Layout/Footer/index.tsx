@@ -70,8 +70,11 @@ const CODESITE_URL = "https://www.code-site.art";
 
 const colHeadingClass =
   "mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
+// inline-block + vertical padding: the links were 20px tall on phones, half
+// the 44px a thumb needs (visual audit 18.10); the padding, not the gap,
+// carries the hit area so the column reads the same.
 const colLinkClass =
-  "text-[17px] leading-snug text-white/55 transition-colors hover:text-white md:text-base md:leading-normal";
+  "inline-block py-2 text-[17px] leading-snug text-white/55 transition-colors hover:text-white md:py-0.5 md:text-base md:leading-normal";
 const colBodyClass = "text-[17px] text-white/45 md:text-sm";
 const creditsLinkClass =
   "min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline";

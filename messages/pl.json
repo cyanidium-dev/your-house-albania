@@ -208,6 +208,10 @@
       "stackNext": "Następna oferta"
     },
     "propertyDetail": {
+      "sold": "Sprzedane",
+      "soldLeadTitle": "Ta nieruchomość została sprzedana. Znajdziemy podobną",
+      "soldLeadBody": "Zostaw numer i napisz, czego szukasz — wyślemy podobne oferty z aktualnymi cenami.",
+      "soldFindSimilar": "Znajdź podobną",
       "propertyDetails": "Szczegóły nieruchomości",
       "checkAllAmenities": "Zobacz wszystkie udogodnienia",
       "whatThisPropertyOffers": "Co oferuje ta nieruchomość",

@@ -24,6 +24,18 @@ export function publishedPropertyFilter(prefix = ""): string {
 /** Convenience constant for the common top-level (unprefixed) case. */
 export const PUBLISHED_PROPERTY_FILTER = publishedPropertyFilter();
 
+/**
+ * The listing's own page also answers for a sold property: the address keeps
+ * working from old links, messengers and search results, the page says "sold"
+ * and offers to find a similar one (2026-10-18). Lists, carousels and sitemaps
+ * keep using `publishedPropertyFilter`, so a sold listing appears nowhere else.
+ */
+export function publishedPropertyDetailFilter(prefix = ""): string {
+  return `${prefix}isPublished == true && (${prefix}lifecycleStatus in ["active", "sold"] || !defined(${prefix}lifecycleStatus)) && ${publicDealStatusFilter(prefix)}`;
+}
+
+export const PUBLISHED_PROPERTY_DETAIL_FILTER = publishedPropertyDetailFilter();
+
 import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes';
 
 /** GROQ predicate for "this property's deal type is one the site offers". */

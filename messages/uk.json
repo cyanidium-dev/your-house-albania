@@ -219,6 +219,10 @@
       "stackNext": "Наступний об’єкт"
     },
     "propertyDetail": {
+      "sold": "Продано",
+      "soldLeadTitle": "Цей об'єкт продано. Підберемо схожий",
+      "soldLeadBody": "Залиште номер і напишіть, що шукаєте, — надішлемо схожі варіанти з актуальними цінами.",
+      "soldFindSimilar": "Знайти схожий",
       "propertyDetails": "Деталі об'єкта",
       "checkAllAmenities": "Всі зручності",
       "whatThisPropertyOffers": "Що пропонує цей об'єкт",

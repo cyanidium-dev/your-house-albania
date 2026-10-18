@@ -219,6 +219,10 @@
       "stackNext": "Prona tjetër"
     },
     "propertyDetail": {
+      "sold": "E shitur",
+      "soldLeadTitle": "Kjo pronë është shitur. Do të gjejmë një të ngjashme",
+      "soldLeadBody": "Lini numrin tuaj dhe na tregoni çfarë kërkoni — do t'ju dërgojmë prona të ngjashme me çmime aktuale.",
+      "soldFindSimilar": "Gjej një të ngjashme",
       "propertyDetails": "Detajet e pronës",
       "checkAllAmenities": "Shiko të gjitha pajisjet",
       "whatThisPropertyOffers": "Çfarë ofron kjo pronë",

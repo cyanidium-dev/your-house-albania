@@ -11,8 +11,12 @@
  * actions share one row.
  */
 
+// On phones the banner sits above the listing's price-and-contact bar
+// (`--mobile-sticky-bar-height`, set by MobileStickyBar) instead of on top of
+// it: on a first visit the bar, the only contact control on a phone, was
+// hidden behind the banner on every listing (visual audit 18.10).
 export const bannerClass =
-  "fixed inset-x-0 bottom-[var(--app-tabbar-offset,0px)] z-[90] border-t border-dark/10 bg-white/95 backdrop-blur-md px-4 sm:px-8 lg:px-12 py-3 sm:py-5 pb-[max(0.75rem,var(--app-bottom-inset,env(safe-area-inset-bottom,0px)))] sm:pb-[max(1.25rem,var(--app-bottom-inset,env(safe-area-inset-bottom,0px)))] dark:border-white/10 dark:bg-dark/95";
+  "fixed inset-x-0 bottom-[calc(var(--app-tabbar-offset,0px)+var(--mobile-sticky-bar-height,0px))] z-[90] border-t border-dark/10 bg-white/95 backdrop-blur-md px-4 sm:px-8 lg:px-12 py-3 sm:py-5 pb-[max(0.75rem,var(--app-bottom-inset,env(safe-area-inset-bottom,0px)))] sm:pb-[max(1.25rem,var(--app-bottom-inset,env(safe-area-inset-bottom,0px)))] dark:border-white/10 dark:bg-dark/95";
 
 export const bannerInnerClass =
   "container mx-auto max-w-8xl flex flex-col gap-2.5 sm:gap-4 lg:flex-row lg:items-center lg:justify-between";

@@ -37,6 +37,7 @@ import { getSiteBaseUrl } from '@/lib/siteUrl';
 import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
 import { PropertyContactButton } from '@/components/property/PropertyContactModal';
+import { SoldSimilarRequest } from '@/components/property/SoldSimilarRequest';
 import { MessengerButtons } from '@/components/contact/MessengerButtons';
 import { resolveMessengers } from '@/lib/contacts/messengers';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
@@ -140,7 +141,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = ((await getBaseUrl()) || getSiteBaseUrl()).replace(/\/$/, '');
 
-  return buildPropertyMetadata(
+  const metadata = buildPropertyMetadata(
     propertySeo as never,
     defaultSeo as never,
     locale,
@@ -155,6 +156,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       propertyPath: { baseUrl, locale, slug: keySlug, localizedSlug },
     }
   );
+  // A sold listing stays reachable for whoever saved the link, but a buyer
+  // searching Google should land on one that is still for sale.
+  const isSold = (sanityProperty as { lifecycleStatus?: string }).lifecycleStatus === 'sold';
+  return isSold ? { ...metadata, robots: { index: false, follow: true } } : metadata;
 }
 
 function getSimilarCount(settings: unknown): number {
@@ -325,7 +330,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
     if (s === 'long-term' || s === 'longterm') return 'dealTypeLongTerm';
     return 'dealTypePrice';
   })();
-  const dealTypeLabel = tPropertyDetail(dealTypeKey);
+  // Sold: the price stays (struck through) with "Sold" where the deal type
+  // was, every contact control gives way to "find a similar one", and the
+  // request form sits right under the gallery (SoldSimilarRequest).
+  const isSold = (sanityProperty as { lifecycleStatus?: string }).lifecycleStatus === 'sold';
+  const dealTypeLabel = isSold ? tPropertyDetail('sold') : tPropertyDetail(dealTypeKey);
+  const findSimilarLabel = tPropertyDetail('soldFindSimilar');
+  const priceClass = isSold ? 'line-through decoration-2 text-dark/40 dark:text-white/40' : '';
 
   const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string; noPublicLink?: boolean } | null }).agent ?? null;
 
@@ -442,10 +453,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     <div className="lg:col-span-4 min-w-0 lg:border-l lg:border-dark/10 lg:dark:border-white/10 lg:pl-10">
                         <div className="flex items-start justify-between gap-4">
                             <div className="min-w-0">
-                                <p className='text-3xl lg:text-[2rem] font-semibold leading-none tracking-tight text-dark dark:text-white tabular-nums'>
+                                <p className={`text-3xl lg:text-[2rem] font-semibold leading-none tracking-tight text-dark dark:text-white tabular-nums ${priceClass}`}>
                                     <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                                 </p>
-                                <p className='mt-2 text-sm text-dark/60 dark:text-white/60'>{dealTypeLabel}</p>
+                                <p className={isSold ? 'mt-2 text-sm font-semibold text-red-600 dark:text-red-400' : 'mt-2 text-sm text-dark/60 dark:text-white/60'}>{dealTypeLabel}</p>
                                 {propertyAgent?.slug && propertyAgent?.name ? (
                                   <p className='mt-1 text-sm text-dark/60 dark:text-white/70'>
                                     {tPropertyDetail.rich('listedBy', {
@@ -470,6 +481,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             <FavoriteButton slug={keySlug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                         </div>
                         {/* Phones get the same CTA in the sticky bottom bar. */}
+                        {isSold ? (
+                          <a href="#similar-request" className={brandButtonClass('primary', 'mt-5 hidden w-full lg:inline-flex', 'md')}>
+                            {findSimilarLabel}
+                          </a>
+                        ) : (
                         <div className="hidden lg:block">
                           <PropertyContactButton
                             locale={locale}
@@ -489,9 +505,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             />
                           </div>
                         </div>
+                        )}
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />
+                {isSold ? <SoldSimilarRequest locale={locale} propertySlug={keySlug} /> : null}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10 items-start">
                     <div className="lg:col-span-8 min-w-0">
                         {amenities.length > 0 && (
@@ -563,12 +581,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     <div className="lg:col-span-4 min-w-0 lg:sticky lg:top-30">
                         <div className="hidden lg:block bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
                             <div className="flex items-center justify-between gap-4 mb-2">
-                              <h4 className='text-dark text-3xl font-medium dark:text-white'>
+                              <h4 className={`text-dark text-3xl font-medium dark:text-white ${priceClass}`}>
                                   <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                               </h4>
                               <FavoriteButton slug={keySlug} name={title} variant="inline" imageUrl={galleryImages[0]?.url ?? null} />
                             </div>
-                            <p className='text-sm text-dark/50 dark:text-white'>{dealTypeLabel}</p>
+                            <p className={isSold ? 'text-sm font-semibold text-red-600 dark:text-red-400' : 'text-sm text-dark/50 dark:text-white'}>{dealTypeLabel}</p>
                             {propertyAgent?.slug && propertyAgent?.name ? (
                               // The agent pages carried no inbound link anywhere on the site and
                               // were reachable only from a sitemap (SEO-08 audit, 02.09.2026).
@@ -593,23 +611,31 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                 })}
                               </p>
                             ) : null}
-                            <PropertyContactButton
-                              locale={locale}
-                              propertySlug={keySlug}
-                              propertyTitle={title}
-                              agentSlug={propertyAgent?.slug ?? null}
-                              agentName={propertyAgent?.name ?? null}
-                              analytics={propertyLeadAnalytics}
-                              label={tPropertyDetail('getInTouch')}
-                              className={brandButtonClass('primary', 'w-full mt-8', 'lg')}
-                            />
-                            <div data-lead-placement="property" data-property-slug={keySlug}>
-                              <MessengerButtons
-                                messengers={messengers}
-                                ariaLabels={messengerAriaLabels}
-                                className="mt-3 flex gap-2"
-                              />
-                            </div>
+                            {isSold ? (
+                              <a href="#similar-request" className={brandButtonClass('primary', 'w-full mt-8', 'lg')}>
+                                {findSimilarLabel}
+                              </a>
+                            ) : (
+                              <>
+                                <PropertyContactButton
+                                  locale={locale}
+                                  propertySlug={keySlug}
+                                  propertyTitle={title}
+                                  agentSlug={propertyAgent?.slug ?? null}
+                                  agentName={propertyAgent?.name ?? null}
+                                  analytics={propertyLeadAnalytics}
+                                  label={tPropertyDetail('getInTouch')}
+                                  className={brandButtonClass('primary', 'w-full mt-8', 'lg')}
+                                />
+                                <div data-lead-placement="property" data-property-slug={keySlug}>
+                                  <MessengerButtons
+                                    messengers={messengers}
+                                    ariaLabels={messengerAriaLabels}
+                                    className="mt-3 flex gap-2"
+                                  />
+                                </div>
+                              </>
+                            )}
                             <div className="absolute right-0 top-4 -z-[1]">
                                 <Image src="/images/properties/vector.svg" width={400} height={500} alt="vector" unoptimized={true} />
                             </div>
@@ -644,30 +670,38 @@ export default async function PropertyDetailsPage({ params }: Props) {
               <div className='flex items-center gap-2 px-4 py-3 bg-primary/50'
                 style={{ paddingBottom: 'max(0.75rem, var(--app-bottom-inset, env(safe-area-inset-bottom, 0px)))' }}>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-dark dark:text-white text-lg font-semibold leading-tight truncate">
+                  <h4 className={`text-dark dark:text-white text-lg font-semibold leading-tight truncate ${priceClass}`}>
                     <PriceText amountEur={rawProperty.price ?? null} priceUnit={rawProperty.priceUnit} locale={locale} />
                   </h4>
-                  <p className="text-sm text-dark/50 dark:text-white/50 truncate">{dealTypeLabel}</p>
+                  <p className={isSold ? 'text-sm font-semibold text-red-600 dark:text-red-400 truncate' : 'text-sm text-dark/50 dark:text-white/50 truncate'}>{dealTypeLabel}</p>
                 </div>
-                <MessengerButtons
-                  messengers={messengers}
-                  ariaLabels={messengerAriaLabels}
-                  variant="icon"
-                  className="flex shrink-0 gap-2 [&>a]:bg-white dark:[&>a]:bg-dark"
-                />
-                {/* Short label so the price keeps its room on a 360px screen; the
-                    accessible name says the whole thing. */}
-                <PropertyContactButton
-                  locale={locale}
-                  propertySlug={keySlug}
-                  propertyTitle={title}
-                  agentSlug={propertyAgent?.slug ?? null}
-                  agentName={propertyAgent?.name ?? null}
-                  analytics={propertyLeadAnalytics}
-                  label={tContactBar('ask')}
-                  ariaLabel={tContactBar('askProperty')}
-                  className={brandButtonClass('primary', 'shrink-0 whitespace-nowrap', 'md')}
-                />
+                {isSold ? (
+                  <a href="#similar-request" className={brandButtonClass('primary', 'shrink-0 whitespace-nowrap', 'md')}>
+                    {findSimilarLabel}
+                  </a>
+                ) : (
+                  <>
+                    <MessengerButtons
+                      messengers={messengers}
+                      ariaLabels={messengerAriaLabels}
+                      variant="icon"
+                      className="flex shrink-0 gap-2 [&>a]:bg-white dark:[&>a]:bg-dark"
+                    />
+                    {/* Short label so the price keeps its room on a 360px screen; the
+                        accessible name says the whole thing. */}
+                    <PropertyContactButton
+                      locale={locale}
+                      propertySlug={keySlug}
+                      propertyTitle={title}
+                      agentSlug={propertyAgent?.slug ?? null}
+                      agentName={propertyAgent?.name ?? null}
+                      analytics={propertyLeadAnalytics}
+                      label={tContactBar('ask')}
+                      ariaLabel={tContactBar('askProperty')}
+                      className={brandButtonClass('primary', 'shrink-0 whitespace-nowrap', 'md')}
+                    />
+                  </>
+                )}
               </div>
             </MobileStickyBar>
         </section>
