@@ -84,3 +84,18 @@ describe('resolveLocaleHref (place listings under the sole public deal)', () => 
     expect(resolveLocaleHref('/albania/durres/rent', 'en')).toBe('/en/albania/durres/rent')
   })
 })
+
+/** Old first segments that 308/301 elsewhere: link the target, not the redirect. */
+describe('resolveLocaleHref (redirected legacy paths)', () => {
+  it('sends /properties to /sale, keeping the query', () => {
+    expect(resolveLocaleHref('/properties', 'en')).toBe('/en/sale')
+    expect(resolveLocaleHref('/de/properties?city=durres', 'pl')).toBe('/pl/sale?city=durres')
+    expect(resolveLocaleHref('properties', 'ru')).toBe('/ru/sale')
+  })
+  it('sends /contact and /contactus to /contacts, but not the thank-you page', () => {
+    expect(resolveLocaleHref('/contact', 'en')).toBe('/en/contacts')
+    expect(resolveLocaleHref('/contactus', 'it')).toBe('/it/contacts')
+    expect(resolveLocaleHref('/contact/thank-you', 'en')).toBe('/en/contact/thank-you')
+    expect(resolveLocaleHref('/property/x', 'en')).toBe('/en/property/x')
+  })
+})
