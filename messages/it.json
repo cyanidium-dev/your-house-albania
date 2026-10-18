@@ -122,11 +122,6 @@
         }
       }
     },
-    "properties": {
-      "badge": "Immobili",
-      "title": "Scopri case dal design ispiratore.",
-      "description": "Case curate dove eleganza, stile e comfort si uniscono."
-    },
     "topOffers": {
       "title": "Migliori offerte",
       "description": "Annunci popolari, nuovi e più richiesti in un unico posto.",
@@ -140,19 +135,6 @@
       "next": "Successivi",
       "seeAllCount": "Vedi tutti gli annunci ({count, number})"
     },
-    "featured": {
-      "badge": "Proprietà in evidenza",
-      "title": "Villa lusso moderna",
-      "address": "20 S Aurora Ave, Miami",
-      "description": "Vivi il lusso nella villa moderna in 20 S Aurora Ave, Miami. $1.650.500, 560 m², 4 camere, 3 bagni, ampi spazi. Efficienza energetica, luce naturale, sicurezza, esterni, 2 aree bar — ideale per 8+ ospiti. Costruita nel 2025.",
-      "bedrooms": "4 Camere",
-      "bathrooms": "3 Bagni",
-      "parkingSpace": "Posto auto",
-      "barAreas": "2 Aree bar",
-      "getInTouch": "Contattaci",
-      "price": "$1.650.500",
-      "discountedPrice": "Prezzo scontato"
-    },
     "faq": {
       "badge": "FAQ",
       "title": "Tutto sulle case Domlivo",
@@ -161,12 +143,6 @@
       "q2": "2. Dove trovo le case Domlivo?",
       "q3": "3. Quali passi per acquistare?",
       "answer": "Scopri una vasta gamma di proprietà di lusso, da appartamenti eleganti a ville spaziose."
-    },
-    "contact": {
-      "title": "Un regno dove design raffinato e lusso senza tempo si incontrano.",
-      "getInTouch": "Contattaci",
-      "marquee1": "VALUTAZIONE GRATUITA DELLA TUA CASA — VENDI CON SICUREZZA!",
-      "marquee2": "SFOGLIA MIGLIAIA DI ANNUNCI IN ZONE PRESTIGIOSE A PREZZI OTTIMI!"
     },
     "blog": {
       "badge": "Blog",

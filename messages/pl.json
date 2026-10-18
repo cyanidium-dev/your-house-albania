@@ -122,11 +122,6 @@
         }
       }
     },
-    "properties": {
-      "badge": "Nieruchomości",
-      "title": "Odkryj inspirujące projekty domów.",
-      "description": "Wyselekcjonowane domy łączące elegancję, styl i komfort."
-    },
     "topOffers": {
       "title": "Najlepsze oferty",
       "description": "Popularne, nowe i najbardziej poszukiwane oferty w jednym miejscu.",
@@ -140,19 +135,6 @@
       "next": "Następne",
       "seeAllCount": "Zobacz wszystkie oferty ({count, number})"
     },
-    "featured": {
-      "badge": "Wyróżniona nieruchomość",
-      "title": "Nowoczesna luksusowa willa",
-      "address": "20 S Aurora Ave, Miami",
-      "description": "Doświadcz luksusowego życia w nowoczesnej willi przy 20 S Aurora Ave w Miami. Wyceniona na $1,650,500, ten inteligentny dom o powierzchni 560 ft² oferuje 4 sypialnie, 3 łazienki i przestronne strefy dzienne. Energooszczędność, naturalne światło, systemy bezpieczeństwa, przestrzenie zewnętrzne i 2 strefy barowe — idealne dla 8 i więcej gości. Wybudowana w 2025 roku.",
-      "bedrooms": "4 sypialnie",
-      "bathrooms": "3 łazienki",
-      "parkingSpace": "Miejsce parkingowe",
-      "barAreas": "2 strefy barowe",
-      "getInTouch": "Skontaktuj się",
-      "price": "$1,650,500",
-      "discountedPrice": "Cena po rabacie"
-    },
     "faq": {
       "badge": "FAQ",
       "title": "Wszystko o domach Domlivo",
@@ -161,12 +143,6 @@
       "q2": "2. Gdzie mogę znaleźć domy Domlivo?",
       "q3": "3. Jakie są kroki, aby kupić nieruchomość Domlivo?",
       "answer": "Odkryj szeroki wybór nieruchomości premium — od luksusowych apartamentów po przestronne wille, dopasowane do Twoich potrzeb."
-    },
-    "contact": {
-      "title": "Wejdź do przestrzeni, w której wyrafinowany design spotyka się z ponadczasowym luksusem.",
-      "getInTouch": "Skontaktuj się",
-      "marquee1": "BEZPŁATNA WYCENA NIERUCHOMOŚCI — SPRZEDAJ SWÓJ DOM Z PEWNOŚCIĄ!",
-      "marquee2": "PRZEGLĄDAJ TYSIĄCE OFERT W NAJLEPSZYCH LOKALIZACJACH W ŚWIETNYCH CENACH!"
     },
     "blog": {
       "badge": "Blog",

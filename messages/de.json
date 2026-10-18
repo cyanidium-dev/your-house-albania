@@ -122,11 +122,6 @@
         }
       }
     },
-    "properties": {
-      "badge": "Immobilien",
-      "title": "Entdecken Sie inspirierend gestaltete Wohnungen.",
-      "description": "Ausgewählte Objekte, in denen Eleganz, Stil und Komfort zusammenkommen."
-    },
     "topOffers": {
       "title": "Top-Angebote",
       "description": "Beliebte, neue und stark nachgefragte Angebote an einem Ort.",
@@ -140,19 +135,6 @@
       "next": "Weiter",
       "seeAllCount": "Alle Angebote ansehen ({count, number})"
     },
-    "featured": {
-      "badge": "Top-Immobilie",
-      "title": "Moderne Luxusvilla",
-      "address": "20 S Aurora Ave, Miami",
-      "description": "Erleben Sie luxuriöses Wohnen in der modernen Luxusvilla in 20 S Aurora Ave, Miami. Für 1.650.500 $ bietet dieses 560 m² große Smart Home 4 Schlafzimmer, 3 Bäder und großzügige Wohnbereiche. Energieeffizienz, viel Tageslicht, Sicherheitstechnik, Außenbereiche und 2 Barbereiche – ideal für 8+ Gäste. Baujahr 2025.",
-      "bedrooms": "4 Schlafzimmer",
-      "bathrooms": "3 Bäder",
-      "parkingSpace": "Stellplatz",
-      "barAreas": "2 Barbereiche",
-      "getInTouch": "Kontakt aufnehmen",
-      "price": "1.650.500 $",
-      "discountedPrice": "Reduzierter Preis"
-    },
     "faq": {
       "badge": "FAQ",
       "title": "Alles über Domlivo Immobilien",
@@ -161,12 +143,6 @@
       "q2": "2. Wo finde ich Domlivo Immobilien?",
       "q3": "3. Welche Schritte sind für den Kauf nötig?",
       "answer": "Entdecken Sie eine vielfältige Auswahl an Premium-Immobilien – von luxuriösen Wohnungen bis zu großzügigen Villen, passend zu Ihren Wünschen."
-    },
-    "contact": {
-      "title": "Betreten Sie eine Welt, in der erlesenes Design und zeitloser Luxus zusammenfinden.",
-      "getInTouch": "Kontakt aufnehmen",
-      "marquee1": "KOSTENLOSE IMMOBILIENBEWERTUNG – VERKAUFEN SIE MIT SICHERHEIT!",
-      "marquee2": "TAUSENDE ANGEBOTE IN BESTEN LAGEN ZU TOP-PREISEN ENTDECKEN!"
     },
     "blog": {
       "badge": "Blog",
