@@ -78,4 +78,4 @@ export const switchThumbCheckedClass = "translate-x-5";
 
 /** Footer trigger — styled to sit in the dark footer credits row. */
 export const settingsLinkClass =
-  "inline-flex items-center whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline cursor-pointer bg-transparent border-0 p-0";
+  "tap-zone relative inline-flex items-center whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline cursor-pointer bg-transparent border-0 p-0";

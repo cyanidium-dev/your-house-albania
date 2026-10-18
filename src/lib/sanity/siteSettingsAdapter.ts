@@ -71,8 +71,14 @@ function mapFooterApp(raw: RawSiteSettings["footerApp"]): ResolvedFooterApp {
   if (!fa || typeof fa !== "object") {
     return { enabled: false, iosUrl: "", androidUrl: "" };
   }
+  // Switched off, the links are not shown — and must not ride along either:
+  // these props reach a client component, so whatever they hold is serialised
+  // into every page's HTML. The CMS still holds the template's placeholder
+  // (`your-house-albania.vercel.app/en`), which crawlers read there (audit
+  // 2026-10-18, C-10).
+  if (!fa.enabled) return { enabled: false, iosUrl: "", androidUrl: "" };
   return {
-    enabled: Boolean(fa.enabled),
+    enabled: true,
     iosUrl: trimUrl(fa.iosUrl),
     androidUrl: trimUrl(fa.androidUrl),
   };

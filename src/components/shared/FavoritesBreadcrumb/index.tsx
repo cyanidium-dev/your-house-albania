@@ -14,7 +14,7 @@ export async function FavoritesBreadcrumb({ locale }: Props) {
   // Favorites is a saved subset of the catalog, so it hangs off Properties.
   const items = buildCatalogCrumbs({
     locale,
-    labels: {home: t("home"), properties: t("catalog"), agents: t("agents")},
+    labels: {home: t("home"), properties: t("saleCatalog"), agents: t("agents")},
     leaf: t("favorites"),
   });
 

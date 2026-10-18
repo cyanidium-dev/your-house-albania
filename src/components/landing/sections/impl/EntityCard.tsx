@@ -63,7 +63,7 @@ export function EntityCard({
           <NoPhotoPlate label={title} className={compact ? "max-sm:[&>span]:hidden" : undefined} />
         )}
         {tag ? (
-          <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white/90">
+          <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-white/90">
             <Icon icon="ph:map-pin-fill" width={11} height={11} />
             {tag}
           </span>

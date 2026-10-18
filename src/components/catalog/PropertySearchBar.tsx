@@ -35,7 +35,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
       {/* Mobile: single liquid-glass pill — deal tabs + filters icon (md:hidden). Modal toggle preserves existing portal/handlers. */}
       <div
         className={cn(
-          "mb-5 flex min-h-11 w-full items-stretch gap-1 rounded-full p-1 md:hidden",
+          "pointer-events-auto mb-5 flex min-h-11 w-full items-stretch gap-1 rounded-full p-1 md:hidden",
           "bg-white/40 backdrop-blur-xl backdrop-saturate-150 dark:bg-white/10",
           "border border-white/40 shadow-lg shadow-dark/5 ring-1 ring-inset ring-white/30 dark:border-white/15 dark:ring-white/10"
         )}
@@ -54,7 +54,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
                 key={v}
                 type="button"
                 onClick={() => applyCompactDealTab(v)}
-                className={segmentedItemClass(deal === v, { size: "sm", glass: true, className: "flex-1 h-auto min-h-8 px-2 py-1 text-center sm:text-base" })}
+                className={segmentedItemClass(deal === v, { size: "sm", glass: true, className: "tap-zone relative flex-1 h-auto min-h-8 px-2 py-1 text-center sm:text-base" })}
               >
                 <span className="min-w-0 truncate">{getDealLabel(v)}</span>
               </button>
@@ -65,7 +65,8 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
             type="button"
             onClick={() => setMobileFilterModalOpen((o) => !o)}
             className={cn(
-              "flex min-w-0 flex-1 items-center rounded-full px-3 text-left text-sm font-medium leading-tight transition-colors sm:text-base",
+              // tap-zone: 34px inside the 44px pill; the zone covers its padding.
+              "tap-zone relative flex min-w-0 flex-1 items-center rounded-full px-3 text-left text-sm font-medium leading-tight transition-colors sm:text-base",
               "text-dark/70 hover:bg-white/40 dark:text-white/80 dark:hover:bg-white/[0.08]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset"
             )}
@@ -81,7 +82,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
           }
           aria-expanded={mobileFilterModalOpen}
           className={cn(
-            "flex w-10 shrink-0 items-center justify-center rounded-full transition-colors",
+            "tap-zone relative flex w-10 shrink-0 items-center justify-center rounded-full transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset",
             mobileFilterModalOpen
               ? "bg-white text-primary shadow-sm dark:bg-dark dark:text-primary"
@@ -102,6 +103,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
             <CatalogFilterCompactBar filters={f} onExpand={expandCompactFilters} />
           }
           align={props.collapsedByDefault ? "start" : "center"}
+          reserve={props.collapsedByDefault ? "visible" : "form"}
         />
       </div>
       {clientMounted &&

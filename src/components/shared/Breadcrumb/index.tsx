@@ -25,7 +25,8 @@ export async function Breadcrumb({ items, separator = "/", overHero = false }: P
         // min-w-0 / overflow-hidden on the nav and the list: without them the
         // list grew to the full title width and the page scrolled sideways on
         // phones (listing 398px wide at 390, post 447px — visual audit 18.10).
-        "flex min-w-0 max-w-full overflow-hidden flex-wrap items-center gap-x-1.5 gap-y-1 text-sm mb-4",
+        // Clipped sideways only, so the links' 44px tap zones are not cut.
+        "flex min-w-0 max-w-full overflow-x-clip flex-wrap items-center gap-x-1.5 gap-y-1 text-sm mb-4",
         overHero
           ? "text-white/90 [&_a]:text-white/90 [&_a]:hover:text-primary [&_a]:transition-colors [&_span]:text-white/70 [&_.font-medium]:text-white"
           : "text-dark/70 dark:text-white/70"
@@ -52,7 +53,8 @@ export async function Breadcrumb({ items, separator = "/", overHero = false }: P
             {item.href ? (
               <Link
                 href={item.href}
-                className="hover:text-primary transition-colors"
+                // tap-zone: the link is 20px tall; its hit area is 44px (audit M2).
+                className="tap-zone relative hover:text-primary transition-colors"
               >
                 {item.label}
               </Link>

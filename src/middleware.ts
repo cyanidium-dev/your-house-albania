@@ -5,10 +5,20 @@ import { getLegacyFallbackCatalogCountrySlug } from "./lib/routes/catalog";
 import { isSitePathIndexable, PARTIAL_LOCALE_ROBOTS_HEADER } from "./lib/seo/localeIndexing";
 import { listingQueryPublicPathname, listingQueryRewritePathname } from "./lib/routes/listingQueryRewrite";
 import { defaultLocaleRedirectTarget } from "./lib/routes/localelessRedirect";
+import { searchWithoutFirstPageParam } from "./lib/routes/pageParam";
 
 const intlMiddleware = createMiddleware(routing);
 
 const LOCALES = routing.locales as readonly string[];
+
+/**
+ * Target of the permanent 308 for deep paths that name no locale. Pinned to
+ * the locale these redirects have pointed at since 2026-09-25, independent of
+ * `routing.defaultLocale` (now `en`, for the root's detection fallback): moving
+ * a permanent redirect's target would re-shuffle addresses search engines have
+ * already consolidated.
+ */
+const LOCALELESS_REDIRECT_LOCALE = "sq";
 
 /**
  * Legacy agent URLs were `/[locale]/agent/[agent]/[city]/…filters`.
@@ -46,7 +56,7 @@ export default function middleware(request: NextRequest) {
   }
   // A deep path with no locale gets a permanent 308 to the default locale
   // rather than next-intl's 307 — see lib/routes/localelessRedirect.
-  const localelessTarget = defaultLocaleRedirectTarget(url.pathname, LOCALES, routing.defaultLocale);
+  const localelessTarget = defaultLocaleRedirectTarget(url.pathname, LOCALES, LOCALELESS_REDIRECT_LOCALE);
   if (localelessTarget) {
     url.pathname = localelessTarget;
     return NextResponse.redirect(url, 308);
@@ -62,13 +72,35 @@ export default function middleware(request: NextRequest) {
     url.pathname = publicListingPath;
     return NextResponse.redirect(url, 308);
   }
-  return withPartialLocaleRobots(
+  // `?page=1`, `?page=0`, `?page=abc` are page one: one address for it.
+  const cleanSearch = searchWithoutFirstPageParam(url.searchParams);
+  if (cleanSearch !== null) {
+    url.search = cleanSearch;
+    return NextResponse.redirect(url, 308);
+  }
+  return withLanguageVaryOnRootRedirect(
     request,
-    withoutLocaleCookieOnCacheableDocuments(
+    withPartialLocaleRobots(
       request,
-      withListingQueryRewrite(request, intlMiddleware(request)),
+      withoutLocaleCookieOnCacheableDocuments(
+        request,
+        withListingQueryRewrite(request, intlMiddleware(request)),
+      ),
     ),
   );
+}
+
+/**
+ * `/` redirects by the `NEXT_LOCALE` cookie, then `Accept-Language`, then the
+ * default locale. The response depends on both request headers, so it has to
+ * say so, or a shared cache may hand one visitor's language to the next
+ * (audit 2026-10-18: the root 307 carried no `Vary`).
+ */
+function withLanguageVaryOnRootRedirect(request: NextRequest, response: Response): Response {
+  if (request.nextUrl.pathname !== "/") return response;
+  if (response.status < 300 || response.status >= 400) return response;
+  response.headers.set("Vary", "Accept-Language, Cookie");
+  return response;
 }
 
 /**

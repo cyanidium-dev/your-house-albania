@@ -11,6 +11,11 @@ describe("static code pages in sitemap-static.xml", () => {
     expect(STATIC_CODE_PAGES.map((p) => p.path)).toContain("about");
   });
 
+  // In no sitemap until the audit of 2026-10-18 (S-17).
+  it("lists /contacts", () => {
+    expect(STATIC_CODE_PAGES.map((p) => p.path)).toContain("contacts");
+  });
+
   it("emits one URL per locale, each with every locale plus x-default as alternates", () => {
     const entries = buildStaticCodePageEntries(BASE + "/", routing.locales, [
       { path: "about", lastModified: "2026-09-20" },
@@ -29,7 +34,7 @@ describe("static code pages in sitemap-static.xml", () => {
     expect(xml).toContain(`<loc>${BASE}/de/about</loc>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="pl" href="${BASE}/pl/about"/>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE}/en/about"/>`);
-    expect(xml.match(/<url>/g)).toHaveLength(routing.locales.length);
+    expect(xml.match(/<url>/g)).toHaveLength(routing.locales.length * STATIC_CODE_PAGES.length);
   });
 
   it("leaves a sitemap without alternates exactly as it was", () => {

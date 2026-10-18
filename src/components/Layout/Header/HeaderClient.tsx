@@ -97,7 +97,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                         squeezed group, not the row, and the logo went to 31px. */}
                     <div className="flex min-w-0 flex-1 items-center gap-4 xl:gap-6">
                       <div className="min-w-0 shrink">
-                        <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
+                        <Link href={`/${locale}`} className="tap-zone relative h-8 md:h-auto flex items-center max-w-full min-w-0">
                           {siteSettings?.logoUrl ? (
                             <>
                               <Image

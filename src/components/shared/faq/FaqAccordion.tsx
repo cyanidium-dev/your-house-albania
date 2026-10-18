@@ -67,7 +67,7 @@ export function FaqAccordion({
               <span
                 className={cn(
                   'flex-1 min-w-0 text-base lg:text-lg font-semibold leading-snug',
-                  isOpen ? 'text-primary' : 'text-dark dark:text-white',
+                  isOpen ? 'text-primary-ink dark:text-primary' : 'text-dark dark:text-white',
                 )}
               >
                 {item.question}
@@ -85,12 +85,12 @@ export function FaqAccordion({
               </span>
             </button>
             <div id={panelId} className="px-5 pb-6 -mt-1" hidden={!isOpen}>
-              <div className="text-[15px] leading-relaxed text-dark/70 dark:text-white/70 [&_p+p]:mt-3 [&_a]:text-primary [&_a]:underline-offset-4 hover:[&_a]:underline">
+              <div className="text-[15px] leading-relaxed text-dark/70 dark:text-white/70 [&_p+p]:mt-3 [&_a]:text-primary-ink dark:[&_a]:text-primary [&_a]:underline-offset-4 hover:[&_a]:underline">
                 {item.answer}
               </div>
               {item.tag ? (
                 <div className="mt-4 flex items-center gap-2 text-xs">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 text-primary px-2.5 py-1 font-medium">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 text-primary-ink dark:text-primary px-2.5 py-1 font-medium">
                     {item.tag}
                   </span>
                 </div>

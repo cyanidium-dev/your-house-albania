@@ -204,7 +204,7 @@ export function SplitDarkVariant({
                     </p>
                     <p className="mt-2 text-xs text-white/70">{s.label}</p>
                     {s.description ? (
-                      <p className="mt-1.5 text-[11px] leading-snug text-white/50">
+                      <p className="mt-1.5 text-xs leading-snug text-white/50">
                         {s.description}
                       </p>
                     ) : null}

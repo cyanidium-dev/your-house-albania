@@ -10,6 +10,8 @@ import { ContactPageContent } from '@/components/contact/ContactPageContent'
 import { AddPropertyNote } from '@/components/contact/AddPropertyNote'
 import { resolveMessengers } from '@/lib/contacts/messengers'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
+import { buildContactPageJsonLd } from '@/lib/seo/contactPageJsonLd'
+import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -30,6 +32,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ContactsPage({ params }: Props) {
   const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'Contacts' })
+  const jsonLd = buildContactPageJsonLd({
+    baseUrl: getSiteBaseUrl(),
+    locale,
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+  })
   const raw = await fetchSiteSettings()
   const manager = mapContactsManagerFromSiteSettings(raw)
   const messengers = resolveMessengers(
@@ -39,6 +48,10 @@ export default async function ContactsPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="pt-28 md:pt-36">
         <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
           <FlatBreadcrumb locale={locale} labelKey="contacts" path="contacts" />

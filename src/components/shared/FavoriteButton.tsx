@@ -71,7 +71,9 @@ export function FavoriteButton({ slug, name, variant = "overlay", size = "defaul
   };
 
   const base =
-    "rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40";
+    // tap-zone: the visible circle is 28-44px; the hit area is never under 44px.
+    // `relative` gives the zone its anchor; an `absolute` from the caller wins.
+    "tap-zone relative rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40";
 
   const overlayStyles =
     size === "compact"

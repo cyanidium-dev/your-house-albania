@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { displayAgencyName } from '@/lib/format/agencyName';
 import React from 'react';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { fetchPropertyBySlug, fetchPropertyDuplicateTarget, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
@@ -486,7 +487,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                 {propertyAgent?.slug && propertyAgent?.name ? (
                                   <p className='mt-1 text-sm text-dark/60 dark:text-white/70'>
                                     {tPropertyDetail.rich('listedBy', {
-                                      name: propertyAgent.name,
+                                      name: displayAgencyName(propertyAgent.name),
                                       link: (chunks) =>
                                         // A partner we route leads for ourselves is named, not linked
                                         // (agent.noPublicLink): the name says whose flat it is, nothing leads away.
@@ -495,7 +496,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                         ) : (
                                           <Link
                                             href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
-                                            className='underline underline-offset-2 hover:text-primary duration-300'
+                                            className='tap-zone relative underline underline-offset-2 hover:text-primary duration-300'
                                           >
                                             {chunks}
                                           </Link>
@@ -620,7 +621,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                               // next to the price.
                               <p className='text-sm text-dark/60 dark:text-white/70 mt-2'>
                                 {tPropertyDetail.rich('listedBy', {
-                                  name: propertyAgent.name,
+                                  name: displayAgencyName(propertyAgent.name),
                                   link: (chunks) =>
                                         // A partner we route leads for ourselves is named, not linked
                                         // (agent.noPublicLink): the name says whose flat it is, nothing leads away.
@@ -629,7 +630,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                         ) : (
                                           <Link
                                             href={catalogPath(locale, undefined, undefined, propertyAgent.slug)}
-                                            className='underline underline-offset-2 hover:text-primary duration-300'
+                                            className='tap-zone relative underline underline-offset-2 hover:text-primary duration-300'
                                           >
                                             {chunks}
                                           </Link>

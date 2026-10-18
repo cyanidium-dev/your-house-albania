@@ -24,6 +24,26 @@ export function canonicalizePlaceListingPath(path: string): string {
 }
 
 /**
+ * Old addresses that redirect permanently, mapped to where they land. CMS CTAs
+ * still carry `/properties` (an early build's catalog, 308 → `/sale`), so every
+ * page with such a CTA linked through a redirect (audit 2026-10-18, P-14).
+ * Only the first segment is matched; a query or hash is kept.
+ */
+const REDIRECTED_FIRST_SEGMENTS: Readonly<Record<string, string>> = {
+  properties: 'sale',
+  contact: 'contacts',
+  contactus: 'contacts',
+}
+
+/** `/properties?x` → `/sale?x`; `/contact/thank-you` is a page and stays. */
+export function canonicalizeRedirectedPath(path: string): string {
+  const match = /^\/([^/?#]+)(?=[?#]|$)/.exec(path)
+  if (!match) return path
+  const target = REDIRECTED_FIRST_SEGMENTS[match[1].toLowerCase()]
+  return target ? `/${target}${path.slice(match[0].length)}` : path
+}
+
+/**
  * Strip a locale segment an editor left on an internal path.
  *
  * CMS copy is full of links pasted from the live site, so a Russian article
@@ -62,10 +82,10 @@ export function resolveLocaleHref(
   }
   if (h.startsWith('#')) return h
   if (h.startsWith('/')) {
-    const path = canonicalizePlaceListingPath(stripLocalePrefix(h, locales))
+    const path = canonicalizeRedirectedPath(canonicalizePlaceListingPath(stripLocalePrefix(h, locales)))
     return path === '/' ? `/${locale}` : `/${locale}${path}`
   }
-  return `/${locale}/${h}`
+  return `/${locale}${canonicalizeRedirectedPath(`/${h}`)}`
 }
 
 /**
