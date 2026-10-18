@@ -38,6 +38,7 @@ import { PriceText } from '@/components/shared/PriceText';
 import { PropertyAmenitiesSection } from '@/components/property/PropertyAmenitiesSection';
 import { PropertyContactButton } from '@/components/property/PropertyContactModal';
 import { SoldSimilarRequest } from '@/components/property/SoldSimilarRequest';
+import { inactiveListingStatus } from '@/lib/property/listingStatus';
 import { MessengerButtons } from '@/components/contact/MessengerButtons';
 import { resolveMessengers } from '@/lib/contacts/messengers';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
@@ -156,10 +157,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       propertyPath: { baseUrl, locale, slug: keySlug, localizedSlug },
     }
   );
-  // A sold listing stays reachable for whoever saved the link, but a buyer
-  // searching Google should land on one that is still for sale.
-  const isSold = (sanityProperty as { lifecycleStatus?: string }).lifecycleStatus === 'sold';
-  return isSold ? { ...metadata, robots: { index: false, follow: true } } : metadata;
+  // A sold or withdrawn listing stays reachable for whoever saved the link,
+  // but a buyer searching Google should land on one that is still for sale.
+  const inactive = inactiveListingStatus((sanityProperty as { lifecycleStatus?: string }).lifecycleStatus);
+  return inactive ? { ...metadata, robots: { index: false, follow: true } } : metadata;
 }
 
 function getSimilarCount(settings: unknown): number {
@@ -330,11 +331,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
     if (s === 'long-term' || s === 'longterm') return 'dealTypeLongTerm';
     return 'dealTypePrice';
   })();
-  // Sold: the price stays (struck through) with "Sold" where the deal type
-  // was, every contact control gives way to "find a similar one", and the
-  // request form sits right under the gallery (SoldSimilarRequest).
-  const isSold = (sanityProperty as { lifecycleStatus?: string }).lifecycleStatus === 'sold';
-  const dealTypeLabel = isSold ? tPropertyDetail('sold') : tPropertyDetail(dealTypeKey);
+  // Sold, reserved, rented or archived: the price stays (struck through) with
+  // the state where the deal type was, every contact control gives way to
+  // "find a similar one", and the request form sits right under the gallery
+  // (SoldSimilarRequest).
+  const inactiveStatus = inactiveListingStatus((sanityProperty as { lifecycleStatus?: string }).lifecycleStatus);
+  const isSold = inactiveStatus !== null;
+  const dealTypeLabel = inactiveStatus ? tPropertyDetail(inactiveStatus) : tPropertyDetail(dealTypeKey);
   const findSimilarLabel = tPropertyDetail('soldFindSimilar');
   const priceClass = isSold ? 'line-through decoration-2 text-dark/40 dark:text-white/40' : '';
 
@@ -509,7 +512,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     </div>
                 </div>
                 <PropertyGallery images={galleryImages} />
-                {isSold ? <SoldSimilarRequest locale={locale} propertySlug={keySlug} /> : null}
+                {inactiveStatus ? <SoldSimilarRequest locale={locale} propertySlug={keySlug} status={inactiveStatus} /> : null}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10 items-start">
                     <div className="lg:col-span-8 min-w-0">
                         {amenities.length > 0 && (
@@ -656,8 +659,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 </div>
                 {similarItems.length > 0 && (
                   // Already inside the page container: a second one here set the
-                  // block 20px in from everything above it.
-                  <section className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20">
+                  // block 20px in from everything above it. content-visibility:
+                  // the carousel's cards lay out when scrolled near, not with
+                  // the first paint.
+                  <section className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20 [content-visibility:auto] [contain-intrinsic-size:auto_560px]">
                     <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-dark dark:text-white mb-6">{tPropertyDetail('similarProperties')}</h2>
                     <SimilarPropertiesCarousel items={similarItems} locale={locale} />
                   </section>

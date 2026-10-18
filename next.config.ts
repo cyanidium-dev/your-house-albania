@@ -5,6 +5,10 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Not `experimental.inlineCss`: tried 18.10 to drop the render-blocking
+  // stylesheet request, but Next puts the inlined 160 KB of CSS into the RSC
+  // payload as well, so the document grew from 470 to 820 KB and mobile TBT
+  // doubled.
   images: {
     // Sanity serves the original bytes unless asked otherwise, so the loader in
     // src/lib/images/loader.ts appends the CDN's own resize/format parameters

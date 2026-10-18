@@ -220,7 +220,11 @@
     },
     "propertyDetail": {
       "sold": "E shitur",
+      "archived": "Nuk është më në shitje",
+      "reserved": "E rezervuar",
+      "rented": "E dhënë me qira",
       "soldLeadTitle": "Kjo pronë është shitur. Do të gjejmë një të ngjashme",
+      "unavailableLeadTitle": "Kjo pronë nuk është më e disponueshme. Do të gjejmë një të ngjashme",
       "soldLeadBody": "Lini numrin tuaj dhe na tregoni çfarë kërkoni — do t'ju dërgojmë prona të ngjashme me çmime aktuale.",
       "soldFindSimilar": "Gjej një të ngjashme",
       "propertyDetails": "Detajet e pronës",

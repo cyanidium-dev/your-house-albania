@@ -24,14 +24,23 @@ export function publishedPropertyFilter(prefix = ""): string {
 /** Convenience constant for the common top-level (unprefixed) case. */
 export const PUBLISHED_PROPERTY_FILTER = publishedPropertyFilter();
 
+/** Lifecycle states whose page stays up with a label instead of a 404. */
+export const INACTIVE_LISTING_STATUSES = ["sold", "archived", "reserved", "rented"] as const;
+export type InactiveListingStatus = (typeof INACTIVE_LISTING_STATUSES)[number];
+
 /**
- * The listing's own page also answers for a sold property: the address keeps
- * working from old links, messengers and search results, the page says "sold"
- * and offers to find a similar one (2026-10-18). Lists, carousels and sitemaps
- * keep using `publishedPropertyFilter`, so a sold listing appears nowhere else.
+ * The listing's own page also answers for a sold, reserved, rented or
+ * archived property: the address keeps working from old links, messengers,
+ * search results and the language switcher, the page says what happened and
+ * offers to find a similar one (2026-10-18). Partner imports archive listings
+ * daily; until then the page in the visitor's language was still cached while
+ * the other six languages were already 404s. Lists, carousels and sitemaps
+ * keep using `publishedPropertyFilter`, so an inactive listing appears nowhere
+ * else. Only `draft` stays private.
  */
 export function publishedPropertyDetailFilter(prefix = ""): string {
-  return `${prefix}isPublished == true && (${prefix}lifecycleStatus in ["active", "sold"] || !defined(${prefix}lifecycleStatus)) && ${publicDealStatusFilter(prefix)}`;
+  const states = ["active", ...INACTIVE_LISTING_STATUSES].map((s) => `"${s}"`).join(", ");
+  return `${prefix}isPublished == true && (${prefix}lifecycleStatus in [${states}] || !defined(${prefix}lifecycleStatus)) && ${publicDealStatusFilter(prefix)}`;
 }
 
 export const PUBLISHED_PROPERTY_DETAIL_FILTER = publishedPropertyDetailFilter();
