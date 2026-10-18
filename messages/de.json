@@ -220,7 +220,11 @@
     },
     "propertyDetail": {
       "sold": "Verkauft",
+      "archived": "Nicht mehr verfügbar",
+      "reserved": "Reserviert",
+      "rented": "Vermietet",
       "soldLeadTitle": "Diese Immobilie ist verkauft. Wir finden eine ähnliche",
+      "unavailableLeadTitle": "Dieses Angebot ist nicht mehr verfügbar. Wir finden ein ähnliches",
       "soldLeadBody": "Hinterlassen Sie Ihre Nummer und sagen Sie uns, was Sie suchen – wir senden Ihnen ähnliche Angebote mit aktuellen Preisen.",
       "soldFindSimilar": "Ähnliche finden",
       "propertyDetails": "Objektdetails",

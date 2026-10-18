@@ -2,7 +2,7 @@
 
 import Link from "@/components/shared/Link";
 import { useState } from 'react'
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/analytics/track'
 import type { AiCitation } from '@/lib/ai/knowledgeTools'

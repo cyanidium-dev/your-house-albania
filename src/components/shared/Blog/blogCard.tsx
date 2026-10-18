@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "@/components/shared/Link";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { getTranslations } from "next-intl/server";
 import { formatBlogDate } from "@/lib/date/formatLocale";
 

@@ -209,7 +209,11 @@
     },
     "propertyDetail": {
       "sold": "Sprzedane",
+      "archived": "Już niedostępne",
+      "reserved": "Zarezerwowane",
+      "rented": "Wynajęte",
       "soldLeadTitle": "Ta nieruchomość została sprzedana. Znajdziemy podobną",
+      "unavailableLeadTitle": "Ta oferta nie jest już dostępna. Znajdziemy podobną",
       "soldLeadBody": "Zostaw numer i napisz, czego szukasz — wyślemy podobne oferty z aktualnymi cenami.",
       "soldFindSimilar": "Znajdź podobną",
       "propertyDetails": "Szczegóły nieruchomości",

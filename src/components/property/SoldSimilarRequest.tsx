@@ -1,20 +1,24 @@
 import { getTranslations } from 'next-intl/server';
 import { QuickLeadForm } from '@/components/shared/QuickLead/QuickLeadForm';
 import { PANEL, SPLIT, SPLIT_ASIDE, SPLIT_MAIN } from '@/components/shared/layout';
+import type { InactiveListingStatus } from '@/lib/sanity/groq/propertyFilters';
 
 /**
- * What a sold listing offers instead of its contact buttons: a one-field
- * request to be sent similar listings. Sits right under the gallery, so the
- * visitor who arrived from an old link sees the way forward before the
- * details of a flat they can no longer buy. Every "find a similar one" button
- * on the page points here (`#similar-request`).
+ * What a sold, reserved, rented or withdrawn listing offers instead of its
+ * contact buttons: a one-field request to be sent similar listings. Sits
+ * right under the gallery, so the visitor who arrived from an old link (or
+ * switched language on a listing the partner import has since archived) sees
+ * the way forward before the details of a flat they can no longer buy. Every
+ * "find a similar one" button on the page points here (`#similar-request`).
  */
 export async function SoldSimilarRequest({
   locale,
   propertySlug,
+  status,
 }: {
   locale: string;
   propertySlug: string;
+  status: InactiveListingStatus;
 }) {
   const t = await getTranslations('Shared.propertyDetail');
   return (
@@ -22,17 +26,17 @@ export async function SoldSimilarRequest({
       <div className={`${SPLIT} items-start`}>
         <div className={SPLIT_ASIDE}>
           <span className="inline-flex items-center rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
-            {t('sold')}
+            {t(status)}
           </span>
           <h2 className="mt-3 text-2xl font-medium leading-tight tracking-tight text-dark text-balance dark:text-white">
-            {t('soldLeadTitle')}
+            {t(status === 'sold' ? 'soldLeadTitle' : 'unavailableLeadTitle')}
           </h2>
           <p className="mt-2 text-dark/70 dark:text-white/70">{t('soldLeadBody')}</p>
         </div>
         <div className={SPLIT_MAIN}>
           <QuickLeadForm
             locale={locale}
-            sourceLabel={`sold-similar:${propertySlug}`}
+            sourceLabel={`${status}-similar:${propertySlug}`}
             placement="property"
             withName
             withMessage

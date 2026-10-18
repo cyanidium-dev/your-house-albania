@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "@/components/shared/Link";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { NoPhotoPlate } from "@/components/shared/NoPhotoPlate";
 import { cn } from "@/lib/utils";
 

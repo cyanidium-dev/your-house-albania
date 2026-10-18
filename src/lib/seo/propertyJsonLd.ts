@@ -100,6 +100,8 @@ export function accommodationTypeFor(slug?: string | null): string | null {
  */
 const AVAILABILITY: Record<string, string> = {
   sold: "https://schema.org/SoldOut",
+  // Withdrawn by the partner import; the page stays up with a label (18.10).
+  archived: "https://schema.org/Discontinued",
   rented: "https://schema.org/LimitedAvailability",
   reserved: "https://schema.org/LimitedAvailability",
 };

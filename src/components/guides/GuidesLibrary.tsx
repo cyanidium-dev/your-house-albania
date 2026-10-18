@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "@/components/shared/Link";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { CONTAINER } from "@/components/shared/layout";
 import { cn } from "@/lib/utils";
 

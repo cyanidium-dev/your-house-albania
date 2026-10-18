@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { CalcSectionShell } from './calculators/CalcSectionShell'
-import { RoiCalcClient, type RoiPreset } from './calculators/RoiCalcClient'
+import dynamic from 'next/dynamic'
+import type { RoiPreset } from './calculators/RoiCalcClient'
+
+// Loaded only on landings that carry the calculator (see MortgageCalcSection).
+const RoiCalcClient = dynamic(() => import('./calculators/RoiCalcClient').then((m) => m.RoiCalcClient))
 
 type RoiPresetRaw = {
   _key?: string

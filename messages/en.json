@@ -220,7 +220,11 @@
     },
     "propertyDetail": {
       "sold": "Sold",
+      "archived": "No longer available",
+      "reserved": "Reserved",
+      "rented": "Rented out",
       "soldLeadTitle": "This one is sold. We will find a similar one",
+      "unavailableLeadTitle": "This listing is no longer available. We will find a similar one",
       "soldLeadBody": "Leave your phone number and tell us what you are looking for — we will send listings like this one, with current prices.",
       "soldFindSimilar": "Find a similar one",
       "propertyDetails": "Property details",

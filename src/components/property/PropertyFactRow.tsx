@@ -1,4 +1,4 @@
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 
 /**
  * The fact row under a property's heading: rooms, bedrooms, bathrooms, area,

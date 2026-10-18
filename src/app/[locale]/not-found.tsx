@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "@/components/shared/Link";
 import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { catalogPath } from "@/lib/routes/catalog";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 

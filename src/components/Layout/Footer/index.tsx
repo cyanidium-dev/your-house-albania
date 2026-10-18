@@ -5,7 +5,7 @@ import Link from "@/components/shared/Link";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import type { FooterCityNavItem } from "@/lib/sanity/client";
 import type { ResolvedSiteSettings } from "@/lib/sanity/siteSettingsAdapter";
 import {
