@@ -73,7 +73,7 @@ export async function PropertyDetailBreadcrumb({
 
   const items = buildCatalogCrumbs({
     locale,
-    labels: {home: t("home"), properties: t("catalog"), agents: t("agents")},
+    labels: {home: t("home"), properties: t("saleCatalog"), agents: t("agents")},
     country,
     city,
     district,
