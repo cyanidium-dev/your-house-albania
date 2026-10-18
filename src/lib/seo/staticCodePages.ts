@@ -16,6 +16,8 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: "about", lastModified: "2026-09-20" },
   // Missing from every sitemap until the audit of 2026-10-18 (S-17).
   { path: "contacts", lastModified: "2026-10-18" },
+  // The Domlivo Price Index methodology; its figures change hourly, its copy rarely.
+  { path: "methodology", lastModified: "2026-10-19" },
 ];
 
 export type StaticCodePageEntry = {
