@@ -52,6 +52,14 @@ const nextConfig: NextConfig = {
   // host moves; per-deployment preview URLs keep working.
   async redirects() {
     return [
+      // The contact page is `/contacts`. `/contact` (what people and the audit
+      // of 2026-10-18 type) was a 404, `/contactus` a temporary redirect from
+      // its page. `/contact/thank-you` is a real page and is not matched.
+      {
+        source: "/:locale(en|uk|ru|sq|it|pl|de)/:path(contact|contactus)",
+        destination: "/:locale/contacts",
+        statusCode: 301,
+      },
       {
         // /api/ stays put: Vercel Cron calls the production URL and does not
         // follow redirects.
