@@ -1,5 +1,5 @@
 import { indexableRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
-import { preconnect } from "react-dom";
+import { preconnect, preload } from "react-dom";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "../globals.css";
@@ -8,7 +8,7 @@ import NextTopLoader from "nextjs-toploader";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { pickClientMessages } from "@/lib/i18n/clientMessages";
-import { IconSprite } from "@/components/shared/IconSprite";
+import { SPRITE_URL } from "@/lib/icons/spriteViewBoxes";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -132,6 +132,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   // Every photo on the site comes from the Sanity CDN; opening the connection
   // with the document saves the LCP image a DNS + TLS round trip on phones.
   preconnect("https://cdn.sanity.io", { crossOrigin: "anonymous" });
+  // The icon sprite every page's <use> elements point at (see SpriteIcon):
+  // fetched with the document rather than when the first icon is laid out.
+  preload(SPRITE_URL, { as: "image", type: "image/svg+xml" });
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -204,7 +207,6 @@ export default async function LocaleLayout({ children, params }: Props) {
         {/* Holds Chromium's install event for the engagement-gated invitation;
             see lib/pwa/earlyCapture. Must run before the event can fire. */}
         <script dangerouslySetInnerHTML={{ __html: PWA_EARLY_CAPTURE_SCRIPT }} />
-        <IconSprite />
         {analyticsEnabled && (
           <>
             {/* Consent Mode v2 + Clarity bootstrap: default denied, then

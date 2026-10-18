@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // The icon sprite's file name is a hash of its content (see
+        // scripts/build-icon-sprite.mjs), so it can be cached for good.
+        source: "/icons/sprite.:hash.svg",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         source: "/:path*",
         headers: [
           // Vercel sets `max-age` alone; `includeSubDomains` closes the door

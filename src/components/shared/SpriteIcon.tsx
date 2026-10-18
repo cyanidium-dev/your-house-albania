@@ -2,7 +2,7 @@ import type { SVGProps } from "react";
 
 import { Icon } from "@/components/shared/Icon";
 import { spriteSymbolId } from "@/lib/icons/sprite";
-import { SPRITE_VIEWBOXES } from "@/lib/icons/spriteViewBoxes";
+import { SPRITE_URL, SPRITE_VIEWBOXES } from "@/lib/icons/spriteViewBoxes";
 
 type SpriteIconProps = Omit<SVGProps<SVGSVGElement>, "width" | "height"> & {
   icon: string;
@@ -11,19 +11,20 @@ type SpriteIconProps = Omit<SVGProps<SVGSVGElement>, "width" | "height"> & {
 };
 
 /**
- * An icon drawn from the page sprite (`IconSprite`, mounted once in the locale
+ * An icon drawn from the site's SVG sprite (`public/icons/sprite.<hash>.svg`,
+ * written by scripts/build-icon-sprite.mjs and preloaded by the locale
  * layout): a `<use>` of about 90 bytes instead of the full inline SVG that
- * `Icon` writes for every instance. Meant for icons a page repeats many times,
- * which is the property cards. Anything not in the sprite falls back to `Icon`
- * so a new name never renders blank; add it to build-icon-sprite.mjs when it
- * turns out to repeat.
+ * `Icon` writes for every instance, and no client component to hydrate. Every
+ * icon the code names statically is in the sprite (18.10); anything else —
+ * an icon key chosen in the CMS — falls back to `Icon`, so a new name never
+ * renders blank. Add it to build-icon-sprite.mjs when it turns out to repeat.
  *
- * Not a client component: a card rendered on the server ships no hydration
- * work for its icons.
+ * Not a client component: an icon rendered on the server ships no hydration
+ * work.
  */
 export function SpriteIcon({ icon, width = 24, height = 24, className, ...rest }: SpriteIconProps) {
-  // The viewBox map rather than SPRITE_ICONS: this component ships inside the
-  // card's client bundle, and the symbol bodies belong to the server sprite.
+  // The viewBox map rather than SPRITE_ICONS: this component ships inside
+  // client bundles too, and the symbol bodies live in the sprite file only.
   const viewBox = SPRITE_VIEWBOXES[icon];
   if (!viewBox) return <Icon icon={icon} width={width} height={height} className={className} />;
   return (
@@ -36,7 +37,7 @@ export function SpriteIcon({ icon, width = 24, height = 24, className, ...rest }
       className={className}
       {...rest}
     >
-      <use href={`#${spriteSymbolId(icon)}`} />
+      <use href={`${SPRITE_URL}#${spriteSymbolId(icon)}`} />
     </svg>
   );
 }
