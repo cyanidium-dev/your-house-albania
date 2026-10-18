@@ -4,6 +4,7 @@ import { loadBotTexts } from '@/lib/telegram/bot/data'
 import { escapeHtml, isSiteLocale, type SiteLocale } from '@/lib/telegram/bot/format'
 import {
   ALERT_BATCH,
+  SENT_SLUGS_KEPT,
   activeSearchSubscriptions,
   deactivateSubscription,
   formatMatchLines,
@@ -51,15 +52,19 @@ export async function GET(request: NextRequest) {
       texts = await loadBotTexts(locale)
       textsByLocale.set(locale, texts)
     }
-    const matches = await searchMatches({
+    // Listings arrive in partner batches of a hundred and more, not one a
+    // day: the alert shows the newest ALERT_BATCH and the rest counts as
+    // sent, so one batch is one message, not a month of drips.
+    const fresh = await searchMatches({
       filters: sub.filters,
       locale,
       texts,
-      limit: ALERT_BATCH,
+      limit: SENT_SLUGS_KEPT,
       since: sub.createdAt,
       except: sub.sentSlugs ?? [],
     })
-    if (matches.length === 0) continue
+    if (fresh.length === 0) continue
+    const matches = fresh.slice(0, ALERT_BATCH)
 
     const text = [
       `🔔 <b>${escapeHtml(texts.search.newListings)}</b>`,
@@ -79,7 +84,7 @@ export async function GET(request: NextRequest) {
     if (result.ok) {
       await recordAlertSent(
         sub,
-        matches.map((m) => m.slug),
+        fresh.map((m) => m.slug),
         now,
       )
       sent++

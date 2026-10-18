@@ -38,7 +38,8 @@ import {
 const MAX_ACTIVE_PER_USER = 5
 /** Listings per alert, newest first; the rest wait for tomorrow. */
 export const ALERT_BATCH = 5
-const SENT_SLUGS_KEPT = 200
+/** Sent slugs kept per subscription; also the most one alert run looks at. */
+export const SENT_SLUGS_KEPT = 200
 
 export function toCatalogFilters(f: SearchFilters): CatalogFilters {
   return {
