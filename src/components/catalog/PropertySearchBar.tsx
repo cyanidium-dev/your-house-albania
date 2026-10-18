@@ -35,7 +35,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
       {/* Mobile: single liquid-glass pill — deal tabs + filters icon (md:hidden). Modal toggle preserves existing portal/handlers. */}
       <div
         className={cn(
-          "mb-5 flex min-h-11 w-full items-stretch gap-1 rounded-full p-1 md:hidden",
+          "pointer-events-auto mb-5 flex min-h-11 w-full items-stretch gap-1 rounded-full p-1 md:hidden",
           "bg-white/40 backdrop-blur-xl backdrop-saturate-150 dark:bg-white/10",
           "border border-white/40 shadow-lg shadow-dark/5 ring-1 ring-inset ring-white/30 dark:border-white/15 dark:ring-white/10"
         )}
@@ -102,6 +102,7 @@ export function PropertySearchBar(props: PropertySearchBarProps) {
             <CatalogFilterCompactBar filters={f} onExpand={expandCompactFilters} />
           }
           align={props.collapsedByDefault ? "start" : "center"}
+          reserve={props.collapsedByDefault ? "visible" : "form"}
         />
       </div>
       {clientMounted &&
