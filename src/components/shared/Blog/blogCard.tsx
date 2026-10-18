@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { getTranslations } from "next-intl/server";
 import { formatBlogDate } from "@/lib/date/formatLocale";
 
@@ -78,7 +78,6 @@ async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string 
             className="object-cover will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.05]"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            unoptimized={true}
           />
         ) : (
           <div

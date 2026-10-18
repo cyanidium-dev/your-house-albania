@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import {
   headerSwitcherCaretClass,
   headerSwitcherPillClass,

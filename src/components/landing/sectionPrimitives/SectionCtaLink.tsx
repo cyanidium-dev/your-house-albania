@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import { cn } from '@/lib/utils'
 
 export type SectionCtaLinkProps = {

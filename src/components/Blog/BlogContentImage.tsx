@@ -24,7 +24,6 @@ export function BlogContentImage({ value }: Props) {
 
   if (!url || typeof url !== "string") return null;
 
-  const unoptimized = url.startsWith("http");
 
   return (
     <figure className="my-8">
@@ -40,7 +39,6 @@ export function BlogContentImage({ value }: Props) {
           width={1170}
           height={600}
           className="w-full h-auto object-cover"
-          unoptimized={unoptimized}
         />
       </button>
       {caption && (
@@ -53,7 +51,6 @@ export function BlogContentImage({ value }: Props) {
         alt={alt}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        unoptimized={unoptimized}
       />
     </figure>
   );

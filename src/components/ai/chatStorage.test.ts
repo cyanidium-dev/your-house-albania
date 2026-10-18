@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { chatStorageKey, clearChat, loadChat, saveChat, type StoredTurn } from './chatStorage'
+import {
+  chatSessionId,
+  chatStorageKey,
+  clearChat,
+  loadChat,
+  saveChat,
+  type StoredTurn,
+} from './chatStorage'
 
 /** Minimal sessionStorage so the module can be exercised in a node environment. */
 function installStorage(impl?: Partial<Storage>) {
@@ -98,5 +105,34 @@ describe('clearChat', () => {
     clearChat('plazh-1br')
     expect(loadChat('plazh-1br')).toEqual([])
     expect(loadChat()).toEqual(turns)
+  })
+
+  it('mints a new session id after the visitor starts over', () => {
+    const first = chatSessionId()
+    clearChat()
+    expect(chatSessionId()).not.toBe(first)
+  })
+})
+
+describe('chatSessionId', () => {
+  it('stays the same across the messages of one conversation', () => {
+    expect(chatSessionId()).toBe(chatSessionId())
+  })
+
+  it('gives each listing its own id', () => {
+    expect(chatSessionId()).not.toBe(chatSessionId('plazh-1br'))
+    expect(chatSessionId('a')).not.toBe(chatSessionId('b'))
+  })
+
+  it('produces the shape the route accepts', () => {
+    expect(chatSessionId()).toMatch(/^[a-z0-9]{8,64}$/)
+  })
+
+  it('still answers when storage is blocked', () => {
+    installStorage({
+      getItem: () => { throw new Error('blocked') },
+      setItem: () => { throw new Error('blocked') },
+    })
+    expect(chatSessionId()).toMatch(/^[a-z0-9]{8,64}$/)
   })
 })

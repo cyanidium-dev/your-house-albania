@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import { Icon } from '@iconify/react';
+import { Icon } from "@/components/shared/Icon";
 import { getTranslations } from 'next-intl/server';
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 
@@ -354,7 +354,6 @@ const SeoText: React.FC<{
               fill
               sizes="(max-width: 1024px) 100vw, 1280px"
               className="object-cover object-center"
-              unoptimized={photo.startsWith('http')}
             />
           </figure>
         ) : null}
@@ -393,7 +392,6 @@ const SeoText: React.FC<{
                 width={40}
                 height={40}
                 className="h-10 w-10 rounded-full ring-1 ring-primary/40 object-cover"
-                unoptimized={author.avatarUrl.startsWith('http')}
               />
             ) : author?.initials ? (
               <div className="h-10 w-10 rounded-full bg-primary/20 ring-1 ring-primary/40 flex items-center justify-center">

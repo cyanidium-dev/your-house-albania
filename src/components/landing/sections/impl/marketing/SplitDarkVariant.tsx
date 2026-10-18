@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import type { MarketingContentData } from "./types";
 
@@ -50,7 +50,6 @@ export function SplitDarkVariant({
                 alt={data.splitDarkImageAlt || data.title || "Marketing"}
                 fill
                 className="object-cover object-center"
-                unoptimized={imgUrl!.startsWith("http")}
               />
             </div>
           ) : null}

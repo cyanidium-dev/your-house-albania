@@ -3,6 +3,7 @@ import { after, type NextRequest } from 'next/server'
 import { createAnthropicClient } from '@/lib/ai/client'
 import { routing } from '@/i18n/routing'
 import { getCatalogSnapshot } from '@/lib/ai/catalogSnapshot'
+import { getKnowledgeSnapshot } from '@/lib/ai/knowledgeSnapshot'
 import { buildPropertySystemBlocks, buildSystemBlocks } from '@/lib/ai/prompt'
 import { buildPropertyContext } from '@/lib/ai/propertyContext'
 import {
@@ -12,9 +13,11 @@ import {
   runCalcRoi,
   runShowProperties,
 } from '@/lib/ai/tools'
+import { runCalcUtilities, runCite, runLookupFacts } from '@/lib/ai/knowledgeTools'
 import { checkRateLimit, clientKeyFromHeaders } from '@/lib/ai/rateLimit'
 import { sliceSafe } from '@/lib/ai/text'
 import { addUsage, EMPTY_USAGE, estimateUsd, isBudgetExhausted, recordUsage } from '@/lib/ai/budget'
+import { isValidSessionId, recordDialogueTurn } from '@/lib/ai/dialogueLog'
 import { encodeAiEvent, type AiChatMessage, type AiStreamEvent } from '@/lib/ai/events'
 import {
   AI_MAX_MESSAGE_CHARS,
@@ -113,10 +116,10 @@ export async function POST(req: NextRequest) {
     typeof rawSlug === 'string' && /^[a-z0-9-]{1,120}$/.test(rawSlug) ? rawSlug : ''
   const propertyContext = propertySlug ? await buildPropertyContext(propertySlug, locale) : null
 
-  const snapshot = await getCatalogSnapshot()
+  const [snapshot, knowledge] = await Promise.all([getCatalogSnapshot(), getKnowledgeSnapshot()])
   const system = propertyContext
-    ? buildPropertySystemBlocks(snapshot, propertyContext.text, locale)
-    : buildSystemBlocks(snapshot, locale)
+    ? buildPropertySystemBlocks(snapshot, knowledge, propertyContext.text, locale)
+    : buildSystemBlocks(snapshot, knowledge, locale)
   const tools = propertyContext ? AI_PROPERTY_TOOLS : AI_TOOLS
   const client = createAnthropicClient()
 
@@ -130,6 +133,20 @@ export async function POST(req: NextRequest) {
   // Sanity write rather than two. Declared out here so the `after` callback
   // below closes over the final value.
   let turnUsage = EMPTY_USAGE
+
+  // The transcript of this exchange, assembled here and written by the same
+  // `after` callback. `sessionId` is minted by the browser and kept for the
+  // length of the tab's conversation, so every exchange of one conversation
+  // lands in one document.
+  const rawSessionId = (body as { sessionId?: unknown })?.sessionId
+  const sessionId = isValidSessionId(rawSessionId) ? rawSessionId : ''
+  // Two letters from the CDN edge. The IP behind it is used for rate limiting
+  // and thrown away; the country is the part worth keeping.
+  const country = req.headers.get('x-vercel-ip-country')?.slice(0, 2).toUpperCase() ?? ''
+  const question = messages[messages.length - 1].content
+  let answerText = ''
+  const shownSlugs: string[] = []
+  const citedIds: string[] = []
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
@@ -151,7 +168,10 @@ export async function POST(req: NextRequest) {
             messages: conversation,
           })
 
-          modelStream.on('text', (delta) => send({ type: 'text', delta }))
+          modelStream.on('text', (delta) => {
+            answerText += delta
+            send({ type: 'text', delta })
+          })
 
           const message = await modelStream.finalMessage()
 
@@ -180,6 +200,11 @@ export async function POST(req: NextRequest) {
           )
           if (toolUses.length === 0) break
 
+          // The model writes before a tool call and again after it. The chat UI
+          // starts a new paragraph at that seam; the transcript has to do the
+          // same, or the two runs read as one collided sentence.
+          if (answerText && !answerText.endsWith('\n')) answerText += '\n\n'
+
           // Last hop reached: answer with what we have rather than looping.
           if (hop === AI_MAX_TOOL_HOPS) break
 
@@ -188,17 +213,50 @@ export async function POST(req: NextRequest) {
             send({ type: 'tool_start', name: toolUse.name })
 
             try {
-              if (toolUse.name === 'calc_roi' || toolUse.name === 'calc_mortgage') {
-                // Pure arithmetic on numbers the visitor supplied — nothing for
-                // the browser to render, so no `cards` event.
+              if (
+                toolUse.name === 'calc_roi' ||
+                toolUse.name === 'calc_mortgage' ||
+                toolUse.name === 'calc_utilities'
+              ) {
+                // Pure arithmetic on stored parameters and what the visitor
+                // supplied — nothing for the browser to render, so no `cards`.
                 const output =
                   toolUse.name === 'calc_roi'
                     ? runCalcRoi(toolUse.input)
-                    : runCalcMortgage(toolUse.input)
+                    : toolUse.name === 'calc_mortgage'
+                      ? runCalcMortgage(toolUse.input)
+                      : runCalcUtilities(toolUse.input)
                 results.push({
                   type: 'tool_result',
                   tool_use_id: toolUse.id,
                   content: JSON.stringify(output),
+                })
+                continue
+              }
+
+              if (toolUse.name === 'lookup_facts') {
+                const output = await runLookupFacts(toolUse.input)
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  content: JSON.stringify(output),
+                })
+                continue
+              }
+
+              if (toolUse.name === 'cite') {
+                // Two audiences again: the browser gets source chips, the model
+                // is told which ids were real, so a hallucinated one can be
+                // corrected in the same turn rather than shown as a source.
+                const { model, ui } = await runCite(toolUse.input, locale)
+                if (ui.length > 0) {
+                  send({ type: 'citations', items: ui })
+                  citedIds.push(...ui.map((item) => item.dataId))
+                }
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  content: JSON.stringify(model),
                 })
                 continue
               }
@@ -216,6 +274,7 @@ export async function POST(req: NextRequest) {
               const { model, ui } = await runShowProperties(toolUse.input, locale)
               if (ui.items.length > 0) {
                 send({ type: 'cards', items: ui.items, catalogUrl: ui.catalogUrl })
+                shownSlugs.push(...ui.items.map((item) => item.slug).filter(Boolean))
               }
               results.push({
                 type: 'tool_result',
@@ -256,6 +315,22 @@ export async function POST(req: NextRequest) {
     if (turnUsage.inputTokens === 0 && turnUsage.outputTokens === 0) return
     console.log('[ai] turn cost', { usd: estimateUsd(turnUsage).toFixed(4) })
     await recordUsage(turnUsage, { newDialogue: userTurns === 1 })
+    // Older tabs and any caller that does not send one have no session id;
+    // their turns still count towards the budget but are not transcribed.
+    if (!sessionId) return
+    await recordDialogueTurn({
+      sessionId,
+      locale,
+      surface: propertyContext ? 'property' : 'search',
+      ...(propertyContext ? { propertySlug } : {}),
+      question,
+      answer: answerText.trim(),
+      shownSlugs,
+      citedIds,
+      usage: turnUsage,
+      ...(country ? { country } : {}),
+      turnIndex: userTurns,
+    })
   })
 
   return new Response(stream, {

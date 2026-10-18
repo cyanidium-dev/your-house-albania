@@ -152,6 +152,18 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} className={`${display.variable} ${sans.variable}`}>
+      <head>
+        {/* Every photograph on the site is served from the Sanity CDN, and the
+            hero one is the LCP element — opening that connection alongside the
+            document saves the DNS/TLS round trips it used to pay for. */}
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        {/* The analytics tags load after hydration, so resolving their hosts
+            early is worth a DNS lookup but not a held-open connection. */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://scripts.clarity.ms" />
+        <link rel="dns-prefetch" href="https://api.iconify.design" />
+      </head>
       <body className="font-sans bg-white antialiased transition-colors duration-300 ease-out overflow-x-clip">
         {analyticsEnabled && (
           <>
@@ -170,7 +182,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             </noscript>
             {/* End Google Tag Manager (noscript) */}
             {/* Google Tag Manager */}
-            <Script id="gtm-base" strategy="afterInteractive">
+            <Script id="gtm-base" strategy="lazyOnload">
               {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -179,7 +191,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </Script>
             {/* End Google Tag Manager */}
             {/* Microsoft Clarity */}
-            <Script id="ms-clarity" strategy="afterInteractive">
+            <Script id="ms-clarity" strategy="lazyOnload">
               {`(function(c,l,a,r,i,t,y){
 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;

@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation';
 import { fetchPropertyBySlug, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapPropertyAmenityDisplayItems, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
-import { Icon } from '@iconify/react';
-import { PropertyLocationMap } from '@/components/catalog/map/PropertyLocationMap';
+import { Icon } from "@/components/shared/Icon";
+import { DeferredPropertyLocationMap } from '@/components/catalog/map/DeferredPropertyLocationMap';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';
 import { PropertyFactRow } from '@/components/property/PropertyFactRow';
@@ -454,7 +454,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             </div>
                         </div>
                         <div className="mt-10">
-                          <PropertyLocationMap
+                          <DeferredPropertyLocationMap
                             coordinates={resolvedCoordinates}
                             mapHeightClassName="h-[210px]"
                           />

@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'

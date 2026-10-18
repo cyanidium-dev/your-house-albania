@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@/components/shared/Icon";
 import { catalogPath } from "@/lib/routes/catalog";
 
 /**
@@ -27,7 +27,6 @@ export default async function LocaleNotFound() {
             alt=""
             width={420}
             height={386}
-            unoptimized
             className="h-auto w-full max-w-[320px] md:max-w-[420px]"
           />
 

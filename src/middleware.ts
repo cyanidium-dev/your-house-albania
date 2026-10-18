@@ -71,5 +71,10 @@ function withoutLocaleCookieOnCacheableDocuments(
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|editor|.*\\..*).*)"],
+  // `icon` and `apple-icon` are Next metadata routes at the app root and
+  // carry no file extension, so the extension exclusion missed them:
+  // next-intl redirected `/apple-icon` to `/{detected-locale}/apple-icon`,
+  // which does not exist. Every page load paid a 307 and a 404, and iOS
+  // never got a touch icon.
+  matcher: ["/((?!api|_next|_vercel|editor|icon|apple-icon|.*\\..*).*)"],
 };

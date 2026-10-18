@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import type { MarketingBenefitItem, MarketingHighlightCard } from "./types";

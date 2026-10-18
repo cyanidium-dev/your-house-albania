@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";

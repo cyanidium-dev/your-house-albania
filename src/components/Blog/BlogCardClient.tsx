@@ -61,7 +61,6 @@ export function BlogCardClient({
               className="object-cover w-full h-full will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.05]"
               width={190}
               height={163}
-              unoptimized={coverImageUrl.startsWith("http")}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-dark/30 dark:text-white/30" aria-hidden>

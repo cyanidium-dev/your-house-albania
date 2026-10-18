@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import type { ContactsManagerBlock } from '@/lib/sanity/contactsManagerFromSiteSettings'
 import {
   fetchCatalogFilterOptions,
@@ -68,7 +68,6 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                     className="object-cover object-center"
                     sizes="(max-width: 1024px) 100vw, 42vw"
                     priority={false}
-                    unoptimized={photo.url.startsWith('http')}
                   />
                 ) : (
                   <div

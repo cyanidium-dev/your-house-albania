@@ -79,7 +79,6 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                               alt={siteSettings?.siteName || 'logo'}
                               width={150}
                               height={68}
-                              unoptimized={siteSettings.logoUrl.startsWith('http')}
                               className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
                             />
                           </>

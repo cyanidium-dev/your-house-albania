@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 
 /**
  * The fact row under a property's heading: rooms, bedrooms, bathrooms, area,

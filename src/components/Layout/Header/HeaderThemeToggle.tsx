@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import { useTheme } from 'next-themes'
 
 type HeaderThemeToggleProps = {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import { resolveCta, resolveLocaleHref } from '@/lib/routes/resolveLocaleHref'
 import { brandButtonClass, type BrandButtonVariant } from '@/components/shared/BrandButton'
 

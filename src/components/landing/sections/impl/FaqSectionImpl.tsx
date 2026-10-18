@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTranslations } from 'next-intl';
 import { PortableText } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import { Icon } from '@iconify/react';
+import { Icon } from "@/components/shared/Icon";
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 
 export type FaqItem = {

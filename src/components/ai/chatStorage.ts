@@ -14,12 +14,19 @@
  */
 
 import type { PropertyHomes } from '@/types/propertyHomes'
+import type { AiCitation } from '@/lib/ai/knowledgeTools'
 
 export type StoredCardGroup = { items: PropertyHomes[]; catalogUrl?: string }
 
 export type StoredTurn =
   | { role: 'user'; text: string }
-  | { role: 'assistant'; text: string; cards: StoredCardGroup[] }
+  | {
+      role: 'assistant'
+      text: string
+      cards: StoredCardGroup[]
+      /** Optional: entries written before citations existed do not carry it. */
+      citations?: AiCitation[]
+    }
 
 /** Version prefix: a shape change should drop old entries, not crash on them. */
 const KEY_PREFIX = 'domlivo:ai-chat:v1:'
@@ -74,9 +81,44 @@ export function clearChat(propertySlug?: string): void {
   if (typeof window === 'undefined') return
   try {
     window.sessionStorage.removeItem(chatStorageKey(propertySlug))
+    window.sessionStorage.removeItem(sessionIdKey(propertySlug))
   } catch {
     // Nothing to do.
   }
+}
+
+function sessionIdKey(propertySlug?: string): string {
+  return `${chatStorageKey(propertySlug)}:sid`
+}
+
+/**
+ * Stable id for one conversation, so the server can append every exchange to a
+ * single transcript instead of writing an orphan document per message.
+ *
+ * Lives beside the conversation it names: same `sessionStorage`, same lifetime,
+ * cleared by `clearChat` when the visitor starts over. It identifies a chat,
+ * not a person — nothing about it survives the tab.
+ */
+export function chatSessionId(propertySlug?: string): string {
+  if (typeof window === 'undefined') return ''
+  const key = sessionIdKey(propertySlug)
+  try {
+    const existing = window.sessionStorage.getItem(key)
+    if (existing && /^[a-z0-9]{8,64}$/.test(existing)) return existing
+    const minted = mintSessionId()
+    window.sessionStorage.setItem(key, minted)
+    return minted
+  } catch {
+    // Blocked storage: one id for this page's lifetime is still better than
+    // none, it just will not survive a navigation.
+    return mintSessionId()
+  }
+}
+
+function mintSessionId(): string {
+  const uuid = globalThis.crypto?.randomUUID?.()
+  if (uuid) return uuid.replace(/-/g, '')
+  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`
 }
 
 function isStoredTurn(value: unknown): value is StoredTurn {

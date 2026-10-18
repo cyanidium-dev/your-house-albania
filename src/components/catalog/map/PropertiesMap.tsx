@@ -369,7 +369,10 @@ export function PropertiesMap({
         layout: {
           'text-field': '{point_count_abbreviated}',
           'text-size': 12,
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          // demotiles serves Noto Sans and Open Sans Semibold — 'Open Sans Bold'
+          // 404s, and every cluster label fell back to local rendering after a
+          // failed request per glyph range.
+          'text-font': ['Noto Sans Bold'],
           'text-allow-overlap': true,
           'text-ignore-placement': true,
         },

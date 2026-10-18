@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react'
+import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import type { ViewMode } from '@/lib/catalog/viewMode'

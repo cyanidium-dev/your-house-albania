@@ -15,6 +15,7 @@ import type { PropertyHomes } from "@/types/propertyHomes";
 import type { PropertyCatalogBanner } from "@/types/propertyCatalogBanner";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { PropertyCatalogBannerCard } from "@/components/catalog/PropertyCatalogBannerCard";
+import imageLoader from "@/lib/images/loader";
 
 const PropertiesMap = dynamic(
   () =>
@@ -441,7 +442,16 @@ export function CatalogBodyClient({
             }
             if (entry.kind === "map") {
               return (
-                <div key={entry.key} className={cn(mapListItemClassName, "relative")} ref={mapCardRef}>
+                // The height belongs on the slot, not only on the map inside
+                // it: PropertiesMap is `ssr: false`, so on the server this cell
+                // held a `h-full` placeholder with no parent height to resolve
+                // against — it measured zero, and every card below the map
+                // jumped down a full map's worth once maplibre mounted.
+                <div
+                  key={entry.key}
+                  className={cn(mapListItemClassName, mapHeightClassName, "relative")}
+                  ref={mapCardRef}
+                >
                   <PropertiesMap
                     items={mapItems}
                     activeSlug={activeSlug}
@@ -480,9 +490,11 @@ export function CatalogBodyClient({
                             <div className="w-full h-[44%] min-h-[92px] rounded-lg overflow-hidden bg-dark/5 dark:bg-white/10">
                               {previewItem.images?.[0]?.src ? (
                                 <img
-                                  src={previewItem.images[0].src}
+                                  src={imageLoader({ src: previewItem.images[0].src, width: 384 })}
                                   alt={previewItem.name || tCard('propertyFallback')}
                                   className="w-full h-full object-cover"
+                                  loading="lazy"
+                                  decoding="async"
                                 />
                               ) : null}
                             </div>
@@ -513,9 +525,11 @@ export function CatalogBodyClient({
                             <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0 bg-dark/5 dark:bg-white/10">
                               {previewItem.images?.[0]?.src ? (
                                 <img
-                                  src={previewItem.images[0].src}
+                                  src={imageLoader({ src: previewItem.images[0].src, width: 384 })}
                                   alt={previewItem.name || tCard('propertyFallback')}
                                   className="w-full h-full object-cover"
+                                  loading="lazy"
+                                  decoding="async"
                                 />
                               ) : null}
                             </div>

@@ -170,7 +170,6 @@ function CreditGroup({ heading, note, credits, standInLabel, sourceLabel }: Cred
                   fill
                   sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
                   className="object-cover"
-                  unoptimized={credit.imageUrl.startsWith("http")}
                 />
               </div>
             )}

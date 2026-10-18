@@ -21,6 +21,7 @@ import type { PropertyHomes } from '@/types/propertyHomes'
 import { calculateRoi } from '@/lib/calculators/roi'
 import { calculateMortgage } from '@/lib/calculators/mortgage'
 import { AI_MAX_CARDS } from './limits'
+import { KNOWLEDGE_TOOLS } from './knowledgeTools'
 
 export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
   name: 'show_properties',
@@ -59,7 +60,8 @@ export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
   },
 }
 
-export const AI_TOOLS: Anthropic.Tool[] = [SHOW_PROPERTIES_TOOL]
+/** Catalog conversation: find listings, and answer the money questions from the knowledge base. */
+export const AI_TOOLS: Anthropic.Tool[] = [SHOW_PROPERTIES_TOOL, ...KNOWLEDGE_TOOLS]
 
 type CatalogLinkInput = {
   city?: string
@@ -222,12 +224,12 @@ export const __testables = { sanitizeSlugs, buildCatalogUrl }
 /* ------------------------------------------------------------------ *
  * Calculators
  *
- * The zone data needed to model a return does not exist yet — yields are
- * empty across every metrics record — so these deliberately take the numbers
- * from the visitor instead: "if you rented it for 600 a month, here is the
- * gross yield". That is an honest calculation on a stated assumption rather
- * than a market claim, and it is useful today. The arithmetic runs in the
- * project's tested calculators; the model never does it itself.
+ * These take the numbers from the visitor: "if you rented it for 600 a month,
+ * here is the gross yield". Market figures to sanity-check that rent against
+ * now exist in the knowledge base (`knowledgeTools.ts`), so the model can say
+ * whether 600 is plausible for that district — but the calculation itself
+ * stays on stated assumptions rather than becoming a promise. The arithmetic
+ * runs in the project's tested calculators; the model never does it itself.
  * ------------------------------------------------------------------ */
 
 export const CALC_ROI_TOOL: Anthropic.Tool = {
@@ -307,9 +309,10 @@ export function runCalcMortgage(rawInput: unknown): unknown {
   return result
 }
 
-/** Tools for the property conversation: the catalog tool plus the calculators. */
+/** One listing in view: the catalog tool, the calculators, and the knowledge base. */
 export const AI_PROPERTY_TOOLS: Anthropic.Tool[] = [
   SHOW_PROPERTIES_TOOL,
   CALC_ROI_TOOL,
   CALC_MORTGAGE_TOOL,
+  ...KNOWLEDGE_TOOLS,
 ]

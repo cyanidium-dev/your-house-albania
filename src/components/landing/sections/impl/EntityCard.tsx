@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@/components/shared/Icon";
 
 export type EntityCardProps = {
   href: string;
@@ -49,7 +49,6 @@ export function EntityCard({
             fill
             sizes={sizes ?? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"}
             className="object-cover object-center will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-            unoptimized={!!imageUrl?.startsWith("http")}
           />
         ) : (
           // Districts photographed later still ship in the grid, and a flat

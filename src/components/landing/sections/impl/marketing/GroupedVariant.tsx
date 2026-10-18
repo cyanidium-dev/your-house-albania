@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { cn } from "@/lib/utils";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
@@ -73,7 +73,6 @@ function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
             fill
             className="object-cover object-center"
             sizes="(max-width: 1024px) 100vw, 40vw"
-            unoptimized={img.url.startsWith("http")}
           />
         </div>
       );
@@ -89,7 +88,6 @@ function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
             fill
             className="object-cover object-center"
             sizes="(max-width: 1024px) 45vw, 33vw"
-            unoptimized={a.url.startsWith("http")}
           />
         </div>
         <div className="relative w-full rounded-2xl overflow-hidden aspect-[3/4] max-h-[min(72vh,520px)]">
@@ -99,7 +97,6 @@ function GroupedIntroMedia({ data }: { data: MarketingContentData }) {
             fill
             className="object-cover object-center"
             sizes="(max-width: 1024px) 45vw, 33vw"
-            unoptimized={b.url.startsWith("http")}
           />
         </div>
       </div>

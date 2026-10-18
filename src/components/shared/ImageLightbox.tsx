@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +18,6 @@ type Props = {
   initialIndex?: number;
   isOpen: boolean;
   onClose: () => void;
-  unoptimized?: boolean;
   /**
    * A control that belongs to the subject, not to the viewer — on a listing
    * card, the enquiry button. Rendered in the bottom bar next to the counter.
@@ -40,7 +39,6 @@ export function ImageLightbox({
   initialIndex = 0,
   isOpen,
   onClose,
-  unoptimized,
   action,
 }: Props) {
   const t = useTranslations("Shared.lightbox");
@@ -179,7 +177,6 @@ export function ImageLightbox({
           fill
           className="object-contain object-center"
           sizes="100vw"
-          unoptimized={unoptimized}
         />
       </div>
 
@@ -241,7 +238,6 @@ export function ImageLightbox({
                         fill
                         className="object-cover"
                         sizes="(max-width: 1023px) 56px, 80px"
-                        unoptimized={unoptimized}
                       />
                     </button>
                   ))}

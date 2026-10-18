@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { useTranslations } from "next-intl";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { useCatalogViewOptional } from "@/contexts/CatalogViewContext";

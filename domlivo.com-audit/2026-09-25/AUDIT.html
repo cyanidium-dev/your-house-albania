@@ -1,0 +1,317 @@
+<title>Domlivo SEO 25.09</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F5F0; --surface:#FFFFFF; --ink:#1C2126; --ink-2:#4F5A63; --ink-3:#7B858E;
+  --line:#DDE0DA; --accent:#0E6E7C; --accent-soft:#E2F0F1;
+  --good:#2C7A4B; --good-soft:#E3F1E7; --warn:#A8690F; --warn-soft:#F8EDD6; --crit:#B3271E; --crit-soft:#F9E3E0;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Sora","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14181B; --surface:#1C2126; --ink:#E9E7E1; --ink-2:#B4BAC0; --ink-3:#7F888F;
+    --line:#2C3338; --accent:#5FB7C3; --accent-soft:#183238;
+    --good:#7CC796; --good-soft:#1B3325; --warn:#E0B265; --warn-soft:#3A2D14; --crit:#F08C84; --crit-soft:#3F1F1C;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14181B; --surface:#1C2126; --ink:#E9E7E1; --ink-2:#B4BAC0; --ink-3:#7F888F;
+  --line:#2C3338; --accent:#5FB7C3; --accent-soft:#183238;
+  --good:#7CC796; --good-soft:#1B3325; --warn:#E0B265; --warn-soft:#3A2D14; --crit:#F08C84; --crit-soft:#3F1F1C;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;padding-block:32px 64px;padding-inline:16px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(26px,4vw,34px);font-weight:700;line-height:1.15}
+h2{font-size:20px;font-weight:600;padding-top:8px}
+h3{font-size:16px;font-weight:600}
+p{margin:0;max-width:68ch}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+header{display:grid;gap:10px}
+header p{color:var(--ink-2)}
+section{display:grid;gap:16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:4px}
+.tile .k{font-size:12px;color:var(--ink-3)}
+.tile .v{font-family:var(--mono);font-size:24px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile .d{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.tile .d b{font-weight:600}
+.up{color:var(--good)} .down{color:var(--crit)} .flat{color:var(--ink-3)}
+.verdict{background:var(--accent-soft);border-left:4px solid var(--accent);padding:14px 16px;border-radius:0 8px 8px 0;display:grid;gap:8px}
+.verdict p{max-width:none}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);font-weight:500;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td code,p code,li code{font-family:var(--mono);font-size:13px;background:var(--accent-soft);padding:1px 5px;border-radius:4px;color:var(--ink)}
+.chip{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:2px 7px;border-radius:999px;white-space:nowrap;vertical-align:middle}
+.chip.crit{background:var(--crit-soft);color:var(--crit)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.info{background:var(--accent-soft);color:var(--accent)}
+ul,ol{margin:0;padding-left:20px;display:grid;gap:6px;max-width:72ch}
+li b{font-weight:600}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.note{font-size:13px;color:var(--ink-2);max-width:72ch}
+.plan{display:grid;gap:10px}
+.plan .row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.plan .num{font-family:var(--mono);font-size:13px;color:var(--accent);padding-top:2px}
+.plan .row p{max-width:none}
+.plan .who{font-size:12px;color:var(--ink-3);margin-top:4px}
+footer{font-size:12px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">domlivo.com · срез 25.09.2026 · сравнение с аудитом 20.09</div>
+  <h1>Domlivo: как идёт SEO через пять дней после плана Q4</h1>
+  <p>Источники: Search Console (домен sc-domain:domlivo.com), GA4 (ресурс p554679221), Microsoft Clarity (проект Domlivo), живой сайт по HTTP, два профильных отчёта по технике и контенту. Все числа сняты 25.09.2026, данные GSC обновлены 5 часов назад, отчёт индексации датирован 21.09.</p>
+</header>
+
+<section>
+  <div class="eyebrow">Главные числа, 28 дней</div>
+  <div class="tiles">
+    <div class="tile"><div class="k">Клики из Google</div><div class="v">140</div><div class="d"><b class="up">+87%</b> к 75 на 20.09</div></div>
+    <div class="tile"><div class="k">Показы</div><div class="v">5 260</div><div class="d"><b class="up">+51%</b> к 3 490</div></div>
+    <div class="tile"><div class="k">Средняя позиция</div><div class="v">9,9</div><div class="d"><b class="up">лучше</b> на 1,2 (было 11,1)</div></div>
+    <div class="tile"><div class="k">В индексе Google</div><div class="v">3 620</div><div class="d">было 487; не в индексе 1 630</div></div>
+    <div class="tile"><div class="k">Внешние ссылки в GSC</div><div class="v">0</div><div class="d"><b class="flat">без изменений</b></div></div>
+    <div class="tile"><div class="k">Сеансы: GA4 / Clarity</div><div class="v">68 / 1 591</div><div class="d">GA4 видит ~4% трафика</div></div>
+    <div class="tile"><div class="k">Лиды (GA4 key events)</div><div class="v">0</div><div class="d">Clarity: 4 сеанса с кликом WhatsApp</div></div>
+    <div class="tile"><div class="k">CWV в поле (Clarity)</div><div class="v">CLS 0,31</div><div class="d">LCP 2,9 с · INP 260 мс · <b class="down">плохо</b></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="verdict">
+    <h2 style="padding:0">Вердикт</h2>
+    <p><b>Рост есть и он ускоряется:</b> за последние 7 дней 76 кликов и 2 270 показов против 57 кликов неделей раньше; позиция 9,1. Индекс вырос с 487 до 3 620 страниц после отправки sitemap 15–22.09. Трафик несут статьи, гайды и страницы «/info», а не коммерческие листинги и карточки.</p>
+    <p><b>Три вещи держат сайт:</b> внешних ссылок по-прежнему ноль (трек A не сдвинулся, все пункты владельца открыты); Google продолжает индексировать старые адреса без www и без языкового префикса (12 кликов и 532 показа за 28 дней ушли на apex-URL); 1 264 URL «обнаружено, не проиндексировано», почти все карточки объектов, что означает провал контрольной точки 15.10 при нынешнем курсе.</p>
+    <p><b>Измерения врут в 20 раз:</b> GA4 записывает только сеансы с принятыми cookie (68 против 1 591 в Clarity), поэтому KPI плана по ИИ-трафику и лидам сейчас нельзя проверить по GA4. Clarity уже показывает 68 сеансов с chatgpt.com за 30 дней, то есть цель трека D (60 в месяц) фактически достигнута, но в GA4 этого не видно.</p>
+  </div>
+</section>
+
+<section>
+  <h2>1. Search Console: откуда клики</h2>
+  <div class="two">
+    <div class="tbl"><table>
+      <thead><tr><th>Раздел (28 дней)</th><th class="n">Клики</th><th class="n">Показы</th><th class="n">Поз.</th></tr></thead>
+      <tbody>
+        <tr><td>Блог <code>/blog/</code></td><td class="n">41</td><td class="n">1 660</td><td class="n">6,8</td></tr>
+        <tr><td>Гайды и сравнения <code>/guides/</code></td><td class="n">29</td><td class="n">1 590</td><td class="n">10,4</td></tr>
+        <tr><td>Страницы цен <code>/info</code></td><td class="n">19</td><td class="n">700</td><td class="n">7,8</td></tr>
+        <tr><td>Листинги Дурреса <code>/albania/durres*</code></td><td class="n">16</td><td class="n">596</td><td class="n">9,4</td></tr>
+        <tr><td>Карточки <code>/property/</code></td><td class="n">9</td><td class="n">231</td><td class="n">7,8</td></tr>
+        <tr><td>Старый хост <code>domlivo.com</code> без www</td><td class="n">12</td><td class="n">532</td><td class="n">10,6</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Страна (28 дней)</th><th class="n">Клики</th><th class="n">Показы</th><th class="n">Поз.</th></tr></thead>
+      <tbody>
+        <tr><td>Албания</td><td class="n">59</td><td class="n">1 645</td><td class="n">8,9</td></tr>
+        <tr><td>Украина</td><td class="n">17</td><td class="n">407</td><td class="n">9,0</td></tr>
+        <tr><td>Италия</td><td class="n">16</td><td class="n">459</td><td class="n">7,3</td></tr>
+        <tr><td>Польша</td><td class="n">12</td><td class="n">822</td><td class="n">19,3</td></tr>
+        <tr><td>США</td><td class="n">4</td><td class="n">312</td><td class="n">6,9</td></tr>
+        <tr><td>Германия</td><td class="n">3</td><td class="n">224</td><td class="n">7,2</td></tr>
+        <tr><td>Великобритания</td><td class="n">3</td><td class="n">219</td><td class="n">7,3</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <p class="note">Мобильные: 105 кликов при позиции 7,4. Десктоп: 33 клика при позиции 13,2. За 3 месяца всего 159 кликов и 5 910 показов, то есть 88% кликов пришлись на последние четыре недели.</p>
+
+  <h3>Страницы с кликами</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>URL (28 дней)</th><th class="n">Клики</th><th class="n">Показы</th><th class="n">Поз.</th><th>Комментарий</th></tr></thead>
+    <tbody>
+      <tr><td><code>/blog/durres-reference-prices-2026</code> (без языка)</td><td class="n">9</td><td class="n">26</td><td class="n">3,0</td><td>Адрес отдаёт 307 на <code>/sq/…</code>; Google ранжирует редирект</td></tr>
+      <tr><td><code>domlivo.com/sq/albania/tirana/info</code> (apex)</td><td class="n">6</td><td class="n">314</td><td class="n">7,8</td><td>www-версия той же страницы: 3 клика, 39 показов</td></tr>
+      <tr><td><code>/en</code></td><td class="n">6</td><td class="n">18</td><td class="n">3,3</td><td>бренд и навигационные</td></tr>
+      <tr><td><code>/ru/blog/can-foreigners-buy-real-estate-albania</code></td><td class="n">4</td><td class="n">51</td><td class="n">6,0</td><td></td></tr>
+      <tr><td><code>/sq/albania/durres/info</code></td><td class="n">3</td><td class="n">70</td><td class="n">9,0</td><td></td></tr>
+      <tr><td><code>/en/blog/durres-marina-eagle-hills-2026</code></td><td class="n">3</td><td class="n">68</td><td class="n">5,1</td><td>новость от 16.09 уже приносит</td></tr>
+      <tr><td><code>/it/guides/durres-vs-vlore</code></td><td class="n">3</td><td class="n">59</td><td class="n">5,3</td><td>итальянские сравнения работают</td></tr>
+      <tr><td><code>/sq/albania/durres/districts/plazh</code></td><td class="n">3</td><td class="n">35</td><td class="n">7,8</td><td></td></tr>
+      <tr><td><code>/pl/albania/sarande</code></td><td class="n">1</td><td class="n">310</td><td class="n">32,3</td><td>спрос есть, объектов 7</td></tr>
+      <tr><td><code>/en/blog/market-outlook-2026</code></td><td class="n">1</td><td class="n">242</td><td class="n">6,0</td><td>CTR 0,4% при позиции 6: заголовок не цепляет</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Запросы</h3>
+  <p>Из 140 кликов Google атрибутирует к запросам только 10; остальные скрыты как редкие. Видимые клики: «cmimet e references 2026 durres» (3, позиция 1,2), «meglio tirana o durazzo», «valona o durazzo», «emerytura w albanii», «cmimet e apartamenteve ne tirane», «нерухомість в саранді».</p>
+  <ul>
+    <li><b>Польша, цены:</b> «ceny mieszkań w albanii 2026» 73 показа на позиции 7–8 без кликов. Страница есть, сниппет не выигрывает.</li>
+    <li><b>Польша, Саранда:</b> кластер «saranda nieruchomości / domy na sprzedaż» около 200 показов на позициях 28–45. Без объектов страница выше не поднимется.</li>
+    <li><b>Русский Дуррес:</b> «реальные цены на жилье в дурресе 2026» 29 показов на 5,9, «мнения албанцев о ценах…» 16 показов. Информационный спрос закрыт, коммерческий («купить квартиру в дурресе») висит на 19–31.</li>
+    <li><b>Тирана, EN инвестиции:</b> «best areas in tirana to buy an apartment» 28 показов на 52, «invest in apartments in tirana» 14 на 41. Нет объектов, нет страницы под запрос.</li>
+    <li><b>Имена агентов:</b> «elena krasniqi» 20 показов на 5,0, «drita hoxha» 13. Страницы агентов без био помечены noindex 20.09; показы скоро уйдут.</li>
+    <li><b>Управление арендой:</b> «short term rental management albania» 24 показа на 35–42. Услуги нет, тема для партнёрства.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>2. Индексация и хосты</h2>
+  <div class="two">
+    <div class="tbl"><table>
+      <thead><tr><th>Причина «не в индексе» (21.09)</th><th class="n">URL</th></tr></thead>
+      <tbody>
+        <tr><td>Обнаружена, не проиндексирована</td><td class="n">1 264</td></tr>
+        <tr><td>Страница с переадресацией</td><td class="n">129</td></tr>
+        <tr><td>Просканирована, не проиндексирована</td><td class="n">85</td></tr>
+        <tr><td>Закрыта noindex</td><td class="n">79</td></tr>
+        <tr><td>Канонические версии не совпадают</td><td class="n">27</td></tr>
+        <tr><td>Вариант с canonical</td><td class="n">23</td></tr>
+        <tr><td>404</td><td class="n">21</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Sitemap в GSC</th><th class="n">URL</th><th>Обработан</th></tr></thead>
+      <tbody>
+        <tr><td><code>sitemap.xml</code> (индекс)</td><td class="n">3 927</td><td>25.09</td></tr>
+        <tr><td><code>sitemap-properties.xml</code></td><td class="n">2 625</td><td>25.09</td></tr>
+        <tr><td><code>sitemap-priority.xml</code></td><td class="n">244</td><td>24.09</td></tr>
+        <tr><td><code>sitemap-cities.xml</code></td><td class="n">13</td><td>25.09</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <ul>
+    <li><b>Карточки объектов.</b> В sitemap 2 625 URL карточек, за 28 дней они дали 9 кликов и 231 показ. Список «обнаружено, не проиндексировано» на 1 264 URL и есть в основном карточки: Google их видит и не берёт. Контрольная точка 15.10 (порог 40% карточек в индексе) при нынешней динамике не пройдёт. <span class="chip crit">высокий</span></li>
+    <li><b>Старый хост.</b> 308 с apex на www включён 18.09, но Google держит apex-адреса: 34 URL с показами, 12 кликов. Отчёт внутренних ссылок GSC до сих пор перечисляет <code>domlivo.com/sq/blog</code>, <code>www.domlivo.com/sale</code>, <code>/albania/shengjin</code> без языка, то есть граф ссылок Google ещё старый. Живые страницы таких ссылок не содержат (проверено на 5 страницах). <span class="chip warn">средний</span></li>
+    <li><b>Адреса без языка.</b> <code>/blog/durres-reference-prices-2026</code> отдаёт 307 на <code>/sq/…</code>, и именно 307-адрес ранжируется на 3-й позиции. 307 для Google временный, поэтому источник остаётся в индексе; отсюда и 129 «страниц с переадресацией». Для глубоких путей без префикса нужен 308 на язык по умолчанию, 307 оставить только корню. <span class="chip warn">средний</span></li>
+    <li><b>Sitemap.</b> <code>sitemap-knowledge.xml</code> отдаёт 7 URL с <code>noindex, nofollow</code>; <code>/uk/albania/sarande</code> живая, но отсутствует в priority и cities; у 7 URL в static нет lastmod; у трёх новых статей lastmod равен времени импорта. <span class="chip warn">средний</span></li>
+    <li><b>Ссылки.</b> Внешних ссылок в GSC 0, внутренних 429. Ни один пункт трека A по ссылкам и профилям не начат.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. Трафик и поведение: GA4 против Clarity</h2>
+  <div class="two">
+    <div class="tbl"><table>
+      <thead><tr><th>GA4, 28.08–24.09</th><th class="n">Сеансы</th><th class="n">Вовлеч.</th></tr></thead>
+      <tbody>
+        <tr><td>Direct</td><td class="n">27</td><td class="n">67%</td></tr>
+        <tr><td>Organic Search (google 21, bing 1)</td><td class="n">22</td><td class="n">73%</td></tr>
+        <tr><td>AI Assistant (chatgpt.com)</td><td class="n">17</td><td class="n">100%</td></tr>
+        <tr><td>Прочее</td><td class="n">2</td><td class="n"></td></tr>
+        <tr><td><b>Всего</b></td><td class="n">68</td><td class="n">76%</td></tr>
+        <tr><td>Ключевые события (лиды, клики по мессенджерам)</td><td class="n">0</td><td class="n"></td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Clarity, 30 дней</th><th class="n">Значение</th></tr></thead>
+      <tbody>
+        <tr><td>Сеансы (без 131 бот-сеанса)</td><td class="n">1 591</td></tr>
+        <tr><td>Уникальные пользователи</td><td class="n">1 484</td></tr>
+        <tr><td>Новые пользователи</td><td class="n">97,5%</td></tr>
+        <tr><td>Страниц за сеанс</td><td class="n">1,46</td></tr>
+        <tr><td>Активное время</td><td class="n">43 с</td></tr>
+        <tr><td>Глубина скролла</td><td class="n">38%</td></tr>
+        <tr><td>Сеансы с chatgpt.com</td><td class="n">68</td></tr>
+        <tr><td>Мёртвые клики / быстрые возвраты</td><td class="n">6,1% / 4,4%</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <ul>
+    <li><b>Почему расходятся.</b> В коде consent mode стартует с <code>analytics_storage: denied</code>, и GA4 через GTM не отправляет события до согласия. Clarity подключается сразу с <code>consent=false</code> и записывает сеансы без cookie. Итог: GA4 видит примерно каждого двадцатого. Пока это так, KPI плана (лиды, ИИ-сеансы) нужно снимать из Clarity, а в GTM включить расширенный consent mode с безcookie-пингами, если владелец согласен с этим по политике. <span class="chip crit">высокий</span></li>
+    <li><b>Что смотрят.</b> Топ страниц Clarity: <code>/ru</code> 220, <code>/en</code> 99, <code>/uk</code> 47, <code>/ru/catalog</code> 41, <code>/en/catalog</code> 33, <code>/en/blog/best-districts-tirana</code> 30, <code>/en/sale</code> 24, <code>/ru/ai-search</code> 21. Русская главная в 2,2 раза популярнее английской, хотя в Google русский трафик мал: это прямой и мессенджерный трафик из канала Виктора.</li>
+    <li><b>Конверсия.</b> Умные события: «Submit form» 185 сеансов (по всей видимости поиск, не заявки), поиск 69, фильтры 36, ИИ-поиск открыт в 8 сеансах, <code>click_whatsapp</code> 4, «Contact us» 3. Лидов в Sanity/Telegram эти данные не подтверждают; проверить, доходят ли 4 клика WhatsApp до владельца.</li>
+    <li><b>Скорость в поле.</b> Clarity по 394 просмотрам: 73/100, LCP 2,9 с, INP 260 мс, CLS 0,31. CLS «плохо» несмотря на правку иконок 17.09; смотреть на главных <code>/ru</code> и <code>/en</code>, где больше всего просмотров. В GSC отчёт CWV для мобильных ещё без данных. <span class="chip warn">средний</span></li>
+    <li><b>Ошибки JS.</b> 9 ошибок за 30 дней: «Maximum call stack size exceeded» 44%, ResizeObserver 22%, React #310 (хук вызван условно), insertBefore. Редкие, но первая заслуживает проверки.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>4. Техника: что проверено на живом сайте</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Проверка</th><th>Статус</th><th>Факты</th></tr></thead>
+    <tbody>
+      <tr><td>Кэш CDN</td><td><span class="chip good">ok</span></td><td><code>/en</code>, <code>/en/albania/durres</code>, Голем, <code>/en/about</code>, <code>/de/albania/durres</code>: X-Vercel-Cache HIT, TTFB 0,2–0,55 с</td></tr>
+      <tr><td>Редиректы хостов</td><td><span class="chip good">ok</span></td><td>apex → www 308; корень → <code>/sq</code> 307 по Accept-Language</td></tr>
+      <tr><td>robots.txt</td><td><span class="chip good">ok</span></td><td>11 строк Sitemap, /api/ закрыт, ИИ-боты разрешены через «*», GoogleOther закрыт намеренно</td></tr>
+      <tr><td>hreflang</td><td><span class="chip good">ok</span></td><td>8 альтернатив на страницу (7 языков + x-default → en), самоссылка, canonical = self</td></tr>
+      <tr><td>Выборка sitemap</td><td><span class="chip good">ok</span></td><td>97 URL из 10 файлов: все 200, все самоканонические, кроме 7 в knowledge</td></tr>
+      <tr><td>Image sitemap</td><td><span class="chip good">ok</span></td><td>11 648 фото на 2 625 карточек</td></tr>
+      <tr><td>Knowledge sitemap</td><td><span class="chip warn">исправить</span></td><td>7 URL <code>/{locale}/knowledge</code> с noindex внутри sitemap</td></tr>
+      <tr><td>uk Саранда</td><td><span class="chip warn">исправить</span></td><td><code>/uk/albania/sarande</code> 200, но нет в priority и cities</td></tr>
+      <tr><td>Кэш блога</td><td><span class="chip warn">исправить</span></td><td><code>/en/blog</code> MISS на каждом запросе, остальные страницы HIT</td></tr>
+      <tr><td>Lighthouse mobile</td><td><span class="chip warn">плохо</span></td><td>Дуррес 31 (LCP 14,7 с, TBT 2,0 с), главная 60 (LCP 7,6 с); подробности в дополнении</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>5. Контент, E-E-A-T, разметка</h2>
+  <p>Проверено 17 страниц без JS: главная, /about, Дуррес, Голем, /info, гайды, блог, три новые статьи, карточка en и de, Дуррес de и pl, /privacy, llms.txt. Вся JSON-LD разметка валидна, Organization + WebSite + SearchAction на каждой странице, Person для трёх основателей, Dataset на /info, полный перевод de/pl включая разметку.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Дефект</th><th>Где</th><th>Что не так</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip crit">высокий</span> Юрлицо</td><td>/privacy, Organization</td><td>«Operated by the Domlivo team», <code>legalName</code> равен слогану, нет адреса и телефона в разметке. Владелец ещё не дал реквизиты.</td></tr>
+      <tr><td><span class="chip crit">высокий</span> Автор</td><td>все статьи и гайды</td><td>Автор везде Organization «Domlivo Editorial»; Person-узлы основателей с /about не подставлены как авторы, рецензента нет.</td></tr>
+      <tr><td><span class="chip crit">высокий</span> Тонкий хаб</td><td>/en/guides/buying</td><td>362 слова, ни одной цифры; в FAQPage три ответа, в DOM виден один; Article без изображения; в разметке «расходы 3–5%», на странице Дурреса «около 1,3%».</td></tr>
+      <tr><td><span class="chip warn">средний</span> FAQ без разметки</td><td>Дуррес, Голем, de, pl</td><td>Видимый блок из 5 вопросов без FAQPage, тогда как на /en, /info и в статьях разметка есть.</td></tr>
+      <tr><td><span class="chip warn">средний</span> Источники без ссылок</td><td>Дуррес, статья о доходности</td><td>«Our sources put…» без ссылок; llms.txt обещает ссылку на источник на каждой странице. На /info ссылки есть (5).</td></tr>
+      <tr><td><span class="chip warn">средний</span> Даты статей</td><td>3 новые статьи</td><td><code>datePublished</code> отличаются на 16 мс, <code>dateModified</code> одинаковый: время импорта, не редакции.</td></tr>
+      <tr><td><span class="chip warn">средний</span> Title</td><td>10 из 16 страниц</td><td>63–78 символов; суффикс « — Domlivo» выталкивает городские заголовки за 70.</td></tr>
+      <tr><td><span class="chip warn">средний</span> Блог и гайды</td><td>/en/blog, /en/guides</td><td>Description блога скопирован с главной; H1 «Real estate insights.»; у /guides title 16 символов и ни одного H2.</td></tr>
+      <tr><td><span class="chip info">низкий</span> Прочее</td><td>карточки, Dataset, og</td><td>Description карточек равен сырому тексту объявления с переносами; у Dataset нет license; нет og:locale; sameAs только WhatsApp и Telegram.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>6. План Q4: где стоим на 25.09</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Трек</th><th>Метрика плана</th><th>Сейчас</th><th>Статус</th></tr></thead>
+    <tbody>
+      <tr><td>0 Гигиена</td><td>всё закрыто</td><td>код закрыт; открыты реквизиты, Bing Webmaster</td><td><span class="chip warn">владелец</span></td></tr>
+      <tr><td>A Сущность и авторитет</td><td>доноров 0 → 15; «domlivo» первым</td><td>доноров 0; профили, фиды, рассылка индекса, рецензент не начаты</td><td><span class="chip crit">стоит</span></td></tr>
+      <tr><td>B Продающие страницы</td><td>10 запросов Дурреса в топ-10; неиндексированных карточек &lt; 100</td><td>листинги Дурреса на 9,4 в среднем, 16 кликов; карточек вне индекса ~1 264</td><td><span class="chip warn">под угрозой 15.10</span></td></tr>
+      <tr><td>C Картинки</td><td>173 показа/3 мес → 2 000/мес</td><td>срез по картинкам в этот раз не снят (отчёт по виду поиска не открылся)</td><td><span class="chip info">нет данных</span></td></tr>
+      <tr><td>D ИИ-поиск</td><td>сеансы из ИИ 8 → 60/мес</td><td>Clarity: 68 с chatgpt.com за 30 дней; GA4: 17</td><td><span class="chip good">достигнуто по Clarity</span></td></tr>
+      <tr><td>E Каталог и конверсия</td><td>10 лидов/мес; 3 района вне Дурреса по 30+ объектов</td><td>лидов 0 в GA4; 4 клика WhatsApp в Clarity; Саранда 7 объектов при 310 показах</td><td><span class="chip crit">стоит</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>7. Что делать в ближайшие две недели</h2>
+  <div class="plan">
+    <div class="row"><div class="num">1</div><div><p><b>Починить измерения.</b> В GTM перевести теги GA4 на расширенный consent mode (безcookie-пинги до согласия) либо признать Clarity источником правды для KPI. Проверить, что 4 клика WhatsApp дошли до Telegram владельца.</p><div class="who">владелец решает по политике · код и GTM: 1 час</div></div></div>
+    <div class="row"><div class="num">2</div><div><p><b>Закрыть старые адреса.</b> Для путей без языкового префикса отдавать 308 на язык по умолчанию (307 оставить корню), запросить переиндексацию 10 самых показываемых apex-URL начиная с <code>/sq/albania/tirana/info</code>. Перепроверить 02.10, как и записано в плане.</p><div class="who">код: middleware · GSC вручную</div></div></div>
+    <div class="row"><div class="num">3</div><div><p><b>Подготовить решение по карточкам к 15.10.</b> Снять по локалям, сколько карточек в индексе и с показами (it, de, pl уже дают клики; uk, sq почти нет). Заготовить переключатель: локали без показов уходят из sitemap и получают noindex, чтобы 15.10 нажать, а не начинать.</p><div class="who">код: реестр sitemap</div></div></div>
+    <div class="row"><div class="num">4</div><div><p><b>Трек A, пункты владельца.</b> Реквизиты юрлица и настоящий телефон (уходят в Organization и /privacy), профили LinkedIn/Facebook/Instagram/GBP, первые 5 писем с индексом цен Дурреса (monitor.al, invest-in-albania, польские и немецкие блоги). Без этого ноль доноров не сдвинется.</p><div class="who">только владелец</div></div></div>
+    <div class="row"><div class="num">5</div><div><p><b>Быстрые правки контента.</b> Person-авторы из /about на статьях; FAQPage на страницах города и районов; ссылки на источники на Дурресе и в статье о доходности; /guides/buying: показать все три ответа, убрать Article, согласовать 1,3% и 3–5%; knowledge вне sitemap; uk Саранда в sitemap; description блога и H1.</p><div class="who">код и CMS: один день</div></div></div>
+    <div class="row"><div class="num">6</div><div><p><b>CLS 0,31 на главных.</b> Записи Clarity по <code>/ru</code> и <code>/en</code> на мобильном покажут, что прыгает: герой, шапка или карточки. Разобрать «Maximum call stack size exceeded».</p><div class="who">код: полдня</div></div></div>
+    <div class="row"><div class="num">7</div><div><p><b>Спрос без товара.</b> Саранда pl (310 показов), Тирана en-инвестиции (50+ показов на 40–50), управление арендой (24 показа). Новых страниц не писать; это аргумент для партнёров вне Дурреса, пункт трека E.</p><div class="who">владелец</div></div></div>
+  </div>
+</section>
+
+<section id="addendum">
+  <h2>Дополнение: редиректы и Lighthouse</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Lighthouse mobile, симуляция slow 4G, 25.09</th><th class="n">Оценка</th><th class="n">LCP</th><th class="n">TBT</th><th class="n">CLS</th><th class="n">FCP</th></tr></thead>
+    <tbody>
+      <tr><td><code>/en/albania/durres</code></td><td class="n">31</td><td class="n">14,7 с</td><td class="n">2 000 мс</td><td class="n">0</td><td class="n">5,0 с</td></tr>
+      <tr><td><code>/en</code></td><td class="n">60</td><td class="n">7,6 с</td><td class="n">630 мс</td><td class="n">0</td><td class="n">1,2 с</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Лаборатория против поля.</b> Lighthouse 20.09 давал Дурресу 58 и LCP 4,0 с; сегодня 31 и 14,7 с, но прогон шёл с другой симуляцией, поэтому сравнивать напрямую нельзя. Поле (Clarity, реальные телефоны) говорит LCP 2,9 с и CLS 0,31, лаборатория говорит CLS 0. Значит, сдвиг вёрстки появляется после взаимодействия или от куки-баннера и шапки, а не при первой отрисовке. TBT 2 с на Дурресе реальный: страница отдаёт 666 КБ HTML с 358 объектами и 24 карточками в разметке; неиспользуемого JS 291 КБ. SEO-оценка Lighthouse 100.</li>
+    <li><b>Кэш блога.</b> <code>/en/blog</code> отдаёт <code>X-Vercel-Cache: MISS</code> на каждом запросе (TTFB 0,35–0,94 с), тогда как остальные страницы HIT. Индекс блога выпал из ISR; проверить, нет ли на нём динамического чтения (cookies, headers, searchParams). <span class="chip warn">средний</span></li>
+    <li><b>Редиректы.</b> <code>http://domlivo.com/</code> идёт тремя прыжками: http → https apex → www → <code>/sq</code>. Слэш в конце, регистр и параметры нормализуются одним 308. Клоакинга нет: Googlebot и браузер получают одинаковые title и canonical. 404 отдаются как 404, включая несуществующие карточки.</li>
+    <li><b>Заголовки безопасности.</b> HSTS стоит с max-age 2 года, но без <code>includeSubDomains</code> и <code>preload</code>. nosniff, Referrer-Policy, frame-ancestors на месте.</li>
+    <li><b>Ложная тревога агента.</b> Технический отчёт назвал отсутствие hreflang критическим дефектом; это ошибка регистра в его проверке. В HTML каждая страница несёт 8 тегов <code>rel="alternate" hrefLang</code>, что проверено вручную.</li>
+  </ul>
+</section>
+
+<footer>Снято 25.09.2026 через Chrome владельца (GSC, GA4, Clarity) и HTTP-запросы к www.domlivo.com. Предыдущий аудит: 20.09.2026, артефакт «Domlivo: аудит и план Q4». Живой чек-лист: docs/seo/PLAN-2026-Q4.md в ветке main.</footer>
+</div>

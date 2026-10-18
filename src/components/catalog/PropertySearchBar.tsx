@@ -3,7 +3,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/shared/Icon";
 import { cn } from "@/lib/utils";
 import {
   useCatalogFilters,

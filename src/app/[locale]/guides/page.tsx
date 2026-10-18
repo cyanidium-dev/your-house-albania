@@ -87,7 +87,6 @@ export default async function GuidesIndexPage({ params }: Props) {
                             alt={title ?? ""}
                             fill
                             className="object-cover will-change-transform transition-transform duration-300 ease-out group-hover:scale-105"
-                            unoptimized={imageUrl.startsWith("http")}
                           />
                         </span>
                       ) : null}

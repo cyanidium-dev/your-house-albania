@@ -37,7 +37,6 @@ export function LandingCard({
   })
   // No routable URL (e.g. district landing with a broken ref chain) — skip the card.
   if (!href) return null
-  const unoptimized = imgUrl?.startsWith('http') ?? false
 
   return (
     <Link href={href} className={cn(cardLinkClass, className)}>
@@ -49,7 +48,6 @@ export function LandingCard({
             fill
             className="object-cover object-center will-change-transform transition-transform duration-300 ease-out group-hover:scale-[1.02]"
             sizes="(max-width: 1023px) 100vw, 33vw"
-            unoptimized={unoptimized}
           />
         ) : null}
       </div>
