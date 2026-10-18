@@ -1,4 +1,4 @@
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { resolveCta } from "@/lib/routes/resolveLocaleHref";
 import { SectionCtaLink } from "@/components/landing/sectionPrimitives";
 import { brandButtonClass } from "@/components/shared/BrandButton";

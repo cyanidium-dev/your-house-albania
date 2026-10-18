@@ -3,7 +3,7 @@
 import Link from "@/components/shared/Link";
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { PRIMARY_NAV_ITEMS, type BuyMenuData, type GuidesMenuData } from '@/data/navConfig'
 import { cn } from '@/lib/utils'
 import { isPrimaryNavItemActive, resolveNavHref } from './navActive'

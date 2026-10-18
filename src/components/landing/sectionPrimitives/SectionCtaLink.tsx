@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from "@/components/shared/Link";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { cn } from '@/lib/utils'
 import { brandButtonClass, type BrandButtonSize, type BrandButtonVariant } from '@/components/shared/BrandButton'
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { brandButtonClass } from "@/components/shared/BrandButton";

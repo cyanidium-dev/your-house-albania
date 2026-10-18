@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { useState, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'

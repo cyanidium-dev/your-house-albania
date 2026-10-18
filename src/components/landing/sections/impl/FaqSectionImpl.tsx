@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTranslations } from 'next-intl';
 import { PortableText } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 import { brandButtonClass } from '@/components/shared/BrandButton';
 import { FaqAccordion } from '@/components/shared/faq/FaqAccordion';

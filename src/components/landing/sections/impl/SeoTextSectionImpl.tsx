@@ -2,7 +2,7 @@ import Link from "@/components/shared/Link";
 import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { getTranslations } from 'next-intl/server';
 import { resolveLocaleHref } from '@/lib/routes/resolveLocaleHref';
 import { brandButtonClass } from '@/components/shared/BrandButton';

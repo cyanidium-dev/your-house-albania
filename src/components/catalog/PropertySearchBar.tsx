@@ -3,7 +3,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { cn } from "@/lib/utils";
 import { segmentedItemClass } from "@/components/shared/Segmented";
 import {

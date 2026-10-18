@@ -2,7 +2,12 @@ import * as React from 'react'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import type { PurchaseCostItem } from '@/lib/calculators/purchaseCost'
 import { CalcSectionShell } from './calculators/CalcSectionShell'
-import { PurchaseCostCalcClient } from './calculators/PurchaseCostCalcClient'
+import dynamic from 'next/dynamic'
+
+// Loaded only on landings that carry the calculator (see MortgageCalcSection).
+const PurchaseCostCalcClient = dynamic(() =>
+  import('./calculators/PurchaseCostCalcClient').then((m) => m.PurchaseCostCalcClient),
+)
 
 type CostItemRaw = {
   _key?: string

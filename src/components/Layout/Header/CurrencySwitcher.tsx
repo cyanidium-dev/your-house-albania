@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react'
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { useTranslations } from 'next-intl'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { cn } from '@/lib/utils'

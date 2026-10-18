@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 import type { MarketingContentData } from "./types";

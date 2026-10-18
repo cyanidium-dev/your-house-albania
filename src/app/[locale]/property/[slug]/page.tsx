@@ -4,7 +4,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { fetchPropertyBySlug, fetchPropertyDuplicateTarget, fetchSiteSettings, fetchSimilarPropertyCandidates } from '@/lib/sanity/client';
 import { mapSanityPropertyToDetailsFields, mapSanityPropertyGallery, mapCatalogPropertyToCard, mapPropertyAmenityDisplayItems, mapSanityPropertyOffers, resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
 import { buildPropertyMetadata } from '@/lib/sanity/propertySeoAdapter';
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { PropertyLocationMapLazy } from '@/components/catalog/map/PropertyLocationMapLazy';
 import Image from 'next/image';
 import { PropertyGallery } from '@/components/Properties/PropertyGallery';

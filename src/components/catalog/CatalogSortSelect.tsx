@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 
 const SORTS = ["newest", "popular", "priceAsc", "priceDesc", "pricePerSqmAsc", "areaDesc"] as const;
 type Sort = (typeof SORTS)[number];
