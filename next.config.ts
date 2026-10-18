@@ -5,6 +5,8 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // `X-Powered-By: Next.js` tells every visitor the stack and nothing else.
+  poweredByHeader: false,
   images: {
     // Sanity serves the original bytes unless asked otherwise, so the loader in
     // src/lib/images/loader.ts appends the CDN's own resize/format parameters
