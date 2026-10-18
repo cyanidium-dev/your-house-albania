@@ -9,6 +9,11 @@ import {
 import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { setRequestLocale } from "next-intl/server";
+import { fetchPriceIndexSnapshot } from "@/lib/sanity/client";
+import { getBaseUrl } from "@/lib/seo/baseUrl";
+import { findIndexCity } from "@/lib/priceIndex/snapshot";
+import { buildCityDatasetJsonLd } from "@/lib/priceIndex/jsonLd";
+import { interpolatePriceIndexTokens } from "@/lib/priceIndex/tokens";
 
 /**
  * ISR. Two exports, and the route needs both.
@@ -59,10 +64,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cmsCountry || cmsCountry !== countrySlug) {
     return {};
   }
-  const [landing, siteSettings] = await Promise.all([
+  const [cmsLanding, siteSettings, snapshot] = await Promise.all([
     fetchCityLandingByCitySlug(citySlug),
     fetchSiteSettings(),
+    fetchPriceIndexSnapshot(),
   ]);
+  // Same token pass as the page body: a meta description can quote the live median.
+  const landing = interpolatePriceIndexTokens(cmsLanding, snapshot, locale);
   const seo = (landing as CityLandingForMeta | null)?.seo ?? null;
   const siteDefaultSeo = (siteSettings as { defaultSeo?: unknown })?.defaultSeo ?? null;
   const doc = landing as CityLandingForMeta | null;
@@ -99,5 +107,23 @@ export default async function CityInfoLandingPage({ params }: Props) {
     notFound();
   }
 
-  return <CityLandingPageBody locale={locale} citySlug={citySlug} />;
+  // The city's Domlivo Price Index Dataset, on every city's page (it used to
+  // ride along with the district table, which a city with one district never
+  // renders). Same snapshot as the figures on the page.
+  const [snapshot, baseUrl] = await Promise.all([fetchPriceIndexSnapshot(), getBaseUrl()]);
+  const indexCity = findIndexCity(snapshot, citySlug);
+  const dataset =
+    snapshot && indexCity ? buildCityDatasetJsonLd({ baseUrl, locale, snapshot, city: indexCity }) : null;
+
+  return (
+    <>
+      {dataset ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(dataset).replace(/</g, "\\u003c") }}
+        />
+      ) : null}
+      <CityLandingPageBody locale={locale} citySlug={citySlug} />
+    </>
+  );
 }
