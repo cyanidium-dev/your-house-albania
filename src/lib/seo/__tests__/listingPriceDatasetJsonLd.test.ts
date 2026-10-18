@@ -13,7 +13,9 @@ const input = {
 }
 
 describe('buildListingPriceDatasetJsonLd', () => {
-  const json = buildListingPriceDatasetJsonLd(input) as Record<string, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type Loose = Record<string, any>
+  const json = buildListingPriceDatasetJsonLd(input) as Loose
 
   it('names a moment and a sample size, so the figures can be cited', () => {
     expect(json['@type']).toBe('Dataset')
@@ -36,7 +38,7 @@ describe('buildListingPriceDatasetJsonLd', () => {
 
   it('lists the districts that have a row, and omits the key when none do', () => {
     expect(json.spatialCoverage.containsPlace.map((p: { name: string }) => p.name)).toEqual(['Golem', 'Plazh'])
-    const empty = buildListingPriceDatasetJsonLd({ ...input, districtNames: [] }) as Record<string, any>
+    const empty = buildListingPriceDatasetJsonLd({ ...input, districtNames: [] }) as Loose
     expect(empty.spatialCoverage.containsPlace).toBeUndefined()
   })
 })

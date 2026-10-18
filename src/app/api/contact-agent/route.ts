@@ -10,7 +10,7 @@ import { fetchAgentLeadChatId, resolveListingAgent } from '@/lib/notifications/l
 import { createLead, lookupLeadProperty, type LeadProperty } from '@/lib/leads/createLead'
 import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agentContact/types'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
-import { isPlausibleEmail, isPlausiblePhone } from '@/lib/contacts/validate'
+import { isPlausiblePhone } from '@/lib/contacts/validate'
 
 const MAX_MESSAGE = 8000
 const MAX_TITLE = 200

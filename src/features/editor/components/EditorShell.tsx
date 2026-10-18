@@ -77,7 +77,10 @@ function EditorShellInner({
   const [addOpen, setAddOpen] = React.useState(false);
   const [saveState, setSaveState] = React.useState<SaveState>({ kind: 'idle' });
 
-  const activeNodes = serverNodesByLocale[state.locale] ?? [];
+  const activeNodes = React.useMemo(
+    () => serverNodesByLocale[state.locale] ?? [],
+    [serverNodesByLocale, state.locale],
+  );
   const activeMessages = messagesByLocale[state.locale] ?? messagesByLocale.en ?? {};
 
   const nodeByKey = React.useMemo(() => {

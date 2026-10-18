@@ -298,6 +298,7 @@ describe("buildPropertyJsonLd: place and language (audit 2026-09-20)", () => {
     locale: "de",
   };
   const graphOf = (json: object) => (json as { "@graph": Record<string, unknown>[] })["@graph"];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const node = (json: object, type: string) => graphOf(json).find((n) => n["@type"] === type) as Record<string, any>;
 
   it("splits the address into city and district when both names are known", () => {

@@ -85,7 +85,7 @@ export default function DrawerSettings() {
         <span className={selectShell}>
           <select className={selectEl} value={currency} onChange={(e) => onCurrency(e.target.value)}>
             {currencies.map((code) => {
-              const meta = getCurrencyMeta(code, locale)
+              const meta = getCurrencyMeta(code)
               return (
                 <option key={code} value={code}>
                   {meta.symbol !== meta.code ? `${meta.symbol} ${meta.code}` : meta.code}

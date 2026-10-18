@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { useEditor } from '../state/EditorContext';
 import { getFieldsForType, readLocalizedField } from '../lib/sectionFields';
-import type { EditorSection } from '../state/types';
 
 /**
  * Canvas-side inline editor.

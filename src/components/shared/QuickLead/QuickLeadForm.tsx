@@ -6,7 +6,7 @@ import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents
 import type { LeadPlacement } from '@/lib/leads/types'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
-import { isPlausibleEmail, isPlausiblePhone } from '@/lib/contacts/validate'
+import { isPlausiblePhone } from '@/lib/contacts/validate'
 
 type Props = {
   locale: string

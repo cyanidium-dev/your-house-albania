@@ -63,7 +63,7 @@ export function formatNumber(value: number, locale: string | undefined, maxFract
 }
 
 /** The display symbol of a currency ("€", "$", "₴"); the ISO code when none is known. */
-export function getCurrencySymbol(code: CurrencyCode, _locale = 'en'): string {
+export function getCurrencySymbol(code: CurrencyCode): string {
   const c = typeof code === 'string' && code.trim() ? code.trim().toUpperCase() : 'EUR'
   return CURRENCY_SYMBOL_FALLBACK_MAP[c] ?? c
 }

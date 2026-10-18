@@ -43,7 +43,7 @@ export function FavoritesContent({ locale }: Props) {
       favorites.every((s) => prevSlugs.has(s)) &&
       newSlugs.size < prevSlugs.size;
 
-    if (isOnlyRemovals && properties.length > 0) {
+    if (isOnlyRemovals) {
       setProperties((prev) => prev.filter((p) => newSlugs.has(p.slug)));
       prevFavoritesRef.current = [...favorites];
       return;

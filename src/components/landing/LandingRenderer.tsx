@@ -84,8 +84,8 @@ export async function LandingRenderer({
     const types = sections.map((s) => s?._type).filter(Boolean)
     console.log('[LandingRenderer] sections', {
       locale,
-      landingId: (landing as any)?._id ?? null,
-      pageType: (landing as any)?.pageType ?? null,
+      landingId: (landing as { _id?: string } | null)?._id ?? null,
+      pageType: (landing as { pageType?: string } | null)?.pageType ?? null,
       count: sections.length,
       types,
     })

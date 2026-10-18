@@ -4,18 +4,18 @@ import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import SocialSignUp from "../SocialSignUp";
 import Logo from "@/components/Layout/Header/BrandLogo/Logo";
-import { useContext, useState } from "react";
+import { useContext, useState, type FormEvent } from "react";
 import AuthDialogContext from "@/app/context/AuthDialogContext";
 const LOCALES = ["en", "uk", "ru", "sq"];
 
-const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
+const SignUp = ({ signUpOpen }: { signUpOpen?: (open: boolean) => void }) => {
   const router = useRouter();
   const pathname = usePathname();
   const locale = pathname.split("/")[1]?.match(new RegExp(`^(${LOCALES.join("|")})$`)) ? pathname.split("/")[1] : "en";
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const authDialog = useContext(AuthDialogContext);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setLoading(true);
@@ -31,7 +31,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
       body: JSON.stringify(finalData),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         toast.success("Successfully registered");
         setLoading(false);
         router.push(`/${locale}`);
@@ -41,7 +41,7 @@ const SignUp = ({ signUpOpen }: { signUpOpen?: any }) => {
         setLoading(false);
       });
     setTimeout(() => {
-      signUpOpen(false);
+      signUpOpen?.(false);
     }, 1200);
     authDialog?.setIsUserRegistered(true);
 

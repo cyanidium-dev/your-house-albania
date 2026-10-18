@@ -3,13 +3,27 @@ import { ArticlesSection } from '@/components/landing/sections'
 import type { SectionHandler } from './types'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 
-export const articlesSectionHandler: SectionHandler = ({ locale, section }) => {
-  if ((section as { enabled?: boolean } | null)?.enabled === false) return null
+type ArticlesProps = React.ComponentProps<typeof ArticlesSection>
 
-  const cmsPosts = Array.isArray((section as any)?.posts) ? (section as any).posts : undefined
-  const cmsTitle = resolveLocalizedString((section as any)?.title as never, locale) || undefined
-  const cmsSubtitle = resolveLocalizedString((section as any)?.subtitle as never, locale) || undefined
-  const cmsCta = (section as any)?.cta
+/** The CMS shape of an articles section, read loosely: the Studio owns the schema. */
+type ArticlesSectionData = {
+  enabled?: boolean
+  posts?: unknown
+  title?: unknown
+  subtitle?: unknown
+  cta?: { href?: string; label?: unknown }
+  mode?: ArticlesProps['mode']
+  manualArticleTitles?: unknown
+}
+
+export const articlesSectionHandler: SectionHandler = ({ locale, section }) => {
+  const s = section as unknown as ArticlesSectionData | null
+  if (s?.enabled === false) return null
+
+  const cmsPosts = Array.isArray(s?.posts) ? (s.posts as ArticlesProps['posts']) : undefined
+  const cmsTitle = resolveLocalizedString(s?.title as never, locale) || undefined
+  const cmsSubtitle = resolveLocalizedString(s?.subtitle as never, locale) || undefined
+  const cmsCta = s?.cta
   const cmsCtaHref = cmsCta?.href
   const cmsCtaLabel = resolveLocalizedString(cmsCta?.label as never, locale) || undefined
 
@@ -20,12 +34,13 @@ export const articlesSectionHandler: SectionHandler = ({ locale, section }) => {
       title={cmsTitle}
       subtitle={cmsSubtitle}
       cta={cmsCtaHref || cmsCtaLabel ? { href: cmsCtaHref, label: cmsCtaLabel } : undefined}
-      mode={(section as any)?.mode}
+      mode={s?.mode}
       posts={cmsPosts}
       manualArticleTitles={
-        Array.isArray((section as any)?.manualArticleTitles) ? (section as any).manualArticleTitles : undefined
+        Array.isArray(s?.manualArticleTitles)
+          ? (s.manualArticleTitles as ArticlesProps['manualArticleTitles'])
+          : undefined
       }
     />
   )
 }
-

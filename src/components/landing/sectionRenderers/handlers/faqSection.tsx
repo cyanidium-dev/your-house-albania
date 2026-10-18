@@ -24,12 +24,12 @@ export const faqSectionHandler: SectionHandler = ({ locale, section, faqJsonLd, 
     : resolved
 
   if (process.env.NODE_ENV === 'development') {
-    const first = faqData?.items?.[0] as any
+    const first = faqData?.items?.[0] as { answer?: unknown } | undefined
     const ans = first?.answer
     console.log('[Landing][faqSection] resolved', {
       locale,
       key: section?._key ?? null,
-      titleType: typeof (faqData as any)?.title,
+      titleType: typeof (faqData as { title?: unknown } | null)?.title,
       itemsCount: Array.isArray(faqData?.items) ? faqData.items.length : null,
       firstAnswerType: Array.isArray(ans) ? 'array' : typeof ans,
       firstAnswerSample:

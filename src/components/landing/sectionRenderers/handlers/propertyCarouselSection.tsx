@@ -95,10 +95,12 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
           ? {
               slug: propertyItems[0].slug,
               name: propertyItems[0].name,
-              price: (propertyItems[0] as any).price,
-              currency: (propertyItems[0] as any).currency,
-              status: (propertyItems[0] as any).status,
-              imagesCount: Array.isArray((propertyItems[0] as any).images) ? (propertyItems[0] as any).images.length : undefined,
+              price: (propertyItems[0] as Record<string, unknown>).price,
+              currency: (propertyItems[0] as Record<string, unknown>).currency,
+              status: (propertyItems[0] as Record<string, unknown>).status,
+              imagesCount: Array.isArray((propertyItems[0] as { images?: unknown }).images)
+                ? ((propertyItems[0] as { images?: unknown[] }).images ?? []).length
+                : undefined,
             }
           : null,
       })
@@ -132,7 +134,7 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
       if (debug) {
         console.log('[Landing][propertyCarouselSection] city-scoped results', {
           count: propertyItems.length,
-          sample: propertyItems[0] ? { slug: propertyItems[0].slug, name: (propertyItems[0] as any).name } : null,
+          sample: propertyItems[0] ? { slug: propertyItems[0].slug, name: (propertyItems[0] as Record<string, unknown>).name } : null,
         })
       }
     } else {
@@ -167,10 +169,12 @@ export const propertyCarouselSectionHandler: SectionHandler = async ({
             ? {
                 slug: propertyItems[0].slug,
                 name: propertyItems[0].name,
-                price: (propertyItems[0] as any).price,
-                currency: (propertyItems[0] as any).currency,
-                status: (propertyItems[0] as any).status,
-                imagesCount: Array.isArray((propertyItems[0] as any).images) ? (propertyItems[0] as any).images.length : undefined,
+                price: (propertyItems[0] as Record<string, unknown>).price,
+                currency: (propertyItems[0] as Record<string, unknown>).currency,
+                status: (propertyItems[0] as Record<string, unknown>).status,
+                imagesCount: Array.isArray((propertyItems[0] as { images?: unknown }).images)
+                ? ((propertyItems[0] as { images?: unknown[] }).images ?? []).length
+                : undefined,
               }
             : null,
         })

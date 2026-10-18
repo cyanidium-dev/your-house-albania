@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Icon } from "@/components/shared/Icon";
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { cn } from '@/lib/utils'
 import { getCurrencyMeta } from '@/lib/currency/registry'
@@ -32,9 +32,8 @@ export default function CurrencySwitcher({
   sticky = false,
 }: CurrencySwitcherProps) {
   const t = useTranslations('Currency')
-  const locale = useLocale()
   const { currency, setCurrency, displayCurrencies } = useCurrency()
-  const meta = getCurrencyMeta(currency, locale)
+  const meta = getCurrencyMeta(currency)
   const currencies = displayCurrencies.length > 0 ? displayCurrencies : ['EUR']
   const [open, setOpen] = React.useState(false)
   const ref = React.useRef<HTMLDivElement>(null)
@@ -97,7 +96,7 @@ export default function CurrencySwitcher({
             )}
           >
             {currencies.map((code) => {
-              const c = getCurrencyMeta(code, locale)
+              const c = getCurrencyMeta(code)
               const showSymbol = c.symbol !== c.code
               return (
                 <button

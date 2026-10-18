@@ -132,6 +132,8 @@ export function BrandButton(props: BrandButtonProps) {
       </a>
     )
   }
+  // Strip the styling props so only real button attributes reach the DOM.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { as: _as, variant: _v, size: _s, className: _c, children: _ch, type, ...rest } = props as AsButtonProps
   return (
     <button type={type ?? 'button'} className={cls} {...rest}>
