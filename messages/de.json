@@ -662,6 +662,14 @@
       "types": {
         "title": "Immobilien zum Kauf in Albanien nach Art"
       }
+    },
+    "searchAlert": {
+      "barText": "Neue Angebote zu dieser Suche, einmal täglich in Telegram",
+      "cta": "Einschalten",
+      "title": "Neue Angebote zu dieser Suche in Telegram erhalten",
+      "body": "Einmal am Tag schickt der Domlivo-Bot, was gerade neu dazugekommen ist und zu diesen Filtern passt. Ein Tippen zum Einschalten, /stop zum Beenden.",
+      "ctaLong": "In Telegram erhalten",
+      "emptyTitle": "Noch nichts Passendes"
     }
   },
   "NewBuilds": {
@@ -1185,6 +1193,35 @@
     "contactReceived": "Danke! Ein Berater meldet sich in Kürze bei Ihnen.",
     "commandStart": "Chat mit einem Berater starten",
     "description": "Domlivo – Immobilien in Albanien. Fragen Sie nach jedem Objekt auf domlivo.com oder schreiben Sie, was Sie suchen: Ein Berater antwortet direkt hier.",
-    "shortDescription": "Immobilien in Albanien: Fragen Sie einen Domlivo-Berater zu jedem Objekt."
+    "shortDescription": "Immobilien in Albanien: Fragen Sie einen Domlivo-Berater zu jedem Objekt.",
+    "commandStop": "Benachrichtigungen zu neuen Angeboten beenden",
+    "search": {
+      "subscribed": "Erledigt. Neue Angebote zu dieser Suche kommen hier an, höchstens einmal am Tag.",
+      "yourSearch": "Ihre Suche: {summary}",
+      "latest": "Schon auf Domlivo:",
+      "openSearch": "Suche auf Domlivo öffnen",
+      "stopHint": "Zum Abbestellen senden Sie /stop.",
+      "stopped": "Benachrichtigungen sind aus. Tippen Sie bei einer Suche auf domlivo.com auf die Glocke, um sie wieder einzuschalten.",
+      "nothingToStop": "Sie haben keine aktiven Benachrichtigungen.",
+      "askMore": "Soll ein Berater Angebote für Sie heraussuchen? Schreiben Sie hier oder senden Sie Ihre Nummer.",
+      "newListings": "Neu auf Domlivo zu Ihrer Suche",
+      "anyListing": "alle Angebote",
+      "dealSale": "zum Kauf",
+      "dealRent": "zur Miete",
+      "priceFrom": "ab {amount}",
+      "priceTo": "bis {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "ab {n} m²",
+      "areaTo": "bis {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ Schlafzimmer",
+      "bedsExact": "{n} Schlafzimmer",
+      "nearSea": "am Meer",
+      "investment": "als Kapitalanlage",
+      "stageUnfinished": "noch im Bau",
+      "stageOffPlan": "in Planung",
+      "stageUnderConstruction": "im Bau",
+      "stageCompleted": "fertiggestellt"
+    }
   }
 }

@@ -6,22 +6,32 @@ import { resolveAgentContactTelegramRouting, resolveTelegramBotToken } from '@/l
 import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
 import { getWriteClient } from '@/lib/sanity/writeClient'
-import { parseStartPayload } from '@/lib/telegram/startPayload'
+import { parseStartPayload, type StartPayload } from '@/lib/telegram/startPayload'
 import { botCall, botUserId } from './api'
 import { latestBotLead, loadBotTexts, lookupBotListing, type BotListing } from './data'
 import {
   botLocale,
   displayName,
   escapeHtml,
+  fill,
   formatMessageHeader,
   formatPropertyCard,
   formatStartForTeam,
   greetingText,
   isSiteLocale,
   userIdFromMarker,
+  type BotTexts,
   type SiteLocale,
   type TelegramUser,
 } from './format'
+import {
+  describeSearch,
+  formatMatchLines,
+  searchCatalogUrl,
+  searchMatches,
+  stopSearchSubscriptions,
+  upsertSearchSubscription,
+} from './search'
 
 /** The parts of a Telegram `Message` the bot reads. */
 export type TelegramMessage = {
@@ -103,6 +113,11 @@ async function handleStart(token: string, message: TelegramMessage, user: Telegr
   const payload = parseStartPayload(rawPayload)
   const locale = botLocale(payload?.locale, user.language_code)
   const texts = await loadBotTexts(locale)
+
+  if (payload?.kind === 'search') {
+    await handleSearchStart(token, message, user, payload, rawPayload, locale, texts)
+    return
+  }
 
   const listing: BotListing | null =
     payload && payload.kind !== 'general' ? await lookupBotListing(payload, locale, texts) : null
@@ -202,6 +217,101 @@ async function handleStart(token: string, message: TelegramMessage, user: Telegr
         : {}),
     }),
   )
+}
+
+/**
+ * Start on a "new listings for this search" link: the search is saved, the
+ * visitor sees what matches today and gets the rest as it appears
+ * (`/api/cron/search-alerts`). A lead like any other Start, so the team can
+ * answer in the same chat.
+ */
+async function handleSearchStart(
+  token: string,
+  message: TelegramMessage,
+  user: TelegramUser,
+  payload: Extract<StartPayload, { kind: 'search' }>,
+  rawPayload: string,
+  locale: SiteLocale,
+  texts: BotTexts & { pricePerSqmFrom: string },
+) {
+  const now = new Date()
+  const chatId = message.chat.id
+  const summary = await describeSearch(payload.filters, locale, texts.search)
+  const catalogUrl = searchCatalogUrl(locale, payload.filters)
+  const [saved, matches] = await Promise.all([
+    upsertSearchSubscription({ user, locale, filters: payload.filters, payload: rawPayload, summary, catalogUrl, now }),
+    searchMatches({ filters: payload.filters, locale, texts, limit: 3, campaign: 'search-start' }),
+  ])
+  if (!saved.ok) console.error('[telegram-bot] subscription not saved', saved.reason)
+
+  const lines = [
+    escapeHtml(greetingText(texts, user)),
+    '',
+    escapeHtml(texts.search.subscribed),
+    escapeHtml(fill(texts.search.yourSearch, { summary })),
+  ]
+  if (matches.length) lines.push('', escapeHtml(texts.search.latest), formatMatchLines(matches, texts.priceOnRequest))
+  lines.push('', escapeHtml(texts.search.stopHint))
+  await botCall(token, 'sendMessage', {
+    chat_id: chatId,
+    text: lines.join('\n'),
+    parse_mode: 'HTML',
+    reply_markup: { inline_keyboard: [[{ text: texts.search.openSearch, url: catalogUrl }]] },
+    link_preview_options: { is_disabled: true },
+  })
+  await botCall(token, 'sendMessage', {
+    chat_id: chatId,
+    text: texts.search.askMore,
+    reply_markup: contactKeyboard(texts.shareContact),
+  })
+
+  // The same search pressed twice within the window is one lead.
+  const previous = await latestBotLead(user.id)
+  const repeat =
+    previous !== null &&
+    Date.now() - new Date(previous.createdAt).getTime() < REPEAT_START_MS &&
+    !previous.propertySlug &&
+    (previous.placement ?? '') === 'catalog'
+  if (repeat) return
+
+  const lead = await createLead({
+    type: 'telegram_start',
+    placement: 'catalog',
+    locale,
+    contact: { name: displayName(user) },
+    telegram: {
+      userId: String(user.id),
+      ...(user.username ? { username: user.username } : {}),
+      ...(user.language_code ? { language: user.language_code.slice(0, 10) } : {}),
+    },
+    formLabel: `telegram-bot:${rawPayload}`,
+    now,
+  })
+  if (!lead.ok) console.error('[telegram-bot] lead not saved', lead.reason)
+
+  await postToTeam(
+    token,
+    teamChats(),
+    formatStartForTeam({
+      user,
+      locale,
+      ...(isSiteLocale(payload.locale) ? { siteLocale: payload.locale } : {}),
+      placement: 'catalog',
+      search: { summary, url: catalogUrl },
+    }),
+  )
+}
+
+/** `/stop`: the search alerts go off; nothing else changes. */
+async function handleStop(token: string, message: TelegramMessage, user: TelegramUser) {
+  const lead = await latestBotLead(user.id)
+  const locale: SiteLocale = isSiteLocale(lead?.locale) ? lead.locale : botLocale(null, user.language_code)
+  const texts = await loadBotTexts(locale)
+  const stopped = await stopSearchSubscriptions(user.id, new Date())
+  await botCall(token, 'sendMessage', {
+    chat_id: message.chat.id,
+    text: stopped > 0 ? texts.search.stopped : texts.search.nothingToStop,
+  })
 }
 
 /** Anything a visitor sends after Start goes to the team chat with a header. */
@@ -311,6 +421,10 @@ export async function handleTelegramUpdate(update: TelegramUpdate, token: string
     const start = /^\/start(?:@\w+)?(?:\s+(\S+))?/.exec(text)
     if (start) {
       await handleStart(token, message, from, start[1] ?? '')
+      return
+    }
+    if (/^\/stop(?:@\w+)?$/i.test(text)) {
+      await handleStop(token, message, from)
       return
     }
     await handleVisitorMessage(token, message, from)

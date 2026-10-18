@@ -2,12 +2,15 @@ import Link from "@/components/shared/Link";
 import { useTranslations } from "next-intl";
 import { catalogPath } from "@/lib/routes/catalog";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { CatalogSearchAlert } from "@/components/catalog/CatalogSearchAlert";
 
 type Props = {
   locale: string;
+  /** Bot deep link for this search: "we'll tell you when something appears". */
+  searchAlertHref?: string | null;
 };
 
-export function CatalogEmptyState({ locale }: Props) {
+export function CatalogEmptyState({ locale, searchAlertHref = null }: Props) {
   const t = useTranslations("Catalog.empty");
 
   return (
@@ -24,6 +27,7 @@ export function CatalogEmptyState({ locale }: Props) {
       >
         {t("reset")}
       </Link>
+      {searchAlertHref ? <CatalogSearchAlert href={searchAlertHref} variant="panel" className="mt-10 w-full" /> : null}
     </div>
   );
 }
