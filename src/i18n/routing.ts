@@ -2,7 +2,14 @@ import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
   locales: ["en", "uk", "ru", "sq", "it", "pl", "de"],
-  defaultLocale: "sq",
+  /**
+   * Where `/` sends a visitor whose language the site cannot tell — no
+   * `NEXT_LOCALE` cookie and no supported `Accept-Language`, which includes
+   * Googlebot. It was `sq`, while hreflang `x-default` names `/en`: crawlers
+   * landed on Albanian at the address the site calls language-neutral (audit
+   * 2026-10-18, T M-4). The cookie and the header still win when present.
+   */
+  defaultLocale: "en",
   localePrefix: "always",
   /**
    * next-intl sets a `Link: rel="alternate"` response header on every request

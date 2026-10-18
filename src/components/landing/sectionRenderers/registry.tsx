@@ -99,7 +99,7 @@ export async function renderLandingSection(input: {
     console.log('[LandingRegistry] render start', {
       locale: input.locale,
       type,
-      key: (input.section as any)?._key ?? null,
+      key: (input.section as { _key?: string } | null)?._key ?? null,
     })
   }
   try {
@@ -108,7 +108,7 @@ export async function renderLandingSection(input: {
       console.log('[LandingRegistry] render ok', {
         locale: input.locale,
         type,
-        key: (input.section as any)?._key ?? null,
+        key: (input.section as { _key?: string } | null)?._key ?? null,
         rendered: !!node,
       })
     }
@@ -118,7 +118,7 @@ export async function renderLandingSection(input: {
       console.log('[LandingRegistry] render crash', {
         locale: input.locale,
         type,
-        key: (input.section as any)?._key ?? null,
+        key: (input.section as { _key?: string } | null)?._key ?? null,
       })
     }
     throw err

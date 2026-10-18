@@ -27,6 +27,13 @@ export async function ContactsHero({ locale }: Props) {
             priority
           />
         </div>
+        {/* The photo is pale sky and foliage: white text on it measured 1.4:1
+            (visual audit 18.10). A scrim from the text side keeps it readable
+            without darkening the whole picture. */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[5] bg-gradient-to-r from-dark/65 via-dark/40 to-dark/10"
+          aria-hidden
+        />
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-white via-white/40 to-transparent dark:from-black dark:via-black/40"
           aria-hidden

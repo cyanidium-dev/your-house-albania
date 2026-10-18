@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 import { HEADER_HIT_AREA, headerIconColorClass } from './headerSwitcherStyles'

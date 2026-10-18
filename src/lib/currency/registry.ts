@@ -8,12 +8,12 @@ export type CurrencyMeta = {
 }
 
 /**
- * Symbol: Intl for (code, locale), then {@link resolveCurrencyDisplaySymbol} fallback
- * (same map as cron) when Intl yields only the ISO code — keeps picker aligned with price formatting.
+ * Symbol: {@link getCurrencySymbol}, then {@link resolveCurrencyDisplaySymbol} fallback
+ * (same map as cron) when that yields only the ISO code — keeps picker aligned with price formatting.
  */
-export function getCurrencyMeta(code: CurrencyCode, locale?: string): CurrencyMeta {
+export function getCurrencyMeta(code: CurrencyCode): CurrencyMeta {
   const c = typeof code === 'string' && code.trim() ? code.trim().toUpperCase() : 'EUR'
-  let symbol = getCurrencySymbol(c, locale)
+  let symbol = getCurrencySymbol(c)
   if (!symbol || symbol === c) {
     const fb = resolveCurrencyDisplaySymbol(c, undefined)
     if (fb) symbol = fb

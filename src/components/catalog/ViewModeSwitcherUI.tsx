@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { useTranslations } from "next-intl";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import { useCatalogViewOptional } from "@/contexts/CatalogViewContext";

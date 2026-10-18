@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "@/components/shared/Link";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { CONTAINER } from "@/components/shared/layout";
 import { cn } from "@/lib/utils";
 
@@ -109,27 +109,34 @@ export function GuidesLibrary({
 
   return (
     <div className={cn(CONTAINER, "pb-16 md:pb-24")}>
-      {/* Search and topics: the two ways to find a guide, side by side. */}
-      <div className="sticky top-[72px] z-20 -mx-5 border-b border-dark/10 bg-white/90 px-5 py-4 backdrop-blur dark:border-white/10 dark:bg-dark/90 2xl:mx-0 2xl:px-0">
-        <label className="relative block md:max-w-xl">
-          <span className="sr-only">{labels.searchLabel}</span>
-          <Icon
-            icon="ph:magnifying-glass"
-            width={20}
-            height={20}
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-dark/45 dark:text-white/45"
-            aria-hidden
-          />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={labels.searchPlaceholder}
-            className="h-12 w-full rounded-full border border-dark/15 bg-white pl-12 pr-4 text-[16px] text-dark outline-none transition-colors placeholder:text-dark/40 focus:border-primary dark:border-white/20 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
-          />
-        </label>
+      {/* Search and topics: the two ways to find a guide, side by side.
+          From a tablet up both stay pinned under the header. On a phone the
+          pair took 137px, and with the header a third of the screen (visual
+          audit 2026-10-18 M6): there only the search follows the reader
+          (`contents` lets it stick within the whole library) and the topic
+          chips scroll away with the page. */}
+      <div className="contents md:sticky md:top-[72px] md:z-20 md:-mx-5 md:block md:border-b md:border-dark/10 md:bg-white/90 md:px-5 md:py-4 md:backdrop-blur md:dark:border-white/10 md:dark:bg-dark/90 2xl:mx-0 2xl:px-0">
+        <div className="sticky top-[72px] z-20 -mx-5 bg-white/90 px-5 pb-3 pt-4 backdrop-blur dark:bg-dark/90 md:static md:z-auto md:mx-0 md:bg-transparent md:p-0 md:backdrop-blur-none md:dark:bg-transparent">
+          <label className="relative block md:max-w-xl">
+            <span className="sr-only">{labels.searchLabel}</span>
+            <Icon
+              icon="ph:magnifying-glass"
+              width={20}
+              height={20}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-dark/45 dark:text-white/45"
+              aria-hidden
+            />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={labels.searchPlaceholder}
+              className="h-12 w-full rounded-full border border-dark/15 bg-white pl-12 pr-4 text-[16px] text-dark outline-none transition-colors placeholder:text-dark/40 focus:border-primary dark:border-white/20 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+            />
+          </label>
+        </div>
         <div
-          className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-2 overflow-x-auto pb-1 md:mt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="group"
           aria-label={labels.searchLabel}
         >
@@ -151,6 +158,7 @@ export function GuidesLibrary({
             </button>
           ))}
         </div>
+        <div className="-mx-5 mt-3 border-b border-dark/10 dark:border-white/10 md:hidden" aria-hidden />
       </div>
 
       {q ? (
@@ -250,7 +258,7 @@ export function GuidesLibrary({
               {hidden > 0 ? (
                 <button
                   type="button"
-                  className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-semibold text-primary hover:underline dark:text-[#5fd3a9]"
+                  className="tap-zone relative mt-6 inline-flex items-center gap-1.5 text-[15px] font-semibold text-primary hover:underline dark:text-[#5fd3a9]"
                   onClick={() => {
                     setTopic(t.key);
                     requestAnimationFrame(() => document.getElementById(t.key)?.scrollIntoView({ block: "start" }));

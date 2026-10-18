@@ -28,7 +28,9 @@ export async function GET() {
     "/sitemap-blog.xml",
     "/sitemap-landings.xml",
     "/sitemap-districts.xml",
-    "/sitemap-knowledge.xml",
+    // `/sitemap-knowledge.xml` returns to the index the day `/knowledge`
+    // publishes its first document: until then it is an empty urlset that
+    // advertises a section with nothing in it (audit 2026-10-18).
   ];
   const xml = buildSitemapIndexXml(paths.map((p) => `${base}${p}`));
   return new NextResponse(xml, {

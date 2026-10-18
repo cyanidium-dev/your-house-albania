@@ -197,7 +197,7 @@ export function HeroSearchWidget({
         <div className={cn("min-w-0", compact && "hidden sm:block")}>
           <div className="flex items-center justify-between text-xs text-dark/70 dark:text-white/80 mb-1 min-w-0">
             <span className="truncate">{tFilters("priceRange")}</span>
-            <span className="font-medium text-dark dark:text-white text-[11px] shrink-0">
+            <span className="font-medium text-dark dark:text-white text-xs shrink-0">
               {priceDisplay}
             </span>
           </div>

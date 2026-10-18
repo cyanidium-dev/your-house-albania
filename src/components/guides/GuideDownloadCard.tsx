@@ -47,7 +47,7 @@ export async function GuideDownloadCard({
     >
       <div className={variant === 'compact' ? '' : 'grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:items-center'}>
         <div>
-          <p className="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white">
+          <p className="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
             {t('badge')}
           </p>
           <h2 id={headingId} className={headingClassName ?? 'mt-2 text-lg md:text-xl font-semibold text-dark dark:text-white'}>

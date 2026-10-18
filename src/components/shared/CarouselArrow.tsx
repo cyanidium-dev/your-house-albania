@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { cn } from '@/lib/utils'
 
 /**
@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
  */
 export function carouselArrowClass(className?: string) {
   return cn(
-    'inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full',
+    'tap-zone relative inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full',
     'border border-dark/10 bg-white/70 text-dark shadow-sm backdrop-blur-md',
     'transition-colors duration-200 ease-out hover:bg-white',
     'dark:border-white/10 dark:bg-dark/60 dark:text-white dark:hover:bg-dark',

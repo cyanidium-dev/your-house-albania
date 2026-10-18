@@ -1,4 +1,5 @@
 import { indexableRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { preconnect, preload } from "react-dom";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "../globals.css";
@@ -7,7 +8,7 @@ import NextTopLoader from "nextjs-toploader";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { pickClientMessages } from "@/lib/i18n/clientMessages";
-import { IconSprite } from "@/components/shared/IconSprite";
+import { SPRITE_URL } from "@/lib/icons/spriteViewBoxes";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -128,6 +129,12 @@ export function generateStaticParams() {
  * `/editor` keeps its own root layout, which is what makes two roots possible.
  */
 export default async function LocaleLayout({ children, params }: Props) {
+  // Every photo on the site comes from the Sanity CDN; opening the connection
+  // with the document saves the LCP image a DNS + TLS round trip on phones.
+  preconnect("https://cdn.sanity.io", { crossOrigin: "anonymous" });
+  // The icon sprite every page's <use> elements point at (see SpriteIcon):
+  // fetched with the document rather than when the first icon is laid out.
+  preload(SPRITE_URL, { as: "image", type: "image/svg+xml" });
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -200,7 +207,6 @@ export default async function LocaleLayout({ children, params }: Props) {
         {/* Holds Chromium's install event for the engagement-gated invitation;
             see lib/pwa/earlyCapture. Must run before the event can fire. */}
         <script dangerouslySetInnerHTML={{ __html: PWA_EARLY_CAPTURE_SCRIPT }} />
-        <IconSprite />
         {analyticsEnabled && (
           <>
             {/* Consent Mode v2 + Clarity bootstrap: default denied, then
@@ -217,28 +223,32 @@ export default async function LocaleLayout({ children, params }: Props) {
               />
             </noscript>
             {/* End Google Tag Manager (noscript) */}
-            {/* Google Tag Manager */}
-            {/* lazyOnload: GTM + gtag are 280 KB and 130 KB of it never runs
-                (Lighthouse 27.09); with consent denied by default GA4 sees
-                ~4% of sessions anyway. Clarity below stays afterInteractive:
-                it is the KPI source and records before consent. */}
-            <Script id="gtm-base" strategy="lazyOnload">
-              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`}
+            {/* Google Tag Manager + Microsoft Clarity, one loader.
+                Both wait for the visitor's first move (pointer, scroll, key,
+                touch) or 5 s after the page has loaded, whichever comes
+                first. GTM + gtag are 300 KB and Clarity 30 KB; executed
+                during the load they cost 0.3–0.8 s of main thread on a phone
+                and most of the TBT behind Lighthouse mobile 44–53 (18.10).
+                A session is still recorded: the Clarity queue (`clarity("…")`
+                calls from the consent bootstrap and the tracker) replays once
+                the tag arrives, and nobody buys a flat in the first five
+                seconds. The dataLayer is created up front so pushes before
+                GTM arrives are kept. */}
+            <Script id="third-parties" strategy="afterInteractive">
+              {`(function(w,d){
+w.dataLayer=w.dataLayer||[];
+var done=false,ev=['pointerdown','pointermove','wheel','scroll','keydown','touchstart'];
+function load(){if(done)return;done=true;ev.forEach(function(e){w.removeEventListener(e,load)});
+w.dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+var f=d.getElementsByTagName('script')[0];
+var g=d.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';f.parentNode.insertBefore(g,f);
+w.clarity=w.clarity||function(){(w.clarity.q=w.clarity.q||[]).push(arguments)};
+var c=d.createElement('script');c.async=true;c.src='https://www.clarity.ms/tag/${CLARITY_ID}';f.parentNode.insertBefore(c,f);}
+ev.forEach(function(e){w.addEventListener(e,load,{passive:true,once:true})});
+function arm(){setTimeout(load,5000)}
+if(d.readyState==='complete')arm();else w.addEventListener('load',arm,{once:true});
+})(window,document);`}
             </Script>
-            {/* End Google Tag Manager */}
-            {/* Microsoft Clarity */}
-            <Script id="ms-clarity" strategy="afterInteractive">
-              {`(function(c,l,a,r,i,t,y){
-c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-})(window, document, "clarity", "script", "${CLARITY_ID}");`}
-            </Script>
-            {/* End Microsoft Clarity */}
           </>
         )}
         <SiteJsonLd

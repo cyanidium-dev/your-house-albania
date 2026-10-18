@@ -1,4 +1,4 @@
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import type { MarketingBenefitItem, MarketingHighlightCard } from "./types";
 
 export function LightBulletList({

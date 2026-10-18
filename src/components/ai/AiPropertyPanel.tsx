@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'

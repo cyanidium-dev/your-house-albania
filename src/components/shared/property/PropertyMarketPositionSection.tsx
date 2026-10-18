@@ -91,7 +91,7 @@ export async function PropertyMarketPositionSection({
         )}
       </div>
       {href && (
-        <Link href={href} className="mt-3 inline-block text-sm text-primary hover:underline">
+        <Link href={href} className="tap-zone relative mt-3 inline-block text-sm text-primary hover:underline">
           {t('viewDistrict')}
         </Link>
       )}

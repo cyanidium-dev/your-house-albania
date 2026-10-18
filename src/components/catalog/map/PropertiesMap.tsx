@@ -556,8 +556,8 @@ export function PropertiesMap({
     containerRef.current.style.overflow = 'hidden'
 
     const initialCenter = validPoints[0]
-      ? ({ lng: validPoints[0].lng, lat: validPoints[0].lat } as any)
-      : ({ lng: 19.8, lat: 41.3 } as any) // fallback: Albania-ish
+      ? { lng: validPoints[0].lng, lat: validPoints[0].lat }
+      : { lng: 19.8, lat: 41.3 } // fallback: Albania-ish
 
     const map = new maplibregl.Map({
       container: containerRef.current,
@@ -742,7 +742,7 @@ export function PropertiesMap({
     if (!ready || !mapRef.current) return
     const src = mapRef.current.getSource('properties') as maplibregl.GeoJSONSource | undefined
     if (!src) return
-    src.setData(geojson as any)
+    src.setData(geojson)
     scheduleMapResize()
 
     if (process.env.NODE_ENV === 'development') {
@@ -1019,7 +1019,7 @@ export function PropertiesMap({
       zoom: ALBANIA_SCOPE.zoom,
       duration: 450,
     })
-  }, [ready, validPoints, activeSlug, selectedScope])
+  }, [ready, validPoints, activeSlug, selectedScope, selectedCitySlug, selectedDistrictSlug])
 
   // Manage feature-state selection highlight.
   React.useEffect(() => {

@@ -4,7 +4,6 @@ import * as React from "react";
 import type { ViewMode } from "@/lib/catalog/viewMode";
 import {
   parseViewMode,
-  DEFAULT_VIEW_MODE,
   VIEW_MODE_STORAGE_KEY,
   isValidViewMode,
 } from "@/lib/catalog/viewMode";

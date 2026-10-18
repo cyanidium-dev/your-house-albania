@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { cn } from "@/lib/utils";
 
 /**

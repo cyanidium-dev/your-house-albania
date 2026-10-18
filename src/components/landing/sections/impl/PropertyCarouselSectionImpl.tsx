@@ -54,16 +54,18 @@ const Properties: React.FC<{
       new: Array.isArray(g.new) ? g.new.length : null,
       highDemand: Array.isArray(g.highDemand) ? g.highDemand.length : null,
     })
+    const firstPopular = (groups as { popular?: Array<{ slug?: string; name?: string; images?: unknown[] }> } | undefined)
+      ?.popular?.[0]
     console.log('[Landing][PropertiesSection] computed', {
       locale,
       hasTopOffersGroupsProp: !!topOffersGroups,
       propertyItemsCount: Array.isArray(propertyItems) ? propertyItems.length : null,
       groupsCounts: safeCounts(groups),
-      sample: (groups as any)?.popular?.[0]
+      sample: firstPopular
         ? {
-            slug: (groups as any).popular[0].slug,
-            name: (groups as any).popular[0].name,
-            imagesCount: Array.isArray((groups as any).popular[0].images) ? (groups as any).popular[0].images.length : undefined,
+            slug: firstPopular.slug,
+            name: firstPopular.name,
+            imagesCount: Array.isArray(firstPopular.images) ? firstPopular.images.length : undefined,
           }
         : null,
     })

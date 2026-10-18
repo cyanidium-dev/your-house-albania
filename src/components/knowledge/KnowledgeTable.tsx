@@ -1,4 +1,4 @@
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { cn } from '@/lib/utils'
 import type { KnowledgeFact, KnowledgeTable as KnowledgeTableData } from '@/lib/sanity/queries/knowledge'
 

@@ -1,6 +1,6 @@
 import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { blogListingProjection } from './blog';
-import { PUBLISHED_PROPERTY_FILTER, PUBLIC_DEAL_STATUS_FILTER } from '../groq/propertyFilters';
+import { PUBLISHED_PROPERTY_FILTER, PUBLISHED_PROPERTY_DETAIL_FILTER, PUBLIC_DEAL_STATUS_FILTER } from '../groq/propertyFilters';
 import type { CatalogProperty } from '@/types/catalog';
 import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl';
 
@@ -36,7 +36,8 @@ export async function fetchPropertyDuplicateTarget(
 export async function fetchPropertyBySlug(slug: string): Promise<unknown | null> {
   const client = getClient();
   if (!client) return null;
-  const query = `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && ${PUBLISHED_PROPERTY_FILTER}][0] {
+  // The detail filter also admits a sold listing: its page stays up and says so.
+  const query = `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && ${PUBLISHED_PROPERTY_DETAIL_FILTER}][0] {
     _id,
     _type,
     title,

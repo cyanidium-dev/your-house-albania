@@ -122,11 +122,6 @@
         }
       }
     },
-    "properties": {
-      "badge": "Prona",
-      "title": "Zbuloni shtëpi me dizajn frymëzues.",
-      "description": "Shtëpi të përzgjedhura ku bashkohen eleganca, stili dhe rehatia."
-    },
     "topOffers": {
       "title": "Ofertat më të mira",
       "description": "Prona të njohura, të reja dhe me kërkesë të lartë në një vend.",
@@ -140,19 +135,6 @@
       "next": "Më pas",
       "seeAllCount": "Shiko të gjitha njoftimet ({count, number})"
     },
-    "featured": {
-      "badge": "Pronë e zgjedhur",
-      "title": "Villë moderne luksoze",
-      "address": "20 S Aurora Ave, Miami",
-      "description": "Jetë luksoze në villë moderne, 20 S Aurora Ave, Miami. $1,650,500, 560 sq ft, 4 dhoma gjumi, 3 banjo, hapësira të mëdha. Efikasitet energjetik, dritë natyrore, siguri, hapësira të jashtme, 2 zona bar — ideal për 8+ mysafirë. E ndërtuar 2025.",
-      "bedrooms": "4 dhoma gjumi",
-      "bathrooms": "3 banjo",
-      "parkingSpace": "Parkim",
-      "barAreas": "2 zona bar",
-      "getInTouch": "Na kontaktoni",
-      "price": "$1,650,500",
-      "discountedPrice": "Çmim me zbritje"
-    },
     "faq": {
       "badge": "Pyetje",
       "title": "Gjithçka rreth shtëpive Domlivo",
@@ -161,12 +143,6 @@
       "q2": "2. Ku mund të gjej shtëpi Domlivo?",
       "q3": "3. Cilat janë hapat për blerje?",
       "answer": "Zgjedhje e gjerë objektesh premium: nga apartamentet luksoze deri te vilat të mëdha."
-    },
-    "contact": {
-      "title": "Hyni në një mbretëri ku dizajni ekzotik dhe luksi i përjetshëm takohen.",
-      "getInTouch": "Na kontaktoni",
-      "marquee1": "VLERËSIM FALAS TË PRONËS — SHITNI ME BESIM!",
-      "marquee2": "MILIONA OBJEKTE NË VENDRIME PREMIUM ME ÇMIME TË MËDHA!"
     },
     "blog": {
       "badge": "Blog",
@@ -219,6 +195,14 @@
       "stackNext": "Prona tjetër"
     },
     "propertyDetail": {
+      "sold": "E shitur",
+      "archived": "Nuk është më në shitje",
+      "reserved": "E rezervuar",
+      "rented": "E dhënë me qira",
+      "soldLeadTitle": "Kjo pronë është shitur. Do të gjejmë një të ngjashme",
+      "unavailableLeadTitle": "Kjo pronë nuk është më e disponueshme. Do të gjejmë një të ngjashme",
+      "soldLeadBody": "Lini numrin tuaj dhe na tregoni çfarë kërkoni — do t'ju dërgojmë prona të ngjashme me çmime aktuale.",
+      "soldFindSimilar": "Gjej një të ngjashme",
       "propertyDetails": "Detajet e pronës",
       "checkAllAmenities": "Shiko të gjitha pajisjet",
       "whatThisPropertyOffers": "Çfarë ofron kjo pronë",
@@ -338,6 +322,7 @@
     "guides": "Udhëzues",
     "districts": "Rrethet",
     "catalog": "Pronat",
+    "saleCatalog": "Prona në shitje",
     "agents": "Agjentët",
     "propertyTypes": "Llojet e pronave",
     "contacts": "Kontakte",
@@ -1089,8 +1074,8 @@
       "body2": "Fjala “i decentralizuar” ka këtu një kuptim konkret. Katalogu nuk i përket një agjencie të vetme: në të publikojnë pronarët dhe shumë agjenci partnere, çdo njoftim tregon kush e ka publikuar dhe blerësi flet drejtpërdrejt me të.",
       "uspTitle": "Çfarë ka sot në faqe",
       "usp": {
-        "item1": "Kërkim me IA: përshkruani shtëpinë me fjalët tuaja; asistenti kërkon në njoftime dhe përgjigjet nga baza e njohurive, duke cituar burimet.",
-        "item2": "Bazë njohurish dhe udhëzues ku çdo shifër ka burim dhe datë.",
+        "item1": "Kërkim me IA: përshkruani shtëpinë me fjalët tuaja; asistenti kërkon në njoftime dhe përgjigjet nga kërkimet e Domlivo, duke cituar burimet.",
+        "item2": "Udhëzues ku çdo shifër ka burim dhe datë.",
         "item3": "Çmimet e kërkuara sipas lagjeve në faqet e qyteteve, të rillogaritura çdo orë nga njoftimet aktive.",
         "item4": "Blloku “Sa kushton blerja dhe mbajtja” në faqet e njoftimeve.",
         "item5": "Shtatë gjuhë dhe ndërrim i monedhës.",

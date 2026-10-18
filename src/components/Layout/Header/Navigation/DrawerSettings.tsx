@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { getCurrencyMeta } from '@/lib/currency/registry'
 import { cn } from '@/lib/utils'
@@ -24,7 +24,7 @@ const LOCALE_NAMES: Record<string, string> = {
 
 const fieldLabel = 'mb-1.5 block text-[12px] font-medium text-dark/55 dark:text-white/55'
 const selectShell =
-  'relative flex h-12 items-center rounded-xl bg-dark/[0.05] text-[15px] font-medium transition-colors focus-within:ring-2 focus-within:ring-primary/50 hover:bg-dark/[0.08] dark:bg-white/[0.07] dark:hover:bg-white/[0.1]'
+  'relative flex h-12 items-center rounded-xl bg-dark/[0.05] text-base font-medium transition-colors focus-within:ring-2 focus-within:ring-primary/50 hover:bg-dark/[0.08] dark:bg-white/[0.07] dark:hover:bg-white/[0.1]'
 const selectEl =
   'h-full w-full min-w-0 cursor-pointer appearance-none truncate rounded-xl bg-transparent pl-3 pr-8 text-dark outline-none dark:text-white [&>option]:text-dark'
 
@@ -85,7 +85,7 @@ export default function DrawerSettings() {
         <span className={selectShell}>
           <select className={selectEl} value={currency} onChange={(e) => onCurrency(e.target.value)}>
             {currencies.map((code) => {
-              const meta = getCurrencyMeta(code, locale)
+              const meta = getCurrencyMeta(code)
               return (
                 <option key={code} value={code}>
                   {meta.symbol !== meta.code ? `${meta.symbol} ${meta.code}` : meta.code}

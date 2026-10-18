@@ -37,7 +37,9 @@ describe("availabilityFor", () => {
     expect(availabilityFor("reserved")).toBe("https://schema.org/LimitedAvailability");
     expect(availabilityFor("active")).toBe("https://schema.org/InStock");
     expect(availabilityFor("draft")).toBe("https://schema.org/InStock");
-    expect(availabilityFor("archived")).toBe("https://schema.org/InStock");
+    // An archived listing keeps its page (withdrawn by the partner import), so
+    // the offer says so instead of claiming stock.
+    expect(availabilityFor("archived")).toBe("https://schema.org/Discontinued");
   });
 
   it("defaults to InStock when unset", () => {
@@ -298,6 +300,7 @@ describe("buildPropertyJsonLd: place and language (audit 2026-09-20)", () => {
     locale: "de",
   };
   const graphOf = (json: object) => (json as { "@graph": Record<string, unknown>[] })["@graph"];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const node = (json: object, type: string) => graphOf(json).find((n) => n["@type"] === type) as Record<string, any>;
 
   it("splits the address into city and district when both names are known", () => {

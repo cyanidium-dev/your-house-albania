@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "@/components/shared/Link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { TEAM_MEMBERS, teamMemberId, type TeamMemberLink } from "@/lib/about/team";
 import {
   BUSINESS_TELEGRAM_URL,
