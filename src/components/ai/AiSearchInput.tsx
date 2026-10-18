@@ -31,19 +31,45 @@ export default function AiSearchInput({ locale }: { locale: string }) {
   }, [t])
 
   const reduceMotion = useRef(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  // The examples that fit the field whole. On a 390px phone the field is
+  // ~240px wide and the longest example was cut mid-phrase ("I want an
+  // apartment by the sea", audit 2026-10-18 M5); a phrase that does not fit
+  // is skipped there and shown on wider screens only.
+  const [fitting, setFitting] = useState<string[] | null>(null)
+
+  useEffect(() => {
+    const el = inputRef.current
+    if (!el || examples.length === 0) return
+    const ctx = document.createElement('canvas').getContext('2d')
+    if (!ctx) return
+    const measure = () => {
+      const style = getComputedStyle(el, '::placeholder')
+      ctx.font = style.font || getComputedStyle(el).font
+      const room = el.clientWidth - 2
+      setFitting(examples.filter((e) => ctx.measureText(e).width <= room))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    document.fonts?.ready.then(measure)
+    return () => ro.disconnect()
+  }, [examples])
+
+  const shown = fitting ?? examples
 
   useEffect(() => {
     reduceMotion.current =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceMotion.current || examples.length < 2) return
+    if (reduceMotion.current || shown.length < 2) return
     const id = window.setInterval(() => {
-      setExampleIndex((i) => (i + 1) % examples.length)
+      setExampleIndex((i) => (i + 1) % shown.length)
     }, ROTATE_MS)
     return () => window.clearInterval(id)
-  }, [examples.length])
+  }, [shown.length])
 
-  const placeholder = examples[exampleIndex] ?? t('inputFallbackPlaceholder')
+  const placeholder = shown[exampleIndex % Math.max(shown.length, 1)] ?? t('inputFallbackPlaceholder')
 
   function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -76,6 +102,7 @@ export default function AiSearchInput({ locale }: { locale: string }) {
           aria-hidden
         />
         <input
+          ref={inputRef}
           id="ai-search-hero"
           type="text"
           value={value}
@@ -85,7 +112,9 @@ export default function AiSearchInput({ locale }: { locale: string }) {
           autoComplete="off"
           enterKeyHint="search"
           className={cn(
-            'min-w-0 flex-1 bg-transparent py-2 text-base outline-none',
+            // The typed text stays 16px (smaller zooms iOS Safari on focus);
+            // only the example placeholder is 14px on a phone.
+            'min-w-0 flex-1 bg-transparent py-2 text-base outline-none placeholder:text-sm sm:placeholder:text-base',
             'text-dark dark:text-white placeholder:text-dark/50 dark:placeholder:text-white/50',
             'placeholder:transition-opacity placeholder:duration-300',
           )}
@@ -99,7 +128,7 @@ export default function AiSearchInput({ locale }: { locale: string }) {
           <Icon icon="ph:arrow-right" width={18} height={18} aria-hidden />
         </button>
       </div>
-      <p className="mt-2 pl-4 text-xs text-white/80 dark:text-white/70 sm:pl-5">{t('heroHint')}</p>
+      <p className="mt-2 pl-4 text-xs text-white/90 dark:text-white/80 sm:pl-5">{t('heroHint')}</p>
     </form>
   )
 }

@@ -139,10 +139,13 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
         {/* Scrim. A photo can be any brightness, so the text needs its own
             ground rather than relying on the image being dark enough:
             a flat wash for the whole frame, then a stronger gradient where
-            the copy sits — vertical on mobile, from the left on desktop. */}
+            the copy sits — vertical on mobile, from the left on desktop. On a
+            phone the copy runs to the bottom of the hero (the assistant hint,
+            the button), so the gradient does not fade out there: over bright
+            roofs the hint read at 2.3:1 (audit 2026-10-18 M4). */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-dark/45" aria-hidden />
         <div
-          className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-dark/80 via-dark/30 to-transparent md:bg-gradient-to-r md:from-dark/85 md:via-dark/45 md:to-transparent"
+          className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-dark/80 via-dark/50 to-dark/45 md:bg-gradient-to-r md:from-dark/85 md:via-dark/45 md:to-transparent"
           aria-hidden
         />
         <div
@@ -245,9 +248,12 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
               </div>
             ) : null}
             {isHome && primaryCta ? (
+              // The one call to action on the phone's first screen: the same
+              // green button as on desktop, not a 20px text link (audit
+              // 2026-10-18 M5).
               <Link
                 href={primaryCta.href}
-                className="order-5 mt-3 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-white underline-offset-4 hover:underline md:hidden"
+                className={brandButtonClass('primary', 'order-5 mt-4 self-start md:hidden', 'md')}
               >
                 {primaryCta.label}
                 <span aria-hidden>→</span>
