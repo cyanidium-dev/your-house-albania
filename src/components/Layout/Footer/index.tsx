@@ -68,8 +68,10 @@ function CreditsDivider() {
  */
 const CODESITE_URL = "https://www.code-site.art";
 
+// `font-display`: the column labels were h3s and took the heading face from
+// globals.css; they are labels now, and keep the face.
 const colHeadingClass =
-  "mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
+  "font-display mb-2.5 text-base font-semibold uppercase tracking-wide text-white/90 md:mb-3.5 md:text-sm";
 // inline-block + vertical padding: the links were 20px tall on phones, half
 // the 44px a thumb needs (visual audit 18.10); the padding, not the gap,
 // carries the hit area so the column reads the same.
@@ -190,7 +192,7 @@ export default function Footer({
             className={`grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:grid-cols-4 md:gap-5 lg:gap-4 ${lgColsClass} xl:gap-4 2xl:gap-5`}
           >
             <nav aria-label={t("columns.property")}>
-              <h3 className={colHeadingClass}>{t("columns.property")}</h3>
+              <p className={colHeadingClass}>{t("columns.property")}</p>
               <ul className="flex flex-col gap-2 md:gap-2.5">
                 {FOOTER_PROPERTY_HEAD.map((item) => (
                   <li key={item.key}>
@@ -231,7 +233,7 @@ export default function Footer({
             </nav>
 
             <nav aria-label={t("columns.useful")}>
-              <h3 className={colHeadingClass}>{t("columns.useful")}</h3>
+              <p className={colHeadingClass}>{t("columns.useful")}</p>
               <ul className="flex flex-col gap-2 md:gap-2.5">
                 {guideLinks.map((link) => (
                   <li key={link._key ?? link.href}>
@@ -251,7 +253,7 @@ export default function Footer({
             </nav>
 
             <nav aria-label={t("columns.company")}>
-              <h3 className={colHeadingClass}>{t("columns.company")}</h3>
+              <p className={colHeadingClass}>{t("columns.company")}</p>
               <ul className="flex flex-col gap-2 md:gap-2.5">
                 {FOOTER_COMPANY_ITEMS.map((item) => (
                   <li key={item.key}>
@@ -271,7 +273,7 @@ export default function Footer({
               click_telegram, placement `footer`), which was the objection.
             */}
             <div>
-              <h3 className={colHeadingClass}>{t("columns.contacts")}</h3>
+              <p className={colHeadingClass}>{t("columns.contacts")}</p>
               <Link
                 href={`/${locale}/contacts`}
                 className={`inline-flex items-center gap-2 ${colLinkClass}`}
@@ -311,7 +313,7 @@ export default function Footer({
 
             {showAppColumn ? (
               <div>
-                <h3 className={colHeadingClass}>{t("columns.app")}</h3>
+                <p className={colHeadingClass}>{t("columns.app")}</p>
                 <ul className="flex flex-col gap-2 md:gap-2.5">
                   {siteSettings?.footerApp.iosUrl ? (
                     <li>
