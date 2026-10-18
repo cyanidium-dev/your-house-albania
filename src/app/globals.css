@@ -8,6 +8,9 @@
   /* Brand green, darkened from #07be8a so white text on it passes WCAG AA
      (4.6:1 on white and on black). Keep any new hardcoded copy in sync. */
   --color-primary: #078660;
+  /* The brand green for text on a green tint (#f4faf7): primary reads 4.33:1
+     there, this one 5:1 (visual audit 2026-10-18 L2). Light theme only. */
+  --color-primary-ink: #067a56;
   --color-skyblue: #79adff;
   --color-lightskyblue: #9cc2dd;
   --color-dark: #172023;

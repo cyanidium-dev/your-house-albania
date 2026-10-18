@@ -11,7 +11,7 @@ export const chipClass =
 // tap-zone: the chip is 38px tall; its hit area is 44px (audit 2026-10-18 M2).
 export const chipLinkClass = `tap-zone relative ${chipClass} hover:border-primary hover:text-primary transition-colors`;
 export const countClass = "text-dark/50 dark:text-white/50 tabular-nums";
-export const textLinkClass = "text-primary font-medium underline-offset-4 hover:underline";
+export const textLinkClass = "text-primary-ink dark:text-primary font-medium underline-offset-4 hover:underline";
 export const subheadClass = "text-sm font-semibold text-dark/70 dark:text-white/70";
 export const noteClass = "text-xs text-dark/50 dark:text-white/50";
 
