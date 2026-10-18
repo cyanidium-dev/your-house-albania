@@ -11,6 +11,7 @@ import {
   type MetricKey,
 } from '@/lib/zoneMetrics/metrics'
 import type { ZoneMetricsDoc } from '@/lib/sanity/queries/zoneMetrics'
+import { methodologyPath } from '@/lib/priceIndex/publish'
 
 const loc = (value: string) => ({ en: value, uk: value, ru: value, sq: value, it: value })
 
@@ -117,6 +118,8 @@ export function ZonePriceTableAutoSection({
         rows: tableRows,
         confidenceEnabled: true,
         sourceNote: period ? loc(period) : undefined,
+        // The methodology page says how these research figures differ from the index.
+        methodologyHref: methodologyPath(locale),
       }}
       aside={showSources && sources.length > 0 ? <SourcesList items={sources} locale={locale} /> : undefined}
     />

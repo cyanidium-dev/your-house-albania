@@ -4,7 +4,8 @@ import { CityLandingBreadcrumb } from "@/components/shared/CityLandingBreadcrumb
 import { CityDistrictsHubLink } from "@/components/city/CityDistrictsHubLink";
 import { CityPriceAnswer } from "@/components/city/CityPriceAnswer";
 import { asSections } from "@/components/landing/sectionRenderers/helpers";
-import { fetchCityLandingByCitySlug } from "@/lib/sanity/client";
+import { fetchCityLandingByCitySlug, fetchPriceIndexSnapshot } from "@/lib/sanity/client";
+import { interpolatePriceIndexTokens } from "@/lib/priceIndex/tokens";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { formatBreadcrumbSlug } from "@/lib/routes/breadcrumbs";
 
@@ -18,8 +19,14 @@ type Props = {
  * Used by `/[locale]/[country]/[city]/info` (canonical) and legacy redirects.
  */
 export async function CityLandingPageBody({ locale, citySlug }: Props) {
-  const landing = await fetchCityLandingByCitySlug(citySlug);
-  if (!landing) notFound();
+  const [cmsLanding, snapshot] = await Promise.all([
+    fetchCityLandingByCitySlug(citySlug),
+    fetchPriceIndexSnapshot(),
+  ]);
+  if (!cmsLanding) notFound();
+  // `{{median:durres}}` and friends in the copy become the live index figures,
+  // so a sentence or an FAQ answer quotes the number the table shows.
+  const landing = interpolatePriceIndexTokens(cmsLanding, snapshot, locale);
 
   const sections = asSections(landing as never);
   const hasDedicatedHero = sections[0]?._type === "heroSection";

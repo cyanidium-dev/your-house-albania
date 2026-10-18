@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { getTranslations } from 'next-intl/server'
+import Link from '@/components/shared/Link'
 import { MarketMoney } from '@/components/shared/property/MarketMoney'
+import { fetchPriceIndexRows } from '@/lib/sanity/client'
+import { methodologyPath } from '@/lib/priceIndex/publish'
+import { MIN_HEADLINE_SAMPLE } from '@/lib/priceIndex/snapshot'
+import { formatBlogDate } from '@/lib/date/formatLocale'
 import type { CostLineKey, DistrictPriceRank, OwnershipCosts } from '@/lib/property/ownershipCosts'
 
 /** Within this many percent of the median, "at the median" says it better than a number. */
@@ -26,6 +31,7 @@ export async function PropertyOwnershipCostsSection({
   costs,
   rank,
   districtName,
+  priceIndexSample = false,
   area,
   rateEur,
 }: {
@@ -33,12 +39,19 @@ export async function PropertyOwnershipCostsSection({
   costs: OwnershipCosts | null
   rank: DistrictPriceRank | null
   districtName?: string | null
+  /**
+   * The median is the Domlivo Price Index district figure (flats and studios):
+   * the line then carries the index date and a link to the methodology.
+   */
+  priceIndexSample?: boolean
   area?: number | null
   /** The per-m² rate, when the listing is priced that way. */
   rateEur?: number | null
 }) {
   if (!costs && !rank) return null
   const t = await getTranslations('PropertyOwnershipCosts')
+  const tIndex = await getTranslations('PriceIndex')
+  const indexRead = rank && priceIndexSample ? await fetchPriceIndexRows() : null
 
   const diff = rank ? Math.round(rank.diffPct) : 0
   const verdict = rank
@@ -67,8 +80,23 @@ export async function PropertyOwnershipCostsSection({
           {t.rich(districtName ? 'districtMedian' : 'districtMedianNoName', {
             district: districtName ?? '',
             count: rank.count,
-            amount: () => <MarketMoney min={rank.medianPerSqm} step={10} locale={locale} />,
+            // Step 1: the same euro as the district's row in the city table.
+            amount: () => <MarketMoney min={rank.medianPerSqm} step={1} locale={locale} />,
           })}
+          {indexRead ? (
+            <>
+              {' '}
+              {rank.reliable ? null : <>{tIndex('districtLowSample', { min: MIN_HEADLINE_SAMPLE })} </>}
+              {tIndex.rich('districtSource', {
+                date: formatBlogDate(new Date(indexRead.computedAt), locale),
+                method: (chunks) => (
+                  <Link href={methodologyPath(locale)} className="underline underline-offset-2 hover:text-primary">
+                    {chunks}
+                  </Link>
+                ),
+              })}
+            </>
+          ) : null}
         </p>
       )}
 

@@ -1,11 +1,13 @@
 import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
-import { fetchCityCountrySlugByCitySlug, fetchCityPriceBands } from '@/lib/sanity/client'
+import { fetchPriceIndexSnapshot } from '@/lib/sanity/client'
 import { catalogFilterPath } from '@/lib/routes/catalog'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
-import type { FlatPriceBand } from '@/lib/catalog/listingPriceSummary'
+import { CONTAINER } from '@/components/shared/layout'
+import { findIndexCity, type PriceIndexFigures } from '@/lib/priceIndex/snapshot'
+import { methodologyPath } from '@/lib/priceIndex/publish'
 
-/** A band of two flats is an anecdote. */
+/** A band of two flats is an anecdote: below this a row is left out altogether. */
 const MIN_BAND_FLATS = 5
 const MAX_DISTRICTS = 4
 
@@ -18,58 +20,64 @@ type Props = {
 /**
  * The first thing under the city page's headline: what a square metre asks
  * here, as a 20–80% band and a median, for the whole city, for new builds
- * against completed stock, and for the largest districts. Computed from the
- * live sale listings every hour, so the page carries a current, quotable
- * answer to "real prices in {city} {year}" before any table.
+ * against completed stock, and for the largest districts. The Domlivo Price
+ * Index snapshot (`lib/priceIndex`), dated, with a link to the methodology,
+ * so the page carries the one quotable figure for the city before any table.
  *
- * Renders nothing for a city with too few priced flats: a band of three
- * listings would mislead more than it informs.
+ * A row under the index's headline sample (30 flats) states its size instead
+ * of a band ("too little data: 11 flats"); districts that small are left to
+ * the table further down. Renders nothing for a city with too few priced
+ * flats to say anything at all.
  */
 export async function CityPriceAnswer({ locale, citySlug, cityLabel }: Props) {
-  const [bands, country, t] = await Promise.all([
-    fetchCityPriceBands(citySlug),
-    fetchCityCountrySlugByCitySlug(citySlug),
+  const [snapshot, t, tIndex] = await Promise.all([
+    fetchPriceIndexSnapshot(),
     getTranslations({ locale, namespace: 'ZoneMetrics.priceAnswer' }),
+    getTranslations({ locale, namespace: 'PriceIndex' }),
   ])
-  if (!bands || !country || bands.city.pricedCount < MIN_BAND_FLATS * 2) return null
+  const city = findIndexCity(snapshot, citySlug)
+  if (!snapshot || !city || city.count < MIN_BAND_FLATS * 2) return null
+  const country = city.country
 
   const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 })
-  const range = (b: FlatPriceBand) =>
-    b.p20 !== null && b.p80 !== null ? t('range', { from: number.format(b.p20), to: number.format(b.p80) }) : null
-  const line = (b: FlatPriceBand) => {
-    const r = range(b)
-    if (!r || b.median === null) return null
-    return { range: r, median: t('median', { value: number.format(b.median) }), flats: t('flats', { count: b.pricedCount }) }
+  const line = (b: PriceIndexFigures) => {
+    if (!b.reliable) return { lowSample: tIndex('lowSample', { count: b.count }) }
+    if (b.p20 === null || b.p80 === null || b.median === null) return null
+    return {
+      range: t('range', { from: number.format(b.p20), to: number.format(b.p80) }),
+      median: t('median', { value: number.format(b.median) }),
+      flats: t('flats', { count: b.count }),
+    }
   }
 
-  const rows: Array<{ key: string; label: string; href?: string; band: FlatPriceBand }> = [
-    { key: 'city', label: t('wholeCity', { city: cityLabel }), band: bands.city },
-    { key: 'completed', label: t('completed'), band: bands.completed },
-    { key: 'newBuild', label: t('newBuild'), band: bands.newBuild },
-    ...bands.districts
-      .filter((d) => d.pricedCount >= MIN_BAND_FLATS)
+  const rows: Array<{ key: string; label: string; href?: string; band: PriceIndexFigures }> = [
+    { key: 'city', label: t('wholeCity', { city: cityLabel }), band: city },
+    { key: 'completed', label: t('completed'), band: city.completed },
+    { key: 'newBuild', label: t('newBuild'), band: city.newBuild },
+    ...city.districts
+      .filter((d) => d.reliable)
       .slice(0, MAX_DISTRICTS)
       .map((d) => ({
-        key: d.districtSlug,
-        label: resolveLocalizedString(d.districtTitle as never, locale) || d.districtSlug,
-        href: catalogFilterPath({ locale, city: citySlug, district: d.districtSlug, country, trustedCityCountrySlug: country }),
-        band: d,
+        key: d.slug,
+        label: resolveLocalizedString(d.title as never, locale) || d.slug,
+        href: catalogFilterPath({ locale, city: citySlug, district: d.slug, country, trustedCityCountrySlug: country }),
+        band: d as PriceIndexFigures,
       })),
-  ].filter((r) => r.band.pricedCount >= MIN_BAND_FLATS)
+  ].filter((r) => r.band.count >= MIN_BAND_FLATS)
 
-  const asOf = new Date()
+  const asOf = new Date(snapshot.computedAt)
   const month = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(asOf)
   const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(asOf)
 
   return (
     <section className="pt-10 md:pt-14" aria-labelledby="city-price-answer-heading">
-      <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+      <div className={CONTAINER}>
         <div className="rounded-2xl border border-dark/10 bg-dark/[0.03] p-6 dark:border-white/10 dark:bg-white/[0.04] md:p-8">
           <h2 id="city-price-answer-heading" className="font-display text-2xl font-semibold text-dark dark:text-white md:text-3xl">
             {t('title', { city: cityLabel, month })}
           </h2>
           <p className="mt-2 max-w-3xl text-base text-dark/70 dark:text-white/70">
-            {t('intro', { count: bands.city.pricedCount, date })}
+            {t('intro', { count: city.count, date })}
           </p>
           <dl className="mt-5 grid gap-x-8 gap-y-3 md:grid-cols-2">
             {rows.map((r) => {
@@ -87,16 +95,27 @@ export async function CityPriceAnswer({ locale, citySlug, cityLabel }: Props) {
                     )}
                   </dt>
                   <dd className="text-right text-base text-dark dark:text-white">
-                    <span className="font-semibold tabular-nums">{l.range}</span>
-                    <span className="ml-2 text-sm text-dark/60 dark:text-white/60">
-                      {l.median} · {l.flats}
-                    </span>
+                    {'lowSample' in l ? (
+                      <span className="text-sm text-dark/60 dark:text-white/60">{l.lowSample}</span>
+                    ) : (
+                      <>
+                        <span className="font-semibold tabular-nums">{l.range}</span>
+                        <span className="ml-2 text-sm text-dark/60 dark:text-white/60">
+                          {l.median} · {l.flats}
+                        </span>
+                      </>
+                    )}
                   </dd>
                 </div>
               )
             })}
           </dl>
-          <p className="mt-4 text-sm text-dark/55 dark:text-white/55">{t('note')}</p>
+          <p className="mt-4 text-sm text-dark/55 dark:text-white/55">
+            {t('note')}{' '}
+            <Link href={methodologyPath(locale)} className="underline underline-offset-2 hover:text-primary">
+              {tIndex('methodologyLink')}
+            </Link>
+          </p>
         </div>
       </div>
     </section>

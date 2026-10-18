@@ -42,6 +42,17 @@ type PriceTableSectionShape = {
   sourceNote?: unknown
   lastUpdated?: string
   cta?: { href?: string; label?: unknown }
+  /**
+   * `<caption>`: what the table is, its date and its basis, so a table lifted
+   * out of the page on its own still says what it measures. Visually hidden:
+   * the heading above already says it to a reader. Built from the title, the
+   * source note and the date when absent.
+   */
+  caption?: string
+  /** A line under the table, e.g. what a marked cell means. */
+  footnote?: string
+  /** Locale-prefixed path of the methodology page, linked beside the source note. */
+  methodologyHref?: string
 }
 
 function parseDate(raw: string | undefined): Date | null {
@@ -127,6 +138,7 @@ export function PriceTableSection({
   aside?: React.ReactNode
 }) {
   const t = useTranslations('Landing')
+  const tIndex = useTranslations('PriceIndex')
   if (section.enabled === false) return null
 
   const columns = (Array.isArray(section.columns) ? section.columns : [])
@@ -146,6 +158,13 @@ export function PriceTableSection({
   const ctaLabel = resolveLocalizedString(section.cta?.label as never, locale) || ''
   const ctaHref = section.cta?.href?.trim() || ''
   const showCta = Boolean(ctaLabel && ctaHref)
+
+  const confidenceShort = (level: ConfidenceLevel) =>
+    level === 'high'
+      ? tIndex('confidenceHigh')
+      : level === 'medium'
+        ? tIndex('confidenceMedium')
+        : tIndex('confidenceLow')
 
   const confidenceLabel = (level: ConfidenceLevel) =>
     level === 'high'
@@ -186,6 +205,13 @@ export function PriceTableSection({
     ? (['high', 'medium', 'low'] as const).filter((l) => resolvedRows.some((r) => r.confidence === l))
     : []
 
+  const caption =
+    section.caption ||
+    [title || labelHeader, sourceNote, lastUpdated ? t('updatedAt', { date: formatBlogDate(lastUpdated, locale) }) : '']
+      .filter(Boolean)
+      .join(' · ')
+  const methodologyHref = section.methodologyHref?.trim() || ''
+
   const cellPad = 'px-4 sm:px-5 py-3.5'
   const headCell = `${cellPad} text-dark dark:text-white font-semibold text-sm sm:text-base border-b border-dark/10 dark:border-white/15`
   const bodyCell = `${cellPad} border-t border-dark/5 dark:border-white/10`
@@ -195,6 +221,7 @@ export function PriceTableSection({
       {/* Desktop: table */}
       <div className="hidden md:block overflow-x-auto rounded-2xl border border-dark/10 dark:border-white/15">
         <table className="w-full border-collapse text-left">
+          {caption ? <caption className="sr-only">{caption}</caption> : null}
           <thead className="bg-dark/[0.04] dark:bg-white/5">
             <tr>
               <th className={headCell}>{labelHeader}</th>
@@ -205,7 +232,14 @@ export function PriceTableSection({
               ))}
               {showBars ? (
                 <th className={`${cellPad} w-[42%] border-b border-dark/10 dark:border-white/15 align-bottom`}>
-                  <div className="flex justify-between text-xs font-normal tabular-nums text-dark/45 dark:text-white/45">
+                  {/* The scale ends alone extract as two unlabelled numbers. */}
+                  <span className="sr-only">
+                    {tIndex('rangeColumn', { from: formatNumber(scale!.lo, locale), to: formatNumber(scale!.hi, locale) })}
+                  </span>
+                  <div
+                    aria-hidden
+                    className="flex justify-between text-xs font-normal tabular-nums text-dark/45 dark:text-white/45"
+                  >
                     <span>{formatNumber(scale!.lo, locale)}</span>
                     <span>{formatNumber(scale!.hi, locale)}</span>
                   </div>
@@ -258,9 +292,13 @@ export function PriceTableSection({
                   </td>
                 ) : null}
                 {showConfidence ? (
-                  <td className={`${bodyCell} text-center`}>
+                  <td className={`${bodyCell} whitespace-nowrap`}>
                     {row.confidence ? (
-                      <ConfidenceDot level={row.confidence} label={confidenceLabel(row.confidence)} />
+                      // Text beside the dot: an icon-only cell reads as empty to anything that extracts text.
+                      <span className="inline-flex items-center gap-1.5 text-xs text-dark/60 dark:text-white/60">
+                        <ConfidenceDot level={row.confidence} label={confidenceLabel(row.confidence)} />
+                        {confidenceShort(row.confidence)}
+                      </span>
                     ) : null}
                   </td>
                 ) : null}
@@ -284,7 +322,10 @@ export function PriceTableSection({
               <div className="flex items-center justify-between gap-2">
                 <span className="font-semibold text-dark dark:text-white">{row.label}</span>
                 {showConfidence && row.confidence ? (
-                  <ConfidenceDot level={row.confidence} label={confidenceLabel(row.confidence)} />
+                  <span className="inline-flex items-center gap-1.5 text-xs text-dark/60 dark:text-white/60">
+                    <ConfidenceDot level={row.confidence} label={confidenceLabel(row.confidence)} />
+                    {confidenceShort(row.confidence)}
+                  </span>
                 ) : null}
               </div>
               <dl className="mt-3 flex flex-col gap-1.5">
@@ -312,13 +353,25 @@ export function PriceTableSection({
         })}
       </div>
 
-      {sourceNote || lastUpdated || levelsShown.length > 0 ? (
+      {section.footnote ? (
+        <p className="mt-4 text-xs text-dark/50 dark:text-white/50">{section.footnote}</p>
+      ) : null}
+
+      {sourceNote || lastUpdated || methodologyHref || levelsShown.length > 0 ? (
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-dark/50 dark:text-white/50">
-          {sourceNote || lastUpdated ? (
+          {sourceNote || lastUpdated || methodologyHref ? (
             <p>
               {sourceNote}
               {sourceNote && lastUpdated ? ' · ' : ''}
               {lastUpdated ? t('updatedAt', { date: formatBlogDate(lastUpdated, locale) }) : ''}
+              {methodologyHref ? (
+                <>
+                  {sourceNote || lastUpdated ? ' · ' : ''}
+                  <Link href={methodologyHref} className="underline underline-offset-2 hover:text-primary">
+                    {tIndex('methodologyLink')}
+                  </Link>
+                </>
+              ) : null}
             </p>
           ) : null}
           {levelsShown.length > 0 ? (
