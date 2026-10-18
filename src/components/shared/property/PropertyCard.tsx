@@ -182,7 +182,7 @@ function PropertyCard({
               'inline-flex items-center rounded-full font-medium shrink-0',
               isList && 'h-7 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
               isLarge && 'h-8 text-xs px-3 border border-primary/80 text-primary bg-primary/5 leading-none',
-              isSmall && !isList && 'bg-primary text-white text-[11px] px-2 shadow-sm h-5 leading-5 max-w-[7.25rem] min-w-0 overflow-hidden'
+              isSmall && !isList && 'bg-primary text-white text-xs px-2 shadow-sm h-5 leading-5 max-w-[7.25rem] min-w-0 overflow-hidden'
             )}
           >
             {isSmall && !isList ? (
@@ -204,7 +204,7 @@ function PropertyCard({
           {marketPosition && (
             <span
               className={cn(
-                'shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none',
+                'shrink-0 rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none',
                 MARKET_POSITION_BADGE_CLASS[marketPosition.label]
               )}
               title={tMarketPosition('disclaimer')}

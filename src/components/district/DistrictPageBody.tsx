@@ -144,7 +144,7 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 {img.label ? (
-                  <span className="absolute bottom-3 left-3 inline-flex items-center rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white/90">
+                  <span className="absolute bottom-3 left-3 inline-flex items-center rounded-full bg-dark/65 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-white/90">
                     {img.label}
                   </span>
                 ) : null}

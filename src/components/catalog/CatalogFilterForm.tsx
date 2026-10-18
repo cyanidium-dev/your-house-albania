@@ -36,7 +36,7 @@ function RangeField({
     <div className="min-w-0">
       <div className="mb-1 flex min-w-0 items-center justify-between gap-2 text-xs text-dark/70 dark:text-white/80">
         <span className="min-w-0 truncate font-medium">{label}</span>
-        <span className="min-w-0 truncate text-right text-[11px] font-medium text-dark dark:text-white">
+        <span className="min-w-0 truncate text-right text-xs font-medium text-dark dark:text-white">
           {valueDisplay}
         </span>
       </div>

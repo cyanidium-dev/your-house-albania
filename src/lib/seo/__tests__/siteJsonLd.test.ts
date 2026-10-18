@@ -58,6 +58,19 @@ describe("buildSiteJsonLd", () => {
     expect(en[1].url).toBe(sq[1].url);
   });
 
+  // `/` redirects by language; x-default is `/en` (audit 2026-10-18, S-08).
+  it("points both nodes at the canonical home page, not at the redirecting root", () => {
+    const [org, site] = graph(BASE);
+    expect(org.url).toBe("https://www.domlivo.com/en");
+    expect(site.url).toBe("https://www.domlivo.com/en");
+  });
+
+  // The target was a noindex catalog with no `q` filter (S-01).
+  it("carries no SearchAction", () => {
+    const [, site] = graph({ ...BASE, searchUrlTemplate: "/en/catalog?q={search_term_string}" });
+    expect(site).not.toHaveProperty("potentialAction");
+  });
+
   it("states who founded it, where it works and which languages it speaks", () => {
     const org = buildOrganizationNode(BASE);
     expect(org.areaServed).toEqual({ "@type": "Country", name: "Albania" });

@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { CalcSectionShell } from './calculators/CalcSectionShell'
-import { MortgageCalcClient } from './calculators/MortgageCalcClient'
+import dynamic from 'next/dynamic'
+
+// Loaded only on landings that carry the calculator: imported statically, its
+// code rode along with every landing's chunk, the home page included.
+const MortgageCalcClient = dynamic(() => import('./calculators/MortgageCalcClient').then((m) => m.MortgageCalcClient))
 
 type MortgageCalcSectionShape = {
   enabled?: boolean

@@ -88,7 +88,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                   padding on top of the gutter and sat 7 to 27px off the grid
                   (QA 2026-10-11). */}
               <div className={`${CONTAINER} h-full min-w-0 pt-[max(0.5rem,env(safe-area-inset-top))] md:pt-0`}>
-                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 px-2 md:py-2 md:px-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark bg-white/90 dark:bg-white/10 backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
+                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 px-2 md:py-2 md:px-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark bg-white/[0.97] dark:bg-dark/[0.97] backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
                     {/* The logo never shrinks: the row's spare width goes to
                         the nav (lg+) and, below that, stays empty. `max-w-[45%]`
@@ -97,7 +97,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                         squeezed group, not the row, and the logo went to 31px. */}
                     <div className="flex min-w-0 flex-1 items-center gap-4 xl:gap-6">
                       <div className="min-w-0 shrink">
-                        <Link href={`/${locale}`} className="h-8 md:h-auto flex items-center max-w-full min-w-0">
+                        <Link href={`/${locale}`} className="tap-zone relative h-8 md:h-auto flex items-center max-w-full min-w-0">
                           {siteSettings?.logoUrl ? (
                             <>
                               <Image
@@ -105,6 +105,9 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                                 alt={siteSettings?.siteName || 'logo'}
                                 width={150}
                                 height={68}
+                                // Above the fold on every page: lazy-loading it only
+                                // painted the brand late (Lighthouse 18.10).
+                                loading="eager"
                                 className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
                               />
                             </>

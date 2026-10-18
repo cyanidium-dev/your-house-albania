@@ -5,6 +5,12 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Not `experimental.inlineCss`: tried 18.10 to drop the render-blocking
+  // stylesheet request, but Next puts the inlined 160 KB of CSS into the RSC
+  // payload as well, so the document grew from 470 to 820 KB and mobile TBT
+  // doubled.
+  // `X-Powered-By: Next.js` tells every visitor the stack and nothing else.
+  poweredByHeader: false,
   images: {
     // Sanity serves the original bytes unless asked otherwise, so the loader in
     // src/lib/images/loader.ts appends the CDN's own resize/format parameters
@@ -32,6 +38,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // The icon sprite's file name is a hash of its content (see
+        // scripts/build-icon-sprite.mjs), so it can be cached for good.
+        source: "/icons/sprite.:hash.svg",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         source: "/:path*",
         headers: [
           // Vercel sets `max-age` alone; `includeSubDomains` closes the door
@@ -52,6 +64,14 @@ const nextConfig: NextConfig = {
   // host moves; per-deployment preview URLs keep working.
   async redirects() {
     return [
+      // The contact page is `/contacts`. `/contact` (what people and the audit
+      // of 2026-10-18 type) was a 404, `/contactus` a temporary redirect from
+      // its page. `/contact/thank-you` is a real page and is not matched.
+      {
+        source: "/:locale(en|uk|ru|sq|it|pl|de)/:path(contact|contactus)",
+        destination: "/:locale/contacts",
+        statusCode: 301,
+      },
       {
         // /api/ stays put: Vercel Cron calls the production URL and does not
         // follow redirects.

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { cn } from "@/lib/utils";
 import type { CatalogFilters } from "@/components/catalog/useCatalogFilters";
 

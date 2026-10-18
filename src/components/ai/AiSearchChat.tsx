@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import Link from "@/components/shared/Link";
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'

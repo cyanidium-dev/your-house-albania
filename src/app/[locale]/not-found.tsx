@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "@/components/shared/Link";
 import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { catalogPath } from "@/lib/routes/catalog";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 
@@ -15,6 +16,16 @@ import { brandButtonClass } from "@/components/shared/BrandButton";
  * boundary sits inside the locale layout, so the chrome and the language come
  * back, and it offers somewhere to go.
  */
+/**
+ * Next.js writes its own `<meta name="robots" content="noindex">` on every 404.
+ * The layout's default robots (`index, follow, …`) used to ship beside it, so a
+ * 404 carried two contradicting tags (audit 2026-10-18, T L-8). `null` drops
+ * the inherited one and leaves Next's noindex alone.
+ */
+export const metadata: Metadata = {
+  robots: null,
+};
+
 export default async function LocaleNotFound() {
   const locale = await getLocale();
   const t = await getTranslations("NotFound");

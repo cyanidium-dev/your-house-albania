@@ -115,7 +115,7 @@ export async function ListingFacetNav({ locale, countrySlug, citySlug, placeLabe
                   <Link
                     key={chip.href}
                     href={chip.href}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3 py-1 text-sm font-medium text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
+                    className="tap-zone relative inline-flex items-center gap-1.5 rounded-full border border-dark/10 dark:border-white/20 px-3 py-1 text-sm font-medium text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
                   >
                     {chip.label}
                     <span className="text-dark/50 dark:text-white/50 tabular-nums">{chip.count}</span>

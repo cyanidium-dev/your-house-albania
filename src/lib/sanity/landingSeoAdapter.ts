@@ -54,6 +54,11 @@ export type LandingMetadataItemContext = {
   alternateLocales?: readonly string[]
   /** `landingPage.contentUpdatedAt` (date string) → `article:modified_time`. */
   contentUpdatedAt?: string
+  /**
+   * `og:type`. Landings are articles; the home page is the site itself
+   * (`website`, audit 2026-10-18, T L-9).
+   */
+  ogType?: 'website' | 'article'
 }
 
 function resolveModifiedTimeIso(raw: string | undefined): string | undefined {
@@ -142,6 +147,8 @@ export function buildLandingMetadata(
   const titleField: Metadata['title'] = title ? { absolute: withBrand(title) } : title
   const keywords = resolveKeywords(landingSeo?.keywords, locale)
   const modifiedTimeIso = resolveModifiedTimeIso(itemContext?.contentUpdatedAt)
+  // `article:modified_time` belongs to `og:type=article` only.
+  const ogTypeIsArticle = (itemContext?.ogType ?? 'article') === 'article'
 
   if (!isIndexingEnabled()) {
     return buildMetadata({
@@ -152,9 +159,9 @@ export function buildLandingMetadata(
       ogDescription: description,
       ogImageUrl: ogImageAbsolute,
       twitterCard: ogImageAbsolute ? 'summary_large_image' : 'summary',
-      ogType: 'article',
+      ogType: itemContext?.ogType ?? 'article',
       robots: indexingDisabledRobots,
-      modifiedTimeIso,
+      modifiedTimeIso: ogTypeIsArticle ? modifiedTimeIso : undefined,
     })
   }
 
@@ -170,11 +177,11 @@ export function buildLandingMetadata(
     ogDescription: description,
     ogImageUrl: ogImageAbsolute,
     twitterCard: ogImageAbsolute ? 'summary_large_image' : 'summary',
-    ogType: 'article',
+    ogType: itemContext?.ogType ?? 'article',
     canonical,
     hreflangLanguages: hreflang?.languages,
     locale,
     robots: robotsFromFlags({ noIndex, noFollow }),
-    modifiedTimeIso,
+    modifiedTimeIso: ogTypeIsArticle ? modifiedTimeIso : undefined,
   })
 }

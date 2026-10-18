@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "@/components/shared/Link";
-import { Icon } from "@/components/shared/Icon";
+import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { getTranslations } from "next-intl/server";
 import { formatBlogDate } from "@/lib/date/formatLocale";
 
@@ -138,7 +138,7 @@ async function BlogCard({ blog, locale }: { blog: BlogCardInput; locale: string 
         <Link
           href={articleUrl}
           aria-label={t("ariaLabel")}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-dark dark:hover:text-white transition-colors w-fit"
+          className="tap-zone relative inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-dark dark:hover:text-white transition-colors w-fit"
         >
           {readMore}
           <Icon

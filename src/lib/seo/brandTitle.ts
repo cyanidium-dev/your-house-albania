@@ -37,3 +37,33 @@ export function withBrand(title: string): string {
   if (!clean || clean === BRAND) return BRAND;
   return clean.length > MAX_TITLE_LENGTH_WITH_BRAND ? clean : `${clean} — ${BRAND}`;
 }
+
+/**
+ * Longest catalog title shipped. Google cuts at about 600 px (~60 characters);
+ * the CMS titles of `/sale` ran 61–63 in four locales ("Property for Sale in
+ * Albania — Apartments, Houses & Beach Homes"), flagged as too long in the
+ * audit of 2026-10-18 (T L-9).
+ */
+export const MAX_LISTING_TITLE_LENGTH = 60;
+
+/** Separators a title is written in segments with, longest-first. */
+const TITLE_SEGMENT = /\s+[—–|]\s+/;
+
+/**
+ * A catalog title that fits the line: an over-long one loses whole trailing
+ * segments ("X — Y — Z" → "X — Y" → "X") until it fits. A title with no
+ * segment to drop, or whose first segment alone is too long, ships as written:
+ * cutting words mid-phrase would be worse than a truncated snippet.
+ */
+export function fitListingTitle(title: string): string {
+  const clean = stripBrandSuffix(title);
+  if (clean.length <= MAX_LISTING_TITLE_LENGTH) return clean;
+  const parts = clean.split(TITLE_SEGMENT);
+  const seps = clean.match(new RegExp(TITLE_SEGMENT.source, "g")) ?? [];
+  for (let keep = parts.length - 1; keep >= 1; keep--) {
+    let head = parts[0];
+    for (let i = 1; i < keep; i++) head += seps[i - 1] + parts[i];
+    if (head.length <= MAX_LISTING_TITLE_LENGTH) return head;
+  }
+  return clean;
+}

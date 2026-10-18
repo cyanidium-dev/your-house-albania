@@ -100,8 +100,17 @@ export function CatalogHero({
       {/* Same scrim recipe as the landing hero: a flat wash so the copy has a
           ground whatever the photo's brightness, then a fade into the page. */}
       <div className="pointer-events-none absolute inset-0 z-10 bg-dark/55" aria-hidden />
+      {/* The copy is start-aligned, so the left side gets more ground: bright
+          facades behind the breadcrumb and label read at 1.5:1 in places, and
+          the lead under 4.5:1 (audit 2026-10-18 M4). */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-white to-transparent dark:from-black"
+        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-dark/45 via-dark/25 to-transparent"
+        aria-hidden
+      />
+      {/* The fade into the page stays inside the bottom padding: taller, it
+          washed the lead and the footer link with white. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 bg-gradient-to-t from-white to-transparent md:h-16 dark:from-black"
         aria-hidden
       />
       <div className="container max-w-8xl mx-auto px-5 2xl:px-0 relative z-20 text-white [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">

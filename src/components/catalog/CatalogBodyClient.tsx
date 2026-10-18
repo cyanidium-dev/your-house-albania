@@ -739,9 +739,12 @@ export function CatalogBodyClient({
       {/* Filters: sticky below fixed header (z-50); z-40 above property card overlays (z-30). Background lives on PropertySearchBar only — no second white shell. */}
       <div
         // Read by useCatalogFilterChrome: focus inside holds the form open.
+        // pointer-events-none: on desktop the bar keeps the form's height while
+        // it shows the pill (no shift, see CatalogFilterCollapse), and that empty
+        // band must not swallow clicks on the cards scrolling under it.
         data-catalog-filters
         className={cn(
-          "sticky z-40 min-w-0 [contain:layout]",
+          "pointer-events-none sticky z-40 min-w-0 [contain:layout]",
           "top-[calc(env(safe-area-inset-top,0px)+72px)] md:top-[84px]"
         )}
       >
@@ -769,7 +772,7 @@ export function CatalogBodyClient({
               </div>
             ) : null}
             <div className={gridClass}>
-              {composedItems.map((entry) => {
+              {composedItems.map((entry, index) => {
                 if (entry.kind === "banner") {
                   return (
                     <div key={entry.key} className="min-w-0 col-span-full">
@@ -782,7 +785,16 @@ export function CatalogBodyClient({
                 return (
                   <div
                     key={entry.key}
-                    className={cn("min-w-0", viewMode !== "list" && "h-full", isActive && "rounded-2xl ring-2 ring-primary/40")}
+                    className={cn(
+                      "min-w-0",
+                      viewMode !== "list" && "h-full",
+                      isActive && "rounded-2xl ring-2 ring-primary/40",
+                      // Cards past the first screen lay out when scrolled near
+                      // (24 cards × 60 elements each were most of the page's
+                      // style and layout time on a phone, 18.10). The size
+                      // hint keeps the scrollbar and the map's sync honest.
+                      index >= 4 && "[content-visibility:auto] [contain-intrinsic-size:auto_420px]",
+                    )}
                     ref={(el) => {
                       if (!item.slug) return;
                       cardRefs.current[item.slug] = el;

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { redirect } from 'next/navigation'
+import { permanentRedirect } from 'next/navigation'
 import { CatalogBodyClient } from '@/components/catalog/CatalogBodyClient'
 import { CatalogSeoText } from '@/components/catalog/CatalogSeoText'
 import { CatalogViewProvider } from '@/contexts/CatalogViewContext'
@@ -204,6 +204,8 @@ async function PropertiesListing({
   const currentPage = Math.min(Math.max(rawPage, 1), totalPages)
 
   // If requested page is out of range but there are items, redirect to valid page (avoids duplicate fetch).
+  // Permanent: `?page=999` is never going to be a page of its own, and a 307
+  // kept the address alive (audit 2026-10-18, T L-4). Page one is the bare URL.
   if (totalItems > 0 && currentPage !== rawPage) {
     const params = new URLSearchParams()
     for (const [k, v] of Object.entries(searchParams)) {
@@ -216,7 +218,8 @@ async function PropertiesListing({
         params.set(k, v)
       }
     }
-    params.set('page', String(currentPage))
+    if (currentPage > 1) params.set('page', String(currentPage))
+    else params.delete('page')
 
     const url = buildListingUrl({
       scope: agentSlugFilter ? 'agent' : 'catalog',
@@ -230,7 +233,7 @@ async function PropertiesListing({
       district: pathDistrict || undefined,
       query: params,
     })
-    redirect(url)
+    permanentRedirect(url)
   }
 
   const pageItemsBase: PropertyHomes[] = Array.isArray(filteredForDisplay)

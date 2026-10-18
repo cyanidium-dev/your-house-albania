@@ -1,6 +1,6 @@
 import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
-import { Icon } from '@/components/shared/Icon'
+import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { MessengerButtons } from '@/components/contact/MessengerButtons'
 import type { MessengerLink } from '@/lib/contacts/messengers'
 
