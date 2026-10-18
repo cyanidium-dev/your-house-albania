@@ -13,6 +13,9 @@ export const LEAD_TYPES = [
   'click_telegram',
   'click_phone',
   'click_email',
+  // The visitor pressed Start in the public Telegram bot (deep link from a
+  // listing or a messenger button) or wrote to it — the chat already exists.
+  'telegram_start',
 ] as const
 
 export type LeadType = (typeof LEAD_TYPES)[number]
@@ -50,6 +53,8 @@ export const LEAD_PLACEMENTS = [
   'register-page',
   'guide',
   'page',
+  // The public Telegram bot, reached without a site link (search, a forward).
+  'telegram-bot',
 ] as const
 
 export type LeadPlacement = (typeof LEAD_PLACEMENTS)[number]

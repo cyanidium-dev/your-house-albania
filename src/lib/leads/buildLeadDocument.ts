@@ -66,6 +66,11 @@ export type LeadDocument = {
   formLabel?: string
   /** Slug of the CMS landing whose form sent the lead (`placement: landing`). */
   landingSlug?: string
+  /** `telegram_start` leads: who pressed Start. Nothing else about them is kept. */
+  telegramUserId?: string
+  telegramUsername?: string
+  /** `language_code` the Telegram app reported. */
+  telegramLanguage?: string
 }
 
 export type LeadInput = {
@@ -88,6 +93,8 @@ export type LeadInput = {
    * and converted on a landing must keep both facts.
    */
   landingSlug?: string
+  /** `telegram_start` only: the Telegram account (id, @username) and its app language. */
+  telegram?: { userId: string; username?: string; language?: string }
   now: Date
 }
 
@@ -186,6 +193,9 @@ export function buildLeadDocument(input: LeadInput): LeadDocument {
     interest: interest && Object.keys(interest).length > 0 ? interest : undefined,
     formLabel: input.formLabel,
     landingSlug: input.landingSlug,
+    telegramUserId: input.telegram?.userId,
+    telegramUsername: input.telegram?.username,
+    telegramLanguage: input.telegram?.language,
   })
 }
 

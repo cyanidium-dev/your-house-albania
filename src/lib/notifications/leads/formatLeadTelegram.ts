@@ -43,6 +43,12 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
   'register-page': 'страница регистрации',
   guide: 'карточка PDF-гида',
   page: 'ссылка на странице',
+  'telegram-bot': 'бот Telegram (без ссылки с сайта)',
+}
+
+/** Russian label of a placement; unknown values (a payload from an old page) as they are. */
+export function placementLabel(placement: string): string {
+  return (PLACEMENT_LABEL as Record<string, string>)[placement] ?? placement
 }
 
 const CLICK_HEADLINE: Record<ClickLeadType, string> = {
