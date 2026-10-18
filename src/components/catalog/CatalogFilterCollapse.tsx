@@ -19,10 +19,10 @@ const GLASS =
  * fade on top of it. Because the blurred layer keeps opacity 1 throughout, the
  * blur is stable instead of snapping in.
  *
- * No-jump rule: while scrolled (`compact`) the wrapper reserves only the PILL
- * height, and the glass + form grow as an OVERLAY on top of the results. Revealing
- * / re-collapsing mid-page therefore never shifts the results below. The single
- * height change (and content move) is the initial condense at the very top.
+ * No-jump rule: the wrapper keeps the FORM height in the page flow in both
+ * states, so condensing to the pill and re-opening never move the results
+ * (desktop CLS 0.10-0.13 on scroll, audit 2026-10-18 M1). The space under the
+ * pill is transparent and lets clicks through to the cards scrolling beneath.
  *
  * A two-pass mount keeps SSR / first paint in normal flow (form sizes the wrapper,
  * glass fills it) before switching to the measured absolute overlay.
@@ -32,6 +32,7 @@ export function CatalogFilterCollapse({
   form,
   pill,
   align = "center",
+  reserve = "form",
 }: {
   /** Page scrolled past the condense threshold. Accepted for API compatibility. */
   compact: boolean;
@@ -41,6 +42,10 @@ export function CatalogFilterCollapse({
   pill: React.ReactNode;
   /** `start`: the pill lines up with the listing heading (pages that open collapsed). */
   align?: "center" | "start";
+  /** `form`: the flow keeps the form height in both states (no shift on
+   *  scroll). `visible`: it follows the panel shown, for a page that opens on
+   *  the pill, where a form-sized gap under it would sit empty at the top. */
+  reserve?: "form" | "visible";
 }) {
   const formRef = React.useRef<HTMLDivElement>(null);
   const pillRef = React.useRef<HTMLDivElement>(null);
@@ -79,11 +84,11 @@ export function CatalogFilterCollapse({
   // The visible panel height tracks the *content* shown (pill when collapsed,
   // else the full form).
   const glassH = collapsed ? pillH : formH;
-  // Reserve EXACTLY the visible panel height in normal flow, so the catalog grid
-  // always starts below the sticky bar. Previously only the pill height was
-  // reserved while scrolled, so re-expanding the form (scroll up) overlaid the
-  // cards. The wrapper's transition-[height] animates this recalculation.
-  const reserveH = glassH;
+  // In-flow height. Following the visible panel (pill when scrolled) moved the
+  // results up by ~45 px every time the form condensed; reserving the form
+  // instead keeps the grid where it is, and the form re-opening on scroll-up
+  // still never overlays the cards.
+  const reserveH = reserve === "form" ? formH : glassH;
 
   // Smooth, slightly long ease so the morph feels premium rather than snappy.
   const ease = "duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
@@ -110,7 +115,13 @@ export function CatalogFilterCollapse({
       // Height and its transition only once the form is measured: mounted with
       // formH still 0, the wrapper collapsed to 0 and grew back over 450 ms —
       // the results jumped 192 px (desktop CLS 0.07-0.13, QA 2026-10-11).
-      className={cn("relative", mounted && formH > 0 && `transition-[height] ${ease}`)}
+      // pointer-events-none: the reserved area under the pill is empty and must
+      // not catch clicks meant for the cards under it; the form and the pill
+      // turn them back on for themselves.
+      className={cn(
+        "pointer-events-none relative",
+        mounted && formH > 0 && `transition-[height] ${ease}`
+      )}
       style={mounted && formH > 0 ? { height: reserveH } : undefined}
     >
       {/* Persistent glass surface — animates height only (constant radius), never fades. */}
@@ -138,7 +149,7 @@ export function CatalogFilterCollapse({
             : collapsed
               ? "hidden"
               : "relative",
-          mounted && collapsed ? "pointer-events-none opacity-0" : "opacity-100"
+          mounted && collapsed ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100"
         )}
       >
         {form}
@@ -150,9 +161,9 @@ export function CatalogFilterCollapse({
         aria-hidden={mounted ? !collapsed : true}
         className={cn(
           "z-10",
-          !mounted && (collapsed ? "relative" : "hidden"),
+          !mounted && (collapsed ? "pointer-events-auto relative" : "hidden"),
           mounted && `absolute inset-x-0 top-0 transition-opacity ${ease}`,
-          mounted && (collapsed ? "opacity-100" : "pointer-events-none opacity-0"),
+          mounted && (collapsed ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"),
           collapsed && collapsedPanel
         )}
       >

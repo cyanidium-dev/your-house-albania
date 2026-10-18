@@ -40,7 +40,7 @@ export function PropertyCardMeta({
   const metaItemClass = cn(
     'flex flex-col font-normal text-black dark:text-white',
     isList && 'gap-0.5 text-xs',
-    isSmall && !isList && 'gap-0.5 text-[11px]',
+    isSmall && !isList && 'gap-0.5 text-xs',
     // A step down from lg, where large cards sit two to a row beside the map
     // or four to a row without it, about 320 px wide: "2 Bedrooms" and
     // "Plot: not specified" were cut to "2 Bedr…" at 16 px.

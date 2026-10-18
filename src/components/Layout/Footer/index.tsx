@@ -77,7 +77,7 @@ const colLinkClass =
   "inline-block py-2 text-[17px] leading-snug text-white/55 transition-colors hover:text-white md:py-0.5 md:text-base md:leading-normal";
 const colBodyClass = "text-[17px] text-white/45 md:text-sm";
 const creditsLinkClass =
-  "min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline";
+  "tap-zone relative min-w-0 whitespace-nowrap text-white/50 underline-offset-[3px] transition-colors hover:text-primary hover:underline";
 
 /**
  * Four groups, not a site map: Property (the hub, the cities, the hub of
@@ -389,7 +389,7 @@ export default function Footer({
                 href={CODESITE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium uppercase tracking-wide text-white/60 transition-colors hover:text-primary"
+                className="tap-zone relative inline-flex items-center gap-1.5 whitespace-nowrap font-medium uppercase tracking-wide text-white/60 transition-colors hover:text-primary"
               >
                 CODE-SITE.ART
                 <CodeSiteTagIcon className="mb-0.5 shrink-0" />

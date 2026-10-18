@@ -69,7 +69,7 @@ export function CatalogSortSelect({ initialSort }: { initialSort?: string }) {
         aria-expanded={open}
         aria-label={t("sortBy")}
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex h-10 min-w-0 cursor-pointer items-center gap-2 rounded-full border border-dark/15 pl-3 pr-3 text-base font-medium text-dark transition-colors hover:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 dark:border-white/20 dark:text-white md:h-9 md:text-sm"
+        className="inline-flex h-11 min-w-0 cursor-pointer items-center gap-2 rounded-full border border-dark/15 pl-3 pr-3 text-base font-medium text-dark transition-colors hover:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 dark:border-white/20 dark:text-white md:h-9 md:text-sm"
       >
         <Icon icon="ph:sort-ascending" width={16} height={16} className="shrink-0 text-dark/55 dark:text-white/60" aria-hidden />
         <span className="min-w-0 truncate">{t(LABEL_KEY[value])}</span>

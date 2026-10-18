@@ -739,9 +739,12 @@ export function CatalogBodyClient({
       {/* Filters: sticky below fixed header (z-50); z-40 above property card overlays (z-30). Background lives on PropertySearchBar only — no second white shell. */}
       <div
         // Read by useCatalogFilterChrome: focus inside holds the form open.
+        // pointer-events-none: on desktop the bar keeps the form's height while
+        // it shows the pill (no shift, see CatalogFilterCollapse), and that empty
+        // band must not swallow clicks on the cards scrolling under it.
         data-catalog-filters
         className={cn(
-          "sticky z-40 min-w-0 [contain:layout]",
+          "pointer-events-none sticky z-40 min-w-0 [contain:layout]",
           "top-[calc(env(safe-area-inset-top,0px)+72px)] md:top-[84px]"
         )}
       >

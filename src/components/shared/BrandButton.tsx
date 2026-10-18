@@ -41,7 +41,9 @@ const BASE =
   'inline-flex items-center justify-center gap-2 rounded-full font-semibold text-center leading-tight whitespace-normal transition-colors duration-200 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent disabled:opacity-50 disabled:pointer-events-none'
 
 export const BRAND_BUTTON_SIZES: Record<BrandButtonSize, string> = {
-  sm: 'min-h-9 px-4 py-1.5 text-sm',
+  // tap-zone: a 36px button keeps its look and gets a 44px hit area (visual
+  // audit 2026-10-18 M2); `relative` anchors it, a caller's `absolute` wins.
+  sm: 'tap-zone relative min-h-9 px-4 py-1.5 text-sm',
   md: 'min-h-11 px-6 py-2.5 text-base sm:px-8',
   lg: 'min-h-12 px-8 py-3 text-base',
 }
