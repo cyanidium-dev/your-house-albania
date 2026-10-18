@@ -266,6 +266,11 @@ export default async function Post({ params }: Props) {
                 {detail.authorName || "—"}
               </span>
             )}
+            {detail.reviewerName && (
+              <p className="text-sm text-dark/70 dark:text-white/70">
+                {tBlog("reviewedBy", { name: detail.reviewerName })}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3 sm:gap-7">

@@ -137,6 +137,8 @@ export default async function GuideLandingPage({ params }: Props) {
     publisherName: siteName,
     publisherUrl: baseUrl,
     locale,
+    authorSlug: landing.authorSlug ?? null,
+    reviewerSlug: landing.reviewerSlug ?? null,
   });
 
   // No visible date is added here on purpose: LandingRenderer already renders a

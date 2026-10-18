@@ -38,6 +38,8 @@ export function BlogArticleSchema({
         ? new Date(detail.updatedAt).toISOString()
         : undefined,
     authorSlug: detail.authorSlug,
+    reviewerName: detail.reviewerName,
+    reviewerSlug: detail.reviewerSlug,
     locale,
   });
 

@@ -280,7 +280,8 @@
       "relatedProperties": "Похожие объекты",
       "listingsTitle": "Объекты по теме",
       "listingsPlaceLink": "{place}: {count, plural, one {# объект в продаже} few {# объекта в продаже} many {# объектов в продаже} other {# объекта в продаже}}",
-      "listingsAllAlbania": "Вся недвижимость в продаже в Албании"
+      "listingsAllAlbania": "Вся недвижимость в продаже в Албании",
+      "reviewedBy": "Проверил: {name}"
     },
     "goBack": "Назад",
     "entityCard": {

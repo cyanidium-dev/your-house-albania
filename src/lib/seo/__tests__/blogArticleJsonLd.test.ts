@@ -87,3 +87,38 @@ describe("buildBlogArticleJsonLd", () => {
     expect(a.mainEntityOfPage).toEqual({ "@type": "WebPage", "@id": BASE.articleUrl });
   });
 });
+
+describe("buildBlogArticleJsonLd — founder bylines", () => {
+  // The same Person the layout and /about emit: one entity, not two.
+  it("gives a founder author the sitewide Person @id and profile links", () => {
+    const a = buildBlogArticleJsonLd({
+      ...BASE,
+      authorName: "Fedir Alpatov",
+      authorSlug: "fedir-alpatov",
+      locale: "de",
+    }) as Record<string, unknown>;
+    const author = a.author as Record<string, unknown>;
+    expect(author["@type"]).toBe("Person");
+    expect(author["@id"]).toBe("https://www.domlivo.com/#person-fedir-alpatov");
+    expect(author.url).toBe("https://www.domlivo.com/de/about");
+    expect(author.sameAs).toEqual(["https://www.code-site.art"]);
+  });
+
+  it("names the reviewer of a legal article as a contributor", () => {
+    const a = buildBlogArticleJsonLd({
+      ...BASE,
+      authorSlug: "fedir-alpatov",
+      reviewerName: "Viktor Grinchenko",
+      reviewerSlug: "viktor-grinchenko",
+      locale: "sq",
+    }) as Record<string, unknown>;
+    const c = a.contributor as Record<string, unknown>;
+    expect(c["@id"]).toBe("https://www.domlivo.com/#person-viktor-grinchenko");
+    expect(c.name).toBe("Viktor Grinchenko");
+  });
+
+  it("emits no contributor when nobody reviewed the text", () => {
+    const a = buildBlogArticleJsonLd(BASE) as Record<string, unknown>;
+    expect(a.contributor).toBeUndefined();
+  });
+});

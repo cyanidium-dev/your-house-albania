@@ -280,7 +280,8 @@
       "relatedProperties": "Immobili correlati",
       "listingsTitle": "Immobili collegati all'articolo",
       "listingsPlaceLink": "{place}: {count, plural, one {# immobile in vendita} other {# immobili in vendita}}",
-      "listingsAllAlbania": "Tutti gli immobili in vendita in Albania"
+      "listingsAllAlbania": "Tutti gli immobili in vendita in Albania",
+      "reviewedBy": "Verificato da {name}"
     },
     "goBack": "Indietro",
     "entityCard": {

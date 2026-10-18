@@ -529,6 +529,9 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
   /** `landingPage.locales` — the page exists only in these locales (empty = all). */
   locales?: string[];
   seo?: unknown;
+  /** Founder who signed / checked the page; drive the Article's Person nodes. */
+  authorSlug?: string | null;
+  reviewerSlug?: string | null;
 } | null> {
   const trimmed = typeof slug === 'string' ? slug.trim() : '';
   if (!trimmed) return null;
@@ -555,7 +558,9 @@ export async function fetchGuideLandingBySlug(slug: string): Promise<{
     topicTags,
     contentUpdatedAt,
     locales,
-    seo
+    seo,
+    "authorSlug": author->slug.current,
+    "reviewerSlug": reviewedBy->slug.current
   }`;
       try {
         return await client.fetch(query, { slug: trimmed });

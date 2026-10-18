@@ -280,7 +280,8 @@
       "relatedProperties": "Prona të ngjashme",
       "listingsTitle": "Prona që lidhen me artikullin",
       "listingsPlaceLink": "{place}: {count, plural, one {# pronë në shitje} other {# prona në shitje}}",
-      "listingsAllAlbania": "Të gjitha pronat në shitje në Shqipëri"
+      "listingsAllAlbania": "Të gjitha pronat në shitje në Shqipëri",
+      "reviewedBy": "Kontrolloi: {name}"
     },
     "goBack": "Kthehu",
     "entityCard": {

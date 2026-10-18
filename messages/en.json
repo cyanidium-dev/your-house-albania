@@ -280,7 +280,8 @@
       "relatedProperties": "Related properties",
       "listingsTitle": "Properties on this topic",
       "listingsPlaceLink": "{place}: {count, plural, one {# property for sale} other {# properties for sale}}",
-      "listingsAllAlbania": "All property for sale in Albania"
+      "listingsAllAlbania": "All property for sale in Albania",
+      "reviewedBy": "Checked by {name}"
     },
     "goBack": "Go Back",
     "entityCard": {

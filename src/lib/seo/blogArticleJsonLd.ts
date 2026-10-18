@@ -4,6 +4,7 @@
  */
 import { organizationId } from "./siteJsonLd";
 import { isEditorialTeamAuthor } from "./editorialAuthor";
+import { teamPersonNode } from "./teamPerson";
 
 export type BlogArticleJsonLdInput = {
   headline: string;
@@ -22,6 +23,9 @@ export type BlogArticleJsonLdInput = {
    *  which have no page to point at. */
   authorSlug?: string | null;
   locale?: string;
+  /** A founder who checked the text (legal articles). Emitted as `contributor`. */
+  reviewerName?: string | null;
+  reviewerSlug?: string | null;
 };
 
 function isAbsoluteUrl(url: string): boolean {
@@ -49,6 +53,8 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
     dateModified,
     authorSlug,
     locale,
+    reviewerName,
+    reviewerSlug,
   } = input;
 
   const baseUrl = publisherUrl.replace(/\/$/, "");
@@ -60,17 +66,22 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
   // as Person claimed an individual who does not exist; it is a department of
   // the organisation, and the people behind it are named on /about.
   const isTeamByline = isEditorialTeamAuthor({ name: authorName, slug: authorSlug });
-  const author: Record<string, unknown> = {
+  // A founder byline is the same Person the layout and /about describe: same
+  // `@id`, so a parser joins the article to the person, their role and links.
+  const founder = authorSlug ? teamPersonNode(baseUrl, authorSlug, locale) : null;
+  const author: Record<string, unknown> = founder ?? {
     "@type": isTeamByline ? "Organization" : "Person",
     name: authorName || "Unknown",
   };
-  if (authorImageUrl) {
+  if (authorImageUrl && !founder) {
     const abs = toAbsoluteUrl(authorImageUrl, baseUrl);
     if (abs) author.image = abs;
   }
   // Only a post with a blogAuthor reference has an author page to point at.
   // The 12 posts still on the legacy inline fields keep a bare Person node.
-  if (isTeamByline) {
+  if (founder) {
+    // url, sameAs and image come from the founder record.
+  } else if (isTeamByline) {
     author.parentOrganization = { "@id": organizationId(baseUrl) };
     if (locale) author.url = `${baseUrl}/${locale}/about`;
   } else if (authorSlug && locale) {
@@ -98,6 +109,10 @@ export function buildBlogArticleJsonLd(input: BlogArticleJsonLdInput): object {
   };
   if (description && description.trim()) {
     article.description = description.trim();
+  }
+  if (reviewerSlug || reviewerName) {
+    const reviewer = reviewerSlug ? teamPersonNode(baseUrl, reviewerSlug, locale) : null;
+    article.contributor = reviewer ?? { "@type": "Person", name: reviewerName };
   }
   if (image) {
     article.image = image;

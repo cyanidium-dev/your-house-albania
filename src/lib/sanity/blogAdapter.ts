@@ -49,6 +49,9 @@ export type BlogDetailData = {
   /** Slug of the linked blogAuthor, when the post has a reference rather than
    *  the legacy inline author fields. Drives the byline link and author.url. */
   authorSlug: string | null;
+  /** The founder who checked a legal article (`reviewedBy`), when set. */
+  reviewerName: string | null;
+  reviewerSlug: string | null;
   updatedAt: string | null;
 };
 
@@ -90,6 +93,14 @@ type SanityDetailPost = SanityListingPost & {
     propertyType?: { title?: unknown; slug?: string };
   }>;
 };
+
+function reviewerOf(post: unknown): { name: string | null; slug: string | null } {
+  const r = (post as { reviewer?: { name?: unknown; slug?: unknown } | null }).reviewer;
+  return {
+    name: typeof r?.name === 'string' && r.name.trim() ? r.name.trim() : null,
+    slug: typeof r?.slug === 'string' && r.slug.trim() ? r.slug.trim() : null,
+  };
+}
 
 function getCoverImageUrl(coverImage: SanityListingPost['coverImage']): string {
   const url = coverImage?.asset?.url;
@@ -264,6 +275,8 @@ export function mapSanityBlogPostToDetail(
       typeof (post as {author?: {slug?: unknown}}).author?.slug === 'string'
         ? ((post as {author: {slug: string}}).author.slug)
         : null,
+    reviewerName: reviewerOf(post).name,
+    reviewerSlug: reviewerOf(post).slug,
     updatedAt: typeof (post as {_updatedAt?: unknown})._updatedAt === 'string' ? (post as {_updatedAt: string})._updatedAt : null,
   };
 }

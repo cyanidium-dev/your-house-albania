@@ -13,6 +13,7 @@ import { resolveLocalizedString, resolveLocalizedContent } from "@/lib/sanity/lo
 import { collectHeadings } from "@/lib/blog/headingAnchors";
 import { ZoneStatsEmbed, type ZoneStatsEmbedValue } from "./blocks/ZoneStatsEmbed";
 import { TrackerEmbed, type TrackerEmbedValue } from "./blocks/TrackerEmbed";
+import { GuideDownloadCard } from "@/components/guides/GuideDownloadCard";
 import { FaqAccordion } from "@/components/shared/faq/FaqAccordion";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 
@@ -329,6 +330,15 @@ function createBlogComponents(
       ),
       trackerEmbed: ({ value }) => (
         <TrackerEmbed value={value as TrackerEmbedValue} locale={locale} />
+      ),
+      // The Durrës buying guide (PDF) offered inside an article, where the
+      // reader has just read about prices. The card is the same lead magnet
+      // the Durrës listing pages carry; it renders nothing in a locale
+      // without a PDF.
+      guideDownloadEmbed: () => (
+        <div className="my-10">
+          <GuideDownloadCard locale={locale} citySlug="durres" subject={{ city: "durres" }} />
+        </div>
       ),
       blogFaqBlock: ({ value }) => {
         const v = value as {
