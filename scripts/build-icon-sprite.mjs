@@ -42,6 +42,7 @@ const ICONS = [
   "ph:crane-tower-fill",
   "ph:envelope-simple",
   "ph:eye",
+  "ph:globe-simple",
   "ph:fire-fill",
   "ph:heart",
   "ph:heart-fill",

@@ -6,9 +6,7 @@ import { usePathname } from 'next/navigation'
 import DrawerNavList from './Navigation/DrawerNavList'
 import DesktopNav from './Navigation/DesktopNav'
 import { ADD_PROPERTY_HREF, type BuyMenuData, type GuidesMenuData } from '@/data/navConfig'
-import LanguageSwitcher from './LanguageSwitcher'
-import CurrencySwitcher from './CurrencySwitcher'
-import HeaderThemeToggle from './HeaderThemeToggle'
+import HeaderPreferences from './HeaderPreferences'
 import HeaderAiSearchLink from './HeaderAiSearchLink'
 import HeaderFavoritesLink from './HeaderFavoritesLink'
 import HeaderBurgerButton from './HeaderBurgerButton'
@@ -143,17 +141,11 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       />
                     </div>
                     {/* Every control is a 44px hit area with its old-size
-                        visual inside. Below `sm` the currency and the theme
-                        live in the drawer's settings row: five 44px targets
-                        and the logo is all a 360px phone holds. */}
+                        visual inside. Language, currency and theme share one
+                        pill (HeaderPreferences), so a 360px phone holds it
+                        next to the AI, favourites and menu buttons. */}
                     <div className='flex items-center gap-0 sm:gap-1 xl:gap-1.5 min-w-0 shrink-0 -mr-px'>
-                      <LanguageSwitcher overHero={overHero} sticky={sticky} />
-                      <div className="hidden sm:flex">
-                        <CurrencySwitcher overHero={overHero} sticky={sticky} />
-                      </div>
-                      <div className="hidden sm:flex">
-                        <HeaderThemeToggle overHero={overHero} sticky={sticky} lightModeLabel={t.switchToLightMode} darkModeLabel={t.switchToDarkMode} />
-                      </div>
+                      <HeaderPreferences overHero={overHero} sticky={sticky} />
                       {aiSearchEnabled ? (
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
                       ) : null}
