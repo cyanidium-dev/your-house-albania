@@ -51,8 +51,12 @@ const display = Bricolage_Grotesque({
   variable: "--font-bricolage",
   display: "swap",
 });
+// `subsets` only picks the files next/font preloads; every subset keeps its
+// @font-face, and the browser fetches the Cyrillic one when a page has Cyrillic
+// text. Preloaded, it was 19 KB on every English page too, downloaded with the
+// stylesheet the first frame waits for (PSI 19.10).
 const sans = Inter({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-inter",
   display: "swap",

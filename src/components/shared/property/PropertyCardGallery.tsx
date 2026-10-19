@@ -37,6 +37,7 @@ export function PropertyCardGallery({
   href,
   view,
   singleImage,
+  imageSizes: imageSizesProp,
   fullClickable,
   imageWrapper,
   imageClass,
@@ -63,6 +64,7 @@ export function PropertyCardGallery({
   href: string
   view: ViewMode
   singleImage: boolean
+  imageSizes?: string
   fullClickable: boolean
   imageWrapper: string
   imageClass: string
@@ -205,11 +207,11 @@ export function PropertyCardGallery({
     e.preventDefault()
   }
 
-  const imageSizes = isList
+  const imageSizes = imageSizesProp ?? (isList
     ? '208px'
     : isSmall
       ? '(min-width: 640px) 50vw, 280px'
-      : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+      : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw')
 
   /**
    * The strip of photographs. Only the slides that hold a photograph are in

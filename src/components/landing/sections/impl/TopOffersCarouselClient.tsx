@@ -2,6 +2,9 @@
 
 import * as React from "react";
 import PropertyCard from "@/components/shared/property/PropertyCard";
+
+/** Matches the slot widths below: w-[280px] sm:w-[320px] md:w-[360px]. */
+const CARD_SIZES = "(min-width: 768px) 360px, (min-width: 640px) 320px, 280px";
 import { cn } from "@/lib/utils";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import { useTranslations } from "next-intl";
@@ -135,7 +138,10 @@ export function TopOffersCarouselClient({
               key={item.slug ?? idx}
               className="snap-start shrink-0 w-[280px] sm:w-[320px] md:w-[360px] min-w-0"
             >
-              <PropertyCard item={item} locale={locale} view="large" fullClickable />
+              {/* The card is 280/320/360px wide here, not the 100vw the card
+                  assumes: a phone was sent the 750px photo for a 280px slot,
+                  twelve times over, in the first second of the page. */}
+              <PropertyCard item={item} locale={locale} view="large" fullClickable imageSizes={CARD_SIZES} />
             </div>
           ))}
         </div>
