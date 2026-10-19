@@ -1,4 +1,6 @@
 import { ALL_PER_EUR, annualUtilitiesEur, calculateUtilities, type UtilityCity } from '@/lib/calculators/utilities';
+import { median, PRICE_INDEX_FLAT_TYPES, pricesPerSqm } from '@/lib/catalog/listingPriceSummary';
+import { isReliableSample } from '@/lib/priceIndex/snapshot';
 
 /**
  * What a listing costs beyond its price: the one-off fees of buying it and the
@@ -44,10 +46,14 @@ const RESIDENTIAL_TYPES = new Set([...FLAT_TYPES, ...HOUSE_TYPES]);
  * The types a listing's €/m² is fair to compare with: a flat against flats, a
  * house against houses (a plot makes a house's €/m² a different number).
  * `null` for anything that isn't a home.
+ *
+ * A flat (a penthouse included) is measured against the Domlivo Price Index
+ * sample, apartments and studios, so the district median it quotes is the one
+ * the district's row on the city's `/info` page shows.
  */
 export function comparableTypeSlugs(typeSlug?: string | null): string[] | null {
   if (!typeSlug) return null;
-  if (FLAT_TYPES.includes(typeSlug)) return FLAT_TYPES;
+  if (FLAT_TYPES.includes(typeSlug)) return [...PRICE_INDEX_FLAT_TYPES];
   if (HOUSE_TYPES.includes(typeSlug)) return HOUSE_TYPES;
   return null;
 }
@@ -186,15 +192,12 @@ export type DistrictPriceRank = {
   count: number;
   /** This listing's €/m² against the median, %; negative means cheaper. */
   diffPct: number;
+  /** False under the Price Index headline sample: say so beside the figure. */
+  reliable: boolean;
 };
 
 /** Fewer listings than this and a district median says more about luck than the market. */
 export const DISTRICT_RANK_MIN_LISTINGS = 8;
-
-function median(sorted: number[]): number {
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-}
 
 /**
  * Where a listing's €/m² sits against the median of the district's listings
@@ -207,14 +210,18 @@ export function rankInDistrict(
 ): DistrictPriceRank | null {
   const rate = pricePerSqm(listing);
   if (rate === null) return null;
-  const rates = rows
-    .map(pricePerSqm)
-    .filter((v): v is number => v !== null)
-    .sort((a, b) => a - b);
+  // The Price Index arithmetic (15 m² floor, rounded median), so the figure
+  // matches the district's row in the city table to the euro.
+  const rates = pricesPerSqm(rows);
   if (rates.length < DISTRICT_RANK_MIN_LISTINGS) return null;
   const med = median(rates);
-  if (!(med > 0)) return null;
-  return { medianPerSqm: med, count: rates.length, diffPct: ((rate - med) / med) * 100 };
+  if (med === null || !(med > 0)) return null;
+  return {
+    medianPerSqm: med,
+    count: rates.length,
+    diffPct: ((rate - med) / med) * 100,
+    reliable: isReliableSample(rates.length),
+  };
 }
 
 function pricePerSqm(row: { price?: number | null; priceUnit?: string | null; area?: number | null }): number | null {

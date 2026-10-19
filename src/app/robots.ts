@@ -39,6 +39,24 @@ const BLOCKED_BOTS = [
   "barkrowler",
 ];
 
+/**
+ * Search and answer crawlers named on their own, with exactly the rules of
+ * `*`. The rules do not change for them; the group exists so a reader of
+ * robots.txt (or an assistant asked "does this site allow ChatGPT?") sees
+ * them allowed by name. A crawler that matches a named group ignores `*`, so
+ * each group repeats the `*` disallows.
+ */
+const SEARCH_BOTS = [
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "Claude-SearchBot",
+  "Claude-User",
+  "PerplexityBot",
+  "Googlebot",
+];
+
+const DEFAULT_DISALLOW = ["/api/", "/*?_rsc=", "/*&_rsc="];
+
 export default function robots(): MetadataRoute.Robots {
   if (!isIndexingEnabled()) {
     return {
@@ -57,11 +75,12 @@ export default function robots(): MetadataRoute.Robots {
       // "other file type"). The HTML carries the whole page, so nothing is
       // lost by keeping crawlers out of them. components/shared/Link stops
       // the prefetches at the source; this stops the re-crawls.
-      { userAgent: "*", allow: "/", disallow: ["/api/", "/*?_rsc=", "/*&_rsc="] },
+      { userAgent: "*", allow: "/", disallow: DEFAULT_DISALLOW },
+      { userAgent: SEARCH_BOTS, allow: "/", disallow: DEFAULT_DISALLOW },
       { userAgent: PREVIEW_BOTS, allow: "/" },
       // Kept, since the site's own Ahrefs data depends on it, but slowed: it
       // was a quarter of all traffic.
-      { userAgent: "AhrefsBot", allow: "/", disallow: ["/api/", "/*?_rsc=", "/*&_rsc="], crawlDelay: 30 },
+      { userAgent: "AhrefsBot", allow: "/", disallow: DEFAULT_DISALLOW, crawlDelay: 30 },
       { userAgent: BLOCKED_BOTS, disallow: "/" },
     ],
     // The priority file first: it is the crawler's starting point (see

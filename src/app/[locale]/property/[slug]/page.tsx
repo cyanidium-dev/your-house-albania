@@ -580,6 +580,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           costs={ownershipCosts}
                           rank={districtRank}
                           districtName={districtName}
+                          priceIndexSample={comparableTypes?.includes('apartment') ?? false}
                           area={area}
                           rateEur={rawProperty.priceUnit === 'per-sqm' ? rawProperty.price ?? null : null}
                         />

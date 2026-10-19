@@ -51,9 +51,11 @@ const MORE_LINK =
 function Section({ title, id, children }: { title: string; id: string; children: ReactNode }) {
   return (
     <section aria-labelledby={id} className="pt-7">
-      <h2 id={id} className="px-3 pb-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-dark/50 dark:text-white/50">
+      {/* A label, not a heading: the drawer is in the HTML of every page, and
+          its h2s came before the page's h1 for anything that reads headings. */}
+      <p id={id} className="font-display px-3 pb-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-dark/50 dark:text-white/50">
         {title}
-      </h2>
+      </p>
       {children}
     </section>
   )
@@ -107,9 +109,9 @@ export default function DrawerNavList({
   return (
     <>
       <div className="flex shrink-0 items-center justify-between gap-3 px-5 pb-1 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <h2 id={titleId} className="font-display text-[22px] font-semibold tracking-tight">
+        <p id={titleId} className="font-display text-[22px] font-semibold tracking-tight">
           {t('title')}
-        </h2>
+        </p>
         <button
           type="button"
           onClick={onNavigate}

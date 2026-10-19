@@ -367,7 +367,7 @@ export default async function Post({ params }: Props) {
             >
               <BlogTableOfContents content={detail.contentBlocks} />
               <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
-              <BlogArticleContent content={detail.contentBlocks} locale={locale} />
+              <BlogArticleContent content={detail.contentBlocks} locale={locale} postSlug={detail.slug} />
               <BlogListingsBlock locale={locale} postSlug={detail.slug} />
               <BlogFaq faq={detail.faq} locale={locale} />
               <BlogSources sources={detail.sources} locale={locale} />
