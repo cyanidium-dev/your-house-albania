@@ -332,3 +332,36 @@ describe("buildPropertyJsonLd: place and language (audit 2026-09-20)", () => {
     expect(node(json, "Apartment").amenityFeature.map((a: { name: string }) => a.name)).toEqual(["Balkon", "Aufzug"]);
   });
 });
+
+describe("seller and publisher", () => {
+  const base = {
+    name: "Flat in Golem",
+    slug: "flat-in-golem",
+    imageUrls: [],
+    baseUrl: "https://www.domlivo.com",
+    locale: "en",
+    price: 95000,
+    lifecycleStatus: "active",
+  };
+
+  it("names the listing agency as the offer's seller and Domlivo as the publisher", () => {
+    const graph = (buildPropertyJsonLd({
+      ...base,
+      seller: { name: "Cactus Real Estate" },
+      publisherId: "https://www.domlivo.com/#organization",
+    }) as { "@graph": Record<string, unknown>[] })["@graph"];
+    const listing = graph.find((n) => n["@type"] === "RealEstateListing")!;
+    const product = graph.find((n) => n["@type"] === "Product")!;
+    expect(listing.publisher).toEqual({ "@id": "https://www.domlivo.com/#organization" });
+    expect((product.offers as Record<string, unknown>).seller).toEqual({
+      "@type": "RealEstateAgent",
+      name: "Cactus Real Estate",
+    });
+  });
+
+  // The marketplace is not the seller: without an agent the offer names none.
+  it("claims no seller without an agent", () => {
+    const offer = buildOffer({ price: 95000, url: "https://www.domlivo.com/en/property/x", seller: null })!;
+    expect(offer.seller).toBeUndefined();
+  });
+});

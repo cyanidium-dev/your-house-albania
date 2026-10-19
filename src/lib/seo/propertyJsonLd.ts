@@ -51,6 +51,13 @@ export type PropertyJsonLdInput = {
    * `geo` would state a precision the data does not have.
    */
   geo?: { lat: number; lng: number } | null;
+  /**
+   * Who sells or lets: the listing agency or agent, as `Offer.seller`. Domlivo
+   * is the marketplace, never the seller, so without an agent there is none.
+   */
+  seller?: { name: string; url?: string | null } | null;
+  /** The site's Organization `@id`: the listing's `publisher`. */
+  publisherId?: string | null;
   /** Amenity names in the page locale. */
   amenityNames?: string[];
 };
@@ -124,8 +131,9 @@ export function buildOffer(input: {
   status?: string | null;
   lifecycleStatus?: string | null;
   url: string;
+  seller?: { name: string; url?: string | null } | null;
 }): Record<string, unknown> | undefined {
-  const { priceUnit, area, status, lifecycleStatus, url } = input;
+  const { priceUnit, area, status, lifecycleStatus, url, seller } = input;
   const rate = input.price;
   if (typeof rate !== "number" || rate < 0) return undefined;
 
@@ -144,6 +152,15 @@ export function buildOffer(input: {
     availability: availabilityFor(lifecycleStatus),
     businessFunction: isLease(status) ? LEASE_OUT : SELL,
     url,
+    ...(seller?.name?.trim()
+      ? {
+          seller: {
+            "@type": "RealEstateAgent",
+            name: seller.name.trim(),
+            ...(seller.url ? { url: seller.url } : {}),
+          },
+        }
+      : {}),
   };
 
   // A rent is per month. Without the unit a crawler reads "€250" as the price
@@ -230,7 +247,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     additionalProperty.push({ "@type": "PropertyValue", name: "Plot area (m²)", value: plotArea });
   }
 
-  const offers = buildOffer({ price, priceUnit, area, status, lifecycleStatus, url });
+  const offers = buildOffer({ price, priceUnit, area, status, lifecycleStatus, url, seller: input.seller ?? null });
 
   // City and district as separate fields when both are known. The free-text
   // `location` ("Plazh, Durres") stays the fallback: it is one string, which a
@@ -286,6 +303,7 @@ export function buildPropertyJsonLd(input: PropertyJsonLdInput): object {
     ...(description && { description }),
     ...(image && { image }),
     ...(datePosted && { datePosted }),
+    ...(input.publisherId ? { publisher: { "@id": input.publisherId } } : {}),
     ...(accommodation && { mainEntity: { "@id": accommodationId } }),
     // Land and commercial space get no accommodation node — `Accommodation`
     // subtypes describe places people live — so without this their address
