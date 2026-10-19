@@ -11,12 +11,14 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { isIndexingEnabled, indexingDisabledRobots, indexableRobots } from "@/lib/seo/envSeo";
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import {
+  listingPageQuery,
+  listingPaginationPage,
   listingUrlHasQueryParams,
   shouldNoindexNonGeoDealTypeCombo,
 } from "@/lib/seo/catalogListingMetadata";
 import { canonicalNonGeoDealListingPath } from "@/lib/routes/listingRouteResolver";
 import { isPublicDealQuery } from "@/lib/catalog/publicDealTypes";
-import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
+import { listingOpenGraph, listingPageTitle, listingTitleField } from "@/lib/seo/listingTitle";
 import { landingOgImageUrl } from "@/lib/seo/ogImageUrl";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { buildTypeListingSeo } from "@/lib/seo/listingSeoCopy";
@@ -52,6 +54,10 @@ export async function generateNonGeoDealRouteMetadata(input: {
       `${t("title")} — ${titleFragment}${typeSeg ? ` — ${typeSeg}` : ""}`
   );
   const description = typedSeo?.description || catalogSeo?.metaDescription || t("description");
+  // `?page=N` alone is a page of its own (catalogListingMetadata): own title,
+  // self-canonical, indexed exactly when page one is.
+  const listingPage = listingPaginationPage(search);
+  const titlePage = { page: listingPage, locale };
   // The social card: title and description over a photograph that fits the deal or type.
   const ogImage = landingOgImageUrl({
     locale,
@@ -61,9 +67,9 @@ export async function generateNonGeoDealRouteMetadata(input: {
   });
   if (!isIndexingEnabled()) {
     return {
-      title: listingTitleField(title),
+      title: listingTitleField(title, titlePage),
       description,
-      openGraph: listingOpenGraph(title, description, ogImage, undefined, locale),
+      openGraph: listingOpenGraph(listingPageTitle(title, titlePage), description, ogImage, undefined, locale),
       robots: indexingDisabledRobots,
     };
   }
@@ -71,9 +77,9 @@ export async function generateNonGeoDealRouteMetadata(input: {
   const purePath = canonicalNonGeoDealListingPath(locale, dealQuery, typeSeg || undefined).split("?")[0];
   const base = getSiteBaseUrl();
   const pathAfterLocale = purePath.replace(new RegExp(`^/${locale}`), "") || "/";
-  const href = buildHreflangAlternates(pathAfterLocale);
+  const canonical = `${base}${purePath}${listingPageQuery(listingPage)}`;
 
-  const hasQuery = listingUrlHasQueryParams(search);
+  const hasQuery = listingPage ? false : listingUrlHasQueryParams(search);
   const seoNo = catalogSeo?.noIndex ?? false;
   // Rentals hidden from the public UI: direct URLs stay reachable but noindexed.
   const hiddenDeal = !isPublicDealQuery(dealQuery);
@@ -86,13 +92,22 @@ export async function generateNonGeoDealRouteMetadata(input: {
     hasQuery || seoNo || thinType || hiddenDeal
       ? { index: false as const, follow: true as const }
       : indexableRobots;
+  // Page N declares alternates only while it is indexed: each locale's page N
+  // lists the same cards in the same order (inventory and sort are not
+  // per-locale), so the set is reciprocal; a noindexed page N declares none.
+  // Page one and filtered copies keep pointing at the bare paths as before.
+  const href = listingPage
+    ? robots.index
+      ? buildHreflangAlternates(`${pathAfterLocale}${listingPageQuery(listingPage)}`)
+      : undefined
+    : buildHreflangAlternates(pathAfterLocale);
 
   return {
-    title: listingTitleField(title),
+    title: listingTitleField(title, titlePage),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage, `${base}${purePath}`, locale),
+    openGraph: listingOpenGraph(listingPageTitle(title, titlePage), description, ogImage, canonical, locale),
     alternates: {
-      canonical: `${base}${purePath}`,
+      canonical,
       ...(href?.languages ? { languages: href.languages } : {}),
     },
     robots,

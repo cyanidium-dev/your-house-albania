@@ -45,6 +45,7 @@ import { resolveMessengers } from '@/lib/contacts/messengers';
 import { messengerContext, messengerPriceLabel } from '@/lib/contacts/messengerContext';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
+import { ListingPlaceLinks } from '@/components/inventory/ListingPlaceLinks';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 // `catalogPath` already returns a locale-prefixed path, so this uses next/link
 // rather than the i18n Link, which would prefix the locale a second time.
@@ -447,6 +448,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             <Icon icon="ph:map-pin" width={20} height={20} className="shrink-0 text-dark/50 dark:text-white/50" />
                             <p className='text-dark/60 dark:text-white/60 text-base'>{location}</p>
                         </div>
+                        {/* The listing's district page and its city's price page (B5). */}
+                        <ListingPlaceLinks locale={locale} citySlug={citySlug} districtSlug={districtSlug} />
                         <PropertyDeveloperBadge
                           locale={locale}
                           developer={(sanityProperty as { developer?: PropertyDeveloperRef }).developer ?? null}

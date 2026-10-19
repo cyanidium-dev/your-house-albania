@@ -1168,6 +1168,33 @@ export async function fetchCatalogSeoPageByDistrict(
   }
 }
 
+/**
+ * Catalog copy of a facet page (`/durres/1-1`, `/durres/plazh/near-the-sea`):
+ * a `catalogSeoPage` with `pageScope == "facet"`, its city, the facet slug and
+ * the district when the slice is a district's. `null` when none is active.
+ */
+export async function fetchCatalogSeoPageByFacet(
+  citySlug: string,
+  facet: string,
+  districtSlug?: string
+): Promise<{
+  title?: unknown;
+  intro?: unknown;
+  bottomText?: unknown;
+  seo?: { metaTitle?: unknown; metaDescription?: unknown; noIndex?: unknown };
+} | null> {
+  const client = getClient();
+  if (!client) return null;
+  const districtFilter = districtSlug ? `district->slug.current == $districtSlug` : `!defined(district)`;
+  const query = `*[_type == "catalogSeoPage" && active == true && pageScope == "facet" && facet == $facet && city->slug.current == $citySlug && ${districtFilter}][0] ${catalogSeoPageProjection}`;
+  try {
+    return await client.fetch(query, { citySlug, facet, districtSlug: districtSlug ?? "" });
+  } catch (err) {
+    console.warn('[Sanity] fetchCatalogSeoPageByFacet failed:', err);
+    return null;
+  }
+}
+
 /** Resolve catalog SEO page raw result to localized strings/arrays. */
 export function resolveCatalogSeoPage(
   raw: {

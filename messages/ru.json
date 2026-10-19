@@ -1279,5 +1279,14 @@
       "stageUnderConstruction": "строится",
       "stageCompleted": "построено"
     }
+  },
+  "InventoryLinks": {
+    "title": "Объекты в продаже и цены",
+    "districtListings": "{district}: недвижимость на продажу",
+    "cityListings": "{city}: вся недвижимость на продажу",
+    "typeListings": "{type} на продажу — {city}",
+    "nationalListings": "Вся недвижимость на продажу в Албании",
+    "cityPrices": "{city}: цены на недвижимость",
+    "nationalPrices": "Цены на недвижимость в Албании"
   }
 }

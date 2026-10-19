@@ -1279,5 +1279,14 @@
       "stageUnderConstruction": "në ndërtim",
       "stageCompleted": "e përfunduar"
     }
+  },
+  "InventoryLinks": {
+    "title": "Prona në shitje dhe çmimet",
+    "districtListings": "Prona në shitje në {district}",
+    "cityListings": "Të gjitha pronat në shitje në {city}",
+    "typeListings": "{type} në shitje në {city}",
+    "nationalListings": "Të gjitha pronat në shitje në Shqipëri",
+    "cityPrices": "Çmimet e pronave në {city}",
+    "nationalPrices": "Çmimet e pronave në Shqipëri"
   }
 }
