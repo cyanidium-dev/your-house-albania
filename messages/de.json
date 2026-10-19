@@ -75,6 +75,7 @@
     "nav": {
       "allListings": "Alle Immobilien",
       "leadLanding": "Immobilien am Meer",
+      "marketGuide": "Immobilien kaufen: Ratgeber 2026",
       "allCities": "Alle Städte",
       "blog": "Blog",
       "about": "Über uns",
@@ -280,7 +281,8 @@
       "relatedProperties": "Passende Immobilien",
       "listingsTitle": "Immobilien zu diesem Thema",
       "listingsPlaceLink": "{place}: {count, plural, one {# Immobilie zu verkaufen} other {# Immobilien zu verkaufen}}",
-      "listingsAllAlbania": "Alle Immobilien zum Verkauf in Albanien"
+      "listingsAllAlbania": "Alle Immobilien zum Verkauf in Albanien",
+      "reviewedBy": "Geprüft von {name}"
     },
     "goBack": "Zurück",
     "entityCard": {

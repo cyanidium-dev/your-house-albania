@@ -75,6 +75,7 @@
     "nav": {
       "allListings": "Wszystkie oferty",
       "leadLanding": "Nieruchomości nad morzem",
+      "marketGuide": "Albania dla Polaków: poradnik",
       "allCities": "Wszystkie miasta",
       "blog": "Blog",
       "about": "O nas",
@@ -269,7 +270,8 @@
       "relatedProperties": "Powiązane nieruchomości",
       "listingsTitle": "Oferty związane z artykułem",
       "listingsPlaceLink": "{place}: {count, plural, one {# oferta na sprzedaż} few {# oferty na sprzedaż} many {# ofert na sprzedaż} other {# oferty na sprzedaż}}",
-      "listingsAllAlbania": "Wszystkie nieruchomości na sprzedaż w Albanii"
+      "listingsAllAlbania": "Wszystkie nieruchomości na sprzedaż w Albanii",
+      "reviewedBy": "Sprawdził: {name}"
     },
     "goBack": "Wróć",
     "entityCard": {

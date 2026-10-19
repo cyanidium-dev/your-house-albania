@@ -11,6 +11,7 @@ import type { ResolvedSiteSettings } from "@/lib/sanity/siteSettingsAdapter";
 import {
   FOOTER_COMPANY_ITEMS,
   FOOTER_LEAD_LANDING,
+  FOOTER_MARKET_GUIDE,
   FOOTER_PROPERTY_HEAD,
   FOOTER_PROPERTY_TAIL,
   FOOTER_USEFUL_ITEMS,
@@ -242,6 +243,13 @@ export default function Footer({
                     </Link>
                   </li>
                 ))}
+                {FOOTER_MARKET_GUIDE[locale] ? (
+                  <li>
+                    <Link href={resolveStableHref(FOOTER_MARKET_GUIDE[locale], locale)} className={colLinkClass}>
+                      {navT("marketGuide")}
+                    </Link>
+                  </li>
+                ) : null}
                 {FOOTER_USEFUL_ITEMS.map((item) => (
                   <li key={item.key}>
                     <Link href={resolveStableHref(item.href, locale)} className={colLinkClass}>

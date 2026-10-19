@@ -273,6 +273,7 @@ export async function fetchBlogPostBySlug(slug: string): Promise<unknown | null>
     },
     "categories": categories[]->{_id,"slug":slug.current,title},
     "author": author->{_id,"slug":slug.current,name,active,role,"photo":photo{alt,asset->{url}},email},
+    "reviewer": reviewedBy->{name,"slug":slug.current},
     authorName,
     authorRole,
     authorImage{

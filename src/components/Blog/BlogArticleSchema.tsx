@@ -66,6 +66,8 @@ export async function BlogArticleSchema({
     publisherUrl,
     dateModified,
     authorSlug: detail.authorSlug,
+    reviewerName: detail.reviewerName,
+    reviewerSlug: detail.reviewerSlug,
     locale,
   });
 

@@ -7,13 +7,14 @@
  * they are, who stands behind them, or how fresh they are. Blog posts have had
  * that since `blogArticleJsonLd`; this closes the same gap for guides.
  *
- * `author` is the Organization on purpose. `landingPage` has no author field,
- * and inventing a named expert is exactly the fabrication CONTENT-OPS.md
- * forbids — these pages are written by the company, so the company is the
- * author. Swap in a Person once the schema carries one.
+ * `author` is the Organization unless the landing names a founder in its
+ * `author` reference: inventing a named expert is exactly the fabrication
+ * CONTENT-OPS.md forbids, so only a page a founder actually signed carries a
+ * Person — the same `@id` the layout and /about emit.
  */
 
 import { organizationId } from "./siteJsonLd";
+import { teamPersonNode } from "./teamPerson";
 
 export type GuideArticleJsonLdInput = {
   headline: string;
@@ -30,6 +31,10 @@ export type GuideArticleJsonLdInput = {
   publisherUrl: string;
   /** BCP-47-ish locale code, emitted as `inLanguage`. */
   locale?: string;
+  /** Slug of the founder who signed the page (`landingPage.author`). */
+  authorSlug?: string | null;
+  /** Slug of the founder who checked it (`landingPage.reviewedBy`). */
+  reviewerSlug?: string | null;
 };
 
 function isAbsoluteUrl(url: string): boolean {
@@ -71,6 +76,8 @@ export function buildGuideArticleJsonLd(
     publisherName,
     publisherUrl,
     locale,
+    authorSlug,
+    reviewerSlug,
   } = input;
 
   const editorDate = cleanDate(contentUpdatedAt);
@@ -100,9 +107,11 @@ export function buildGuideArticleJsonLd(
     // `_updatedAt` moves on any field change, including unrelated ones.
     datePublished: editorDate ?? systemDate,
     dateModified: systemDate ?? editorDate,
-    author: organization,
+    author: (authorSlug && teamPersonNode(baseUrl, authorSlug, locale)) || organization,
     publisher: organization,
   };
+  const reviewer = reviewerSlug ? teamPersonNode(baseUrl, reviewerSlug, locale) : null;
+  if (reviewer) article.contributor = reviewer;
 
   if (description && description.trim()) {
     article.description = description.trim();

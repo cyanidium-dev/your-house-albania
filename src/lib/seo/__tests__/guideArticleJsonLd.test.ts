@@ -110,3 +110,28 @@ describe("buildGuideArticleJsonLd", () => {
     expect(a.mainEntityOfPage).toEqual({ "@type": "WebPage", "@id": base.articleUrl });
   });
 });
+
+describe("buildGuideArticleJsonLd — founder byline", () => {
+  const base = {
+    headline: "Tirana o Valona",
+    articleUrl: "https://www.domlivo.com/it/guides/tirana-vs-vlore",
+    contentUpdatedAt: "2026-10-19",
+    publisherName: "Domlivo",
+    publisherUrl: "https://www.domlivo.com",
+    locale: "it",
+  };
+
+  it("uses the founder's Person node when the landing names one", () => {
+    const a = buildGuideArticleJsonLd({ ...base, authorSlug: "fedir-alpatov" }) as Record<string, unknown>;
+    const author = a.author as Record<string, unknown>;
+    expect(author["@type"]).toBe("Person");
+    expect(author["@id"]).toBe("https://www.domlivo.com/#person-fedir-alpatov");
+  });
+
+  it("keeps the Organization for an unknown or missing author", () => {
+    for (const authorSlug of [null, "someone-else"]) {
+      const a = buildGuideArticleJsonLd({ ...base, authorSlug }) as Record<string, unknown>;
+      expect((a.author as Record<string, unknown>)["@type"]).toBe("Organization");
+    }
+  });
+});

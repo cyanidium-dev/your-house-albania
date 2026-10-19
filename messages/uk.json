@@ -75,6 +75,7 @@
     "nav": {
       "allListings": "Усі об'єкти",
       "leadLanding": "Купити квартиру в Албанії",
+      "marketGuide": "Гід із купівлі",
       "allCities": "Усі міста",
       "blog": "Блог",
       "about": "Про нас",
@@ -280,7 +281,8 @@
       "relatedProperties": "Схожі об'єкти",
       "listingsTitle": "Обʼєкти за темою",
       "listingsPlaceLink": "{place}: {count, plural, one {# обʼєкт у продажу} few {# обʼєкти у продажу} many {# обʼєктів у продажу} other {# обʼєкта у продажу}}",
-      "listingsAllAlbania": "Уся нерухомість у продажу в Албанії"
+      "listingsAllAlbania": "Уся нерухомість у продажу в Албанії",
+      "reviewedBy": "Перевірив: {name}"
     },
     "goBack": "Назад",
     "entityCard": {
