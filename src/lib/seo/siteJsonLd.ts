@@ -1,3 +1,4 @@
+import { isProfileUrl } from '@/lib/seo/personJsonLd';
 /**
  * Site-level JSON-LD: one Organization and one WebSite, emitted from the locale
  * layout on every page as a single @graph.
@@ -114,7 +115,8 @@ export function buildOrganizationNode(input: SiteJsonLdInput): Record<string, un
   const email = input.email?.trim() || undefined;
   const telephone = publishablePhone(input.telephone);
   const languages = cleanList(input.languages);
-  const sameAs = cleanList(input.sameAs);
+  // Profiles only: the messenger links are contact points, emitted below.
+  const sameAs = cleanList(input.sameAs).filter(isProfileUrl);
   const messengers = (input.messengers ?? []).filter((m) => m?.url?.trim());
   const founders = (input.founders ?? []).filter((f) => f?.id && f?.name);
 
