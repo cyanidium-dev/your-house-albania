@@ -9,6 +9,7 @@
  * translated.
  */
 import { organizationId, websiteId } from "./siteJsonLd";
+import { isProfileUrl } from "@/lib/seo/personJsonLd";
 
 export type AboutPersonInput = {
   /** Stable, locale-independent `@id`. */
@@ -42,7 +43,7 @@ export function buildAboutJsonLd(input: AboutJsonLdInput): object {
   const orgId = organizationId(baseUrl);
 
   const persons = people.map((p) => {
-    const sameAs = (p.sameAs ?? []).filter((u) => typeof u === "string" && u.trim());
+    const sameAs = (p.sameAs ?? []).filter((u) => typeof u === "string" && u.trim() && isProfileUrl(u));
     const knowsAbout = (p.knowsAbout ?? []).filter((k) => typeof k === "string" && k.trim());
     return {
       "@type": "Person",
