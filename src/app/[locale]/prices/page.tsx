@@ -87,8 +87,11 @@ export default async function PricesByCityPage({ params }: Props) {
   const date = snapshot ? formatBlogDate(new Date(snapshot.computedAt), locale) : "";
   const cities = snapshot?.cities.filter((c) => c.count > 0) ?? [];
   const reliable = cities.filter((c) => c.reliable && c.median !== null);
-  const cheapest = reliable.length ? reliable.reduce((a, b) => (b.median! < a.median! ? b : a)) : null;
-  const dearest = reliable.length ? reliable.reduce((a, b) => (b.median! > a.median! ? b : a)) : null;
+  // "Cheapest" and "most expensive" need two cities to compare: with one
+  // reliable sample (October 2026: Durrës alone) both answers would name it.
+  const comparable = reliable.length >= 2;
+  const cheapest = comparable ? reliable.reduce((a, b) => (b.median! < a.median! ? b : a)) : null;
+  const dearest = comparable ? reliable.reduce((a, b) => (b.median! > a.median! ? b : a)) : null;
 
   const faq = [
     cheapest
