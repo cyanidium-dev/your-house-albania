@@ -375,7 +375,17 @@ async function PropertiesListing({
   return (
     <section className='pt-0!'>
       {pageItems.length > 0 && (
-        <ItemListJsonLd items={itemListEntries} baseUrl={baseUrl} locale={locale} />
+        <ItemListJsonLd
+          items={itemListEntries}
+          baseUrl={baseUrl}
+          locale={locale}
+          // A place page (city, district): the list is "listings in <place>".
+          collection={
+            headingText && heading && !('text' in heading)
+              ? { name: headingText, placeName: heading.place }
+              : null
+          }
+        />
       )}
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0 overflow-x-clip'>
         {headingText && totalItems > 0 ? (

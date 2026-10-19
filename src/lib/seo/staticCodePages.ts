@@ -18,6 +18,8 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: "contacts", lastModified: "2026-10-18" },
   // The Domlivo Price Index methodology; its figures change hourly, its copy rarely.
   { path: "methodology", lastModified: "2026-10-19" },
+  // Property prices by city: one table over the live index (AI prompt audit 2026-10-19).
+  { path: "prices", lastModified: "2026-10-19" },
 ];
 
 export type StaticCodePageEntry = {

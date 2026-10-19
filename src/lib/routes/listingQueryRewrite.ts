@@ -42,6 +42,7 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "knowledge",
   "luxury-villa",
   "methodology",
+  "prices",
   "office-spaces",
   "privacy",
   "properties",

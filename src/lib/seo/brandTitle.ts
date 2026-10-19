@@ -55,15 +55,15 @@ const TITLE_SEGMENT = /\s+[—–|]\s+/;
  * segment to drop, or whose first segment alone is too long, ships as written:
  * cutting words mid-phrase would be worse than a truncated snippet.
  */
-export function fitListingTitle(title: string): string {
+export function fitListingTitle(title: string, maxLength: number = MAX_LISTING_TITLE_LENGTH): string {
   const clean = stripBrandSuffix(title);
-  if (clean.length <= MAX_LISTING_TITLE_LENGTH) return clean;
+  if (clean.length <= maxLength) return clean;
   const parts = clean.split(TITLE_SEGMENT);
   const seps = clean.match(new RegExp(TITLE_SEGMENT.source, "g")) ?? [];
   for (let keep = parts.length - 1; keep >= 1; keep--) {
     let head = parts[0];
     for (let i = 1; i < keep; i++) head += seps[i - 1] + parts[i];
-    if (head.length <= MAX_LISTING_TITLE_LENGTH) return head;
+    if (head.length <= maxLength) return head;
   }
   return clean;
 }
