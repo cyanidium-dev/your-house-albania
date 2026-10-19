@@ -106,6 +106,11 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                                 // Above the fold on every page: lazy-loading it only
                                 // painted the brand late (Lighthouse 18.10).
                                 loading="eager"
+                                // Low, so React does not preload it ahead of the
+                                // hero: both come from cdn.sanity.io, and the
+                                // preloaded logo went first on that connection
+                                // (Lighthouse 19.10).
+                                fetchPriority="low"
                                 className={`object-contain object-left h-7 sm:h-8 w-auto transition-[height,width] duration-300 ease-out ${logoSizeClass} ${logoOnPhoto ? "brightness-0 invert" : "dark:brightness-0 dark:invert"}`}
                               />
                             </>

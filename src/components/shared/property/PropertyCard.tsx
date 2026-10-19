@@ -36,6 +36,7 @@ function PropertyCard({
   fullClickable = true,
   singleImage = false,
   fillHeight = false,
+  imageSizes,
 }: {
   item: PropertyHomes
   locale: string
@@ -45,6 +46,8 @@ function PropertyCard({
   singleImage?: boolean
   /** Fill parent height for even card alignment in carousel */
   fillHeight?: boolean
+  /** `sizes` for the photo when the card's width is fixed (carousels). */
+  imageSizes?: string
 }) {
   const {
     name,
@@ -327,6 +330,7 @@ function PropertyCard({
           href={href}
           view={view}
           singleImage={singleImage}
+          imageSizes={imageSizes}
           fullClickable={fullClickable}
           imageWrapper={imageWrapper}
           imageClass={imageClass}
