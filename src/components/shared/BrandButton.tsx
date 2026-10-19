@@ -37,8 +37,10 @@ export type BrandButtonVariant =
 
 export type BrandButtonSize = 'sm' | 'md' | 'lg'
 
-const BASE =
-  'inline-flex items-center justify-center gap-2 rounded-full font-semibold text-center leading-tight whitespace-normal transition-colors duration-200 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent disabled:opacity-50 disabled:pointer-events-none'
+// One class, defined in globals.css (`@utility brand-btn`): the same 19
+// utilities were repeated on ~90 buttons per page, in the HTML and again in
+// the RSC payload (≈50 KB on the home page, 2026-10-19).
+const BASE = 'brand-btn'
 
 export const BRAND_BUTTON_SIZES: Record<BrandButtonSize, string> = {
   // tap-zone: a 36px button keeps its look and gets a 44px hit area (visual
