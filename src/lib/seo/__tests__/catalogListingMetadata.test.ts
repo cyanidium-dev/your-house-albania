@@ -54,6 +54,8 @@ describe("query rules for everything that is not a bare page N", () => {
     expect(listingUrlHasQueryParams({})).toBe(false);
     expect(shouldCatalogListingNoindex({ page: "2" })).toBe(true);
     expect(shouldCatalogListingNoindex({ sort: "priceAsc" })).toBe(true);
-    expect(shouldCatalogListingNoindex({ sort: "newest" })).toBe(false);
+    // "recommended" is the default order and no query; explicit newest is one.
+    expect(shouldCatalogListingNoindex({ sort: "recommended" })).toBe(false);
+    expect(shouldCatalogListingNoindex({ sort: "newest" })).toBe(true);
   });
 });

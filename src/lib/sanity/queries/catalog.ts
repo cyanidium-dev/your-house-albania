@@ -24,6 +24,7 @@ import { isNewBuildRow } from '@/lib/priceIndex/snapshot';
 import { fetchPriceIndexRows } from './priceIndex';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
+import { rotateCatalog, rotationSeed, type RotationRow } from '@/lib/catalog/rotation';
 
 const cachedFetchCatalogAreaBoundsFromData = sanityCache(
   async () => {
@@ -304,7 +305,7 @@ const cachedFetchCatalogProperties = sanityCache(
   const client = getClient();
   if (!client) return null;
 
-  const { sort = 'newest', page = 1, pageSize = 12 } = filters;
+  const { sort = 'recommended', page = 1, pageSize = 12 } = filters;
 
   const safePage = Number.isFinite(page) && page > 0 ? page : 1;
   const safePageSize =
@@ -337,6 +338,32 @@ const cachedFetchCatalogProperties = sanityCache(
   } else order = `| order(${promotionOrder}, _createdAt desc)`;
 
   const baseFilter = `*${where ? `[${where}]` : ''}`;
+
+  // The default order is decided in code: ids with their tier and agency,
+  // dealt out for the day (lib/catalog/rotation), then this page's documents
+  // by id. Two cheap queries instead of one ordered slice.
+  if (sort === 'recommended') {
+    try {
+      const rows = await client.fetch<RotationRow[]>(
+        `${baseFilter} | order(${promotionOrder}, _createdAt desc) { _id, promoted, promotionType, "agent": agent->slug.current }`,
+        params,
+      );
+      const ordered = rotateCatalog(Array.isArray(rows) ? rows : [], rotationSeed());
+      const ids = ordered.slice(start, end);
+      const docs = ids.length
+        ? await client.fetch<CatalogProperty[]>(`*[_id in $ids] ${CATALOG_CARD_PROJECTION}`, { ids })
+        : [];
+      const byId = new Map((Array.isArray(docs) ? docs : []).map((d) => [d._id, d] as const));
+      return {
+        items: ids.map((id) => byId.get(id)).filter((d): d is CatalogProperty => d !== undefined),
+        totalCount: ordered.length,
+      };
+    } catch (err) {
+      console.warn('[Sanity] fetchCatalogProperties (recommended) failed:', err);
+      return null;
+    }
+  }
+
   const orderedSelector = `${baseFilter} ${order}`;
 
   const countQuery = `count(${baseFilter})`;

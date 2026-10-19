@@ -101,7 +101,7 @@ export function buildCatalogFilterUrl(state: CatalogFilterUrlState): string {
   if (stage && stage !== "any") params.set("stage", stage);
   else params.delete("stage");
 
-  if (sort && sort !== "newest") params.set("sort", sort);
+  if (sort && sort !== "recommended") params.set("sort", sort);
   else params.delete("sort");
 
   if (amenities.length > 0) params.set("amenities", amenities.join(","));

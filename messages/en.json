@@ -674,7 +674,8 @@
       "stageOffPlan": "Off-plan",
       "stageUnderConstruction": "Under construction",
       "stageCompleted": "Completed",
-      "sortHandoverAsc": "Handover (soonest first)"
+      "sortHandoverAsc": "Handover (soonest first)",
+      "sortRecommended": "Recommended"
     },
     "cityInfoLink": "{place}: prices and districts",
     "districtInfoLink": "{place}: prices and area guide",

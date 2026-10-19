@@ -324,11 +324,12 @@ export function CatalogFilterForm({
               {/* Sort */}
               <FilterSelect
                 label={t("sortBy")}
-                value={sort || "newest"}
+                value={sort || "recommended"}
                 onValueChange={setSort}
-                anyLabel={t("sortNewest")}
-                anyValue="newest"
+                anyLabel={t("sortRecommended")}
+                anyValue="recommended"
                 options={[
+                  { value: "newest", label: t("sortNewest") },
                   { value: "popular", label: t("sortPopular") },
                   { value: "priceAsc", label: t("sortPriceAsc") },
                   { value: "priceDesc", label: t("sortPriceDesc") },

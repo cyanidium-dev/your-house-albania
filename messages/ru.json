@@ -674,7 +674,8 @@
       "stageOffPlan": "На стадии проекта",
       "stageUnderConstruction": "Строится",
       "stageCompleted": "Построено",
-      "sortHandoverAsc": "Сдача (сначала ближайшие)"
+      "sortHandoverAsc": "Сдача (сначала ближайшие)",
+      "sortRecommended": "Рекомендуемые"
     },
     "cityInfoLink": "{place}: цены и районы",
     "districtInfoLink": "{place}: цены и обзор района",

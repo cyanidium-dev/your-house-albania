@@ -18,7 +18,7 @@ import { isTrackingQueryParam } from "@/lib/routes/listingQueryRewrite";
 export { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
 
 const DEFAULT_PAGE_SIZE = "24";
-const DEFAULT_SORT = "newest";
+const DEFAULT_SORT = "recommended";
 
 function stringParam(
   searchParams: Record<string, string | string[] | undefined>,
