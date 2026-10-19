@@ -411,6 +411,60 @@
       "note": "Asking prices from live listings, not transaction prices; recomputed every hour. The full table by district is further down the page."
     }
   },
+  "PriceIndex": {
+    "confidenceHigh": "High",
+    "confidenceMedium": "Medium",
+    "confidenceLow": "Low",
+    "rangeColumn": "Range on one scale, {from} to {to}",
+    "methodologyLink": "Methodology",
+    "lowSample": "too little data: {count, plural, one {# flat} other {# flats}}",
+    "lowSampleNote": "* Fewer than {min} flats with a price per m²: indicative only, not a headline figure.",
+    "tableCaption": "Domlivo Price Index, {city}, {date}: asking prices of flats and studios by district, from {flats} flats with a price per m² among {listings} sale listings on Domlivo",
+    "editionCaption": "Domlivo Price Index, {month}: asking prices of flats and studios listed for sale on Domlivo",
+    "districtLowSample": "Fewer than {min} flats: indicative only.",
+    "districtSource": "Domlivo Price Index, {date}. <method>Methodology</method>",
+    "methodology": {
+      "metaTitle": "Domlivo Price Index: methodology and open data",
+      "metaDescription": "How the Domlivo Price Index of asking prices in Albania is computed: sample, filters, median and range, the 30-flat rule, how to cite it, CSV and JSON.",
+      "breadcrumb": "Price index methodology",
+      "h1": "Domlivo Price Index: how the figures are computed",
+      "lead": "The median asking price per square metre of flats and studios listed for sale on Domlivo, by city and district in Albania, recomputed every hour from the live listings. Free to reuse under CC BY 4.0.",
+      "figuresTitle": "Current figures",
+      "figuresLead": "Computed on {date}. A city with fewer than {min} flats in the sample shows its size instead of a headline figure.",
+      "figuresCaption": "Domlivo Price Index by city, {date}: median and 20th–80th percentile asking price per m² of flats and studios listed for sale on Domlivo",
+      "colCity": "City",
+      "colMedian": "Median, €/m²",
+      "colRange": "20–80th percentile, €/m²",
+      "colCount": "Flats in the sample",
+      "lowSampleCell": "too little data",
+      "methodTitle": "Method",
+      "askingTitle": "What an asking price is",
+      "askingBody": "The price a seller or an agency states in a listing. It is not the price a sale closed at: the two can differ, and the index measures only the first.",
+      "sampleTitle": "The sample",
+      "sampleBody": "Listings published on domlivo.com, active and offered for sale at the moment of computation. The price figures use flats and studios only; houses, villas, land and commercial space count towards the number of listings, not towards the prices.",
+      "filtersTitle": "Filters",
+      "filtersBody": "A listing without a price is left out. For a listing priced per m² the stated rate is used; otherwise the total asking price is divided by the floor area. An area under 15 m² is treated as a data error and left out of the per-m² figures.",
+      "thresholdTitle": "The {min}-flat threshold",
+      "thresholdBody": "A median over fewer than {min} flats is never shown as a headline figure. Pages say \"too little data\" with the number of flats, tables mark it with an asterisk, and the downloads flag it (low_sample).",
+      "medianTitle": "Median and range",
+      "medianBody": "The median is the middle value of the per-m² prices (the mean of the two middle values when their number is even), rounded to the euro. The range is the 20th to the 80th percentile, interpolated linearly, so one mistyped price does not move it.",
+      "frequencyTitle": "How often it is updated",
+      "frequencyBody": "Recomputed from the live listings at most once an hour, and every figure carries the date it was computed on. A monthly edition is published in the blog only when the figures have changed since the previous one.",
+      "researchTitle": "Other figures on the site",
+      "researchBody": "Zone tables with a confidence column report published market research, cited with its sources beside the table. They are not part of the index and can differ from it.",
+      "useTitle": "Using the data",
+      "citeTitle": "How to cite",
+      "citeBody": "Name the index, the place, the date of the figures and the page you took them from:",
+      "citeTemplate": "Domlivo Price Index, <city>, <date>, <URL>",
+      "citeExample": "For example:",
+      "licenceTitle": "Licence",
+      "licenceBody": "The figures and the files are published under Creative Commons Attribution 4.0: copy, share and adapt them, commercially too, with credit to the Domlivo Price Index and a link.",
+      "downloadsTitle": "Downloads",
+      "downloadsBody": "Regenerated hourly with the pages. The CSV has one file per city, the whole city first and then its districts; the JSON holds every city and district with a description of each field.",
+      "downloadAll": "All cities and districts (JSON)",
+      "downloadCity": "{city} by district (CSV)"
+    }
+  },
   "Calculators": {
     "propertyPrice": "Property price",
     "enterPrice": "Enter a property price to see the results",
@@ -664,6 +718,14 @@
       "types": {
         "title": "Property for sale in Albania by type"
       }
+    },
+    "searchAlert": {
+      "barText": "New listings for this search, once a day in Telegram",
+      "cta": "Turn on",
+      "title": "Get new listings for this search in Telegram",
+      "body": "Once a day the Domlivo bot sends what has just appeared and matches these filters. One tap to start, /stop to end.",
+      "ctaLong": "Get alerts in Telegram",
+      "emptyTitle": "Nothing matches yet"
     }
   },
   "NewBuilds": {
@@ -1187,6 +1249,35 @@
     "contactReceived": "Thank you! A manager will contact you soon.",
     "commandStart": "Start a chat with a manager",
     "description": "Domlivo — property in Albania. Ask about any listing on domlivo.com or tell us what you are looking for: a manager replies right here.",
-    "shortDescription": "Property in Albania: ask a Domlivo manager about any listing."
+    "shortDescription": "Property in Albania: ask a Domlivo manager about any listing.",
+    "commandStop": "Stop the search alerts",
+    "search": {
+      "subscribed": "Done. New listings for this search will come here, once a day at most.",
+      "yourSearch": "Your search: {summary}",
+      "latest": "Already on Domlivo:",
+      "openSearch": "Open the search on Domlivo",
+      "stopHint": "To stop the alerts, send /stop.",
+      "stopped": "Alerts are off. Press the bell on any search on domlivo.com to turn them on again.",
+      "nothingToStop": "You have no alerts on.",
+      "askMore": "Want a manager to pick options for you? Write here or send your number.",
+      "newListings": "New on Domlivo for your search",
+      "anyListing": "all listings",
+      "dealSale": "for sale",
+      "dealRent": "for rent",
+      "priceFrom": "from {amount}",
+      "priceTo": "up to {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "from {n} m²",
+      "areaTo": "up to {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ bedrooms",
+      "bedsExact": "{n} bedrooms",
+      "nearSea": "near the sea",
+      "investment": "for investment",
+      "stageUnfinished": "still being built",
+      "stageOffPlan": "off-plan",
+      "stageUnderConstruction": "under construction",
+      "stageCompleted": "completed"
+    }
   }
 }

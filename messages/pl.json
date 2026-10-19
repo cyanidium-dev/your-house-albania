@@ -411,6 +411,60 @@
       "note": "Ceny ofertowe z aktywnych ogłoszeń, nie ceny transakcyjne; przeliczane co godzinę. Pełna tabela według dzielnic znajduje się niżej na stronie."
     }
   },
+  "PriceIndex": {
+    "confidenceHigh": "Wysoka",
+    "confidenceMedium": "Średnia",
+    "confidenceLow": "Niska",
+    "rangeColumn": "Przedział na wspólnej skali, od {from} do {to}",
+    "methodologyLink": "Metodologia",
+    "lowSample": "za mało danych: {count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}}",
+    "lowSampleNote": "* Mniej niż {min} mieszkań z ceną za m²: tylko orientacyjnie, nie jako główna liczba.",
+    "tableCaption": "Domlivo Price Index, {city}, {date}: ceny ofertowe mieszkań i kawalerek według dzielnic, z {flats} mieszkań z ceną za m² spośród {listings} ogłoszeń sprzedaży na Domlivo",
+    "editionCaption": "Domlivo Price Index, {month}: ceny ofertowe mieszkań i kawalerek wystawionych na sprzedaż na Domlivo",
+    "districtLowSample": "Mniej niż {min} mieszkań: tylko orientacyjnie.",
+    "districtSource": "Domlivo Price Index, {date}. <method>Metodologia</method>",
+    "methodology": {
+      "metaTitle": "Domlivo Price Index: metodologia i otwarte dane",
+      "metaDescription": "Jak liczony jest Domlivo Price Index cen ofertowych w Albanii: próba, filtry, mediana i przedział, próg 30 mieszkań, jak go cytować, pliki CSV i JSON.",
+      "breadcrumb": "Metodologia indeksu cen",
+      "h1": "Domlivo Price Index: jak liczymy dane",
+      "lead": "Mediana ceny ofertowej za metr kwadratowy mieszkań i kawalerek wystawionych na sprzedaż na Domlivo, według miast i dzielnic Albanii, przeliczana co godzinę z aktywnych ogłoszeń. Do swobodnego wykorzystania na licencji CC BY 4.0.",
+      "figuresTitle": "Aktualne dane",
+      "figuresLead": "Stan na {date}. Gdy próba miasta liczy mniej niż {min} mieszkań, zamiast głównej liczby podajemy jej wielkość.",
+      "figuresCaption": "Domlivo Price Index według miast, {date}: mediana i 20.–80. percentyl ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo",
+      "colCity": "Miasto",
+      "colMedian": "Mediana, €/m²",
+      "colRange": "20.–80. percentyl, €/m²",
+      "colCount": "Mieszkań w próbie",
+      "lowSampleCell": "za mało danych",
+      "methodTitle": "Metodologia",
+      "askingTitle": "Czym jest cena ofertowa",
+      "askingBody": "Cena, którą sprzedający lub agencja podaje w ogłoszeniu. To nie jest cena, za którą zawarto transakcję: obie mogą się różnić, a indeks mierzy tylko pierwszą.",
+      "sampleTitle": "Próba",
+      "sampleBody": "Ogłoszenia opublikowane na domlivo.com, aktywne i wystawione na sprzedaż w chwili obliczenia. Ceny liczymy tylko dla mieszkań i kawalerek; domy, wille, działki i lokale użytkowe wliczają się do liczby ogłoszeń, ale nie do cen.",
+      "filtersTitle": "Filtry",
+      "filtersBody": "Ogłoszenie bez ceny jest pomijane. Przy cenie za m² używamy tej stawki; w innym przypadku całkowitą cenę ofertową dzielimy przez powierzchnię. Powierzchnię poniżej 15 m² traktujemy jako błąd danych i pomijamy w cenach za m².",
+      "thresholdTitle": "Próg {min} mieszkań",
+      "thresholdBody": "Mediana z mniej niż {min} mieszkań nigdy nie jest pokazywana jako główna liczba. Strony piszą „za mało danych” z liczbą mieszkań, tabele oznaczają ją gwiazdką, a pliki polem low_sample.",
+      "medianTitle": "Mediana i przedział",
+      "medianBody": "Mediana to środkowa wartość cen za m² (przy parzystej liczbie wartości średnia dwóch środkowych), zaokrąglona do euro. Przedział to 20.–80. percentyl z interpolacją liniową, więc jedna błędnie wpisana cena go nie przesuwa.",
+      "frequencyTitle": "Jak często aktualizujemy",
+      "frequencyBody": "Przeliczamy z aktywnych ogłoszeń najwyżej raz na godzinę, a każda liczba ma datę obliczenia. Miesięczne wydanie ukazuje się na blogu tylko wtedy, gdy dane zmieniły się od poprzedniego.",
+      "researchTitle": "Inne dane na stronie",
+      "researchBody": "Tabele stref z kolumną „Wiarygodność” podają opublikowane badania rynku, ze źródłami obok tabeli. Nie należą do indeksu i mogą się od niego różnić.",
+      "useTitle": "Korzystanie z danych",
+      "citeTitle": "Jak cytować",
+      "citeBody": "Podaj nazwę indeksu, miejsce, datę danych i stronę, z której je wziąłeś:",
+      "citeTemplate": "Domlivo Price Index, <miasto>, <data>, <URL>",
+      "citeExample": "Na przykład:",
+      "licenceTitle": "Licencja",
+      "licenceBody": "Dane i pliki publikujemy na licencji Creative Commons Uznanie autorstwa 4.0: można je kopiować, rozpowszechniać i przetwarzać, także komercyjnie, z podaniem Domlivo Price Index i linkiem.",
+      "downloadsTitle": "Pliki do pobrania",
+      "downloadsBody": "Generowane co godzinę razem ze stronami. CSV to jeden plik na miasto, najpierw całe miasto, potem dzielnice; JSON zawiera wszystkie miasta i dzielnice z opisem każdego pola.",
+      "downloadAll": "Wszystkie miasta i dzielnice (JSON)",
+      "downloadCity": "{city} według dzielnic (CSV)"
+    }
+  },
   "Calculators": {
     "propertyPrice": "Cena nieruchomości",
     "enterPrice": "Wpisz cenę nieruchomości, aby zobaczyć wyniki",
@@ -664,6 +718,14 @@
       "types": {
         "title": "Nieruchomości na sprzedaż w Albanii według rodzaju"
       }
+    },
+    "searchAlert": {
+      "barText": "Nowe oferty dla tego wyszukiwania, raz dziennie na Telegramie",
+      "cta": "Włącz",
+      "title": "Otrzymuj nowe oferty dla tego wyszukiwania na Telegramie",
+      "body": "Raz dziennie bot Domlivo wysyła to, co właśnie się pojawiło i pasuje do tych filtrów. Jedno dotknięcie, aby włączyć, /stop, aby wyłączyć.",
+      "ctaLong": "Otrzymuj na Telegramie",
+      "emptyTitle": "Na razie nic nie pasuje"
     }
   },
   "NewBuilds": {
@@ -1187,6 +1249,35 @@
     "contactReceived": "Dziękujemy! Menedżer wkrótce się z Tobą skontaktuje.",
     "commandStart": "Rozpocznij czat z menedżerem",
     "description": "Domlivo — nieruchomości w Albanii. Zapytaj o dowolną ofertę z domlivo.com albo napisz, czego szukasz: menedżer odpowie tutaj.",
-    "shortDescription": "Nieruchomości w Albanii: zapytaj menedżera Domlivo o dowolną ofertę."
+    "shortDescription": "Nieruchomości w Albanii: zapytaj menedżera Domlivo o dowolną ofertę.",
+    "commandStop": "Wyłącz powiadomienia o nowych ofertach",
+    "search": {
+      "subscribed": "Gotowe. Nowe oferty dla tego wyszukiwania będą przychodzić tutaj, najwyżej raz dziennie.",
+      "yourSearch": "Twoje wyszukiwanie: {summary}",
+      "latest": "Już na Domlivo:",
+      "openSearch": "Otwórz wyszukiwanie na Domlivo",
+      "stopHint": "Aby wyłączyć powiadomienia, wyślij /stop.",
+      "stopped": "Powiadomienia wyłączone. Naciśnij dzwonek w dowolnym wyszukiwaniu na domlivo.com, aby włączyć je ponownie.",
+      "nothingToStop": "Nie masz włączonych powiadomień.",
+      "askMore": "Chcesz, aby menedżer dobrał oferty dla Ciebie? Napisz tutaj albo wyślij numer.",
+      "newListings": "Nowe na Domlivo dla Twojego wyszukiwania",
+      "anyListing": "wszystkie oferty",
+      "dealSale": "na sprzedaż",
+      "dealRent": "na wynajem",
+      "priceFrom": "od {amount}",
+      "priceTo": "do {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "od {n} m²",
+      "areaTo": "do {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ sypialni",
+      "bedsExact": "sypialnie: {n}",
+      "nearSea": "blisko morza",
+      "investment": "pod inwestycję",
+      "stageUnfinished": "jeszcze w budowie",
+      "stageOffPlan": "na etapie projektu",
+      "stageUnderConstruction": "w budowie",
+      "stageCompleted": "ukończone"
+    }
   }
 }

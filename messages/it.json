@@ -411,6 +411,60 @@
       "note": "Prezzi richiesti dagli annunci attivi, non prezzi di compravendita; ricalcolati ogni ora. La tabella completa per quartiere è più in basso nella pagina."
     }
   },
+  "PriceIndex": {
+    "confidenceHigh": "Alta",
+    "confidenceMedium": "Media",
+    "confidenceLow": "Bassa",
+    "rangeColumn": "Intervallo su una scala comune, da {from} a {to}",
+    "methodologyLink": "Metodologia",
+    "lowSample": "dati insufficienti: {count, plural, one {# appartamento} other {# appartamenti}}",
+    "lowSampleNote": "* Meno di {min} appartamenti con prezzo al m²: solo indicativo, non un dato di riferimento.",
+    "tableCaption": "Domlivo Price Index, {city}, {date}: prezzi richiesti di appartamenti e monolocali per quartiere, da {flats} appartamenti con prezzo al m² su {listings} annunci di vendita su Domlivo",
+    "editionCaption": "Domlivo Price Index, {month}: prezzi richiesti di appartamenti e monolocali in vendita su Domlivo",
+    "districtLowSample": "Meno di {min} appartamenti: solo indicativo.",
+    "districtSource": "Domlivo Price Index, {date}. <method>Metodologia</method>",
+    "methodology": {
+      "metaTitle": "Domlivo Price Index: metodologia e dati aperti",
+      "metaDescription": "Come si calcola il Domlivo Price Index dei prezzi richiesti in Albania: campione, filtri, mediana e intervallo, la soglia di 30, come citarlo, CSV e JSON.",
+      "breadcrumb": "Metodologia dell'indice dei prezzi",
+      "h1": "Domlivo Price Index: come si calcolano i dati",
+      "lead": "La mediana del prezzo richiesto al metro quadro di appartamenti e monolocali in vendita su Domlivo, per città e quartiere in Albania, ricalcolata ogni ora dagli annunci attivi. Riutilizzabile liberamente con licenza CC BY 4.0.",
+      "figuresTitle": "Dati attuali",
+      "figuresLead": "Calcolati il {date}. Se il campione di una città ha meno di {min} appartamenti, al posto del dato di riferimento compare la sua dimensione.",
+      "figuresCaption": "Domlivo Price Index per città, {date}: mediana e 20°–80° percentile del prezzo richiesto al m² di appartamenti e monolocali in vendita su Domlivo",
+      "colCity": "Città",
+      "colMedian": "Mediana, €/m²",
+      "colRange": "20°–80° percentile, €/m²",
+      "colCount": "Appartamenti nel campione",
+      "lowSampleCell": "dati insufficienti",
+      "methodTitle": "Metodologia",
+      "askingTitle": "Che cos'è il prezzo richiesto",
+      "askingBody": "Il prezzo che il venditore o l'agenzia indica nell'annuncio. Non è il prezzo a cui si è chiusa la vendita: i due possono differire, e l'indice misura solo il primo.",
+      "sampleTitle": "Il campione",
+      "sampleBody": "Gli annunci pubblicati su domlivo.com, attivi e in vendita al momento del calcolo. I prezzi si basano solo su appartamenti e monolocali; case, ville, terreni e locali commerciali contano nel numero degli annunci, non nei prezzi.",
+      "filtersTitle": "Filtri",
+      "filtersBody": "Un annuncio senza prezzo viene escluso. Se il prezzo è al m² si usa quello; altrimenti il prezzo totale richiesto si divide per la superficie. Una superficie sotto i 15 m² è considerata un errore nei dati ed è esclusa dai prezzi al m².",
+      "thresholdTitle": "La soglia di {min} appartamenti",
+      "thresholdBody": "Una mediana su meno di {min} appartamenti non viene mai mostrata come dato di riferimento. Le pagine scrivono «dati insufficienti» con il numero di appartamenti, le tabelle la segnano con un asterisco, i file con il campo low_sample.",
+      "medianTitle": "Mediana e intervallo",
+      "medianBody": "La mediana è il valore centrale dei prezzi al m² (con un numero pari di valori, la media dei due centrali), arrotondata all'euro. L'intervallo va dal 20° all'80° percentile, con interpolazione lineare, così un solo prezzo sbagliato non lo sposta.",
+      "frequencyTitle": "Ogni quanto si aggiorna",
+      "frequencyBody": "Ricalcolato dagli annunci attivi al massimo una volta all'ora, e ogni dato riporta la data del calcolo. Un'edizione mensile esce nel blog solo se i dati sono cambiati rispetto alla precedente.",
+      "researchTitle": "Altri dati sul sito",
+      "researchBody": "Le tabelle per zona con la colonna «Affidabilità» riportano ricerche di mercato pubblicate, con le fonti accanto alla tabella. Non fanno parte dell'indice e possono differire da esso.",
+      "useTitle": "Usare i dati",
+      "citeTitle": "Come citare",
+      "citeBody": "Indicate l'indice, il luogo, la data dei dati e la pagina da cui li avete presi:",
+      "citeTemplate": "Domlivo Price Index, <città>, <data>, <URL>",
+      "citeExample": "Per esempio:",
+      "licenceTitle": "Licenza",
+      "licenceBody": "I dati e i file sono pubblicati con licenza Creative Commons Attribuzione 4.0: copiateli, condivideteli e adattateli, anche a fini commerciali, citando il Domlivo Price Index con un link.",
+      "downloadsTitle": "File da scaricare",
+      "downloadsBody": "Rigenerati ogni ora insieme alle pagine. In CSV un file per città, prima l'intera città e poi i quartieri; in JSON tutte le città e tutti i quartieri, con la descrizione di ogni campo.",
+      "downloadAll": "Tutte le città e i quartieri (JSON)",
+      "downloadCity": "{city} per quartiere (CSV)"
+    }
+  },
   "Calculators": {
     "propertyPrice": "Prezzo dell'immobile",
     "enterPrice": "Inserisci il prezzo dell'immobile per vedere i risultati",
@@ -664,6 +718,14 @@
       "types": {
         "title": "Immobili in vendita in Albania per tipologia"
       }
+    },
+    "searchAlert": {
+      "barText": "Nuovi annunci per questa ricerca, una volta al giorno su Telegram",
+      "cta": "Attiva",
+      "title": "Ricevi i nuovi annunci per questa ricerca su Telegram",
+      "body": "Una volta al giorno il bot di Domlivo invia ciò che è appena apparso e corrisponde a questi filtri. Un tocco per attivare, /stop per interrompere.",
+      "ctaLong": "Ricevi avvisi su Telegram",
+      "emptyTitle": "Ancora nessun annuncio corrispondente"
     }
   },
   "NewBuilds": {
@@ -1187,6 +1249,35 @@
     "contactReceived": "Grazie! Un consulente ti contatterà a breve.",
     "commandStart": "Inizia una chat con un consulente",
     "description": "Domlivo — immobili in Albania. Chiedi di qualsiasi annuncio su domlivo.com o raccontaci cosa cerchi: un consulente risponde qui.",
-    "shortDescription": "Immobili in Albania: chiedi a un consulente Domlivo di qualsiasi annuncio."
+    "shortDescription": "Immobili in Albania: chiedi a un consulente Domlivo di qualsiasi annuncio.",
+    "commandStop": "Interrompi gli avvisi sui nuovi annunci",
+    "search": {
+      "subscribed": "Fatto. I nuovi annunci per questa ricerca arriveranno qui, al massimo una volta al giorno.",
+      "yourSearch": "La tua ricerca: {summary}",
+      "latest": "Già su Domlivo:",
+      "openSearch": "Apri la ricerca su Domlivo",
+      "stopHint": "Per interrompere gli avvisi, invia /stop.",
+      "stopped": "Avvisi disattivati. Premi la campanella in qualsiasi ricerca su domlivo.com per riattivarli.",
+      "nothingToStop": "Non hai avvisi attivi.",
+      "askMore": "Vuoi che un consulente selezioni le opzioni per te? Scrivi qui o invia il tuo numero.",
+      "newListings": "Novità su Domlivo per la tua ricerca",
+      "anyListing": "tutti gli annunci",
+      "dealSale": "in vendita",
+      "dealRent": "in affitto",
+      "priceFrom": "da {amount}",
+      "priceTo": "fino a {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "da {n} m²",
+      "areaTo": "fino a {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ camere",
+      "bedsExact": "{n} camere",
+      "nearSea": "vicino al mare",
+      "investment": "per investimento",
+      "stageUnfinished": "ancora in costruzione",
+      "stageOffPlan": "su carta",
+      "stageUnderConstruction": "in costruzione",
+      "stageCompleted": "completato"
+    }
   }
 }

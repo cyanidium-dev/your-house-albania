@@ -3,6 +3,9 @@ import {
   START_PAYLOAD_MAX,
   buildGeneralStartPayload,
   buildPropertyStartPayload,
+  buildSearchStartPayload,
+  decodeSearchFilters,
+  encodeSearchFilters,
   parseStartPayload,
   propertyIdCandidates,
 } from './startPayload'
@@ -75,4 +78,70 @@ describe('parseStartPayload', () => {
       expect(parseStartPayload(raw as string)).toBeNull()
     },
   )
+})
+
+describe('search payloads', () => {
+  it('encodes the search and reads it back', () => {
+    const filters = {
+      city: 'durres',
+      deal: 'sale',
+      type: 'apartment',
+      minPrice: 50000,
+      maxPrice: 120000,
+      beds: 2,
+      nearSea: true,
+    }
+    const p = buildSearchStartPayload({ locale: 'de', filters })
+    expect(p).toBe('s_de_Cdurres_Lsale_Tapartment_P50000-120000_B2_N')
+    expect(parseStartPayload(p)).toEqual({ kind: 'search', locale: 'de', filters })
+  })
+
+  it('keeps open ranges, exact bedrooms, stage, extra cities and types', () => {
+    const encoded = encodeSearchFilters(
+      { maxPrice: 90000, minArea: 40, bedsExact: 1, stage: 'unfinished', cities: ['vlore', 'sarande'], types: ['studio'] },
+      64,
+    )
+    expect(encoded).toBe('P-90000_E1_A40-_Sunfinished_Mvlore_Msarande_Ystudio')
+    expect(decodeSearchFilters(encoded!)).toEqual({
+      maxPrice: 90000,
+      minArea: 40,
+      bedsExact: 1,
+      stage: 'unfinished',
+      cities: ['vlore', 'sarande'],
+      types: ['studio'],
+    })
+  })
+
+  it('drops the tokens that do not fit, never cuts one in half', () => {
+    const p = buildSearchStartPayload({
+      locale: 'en',
+      filters: {
+        city: 'durres',
+        district: 'plazh-i-ri-hekurudha-lagjja-nr-13',
+        deal: 'sale',
+        type: 'apartment',
+        minPrice: 50000,
+        maxPrice: 120000,
+        beds: 2,
+        minArea: 40,
+        maxArea: 90,
+      },
+    })!
+    expect(p.length).toBeLessThanOrEqual(START_PAYLOAD_MAX)
+    expect(parseStartPayload(p)).toEqual({
+      kind: 'search',
+      locale: 'en',
+      filters: { city: 'durres', district: 'plazh-i-ri-hekurudha-lagjja-nr-13', deal: 'sale', type: 'apartment' },
+    })
+  })
+
+  it('has nothing to subscribe to without filters', () => {
+    expect(buildSearchStartPayload({ locale: 'en', filters: {} })).toBeNull()
+    expect(buildSearchStartPayload({ locale: 'en', filters: { city: 'Durrës' } })).toBeNull()
+    expect(parseStartPayload('s_en_Qfoo')).toBeNull()
+  })
+
+  it('skips what it does not understand and keeps the rest', () => {
+    expect(decodeSearchFilters('Cdurres_Sfoo_B200_Px-y_Q1')).toEqual({ city: 'durres' })
+  })
 })

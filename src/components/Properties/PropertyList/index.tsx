@@ -26,10 +26,14 @@ import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
 import { propertyCardCanonicalCoverUrl } from '@/lib/property/propertyCardImages'
 import { getTranslations } from 'next-intl/server'
 import { LISTINGS_ANCHOR_ID } from '@/lib/routes/currentCityListing'
+import { telegramBotUrl, telegramBotUsername } from '@/lib/contacts/messengerLinks'
+import { buildSearchStartPayload } from '@/lib/telegram/startPayload'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
 const DEFAULT_PAGE_SIZE = 24
+/** The Telegram search-alert block in the catalogue; see the note where it is built. */
+const SEARCH_ALERTS_IN_CATALOG = false
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
 // Public deal filter options: rentals hidden from the UI (direct URLs keep working).
@@ -128,6 +132,39 @@ async function PropertiesListing({
   const stageFilter = parsedFilters.stage
   const investmentFilter = parsedFilters.investment
   const viewMode = parseViewMode(searchParams.view)
+
+  // "New listings for this search in Telegram": the search goes into the
+  // bot's Start payload (src/lib/telegram/bot/search.ts). Not on an agent's
+  // page — the subscription is to the market, not to one agent's stock.
+  // Off since 2026-10-19 (owner's call): listings arrive in partner batches
+  // of a hundred or more about once a month, prices never move, and the DE,
+  // PL and IT visitors are not on Telegram — the block took the space above
+  // the cards for one message a month. The bot still honours `s_` links.
+  const botUsername = SEARCH_ALERTS_IN_CATALOG ? telegramBotUsername() : null
+  const searchAlertPayload =
+    botUsername && !agentSlugFilter
+      ? buildSearchStartPayload({
+          locale,
+          filters: {
+            city: cityFilter || undefined,
+            cities: citiesFilter.length ? citiesFilter : undefined,
+            district: districtFilter || undefined,
+            type: typeFilter || undefined,
+            types: typesFilter.length ? typesFilter : undefined,
+            deal: dealFilter || undefined,
+            stage: stageFilter || undefined,
+            minPrice: minPriceFilter || undefined,
+            maxPrice: maxPriceFilter || undefined,
+            minArea: minAreaFilter || undefined,
+            maxArea: maxAreaFilter || undefined,
+            beds: bedsFilter || undefined,
+            bedsExact: bedsExactFilter || undefined,
+            nearSea: nearSeaFilter || undefined,
+            investment: investmentFilter || undefined,
+          },
+        })
+      : null
+  const searchAlertHref = botUsername && searchAlertPayload ? telegramBotUrl(botUsername, searchAlertPayload) : null
 
   const rawPage = parsedFilters.page
 
@@ -360,6 +397,7 @@ async function PropertiesListing({
             totalCount={totalItems}
             pageSize={pageSize}
             loadMoreQuery={loadMoreQuery}
+            searchAlertHref={searchAlertHref}
             serverSearch={serverSearch}
             afterFilters={afterFilters}
           />

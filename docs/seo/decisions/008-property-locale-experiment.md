@@ -1,6 +1,6 @@
 # ADR 008 — Listing pages: fewer indexed locales per listing, as an experiment
 
-Status: accepted · 2026-09-25 · review 2026-10-15 · applies [ADR 007](007-experiments.md) to `/property/*`
+Status: closed 2026-10-19 (outcome 2, no difference) · accepted 2026-09-25 · review 2026-10-15 · applies [ADR 007](007-experiments.md) to `/property/*`
 
 ## Context
 
@@ -28,6 +28,17 @@ Read, per sitemap, the indexed and "discovered, not indexed" counts, and the Goo
 3. **Trimmed arm loses clicks in the cut locales with no gain elsewhere**: same as 2.
 
 Never by extending the date silently.
+
+## Result (read 2026-10-19, Search Console page report per sitemap, data of 2026-10-12)
+
+| Arm | URLs in sitemap | Indexed | Not indexed | Indexed share | Indexed locale versions per listing |
+|---|---:|---:|---:|---:|---:|
+| full (`sitemap-properties.xml`, 368 listings x 7) | 2,576 | 1,070 | 1,380 | 42% | 2.9 of 7 |
+| trimmed (`sitemap-properties-trimmed.xml`, 359 listings x 4) | 1,436 | 765 | 691 | 53% | 2.1 of 4 |
+
+The trimmed arm's share is eleven points higher, but per listing it holds fewer indexed pages than the full arm, and the four locales it kept are still only half indexed. Cutting three locales did not make Google fetch the rest: the queue is not the limit, authority is. Outcome 2.
+
+Applied: `TRIMMED_LOCALES = []`, so every listing is back in all seven locales (hreflang, sitemap, IndexNow); the trimmed sitemap is empty and removed from `sitemap.xml` and robots. The uk, pl and sq copies were translated all along, so nothing else had to change. Owner: resubmit `sitemap-properties.xml` in Search Console and delete the trimmed one there. Next lever: links and mentions (growth plan track A4/B).
 
 ## Alternatives considered
 

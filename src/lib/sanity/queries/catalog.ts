@@ -20,6 +20,8 @@ import {
   type FlatPriceSummary,
 } from '@/lib/catalog/listingPriceSummary';
 import { summarizeInventory, type InventoryRow, type InventorySummary } from '@/lib/catalog/inventorySummary';
+import { isNewBuildRow } from '@/lib/priceIndex/snapshot';
+import { fetchPriceIndexRows } from './priceIndex';
 import type { PropertyCatalogBanner } from '@/types/propertyCatalogBanner';
 import type { CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 
@@ -187,7 +189,7 @@ function buildCatalogPredicateParts(
   return parts;
 }
 
-function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
+export function buildCatalogWhereClause(filters: CatalogFilters): CatalogWhereParams {
   const { excludedPropertyIds } = filters;
 
   const parts: string[] = ['_type == "property"', publishedPropertyFilter()];
@@ -529,34 +531,22 @@ export type ListingPriceIndexRow = FlatPriceSummary & {
 
 /**
  * Asking prices across one city's live sale listings, for the whole city and
- * per published district — the "our listings" table on city pages. One fetch,
- * grouped here, so every row comes from the same snapshot.
+ * per published district — the "our listings" table on city pages. Derived
+ * from the price index read (`fetchPriceIndexRows`), so every row, the answer
+ * box above it and the downloads come from the same snapshot.
  */
-export const fetchCityListingPriceIndex = sanityCache(
-  async (citySlug: string): Promise<ListingPriceIndexRow[]> => {
-    const client = getClient();
-    if (!client || !citySlug) return [];
-    const { where, params } = buildCatalogWhereClause({ city: citySlug });
-    type Row = { price?: number; priceUnit?: string; area?: number; type?: string; d?: string; dt?: unknown; dp?: boolean };
-    try {
-      const rows = await client.fetch<Row[]>(
-        `*[${where}]{price, priceUnit, area, "type": type->slug.current,
-          "d": district->slug.current, "dt": district->title, "dp": district->isPublished != false}`,
-        params,
-      );
-      if (!Array.isArray(rows) || rows.length === 0) return [];
-      const districts = [...groupRowsBy(rows, (r) => (r.dp ? r.d : null)).entries()]
-        .map(([slug, items]) => ({ districtSlug: slug, districtTitle: items[0]?.dt, ...summarizeFlatPrices(items) }))
-        .sort((a, b) => b.count - a.count || String(a.districtSlug).localeCompare(String(b.districtSlug)));
-      return [{ districtSlug: null, districtTitle: undefined, ...summarizeFlatPrices(rows) }, ...districts];
-    } catch (err) {
-      console.warn('[Sanity] fetchCityListingPriceIndex failed:', err);
-      return [];
-    }
-  },
-  ['sanity-city-listing-price-index'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
-);
+export async function fetchCityListingPriceIndex(citySlug: string): Promise<ListingPriceIndexRow[]> {
+  if (!citySlug) return [];
+  const data = await fetchPriceIndexRows();
+  if (!data) return [];
+  const rows = data.rows.filter((r) => r.c === citySlug);
+  if (rows.length === 0) return [];
+  const districtTitle = new Map(data.districts.map((d) => [d.slug, d.title]));
+  const districts = [...groupRowsBy(rows, (r) => (r.d && districtTitle.has(r.d) ? r.d : null)).entries()]
+    .map(([slug, items]) => ({ districtSlug: slug, districtTitle: districtTitle.get(slug), ...summarizeFlatPrices(items) }))
+    .sort((a, b) => b.count - a.count || String(a.districtSlug).localeCompare(String(b.districtSlug)));
+  return [{ districtSlug: null, districtTitle: undefined, ...summarizeFlatPrices(rows) }, ...districts];
+}
 
 export type CityPriceBands = {
   /** Sale listings of every type in the city. */
@@ -570,47 +560,31 @@ export type CityPriceBands = {
   districts: Array<FlatPriceBand & { districtSlug: string; districtTitle?: unknown }>;
 };
 
-const NEW_BUILD_STAGES: readonly string[] = ['off-plan', 'under-construction'];
-
 /**
  * The answer a buyer wants before the tables: what a square metre asks in
  * this city, as a 20–80% band, for the whole city, for new builds against
- * completed stock, and per district. Same filter and arithmetic as
+ * completed stock, and per district. Same read and arithmetic as
  * `fetchCityListingPriceIndex`; the split by construction stage is the only
  * addition. Renders as `CityPriceAnswer` under the city page's hero.
  */
-export const fetchCityPriceBands = sanityCache(
-  async (citySlug: string): Promise<CityPriceBands | null> => {
-    const client = getClient();
-    if (!client || !citySlug) return null;
-    const { where, params } = buildCatalogWhereClause({ city: citySlug });
-    type Row = { price?: number; priceUnit?: string; area?: number; type?: string; stage?: string; d?: string; dt?: unknown; dp?: boolean };
-    try {
-      const rows = await client.fetch<Row[]>(
-        `*[${where}]{price, priceUnit, area, "type": type->slug.current, "stage": constructionStage,
-          "d": district->slug.current, "dt": district->title, "dp": district->isPublished != false}`,
-        params,
-      );
-      if (!Array.isArray(rows) || rows.length === 0) return null;
-      const isNew = (r: Row) => typeof r.stage === 'string' && NEW_BUILD_STAGES.includes(r.stage);
-      const districts = [...groupRowsBy(rows, (r) => (r.dp ? r.d : null)).entries()]
-        .map(([districtSlug, items]) => ({ districtSlug, districtTitle: items[0]?.dt, ...flatPriceBand(items) }))
-        .sort((a, b) => b.flatCount - a.flatCount || a.districtSlug.localeCompare(b.districtSlug));
-      return {
-        listingCount: rows.length,
-        city: flatPriceBand(rows),
-        newBuild: flatPriceBand(rows.filter(isNew)),
-        completed: flatPriceBand(rows.filter((r) => !isNew(r))),
-        districts,
-      };
-    } catch (err) {
-      console.warn('[Sanity] fetchCityPriceBands failed:', err);
-      return null;
-    }
-  },
-  ['sanity-city-price-bands'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
-);
+export async function fetchCityPriceBands(citySlug: string): Promise<CityPriceBands | null> {
+  if (!citySlug) return null;
+  const data = await fetchPriceIndexRows();
+  if (!data) return null;
+  const rows = data.rows.filter((r) => r.c === citySlug);
+  if (rows.length === 0) return null;
+  const districtTitle = new Map(data.districts.map((d) => [d.slug, d.title]));
+  const districts = [...groupRowsBy(rows, (r) => (r.d && districtTitle.has(r.d) ? r.d : null)).entries()]
+    .map(([districtSlug, items]) => ({ districtSlug, districtTitle: districtTitle.get(districtSlug), ...flatPriceBand(items) }))
+    .sort((a, b) => b.flatCount - a.flatCount || a.districtSlug.localeCompare(b.districtSlug));
+  return {
+    listingCount: rows.length,
+    city: flatPriceBand(rows),
+    newBuild: flatPriceBand(rows.filter(isNewBuildRow)),
+    completed: flatPriceBand(rows.filter((r) => !isNewBuildRow(r))),
+    districts,
+  };
+}
 
 export type NationalListingPriceIndex = {
   /** Every live sale listing on the site. */
@@ -624,37 +598,22 @@ export type NationalListingPriceIndex = {
 /**
  * Asking prices across every live sale listing, nationally and per published
  * city, plus the split by property type — what the `/sale` hub prints under its
- * grid. One fetch and the same arithmetic as the city index, so the Durrës row
- * here and the figures on `/albania/durres` come out of one function.
+ * grid. The same read and arithmetic as the city index, so the Durrës row
+ * here and the figures on `/albania/durres` come out of one snapshot.
  */
-export const fetchNationalListingPriceIndex = sanityCache(
-  async (): Promise<NationalListingPriceIndex | null> => {
-    const client = getClient();
-    if (!client) return null;
-    const { where, params } = buildCatalogWhereClause({ deal: 'sale' });
-    type Row = { price?: number; priceUnit?: string; area?: number; type?: string; c?: string; cp?: boolean };
-    try {
-      const rows = await client.fetch<Row[]>(
-        `*[${where}]{price, priceUnit, area, "type": type->slug.current,
-          "c": city->slug.current, "cp": city->isPublished != false}`,
-        params,
-      );
-      if (!Array.isArray(rows)) return null;
-      const cities = [...groupRowsBy(rows, (r) => (r.cp ? r.c : null)).entries()]
-        .map(([citySlug, items]) => ({ citySlug, ...summarizeFlatPrices(items) }))
-        .sort((a, b) => b.count - a.count || a.citySlug.localeCompare(b.citySlug));
-      const types = [...groupRowsBy(rows, (r) => r.type).entries()]
-        .map(([typeSlug, items]) => ({ typeSlug, count: items.length }))
-        .sort((a, b) => b.count - a.count || a.typeSlug.localeCompare(b.typeSlug));
-      return { national: summarizeFlatPrices(rows), cities, types };
-    } catch (err) {
-      console.warn('[Sanity] fetchNationalListingPriceIndex failed:', err);
-      return null;
-    }
-  },
-  ['sanity-national-listing-price-index'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.propertyType] },
-);
+export async function fetchNationalListingPriceIndex(): Promise<NationalListingPriceIndex | null> {
+  const data = await fetchPriceIndexRows();
+  if (!data) return null;
+  const { rows } = data;
+  const published = new Set(data.cities.map((c) => c.slug));
+  const cities = [...groupRowsBy(rows, (r) => (r.c && published.has(r.c) ? r.c : null)).entries()]
+    .map(([citySlug, items]) => ({ citySlug, ...summarizeFlatPrices(items) }))
+    .sort((a, b) => b.count - a.count || a.citySlug.localeCompare(b.citySlug));
+  const types = [...groupRowsBy(rows, (r) => r.type).entries()]
+    .map(([typeSlug, items]) => ({ typeSlug, count: items.length }))
+    .sort((a, b) => b.count - a.count || a.typeSlug.localeCompare(b.typeSlug));
+  return { national: summarizeFlatPrices(rows), cities, types };
+}
 
 type PropertyCatalogBannerCandidate = {
   _key?: string;

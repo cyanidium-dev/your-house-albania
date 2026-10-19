@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
+import { fetchPriceIndexSnapshot } from '@/lib/sanity/client'
+import { keyFiguresMarkdown } from '@/lib/priceIndex/llmsText'
+import type { PriceIndexSnapshot } from '@/lib/priceIndex/snapshot'
 
 /**
  * `/llms.txt`: a plain-text map of the site for AI assistants.
@@ -11,11 +14,13 @@ import { getSiteBaseUrl } from '@/lib/siteUrl'
  *
  * English on purpose. Every page named here has the same page in six other
  * languages under its own locale prefix, which the file says once.
+ *
+ * "Key figures" is the Domlivo Price Index line per city, from the same
+ * snapshot as the `/info` pages, so the file is regenerated hourly with them.
  */
-export const dynamic = 'force-static'
-export const revalidate = 86400
+export const revalidate = 3600
 
-function buildLlmsTxt(base: string): string {
+function buildLlmsTxt(base: string, snapshot: PriceIndexSnapshot | null): string {
   const u = (path: string) => `${base}${path}`
   return `# Domlivo
 
@@ -25,9 +30,9 @@ The idea behind it: an analytical marketplace that no single agency owns. Owners
 
 Every page exists in seven languages under its locale prefix: /en, /sq, /ru, /uk, /it, /pl, /de. The English URLs are listed here.
 
-Figures on the price pages come from two places and are labelled as such: asking prices computed from the listings live on Domlivo (count, median price and median price per m² by district, refreshed hourly), and published market sources, each cited on the page with a link.
+Figures on the price pages come from two places and are labelled as such: the Domlivo Price Index, asking prices computed from the listings live on Domlivo (median and 20th–80th percentile price per m², sample size, by city and district, refreshed hourly, CC BY 4.0, method at ${u('/en/methodology')}), and published market research, each cited on the page with a link.
 
-## Listings
+${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}## Listings
 
 - [Property for sale in Albania](${u('/en/sale')}): all sale listings with filters for city, district, type, price and area
 - [Durrës: apartments and property for sale](${u('/en/albania/durres')}): the largest section, with links to each district and to one-bedroom, two-bedroom, near-the-sea, new-build and under €100k selections
@@ -40,6 +45,9 @@ Figures on the price pages come from two places and are labelled as such: asking
 - [Tirana: prices and districts](${u('/en/albania/tirana/info')})
 - [Vlorë: prices and districts](${u('/en/albania/vlore/info')})
 - [Sarandë: prices and districts](${u('/en/albania/sarande/info')})
+- [Price index methodology](${u('/en/methodology')}): what an asking price is, the sample, filters, the 30-flat threshold, how to cite, licence
+- [Price index data (JSON)](${u('/data/prices/index.json')}) and one CSV per city at ${u('/data/prices/<city>.csv')}
+- [Full text for language models](${u('/llms-full.txt')}): the methodology and every city's district table
 
 ## Guides and comparisons
 
@@ -60,12 +68,13 @@ Figures on the price pages come from two places and are labelled as such: asking
 `
 }
 
-export function GET() {
+export async function GET() {
   const base = getSiteBaseUrl().replace(/\/$/, '')
-  return new NextResponse(buildLlmsTxt(base), {
+  const snapshot = await fetchPriceIndexSnapshot()
+  return new NextResponse(buildLlmsTxt(base, snapshot), {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
     },
   })
 }

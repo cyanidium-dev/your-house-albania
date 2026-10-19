@@ -411,6 +411,60 @@
       "note": "Angebotspreise aus aktiven Inseraten, keine Transaktionspreise; stündlich neu berechnet. Die vollständige Tabelle nach Stadtteilen steht weiter unten."
     }
   },
+  "PriceIndex": {
+    "confidenceHigh": "Hoch",
+    "confidenceMedium": "Mittel",
+    "confidenceLow": "Gering",
+    "rangeColumn": "Spanne auf einer gemeinsamen Skala, von {from} bis {to}",
+    "methodologyLink": "Methodik",
+    "lowSample": "zu wenige Daten: {count, plural, one {# Wohnung} other {# Wohnungen}}",
+    "lowSampleNote": "* Weniger als {min} Wohnungen mit Quadratmeterpreis: nur ein Anhaltspunkt, keine Leitzahl.",
+    "tableCaption": "Domlivo Price Index, {city}, {date}: Angebotspreise von Wohnungen und Studios nach Stadtteil, aus {flats} Wohnungen mit Quadratmeterpreis unter {listings} Verkaufsanzeigen auf Domlivo",
+    "editionCaption": "Domlivo Price Index, {month}: Angebotspreise der auf Domlivo zum Verkauf stehenden Wohnungen und Studios",
+    "districtLowSample": "Weniger als {min} Wohnungen: nur ein Anhaltspunkt.",
+    "districtSource": "Domlivo Price Index, {date}. <method>Methodik</method>",
+    "methodology": {
+      "metaTitle": "Domlivo Price Index: Methodik und offene Daten",
+      "metaDescription": "Wie der Domlivo Price Index der Angebotspreise in Albanien entsteht: Stichprobe, Filter, Median und Spanne, 30-Wohnungen-Regel, Zitierweise, CSV und JSON.",
+      "breadcrumb": "Methodik des Preisindex",
+      "h1": "Domlivo Price Index: wie die Zahlen berechnet werden",
+      "lead": "Der Median des Angebotspreises pro Quadratmeter für Wohnungen und Studios, die auf Domlivo zum Verkauf stehen, nach Stadt und Stadtteil in Albanien, stündlich aus den aktiven Anzeigen neu berechnet. Frei nutzbar unter CC BY 4.0.",
+      "figuresTitle": "Aktuelle Zahlen",
+      "figuresLead": "Berechnet am {date}. Hat eine Stadt weniger als {min} Wohnungen in der Stichprobe, steht statt einer Leitzahl die Größe der Stichprobe.",
+      "figuresCaption": "Domlivo Price Index nach Stadt, {date}: Median und 20.–80. Perzentil des Angebotspreises pro m² der auf Domlivo zum Verkauf stehenden Wohnungen und Studios",
+      "colCity": "Stadt",
+      "colMedian": "Median, €/m²",
+      "colRange": "20.–80. Perzentil, €/m²",
+      "colCount": "Wohnungen in der Stichprobe",
+      "lowSampleCell": "zu wenige Daten",
+      "methodTitle": "Methodik",
+      "askingTitle": "Was ein Angebotspreis ist",
+      "askingBody": "Der Preis, den Verkäufer oder Makler in der Anzeige nennen. Er ist nicht der Preis, zu dem verkauft wurde: Beide können abweichen, und der Index misst nur den ersten.",
+      "sampleTitle": "Die Stichprobe",
+      "sampleBody": "Anzeigen auf domlivo.com, die zum Zeitpunkt der Berechnung veröffentlicht, aktiv und zum Verkauf angeboten sind. Die Preiszahlen stützen sich nur auf Wohnungen und Studios; Häuser, Villen, Grundstücke und Gewerbeflächen zählen zur Zahl der Anzeigen, nicht zu den Preisen.",
+      "filtersTitle": "Filter",
+      "filtersBody": "Eine Anzeige ohne Preis bleibt außen vor. Bei einem Preis pro m² wird dieser Satz verwendet, sonst der Gesamtpreis geteilt durch die Wohnfläche. Eine Fläche unter 15 m² gilt als Datenfehler und fließt nicht in die Quadratmeterpreise ein.",
+      "thresholdTitle": "Die Schwelle von {min} Wohnungen",
+      "thresholdBody": "Ein Median aus weniger als {min} Wohnungen erscheint nie als Leitzahl. Die Seiten schreiben „zu wenige Daten“ mit der Zahl der Wohnungen, Tabellen markieren ihn mit einem Sternchen, die Downloads mit dem Feld low_sample.",
+      "medianTitle": "Median und Spanne",
+      "medianBody": "Der Median ist der mittlere Wert der Quadratmeterpreise (bei gerader Anzahl der Mittelwert der beiden mittleren), auf den Euro gerundet. Die Spanne reicht vom 20. bis zum 80. Perzentil, linear interpoliert, sodass ein einzelner Tippfehler sie nicht verschiebt.",
+      "frequencyTitle": "Wie oft aktualisiert wird",
+      "frequencyBody": "Höchstens einmal pro Stunde aus den aktiven Anzeigen neu berechnet; jede Zahl trägt das Datum ihrer Berechnung. Eine Monatsausgabe erscheint im Blog nur, wenn sich die Zahlen seit der vorigen geändert haben.",
+      "researchTitle": "Andere Zahlen auf der Website",
+      "researchBody": "Zonentabellen mit einer Spalte „Verlässlichkeit“ geben veröffentlichte Marktforschung wieder, mit den Quellen neben der Tabelle. Sie gehören nicht zum Index und können von ihm abweichen.",
+      "useTitle": "Die Daten nutzen",
+      "citeTitle": "Zitierweise",
+      "citeBody": "Nennen Sie den Index, den Ort, das Datum der Zahlen und die Seite, von der Sie sie haben:",
+      "citeTemplate": "Domlivo Price Index, <Stadt>, <Datum>, <URL>",
+      "citeExample": "Zum Beispiel:",
+      "licenceTitle": "Lizenz",
+      "licenceBody": "Die Zahlen und Dateien stehen unter Creative Commons Namensnennung 4.0: kopieren, weitergeben und bearbeiten, auch kommerziell, mit Nennung des Domlivo Price Index und einem Link.",
+      "downloadsTitle": "Downloads",
+      "downloadsBody": "Stündlich mit den Seiten neu erzeugt. Als CSV eine Datei pro Stadt, zuerst die ganze Stadt, dann ihre Stadtteile; als JSON alle Städte und Stadtteile mit einer Beschreibung jedes Feldes.",
+      "downloadAll": "Alle Städte und Stadtteile (JSON)",
+      "downloadCity": "{city} nach Stadtteil (CSV)"
+    }
+  },
   "Calculators": {
     "propertyPrice": "Kaufpreis",
     "enterPrice": "Kaufpreis eingeben, um die Ergebnisse zu sehen",
@@ -664,6 +718,14 @@
       "types": {
         "title": "Immobilien zum Kauf in Albanien nach Art"
       }
+    },
+    "searchAlert": {
+      "barText": "Neue Angebote zu dieser Suche, einmal täglich in Telegram",
+      "cta": "Einschalten",
+      "title": "Neue Angebote zu dieser Suche in Telegram erhalten",
+      "body": "Einmal am Tag schickt der Domlivo-Bot, was gerade neu dazugekommen ist und zu diesen Filtern passt. Ein Tippen zum Einschalten, /stop zum Beenden.",
+      "ctaLong": "In Telegram erhalten",
+      "emptyTitle": "Noch nichts Passendes"
     }
   },
   "NewBuilds": {
@@ -1187,6 +1249,35 @@
     "contactReceived": "Danke! Ein Berater meldet sich in Kürze bei Ihnen.",
     "commandStart": "Chat mit einem Berater starten",
     "description": "Domlivo – Immobilien in Albanien. Fragen Sie nach jedem Objekt auf domlivo.com oder schreiben Sie, was Sie suchen: Ein Berater antwortet direkt hier.",
-    "shortDescription": "Immobilien in Albanien: Fragen Sie einen Domlivo-Berater zu jedem Objekt."
+    "shortDescription": "Immobilien in Albanien: Fragen Sie einen Domlivo-Berater zu jedem Objekt.",
+    "commandStop": "Benachrichtigungen zu neuen Angeboten beenden",
+    "search": {
+      "subscribed": "Erledigt. Neue Angebote zu dieser Suche kommen hier an, höchstens einmal am Tag.",
+      "yourSearch": "Ihre Suche: {summary}",
+      "latest": "Schon auf Domlivo:",
+      "openSearch": "Suche auf Domlivo öffnen",
+      "stopHint": "Zum Abbestellen senden Sie /stop.",
+      "stopped": "Benachrichtigungen sind aus. Tippen Sie bei einer Suche auf domlivo.com auf die Glocke, um sie wieder einzuschalten.",
+      "nothingToStop": "Sie haben keine aktiven Benachrichtigungen.",
+      "askMore": "Soll ein Berater Angebote für Sie heraussuchen? Schreiben Sie hier oder senden Sie Ihre Nummer.",
+      "newListings": "Neu auf Domlivo zu Ihrer Suche",
+      "anyListing": "alle Angebote",
+      "dealSale": "zum Kauf",
+      "dealRent": "zur Miete",
+      "priceFrom": "ab {amount}",
+      "priceTo": "bis {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "ab {n} m²",
+      "areaTo": "bis {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ Schlafzimmer",
+      "bedsExact": "{n} Schlafzimmer",
+      "nearSea": "am Meer",
+      "investment": "als Kapitalanlage",
+      "stageUnfinished": "noch im Bau",
+      "stageOffPlan": "in Planung",
+      "stageUnderConstruction": "im Bau",
+      "stageCompleted": "fertiggestellt"
+    }
   }
 }

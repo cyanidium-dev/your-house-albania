@@ -86,10 +86,14 @@ export function formatStartForTeam(input: {
   property?: BotProperty | null
   /** The payload named a listing the bot could not find. */
   missingProperty?: string
+  /** Start on a search-alert link: the visitor now gets new listings for this search. */
+  search?: { summary: string; url: string }
   internal?: boolean
 }): string {
   const lines = [
-    `${input.internal ? '[ТЕСТ] ' : ''}🤖 <b>Лид из Telegram-бота</b> — нажал «Старт»`,
+    `${input.internal ? '[ТЕСТ] ' : ''}🤖 <b>Лид из Telegram-бота</b> — ${
+      input.search ? 'подписался на новые объекты' : 'нажал «Старт»'
+    }`,
     '',
     `Кто: ${whoHtml(input.user)}`,
     `Язык: ${input.locale.toUpperCase()}${input.siteLocale ? ' (сайт)' : ''}${
@@ -102,6 +106,9 @@ export function formatStartForTeam(input: {
     lines.push(escapeHtml(input.property.url))
   } else if (input.missingProperty) {
     lines.push(`Объект: ${escapeHtml(input.missingProperty)} (не найден на сайте)`)
+  }
+  if (input.search) {
+    lines.push(`Поиск: <b>${escapeHtml(input.search.summary)}</b>`, escapeHtml(input.search.url))
   }
   lines.push(
     '',
@@ -124,6 +131,36 @@ export function formatMessageHeader(input: {
   return `💬 ${parts.join(', ')}\n${userMarker(input.user.id)}`
 }
 
+/** `TelegramBot.search` in messages/*.json: the search-alert flow and the words of a search. */
+export type SearchTexts = {
+  subscribed: string
+  yourSearch: string
+  latest: string
+  openSearch: string
+  stopHint: string
+  stopped: string
+  nothingToStop: string
+  askMore: string
+  newListings: string
+  anyListing: string
+  dealSale: string
+  dealRent: string
+  priceFrom: string
+  priceTo: string
+  priceBetween: string
+  areaFrom: string
+  areaTo: string
+  areaBetween: string
+  bedsFrom: string
+  bedsExact: string
+  nearSea: string
+  investment: string
+  stageUnfinished: string
+  stageOffPlan: string
+  stageUnderConstruction: string
+  stageCompleted: string
+}
+
 export type BotTexts = {
   greeting: string
   greetingNoName: string
@@ -134,6 +171,7 @@ export type BotTexts = {
   openListing: string
   priceOnRequest: string
   contactReceived: string
+  search: SearchTexts
 }
 
 /** Plain text: escape before sending in HTML mode. */

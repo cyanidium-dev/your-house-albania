@@ -16,11 +16,18 @@ import { TrackerEmbed, type TrackerEmbedValue } from "./blocks/TrackerEmbed";
 import { GuideDownloadCard } from "@/components/guides/GuideDownloadCard";
 import { FaqAccordion } from "@/components/shared/faq/FaqAccordion";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
+import { parsePriceIndexEditionSlug } from "@/lib/priceIndex/jsonLd";
+import { methodologyPath } from "@/lib/priceIndex/publish";
 
 type BlogArticleContentProps = {
   content: unknown[];
   locale: string;
+  /** Lets a monthly price-index edition caption its tables and link the methodology. */
+  postSlug?: string;
 };
+
+/** What every table of a price-index edition says about itself. */
+type PriceIndexTableContext = { caption: string; methodologyHref: string; methodologyLabel: string };
 
 /**
  * Href for a CTA block or an inline link inside an article.
@@ -141,7 +148,8 @@ function createBlogComponents(
    * Note the levels shift down by one: the page's <h1> is the article title,
    * so Portable Text h2 renders as <h3>.
    */
-  headingIds: Map<string, string>
+  headingIds: Map<string, string>,
+  tableContext?: PriceIndexTableContext
 ): PortableTextComponents {
   const blockComponents: PortableTextComponents["block"] = {
     h1: ({ children }) => (
@@ -295,6 +303,13 @@ function createBlogComponents(
               </h4>
             )}
             <table className="w-full border-collapse border border-dark/10 dark:border-white/20">
+              {blockTitle || tableContext ? (
+                // The visible title is the h4 above; the caption makes the table
+                // self-describing when it is lifted out of the article alone.
+                <caption className="sr-only">
+                  {[blockTitle, tableContext?.caption].filter(Boolean).join(" — ")}
+                </caption>
+              ) : null}
               <thead>
                 <tr>
                   {headerCells.map((cell, i) => (
@@ -322,6 +337,13 @@ function createBlogComponents(
                 ))}
               </tbody>
             </table>
+            {tableContext ? (
+              <p className="mt-2 text-xs text-dark/50 dark:text-white/50">
+                <Link href={tableContext.methodologyHref} className="underline underline-offset-2 hover:text-primary">
+                  {tableContext.methodologyLabel}
+                </Link>
+              </p>
+            ) : null}
           </div>
         );
       },
@@ -438,13 +460,26 @@ function createBlogComponents(
   };
 }
 
-export function BlogArticleContent({ content, locale }: BlogArticleContentProps) {
+export function BlogArticleContent({ content, locale, postSlug }: BlogArticleContentProps) {
   const t = useTranslations("Shared.blogCta");
+  const tIndex = useTranslations("PriceIndex");
   if (!Array.isArray(content) || content.length === 0) return null;
   const headingIds = new Map(
     collectHeadings(content).map((h) => [h.blockKey, h.id] as const)
   );
-  const components = createBlogComponents(locale, t("learnMore"), headingIds);
+  const edition = postSlug ? parsePriceIndexEditionSlug(postSlug) : null;
+  const tableContext: PriceIndexTableContext | undefined = edition
+    ? {
+        caption: tIndex("editionCaption", {
+          month: new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(
+            new Date(Date.UTC(edition.year, edition.month - 1, 1)),
+          ),
+        }),
+        methodologyHref: methodologyPath(locale),
+        methodologyLabel: tIndex("methodologyLink"),
+      }
+    : undefined;
+  const components = createBlogComponents(locale, t("learnMore"), headingIds, tableContext);
   return (
     <div className="blog-details">
       <PortableText value={content as PortableTextBlock[]} components={components} />

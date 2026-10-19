@@ -16,5 +16,6 @@ export * from './queries/blog';
 export * from './queries/agent';
 export * from './queries/sitemap';
 export * from './queries/seoPages';
+export * from './queries/priceIndex';
 export type { CatalogSort, CatalogFilters, CatalogProperty, CatalogResult } from '@/types/catalog';
 export type { AgentContactPage } from './agentAdapter';
