@@ -1336,5 +1336,38 @@
     "nationalListings": "Të gjitha pronat në shitje në Shqipëri",
     "cityPrices": "Çmimet e pronave në {city}",
     "nationalPrices": "Çmimet e pronave në Shqipëri"
+  },
+  "Capture": {
+    "ask": {
+      "title": "Pyetni për këtë pronë",
+      "placeholder": "Pyetja juaj për këtë pronë",
+      "submit": "Dërgo pyetjen",
+      "required": "Ju lutemi shkruani pyetjen tuaj."
+    },
+    "neighbours": {
+      "cheaper": "Të ngjashme më lirë",
+      "pricier": "Të ngjashme më shtrenjtë"
+    },
+    "district": {
+      "title": "Gjeni një në këtë zonë",
+      "budgetLabel": "Buxheti",
+      "bands": {
+        "under70": "Nën €70 mijë",
+        "70to120": "€70–120 mijë",
+        "120to200": "€120–200 mijë",
+        "over200": "Mbi €200 mijë"
+      }
+    },
+    "selection": {
+      "title": "Ju dërgojmë një përzgjedhje sipas kritereve tuaja",
+      "criteria": "Kriteret tuaja"
+    },
+    "trust": {
+      "phone": "Telefoni",
+      "address": "Adresa",
+      "testimonialsTitle": "Çfarë thonë klientët",
+      "officePhotoAlt": "Zyra jonë",
+      "sectionLabel": "Kontakte dhe vlerësime"
+    }
   }
 }

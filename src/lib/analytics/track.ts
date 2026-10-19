@@ -131,6 +131,8 @@ export type AnalyticsEvent =
     }
   /** The browser reports the app was installed (`appinstalled`, Chromium only). */
   | { event: 'pwa_installed' }
+  /** A link in a capture block was followed: a price neighbour, a budget chip. */
+  | { event: 'capture_click'; block: 'price-neighbours' | 'district-budget'; placement: string; target: string }
 
 /**
  * GTM keeps every key ever pushed in its data model, so a `property_slug` from

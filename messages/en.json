@@ -1336,5 +1336,38 @@
     "nationalListings": "All property for sale in Albania",
     "cityPrices": "Property prices in {city}",
     "nationalPrices": "Property prices across Albania"
+  },
+  "Capture": {
+    "ask": {
+      "title": "Ask about this listing",
+      "placeholder": "Your question about this listing",
+      "submit": "Send question",
+      "required": "Please type your question."
+    },
+    "neighbours": {
+      "cheaper": "Similar for less",
+      "pricier": "Similar for more"
+    },
+    "district": {
+      "title": "Find one in this district",
+      "budgetLabel": "Budget",
+      "bands": {
+        "under70": "Under €70k",
+        "70to120": "€70–120k",
+        "120to200": "€120–200k",
+        "over200": "Over €200k"
+      }
+    },
+    "selection": {
+      "title": "We'll send a selection by your criteria",
+      "criteria": "Your criteria"
+    },
+    "trust": {
+      "phone": "Phone",
+      "address": "Address",
+      "testimonialsTitle": "What clients say",
+      "officePhotoAlt": "Our office",
+      "sectionLabel": "Contacts and reviews"
+    }
   }
 }

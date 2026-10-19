@@ -1336,5 +1336,38 @@
     "nationalListings": "Wszystkie nieruchomości na sprzedaż w Albanii",
     "cityPrices": "{city}: ceny nieruchomości",
     "nationalPrices": "Ceny nieruchomości w Albanii"
+  },
+  "Capture": {
+    "ask": {
+      "title": "Zapytaj o tę ofertę",
+      "placeholder": "Twoje pytanie o tę ofertę",
+      "submit": "Wyślij pytanie",
+      "required": "Wpisz swoje pytanie."
+    },
+    "neighbours": {
+      "cheaper": "Podobne taniej",
+      "pricier": "Podobne drożej"
+    },
+    "district": {
+      "title": "Znajdź coś w tej dzielnicy",
+      "budgetLabel": "Budżet",
+      "bands": {
+        "under70": "Do 70 tys. €",
+        "70to120": "70–120 tys. €",
+        "120to200": "120–200 tys. €",
+        "over200": "Powyżej 200 tys. €"
+      }
+    },
+    "selection": {
+      "title": "Wyślemy wybór ofert według Twoich kryteriów",
+      "criteria": "Twoje kryteria"
+    },
+    "trust": {
+      "phone": "Telefon",
+      "address": "Adres",
+      "testimonialsTitle": "Opinie klientów",
+      "officePhotoAlt": "Nasze biuro",
+      "sectionLabel": "Kontakt i opinie"
+    }
   }
 }

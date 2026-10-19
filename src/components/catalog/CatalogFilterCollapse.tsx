@@ -97,10 +97,18 @@ export function CatalogFilterCollapse({
   // panel instead of stretching full width (desktop/tablet only — this component
   // renders inside an md:block wrapper). Applied to the glass + pill layers only,
   // so the full-width form layer still measures its natural height.
+  //
+  // Centred with a transform, not `left: 50%`: the panel keeps its left edge
+  // where the full form had it and only narrows, then slides to the middle.
+  // Layout-shift scoring follows an element's start point and ignores
+  // transforms, so the condense no longer counts — with `left-1/2` the glass
+  // jumped 344 px sideways on the first scroll, CLS 0.058 on every desktop
+  // catalogue visit (docs/ux/cls-2026-10.md). `50cqw` is half the wrapper,
+  // which is the size container (`@container` below).
   const collapsedPanel =
     align === "start"
       ? "md:left-0 md:right-auto md:w-[42rem] md:max-w-full"
-      : "md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[42rem] md:max-w-[calc(100%-1rem)]";
+      : "md:left-0 md:right-auto md:w-[42rem] md:max-w-[calc(100%-1rem)] md:translate-x-[calc(50cqw-50%)]";
 
   // ONE constant radius for both states instead of animating rounded-2xl -> full.
   // 24px (rounded-3xl) is exactly half the pill height, so the collapsed bar reads
@@ -119,7 +127,7 @@ export function CatalogFilterCollapse({
       // not catch clicks meant for the cards under it; the form and the pill
       // turn them back on for themselves.
       className={cn(
-        "pointer-events-none relative",
+        "@container pointer-events-none relative",
         mounted && formH > 0 && `transition-[height] ${ease}`
       )}
       style={mounted && formH > 0 ? { height: reserveH } : undefined}

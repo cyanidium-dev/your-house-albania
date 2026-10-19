@@ -21,7 +21,7 @@ export type NormalizedAgentContactSubmission = {
   phone: string
   email: string
   message: string
-  /** Property-page context (agent submissions only). */
+  /** Property-page context (agent submissions; quote submissions asking about a listing). */
   propertySlug?: string
   propertyTitle?: string
   /** Absolute link to the property page, built server-side. */

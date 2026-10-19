@@ -426,6 +426,73 @@ export const fetchCatalogCardBySlug = sanityCache(
   { revalidate: 3600, tags: [SANITY_TAGS.property] },
 );
 
+/** Up to three listings either side of a price: see `fetchPriceNeighbours`. */
+export type PriceNeighbours = { cheaper: CatalogProperty[]; pricier: CatalogProperty[] };
+
+/**
+ * "Similar for less / for more" on a listing page: the nearest three listings
+ * of the same city, type and deal under and over this one's total price.
+ * Totals only (`PRICE_TOTAL_KEY`: a per-m² rate times the area), so a rate
+ * never passes for a cheap flat. Two small slices, not the catalogue.
+ */
+export const fetchPriceNeighbours = sanityCache(
+  async (args: {
+    excludeId: string;
+    city: string;
+    type: string;
+    deal?: string;
+    priceTotal: number;
+  }): Promise<PriceNeighbours> => {
+    const empty: PriceNeighbours = { cheaper: [], pricier: [] };
+    const client = getClient();
+    if (!client || !(args.priceTotal > 0)) return empty;
+    const { where, params } = buildCatalogWhereClause({ city: args.city, type: args.type, deal: args.deal });
+    const base = `${where} && _id != $selfId && defined(${PRICE_TOTAL_KEY})`;
+    const query = `{
+      "cheaper": *[${base} && ${PRICE_TOTAL_KEY} < $priceTotal] | order(${PRICE_TOTAL_KEY} desc)[0...3] ${CATALOG_CARD_PROJECTION},
+      "pricier": *[${base} && ${PRICE_TOTAL_KEY} > $priceTotal] | order(${PRICE_TOTAL_KEY} asc)[0...3] ${CATALOG_CARD_PROJECTION}
+    }`;
+    try {
+      const row = await client.fetch<Partial<PriceNeighbours> | null>(query, {
+        ...params,
+        selfId: args.excludeId,
+        priceTotal: args.priceTotal,
+      });
+      return {
+        cheaper: Array.isArray(row?.cheaper) ? row.cheaper : [],
+        pricier: Array.isArray(row?.pricier) ? row.pricier : [],
+      };
+    } catch (err) {
+      console.warn('[Sanity] fetchPriceNeighbours failed:', err);
+      return empty;
+    }
+  },
+  ['sanity-catalog-price-neighbours'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.propertyType] },
+);
+
+/**
+ * Prices of a district's listings for sale, for the budget chips of its page
+ * (src/lib/catalog/budgetBands.ts). Same where-clause as the catalogue the
+ * chips link to.
+ */
+export const fetchDistrictSalePrices = sanityCache(
+  async (citySlug: string, districtSlug: string): Promise<Array<{ price?: number; priceUnit?: string }>> => {
+    const client = getClient();
+    if (!client) return [];
+    const { where, params } = buildCatalogWhereClause({ city: citySlug, district: districtSlug, deal: 'sale' });
+    try {
+      const rows = await client.fetch<Array<{ price?: number; priceUnit?: string }>>(`*[${where}]{price, priceUnit}`, params);
+      return Array.isArray(rows) ? rows : [];
+    } catch (err) {
+      console.warn('[Sanity] fetchDistrictSalePrices failed:', err);
+      return [];
+    }
+  },
+  ['sanity-district-sale-prices'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
+);
+
 export type CatalogMapPoint = {
   slug: string;
   localizedSlug?: LocalizedSlug | null;

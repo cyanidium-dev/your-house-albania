@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { ImageLightbox } from "@/components/shared/ImageLightbox";
+import { ZoomableImage } from "@/components/shared/ZoomableImage";
 
 type ImageValue = {
   asset?: { url?: string };
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export function BlogContentImage({ value }: Props) {
-  const [lightboxOpen, setLightboxOpen] = useState(false);
   const t = useTranslations("Shared.lightbox");
   const url = value?.asset?.url;
   const alt = value?.alt ?? "";
@@ -24,15 +22,9 @@ export function BlogContentImage({ value }: Props) {
 
   if (!url || typeof url !== "string") return null;
 
-
   return (
     <figure className="my-8">
-      <button
-        type="button"
-        onClick={() => setLightboxOpen(true)}
-        className="block w-full text-left overflow-hidden rounded-2xl cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-primary/50"
-        aria-label={t("viewImageFullscreen")}
-      >
+      <ZoomableImage url={url} alt={alt} label={t("viewImageFullscreen")} className="overflow-hidden rounded-2xl">
         <Image
           src={url}
           alt={alt}
@@ -40,18 +32,12 @@ export function BlogContentImage({ value }: Props) {
           height={600}
           className="w-full h-auto object-cover"
         />
-      </button>
+      </ZoomableImage>
       {caption && (
         <figcaption className="mt-2 text-sm text-dark/60 dark:text-white/60 text-center">
           {caption}
         </figcaption>
       )}
-      <ImageLightbox
-        url={url}
-        alt={alt}
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-      />
     </figure>
   );
 }

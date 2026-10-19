@@ -1336,5 +1336,38 @@
     "nationalListings": "Tutti gli immobili in vendita in Albania",
     "cityPrices": "Prezzi degli immobili a {city}",
     "nationalPrices": "Prezzi degli immobili in Albania"
+  },
+  "Capture": {
+    "ask": {
+      "title": "Chiedi informazioni su questo immobile",
+      "placeholder": "La tua domanda su questo immobile",
+      "submit": "Invia la domanda",
+      "required": "Scrivi la tua domanda."
+    },
+    "neighbours": {
+      "cheaper": "Simili a meno",
+      "pricier": "Simili a più"
+    },
+    "district": {
+      "title": "Trova un immobile in questa zona",
+      "budgetLabel": "Budget",
+      "bands": {
+        "under70": "Fino a €70k",
+        "70to120": "€70–120k",
+        "120to200": "€120–200k",
+        "over200": "Oltre €200k"
+      }
+    },
+    "selection": {
+      "title": "Ti inviamo una selezione in base ai tuoi criteri",
+      "criteria": "I tuoi criteri"
+    },
+    "trust": {
+      "phone": "Telefono",
+      "address": "Indirizzo",
+      "testimonialsTitle": "Cosa dicono i clienti",
+      "officePhotoAlt": "Il nostro ufficio",
+      "sectionLabel": "Contatti e recensioni"
+    }
   }
 }

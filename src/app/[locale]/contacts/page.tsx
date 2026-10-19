@@ -12,6 +12,8 @@ import { resolveMessengers } from '@/lib/contacts/messengers'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
 import { buildContactPageJsonLd } from '@/lib/seo/contactPageJsonLd'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
+import { SiteTrustSection } from '@/components/capture/SiteTrust'
+import { mapSiteTrust } from '@/lib/sanity/trustFromSiteSettings'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -59,6 +61,7 @@ export default async function ContactsPage({ params }: Props) {
       </section>
       <ContactsHero locale={locale} />
       <ContactPageContent locale={locale} manager={manager} />
+      <SiteTrustSection locale={locale} trust={mapSiteTrust(raw, locale)} />
       <AddPropertyNote locale={locale} messengers={messengers} />
     </>
   )
