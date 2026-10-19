@@ -7,6 +7,7 @@
  * the same profile links. Returns `null` for any other author slug.
  */
 import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
+import { isProfileUrl } from "@/lib/seo/personJsonLd";
 
 export function teamPersonNode(
   baseUrl: string,
@@ -23,6 +24,7 @@ export function teamPersonNode(
     image: `${base}${member.photo}`,
   };
   if (locale) node.url = `${base}/${locale}/about`;
-  if (member.links.length) node.sameAs = member.links.map((l) => l.href);
+  const profiles = member.links.map((l) => l.href).filter(isProfileUrl);
+  if (profiles.length) node.sameAs = profiles;
   return node;
 }

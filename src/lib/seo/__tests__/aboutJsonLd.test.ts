@@ -49,7 +49,7 @@ describe("buildAboutJsonLd", () => {
     const viktor = persons.find((p) => p.name === "Viktor Grinchenko")!;
     expect(viktor.sameAs).toEqual([
       "https://www.grinchenko-realestate.com",
-      "https://t.me/real_estate_al",
+      // t.me/real_estate_al is a chat, not a profile: kept out of sameAs.
       "https://www.instagram.com/grinchenko.realestate",
       "https://www.youtube.com/@grinchenko.realestate",
     ]);

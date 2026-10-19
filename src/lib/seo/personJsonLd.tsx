@@ -38,9 +38,22 @@ export function buildPersonJsonLd(input: PersonJsonLdInput): object {
     person[isOrganization ? "parentOrganization" : "worksFor"] = { "@id": organizationId };
   }
   if (description && description.trim()) person.description = description.trim();
-  const links = (sameAs ?? []).filter((s) => typeof s === "string" && s.trim());
+  const links = (sameAs ?? []).filter((s) => typeof s === "string" && s.trim() && isProfileUrl(s));
   if (links.length > 0) person.sameAs = links;
   return person;
+}
+
+/** Messenger, mail and phone links open a chat; they are not another page about the entity. */
+const NOT_A_PROFILE = /^(mailto:|tel:|viber:|https?:\/\/(www\.)?(wa\.me|api\.whatsapp\.com|web\.whatsapp\.com|t\.me|telegram\.me)\/)/i;
+
+/**
+ * `sameAs` is for pages that identify the same entity elsewhere (a LinkedIn
+ * profile, Wikidata, a verified social account). The CMS "social links" of an
+ * author also hold the WhatsApp and Telegram contacts, which told a crawler
+ * that a founder "is" the company's chat line (brand-entity review 2026-10-19).
+ */
+export function isProfileUrl(url: string): boolean {
+  return !NOT_A_PROFILE.test(url.trim());
 }
 
 export function PersonJsonLd(props: PersonJsonLdInput) {
