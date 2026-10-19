@@ -32,6 +32,8 @@ import { buildSearchStartPayload } from '@/lib/telegram/startPayload'
 type SearchParams = Record<string, string | string[] | undefined>
 
 const DEFAULT_PAGE_SIZE = 24
+/** The Telegram search-alert block in the catalogue; see the note where it is built. */
+const SEARCH_ALERTS_IN_CATALOG = false
 const PAGE_SIZE_OPTIONS = [12, 24, 36, 48]
 
 // Public deal filter options: rentals hidden from the UI (direct URLs keep working).
@@ -134,7 +136,11 @@ async function PropertiesListing({
   // "New listings for this search in Telegram": the search goes into the
   // bot's Start payload (src/lib/telegram/bot/search.ts). Not on an agent's
   // page — the subscription is to the market, not to one agent's stock.
-  const botUsername = telegramBotUsername()
+  // Off since 2026-10-19 (owner's call): listings arrive in partner batches
+  // of a hundred or more about once a month, prices never move, and the DE,
+  // PL and IT visitors are not on Telegram — the block took the space above
+  // the cards for one message a month. The bot still honours `s_` links.
+  const botUsername = SEARCH_ALERTS_IN_CATALOG ? telegramBotUsername() : null
   const searchAlertPayload =
     botUsername && !agentSlugFilter
       ? buildSearchStartPayload({
