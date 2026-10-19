@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { organizationId } from '@/lib/seo/siteJsonLd';
 import { displayAgencyName } from '@/lib/format/agencyName';
 import React from 'react';
 import { notFound, permanentRedirect } from 'next/navigation';
@@ -423,6 +424,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
               cityName={resolveLocalizedString((sanityProperty as { city?: { title?: unknown } })?.city?.title as never, locale) || null}
               geo={locationIsApproximate ? null : resolvedCoordinates}
               amenityNames={amenities.map((a) => a.title)}
+              seller={propertyAgent?.name ? { name: propertyAgent.name } : null}
+              publisherId={organizationId(baseUrl)}
             />
             <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
                 <PropertyDetailBreadcrumb
