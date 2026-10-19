@@ -1,5 +1,5 @@
 /**
- * Typed `dataLayer` pushes for GTM, mirrored to Microsoft Clarity.
+ * Typed `dataLayer` pushes for GTM, mirrored to Microsoft Clarity and PostHog.
  *
  * The site already loads GTM (and GA4 through it) behind
  * `NEXT_PUBLIC_ENABLE_ANALYTICS` and the consent banner, so behavioural
@@ -20,6 +20,8 @@
 
 import { syncInternalFlag } from './attribution'
 import { analyticsEnabled } from './config'
+import { capturePostHog } from './posthog'
+import { toPostHogEvent } from './posthogEvents'
 import type { LeadPlacement, LeadType } from '@/lib/leads/types'
 
 export type { LeadPlacement, LeadType }
@@ -202,7 +204,8 @@ function mirrorToClarity(payload: AnalyticsEvent): void {
 }
 
 /**
- * Pushes one event to GTM and Clarity. Safe to call anywhere: no-ops on the
+ * Pushes one event to GTM, Clarity and PostHog (which drops it without
+ * analytics consent; see `posthog.ts`). Safe to call anywhere: no-ops on the
  * server and whenever analytics is switched off, so callers never need to guard.
  */
 export function track(payload: AnalyticsEvent): void {
@@ -224,6 +227,12 @@ export function track(payload: AnalyticsEvent): void {
   }
   try {
     mirrorToClarity(payload)
+  } catch {
+    // Same.
+  }
+  try {
+    const ph = toPostHogEvent(payload)
+    if (ph) capturePostHog(ph.name, ph.properties)
   } catch {
     // Same.
   }

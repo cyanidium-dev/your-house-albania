@@ -21,6 +21,10 @@ track() ─ dataLayer (GTM → GA4) + window.clarity("event")
 | `src/lib/analytics/trafficSource.ts` | Pure source/medium/channel and device rules |
 | `src/lib/analytics/attribution.ts` | First touch, session, journey in browser storage; `getLeadContext()` |
 | `src/lib/analytics/track.ts` | Typed `track()` → dataLayer + Clarity; internal-traffic flag |
+| `src/lib/analytics/posthog.ts` | PostHog loader behind analytics consent; `capturePostHog()`, flag reads |
+| `src/lib/analytics/posthogEvents.ts` | How a `track()` event becomes a PostHog event (pure, tested) |
+| `src/lib/analytics/posthogServer.ts` | Server-side `telegram_start` to PostHog, no person profile |
+| `src/components/analytics/PostHogConsent.tsx` | Hands the consent choice to the loader; mounted in the layout |
 | `src/lib/analytics/leadEvents.ts` | `trackFormLead()`, `trackContactClick()` (event + beacon) |
 | `src/lib/analytics/searchEvents.ts` | `search_submit`, `filter_apply` |
 | `src/components/analytics/LeadTracker.tsx` | Mounted once in `src/app/[locale]/layout.tsx` |
@@ -279,11 +283,41 @@ exclude `1` (or save it as a segment "Without internal").
    `property_slug`, `channel` if you want them in standard reports.
 6. The legacy `lead_submit` trigger can be retired once `generate_lead` is live.
 
+## PostHog (funnels and experiments)
+
+PostHog EU cloud (`eu.i.posthog.com`) runs next to GA4 for two things GA4 does badly here: funnels by visitor, and feature-flag experiments with exposure tracking. It is off unless `NEXT_PUBLIC_ENABLE_ANALYTICS=true` and `NEXT_PUBLIC_POSTHOG_KEY` is set.
+
+**Consent.** Nothing loads, nothing is stored and nothing is sent until the visitor grants "analytics" in the cookie banner (the same category as GA4's `analytics_storage` and Clarity). After a grant the library is imported after the first move or 5 s, the same deferral as GTM. Events tracked while it loads are queued; events from before the grant are dropped. Withdrawing consent calls `opt_out_capturing()` at once.
+
+**What it receives.** Every `track()` call is mirrored (`track.ts` → `posthogEvents.ts`), plus `$pageview` / `$pageleave` on every App Router navigation (`capture_pageview: 'history_change'`). Lead events are renamed to the lead type, one event per lead (GA4 gets three):
+
+| PostHog event | From | Notes |
+| --- | --- | --- |
+| `click_whatsapp`, `click_telegram`, `click_phone`, `click_email` | contact link clicks (`LeadTracker`) | intent, `is_lead: true` |
+| `property_inquiry`, `agent_contact`, `contact_form`, `guide_download`, `registration` | `generate_lead` with that `lead_type` | `is_lead: true` |
+| `telegram_start` | the public bot, server-side (`posthogServer.ts`) | random distinct id, no person profile; cannot join a browser funnel |
+| `property_view`, `messenger_open`, `search_submit`, `filter_apply`, … | the same `track()` events | unchanged |
+
+`lead_submit`, `contact_form_submit` and `property_inquiry_submit` are GA4-only duplicates and are not sent. Every event carries `locale` (from the path) and the session source: `landing_page`, `source`, `medium`, `channel`, `campaign` (from `attribution.ts`). Internal browsers (`?domlivo_internal=1`) carry `traffic_type: internal`; filter them out in PostHog project settings → "Filter out internal and test users" with `traffic_type = internal`.
+
+Autocapture, session recording and surveys are off: Clarity records sessions, and autocapture would send element text.
+
+**Funnel: landing → listing → contact.** In PostHog → Product analytics → Funnel, conversion window 1 day, by unique users:
+
+1. `$pageview` (optionally filter `$pathname` to a landing, or break down by `channel`)
+2. `property_view`
+3. any event with `is_lead = true` (or a specific one: `click_whatsapp`, `property_inquiry`, …)
+
+Break down by `channel`, `source`, `locale` or `placement`.
+
+**Experiments.** `useFlagVariant(key)` reads a multivariate flag once flags have loaded (reading it records the exposure). Each experiment has a record in `docs/experiments/`. Running: [E001 listing contact order](../experiments/001-listing-contact-order.md), flag `listing-contact-order`.
+
 ## Privacy
 
 - The journey stays in the visitor's browser until the visitor submits a form or clicks a contact link; only then does it go, with that request, to our own API. It is collected regardless of the analytics consent choice because it is first-party and never shared with GA4 or Clarity beyond the coarse parameters listed above.
 - No IP address is stored anywhere. Country comes from Vercel's geo header; the click throttle hashes the IP in memory for 30 seconds.
-- GA4 and Clarity never receive names, phones, emails, messages, free text, referrer URLs or the page list.
+- PostHog loads only after analytics consent and receives the same coarse parameters as GA4; server-side events (`telegram_start`) carry no Telegram account and create no person profile.
+- GA4, Clarity and PostHog never receive names, phones, emails, messages, free text, referrer URLs or the page list.
 - Only the Google Ads click id's presence (`hasGclid`) is kept, never the id.
 - Paths are stored without query strings.
 - Internal/test leads are kept (as spam) so tests can be debugged; delete them in Studio as needed.
@@ -294,4 +328,5 @@ exclude `1` (or save it as a segment "Without internal").
 `SANITY_API_TOKEN` (write; without it leads are not saved but Telegram still
 works), `NEXT_PUBLIC_SANITY_PROJECT_ID` (property lookup),
 `NEXT_PUBLIC_SITE_URL` (listing links), `NEXT_PUBLIC_ENABLE_ANALYTICS=true`
-(events). `TELEGRAM_API_BASE_URL` can point at a local mock for testing.
+(events), `NEXT_PUBLIC_POSTHOG_KEY` (PostHog project key, `phc_…`; optional
+`NEXT_PUBLIC_POSTHOG_HOST`, default `https://eu.i.posthog.com`). `TELEGRAM_API_BASE_URL` can point at a local mock for testing.

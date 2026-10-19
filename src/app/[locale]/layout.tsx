@@ -29,6 +29,8 @@ import { mapSiteSettingsToResolved } from "@/lib/sanity/siteSettingsAdapter";
 import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
 import { LeadTracker } from "@/components/analytics/LeadTracker";
+import { PostHogConsent } from "@/components/analytics/PostHogConsent";
+import { posthogEnabled } from "@/lib/analytics/posthog";
 import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
 import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
 import { BUSINESS_TELEGRAM_URL, BUSINESS_WHATSAPP_URL } from "@/lib/contacts/businessContacts";
@@ -290,6 +292,8 @@ if(d.readyState==='complete')arm();else w.addEventListener('load',arm,{once:true
               stays in the browser until the visitor submits a form or clicks
               a contact link, and then goes only to our own API. */}
           <LeadTracker />
+          {/* PostHog funnels and flags; loads only after analytics consent. */}
+          {posthogEnabled && <PostHogConsent />}
           <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
           {children}
           <Footer
