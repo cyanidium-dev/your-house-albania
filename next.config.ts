@@ -5,10 +5,16 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Not `experimental.inlineCss`: tried 18.10 to drop the render-blocking
-  // stylesheet request, but Next puts the inlined 160 KB of CSS into the RSC
-  // payload as well, so the document grew from 470 to 820 KB and mobile TBT
-  // doubled.
+  // The stylesheet goes inside the HTML. As a separate file it shared one
+  // connection with the 26 JS chunks and arrived with them, so the first frame
+  // came after all the JS had downloaded and PSI's simulation put every chunk
+  // on the LCP path (LCP 5.1 s on a 0.5 s hero; docs/seo/perf-2026-10-home-lcp.md).
+  // The cost: Next repeats the CSS in the RSC payload, so the home document is
+  // 56 → 112 KB gzip. Tried first on 18.10, when GTM still ran during the load
+  // and TBT doubled; third parties now wait for the first interaction.
+  experimental: {
+    inlineCss: true,
+  },
   // `X-Powered-By: Next.js` tells every visitor the stack and nothing else.
   poweredByHeader: false,
   images: {
