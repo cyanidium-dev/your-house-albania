@@ -65,7 +65,7 @@ export function cityHeadline(city: PriceIndexCity, asOf: string): string {
   if (city.median === null) return `No flats with a usable asking price per m² in ${name} on ${date}.`;
   if (!city.reliable) {
     return (
-      `Too little data for a headline figure in ${name}: ${city.count} flats with a price per m² on ${date} ` +
+      `Too little data for a headline figure in ${name}: ${city.count} ${city.count === 1 ? "flat" : "flats"} with a price per m² on ${date} ` +
       `(indicative median ${eur(city.median)} per m²; the index needs ${MIN_HEADLINE_SAMPLE}).`
     );
   }

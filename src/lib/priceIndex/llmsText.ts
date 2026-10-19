@@ -18,6 +18,7 @@ import {
 
 const num = (n: number) => new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(n);
 const eur = (n: number | null) => (n === null ? "-" : `€${num(n)}`);
+const flatsText = (n: number) => `${n} ${n === 1 ? "flat" : "flats"}`;
 
 function trimBase(base: string): string {
   return base.replace(/\/$/, "");
@@ -26,8 +27,8 @@ function trimBase(base: string): string {
 /** "€1,500/m² median, 511 flats" or "too little data for a headline figure (11 flats)". */
 function figureText(f: PriceIndexFigures): string {
   if (f.median === null) return "no priced flats";
-  if (!f.reliable) return `too little data for a headline figure (${f.count} flats; indicative median ${eur(f.median)}/m²)`;
-  return `${eur(f.median)}/m² median asking price, ${f.count} flats`;
+  if (!f.reliable) return `too little data for a headline figure (${flatsText(f.count)}; indicative median ${eur(f.median)}/m²)`;
+  return `${eur(f.median)}/m² median asking price, ${flatsText(f.count)}`;
 }
 
 /** The "Key figures" section of llms.txt. */
