@@ -55,3 +55,15 @@ export const FOOTER_LEAD_LANDING: Readonly<Record<string, `/${string}`>> = {
   uk: "/kupyty-kvartyru-v-albanii",
   sq: "/apartamente-ne-shitje-durres-okazion",
 };
+
+/**
+ * The market guide of the three markets with their own article series
+ * (track B of the Q4 plan, 2026-10-19): Germany's buying guide, the Polish
+ * buyers' guide and the Albanian reference prices. Linked from the Useful
+ * column so every page in that locale passes them an internal link.
+ */
+export const FOOTER_MARKET_GUIDE: Readonly<Record<string, `/${string}`>> = {
+  de: "/blog/buying-property-albania-from-germany-2026",
+  pl: "/blog/albania-property-for-polish-buyers-2026",
+  sq: "/blog/albania-reference-prices-2026-by-city",
+};
