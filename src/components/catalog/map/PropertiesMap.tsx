@@ -105,6 +105,53 @@ type MapStack = {
   pill: boolean
 }
 
+/**
+ * Labels the map itself draws (the `points-price` and `pill-reserve` layers):
+ * `dotLabel`, the price written on a dot beyond the loaded cards wherever
+ * there is room for it; `reserveLabel`, the text of the HTML pill a loaded
+ * card gets, so the drawn labels keep clear of it. A building has one label,
+ * on the member its marker sits at; the others carry none.
+ */
+function canvasLabels(p: MapPoint, stack: MapStack | undefined): { dotLabel: string; reserveLabel: string } {
+  const none = { dotLabel: '', reserveLabel: '' }
+  if (stack) {
+    if (stack.slugs[0] !== p.slug) return none
+    const label = stack.approximate ? `≈ ${stack.label}` : stack.label
+    return stack.pill ? { dotLabel: '', reserveLabel: label } : { dotLabel: label, reserveLabel: '' }
+  }
+  if (!p.markerLabel) return none
+  const label = p.approximate ? `≈ ${p.markerLabel}` : p.markerLabel
+  return p.pill ? { dotLabel: '', reserveLabel: label } : { dotLabel: label, reserveLabel: '' }
+}
+
+/**
+ * The pill behind a drawn price label, as a stretchable image: white with the
+ * HTML pill's hairline, or the pale fill and darker edge of an approximate
+ * place. Drawn at 2× for sharp edges; only the straight middle stretches.
+ */
+function pillImage(fill: string, edge: string): { image: ImageData; options: Partial<maplibregl.StyleImageMetadata> } | null {
+  if (typeof document === 'undefined') return null
+  const w = 64
+  const h = 44
+  const r = h / 2
+  const canvas = document.createElement('canvas')
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return null
+  ctx.beginPath()
+  ctx.roundRect(1, 1, w - 2, h - 2, r - 1)
+  ctx.fillStyle = fill
+  ctx.fill()
+  ctx.lineWidth = 2
+  ctx.strokeStyle = edge
+  ctx.stroke()
+  return {
+    image: ctx.getImageData(0, 0, w, h),
+    options: { pixelRatio: 2, stretchX: [[r, w - r]], stretchY: [[r - 1, r + 1]], content: [r - 6, 8, w - r + 6, h - 8] },
+  }
+}
+
 /** A building's marker: the block icon, then the label, which a later pass may change. */
 function setMarkerContent(el: HTMLDivElement, label: string, stacked: boolean) {
   if (!stacked) {
@@ -341,6 +388,7 @@ export function PropertiesMap({
           markerLabel: p.markerLabel,
           approximate: p.approximate,
           pill: p.pill,
+          ...canvasLabels(p, stackBySlug.get(p.slug)),
         },
         geometry: {
           type: 'Point' as const,
@@ -348,7 +396,7 @@ export function PropertiesMap({
         },
       })),
     }
-  }, [validPoints])
+  }, [validPoints, stackBySlug])
 
   const selectedScope = React.useMemo(() => {
     const district = (selectedDistrictSlug || '').trim().toLowerCase()
@@ -649,6 +697,62 @@ export function PropertiesMap({
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 1.5,
         },
+      })
+
+      // The price on a dot wherever there is room for it (issue: the owner,
+      // 2026-10-19 — "a grey dot says nothing, show the price"). The map's
+      // own collision check decides: a label that would overlap another, or
+      // a pill, is left out and its dot stays; zooming in frees room and
+      // more prices appear. Centred on the dot like the HTML pills, or beside
+      // it when the centre is taken.
+      for (const [name, fill, edge] of [
+        ['dot-pill', '#ffffff', 'rgba(0,0,0,0.22)'],
+        ['dot-pill-approx', '#f7f7f5', 'rgba(0,0,0,0.45)'],
+      ] as const) {
+        const pill = pillImage(fill, edge)
+        if (pill && !map.hasImage(name)) map.addImage(name, pill.image, pill.options)
+      }
+      map.addLayer({
+        id: 'points-price',
+        type: 'symbol',
+        source: 'properties',
+        filter: ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'dotLabel'], '']],
+        layout: {
+          'text-field': ['get', 'dotLabel'],
+          'text-font': MAP_FONT,
+          'text-size': 12,
+          'text-variable-anchor': ['center', 'bottom', 'top', 'left', 'right'],
+          'text-radial-offset': 0.9,
+          'text-padding': 1,
+          'icon-image': ['case', ['==', ['get', 'approximate'], true], 'dot-pill-approx', 'dot-pill'],
+          'icon-text-fit': 'both',
+          'icon-text-fit-padding': [3, 7, 3, 7],
+          'text-pitch-alignment': 'viewport',
+          'icon-pitch-alignment': 'viewport',
+        },
+        paint: { 'text-color': '#111111' },
+      })
+      // Room for the HTML pills of the loaded cards, which the collision
+      // check cannot see: the same text and pill, invisible and placed first
+      // (the layer above is placed first), so no drawn label lands on a pill.
+      map.addLayer({
+        id: 'pill-reserve',
+        type: 'symbol',
+        source: 'properties',
+        filter: ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'reserveLabel'], '']],
+        layout: {
+          'text-field': ['get', 'reserveLabel'],
+          'text-font': MAP_FONT,
+          'text-size': 12,
+          'icon-image': 'dot-pill',
+          'icon-text-fit': 'both',
+          'icon-text-fit-padding': [4, 10, 4, 10],
+          'text-allow-overlap': true,
+          'icon-allow-overlap': true,
+          'text-pitch-alignment': 'viewport',
+          'icon-pitch-alignment': 'viewport',
+        },
+        paint: { 'text-opacity': 0, 'icon-opacity': 0 },
       })
 
       // A picked approximate listing has no building; the zone it is in is
@@ -1131,6 +1235,9 @@ export function PropertiesMap({
     map.on('click', 'points-dot', onDotClick)
     map.on('mouseenter', 'points-dot', pointer)
     map.on('mouseleave', 'points-dot', noPointer)
+    map.on('click', 'points-price', onDotClick)
+    map.on('mouseenter', 'points-price', pointer)
+    map.on('mouseleave', 'points-price', noPointer)
     map.on('mouseenter', 'clusters', pointer)
     map.on('mouseleave', 'clusters', noPointer)
     map.on('moveend', scheduleSync)
@@ -1143,6 +1250,9 @@ export function PropertiesMap({
       map.off('click', 'points-dot', onDotClick)
       map.off('mouseenter', 'points-dot', pointer)
       map.off('mouseleave', 'points-dot', noPointer)
+      map.off('click', 'points-price', onDotClick)
+      map.off('mouseenter', 'points-price', pointer)
+      map.off('mouseleave', 'points-price', noPointer)
       map.off('mouseenter', 'clusters', pointer)
       map.off('mouseleave', 'clusters', noPointer)
       map.off('moveend', scheduleSync)
