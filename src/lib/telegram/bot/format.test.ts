@@ -8,8 +8,10 @@ import {
   userIdFromMarker,
   type BotTexts,
 } from './format'
+import en from '../../../../messages/en.json'
 
 const texts: BotTexts = {
+  search: en.TelegramBot.search,
   greeting: 'Здравствуйте, {name}! Это Domlivo — недвижимость в Албании.',
   greetingNoName: 'Здравствуйте! Это Domlivo — недвижимость в Албании.',
   aboutProperty: 'Вы спрашиваете об этом объекте:',
@@ -22,6 +24,22 @@ const texts: BotTexts = {
 }
 
 const anna = { id: 123456789, first_name: 'Anna <script>', username: 'anna_k', language_code: 'ru' }
+
+describe('formatStartForTeam for a search alert', () => {
+  it('names the search and its catalogue link', () => {
+    const html = formatStartForTeam({
+      user: anna,
+      locale: 'ru',
+      siteLocale: 'ru',
+      placement: 'catalog',
+      search: { summary: 'Квартира · продажа · Дуррес · до 120 000 €', url: 'https://www.domlivo.com/ru/albania/durres?deal=sale' },
+    })
+    expect(html).toContain('подписался на новые объекты')
+    expect(html).toContain('Поиск: <b>Квартира · продажа · Дуррес · до 120 000 €</b>')
+    expect(html).toContain('https://www.domlivo.com/ru/albania/durres?deal=sale')
+    expect(html).toContain('#tg123456789')
+  })
+})
 
 describe('botLocale', () => {
   it('prefers the site language, then the app language, then English', () => {

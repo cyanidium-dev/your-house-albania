@@ -21,7 +21,7 @@ import { join } from 'node:path'
 
 const LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
 
-type BotTexts = { commandStart: string; description: string; shortDescription: string }
+type BotTexts = { commandStart: string; commandStop: string; description: string; shortDescription: string }
 
 const token = process.env.TELEGRAM_PUBLIC_BOT_TOKEN?.trim()
 const secret = process.env.TELEGRAM_WEBHOOK_SECRET?.trim()
@@ -87,7 +87,13 @@ async function main() {
   for (const locale of LOCALES) {
     const t = texts(locale)
     const lang = locale === 'en' ? {} : { language_code: locale }
-    await call('setMyCommands', { commands: [{ command: 'start', description: t.commandStart }], ...lang })
+    await call('setMyCommands', {
+      commands: [
+        { command: 'start', description: t.commandStart },
+        { command: 'stop', description: t.commandStop },
+      ],
+      ...lang,
+    })
     await call('setMyDescription', { description: t.description, ...lang })
     await call('setMyShortDescription', { short_description: t.shortDescription, ...lang })
     console.log(`Texts: ${locale}`)

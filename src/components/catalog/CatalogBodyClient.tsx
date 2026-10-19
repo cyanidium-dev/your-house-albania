@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
+import { CatalogSearchAlert } from "@/components/catalog/CatalogSearchAlert";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
@@ -86,6 +87,8 @@ export type CatalogBodyClientProps = {
   pageSize: number;
   /** The URL's own query string as the server saw it (no `?`); empty on a cached page. */
   serverSearch?: string;
+  /** Bot deep link that subscribes to this search; `null` without a bot or a filter. */
+  searchAlertHref?: string | null;
 };
 
 type BannerSlot = "top" | { afterProperty: number };
@@ -192,6 +195,7 @@ export function CatalogBodyClient({
   pageSize,
   loadMoreQuery,
   serverSearch = "",
+  searchAlertHref = null,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
   const tMap = useTranslations("Shared.map");
@@ -771,6 +775,7 @@ export function CatalogBodyClient({
                 </button>
               </div>
             ) : null}
+            {searchAlertHref && allItems.length > 0 ? <CatalogSearchAlert href={searchAlertHref} /> : null}
             <div className={gridClass}>
               {composedItems.map((entry, index) => {
                 if (entry.kind === "banner") {
@@ -812,7 +817,7 @@ export function CatalogBodyClient({
               })}
             </div>
             {allItems.length === 0 ? (
-              <CatalogEmptyState locale={locale} />
+              <CatalogEmptyState locale={locale} searchAlertHref={searchAlertHref} />
             ) : (
               <>
                 {/* One control: a link to the next page for crawlers, an in-place

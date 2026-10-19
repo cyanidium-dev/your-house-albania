@@ -26,6 +26,8 @@ import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
 import { propertyCardCanonicalCoverUrl } from '@/lib/property/propertyCardImages'
 import { getTranslations } from 'next-intl/server'
 import { LISTINGS_ANCHOR_ID } from '@/lib/routes/currentCityListing'
+import { telegramBotUrl, telegramBotUsername } from '@/lib/contacts/messengerLinks'
+import { buildSearchStartPayload } from '@/lib/telegram/startPayload'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -128,6 +130,35 @@ async function PropertiesListing({
   const stageFilter = parsedFilters.stage
   const investmentFilter = parsedFilters.investment
   const viewMode = parseViewMode(searchParams.view)
+
+  // "New listings for this search in Telegram": the search goes into the
+  // bot's Start payload (src/lib/telegram/bot/search.ts). Not on an agent's
+  // page — the subscription is to the market, not to one agent's stock.
+  const botUsername = telegramBotUsername()
+  const searchAlertPayload =
+    botUsername && !agentSlugFilter
+      ? buildSearchStartPayload({
+          locale,
+          filters: {
+            city: cityFilter || undefined,
+            cities: citiesFilter.length ? citiesFilter : undefined,
+            district: districtFilter || undefined,
+            type: typeFilter || undefined,
+            types: typesFilter.length ? typesFilter : undefined,
+            deal: dealFilter || undefined,
+            stage: stageFilter || undefined,
+            minPrice: minPriceFilter || undefined,
+            maxPrice: maxPriceFilter || undefined,
+            minArea: minAreaFilter || undefined,
+            maxArea: maxAreaFilter || undefined,
+            beds: bedsFilter || undefined,
+            bedsExact: bedsExactFilter || undefined,
+            nearSea: nearSeaFilter || undefined,
+            investment: investmentFilter || undefined,
+          },
+        })
+      : null
+  const searchAlertHref = botUsername && searchAlertPayload ? telegramBotUrl(botUsername, searchAlertPayload) : null
 
   const rawPage = parsedFilters.page
 
@@ -360,6 +391,7 @@ async function PropertiesListing({
             totalCount={totalItems}
             pageSize={pageSize}
             loadMoreQuery={loadMoreQuery}
+            searchAlertHref={searchAlertHref}
             serverSearch={serverSearch}
             afterFilters={afterFilters}
           />

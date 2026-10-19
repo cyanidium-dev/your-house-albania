@@ -716,6 +716,14 @@
       "types": {
         "title": "Prona në shitje në Shqipëri sipas llojit"
       }
+    },
+    "searchAlert": {
+      "barText": "Prona të reja për këtë kërkim, një herë në ditë në Telegram",
+      "cta": "Ndiz",
+      "title": "Merrni pronat e reja për këtë kërkim në Telegram",
+      "body": "Një herë në ditë boti i Domlivo dërgon atë që sapo është shfaqur dhe përputhet me këto filtra. Një prekje për ta ndezur, /stop për ta ndalur.",
+      "ctaLong": "Merr njoftime në Telegram",
+      "emptyTitle": "Asgjë nuk përputhet ende"
     }
   },
   "NewBuilds": {
@@ -1239,6 +1247,35 @@
     "contactReceived": "Faleminderit! Një menaxher do t’ju kontaktojë së shpejti.",
     "commandStart": "Fillo një bisedë me menaxherin",
     "description": "Domlivo — prona në Shqipëri. Pyetni për çdo pronë në domlivo.com ose na tregoni çfarë kërkoni: një menaxher përgjigjet këtu.",
-    "shortDescription": "Prona në Shqipëri: pyetni një menaxher të Domlivo për çdo pronë."
+    "shortDescription": "Prona në Shqipëri: pyetni një menaxher të Domlivo për çdo pronë.",
+    "commandStop": "Ndalo njoftimet për prona të reja",
+    "search": {
+      "subscribed": "Gati. Pronat e reja për këtë kërkim do të vijnë këtu, jo më shpesh se një herë në ditë.",
+      "yourSearch": "Kërkimi juaj: {summary}",
+      "latest": "Tashmë në Domlivo:",
+      "openSearch": "Hap kërkimin në Domlivo",
+      "stopHint": "Për të ndaluar njoftimet, dërgoni /stop.",
+      "stopped": "Njoftimet janë fikur. Shtypni zilen në çdo kërkim në domlivo.com për t'i ndezur sërish.",
+      "nothingToStop": "Nuk keni njoftime të ndezura.",
+      "askMore": "Doni që një menaxher t'ju zgjedhë opsione? Shkruani këtu ose dërgoni numrin.",
+      "newListings": "E re në Domlivo për kërkimin tuaj",
+      "anyListing": "të gjitha pronat",
+      "dealSale": "në shitje",
+      "dealRent": "me qira",
+      "priceFrom": "nga {amount}",
+      "priceTo": "deri në {amount}",
+      "priceBetween": "{min} – {max}",
+      "areaFrom": "nga {n} m²",
+      "areaTo": "deri në {n} m²",
+      "areaBetween": "{min}–{max} m²",
+      "bedsFrom": "{n}+ dhoma gjumi",
+      "bedsExact": "{n} dhoma gjumi",
+      "nearSea": "pranë detit",
+      "investment": "për investim",
+      "stageUnfinished": "ende në ndërtim",
+      "stageOffPlan": "në projekt",
+      "stageUnderConstruction": "në ndërtim",
+      "stageCompleted": "e përfunduar"
+    }
   }
 }
