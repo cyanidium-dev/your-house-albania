@@ -1,6 +1,17 @@
 /**
- * Experiment 2026-09-25 → 2026-10-15: does Google index more listing pages
- * when a listing offers fewer language versions of itself?
+ * Experiment 2026-09-25 → 2026-10-19 (closed): does Google index more listing
+ * pages when a listing offers fewer language versions of itself?
+ *
+ * Result: no. On 2026-10-19 the trimmed arm had 765 of 1,436 URLs indexed
+ * (53%) and the full arm 1,070 of 2,576 (42%): per listing that is 2.1 indexed
+ * locale versions out of 4 against 2.9 out of 7. Cutting three locales did
+ * not get the remaining four indexed, so the crawl queue was not the limit.
+ * `TRIMMED_LOCALES` is empty: every listing is back in all seven locales, the
+ * trimmed sitemap is empty and out of the index. The module stays so the
+ * hash split can be reused for the next experiment.
+ * Decision record: docs/seo/decisions/008-property-locale-experiment.md.
+ *
+ * The original note follows.
  *
  * The site publishes every listing in seven locales: 375 listings became
  * 2,625 URLs on a domain with no external links, and on 2026-09-25 Search
@@ -28,12 +39,13 @@
 export const PROPERTY_LOCALE_EXPERIMENT = {
   startedAt: "2026-09-25",
   reviewAt: "2026-10-15",
+  closedAt: "2026-10-19",
 } as const;
 
 export type PropertyExperimentArm = "full" | "trimmed";
 
-/** Locales a listing in the trimmed arm is not indexed in. */
-export const TRIMMED_LOCALES: readonly string[] = ["uk", "pl", "sq"];
+/** Locales a listing in the trimmed arm is not indexed in. Empty: experiment closed. */
+export const TRIMMED_LOCALES: readonly string[] = [];
 
 /** FNV-1a, 32-bit: stable, dependency-free, good enough to halve a list. */
 function fnv1a(input: string): number {
@@ -46,18 +58,26 @@ function fnv1a(input: string): number {
 }
 
 /** The arm a listing belongs to, from its key slug. */
-export function propertyExperimentArm(key: string): PropertyExperimentArm {
-  if (TRIMMED_LOCALES.length === 0) return "full";
+export function propertyExperimentArm(key: string, trimmedLocales: readonly string[] = TRIMMED_LOCALES): PropertyExperimentArm {
+  if (trimmedLocales.length === 0) return "full";
   return fnv1a(key.trim().toLowerCase()) % 2 === 1 ? "trimmed" : "full";
 }
 
 /** Whether `/{locale}/property/…` of this listing may be indexed. */
-export function isPropertyLocaleIndexable(key: string, locale: string): boolean {
-  if (propertyExperimentArm(key) === "full") return true;
-  return !TRIMMED_LOCALES.includes(locale);
+export function isPropertyLocaleIndexable(
+  key: string,
+  locale: string,
+  trimmedLocales: readonly string[] = TRIMMED_LOCALES,
+): boolean {
+  if (propertyExperimentArm(key, trimmedLocales) === "full") return true;
+  return !trimmedLocales.includes(locale);
 }
 
 /** `locales` minus the ones this listing is not indexed in. */
-export function indexablePropertyLocales(key: string, locales: readonly string[]): string[] {
-  return locales.filter((locale) => isPropertyLocaleIndexable(key, locale));
+export function indexablePropertyLocales(
+  key: string,
+  locales: readonly string[],
+  trimmedLocales: readonly string[] = TRIMMED_LOCALES,
+): string[] {
+  return locales.filter((locale) => isPropertyLocaleIndexable(key, locale, trimmedLocales));
 }
