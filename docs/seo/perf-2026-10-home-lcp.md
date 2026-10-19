@@ -64,8 +64,22 @@ for a request that competes with the JS.
 
 | build | PSI mobile /en | LCP | FCP | TBT | PSI desktop /en | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| before (main 4cc0c6d) | 80 | 5.1 s | 1.35 s | 64 ms | 99 | /en/sale 80 (LCP 4.2 s), listing 80 (LCP 4.4 s) |
-| A (#85, 69ccf04) | 76 | 5.1 s | 1.7 s | 30 ms | | LCP unchanged, as expected: the stylesheet still arrives with the JS |
+| before (main 4cc0c6d) | 80 | 5.1 s | 1.35 s | 64 ms | 97 | |
+| step A (#85) | 76 (PSI) · 69–80 (Lighthouse ×3 on production) | 5.1 s (PSI) · 4.8–5.5 s | 1.5–2.5 s | 150–330 ms | | kept: not worse |
+| step A + B (#87) | 71–74 (Lighthouse ×3 on production) | 5.0–5.3 s | 1.9–2.4 s | 150–190 ms | | reverted 2026-10-20: no gain, document 794 KB |
 
 Local Lighthouse (simulated, mobile; 3 runs each): before 74–81 / LCP 4.1–4.5 s;
 step A 71–80 / LCP 4.3–4.4 s; step B 70–72 / LCP 4.1–4.2 s — noise, see above.
+
+## Conclusion (2026-10-20)
+
+Taking the stylesheet out of the JS race (step B) did not move the simulated
+LCP: Lantern still puts the whole JS graph in front of the first paint, because
+the first frame of an App Router page waits for the document's own script
+chunks (the client runtime parses the RSC payload before the hero is
+committed), not only for the CSS. Left to try, in order of expected gain:
+fewer and smaller first-party chunks on the home page (26 chunks / 280 KB:
+move the carousel, map and filters off the first render), a smaller RSC
+payload (the home document is 434 KB; the carousel ships 12 full listing
+objects), and a static (SSG) home shell. Each is a separate PR measured on
+production with three Lighthouse runs.
