@@ -1381,5 +1381,113 @@
       "officePhotoAlt": "Наш офис",
       "sectionLabel": "Контакты и отзывы"
     }
+  },
+  "PartnerLanding": {
+    "crumb": "{partner}",
+    "label": "{partner} · {place}",
+    "title": "{place}: {count, plural, one {# квартира} few {# квартиры} many {# квартир} other {# квартиры}} от {partner}",
+    "metaTitle": "{place}: {count, plural, one {# квартира} few {# квартиры} many {# квартир} other {# квартиры}} от Cactus",
+    "metaDescription": "{count} квартир на продажу: {placeFull}, агентство {partner}. От {from}, медиана {median}/м²{vsPlace}{sea}. Цены предложения из живых объявлений на Domlivo.",
+    "metaVsPlace": ", на {percent}% {direction, select, below {ниже} above {выше} other {вровень с}} медианы района",
+    "metaSea": "; {within} до 300 м от моря",
+    "metaDescriptionShort": "{count} квартир на продажу: {placeFull}, агентство {partner}. Цена указана в каждом объявлении.",
+    "heroAlt": "Квартира в районе {placeFull} от {partner}",
+    "lead": "{count, plural, one {# квартира} few {# квартиры} many {# квартир} other {# квартиры}} на продажу: {placeFull}. Публикует {partner}, цена указана в каждом объявлении.",
+    "allListings": "Все {count} объявлений от {partner}",
+    "linkFromPlace": "{partner} - {place}: {count, plural, one {# квартира} few {# квартиры} many {# квартир} other {# квартиры}} с планировками и ценами",
+    "stage": {
+      "mixed": "{completed, plural, one {# в сданном доме} other {# в сданных домах}}, {unfinished, plural, one {# ещё строится} other {# ещё строятся}}, сдача обещана в {years}.",
+      "allCompleted": "Все {count} в сданных домах; на этапе котлована ничего не продаётся.",
+      "mixedNoYear": "{completed, plural, one {# в сданном доме} other {# в сданных домах}}, {unfinished, plural, one {# ещё строится} other {# ещё строятся}}; срок сдачи не указан."
+    },
+    "stats": {
+      "listings": "Квартир в продаже",
+      "from": "Цены от",
+      "medianSqm": "Медианная цена за м²",
+      "nearSea": "До {metres} м от моря",
+      "vsPlaceNote": "Медиана подборки за м² на {percent}% {direction, select, below {ниже} above {выше} other {вровень с}} медианы района {place} - {placeMedian}/м² (индекс цен Domlivo, квартиры и студии).",
+      "nearestSea": "Ближайшее к морю"
+    },
+    "thin": "Сейчас в подборке меньше {min} квартир, поэтому страница не показывается в поиске, пока объектов не станет больше.",
+    "about": {
+      "title": "Что предлагает {partner}: {place}",
+      "lead": "Каждая строка ниже посчитана по объявлениям на этой странице; руками ничего не написано.",
+      "price": "Цены предложения от {from}; медиана - {median} за м².",
+      "priceVsPlace": "Цены предложения от {from}; медиана - {median} за м², на {percent}% {direction, select, below {ниже} above {выше} other {вровень с}} медианы района {place} ({placeMedian}/м²).",
+      "layouts": "Планировки: {list}.",
+      "sea": "{within} из {known} объявлений с указанным расстоянием - до {metres} м от моря; ближайшее - {min}.",
+      "complexes": "Комплексы, названные в объявлениях",
+      "asOf": "Данные на {date}, по {count, plural, one {# объявлению} few {# объявлениям} many {# объявлениям} other {# объявлениям}} на Domlivo.",
+      "seaNone": "Ни одно из {known} объявлений с указанным расстоянием не ближе {metres} м к морю; ближайшее - {min}, медиана - {median} м."
+    },
+    "layout": {
+      "studio": "Студия",
+      "oneOne": "1+1",
+      "twoOne": "2+1",
+      "threePlus": "3+1 и больше"
+    },
+    "table": {
+      "title": "Планировки и цены: {place}",
+      "lead": "По планировкам: сколько объявлений у {partner}, площади, минимальная цена и медиана за м².",
+      "colLayout": "Планировка",
+      "colCount": "Объявлений",
+      "colArea": "Площадь",
+      "colFrom": "От",
+      "colMedianSqm": "Медиана €/м²",
+      "caption": "Квартиры от {partner} ({placeFull}) по планировкам, данные на {date}.",
+      "footnote": "Медиана печатается только по трём и более квартирам с указанной площадью."
+    },
+    "grid": {
+      "title": "Квартиры: {place}",
+      "lead": "{shown} из {count}: сначала объявления с точным адресом дома на карте, потом самые новые.",
+      "all": "Все {count} объявлений"
+    },
+    "place": {
+      "title": "О районе {place}",
+      "allListings": "Вся недвижимость на продажу: {place}",
+      "prices": "{place}: цены и районы"
+    },
+    "faq": {
+      "priceQ": "Сколько стоит квартира от {partner} в районе {place}?",
+      "priceA": "От {from}. Медианная цена предложения - {median} за м² по {count} объявлениям, данные на {date}.",
+      "priceAWithPlace": "От {from}. Медианная цена предложения - {median} за м² по {count} объявлениям, данные на {date}; медиана района {place} на Domlivo - {placeMedian}/м².",
+      "layoutsQ": "Какие планировки есть в подборке ({place})?",
+      "layoutsA": "{list}.",
+      "layoutItem": "{layout}: {count, plural, one {# объявление} few {# объявления} many {# объявлений} other {# объявления}}",
+      "layoutItemFrom": "{layout}: {count, plural, one {# объявление} few {# объявления} many {# объявлений} other {# объявления}} от {from}",
+      "seaQ": "Как далеко от моря эти квартиры ({place})?",
+      "seaA": "{within} из {known} объявлений с указанным расстоянием - до {metres} м от моря. Ближайшее - {min}, медиана - {median} м.",
+      "stageQ": "Есть ли среди них строящиеся?",
+      "stageA": "{unfinished, plural, one {# строится} other {# строятся}}, сдача обещана в {years}; {completed, plural, one {# в сданном доме} other {# в сданных домах}}.",
+      "stageAllCompletedA": "Нет. Все {count} в сданных домах; на этапе котлована ничего не продаётся.",
+      "sellerQ": "Кто продаёт эти квартиры?",
+      "sellerA": "Все объявления на этой странице публикует {partner} - агентство-партнёр Domlivo. Указана цена предложения агентства. Спросить о квартире можно через форму на этой странице или в WhatsApp и Telegram.",
+      "heading": "Вопросы: {place}",
+      "stageANoYear": "{unfinished, plural, one {# строится} other {# строятся}}, срок сдачи не указан; {completed, plural, one {# в сданном доме} other {# в сданных домах}}.",
+      "seaANone": "Ни одно из {known} объявлений с указанным расстоянием не ближе {metres} м к морю. Ближайшее - {min}, медиана - {median} м."
+    },
+    "contact": {
+      "title": "Спросить о квартирах: {place}",
+      "lead": "Одно сообщение: какая квартира, бюджет или вопрос. Оно уходит команде Domlivo, которая работает с {partner} по этим объявлениям.",
+      "placeholder": "Какая квартира, бюджет или вопрос",
+      "submit": "Отправить"
+    },
+    "more": {
+      "title": "Ещё от {partner}",
+      "agent": "Все объявления от {partner}",
+      "sellerNote": "Все объявления на этой странице публикует {partner}; указана цена предложения агентства.",
+      "chips": {
+        "plazh_durres": "Плаж",
+        "golem_durres": "Голем",
+        "shkembi_i_kavajes_durres": "Шкемби-и-Каваес",
+        "durres_city_centre": "Центр Дурреса",
+        "mali_i_robit_durres": "Мали-и-Робит",
+        "qerret_durres": "Черрет",
+        "shengjin": "Шенджин",
+        "tocak_plazh_durres": "Комплекс Tocak, Плаж"
+      }
+    },
+    "firstLine": "на первой линии, прямо у пляжа",
+    "metres": "{n} м"
   }
 }

@@ -1381,5 +1381,113 @@
       "officePhotoAlt": "Il nostro ufficio",
       "sectionLabel": "Contatti e recensioni"
     }
+  },
+  "PartnerLanding": {
+    "crumb": "{partner}",
+    "label": "{partner} · {place}",
+    "title": "{place}: {count, plural, one {# appartamento} other {# appartamenti}} da {partner}",
+    "metaTitle": "{place}: {count, plural, one {# appartamento} other {# appartamenti}} da Cactus",
+    "metaDescription": "{count} appartamenti in vendita a {placeFull} pubblicati da {partner}: da {from}, mediana {median}/m²{vsPlace}{sea}. Prezzi richiesti dagli annunci attivi su Domlivo.",
+    "metaVsPlace": ", {percent}% {direction, select, below {sotto} above {sopra} other {in linea con}} la mediana della zona",
+    "metaSea": "; {within} entro 300 m dal mare",
+    "metaDescriptionShort": "{count} appartamenti in vendita a {placeFull}, pubblicati da {partner}. Prezzo indicato in ogni annuncio.",
+    "heroAlt": "Un appartamento a {placeFull} pubblicato da {partner}",
+    "lead": "{count, plural, one {# appartamento} other {# appartamenti}} in vendita a {placeFull}, pubblicati da {partner} con il prezzo richiesto in ogni annuncio.",
+    "allListings": "Tutti i {count} annunci di {partner}",
+    "linkFromPlace": "{partner} a {place}: {count, plural, one {# appartamento} other {# appartamenti}} con planimetrie e prezzi",
+    "stage": {
+      "mixed": "{completed, plural, one {# è in un edificio completato} other {# sono in edifici completati}}, {unfinished, plural, one {# è ancora in costruzione} other {# sono ancora in costruzione}} con consegna promessa per il {years}.",
+      "allCompleted": "Tutti i {count} sono in edifici completati; nessuno è venduto su carta.",
+      "mixedNoYear": "{completed, plural, one {# è in un edificio completato} other {# sono in edifici completati}}, {unfinished, plural, one {# è ancora in costruzione} other {# sono ancora in costruzione}}; la data di consegna non è indicata."
+    },
+    "stats": {
+      "listings": "Appartamenti in vendita",
+      "from": "Prezzi da",
+      "medianSqm": "Prezzo mediano al m²",
+      "nearSea": "Entro {metres} m dal mare",
+      "vsPlaceNote": "La mediana al m² della selezione è {percent}% {direction, select, below {sotto} above {sopra} other {in linea con}} la mediana di {place}, {placeMedian}/m² (Indice dei prezzi Domlivo, appartamenti e monolocali).",
+      "nearestSea": "Il più vicino al mare"
+    },
+    "thin": "Al momento la selezione ha meno di {min} appartamenti, quindi la pagina resta fuori dai risultati di ricerca finché l'offerta non cresce.",
+    "about": {
+      "title": "Cosa offre {partner} a {place}",
+      "lead": "Ogni riga qui sotto è calcolata dagli annunci di questa pagina; niente è scritto a mano.",
+      "price": "Prezzi richiesti da {from}; la mediana è {median} al m².",
+      "priceVsPlace": "Prezzi richiesti da {from}; la mediana è {median} al m², {percent}% {direction, select, below {sotto} above {sopra} other {in linea con}} la mediana di {place} ({placeMedian}/m²).",
+      "layouts": "Tagli in offerta: {list}.",
+      "sea": "{within} dei {known} annunci con distanza dichiarata sono entro {metres} m dal mare; il più vicino è a {min}.",
+      "complexes": "Complessi citati negli annunci",
+      "asOf": "Dati al {date}, da {count, plural, one {# annuncio} other {# annunci}} su Domlivo.",
+      "seaNone": "Nessuno dei {known} annunci con distanza dichiarata è entro {metres} m dal mare; il più vicino è a {min}, la mediana è {median} m."
+    },
+    "layout": {
+      "studio": "Monolocale",
+      "oneOne": "1+1",
+      "twoOne": "2+1",
+      "threePlus": "3+1 e più grandi"
+    },
+    "table": {
+      "title": "Tagli e prezzi a {place}",
+      "lead": "Per taglio: quanti annunci ha {partner}, le superfici, il prezzo richiesto più basso e la mediana al m².",
+      "colLayout": "Taglio",
+      "colCount": "Annunci",
+      "colArea": "Superficie",
+      "colFrom": "Da",
+      "colMedianSqm": "Mediana €/m²",
+      "caption": "Appartamenti a {placeFull} pubblicati da {partner}, per taglio, al {date}.",
+      "footnote": "La mediana è indicata solo su tre o più appartamenti con superficie dichiarata."
+    },
+    "grid": {
+      "title": "Appartamenti a {place}",
+      "lead": "{shown} di {count}: prima gli annunci con l'edificio localizzato sulla mappa, poi i più recenti.",
+      "all": "Tutti i {count} annunci"
+    },
+    "place": {
+      "title": "Su {place}",
+      "allListings": "Tutti gli immobili in vendita a {place}",
+      "prices": "{place}: prezzi e zone"
+    },
+    "faq": {
+      "priceQ": "Quanto costa un appartamento di {partner} a {place}?",
+      "priceA": "Da {from}. Il prezzo richiesto mediano è {median} al m² su {count} annunci, al {date}.",
+      "priceAWithPlace": "Da {from}. Il prezzo richiesto mediano è {median} al m² su {count} annunci, al {date}; la mediana di {place} su Domlivo è {placeMedian}/m².",
+      "layoutsQ": "Quali tagli sono in offerta a {place}?",
+      "layoutsA": "{list}.",
+      "layoutItem": "{layout}: {count, plural, one {# annuncio} other {# annunci}}",
+      "layoutItemFrom": "{layout}: {count, plural, one {# annuncio} other {# annunci}} da {from}",
+      "seaQ": "Quanto distano dal mare gli appartamenti a {place}?",
+      "seaA": "{within} dei {known} annunci con distanza dichiarata sono entro {metres} m dal mare. Il più vicino è a {min}, la mediana è {median} m.",
+      "stageQ": "Ce ne sono ancora in costruzione?",
+      "stageA": "{unfinished, plural, one {# è} other {# sono}} in costruzione, con consegna promessa per il {years}; {completed, plural, one {# è} other {# sono}} in edifici completati.",
+      "stageAllCompletedA": "No. Tutti i {count} sono in edifici completati; nessuno è venduto su carta.",
+      "sellerQ": "Chi vende questi appartamenti?",
+      "sellerA": "Ogni annuncio di questa pagina è pubblicato da {partner}, agenzia partner di Domlivo. Il prezzo indicato è quello richiesto dall'agenzia. Per chiedere di un appartamento usa il modulo in questa pagina o scrivi su WhatsApp o Telegram.",
+      "heading": "Domande su {place}",
+      "stageANoYear": "{unfinished, plural, one {# è} other {# sono}} in costruzione senza data di consegna indicata; {completed, plural, one {# è} other {# sono}} in edifici completati.",
+      "seaANone": "Nessuno dei {known} annunci con distanza dichiarata è entro {metres} m dal mare. Il più vicino è a {min}, la mediana è {median} m."
+    },
+    "contact": {
+      "title": "Chiedi degli appartamenti a {place}",
+      "lead": "Un messaggio: quale appartamento, il tuo budget o la tua domanda. Arriva al team Domlivo, che lavora con {partner} su questi annunci.",
+      "placeholder": "Quale appartamento, il tuo budget o la tua domanda",
+      "submit": "Invia"
+    },
+    "more": {
+      "title": "Altro da {partner}",
+      "agent": "Tutti gli annunci di {partner}",
+      "sellerNote": "Ogni annuncio di questa pagina è pubblicato da {partner}; il prezzo indicato è quello richiesto dall'agenzia.",
+      "chips": {
+        "plazh_durres": "Plazh",
+        "golem_durres": "Golem",
+        "shkembi_i_kavajes_durres": "Shkëmbi i Kavajës",
+        "durres_city_centre": "Centro di Durazzo",
+        "mali_i_robit_durres": "Mali i Robit",
+        "qerret_durres": "Qerret",
+        "shengjin": "Shëngjin",
+        "tocak_plazh_durres": "Complesso Tocak, Plazh"
+      }
+    },
+    "firstLine": "in prima linea, direttamente sulla spiaggia",
+    "metres": "{n} m"
   }
 }

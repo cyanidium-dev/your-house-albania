@@ -484,7 +484,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             <p className='text-dark/60 dark:text-white/60 text-base'>{location}</p>
                         </div>
                         {/* The listing's district page and its city's price page (B5). */}
-                        <ListingPlaceLinks locale={locale} citySlug={citySlug} districtSlug={districtSlug} />
+                        <ListingPlaceLinks locale={locale} citySlug={citySlug} districtSlug={districtSlug} agentSlug={propertyAgent?.slug ?? null} />
                         <PropertyDeveloperBadge
                           locale={locale}
                           developer={(sanityProperty as { developer?: PropertyDeveloperRef }).developer ?? null}

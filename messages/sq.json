@@ -1381,5 +1381,113 @@
       "officePhotoAlt": "Zyra jonë",
       "sectionLabel": "Kontakte dhe vlerësime"
     }
+  },
+  "PartnerLanding": {
+    "crumb": "{partner}",
+    "label": "{partner} · {place}",
+    "title": "{place}: {count, plural, one {# apartament} other {# apartamente}} nga {partner}",
+    "metaTitle": "{place}: {count, plural, one {# apartament} other {# apartamente}} nga Cactus",
+    "metaDescription": "{count} apartamente në shitje, {placeFull}, nga {partner}: nga {from}, mediana {median}/m²{vsPlace}{sea}. Çmime kërkese nga njoftimet aktive në Domlivo.",
+    "metaVsPlace": ", {percent}% {direction, select, below {nën} above {mbi} other {sa}} mediana e zonës",
+    "metaSea": "; {within} deri në 300 m nga deti",
+    "metaDescriptionShort": "{count} apartamente në shitje, {placeFull}, nga {partner}. Çmimi në çdo njoftim.",
+    "heroAlt": "Apartament, {placeFull}, nga {partner}",
+    "lead": "{count, plural, one {# apartament} other {# apartamente}} në shitje, {placeFull}, publikuar nga {partner} me çmimin e kërkuar në çdo njoftim.",
+    "allListings": "Të gjitha {count} njoftimet nga {partner}",
+    "linkFromPlace": "{partner}, {place}: {count, plural, one {# apartament} other {# apartamente}} me planimetri dhe çmime",
+    "stage": {
+      "mixed": "{completed, plural, one {# është në ndërtesë të përfunduar} other {# janë në ndërtesa të përfunduara}}, {unfinished, plural, one {# është ende në ndërtim} other {# janë ende në ndërtim}} me dorëzim të premtuar për {years}.",
+      "allCompleted": "Të gjitha {count} janë në ndërtesa të përfunduara; asnjë nuk shitet para ndërtimit.",
+      "mixedNoYear": "{completed, plural, one {# është në ndërtesë të përfunduar} other {# janë në ndërtesa të përfunduara}}, {unfinished, plural, one {# është ende në ndërtim} other {# janë ende në ndërtim}}; data e dorëzimit nuk është deklaruar."
+    },
+    "stats": {
+      "listings": "Apartamente në shitje",
+      "from": "Çmime nga",
+      "medianSqm": "Çmimi median për m²",
+      "nearSea": "Deri në {metres} m nga deti",
+      "vsPlaceNote": "Mediana e përzgjedhjes për m² është {percent}% {direction, select, below {nën} above {mbi} other {sa}} mediana e zonës {place}, {placeMedian}/m² (Indeksi i Çmimeve Domlivo, apartamente dhe studio).",
+      "nearestSea": "Më afër detit"
+    },
+    "thin": "Tani për tani përzgjedhja ka më pak se {min} apartamente, prandaj faqja mbetet jashtë rezultateve të kërkimit derisa oferta të rritet.",
+    "about": {
+      "title": "Çfarë ofron {partner}: {place}",
+      "lead": "Çdo rresht më poshtë llogaritet nga njoftimet në këtë faqe; asgjë nuk është shkruar me dorë.",
+      "price": "Çmime kërkese nga {from}; mediana është {median} për m².",
+      "priceVsPlace": "Çmime kërkese nga {from}; mediana është {median} për m², {percent}% {direction, select, below {nën} above {mbi} other {sa}} mediana e zonës {place} ({placeMedian}/m²).",
+      "layouts": "Planimetritë në ofertë: {list}.",
+      "sea": "{within} nga {known} njoftime me distancë të deklaruar janë deri në {metres} m nga deti; më i afërti është {min} larg.",
+      "complexes": "Komplekse që përmenden në njoftime",
+      "asOf": "Të dhëna më {date}, nga {count, plural, one {# njoftim} other {# njoftime}} në Domlivo.",
+      "seaNone": "Asnjë nga {known} njoftimet me distancë të deklaruar nuk është deri në {metres} m nga deti; më i afërti është {min}, mediana {median} m."
+    },
+    "layout": {
+      "studio": "Studio",
+      "oneOne": "1+1",
+      "twoOne": "2+1",
+      "threePlus": "3+1 e më të mëdha"
+    },
+    "table": {
+      "title": "Planimetri dhe çmime: {place}",
+      "lead": "Sipas planimetrisë: sa njoftime ka {partner}, sipërfaqet, çmimi më i ulët dhe mediana për m².",
+      "colLayout": "Planimetria",
+      "colCount": "Njoftime",
+      "colArea": "Sipërfaqja",
+      "colFrom": "Nga",
+      "colMedianSqm": "Mediana €/m²",
+      "caption": "Apartamente nga {partner}, {placeFull}, sipas planimetrisë, më {date}.",
+      "footnote": "Mediana shfaqet vetëm për tre ose më shumë apartamente me sipërfaqe të deklaruar."
+    },
+    "grid": {
+      "title": "Apartamente: {place}",
+      "lead": "{shown} nga {count}: së pari njoftimet me ndërtesën e vendosur në hartë, pastaj më të rejat.",
+      "all": "Të gjitha {count} njoftimet"
+    },
+    "place": {
+      "title": "Rreth zonës {place}",
+      "allListings": "E gjithë pasuria në shitje: {place}",
+      "prices": "{place}: çmime dhe zona"
+    },
+    "faq": {
+      "priceQ": "Sa kushton një apartament nga {partner}, {place}?",
+      "priceA": "Nga {from}. Çmimi median i kërkuar është {median} për m² mbi {count} njoftime, më {date}.",
+      "priceAWithPlace": "Nga {from}. Çmimi median i kërkuar është {median} për m² mbi {count} njoftime, më {date}; mediana e zonës {place} në Domlivo është {placeMedian}/m².",
+      "layoutsQ": "Cilat planimetri ofrohen ({place})?",
+      "layoutsA": "{list}.",
+      "layoutItem": "{layout}: {count, plural, one {# njoftim} other {# njoftime}}",
+      "layoutItemFrom": "{layout}: {count, plural, one {# njoftim} other {# njoftime}} nga {from}",
+      "seaQ": "Sa larg nga deti janë apartamentet ({place})?",
+      "seaA": "{within} nga {known} njoftime me distancë të deklaruar janë deri në {metres} m nga deti. Më i afërti është {min}, mediana {median} m.",
+      "stageQ": "A ka ndonjë ende në ndërtim?",
+      "stageA": "{unfinished, plural, one {# është} other {# janë}} në ndërtim, me dorëzim të premtuar për {years}; {completed, plural, one {# është} other {# janë}} në ndërtesa të përfunduara.",
+      "stageAllCompletedA": "Jo. Të gjitha {count} janë në ndërtesa të përfunduara; asnjë nuk shitet para ndërtimit.",
+      "sellerQ": "Kush i shet këto apartamente?",
+      "sellerA": "Çdo njoftim në këtë faqe publikohet nga {partner}, agjenci partnere e Domlivo. Çmimi i shfaqur është çmimi i kërkuar nga agjencia. Për të pyetur për një apartament, përdorni formularin në këtë faqe ose shkruani në WhatsApp ose Telegram.",
+      "heading": "Pyetje: {place}",
+      "stageANoYear": "{unfinished, plural, one {# është} other {# janë}} në ndërtim pa datë dorëzimi të deklaruar; {completed, plural, one {# është} other {# janë}} në ndërtesa të përfunduara.",
+      "seaANone": "Asnjë nga {known} njoftimet me distancë të deklaruar nuk është deri në {metres} m nga deti. Më i afërti është {min}, mediana {median} m."
+    },
+    "contact": {
+      "title": "Pyesni për apartamentet: {place}",
+      "lead": "Një mesazh: cili apartament, buxheti ose pyetja juaj. Ai shkon te ekipi i Domlivo, që punon me {partner} për këto njoftime.",
+      "placeholder": "Cili apartament, buxheti ose pyetja juaj",
+      "submit": "Dërgo"
+    },
+    "more": {
+      "title": "Më shumë nga {partner}",
+      "agent": "Të gjitha njoftimet nga {partner}",
+      "sellerNote": "Çdo njoftim në këtë faqe publikohet nga {partner}; çmimi i shfaqur është çmimi i kërkuar nga agjencia.",
+      "chips": {
+        "plazh_durres": "Plazhi",
+        "golem_durres": "Golemi",
+        "shkembi_i_kavajes_durres": "Shkëmbi i Kavajës",
+        "durres_city_centre": "Qendra e Durrësit",
+        "mali_i_robit_durres": "Mali i Robit",
+        "qerret_durres": "Qerreti",
+        "shengjin": "Shëngjini",
+        "tocak_plazh_durres": "Kompleksi Tocak, Plazh"
+      }
+    },
+    "firstLine": "në vijën e parë, buzë plazhit",
+    "metres": "{n} m"
   }
 }

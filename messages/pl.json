@@ -1381,5 +1381,113 @@
       "officePhotoAlt": "Nasze biuro",
       "sectionLabel": "Kontakt i opinie"
     }
+  },
+  "PartnerLanding": {
+    "crumb": "{partner}",
+    "label": "{partner} · {place}",
+    "title": "{place}: {count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}} od {partner}",
+    "metaTitle": "{place}: {count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}} od Cactus",
+    "metaDescription": "{count} mieszkań na sprzedaż: {placeFull}, oferty {partner}. Od {from}, mediana {median}/m²{vsPlace}{sea}. Ceny ofertowe z aktualnych ogłoszeń na Domlivo.",
+    "metaVsPlace": ", {percent}% {direction, select, below {poniżej} above {powyżej} other {na poziomie}} mediany dzielnicy",
+    "metaSea": "; {within} do 300 m od morza",
+    "metaDescriptionShort": "{count} mieszkań na sprzedaż: {placeFull}, oferty {partner}. Cena w każdym ogłoszeniu.",
+    "heroAlt": "Mieszkanie, {placeFull}, oferta {partner}",
+    "lead": "{count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}} na sprzedaż: {placeFull}. Publikuje {partner}, cena ofertowa w każdym ogłoszeniu.",
+    "allListings": "Wszystkie {count} ogłoszeń od {partner}",
+    "linkFromPlace": "{partner}, {place}: {count, plural, one {# mieszkanie} few {# mieszkania} many {# mieszkań} other {# mieszkania}} z układami i cenami",
+    "stage": {
+      "mixed": "{completed, plural, one {# w oddanym budynku} other {# w oddanych budynkach}}, {unfinished, plural, one {# wciąż w budowie} other {# wciąż w budowie}}, oddanie obiecane na {years}.",
+      "allCompleted": "Wszystkie {count} w oddanych budynkach; nic nie jest sprzedawane z planu.",
+      "mixedNoYear": "{completed, plural, one {# w oddanym budynku} other {# w oddanych budynkach}}, {unfinished, plural, one {# wciąż w budowie} other {# wciąż w budowie}}; termin oddania niepodany."
+    },
+    "stats": {
+      "listings": "Mieszkań na sprzedaż",
+      "from": "Ceny od",
+      "medianSqm": "Mediana ceny za m²",
+      "nearSea": "Do {metres} m od morza",
+      "vsPlaceNote": "Mediana za m² w tym zestawieniu jest {percent}% {direction, select, below {poniżej} above {powyżej} other {na poziomie}} mediany dzielnicy {place}, {placeMedian}/m² (Indeks cen Domlivo, mieszkania i kawalerki).",
+      "nearestSea": "Najbliżej morza"
+    },
+    "thin": "Obecnie w zestawieniu jest mniej niż {min} mieszkań, więc strona pozostaje poza wynikami wyszukiwania, dopóki oferta nie urośnie.",
+    "about": {
+      "title": "Co oferuje {partner}: {place}",
+      "lead": "Każdy wiersz poniżej jest policzony z ogłoszeń na tej stronie; nic nie jest napisane ręcznie.",
+      "price": "Ceny ofertowe od {from}; mediana to {median} za m².",
+      "priceVsPlace": "Ceny ofertowe od {from}; mediana to {median} za m², {percent}% {direction, select, below {poniżej} above {powyżej} other {na poziomie}} mediany dzielnicy {place} ({placeMedian}/m²).",
+      "layouts": "Układy w ofercie: {list}.",
+      "sea": "{within} z {known} ogłoszeń z podaną odległością leży do {metres} m od morza; najbliższe jest {min} od plaży.",
+      "complexes": "Kompleksy wymienione w ogłoszeniach",
+      "asOf": "Dane na {date}, z {count, plural, one {# ogłoszenia} few {# ogłoszeń} many {# ogłoszeń} other {# ogłoszenia}} na Domlivo.",
+      "seaNone": "Żadne z {known} ogłoszeń z podaną odległością nie leży do {metres} m od morza; najbliższe jest {min}, mediana to {median} m."
+    },
+    "layout": {
+      "studio": "Kawalerka",
+      "oneOne": "1+1",
+      "twoOne": "2+1",
+      "threePlus": "3+1 i większe"
+    },
+    "table": {
+      "title": "Układy i ceny: {place}",
+      "lead": "Według układu: ile ogłoszeń ma {partner}, metraże, najniższa cena ofertowa i mediana za m².",
+      "colLayout": "Układ",
+      "colCount": "Ogłoszeń",
+      "colArea": "Powierzchnia",
+      "colFrom": "Od",
+      "colMedianSqm": "Mediana €/m²",
+      "caption": "Mieszkania od {partner} ({placeFull}) według układu, stan na {date}.",
+      "footnote": "Mediana jest podawana tylko dla trzech lub więcej mieszkań z podaną powierzchnią."
+    },
+    "grid": {
+      "title": "Mieszkania: {place}",
+      "lead": "{shown} z {count}: najpierw ogłoszenia z budynkiem zlokalizowanym na mapie, potem najnowsze.",
+      "all": "Wszystkie {count} ogłoszeń"
+    },
+    "place": {
+      "title": "O dzielnicy {place}",
+      "allListings": "Wszystkie nieruchomości na sprzedaż: {place}",
+      "prices": "{place}: ceny i dzielnice"
+    },
+    "faq": {
+      "priceQ": "Ile kosztuje mieszkanie od {partner} w dzielnicy {place}?",
+      "priceA": "Od {from}. Mediana ceny ofertowej to {median} za m² z {count} ogłoszeń, stan na {date}.",
+      "priceAWithPlace": "Od {from}. Mediana ceny ofertowej to {median} za m² z {count} ogłoszeń, stan na {date}; mediana dzielnicy {place} na Domlivo to {placeMedian}/m².",
+      "layoutsQ": "Jakie układy są w ofercie ({place})?",
+      "layoutsA": "{list}.",
+      "layoutItem": "{layout}: {count, plural, one {# ogłoszenie} few {# ogłoszenia} many {# ogłoszeń} other {# ogłoszenia}}",
+      "layoutItemFrom": "{layout}: {count, plural, one {# ogłoszenie} few {# ogłoszenia} many {# ogłoszeń} other {# ogłoszenia}} od {from}",
+      "seaQ": "Jak daleko od morza są te mieszkania ({place})?",
+      "seaA": "{within} z {known} ogłoszeń z podaną odległością leży do {metres} m od morza. Najbliższe jest {min} od plaży, mediana to {median} m.",
+      "stageQ": "Czy któreś są jeszcze w budowie?",
+      "stageA": "{unfinished, plural, one {# jest} other {# są}} w budowie, oddanie obiecane na {years}; {completed, plural, one {# jest} other {# są}} w oddanych budynkach.",
+      "stageAllCompletedA": "Nie. Wszystkie {count} są w oddanych budynkach; nic nie jest sprzedawane z planu.",
+      "sellerQ": "Kto sprzedaje te mieszkania?",
+      "sellerA": "Każde ogłoszenie na tej stronie publikuje {partner}, agencja partnerska Domlivo. Podana cena to cena ofertowa agencji. Aby zapytać o mieszkanie, użyj formularza na tej stronie albo napisz na WhatsApp lub Telegram.",
+      "heading": "Pytania: {place}",
+      "stageANoYear": "{unfinished, plural, one {# jest} other {# są}} w budowie bez podanego terminu oddania; {completed, plural, one {# jest} other {# są}} w oddanych budynkach.",
+      "seaANone": "Żadne z {known} ogłoszeń z podaną odległością nie leży do {metres} m od morza. Najbliższe jest {min}, mediana to {median} m."
+    },
+    "contact": {
+      "title": "Zapytaj o mieszkania: {place}",
+      "lead": "Jedna wiadomość: które mieszkanie, budżet lub pytanie. Trafia do zespołu Domlivo, który pracuje z {partner} nad tymi ogłoszeniami.",
+      "placeholder": "Które mieszkanie, budżet lub pytanie",
+      "submit": "Wyślij"
+    },
+    "more": {
+      "title": "Więcej od {partner}",
+      "agent": "Wszystkie ogłoszenia od {partner}",
+      "sellerNote": "Każde ogłoszenie na tej stronie publikuje {partner}; podana cena to cena ofertowa agencji.",
+      "chips": {
+        "plazh_durres": "Plazh",
+        "golem_durres": "Golem",
+        "shkembi_i_kavajes_durres": "Shkëmbi i Kavajës",
+        "durres_city_centre": "Centrum Durrës",
+        "mali_i_robit_durres": "Mali i Robit",
+        "qerret_durres": "Qerret",
+        "shengjin": "Shëngjin",
+        "tocak_plazh_durres": "Kompleks Tocak, Plazh"
+      }
+    },
+    "firstLine": "w pierwszej linii, tuż przy plaży",
+    "metres": "{n} m"
   }
 }

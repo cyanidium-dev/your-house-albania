@@ -44,6 +44,13 @@ ${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}${knowledge.length
 - [Golem](${u('/en/albania/durres/golem-durres')}), [Plazh](${u('/en/albania/durres/plazh')}), [Durrës city centre](${u('/en/albania/durres/city-center-durres')}), [Shkëmbi i Kavajës](${u('/en/albania/durres/shkembi-durres')}), [Qerret](${u('/en/albania/durres/qerret')}): district listings
 - [Cities](${u('/en/cities')}): Tirana, Durrës, Vlorë, Sarandë, Himarë, Shëngjin, Shkodër
 
+## Partner selections
+
+One page per place where the partner agency Cactus Real Estate lists enough flats for the figures to mean something: layouts, asking prices against the district median, distance to the sea, what is still under construction. Every figure is computed from the live listings.
+
+- [Plazh, Durrës](${u('/en/partners/cactus/plazh-durres')}), [Golem](${u('/en/partners/cactus/golem-durres')}), [Shkëmbi i Kavajës](${u('/en/partners/cactus/shkembi-i-kavajes-durres')}), [Durrës city centre](${u('/en/partners/cactus/durres-city-centre')}), [Mali i Robit](${u('/en/partners/cactus/mali-i-robit-durres')}), [Qerret](${u('/en/partners/cactus/qerret-durres')}), [Shëngjin](${u('/en/partners/cactus/shengjin')})
+- [Tocak complex, Plazh](${u('/en/partners/cactus/tocak-plazh-durres')}): one named complex
+
 ## Prices and districts
 
 - [Durrës: prices and districts](${u('/en/albania/durres/info')}): price per m² by zone with sources, a live table from current listings, district notes, FAQ

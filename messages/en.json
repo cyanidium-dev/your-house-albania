@@ -1381,5 +1381,113 @@
       "officePhotoAlt": "Our office",
       "sectionLabel": "Contacts and reviews"
     }
+  },
+  "PartnerLanding": {
+    "crumb": "{partner}",
+    "label": "{partner} · {place}",
+    "title": "{place}: {count, plural, one {# flat} other {# flats}} from {partner}",
+    "metaTitle": "{place}: {count, plural, one {# flat} other {# flats}} from Cactus",
+    "metaDescription": "{count} flats for sale in {placeFull} listed by {partner}: from {from}, median {median}/m²{vsPlace}{sea}. Asking prices from live listings on Domlivo.",
+    "metaVsPlace": ", {percent}% {direction, select, below {below} above {above} other {level with}} the district median",
+    "metaSea": "; {within} within 300 m of the sea",
+    "metaDescriptionShort": "{count} flats for sale in {placeFull}, listed by {partner}. Asking prices on every listing.",
+    "heroAlt": "A flat in {placeFull} listed by {partner}",
+    "lead": "{count, plural, one {# flat} other {# flats}} for sale in {placeFull}, published by {partner} with the asking price on every listing.",
+    "allListings": "All {count} listings from {partner}",
+    "linkFromPlace": "{partner} in {place}: {count, plural, one {# flat} other {# flats}} with layouts and prices",
+    "stage": {
+      "mixed": "{completed, plural, one {# is in a completed building} other {# are in completed buildings}}, {unfinished, plural, one {# is still under construction} other {# are still under construction}} with handover promised for {years}.",
+      "allCompleted": "All {count} are in completed buildings; none is sold off-plan.",
+      "mixedNoYear": "{completed, plural, one {# is in a completed building} other {# are in completed buildings}}, {unfinished, plural, one {# is still under construction} other {# are still under construction}}; the handover date is not stated."
+    },
+    "stats": {
+      "listings": "Flats for sale",
+      "from": "Prices from",
+      "medianSqm": "Median price per m²",
+      "nearSea": "Within {metres} m of the sea",
+      "vsPlaceNote": "The selection's median per m² is {percent}% {direction, select, below {below} above {above} other {level with}} the {place} median of {placeMedian}/m² (Domlivo Price Index, flats and studios).",
+      "nearestSea": "Nearest to the sea"
+    },
+    "thin": "Fewer than {min} flats in this selection right now, so the page stays out of search results until the stock grows.",
+    "about": {
+      "title": "What {partner} offers in {place}",
+      "lead": "Every line below is computed from the listings on this page; nothing is written by hand.",
+      "price": "Asking prices from {from}; the median is {median} per m².",
+      "priceVsPlace": "Asking prices from {from}; the median is {median} per m², {percent}% {direction, select, below {below} above {above} other {level with}} the {place} median of {placeMedian}/m².",
+      "layouts": "Layouts on offer: {list}.",
+      "sea": "{within} of {known} listings with a stated distance are within {metres} m of the sea; the nearest is {min} away.",
+      "complexes": "Complexes the listings name",
+      "asOf": "Data as of {date}, from {count, plural, one {# listing} other {# listings}} on Domlivo.",
+      "seaNone": "None of the {known} listings with a stated distance is within {metres} m of the sea; the nearest is {min}, the median {median} m."
+    },
+    "layout": {
+      "studio": "Studio",
+      "oneOne": "1+1",
+      "twoOne": "2+1",
+      "threePlus": "3+1 and larger"
+    },
+    "table": {
+      "title": "Layouts and prices in {place}",
+      "lead": "By layout: how many {partner} lists, the sizes, the lowest asking price and the median per m².",
+      "colLayout": "Layout",
+      "colCount": "Listings",
+      "colArea": "Area",
+      "colFrom": "From",
+      "colMedianSqm": "Median €/m²",
+      "caption": "Flats in {placeFull} listed by {partner}, by layout, as of {date}.",
+      "footnote": "A median is printed only over three or more flats with a stated area."
+    },
+    "grid": {
+      "title": "Flats in {place}",
+      "lead": "{shown} of {count}: listings with the building located on the map first, then the newest.",
+      "all": "All {count} listings"
+    },
+    "place": {
+      "title": "About {place}",
+      "allListings": "All property for sale in {place}",
+      "prices": "{place}: prices and districts"
+    },
+    "faq": {
+      "priceQ": "How much does a flat in {place} from {partner} cost?",
+      "priceA": "From {from}. The median asking price is {median} per m² across {count} listings, as of {date}.",
+      "priceAWithPlace": "From {from}. The median asking price is {median} per m² across {count} listings, as of {date}; the {place} median on Domlivo is {placeMedian}/m².",
+      "layoutsQ": "Which layouts are on offer in {place}?",
+      "layoutsA": "{list}.",
+      "layoutItem": "{layout}: {count, plural, one {# listing} other {# listings}}",
+      "layoutItemFrom": "{layout}: {count, plural, one {# listing} other {# listings}} from {from}",
+      "seaQ": "How far from the sea are the flats in {place}?",
+      "seaA": "{within} of the {known} listings with a stated distance are within {metres} m of the sea. The nearest is {min} away, the median {median} m.",
+      "stageQ": "Are any of them still under construction?",
+      "stageA": "{unfinished, plural, one {# is} other {# are}} under construction, with handover promised for {years}; {completed, plural, one {# is} other {# are}} in completed buildings.",
+      "stageAllCompletedA": "No. All {count} are in completed buildings; none is sold off-plan.",
+      "sellerQ": "Who is selling these flats?",
+      "sellerA": "Every listing on this page is published by {partner}, a partner agency on Domlivo. The price shown is the agency's asking price. To ask about a flat, use the form on this page or write on WhatsApp or Telegram.",
+      "heading": "Questions about {place}",
+      "stageANoYear": "{unfinished, plural, one {# is} other {# are}} under construction with no handover date stated; {completed, plural, one {# is} other {# are}} in completed buildings.",
+      "seaANone": "None of the {known} listings with a stated distance is within {metres} m of the sea. The nearest is {min}, the median {median} m."
+    },
+    "contact": {
+      "title": "Ask about flats in {place}",
+      "lead": "One message: which flat, your budget or your question. It goes to the Domlivo team, which works with {partner} on these listings.",
+      "placeholder": "Which flat, your budget or your question",
+      "submit": "Send"
+    },
+    "more": {
+      "title": "More from {partner}",
+      "agent": "All listings from {partner}",
+      "sellerNote": "Every listing on this page is published by {partner}; the price shown is the agency's asking price.",
+      "chips": {
+        "plazh_durres": "Plazh",
+        "golem_durres": "Golem",
+        "shkembi_i_kavajes_durres": "Shkëmbi i Kavajës",
+        "durres_city_centre": "Durrës city centre",
+        "mali_i_robit_durres": "Mali i Robit",
+        "qerret_durres": "Qerret",
+        "shengjin": "Shëngjin",
+        "tocak_plazh_durres": "Tocak complex, Plazh"
+      }
+    },
+    "firstLine": "on the first line, right on the beach",
+    "metres": "{n} m"
   }
 }
