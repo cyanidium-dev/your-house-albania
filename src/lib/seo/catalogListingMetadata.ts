@@ -3,13 +3,17 @@
  * Does not change filter parsing or UI.
  *
  * Policy (listing/filter pages):
- * - Any real query string on the URL → noindex; canonical is always the path without `?…`.
+ * - `?page=N` (N ≥ 2) and nothing else but tracking parameters → a page of its
+ *   own: canonical to itself (`<path>?page=N`), indexed exactly when the bare
+ *   page is (audit M-2). See {@link listingPaginationPage}.
+ * - Any other real query string on the URL → noindex; canonical is the path without `?…`.
  * - Deal + property-type URLs → also noindex when inventory is at or below
  *   `LISTING_DEAL_TYPE_NOINDEX_THRESHOLD` (same rule as geo listings + sitemap-types).
  */
 
 import { fetchCatalogProperties } from "@/lib/sanity/client";
 import { isNationalTypeListingThin } from "@/lib/seo/listingIndexPolicy";
+import { isTrackingQueryParam } from "@/lib/routes/listingQueryRewrite";
 
 export { LISTING_DEAL_TYPE_NOINDEX_THRESHOLD } from "@/lib/seo/listingIndexPolicy";
 
@@ -52,6 +56,47 @@ export function listingUrlHasQueryParams(
     }
   }
   return false;
+}
+
+const LATER_PAGE = /^[1-9]\d*$/;
+
+/**
+ * The page number when the query names a later page and nothing else:
+ * `?page=2` → 2, `?page=2&utm_source=x` → 2 (tracking parameters change
+ * nothing on the page). `null` for page one, for no query, and whenever any
+ * other parameter is present (`?page=2&sort=priceAsc` is a filtered copy).
+ *
+ * Such a page lists cards no other URL lists, so it is a page of its own:
+ * self-canonical and as indexable as the bare listing. Pointing its canonical
+ * at page one while also saying `noindex` (the rule until 2026-10-19) told
+ * search engines to drop the only URLs linking listings 25 and later.
+ * `?page=1`, `?page=0` and `?page=abc` never get here: the middleware 308s
+ * them to the bare URL (`lib/routes/pageParam`).
+ */
+export function listingPaginationPage(
+  searchParams: Record<string, string | string[] | undefined>
+): number | null {
+  let page: number | null = null;
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (value === undefined) continue;
+    const values = (Array.isArray(value) ? value : [value]).filter(
+      (v): v is string => typeof v === "string" && v.trim() !== ""
+    );
+    if (values.length === 0) continue;
+    if (isTrackingQueryParam(key)) continue;
+    if (key !== "page" || values.length !== 1) return null;
+    const raw = values[0].trim();
+    if (!LATER_PAGE.test(raw)) return null;
+    const n = Number(raw);
+    if (!Number.isSafeInteger(n) || n < 2) return null;
+    page = n;
+  }
+  return page;
+}
+
+/** `?page=N` for a later page, `""` for page one — appended to a canonical or hreflang path. */
+export function listingPageQuery(page: number | null | undefined): string {
+  return page && page > 1 ? `?page=${page}` : "";
 }
 
 /**

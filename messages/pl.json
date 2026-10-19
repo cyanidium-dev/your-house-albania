@@ -463,6 +463,38 @@
       "downloadsBody": "Generowane co godzinę razem ze stronami. CSV to jeden plik na miasto, najpierw całe miasto, potem dzielnice; JSON zawiera wszystkie miasta i dzielnice z opisem każdego pola.",
       "downloadAll": "Wszystkie miasta i dzielnice (JSON)",
       "downloadCity": "{city} według dzielnic (CSV)"
+    },
+    "prices": {
+      "metaTitle": "Ceny nieruchomości w Albanii według miast 2026: mediana €/m² (Domlivo Price Index)",
+      "metaDescription": "Ceny ofertowe mieszkań w Albanii według miast: mediana i 20.–80. percentyl €/m² dla Durrës, Tirany, Wlory, Sarandy i innych, z aktywnych ogłoszeń, aktualizacja co godzinę. Otwarte dane, CC BY 4.0.",
+      "breadcrumb": "Ceny według miast",
+      "h1": "Ceny nieruchomości w Albanii według miast",
+      "lead": "Mediana ceny ofertowej za metr kwadratowy mieszkań i kawalerek na sprzedaż na Domlivo, miasto po mieście, obliczona {date} na podstawie {listings} ogłoszeń. Miasto, które ma w próbie mniej niż {min} mieszkań, pokazuje wielkość próby zamiast liczby.",
+      "leadNoData": "Liczby są przeliczane. Spróbuj ponownie za kilka minut.",
+      "tableTitle": "Mediana ceny ofertowej za m², według miast",
+      "tableLead": "Miasta według liczby ogłoszeń. Każde miasto otwiera swoje dzielnice i źródła.",
+      "tableCaption": "Ceny nieruchomości w Albanii według miast, {date}: mediana i 20.–80. percentyl ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo oraz liczba mieszkań w próbie",
+      "colCity": "Miasto",
+      "colMedian": "Mediana, €/m²",
+      "colRange": "20.–80. percentyl, €/m²",
+      "colCount": "Mieszkań w próbie",
+      "lowSampleCell": "za mało danych",
+      "stageTitle": "Nowe budownictwo a gotowe mieszkania",
+      "stageLead": "Te same miasta według etapu budowy: w projekcie i w budowie wobec budynków ukończonych. Kreska oznacza mniej niż {min} mieszkań w grupie.",
+      "colNewBuild": "Nowe budownictwo, €/m²",
+      "colCompleted": "Ukończone, €/m²",
+      "stageCaption": "Mediana ceny ofertowej za m² według miasta i etapu budowy, {date}, Domlivo Price Index",
+      "howTitle": "Jak czytać te liczby",
+      "howBody": "To ceny ofertowe, nie transakcyjne: to, co sprzedający i agencje podają w ogłoszeniach na Domlivo. Mediana to wartość środkowa; przedział biegnie od 20. do 80. percentyla, więc jedna błędnie wpisana cena go nie przesuwa. Mediana z mniej niż {min} mieszkań nigdy nie jest pokazywana. Metoda, filtry i próba są na stronie metodologii; liczby można swobodnie wykorzystywać z linkiem.",
+      "methodologyLink": "Przeczytaj metodologię",
+      "downloadJson": "Pobierz wszystkie liczby (JSON)",
+      "faqTitle": "Pytania",
+      "faq1q": "W którym mieście Albanii mieszkania są najtańsze?",
+      "faq1a": "{city}: mediana ceny ofertowej €{median} za m² w dniu {date}, najniższa wśród miast z wiarygodną próbą na Domlivo. Ceny różnią się bardziej wewnątrz miasta niż między miastami; tabela dzielnic na stronie każdego miasta pokazuje rozrzut.",
+      "faq2q": "Które miasto jest najdroższe?",
+      "faq2a": "{city}: €{median} za m² mediany ceny ofertowej w dniu {date}. Pierwsza linia brzegowa i Riwiera leżą powyżej każdej mediany miejskiej.",
+      "faq3q": "Jak często aktualizowane są liczby?",
+      "faq3a": "Najwyżej raz na godzinę, na podstawie ogłoszeń aktywnych w tym momencie na Domlivo. Każda tabela ma datę obliczenia; wydania miesięczne ukazują się na blogu."
     }
   },
   "Calculators": {
@@ -1279,6 +1311,15 @@
       "stageUnderConstruction": "w budowie",
       "stageCompleted": "ukończone"
     }
+  },
+  "InventoryLinks": {
+    "title": "Oferty na sprzedaż i ceny",
+    "districtListings": "{district}: nieruchomości na sprzedaż",
+    "cityListings": "{city}: wszystkie nieruchomości na sprzedaż",
+    "typeListings": "{type} na sprzedaż — {city}",
+    "nationalListings": "Wszystkie nieruchomości na sprzedaż w Albanii",
+    "cityPrices": "{city}: ceny nieruchomości",
+    "nationalPrices": "Ceny nieruchomości w Albanii"
   },
   "Capture": {
     "ask": {

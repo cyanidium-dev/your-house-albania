@@ -66,6 +66,27 @@ Pages indexed on probation ([ADR 007](decisions/007-experiments.md)). Review dat
 | `durres-new-builds` | `/{l}/albania/durres/new-builds` | 45 | New-build / off-plan / "ne ndertim" queries on this URL; indexed | — |
 | `durres-near-the-sea-data` | `/{l}/albania/durres/near-the-sea` | 98 | Indexed; beach/sea queries on this URL; sea-distance coverage > 60% | — |
 
+## Thin pages and pagination (2026-10-19, growth plan B4)
+
+`npx tsx scripts/audit-thin-pages.ts` before the change: 116 listing pages with inventory, 100 indexable page × locale rows, 51 of them with under 120 words of their own copy. Own copy (180–230 words, figures as live index tokens) was written for the indexable thin pages; they were opened and checked locally on 2026-10-19 (robots as the registry decides):
+
+| Page | Locales indexed | Listings | Copy | Robots checked |
+|---|---|---:|---|---|
+| `/{l}/albania/durres/1-1` | all 7 | 268 | facet `catalogSeoPage` | en, de: index |
+| `/{l}/albania/durres/near-the-sea` | all 7 (experiment) | 406 | facet `catalogSeoPage` | en, de: index |
+| `/{l}/albania/durres/under-100k` | all 7 (experiment) | 204 | facet `catalogSeoPage` | en, de: index |
+| `/{l}/albania/durres/2-1`, `/new-builds` | all 7 | 159, 70 | facet `catalogSeoPage` | — |
+| `/{l}/albania/vlore` | en sq it pl de | 10 | city `catalogSeoPage` | after #74 deploy |
+| `/{l}/albania/sarande` | en ru sq it pl de | 12 | city `catalogSeoPage` | after #74 deploy |
+| `/{l}/albania/shengjin` | en sq | 20 | city `catalogSeoPage` | after #74 deploy |
+| `/{l}/albania/tirana` | en sq de | 17 | city `catalogSeoPage` | after #74 deploy |
+
+Stay noindex (inventory under the family minimum, nothing a city page does not say — reason in `eligibility.ts`): Himarë (1 listing), Shkodër (1), Ksamil (0, no page), every Tirana district (1 each), every Vlorë district (≤ 3), the small facets of Sarandë, Shëngjin, Tirana and Vlorë. Spille (19) stays noindex on demand (no cluster, under the 30-listing inferred-demand floor) and already has its own text.
+
+Pagination: `?page=N` is self-canonical with the bare page's robots (`/en/sale?page=2` → canonical `/en/sale?page=2`, index). Track in GSC whether page-N URLs get indexed and whether "Alternate page with proper canonical tag" for `?page=` drops. `node scripts/check-listing-click-depth.ts --cities`: every listing ≤ 2 clicks from its city hub.
+
+Review on 2026-11-12 with the experiments: impressions and query → page alignment for the eight pages above; if Vlorë, Sarandë, Shëngjin or Tirana stay at 0 impressions with indexed status, the copy is not the bottleneck — inventory is.
+
 ## What to track per registry page
 
 | Signal | Where | Cadence |

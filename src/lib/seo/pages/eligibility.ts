@@ -87,8 +87,15 @@ export function evaluateSeoPage(input: EvaluateSeoPageInput): SeoPageDecision {
     );
   }
 
+  // Thin pages (growth plan B4, 2026-10-19): a page under its family's
+  // minimum stays noindex whatever copy it carries. Copy is written for the
+  // pages that clear it (scripts/audit-thin-pages.ts lists the indexable ones
+  // with under THIN_COPY_MIN_WORDS of their own text); a page with one or
+  // three listings has nothing to say that its city page does not, so Himarë,
+  // Shkodër, the Tirana and Vlorë districts and the small facets wait for
+  // stock instead of getting text written around an empty grid.
   const inventoryOk = count >= policy.minInventory;
-  if (!inventoryOk) reasons.push(`inventory ${count} < min ${policy.minInventory}`);
+  if (!inventoryOk) reasons.push(`inventory ${count} < min ${policy.minInventory}: thin, noindex until the stock arrives`);
 
   let distinctOk = true;
   const parentCount = inventory.parentCount;

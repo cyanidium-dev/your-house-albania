@@ -11,10 +11,24 @@ export type ItemListEntry = {
   image?: string | null;
 };
 
+/**
+ * The page the list is on, when it is about a place: the city or district
+ * catalogue. Emitted as a `CollectionPage` whose `mainEntity` is the list and
+ * whose `about` is the `Place`, so a crawler reads "a page of listings in
+ * Durrës" instead of an anonymous list.
+ */
+export type ItemListCollection = {
+  name: string;
+  /** Absolute canonical URL of the page, when known. */
+  url?: string;
+  placeName?: string;
+};
+
 export function buildItemListJsonLd(
   items: ItemListEntry[],
   baseUrl: string,
-  locale: string
+  locale: string,
+  collection?: ItemListCollection | null
 ): object {
   const base = baseUrl.replace(/\/$/, "");
 
@@ -38,10 +52,19 @@ export function buildItemListJsonLd(
       return listItem;
     });
 
-  return {
-    "@context": "https://schema.org",
+  const itemList = {
     "@type": "ItemList",
     numberOfItems: itemListElement.length,
     itemListElement,
+  };
+  if (!collection?.name) return { "@context": "https://schema.org", ...itemList };
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: collection.name,
+    ...(collection.url ? { url: collection.url } : {}),
+    inLanguage: locale,
+    ...(collection.placeName ? { about: { "@type": "Place", name: collection.placeName } } : {}),
+    mainEntity: itemList,
   };
 }

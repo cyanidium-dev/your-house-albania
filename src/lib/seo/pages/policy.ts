@@ -46,3 +46,11 @@ export const INFERRED_DEMAND_SCORE: DemandScore = 1;
 
 /** Tier 1 = demand score 3 and inventory at least this multiple of the family minimum. */
 export const TIER_ONE_INVENTORY_MULTIPLE = 2;
+
+/**
+ * Words of copy written for the page itself (its `catalogSeoPage` intro and
+ * bottom text in the locale) below which an indexable listing page counts as
+ * thin in `scripts/audit-thin-pages.ts`. Growth plan B4: 150–300 words with
+ * the index figures, or noindex until the stock is there.
+ */
+export const THIN_COPY_MIN_WORDS = 120;

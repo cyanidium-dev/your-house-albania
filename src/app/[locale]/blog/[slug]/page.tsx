@@ -32,7 +32,8 @@ import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
-import { BlogListingsBlock } from "@/components/Blog/BlogListingsBlock";
+import { InventoryLinksSection } from "@/components/inventory/InventoryLinksSection";
+import { blogPostTopics } from "@/lib/inventoryLinks/places";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
@@ -223,6 +224,12 @@ export default async function Post({ params }: Props) {
   const tBlogCard = await getTranslations("Shared.blogCard");
   const tLightbox = await getTranslations("Shared.lightbox");
   const primaryCategory = detail.categories[0];
+  // Listing cards already placed by the editor (the sidebar's
+  // relatedProperties, or a property embed in the text) are the post's listing
+  // block; the inventory section then adds only its links.
+  const hasCmsListings =
+    detail.properties.length > 0 ||
+    detail.contentBlocks.some((b) => (b as { _type?: string } | null)?._type === "blogPropertyEmbedBlock");
 
   const introBlock = (
     <div className="min-w-0 flex-1 flex flex-col justify-between">
@@ -380,7 +387,6 @@ export default async function Post({ params }: Props) {
               <BlogTableOfContents content={detail.contentBlocks} />
               <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} postSlug={detail.slug} />
-              <BlogListingsBlock locale={locale} postSlug={detail.slug} />
               <BlogFaq faq={detail.faq} locale={locale} />
               <BlogSources sources={detail.sources} locale={locale} />
               {/* Last thing in the article, after the sources. Editors can also
@@ -423,6 +429,14 @@ export default async function Post({ params }: Props) {
           </div>
         </div>
       </section>
+      {/* Full width under the article: listing pages and the price index of
+          the places the post is about, and three live listings (B5). */}
+      <InventoryLinksSection
+        locale={locale}
+        topics={(dir) => blogPostTopics(detail.slug, dir)}
+        showCards={!hasCmsListings}
+        className="pt-0 md:pt-0"
+      />
     </>
   );
 }

@@ -227,6 +227,27 @@ describe("tokens in CMS copy", () => {
     expect(replacePriceIndexTokens("{{median:durres}}", null, "en")).toBe("—");
   });
 
+  it("reads a district or a facet slice of the city, and the count and price fields", () => {
+    const facetSnapshot = buildPriceIndexSnapshot({
+      rows: [
+        ...flats(4, "durres", "plazh", { bedrooms: 1, price: 70000 }),
+        ...flats(2, "durres", "plazh", { bedrooms: 2, price: 150000 }),
+        ...flats(3, "durres", "golem", { bedrooms: 1, price: 90000, sea: 120 }),
+        { price: 50000, area: 400, type: "land", c: "durres", d: "plazh" },
+      ],
+      cities: [{ slug: "durres", title: { en: "Durrës" }, country: "albania" }],
+      districts: [{ slug: "plazh" }, { slug: "golem" }],
+      computedAt: COMPUTED_AT,
+    });
+    const r = (text: string) => replacePriceIndexTokens(text, facetSnapshot, "en");
+    expect(r("{{listings:durres}} / {{flats:durres}}")).toBe("10 / 9");
+    expect(r("{{count:durres/1-1}} from €{{from:durres/1-1}}")).toBe("7 from €70,000");
+    expect(r("{{listings:durres/plazh}}")).toBe("7");
+    expect(r("{{count:durres/near-the-sea}}")).toBe("3");
+    expect(r("{{price:durres/under-100k}}")).toBe("70,000");
+    expect(r("{{count:durres/3-1}} {{median:durres/nowhere}}")).toBe("— —");
+  });
+
   it("returns untouched objects as they were and rebuilds only changed branches", () => {
     const untouched = { a: [{ text: "no token" }] };
     expect(interpolatePriceIndexTokens(untouched, snapshot, "en")).toBe(untouched);

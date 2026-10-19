@@ -59,6 +59,7 @@ export async function LandingRenderer({
   breadcrumb,
   afterHero,
   propertiesDeal: propertiesDealOverride,
+  beforeCta,
 }: {
   locale: string
   landing: LandingPageDoc | null
@@ -72,6 +73,11 @@ export async function LandingRenderer({
   afterHero?: React.ReactNode
   /** When set, wins over inferring `deal` from landing pageType/slug for property-type card links. */
   propertiesDeal?: PropertiesDealParam
+  /**
+   * Rendered before the closing CTA when the landing ends on one, otherwise
+   * last: the guides' listings-and-prices links live here.
+   */
+  beforeCta?: React.ReactNode
 }) {
   const sections = asSections(landing)
   const propertiesDeal =
@@ -115,6 +121,7 @@ export async function LandingRenderer({
   }
 
   const nodes: React.ReactNode[] = []
+  let lastRenderedType: string | undefined
 
   for (let i = 0; i < sections.length; i++) {
     const section = sections[i]
@@ -131,6 +138,7 @@ export async function LandingRenderer({
       landingCtx: { id: landing?._id, slug: landing?.slug, pageType: landing?.pageType, topicTags: landing?.topicTags },
     })
     if (!node) continue
+    lastRenderedType = section?._type
     // Sections below the first screen render lazily: with `content-visibility`
     // the browser skips their style and layout until they scroll near, and
     // style/layout was 1.3 s of the main thread on a phone (Lighthouse
@@ -146,6 +154,11 @@ export async function LandingRenderer({
         node
       ),
     )
+  }
+
+  if (beforeCta) {
+    const endsOnCta = nodes.length > 0 && lastRenderedType === 'ctaSection'
+    nodes.splice(endsOnCta ? nodes.length - 1 : nodes.length, 0, <React.Fragment key="before-cta">{beforeCta}</React.Fragment>)
   }
 
   if (afterHero) {

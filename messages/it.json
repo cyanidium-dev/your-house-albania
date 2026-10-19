@@ -463,6 +463,38 @@
       "downloadsBody": "Rigenerati ogni ora insieme alle pagine. In CSV un file per città, prima l'intera città e poi i quartieri; in JSON tutte le città e tutti i quartieri, con la descrizione di ogni campo.",
       "downloadAll": "Tutte le città e i quartieri (JSON)",
       "downloadCity": "{city} per quartiere (CSV)"
+    },
+    "prices": {
+      "metaTitle": "Prezzi degli immobili in Albania per città 2026: mediana €/m² (Domlivo Price Index)",
+      "metaDescription": "Prezzi richiesti degli appartamenti in Albania per città: mediana e 20°–80° percentile €/m² per Durazzo, Tirana, Valona, Saranda e altre, dagli annunci attivi, aggiornati ogni ora. Dati aperti, CC BY 4.0.",
+      "breadcrumb": "Prezzi per città",
+      "h1": "Prezzi degli immobili in Albania per città",
+      "lead": "Prezzo richiesto mediano al metro quadro di appartamenti e monolocali in vendita su Domlivo, città per città, calcolato il {date} su {listings} annunci. Una città con meno di {min} appartamenti nel campione mostra la dimensione del campione al posto della cifra.",
+      "leadNoData": "Le cifre sono in ricalcolo. Riprova tra qualche minuto.",
+      "tableTitle": "Prezzo richiesto mediano al m², per città",
+      "tableLead": "Città per numero di annunci. Ogni città apre i suoi quartieri e le fonti.",
+      "tableCaption": "Prezzi degli immobili in Albania per città, {date}: mediana e 20°–80° percentile del prezzo richiesto al m² di appartamenti e monolocali in vendita su Domlivo, e appartamenti nel campione",
+      "colCity": "Città",
+      "colMedian": "Mediana, €/m²",
+      "colRange": "20°–80° percentile, €/m²",
+      "colCount": "Appartamenti nel campione",
+      "lowSampleCell": "dati insufficienti",
+      "stageTitle": "Nuove costruzioni e stock completato",
+      "stageLead": "Le stesse città per fase di costruzione: su carta e in costruzione contro edifici completati. Il trattino indica meno di {min} appartamenti nel gruppo.",
+      "colNewBuild": "Nuove costruzioni, €/m²",
+      "colCompleted": "Completati, €/m²",
+      "stageCaption": "Prezzo richiesto mediano al m² per città e fase di costruzione, {date}, Domlivo Price Index",
+      "howTitle": "Come leggere queste cifre",
+      "howBody": "Sono prezzi richiesti, non prezzi di vendita: ciò che venditori e agenzie indicano nei loro annunci su Domlivo. La mediana è il valore centrale; l'intervallo va dal 20° all'80° percentile, così un prezzo digitato male non lo sposta. Una mediana su meno di {min} appartamenti non viene mai mostrata. Metodo, filtri e campione sono nella pagina della metodologia; le cifre sono riutilizzabili liberamente con un link.",
+      "methodologyLink": "Leggi la metodologia",
+      "downloadJson": "Scarica tutte le cifre (JSON)",
+      "faqTitle": "Domande",
+      "faq1q": "Quale città albanese ha gli appartamenti più economici?",
+      "faq1a": "{city}: prezzo richiesto mediano di €{median} al m² il {date}, il più basso tra le città con un campione affidabile su Domlivo. I prezzi variano più dentro una città che tra città; la tabella dei quartieri nella pagina di ogni città mostra la dispersione.",
+      "faq2q": "Quale città è la più cara?",
+      "faq2a": "{city}: €{median} al m² di prezzo richiesto mediano il {date}. Le prime linee sul mare e la Riviera stanno sopra ogni mediana cittadina.",
+      "faq3q": "Ogni quanto si aggiornano le cifre?",
+      "faq3a": "Al massimo una volta all'ora, dagli annunci attivi su Domlivo in quel momento. Ogni tabella riporta la data del calcolo; le edizioni mensili escono sul blog."
     }
   },
   "Calculators": {
@@ -1279,6 +1311,15 @@
       "stageUnderConstruction": "in costruzione",
       "stageCompleted": "completato"
     }
+  },
+  "InventoryLinks": {
+    "title": "Immobili in vendita e prezzi",
+    "districtListings": "Immobili in vendita a {district}",
+    "cityListings": "Tutti gli immobili in vendita a {city}",
+    "typeListings": "{type} in vendita a {city}",
+    "nationalListings": "Tutti gli immobili in vendita in Albania",
+    "cityPrices": "Prezzi degli immobili a {city}",
+    "nationalPrices": "Prezzi degli immobili in Albania"
   },
   "Capture": {
     "ask": {

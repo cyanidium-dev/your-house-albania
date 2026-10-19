@@ -7,12 +7,15 @@ import { useTranslations } from "next-intl";
 import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { useUrlSearch } from "@/hooks/useUrlSearch";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { catalogPageIndex } from "@/lib/catalog/listingPagination";
 
 type Props = {
   /** The page the server rendered (`?page=`), 1 on a plain listing URL. */
   currentPage: number;
   /** The next page `onShowMore` will append. */
   nextPage: number;
+  /** Pages in the whole listing, for the page index. */
+  totalPages: number;
   hasMore: boolean;
   isLoading: boolean;
   onShowMore: () => void;
@@ -23,6 +26,9 @@ type Props = {
   /** The query string the server rendered this page for (no leading `?`). */
   serverSearch?: string;
 };
+
+const PAGE_LINK =
+  "inline-flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm tabular-nums transition-colors duration-200 ease-out";
 
 /**
  * "Show more": one control for people and for crawlers.
@@ -38,10 +44,19 @@ type Props = {
  * intercepted and appends the cards in place instead, so the visitor keeps
  * their scroll position and decides when to load more. A visitor who lands on
  * `?page=3` from search also gets a link back to the page before.
+ *
+ * Under them, a compact index links every page of the listing (audit M-2).
+ * With 24 cards a page Durrës runs past twenty pages, and a next-link chain
+ * put its oldest listings twenty clicks from the city page; from any page,
+ * every page is now one click away and every listing two. The pages on screen
+ * (the one loaded plus any appended) are marked, so the index never claims
+ * page 1 while pages 1–4 are showing. `lib/catalog/listingPagination` builds
+ * the index, and the click-depth check walks the same function.
  */
 export function PropertyPagination({
   currentPage,
   nextPage,
+  totalPages,
   hasMore,
   isLoading,
   onShowMore,
@@ -63,6 +78,7 @@ export function PropertyPagination({
     const qs = params.toString();
     return qs ? `${pathname}?${qs}` : pathname;
   };
+  const pageIndex = catalogPageIndex(currentPage, totalPages);
 
   return (
     <nav className="mt-10 flex flex-col items-center gap-3" aria-label={t("pagination")}>
@@ -105,6 +121,30 @@ export function PropertyPagination({
           <Icon icon="ph:caret-left" width={16} height={16} />
           {t("previousPage")}
         </Link>
+      ) : null}
+      {pageIndex.length > 0 ? (
+        <ol className="mt-1 flex max-w-full flex-wrap justify-center gap-1">
+          {pageIndex.map(({ page, current }) => (
+            <li key={page}>
+              {current ? (
+                <span aria-current="page" className={`${PAGE_LINK} bg-primary text-white`}>
+                  {page}
+                </span>
+              ) : (
+                <Link
+                  href={hrefFor(page)}
+                  className={`${PAGE_LINK} hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                    page > currentPage && page < nextPage
+                      ? "bg-primary/10 text-primary"
+                      : "text-dark/60 dark:text-white/60"
+                  }`}
+                >
+                  {page}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ol>
       ) : null}
     </nav>
   );

@@ -19,6 +19,7 @@ const resolveCatalogSeoPage = vi.fn();
 vi.mock("@/lib/sanity/client", () => ({
   fetchCatalogSeoPageRoot: () => fetchCatalogSeoPageRoot(),
   resolveCatalogSeoPage: (raw: unknown, locale: string) => resolveCatalogSeoPage(raw, locale),
+  fetchCatalogProperties: async () => null,
 }));
 
 const buildTypeListingSeo = vi.fn();
@@ -32,14 +33,18 @@ vi.mock("@/lib/seo/envSeo", () => ({
   indexableRobots: { index: true, follow: true, "max-image-preview": "large" },
 }));
 
-vi.mock("@/lib/seo/catalogListingMetadata", () => ({
-  listingUrlHasQueryParams: () => false,
+// The real query rules (page N vs filters); only the inventory lookup is stubbed.
+vi.mock("@/lib/seo/catalogListingMetadata", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../catalogListingMetadata")>()),
   shouldNoindexNonGeoDealTypeCombo: async () => false,
 }));
 
 vi.mock("@/lib/siteUrl", () => ({ getSiteBaseUrl: () => "https://www.domlivo.com" }));
+const buildHreflangAlternates = vi.fn((path: string) => ({
+  languages: { en: `https://www.domlivo.com/en${path}`, pl: `https://www.domlivo.com/pl${path}` },
+}));
 vi.mock("@/lib/seo/hreflang", () => ({
-  buildHreflangAlternates: () => ({ languages: { en: "https://www.domlivo.com/en/sale" } }),
+  buildHreflangAlternates: (path: string) => buildHreflangAlternates(path),
 }));
 
 const { generateNonGeoDealRouteMetadata } = await import("../nonGeoDealRouteMetadata");
@@ -50,13 +55,14 @@ beforeEach(() => {
     .mockReset()
     .mockReturnValue({ metaTitle: CMS_TITLE, metaDescription: CMS_DESCRIPTION, noIndex: false });
   buildTypeListingSeo.mockReset();
+  buildHreflangAlternates.mockClear();
 });
 
-const run = (filters: string[]) =>
+const run = (filters: string[], search: Record<string, string> = {}) =>
   generateNonGeoDealRouteMetadata({
     locale: "pl",
     filters,
-    search: {},
+    search,
     dealQuery: "sale",
     titleFragment: "sale",
   });
@@ -98,5 +104,54 @@ describe("generateNonGeoDealRouteMetadata", () => {
     buildTypeListingSeo.mockResolvedValue(null);
     await run(["commercial%2Dspace"]);
     expect(buildTypeListingSeo).toHaveBeenCalledWith("commercial-space", "pl");
+  });
+});
+
+describe("generateNonGeoDealRouteMetadata — pagination (audit M-2)", () => {
+  const SALE = "https://www.domlivo.com/pl/sale";
+
+  it("makes ?page=N self-canonical and as indexable as page one", async () => {
+    buildTypeListingSeo.mockResolvedValue(null);
+    const meta = await run([], { page: "2" });
+    expect(meta.alternates?.canonical).toBe(`${SALE}?page=2`);
+    expect(meta.robots).toEqual({ index: true, follow: true, "max-image-preview": "large" });
+    expect(buildHreflangAlternates).toHaveBeenCalledWith("/sale?page=2");
+    expect(meta.alternates?.languages).toEqual({
+      en: "https://www.domlivo.com/en/sale?page=2",
+      pl: `${SALE}?page=2`,
+    });
+    expect(meta.openGraph?.url).toBe(`${SALE}?page=2`);
+    expect(meta.title).toEqual({ absolute: "Nieruchomości w Albanii — Strona 2 — Domlivo" });
+  });
+
+  it("keeps the page number when tracking parameters ride along", async () => {
+    buildTypeListingSeo.mockResolvedValue(null);
+    const meta = await run([], { page: "3", utm_source: "newsletter" });
+    expect(meta.alternates?.canonical).toBe(`${SALE}?page=3`);
+    expect(meta.robots).toMatchObject({ index: true });
+  });
+
+  it("keeps a filtered page N out of the index, canonical to the bare path", async () => {
+    buildTypeListingSeo.mockResolvedValue(null);
+    const meta = await run([], { page: "2", sort: "priceAsc" });
+    expect(meta.alternates?.canonical).toBe(SALE);
+    expect(meta.robots).toEqual({ index: false, follow: true });
+    expect(meta.title).toEqual({ absolute: CMS_TITLE });
+  });
+
+  it("follows page one into noindex, still self-canonical and with no alternates", async () => {
+    buildTypeListingSeo.mockResolvedValue(null);
+    resolveCatalogSeoPage.mockReturnValue({ metaTitle: CMS_TITLE, metaDescription: CMS_DESCRIPTION, noIndex: true });
+    const meta = await run([], { page: "2" });
+    expect(meta.alternates?.canonical).toBe(`${SALE}?page=2`);
+    expect(meta.robots).toEqual({ index: false, follow: true });
+    expect(meta.alternates?.languages).toBeUndefined();
+  });
+
+  it("leaves page one unchanged", async () => {
+    buildTypeListingSeo.mockResolvedValue(null);
+    const meta = await run([]);
+    expect(meta.alternates?.canonical).toBe(SALE);
+    expect(buildHreflangAlternates).toHaveBeenCalledWith("/sale");
   });
 });

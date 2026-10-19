@@ -463,6 +463,38 @@
       "downloadsBody": "Stündlich mit den Seiten neu erzeugt. Als CSV eine Datei pro Stadt, zuerst die ganze Stadt, dann ihre Stadtteile; als JSON alle Städte und Stadtteile mit einer Beschreibung jedes Feldes.",
       "downloadAll": "Alle Städte und Stadtteile (JSON)",
       "downloadCity": "{city} nach Stadtteil (CSV)"
+    },
+    "prices": {
+      "metaTitle": "Immobilienpreise in Albanien nach Stadt 2026: Median €/m² (Domlivo Price Index)",
+      "metaDescription": "Angebotspreise für Wohnungen in Albanien nach Stadt: Median und 20.–80. Perzentil €/m² für Durrës, Tirana, Vlorë, Sarandë und mehr, aus aktiven Inseraten, stündlich aktualisiert. Offene Daten, CC BY 4.0.",
+      "breadcrumb": "Preise nach Stadt",
+      "h1": "Immobilienpreise in Albanien nach Stadt",
+      "lead": "Median des Angebotspreises pro Quadratmeter für Wohnungen und Studios zum Kauf auf Domlivo, Stadt für Stadt, berechnet am {date} aus {listings} Inseraten. Eine Stadt mit weniger als {min} Wohnungen in der Stichprobe zeigt statt einer Zahl die Stichprobengröße.",
+      "leadNoData": "Die Zahlen werden neu berechnet. Versuchen Sie es in ein paar Minuten noch einmal.",
+      "tableTitle": "Median des Angebotspreises pro m², nach Stadt",
+      "tableLead": "Städte nach Zahl der Inserate. Jede Stadt öffnet ihre Stadtteile und Quellen.",
+      "tableCaption": "Immobilienpreise in Albanien nach Stadt, {date}: Median und 20.–80. Perzentil des Angebotspreises pro m² für Wohnungen und Studios zum Kauf auf Domlivo sowie Wohnungen in der Stichprobe",
+      "colCity": "Stadt",
+      "colMedian": "Median, €/m²",
+      "colRange": "20.–80. Perzentil, €/m²",
+      "colCount": "Wohnungen in der Stichprobe",
+      "lowSampleCell": "zu wenig Daten",
+      "stageTitle": "Neubau gegen Bestand",
+      "stageLead": "Dieselben Städte nach Bauphase: in Planung und im Bau gegen fertiggestellte Gebäude. Ein Strich bedeutet weniger als {min} Wohnungen in der Gruppe.",
+      "colNewBuild": "Neubau, €/m²",
+      "colCompleted": "Fertiggestellt, €/m²",
+      "stageCaption": "Median des Angebotspreises pro m² nach Stadt und Bauphase, {date}, Domlivo Price Index",
+      "howTitle": "Wie diese Zahlen zu lesen sind",
+      "howBody": "Das sind Angebotspreise, keine Verkaufspreise: was Verkäufer und Agenturen in ihren Inseraten auf Domlivo angeben. Der Median ist der mittlere Wert; die Spanne reicht vom 20. bis zum 80. Perzentil, sodass ein vertippter Preis sie nicht verschiebt. Ein Median über weniger als {min} Wohnungen wird nie gezeigt. Methode, Filter und Stichprobe stehen auf der Methodikseite; die Zahlen dürfen mit Link frei weiterverwendet werden.",
+      "methodologyLink": "Methodik lesen",
+      "downloadJson": "Alle Zahlen herunterladen (JSON)",
+      "faqTitle": "Fragen",
+      "faq1q": "In welcher Stadt Albaniens sind Wohnungen am günstigsten?",
+      "faq1a": "{city}: ein Median-Angebotspreis von €{median} pro m² am {date}, der niedrigste unter den Städten mit verlässlicher Stichprobe auf Domlivo. Innerhalb einer Stadt streuen die Preise stärker als zwischen Städten; die Stadtteiltabelle auf jeder Stadtseite zeigt die Spanne.",
+      "faq2q": "Welche Stadt ist am teuersten?",
+      "faq2a": "{city}: €{median} pro m² Median-Angebotspreis am {date}. Erste Meereslinie und Riviera liegen über jedem Stadtmedian.",
+      "faq3q": "Wie oft werden die Zahlen aktualisiert?",
+      "faq3a": "Höchstens einmal pro Stunde, aus den in diesem Moment aktiven Inseraten auf Domlivo. Jede Tabelle trägt das Datum der Berechnung; monatliche Ausgaben erscheinen im Blog."
     }
   },
   "Calculators": {
@@ -1279,6 +1311,15 @@
       "stageUnderConstruction": "im Bau",
       "stageCompleted": "fertiggestellt"
     }
+  },
+  "InventoryLinks": {
+    "title": "Immobilien zum Verkauf und Preise",
+    "districtListings": "Immobilien zum Verkauf in {district}",
+    "cityListings": "Alle Immobilien zum Verkauf in {city}",
+    "typeListings": "{type} zum Verkauf in {city}",
+    "nationalListings": "Alle Immobilien zum Verkauf in Albanien",
+    "cityPrices": "Immobilienpreise in {city}",
+    "nationalPrices": "Immobilienpreise in Albanien"
   },
   "Capture": {
     "ask": {

@@ -1,7 +1,37 @@
 import type { Metadata } from "next";
 import { buildOgImageArray } from "@/lib/sanity/socialMetadataResolution";
 import { ogLocale } from "@/lib/seo/ogLocale";
-import { fitListingTitle, withBrand } from "@/lib/seo/brandTitle";
+import { MAX_LISTING_TITLE_LENGTH, fitListingTitle, withBrand } from "@/lib/seo/brandTitle";
+
+/**
+ * "Page 2" in each site locale, for the title of a later catalogue page
+ * (`?page=N`, self-canonical since audit M-2). Without it pages 2–31 of
+ * `/sale` shipped the same <title> as page one. Composed here, like the photo
+ * alt text in `propertyImageAlt`, because metadata is built outside any
+ * component and the word order is the same in every locale.
+ */
+const PAGE_LABEL: Record<string, (page: number) => string> = {
+  en: (n) => `Page ${n}`,
+  de: (n) => `Seite ${n}`,
+  it: (n) => `Pagina ${n}`,
+  pl: (n) => `Strona ${n}`,
+  ru: (n) => `Страница ${n}`,
+  uk: (n) => `Сторінка ${n}`,
+  sq: (n) => `Faqja ${n}`,
+};
+
+export type ListingTitlePage = { page: number | null | undefined; locale: string };
+
+function pageSuffix(page?: ListingTitlePage): string {
+  if (!page?.page || page.page < 2) return "";
+  const label = PAGE_LABEL[page.locale] ?? PAGE_LABEL.en;
+  return ` — ${label(page.page)}`;
+}
+
+/** The listing title with " — Page N" on a later page; unchanged on page one. */
+export function listingPageTitle(title: string, page?: ListingTitlePage): string {
+  return `${title}${pageSuffix(page)}`;
+}
 
 /**
  * Root layout applies a `%s — Domlivo` title template. A resolved listing
@@ -9,10 +39,14 @@ import { fitListingTitle, withBrand } from "@/lib/seo/brandTitle";
  * "Pasuri në Shqipëri | Domlivo"), and a long one has no room for it: both
  * are decided in one place, `withBrand`, and the result is absolute.
  */
-export function listingTitleField(title: string): Metadata["title"] {
+export function listingTitleField(title: string, page?: ListingTitlePage): Metadata["title"] {
   // Absolute, so the root layout's `%s — Domlivo` template stays out of it:
   // `withBrand` decides whether the brand fits (lib/seo/brandTitle).
-  return { absolute: withBrand(fitListingTitle(title)) };
+  const suffix = pageSuffix(page);
+  if (!suffix) return { absolute: withBrand(fitListingTitle(title)) };
+  // A later page keeps its page number: the place title gives up its trailing
+  // segments to make room, never the suffix.
+  return { absolute: withBrand(`${fitListingTitle(title, MAX_LISTING_TITLE_LENGTH - suffix.length)}${suffix}`) };
 }
 
 /**

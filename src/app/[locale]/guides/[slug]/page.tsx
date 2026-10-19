@@ -10,6 +10,8 @@ import { buildLandingMetadata } from "@/lib/sanity/landingSeoAdapter";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { isLandingInLocale, landingLocales } from "@/lib/landing/localeScope";
 import { setRequestLocale } from "next-intl/server";
+import { InventoryLinksSection } from "@/components/inventory/InventoryLinksSection";
+import { guideTopics } from "@/lib/inventoryLinks/places";
 
 /**
  * ISR. Two exports, and the route needs both.
@@ -141,6 +143,20 @@ export default async function GuideLandingPage({ params }: Props) {
     reviewerSlug: landing.reviewerSlug ?? null,
   });
 
+  // Listings and prices of the places the guide is about (B5), before its
+  // closing CTA. A guide with no topic tags (legal pages) is about no place
+  // and gets none; one whose CMS sections already show listing cards (the
+  // type × city guides' carousel) gets the links without a second card row.
+  const topicTags = Array.isArray(landing.topicTags) ? landing.topicTags : [];
+  const inventoryLinks =
+    topicTags.length > 0 ? (
+      <InventoryLinksSection
+        locale={locale}
+        topics={(dir) => guideTopics(topicTags, dir)}
+        showCards={!sections.some((s) => s?._type === "propertyCarouselSection")}
+      />
+    ) : null;
+
   // No visible date is added here on purpose: LandingRenderer already renders a
   // freshness badge from `contentUpdatedAt`, and a second one read as a bug.
   const structuredData = articleJsonLd ? (
@@ -157,6 +173,7 @@ export default async function GuideLandingPage({ params }: Props) {
         <LandingRenderer
           locale={locale}
           landing={landing as never}
+          beforeCta={inventoryLinks}
           breadcrumb={
             <GuidesBreadcrumb locale={locale} slug={guideSlug} guideTitle={guideTitle} overHero />
           }
@@ -173,7 +190,7 @@ export default async function GuideLandingPage({ params }: Props) {
           <GuidesBreadcrumb locale={locale} slug={guideSlug} guideTitle={guideTitle} />
         </div>
       </section>
-      <LandingRenderer locale={locale} landing={landing as never} />
+      <LandingRenderer locale={locale} landing={landing as never} beforeCta={inventoryLinks} />
     </>
   );
 }
