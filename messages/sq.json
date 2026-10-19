@@ -734,6 +734,17 @@
         "source": "Tarifat: Urdhri 279/2012 i Ministrisë së Drejtësisë (tarifat noteriale), tarifat e ASHK-së, praktika e tregut për komisionet. Shumat e sakta konfirmojini me noterin.",
         "guideForeigners": "A mund të blejnë të huajt pronë në Shqipëri?",
         "guideLegal": "Udhëzues ligjor për blerësit"
+      },
+      "answer": {
+        "line": "Çmimi mesatar i kërkuar në {placeIn}: {sqm} për m², mbi {count, plural, one {# apartament} other {# apartamente}} në shitje në Domlivo ({date}). Apartamente nga {from}.",
+        "meta": "Mediana e çmimit të kërkuar {sqm}/m² mbi {count} apartamente ({date})."
+      },
+      "recent": {
+        "title": "Të reja në {placeIn} këto dy javë",
+        "lead": "Njoftime të shtuara në {days} ditët e fundit, më të rejat në krye. Secila ka faqen e vet me foto dhe çmim.",
+        "leadNewest": "Njoftimet e shtuara së fundmi. Secila ka faqen e vet me foto dhe çmim.",
+        "all": "Të gjitha njoftimet e reja në {placeIn}",
+        "added": "shtuar më {date}"
       }
     },
     "saleHub": {

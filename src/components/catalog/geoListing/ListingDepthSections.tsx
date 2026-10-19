@@ -1,4 +1,6 @@
 import Link from "@/components/shared/Link";
+import { propertyPath } from "@/lib/property/propertyUrl";
+import { formatMoney } from "@/lib/currency/format";
 import { getTranslations } from "next-intl/server";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
@@ -6,6 +8,7 @@ import { MarketMoney } from "@/components/shared/property/MarketMoney";
 import {
   fetchCityLandingByCitySlug,
   fetchCityListingPriceIndex,
+  fetchRecentListingsForPlace,
   fetchDistrictBySlugs,
   fetchDistrictListingCounts,
   fetchPlaceFaqItems,
@@ -92,10 +95,10 @@ export async function ListingDepthSections({
   sections,
 }: Props) {
   const want = (section: SeoContentSection) => sections.includes(section);
-  if (!want("priceStats") && !want("districtLinks") && !want("faq") && !want("buyingCosts")) return null;
+  if (!want("priceStats") && !want("districtLinks") && !want("faq") && !want("buyingCosts") && !want("recentListings")) return null;
 
   const place = { country: countrySlug, city: citySlug, district: districtSlug };
-  const [t, tFacts, tChip, tCatalog, priceIndex, decisions, cityIn, faqRaw, districtTitles, placeDoc] =
+  const [t, tFacts, tChip, tCatalog, priceIndex, decisions, cityIn, faqRaw, districtTitles, placeDoc, recentData, tCard] =
     await Promise.all([
       getTranslations({ locale, namespace: "Catalog.depth" }),
       getTranslations({ locale, namespace: "Catalog.facts" }),
@@ -107,6 +110,10 @@ export async function ListingDepthSections({
       want("faq") ? fetchPlaceFaqItems(citySlug, districtSlug) : Promise.resolve([]),
       want("districtLinks") ? fetchDistrictListingCounts(citySlug) : Promise.resolve([]),
       districtSlug ? fetchDistrictBySlugs(citySlug, districtSlug) : fetchCityLandingByCitySlug(citySlug),
+      want("recentListings")
+        ? fetchRecentListingsForPlace({ citySlug, districtSlug: districtSlug ?? null })
+        : Promise.resolve({ rows: [], recent: false }),
+      getTranslations({ locale, namespace: "Shared.propertyCard" }),
     ]);
   const infoExists = Boolean(placeDoc);
 
@@ -184,6 +191,7 @@ export async function ListingDepthSections({
     : [];
 
   if (
+    recentData.rows.length === 0 &&
     !facts &&
     !researchRecord &&
     districts.length === 0 &&
@@ -194,8 +202,61 @@ export async function ListingDepthSections({
     return null;
   }
 
+  const addedOn = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", timeZone: "Europe/Tirane" });
+  const newestHref = `${cityHref}${districtSlug ? "" : ""}?sort=newest`;
+
   return (
     <>
+      {recentData.rows.length > 0 ? (
+        // Plain links, not cards: the point is that a crawler visiting this
+        // page finds the place's newest stock (SEO hypothesis 1, 2026-10-19).
+        <Section aria-labelledby="listing-recent">
+          <SectionHeading
+            id="listing-recent"
+            title={t("recent.title", names)}
+            lead={recentData.recent ? t("recent.lead", { days: 14 }) : t("recent.leadNewest")}
+          />
+          <ul className="mt-6 divide-y divide-dark/10 dark:divide-white/10">
+            {recentData.rows.map((row) => {
+              const title = (resolveLocalizedString(row.title as never, locale) || row.slug).trim();
+              const district = row.districtTitle ? resolveLocalizedString(row.districtTitle as never, locale) : "";
+              const facts = [
+                district && !districtSlug ? district : "",
+                row.bedrooms ? tCard("bedroomsCount", { count: row.bedrooms }) : "",
+                row.area ? `${number(row.area)} m²` : "",
+              ].filter(Boolean);
+              const price =
+                typeof row.price === "number" && row.price > 0
+                  ? row.priceUnit === "per-sqm"
+                    ? `${formatMoney(row.price, "EUR", locale)}/m²`
+                    : formatMoney(row.price, "EUR", locale)
+                  : "";
+              return (
+                <li key={row.slug} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3">
+                  <div className="min-w-0">
+                    <Link href={propertyPath(locale, row.slug, row.localizedSlug ?? undefined)} className={`${textLinkClass} font-medium`}>
+                      {title}
+                    </Link>
+                    {facts.length > 0 ? (
+                      <span className="ml-2 text-sm text-dark/60 dark:text-white/60">{facts.join(" · ")}</span>
+                    ) : null}
+                  </div>
+                  <div className="shrink-0 text-sm text-dark/60 dark:text-white/60">
+                    {price ? <span className="font-semibold text-dark dark:text-white">{price}</span> : null}
+                    <span className="ml-3">{t("recent.added", { date: addedOn.format(new Date(row.createdAt)) })}</span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          <p className={`mt-4 ${noteClass}`}>
+            <Link href={newestHref} className={textLinkClass}>
+              {t("recent.all", names)}
+            </Link>
+          </p>
+        </Section>
+      ) : null}
+
       {facts ? (
         <Section aria-labelledby="listing-prices">
           <SectionHeading id="listing-prices" title={t("prices.title", names)} lead={t("prices.lead")} />

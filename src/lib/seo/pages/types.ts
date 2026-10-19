@@ -117,6 +117,9 @@ export type SeoContentSection =
   | "listings"
   | "catalogBottomText"
   // Under the grid, on indexable pages only (`ListingDepthSections`).
+  // Listings added in the last fortnight, as plain links: the crawler finds
+  // new stock from a page it already visits (SEO hypothesis 1, 2026-10-19).
+  | "recentListings"
   | "priceStats"
   | "districtLinks"
   | "faq"

@@ -734,6 +734,17 @@
         "source": "Sätze: Verordnung 279/2012 des Justizministeriums (Notargebühren), ASHK-Gebührenordnung, Marktpraxis bei Provisionen. Die genauen Beträge bestätigt Ihr Notar.",
         "guideForeigners": "Können Ausländer in Albanien Immobilien kaufen?",
         "guideLegal": "Rechtsleitfaden für Käufer"
+      },
+      "answer": {
+        "line": "Median-Angebotspreis in {placeIn}: {sqm} pro m², über {count, plural, one {# Wohnung} other {# Wohnungen}} zum Kauf auf Domlivo ({date}). Wohnungen ab {from}.",
+        "meta": "Median-Angebotspreis {sqm}/m² über {count} Wohnungen ({date})."
+      },
+      "recent": {
+        "title": "Neu in {placeIn} in den letzten zwei Wochen",
+        "lead": "In den letzten {days} Tagen eingestellte Angebote, die neuesten zuerst. Jedes hat seine Seite mit Fotos und Preis.",
+        "leadNewest": "Die zuletzt eingestellten Angebote. Jedes hat seine Seite mit Fotos und Preis.",
+        "all": "Alle neuen Angebote in {placeIn}",
+        "added": "eingestellt am {date}"
       }
     },
     "saleHub": {

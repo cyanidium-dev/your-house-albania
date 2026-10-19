@@ -734,6 +734,17 @@
         "source": "Stawki: zarządzenie Ministerstwa Sprawiedliwości nr 279/2012 (taryfa notarialna), cennik ASHK, praktyka rynkowa w zakresie prowizji. Dokładne kwoty potwierdź u notariusza.",
         "guideForeigners": "Czy cudzoziemiec może kupić nieruchomość w Albanii?",
         "guideLegal": "Przewodnik prawny dla kupujących"
+      },
+      "answer": {
+        "line": "Mediana ceny ofertowej w {placeIn}: {sqm} za m², na podstawie {count, plural, one {# mieszkania} few {# mieszkań} many {# mieszkań} other {# mieszkań}} na sprzedaż na Domlivo ({date}). Mieszkania od {from}.",
+        "meta": "Mediana ceny ofertowej {sqm}/m² z {count} mieszkań ({date})."
+      },
+      "recent": {
+        "title": "Nowe w {placeIn} z ostatnich dwóch tygodni",
+        "lead": "Oferty dodane w ciągu ostatnich {days} dni, najnowsze na górze. Każda ma swoją stronę ze zdjęciami i ceną.",
+        "leadNewest": "Ostatnio dodane oferty. Każda ma swoją stronę ze zdjęciami i ceną.",
+        "all": "Wszystkie nowe oferty w {placeIn}",
+        "added": "dodano {date}"
       }
     },
     "saleHub": {

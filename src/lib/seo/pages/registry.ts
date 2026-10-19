@@ -17,7 +17,7 @@ export const SEO_PAGE_FAMILIES: Record<SeoPageFamily, SeoPageFamilyDefinition> =
     editorialScope: "city",
     contentSections: [
       "hero", "factsLine", "facetNav", "placeInfoLink", "catalogIntro", "listings", "catalogBottomText",
-      "priceStats", "districtLinks", "faq", "buyingCosts",
+      "recentListings", "priceStats", "districtLinks", "faq", "buyingCosts",
     ],
     structuredData: ["BreadcrumbList", "ItemList"],
   },
@@ -29,7 +29,7 @@ export const SEO_PAGE_FAMILIES: Record<SeoPageFamily, SeoPageFamilyDefinition> =
     editorialScope: "district",
     contentSections: [
       "hero", "factsLine", "facetNav", "placeInfoLink", "catalogIntro", "listings", "catalogBottomText",
-      "priceStats", "districtLinks", "faq", "buyingCosts",
+      "recentListings", "priceStats", "districtLinks", "faq", "buyingCosts",
     ],
     structuredData: ["BreadcrumbList", "ItemList"],
   },

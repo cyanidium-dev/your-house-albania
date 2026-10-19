@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { placeAnswer } from "@/lib/catalog/placeAnswer";
+import { truncateMetaDescription } from "@/lib/seo/propertyMeta";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
@@ -344,7 +346,7 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
       catalogSeo?.metaTitle ||
       (localizedTitleFromSeo ? `${listTitle} | ${localizedTitleFromSeo}` : listTitle)
   );
-  const description =
+  const baseDescription =
     generatedType?.description ||
     catalogSeo?.metaDescriptionInLocale ||
     generatedDistrict?.description ||
@@ -353,6 +355,13 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
     (defaultSeo?.metaDescription
       ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription
       : listDescription);
+  // The live median first (SEO hypothesis 2, 2026-10-19): the figure a searcher
+  // scans the snippet for, on the city or district page itself, page one only.
+  const answerMeta =
+    geo.mode === "fullGeo" && !typeSlug && !listingPaginationPage(search)
+      ? await placeAnswer({ locale, citySlug: geo.listingCitySlug, districtSlug: pathDistrict || null, placeIn: "" })
+      : null;
+  const description = answerMeta ? truncateMetaDescription(`${answerMeta.meta} ${baseDescription}`, 160) : baseDescription;
   // `?page=N` alone is a page of its own (lib/seo/catalogListingMetadata):
   // own title, self-canonical, indexed exactly when page one is. Its query
   // then plays no part in the indexing rules below.
@@ -581,6 +590,11 @@ export async function GeoListingPage({ params, search }: Props) {
   // Albanian needs the city in the locative after "në", as the district title template has it.
   const cityIn = (await resolveCityDisplayName(geo.listingCitySlug, locale)) || cityLabel;
   const placeIn = districtLabel ? `${districtLabel}, ${cityIn}` : cityIn;
+  // One sentence of figures under the listing heading (lib/catalog/placeAnswer).
+  const answer =
+    geo.mode === "fullGeo" && !typeSlug && !facet && !listingPaginationPage(search)
+      ? await placeAnswer({ locale, citySlug: geo.listingCitySlug, districtSlug: pathDistrict || null, placeIn })
+      : null;
   const hasQuery = listingUrlHasQueryParams(search);
 
   // The blocks under the grid (what homes cost here, the districts, the
@@ -672,6 +686,7 @@ export async function GeoListingPage({ params, search }: Props) {
             ? { place: placeName, placeIn, filtered: Boolean(facet || typeSlug || dealType || (hasQuery && !listingPaginationPage(search))) }
             : undefined
         }
+        headingLead={answer?.line}
         afterFilters={
           geo.mode === "fullGeo" && !typeSlug ? (
             <ListingFacetNav
