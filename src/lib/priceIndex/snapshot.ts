@@ -16,6 +16,7 @@
  * 15 m². The figures are the median and the 20th–80th percentile band of
  * those values. Pure: no I/O, so the tests pin the arithmetic.
  */
+import { LISTING_FACETS, LISTING_FACET_SLUGS, type ListingFacetSlug } from "@/lib/catalog/listingFacets";
 import {
   flatPriceBand,
   groupRowsBy,
@@ -37,6 +38,12 @@ export const NEW_BUILD_STAGES: readonly string[] = ["off-plan", "under-construct
 /** One live sale listing, as the index fetch returns it. */
 export type PriceIndexListingRow = ListingPriceRow & {
   stage?: string | null;
+  /** Bedrooms as listed (a 1+1 has one): read by the facet figures only. */
+  bedrooms?: number | null;
+  /** Stated walking distance to the sea, metres. */
+  sea?: number | null;
+  /** First line. */
+  beach?: boolean | null;
   /** City slug. */
   c?: string | null;
   /** District slug. */
@@ -88,6 +95,12 @@ export type PriceIndexCity = PriceIndexFigures & {
   completed: PriceIndexFigures;
   /** Published districts with at least one listing, most flats first. */
   districts: PriceIndexDistrict[];
+  /**
+   * The city's facet slices (`/durres/1-1`, `/durres/under-100k`, …), with the
+   * same predicate the facet page lists by. Only facets with a listing. Not
+   * part of the published downloads: CMS tokens on facet pages read them.
+   */
+  facets: Partial<Record<ListingFacetSlug, PriceIndexFigures>>;
 };
 
 export type PriceIndexSnapshot = {
@@ -125,6 +138,27 @@ export function isNewBuildRow(row: { stage?: string | null }): boolean {
   return typeof row.stage === "string" && NEW_BUILD_STAGES.includes(row.stage);
 }
 
+/** Index figures of every facet slice of a group of listings that has one. */
+export function facetFigures(rows: readonly PriceIndexListingRow[]): Partial<Record<ListingFacetSlug, PriceIndexFigures>> {
+  const out: Partial<Record<ListingFacetSlug, PriceIndexFigures>> = {};
+  for (const facet of LISTING_FACET_SLUGS) {
+    const matches = LISTING_FACETS[facet].matches;
+    const slice = rows.filter((r) =>
+      matches({
+        typeSlug: r.type,
+        bedrooms: r.bedrooms,
+        price: r.price,
+        priceUnit: r.priceUnit,
+        constructionStage: r.stage,
+        seaDistanceMeters: r.sea,
+        beachfront: r.beach,
+      }),
+    );
+    if (slice.length > 0) out[facet] = computePriceIndexFigures(slice);
+  }
+  return out;
+}
+
 /**
  * The whole snapshot from one read of the listings. Rows of an unpublished
  * city or district still count towards the national figures and their city
@@ -156,6 +190,7 @@ export function buildPriceIndexSnapshot(input: {
         newBuild: computePriceIndexFigures(rows.filter(isNewBuildRow)),
         completed: computePriceIndexFigures(rows.filter((r) => !isNewBuildRow(r))),
         districts,
+        facets: facetFigures(rows),
       };
     })
     .sort((a, b) => b.listings - a.listings || a.slug.localeCompare(b.slug));

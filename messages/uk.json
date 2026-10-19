@@ -1311,5 +1311,14 @@
       "stageUnderConstruction": "будується",
       "stageCompleted": "збудовано"
     }
+  },
+  "InventoryLinks": {
+    "title": "Обʼєкти в продажу та ціни",
+    "districtListings": "{district}: нерухомість на продаж",
+    "cityListings": "{city}: уся нерухомість на продаж",
+    "typeListings": "{type} на продаж — {city}",
+    "nationalListings": "Уся нерухомість на продаж в Албанії",
+    "cityPrices": "{city}: ціни на нерухомість",
+    "nationalPrices": "Ціни на нерухомість в Албанії"
   }
 }

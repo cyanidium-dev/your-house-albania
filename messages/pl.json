@@ -1311,5 +1311,14 @@
       "stageUnderConstruction": "w budowie",
       "stageCompleted": "ukończone"
     }
+  },
+  "InventoryLinks": {
+    "title": "Oferty na sprzedaż i ceny",
+    "districtListings": "{district}: nieruchomości na sprzedaż",
+    "cityListings": "{city}: wszystkie nieruchomości na sprzedaż",
+    "typeListings": "{type} na sprzedaż — {city}",
+    "nationalListings": "Wszystkie nieruchomości na sprzedaż w Albanii",
+    "cityPrices": "{city}: ceny nieruchomości",
+    "nationalPrices": "Ceny nieruchomości w Albanii"
   }
 }

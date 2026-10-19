@@ -12,6 +12,8 @@ import {
   fetchSiteSettings,
   fetchCatalogSeoPageByCity,
   fetchCatalogSeoPageByDistrict,
+  fetchCatalogSeoPageByFacet,
+  fetchPriceIndexSnapshot,
   resolveCatalogSeoPage,
   fetchCatalogFilterOptions,
   fetchCatalogListingStats,
@@ -19,8 +21,11 @@ import {
   fetchSeoPageDecision,
 } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
+import { interpolatePriceIndexTokens } from "@/lib/priceIndex/tokens";
 import { buildHreflangAlternates } from "@/lib/seo/hreflang";
 import {
+  listingPageQuery,
+  listingPaginationPage,
   listingUrlHasQueryParams,
   shouldCatalogListingNoindex,
 } from "@/lib/seo/catalogListingMetadata";
@@ -37,7 +42,7 @@ import { facetCatalogFilters, withFacetQuery, type ListingFacetSlug } from "@/li
 import { stripBrandSuffix } from "@/lib/seo/brandTitle";
 import { indexingDisabledRobots, isIndexingEnabled, indexableRobots } from "@/lib/seo/envSeo";
 import { ListingContactBar } from "@/components/catalog/ListingContactBar";
-import { listingOpenGraph, listingTitleField } from "@/lib/seo/listingTitle";
+import { listingOpenGraph, listingPageTitle, listingTitleField } from "@/lib/seo/listingTitle";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { catalogFilterPath, isReservedFilterCountrySegment } from "@/lib/routes/catalog";
 import { isPublicDealRouteSegment, isSolePublicDealRouteSegment } from "@/lib/catalog/publicDealTypes";
@@ -106,6 +111,16 @@ function districtLabelFor(
 async function fetchListingSeoDoc(citySlug: string, districtSlug: string) {
   if (districtSlug) return fetchCatalogSeoPageByDistrict(citySlug, districtSlug);
   return fetchCatalogSeoPageByCity(citySlug);
+}
+
+/**
+ * Catalogue copy with its `{{median:vlore}}`-style tokens filled from the live
+ * price index (src/lib/priceIndex/tokens.ts), so the figures in the text are
+ * the ones in the price table. Copy without a token costs no fetch.
+ */
+async function withPriceIndexFigures<T>(copy: T, locale: string): Promise<T> {
+  if (!copy || !JSON.stringify(copy).includes("{{")) return copy;
+  return interpolatePriceIndexTokens(copy, await fetchPriceIndexSnapshot(), locale);
 }
 
 async function validateListingGeoContent(
@@ -187,6 +202,11 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
   if (!copy) return {};
   const title = copy.title;
   const description = copy.description;
+  // `?page=N` alone is a page of its own (lib/seo/catalogListingMetadata):
+  // own title, self-canonical, indexed exactly when page one is.
+  const listingPage = listingPaginationPage(input.search);
+  const titlePage = { page: listingPage, locale: input.locale };
+  const ogTitle = listingPageTitle(title, titlePage);
   const ogImage = landingOgImageUrl({
     locale: input.locale,
     title,
@@ -194,7 +214,7 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
     photo: { key: heroPhotoFor({ citySlug: input.citySlug, propertyType: "apartment", slug: input.citySlug }).key },
   });
   if (!isIndexingEnabled()) {
-    return { title: listingTitleField(title), description, openGraph: listingOpenGraph(title, description, ogImage, undefined, input.locale), robots: indexingDisabledRobots };
+    return { title: listingTitleField(title, titlePage), description, openGraph: listingOpenGraph(ogTitle, description, ogImage, undefined, input.locale), robots: indexingDisabledRobots };
   }
   const path = catalogFilterPath({
     locale: input.locale,
@@ -204,7 +224,7 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
     district: input.districtSlug,
     facet: input.facet,
   });
-  const canonical = `${getSiteBaseUrl()}${path}`;
+  const canonical = `${getSiteBaseUrl()}${path}${listingPageQuery(listingPage)}`;
   const indexing = await registryIndexing({
     locale: input.locale,
     countrySlug: input.countrySlug,
@@ -213,15 +233,18 @@ async function facetListingMetadata(input: FacetPageInput & { search: SearchPara
     facet: input.facet,
   });
   // A noindexed page declares no alternates: hreflang points only at pages
-  // we want indexed, in the locales that have demand for them.
-  const href = indexing.indexable ? buildHreflangAlternates(path.replace(`/${input.locale}`, ""), indexing.locales) : undefined;
+  // we want indexed, in the locales that have demand for them. Page N of an
+  // indexed slice points at page N in those locales: same cards, same order.
+  const href = indexing.indexable
+    ? buildHreflangAlternates(`${path.replace(`/${input.locale}`, "")}${listingPageQuery(listingPage)}`, indexing.locales)
+    : undefined;
   // A slice the registry does not index, or a filtered copy of one, stays
   // reachable but out of the index.
-  const noindex = listingUrlHasQueryParams(input.search) || !indexing.indexable;
+  const noindex = (!listingPage && listingUrlHasQueryParams(input.search)) || !indexing.indexable;
   return {
-    title: listingTitleField(title),
+    title: listingTitleField(title, titlePage),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage, canonical, input.locale),
+    openGraph: listingOpenGraph(ogTitle, description, ogImage, canonical, input.locale),
     alternates: { canonical, ...(href?.languages ? { languages: href.languages } : {}) },
     robots: noindex ? { index: false, follow: true } : indexableRobots,
   };
@@ -330,6 +353,13 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
     (defaultSeo?.metaDescription
       ? resolveLocalizedString(defaultSeo.metaDescription as never, locale) || listDescription
       : listDescription);
+  // `?page=N` alone is a page of its own (lib/seo/catalogListingMetadata):
+  // own title, self-canonical, indexed exactly when page one is. Its query
+  // then plays no part in the indexing rules below.
+  const listingPage = listingPaginationPage(search);
+  const indexingSearch: SearchParams = listingPage ? {} : search;
+  const titlePage = { page: listingPage, locale };
+  const ogTitle = listingPageTitle(title, titlePage);
   // The social card: title and description over a photograph of the city.
   const ogImage = landingOgImageUrl({
     locale,
@@ -342,9 +372,9 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
 
   if (!isIndexingEnabled()) {
     return {
-      title: listingTitleField(title),
+      title: listingTitleField(title, titlePage),
       description,
-      openGraph: listingOpenGraph(title, description, ogImage, undefined, locale),
+      openGraph: listingOpenGraph(ogTitle, description, ogImage, undefined, locale),
       robots: indexingDisabledRobots,
     };
   }
@@ -361,10 +391,10 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
     district: pathDistrict || (typeof search.district === "string" ? search.district : undefined),
   });
   const baseUrl = getSiteBaseUrl();
-  const canonical = `${baseUrl}${path.split("?")[0]}`;
+  const canonical = `${baseUrl}${path.split("?")[0]}${listingPageQuery(listingPage)}`;
   const noindexQuery =
-    listingUrlHasQueryParams(search) ||
-    shouldCatalogListingNoindex(mergedSearchParams(search, dealForPath, typeSlug || undefined), {
+    listingUrlHasQueryParams(indexingSearch) ||
+    shouldCatalogListingNoindex(mergedSearchParams(indexingSearch, dealForPath, typeSlug || undefined), {
       ignoredQueryKeys: ["deal", "type", "district"],
     });
   // Rentals hidden from the public UI: rent listing pages stay reachable but noindexed.
@@ -382,15 +412,21 @@ export async function geoListingMetadata({ params, search }: Props): Promise<Met
           type: typeSlug || undefined,
         })
       : { indexable: false, locales: [] };
-  const href = indexing.indexable
-    ? buildHreflangAlternates(path.split("?")[0].replace(`/${locale}`, ""), indexing.locales)
-    : undefined;
   const robots = noindexQuery || !indexing.indexable ? { index: false as const, follow: true as const } : indexableRobots;
+  // Page N of an indexed page points at page N in the indexed locales: each
+  // locale's page N lists the same cards in the same order, so the set is
+  // reciprocal. A noindexed page N declares none.
+  const href = indexing.indexable && (!listingPage || robots.index)
+    ? buildHreflangAlternates(
+        `${path.split("?")[0].replace(`/${locale}`, "")}${listingPageQuery(listingPage)}`,
+        indexing.locales,
+      )
+    : undefined;
 
   return {
-    title: listingTitleField(title),
+    title: listingTitleField(title, titlePage),
     description,
-    openGraph: listingOpenGraph(title, description, ogImage, canonical, locale),
+    openGraph: listingOpenGraph(ogTitle, description, ogImage, canonical, locale),
     alternates: {
       canonical,
       ...(href?.languages ? { languages: href.languages } : {}),
@@ -522,10 +558,15 @@ export async function GeoListingPage({ params, search }: Props) {
           facet,
         })
       : null;
-  // A facet page carries its own copy; the place's catalogue intro and bottom
-  // text would repeat word for word across every slice of the same place.
-  const rawSeo = facet ? null : await fetchListingSeoDoc(geo.listingCitySlug, pathDistrict);
-  const catalogSeo = resolveCatalogSeoPage(rawSeo, locale);
+  // A facet page carries its own copy — its own `catalogSeoPage` when one is
+  // written, else the generated sentence; the place's catalogue intro and
+  // bottom text would repeat word for word across every slice of the same place.
+  const rawSeo = facet
+    ? geo.mode === "fullGeo"
+      ? await fetchCatalogSeoPageByFacet(geo.listingCitySlug, facet, pathDistrict || undefined)
+      : null
+    : await fetchListingSeoDoc(geo.listingCitySlug, pathDistrict);
+  const catalogSeo = await withPriceIndexFigures(resolveCatalogSeoPage(rawSeo, locale), locale);
   const districtCopy = pathDistrict
     ? await buildCityDistrictListingSeo(geo.listingCitySlug, districtLabelFor(options, pathDistrict), locale)
     : null;
@@ -623,10 +664,12 @@ export async function GeoListingPage({ params, search }: Props) {
         omitCountryInPath={geo.mode === "omitCountry"}
         searchParams={mergedSearch}
         urlSearch={search}
-        catalogSeo={catalogSeo ? { bottomText: catalogSeo.bottomText } : null}
+        // Page 2+ is its own indexable page (audit M-2): the place's long text
+        // stays on page one instead of repeating on all of them.
+        catalogSeo={catalogSeo && !listingPaginationPage(search) ? { bottomText: catalogSeo.bottomText } : null}
         heading={
           geo.mode === "fullGeo"
-            ? { place: placeName, placeIn, filtered: Boolean(facet || typeSlug || dealType || hasQuery) }
+            ? { place: placeName, placeIn, filtered: Boolean(facet || typeSlug || dealType || (hasQuery && !listingPaginationPage(search))) }
             : undefined
         }
         afterFilters={

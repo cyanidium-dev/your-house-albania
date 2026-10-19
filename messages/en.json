@@ -1311,5 +1311,14 @@
       "stageUnderConstruction": "under construction",
       "stageCompleted": "completed"
     }
+  },
+  "InventoryLinks": {
+    "title": "Property for sale and prices",
+    "districtListings": "Property for sale in {district}",
+    "cityListings": "All property for sale in {city}",
+    "typeListings": "{type} for sale in {city}",
+    "nationalListings": "All property for sale in Albania",
+    "cityPrices": "Property prices in {city}",
+    "nationalPrices": "Property prices across Albania"
   }
 }

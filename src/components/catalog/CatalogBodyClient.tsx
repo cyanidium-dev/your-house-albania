@@ -826,6 +826,7 @@ export function CatalogBodyClient({
                   <PropertyPagination
                     currentPage={currentPage}
                     nextPage={nextPage}
+                    totalPages={totalPages}
                     hasMore={hasMore}
                     isLoading={isLoadingMore}
                     onShowMore={loadMore}
