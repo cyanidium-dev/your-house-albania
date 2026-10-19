@@ -64,7 +64,7 @@ export async function DistrictFindBlock({
             </CaptureClickTracker>
           ) : null}
         </div>
-        <div className={`${SPLIT_MAIN} ${PANEL} p-6 sm:p-8`} data-lead-placement="catalog">
+        <div className={`${SPLIT_MAIN} ${PANEL} p-4 sm:p-8`} data-lead-placement="catalog">
           <p className="text-xl font-medium text-dark dark:text-white">{tQuick('heading')}</p>
           <p className="mt-2 text-sm text-dark/70 dark:text-white/70">{tQuick('body')}</p>
           <QuickLeadForm

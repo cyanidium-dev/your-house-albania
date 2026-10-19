@@ -24,7 +24,7 @@ export function CatalogSelectionRequest({
 }) {
   return (
     <section
-      className={`${PANEL} mt-8 p-6 sm:p-8`}
+      className={`${PANEL} mt-8 p-4 sm:p-8`}
       aria-labelledby="catalog-selection"
       data-lead-placement="catalog"
     >
