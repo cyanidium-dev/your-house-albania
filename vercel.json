@@ -1,4 +1,5 @@
 {
+  "buildCommand": "npm run build:ci",
   "crons": [
     {
       "path": "/api/cron/update-currency-rates",

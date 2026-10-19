@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { capturePostHogServer } from '@/lib/analytics/posthogServer'
 import { createLead } from '@/lib/leads/createLead'
 import { isLeadPlacement, type LeadPlacement } from '@/lib/leads/types'
 import { resolveAgentContactTelegramRouting, resolveTelegramBotToken } from '@/lib/notifications/agentContact/routing'
@@ -202,6 +203,15 @@ async function handleStart(token: string, message: TelegramMessage, user: Telegr
     now: new Date(),
   })
   if (!lead.ok) console.error('[telegram-bot] lead not saved', lead.reason)
+  await capturePostHogServer('telegram_start', {
+    lead_type: 'telegram_start',
+    is_lead: true,
+    placement,
+    locale,
+    site_locale: payload && isSiteLocale(payload.locale) ? payload.locale : undefined,
+    property_slug: listing?.slug,
+    source: 'telegram-bot',
+  })
 
   await postToTeam(
     token,
@@ -288,6 +298,15 @@ async function handleSearchStart(
     now,
   })
   if (!lead.ok) console.error('[telegram-bot] lead not saved', lead.reason)
+  await capturePostHogServer('telegram_start', {
+    lead_type: 'telegram_start',
+    is_lead: true,
+    placement: 'catalog',
+    locale,
+    site_locale: isSiteLocale(payload.locale) ? payload.locale : undefined,
+    search: true,
+    source: 'telegram-bot',
+  })
 
   await postToTeam(
     token,

@@ -17,7 +17,10 @@ npm run dev        # cleans .next, starts dev server
 npm run build      # production build
 npm start          # serve production build
 npm run lint
+npm test           # Vitest suite (src/**/*.test.ts)
 ```
+
+Every Vercel deployment (production and each branch/PR preview) runs `npm run build:ci`, which is `vitest run && next build` (`vercel.json` → `buildCommand`). A failing test fails the deployment, and the Vercel check on the pull request goes red. GitHub Actions is not used: Actions is billing-locked on this account.
 
 ## Environment variables
 
@@ -28,6 +31,7 @@ See `.env.example` for the full annotated list. Groups:
 - **Revalidation** — `SANITY_REVALIDATE_SECRET` (bearer secret for `POST /api/revalidate/sanity`; route is disabled without it)
 - **Telegram** — `TELEGRAM_BOT_TOKEN`, `TELEGRAM_GENERAL_CHAT_ID` (contact/registration form delivery), optional `TELEGRAM_API_BASE_URL`, agent-inbox stub vars
 - **Editor auth** — `EDITOR_PASSWORD`, `EDITOR_SESSION_SECRET` (HMAC cookie signing) for the hidden `/editor` route tree
+- **Analytics** — `NEXT_PUBLIC_ENABLE_ANALYTICS` (GTM, GA4, Clarity), `NEXT_PUBLIC_POSTHOG_KEY` (PostHog EU: funnels and feature-flag experiments, behind analytics consent; see `docs/analytics/README.md` § PostHog)
 - **SEO / flags** — `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_ENABLE_INDEXING` (keep `false` outside production)
 
 ## Route map (under `/[locale]`)
@@ -47,4 +51,5 @@ See `.env.example` for the full annotated list. Groups:
 ## Documentation
 
 - `docs/` — Sanity↔frontend contracts (blog, registration requests, revalidation webhook), canonical technical audit (`TECHNICAL_AUDIT_LATEST.md`), refactor prompt series (`docs/refactor-prompts/`), archived reports (`docs/archive/`)
+- `docs/experiments/` — product experiments (feature flags), one decision record each with hypothesis, metric and review date
 - Live backlog: workspace `docs/engineering/BACKLOG.md`

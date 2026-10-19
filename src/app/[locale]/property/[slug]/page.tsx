@@ -42,6 +42,7 @@ import { PropertyContactButton } from '@/components/property/PropertyContactModa
 import { SoldSimilarRequest } from '@/components/property/SoldSimilarRequest';
 import { inactiveListingStatus } from '@/lib/property/listingStatus';
 import { MessengerButtons } from '@/components/contact/MessengerButtons';
+import { ListingContactBlock } from '@/components/property/ListingContactBlock';
 import { resolveMessengers } from '@/lib/contacts/messengers';
 import { messengerContext, messengerPriceLabel } from '@/lib/contacts/messengerContext';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
@@ -550,25 +551,31 @@ export default async function PropertyDetailsPage({ params }: Props) {
                             {findSimilarLabel}
                           </a>
                         ) : (
-                        <div className="hidden lg:block">
-                          <PropertyContactButton
-                            locale={locale}
-                            propertySlug={keySlug}
-                            propertyTitle={title}
-                            agentSlug={propertyAgent?.slug ?? null}
-                            agentName={propertyAgent?.name ?? null}
-                            analytics={propertyLeadAnalytics}
-                            label={tPropertyDetail('getInTouch')}
-                            className={brandButtonClass('primary', 'mt-5 w-full', 'md')}
-                          />
-                          <div data-lead-placement="property" data-property-slug={keySlug}>
-                            <MessengerButtons
-                              messengers={messengers}
-                              ariaLabels={messengerAriaLabels}
-                              className="mt-2 flex gap-2"
+                        // Experiment E001 decides which control comes first (docs/experiments).
+                        <ListingContactBlock
+                          className="mt-5 hidden flex-col gap-2 lg:flex"
+                          form={
+                            <PropertyContactButton
+                              locale={locale}
+                              propertySlug={keySlug}
+                              propertyTitle={title}
+                              agentSlug={propertyAgent?.slug ?? null}
+                              agentName={propertyAgent?.name ?? null}
+                              analytics={propertyLeadAnalytics}
+                              label={tPropertyDetail('getInTouch')}
+                              className={brandButtonClass('primary', 'w-full', 'md')}
                             />
-                          </div>
-                        </div>
+                          }
+                          messengers={
+                            <div data-lead-placement="property" data-property-slug={keySlug}>
+                              <MessengerButtons
+                                messengers={messengers}
+                                ariaLabels={messengerAriaLabels}
+                                className="flex gap-2"
+                              />
+                            </div>
+                          }
+                        />
                         )}
                     </div>
                 </div>
@@ -689,25 +696,30 @@ export default async function PropertyDetailsPage({ params }: Props) {
                                 {findSimilarLabel}
                               </a>
                             ) : (
-                              <>
-                                <PropertyContactButton
-                                  locale={locale}
-                                  propertySlug={keySlug}
-                                  propertyTitle={title}
-                                  agentSlug={propertyAgent?.slug ?? null}
-                                  agentName={propertyAgent?.name ?? null}
-                                  analytics={propertyLeadAnalytics}
-                                  label={tPropertyDetail('getInTouch')}
-                                  className={brandButtonClass('primary', 'w-full mt-8', 'lg')}
-                                />
-                                <div data-lead-placement="property" data-property-slug={keySlug}>
-                                  <MessengerButtons
-                                    messengers={messengers}
-                                    ariaLabels={messengerAriaLabels}
-                                    className="mt-3 flex gap-2"
+                              <ListingContactBlock
+                                className="mt-8 flex flex-col gap-3"
+                                form={
+                                  <PropertyContactButton
+                                    locale={locale}
+                                    propertySlug={keySlug}
+                                    propertyTitle={title}
+                                    agentSlug={propertyAgent?.slug ?? null}
+                                    agentName={propertyAgent?.name ?? null}
+                                    analytics={propertyLeadAnalytics}
+                                    label={tPropertyDetail('getInTouch')}
+                                    className={brandButtonClass('primary', 'w-full', 'lg')}
                                   />
-                                </div>
-                              </>
+                                }
+                                messengers={
+                                  <div data-lead-placement="property" data-property-slug={keySlug}>
+                                    <MessengerButtons
+                                      messengers={messengers}
+                                      ariaLabels={messengerAriaLabels}
+                                      className="flex gap-2"
+                                    />
+                                  </div>
+                                }
+                              />
                             )}
                             <div className="absolute right-0 top-4 -z-[1]">
                                 <Image src="/images/properties/vector.svg" width={400} height={500} alt="vector" unoptimized={true} />
