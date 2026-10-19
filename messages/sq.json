@@ -674,7 +674,8 @@
       "stageOffPlan": "Në projekt",
       "stageUnderConstruction": "Në ndërtim",
       "stageCompleted": "E përfunduar",
-      "sortHandoverAsc": "Dorëzimi (më të afërtit në fillim)"
+      "sortHandoverAsc": "Dorëzimi (më të afërtit në fillim)",
+      "sortRecommended": "Të rekomanduara"
     },
     "cityInfoLink": "{place}: çmimet dhe lagjet",
     "districtInfoLink": "{place}: çmimet dhe përshkrimi i zonës",

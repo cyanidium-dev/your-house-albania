@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import { cn } from "@/lib/utils";
 
-const SORTS = ["newest", "popular", "priceAsc", "priceDesc", "pricePerSqmAsc", "areaDesc"] as const;
+const SORTS = ["recommended", "newest", "popular", "priceAsc", "priceDesc", "pricePerSqmAsc", "areaDesc"] as const;
 type Sort = (typeof SORTS)[number];
 
 const LABEL_KEY: Record<Sort, string> = {
+  recommended: "sortRecommended",
   newest: "sortNewest",
   popular: "sortPopular",
   priceAsc: "sortPriceAsc",
@@ -30,7 +31,7 @@ const LABEL_KEY: Record<Sort, string> = {
 export function CatalogSortSelect({ initialSort }: { initialSort?: string }) {
   const t = useTranslations("Catalog.filters");
   const router = useRouter();
-  const value: Sort = (SORTS as readonly string[]).includes(initialSort ?? "") ? (initialSort as Sort) : "newest";
+  const value: Sort = (SORTS as readonly string[]).includes(initialSort ?? "") ? (initialSort as Sort) : "recommended";
   const [open, setOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -54,7 +55,7 @@ export function CatalogSortSelect({ initialSort }: { initialSort?: string }) {
     setOpen(false);
     if (next === value) return;
     const url = new URL(window.location.href);
-    if (next === "newest") url.searchParams.delete("sort");
+    if (next === "recommended") url.searchParams.delete("sort");
     else url.searchParams.set("sort", next);
     url.searchParams.delete("page");
     router.push(`${url.pathname}${url.search}`, { scroll: false });

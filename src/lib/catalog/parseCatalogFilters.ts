@@ -73,7 +73,7 @@ export function parseCatalogFilters(
     sortRaw === "pricePerSqmAsc" ||
     sortRaw === "newest"
       ? sortRaw
-      : "newest";
+      : "recommended";
 
   const stageRaw = pickSearchString(searchParams, "stage", true);
   const stage: ConstructionStageFilter | "" =

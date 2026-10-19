@@ -674,7 +674,8 @@
       "stageOffPlan": "На стадії проєкту",
       "stageUnderConstruction": "Будується",
       "stageCompleted": "Збудовано",
-      "sortHandoverAsc": "Здача (спершу найближчі)"
+      "sortHandoverAsc": "Здача (спершу найближчі)",
+      "sortRecommended": "Рекомендовані"
     },
     "cityInfoLink": "{place}: ціни та райони",
     "districtInfoLink": "{place}: ціни та огляд району",

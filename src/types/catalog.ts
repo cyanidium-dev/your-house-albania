@@ -1,4 +1,9 @@
 export type CatalogSort =
+  /**
+   * The default: paid slots first, then a daily rotation dealt across
+   * agencies (lib/catalog/rotation). Not a query parameter.
+   */
+  | 'recommended'
   | 'newest'
   | 'priceAsc'
   | 'priceDesc'

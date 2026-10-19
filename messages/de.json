@@ -674,7 +674,8 @@
       "stageOffPlan": "In Planung",
       "stageUnderConstruction": "Im Bau",
       "stageCompleted": "Fertiggestellt",
-      "sortHandoverAsc": "Übergabe (früheste zuerst)"
+      "sortHandoverAsc": "Übergabe (früheste zuerst)",
+      "sortRecommended": "Empfohlen"
     },
     "cityInfoLink": "{place}: Preise und Stadtteile",
     "districtInfoLink": "{place}: Preise und Lage im Überblick",

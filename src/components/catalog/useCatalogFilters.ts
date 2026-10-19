@@ -106,7 +106,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
   const [stage, setStage] = React.useState(initialStage || "any");
   const [beds, setBeds] = React.useState(initialBeds || "any");
   const [district, setDistrict] = React.useState(initialDistrict || "any");
-  const [sort, setSort] = React.useState(initialSort || "newest");
+  const [sort, setSort] = React.useState(initialSort || "recommended");
   const [pageSize, setPageSize] = React.useState(initialPageSize || "24");
   const [amenities, setAmenities] = React.useState<string[]>(initialAmenities);
   const {
@@ -224,7 +224,7 @@ export function useCatalogFilters(props: PropertySearchBarProps) {
   React.useEffect(() => {
     setBeds(initialBeds || "any");
     setDistrict(initialDistrict || "any");
-    setSort(initialSort || "newest");
+    setSort(initialSort || "recommended");
     setPageSize(initialPageSize || "24");
     setAmenities(
       Array.isArray(initialAmenities) && initialAmenities.length > 0
