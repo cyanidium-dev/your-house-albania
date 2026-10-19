@@ -227,6 +227,14 @@ describe("tokens in CMS copy", () => {
     expect(replacePriceIndexTokens("{{median:durres}}", null, "en")).toBe("—");
   });
 
+  it("reads a district after a slash, and a missing district as a dash", () => {
+    const plazh = durres.districts.find((d) => d.slug === "plazh")!;
+    expect(replacePriceIndexTokens("€{{median:durres/plazh}} over {{count:durres/plazh}}", snapshot, "en")).toBe(
+      `€${new Intl.NumberFormat("en").format(plazh.median!)} over ${plazh.count}`,
+    );
+    expect(replacePriceIndexTokens("{{p80:durres/nowhere}}", snapshot, "en")).toBe("—");
+  });
+
   it("returns untouched objects as they were and rebuilds only changed branches", () => {
     const untouched = { a: [{ text: "no token" }] };
     expect(interpolatePriceIndexTokens(untouched, snapshot, "en")).toBe(untouched);

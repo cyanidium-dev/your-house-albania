@@ -1,3 +1,5 @@
+import { KnowledgeLinksSection } from "@/components/knowledge/KnowledgeLinks";
+import { KNOWLEDGE_LINKS_BY_CITY } from "@/lib/knowledge/links";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CityLandingPageBody } from "@/components/city/CityLandingPageBody";
@@ -124,6 +126,7 @@ export default async function CityInfoLandingPage({ params }: Props) {
         />
       ) : null}
       <CityLandingPageBody locale={locale} citySlug={citySlug} />
+      <KnowledgeLinksSection locale={locale} slugs={KNOWLEDGE_LINKS_BY_CITY[citySlug] ?? []} />
     </>
   );
 }

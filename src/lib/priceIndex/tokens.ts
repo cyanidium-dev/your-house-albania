@@ -12,23 +12,29 @@
  *   {{count:durres}}   → 511       flats in the sample
  *   {{date:durres}}    → 19 October 2026, in the page's language
  *
+ * A district is addressed after a slash, with its index slug:
+ *
+ *   {{median:durres/plazh}} → 1,611   the Plazh median
+ *
  * The currency sign and the unit stay in the copy ("€{{median:durres}}/m²"),
- * where each language already writes them its own way. A token for a city the
- * index does not have, or a figure it cannot compute, becomes "—".
+ * where each language already writes them its own way. A token for a city or
+ * district the index does not have, or a figure it cannot compute, becomes "—".
  */
 import { formatBlogDate } from "@/lib/date/formatLocale";
 import { findIndexCity, type PriceIndexSnapshot } from "@/lib/priceIndex/snapshot";
 
-const TOKEN = /\{\{\s*(median|p20|p80|count|date)\s*:\s*([a-z0-9-]+)\s*\}\}/g;
+const TOKEN = /\{\{\s*(median|p20|p80|count|date)\s*:\s*([a-z0-9-]+)(?:\/([a-z0-9-]+))?\s*\}\}/g;
 
 export function replacePriceIndexTokens(text: string, snapshot: PriceIndexSnapshot | null, locale: string): string {
   if (!text.includes("{{")) return text;
   const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
-  return text.replace(TOKEN, (_match, field: string, citySlug: string) => {
+  return text.replace(TOKEN, (_match, field: string, citySlug: string, districtSlug?: string) => {
     const city = findIndexCity(snapshot, citySlug);
     if (!snapshot || !city) return "—";
     if (field === "date") return formatBlogDate(new Date(snapshot.computedAt), locale);
-    const value = field === "count" ? city.count : city[field as "median" | "p20" | "p80"];
+    const figures = districtSlug ? city.districts.find((d) => d.slug === districtSlug) : city;
+    if (!figures) return "—";
+    const value = field === "count" ? figures.count : figures[field as "median" | "p20" | "p80"];
     return typeof value === "number" ? number.format(value) : "—";
   });
 }

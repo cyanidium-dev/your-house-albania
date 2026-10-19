@@ -53,6 +53,7 @@ function getKnowledgeClient() {
 export type KnowledgeSource = {
   sourceId: string
   name: string
+  publisher?: string
   url?: string
   archivedUrl?: string
   sourceType?: string
@@ -104,7 +105,12 @@ export type KnowledgeArticleSummary = {
   confidence?: string
   lastUpdated?: string
   questionCount: number
+  /** Section of /knowledge for the question pages; empty on research data sheets. */
+  topicGroup?: string
 }
+
+/** A founder named on a page: who compiled the data, who checked it. */
+export type KnowledgePerson = { name: string; slug: string }
 
 export type KnowledgeTableRow = {
   rowId: string
@@ -130,6 +136,15 @@ export type KnowledgeSection = {
 
 export type KnowledgeArticle = KnowledgeArticleSummary & {
   questions: string[]
+  faq: { question: string; answer: string }[]
+  sources: KnowledgeSource[]
+  author?: KnowledgePerson | null
+  /** Set only after the reviewer has checked the page. */
+  reviewer?: KnowledgePerson | null
+  reviewedAt?: string
+  seoTitle?: string
+  seoDescription?: string
+  tags?: string[]
   sections: KnowledgeSection[]
   exchangeRateNote?: string
   nextReviewAt?: string
@@ -144,7 +159,7 @@ export type KnowledgeArticle = KnowledgeArticleSummary & {
 const CURRENT_FACT = `_type == "knowledgeFact" && isCurrent == true`
 
 const SOURCE_PROJECTION = `{
-  sourceId, name, url, archivedUrl, sourceType, priorityRank, publishedAt, accessedAt
+  sourceId, name, publisher, url, archivedUrl, sourceType, priorityRank, publishedAt, accessedAt
 }`
 
 const FACT_PROJECTION = `{
@@ -273,7 +288,8 @@ const ARTICLE_SUMMARY_PROJECTION = (locale: string) => `{
   dataPeriod,
   confidence,
   lastUpdated,
-  "questionCount": count(questionSet)
+  "questionCount": count(questionSet),
+  topicGroup
 }`
 
 async function fetchIndex(locale: string): Promise<KnowledgeArticleSummary[]> {
@@ -295,10 +311,8 @@ export const fetchKnowledgeIndex = sanityCache(fetchIndex, ['knowledge-index'], 
   tags: [SANITY_TAGS.knowledgeArticle],
 })
 
-async function fetchArticle(slug: string, locale: string): Promise<KnowledgeArticle | null> {
-  const client = getKnowledgeClient()
-  if (!client || !slug) return null
-  const query = `*[_type == "knowledgeArticle" && slug.current == $slug && isPublished == true][0]{
+/** Everything a page renders, in one locale with English as the fallback. */
+const ARTICLE_PROJECTION = (locale: string) => `{
     documentId,
     "slug": slug.current,
     "title": coalesce(title.${locale}, title.en),
@@ -311,8 +325,17 @@ async function fetchArticle(slug: string, locale: string): Promise<KnowledgeArti
     nextReviewAt,
     exchangeRateNote,
     sourceFile,
+    topicGroup,
+    tags,
     "questionCount": count(questionSet),
     "questions": questionSet[]{"v": coalesce(${locale}, en)}.v,
+    "faq": faq[]{"question": coalesce(question.${locale}, question.en), "answer": coalesce(answer.${locale}, answer.en)},
+    "sources": sources[]->${SOURCE_PROJECTION},
+    "author": author->{"name": coalesce(name.${locale}, name.en, name), "slug": slug.current},
+    "reviewer": reviewedBy->{"name": coalesce(name.${locale}, name.en, name), "slug": slug.current},
+    reviewedAt,
+    "seoTitle": coalesce(seo.metaTitle.${locale}, seo.metaTitle.en),
+    "seoDescription": coalesce(seo.metaDescription.${locale}, seo.metaDescription.en),
     "gaps": gaps[]{gapId, "description": coalesce(description.${locale}, description.en), priority},
     "relatedArticles": relatedArticles[]->{"slug": slug.current, "title": coalesce(title.${locale}, title.en)},
     sections[]{
@@ -327,12 +350,17 @@ async function fetchArticle(slug: string, locale: string): Promise<KnowledgeArti
         confidence,
         rows[]{
           rowId,
-          cells,
+          "cells": coalesce(localizedCells[]{"v": coalesce(${locale}, en)}.v, cells),
           "facts": facts[]->${FACT_PROJECTION}
         }
       }
     }
   }`
+
+async function fetchArticle(slug: string, locale: string): Promise<KnowledgeArticle | null> {
+  const client = getKnowledgeClient()
+  if (!client || !slug) return null
+  const query = `*[_type == "knowledgeArticle" && slug.current == $slug && isPublished == true][0]${ARTICLE_PROJECTION(locale)}`
   try {
     const row = await client.fetch<KnowledgeArticle | null>(query, { slug })
     return row ?? null
@@ -361,6 +389,53 @@ async function fetchSlugs(): Promise<string[]> {
 }
 
 export const fetchKnowledgeSlugs = sanityCache(fetchSlugs, ['knowledge-slugs'], {
+  revalidate: 3600,
+  tags: [SANITY_TAGS.knowledgeArticle],
+})
+
+/**
+ * Every published question page in full, for llms.txt and llms-full.txt.
+ * The research data sheets (no `topicGroup`) are left out: they are not
+ * written as answers.
+ */
+async function fetchQuestionPages(locale: string): Promise<KnowledgeArticle[]> {
+  const client = getKnowledgeClient()
+  if (!client) return []
+  try {
+    const rows = await client.fetch<KnowledgeArticle[]>(
+      `*[_type == "knowledgeArticle" && isPublished == true && defined(topicGroup)] | order(topicGroup asc, documentId asc) ${ARTICLE_PROJECTION(locale)}`,
+    )
+    return Array.isArray(rows) ? rows : []
+  } catch (err) {
+    console.warn('[knowledge] question pages fetch failed:', err)
+    return []
+  }
+}
+
+export const fetchKnowledgeQuestionPages = sanityCache(fetchQuestionPages, ['knowledge-question-pages'], {
+  revalidate: 3600,
+  tags: [SANITY_TAGS.knowledgeArticle, SANITY_TAGS.knowledgeFact, SANITY_TAGS.knowledgeSource],
+})
+
+/** Titles of the given pages, published ones only, in the order asked for. */
+async function fetchLinks(slugs: string[], locale: string): Promise<{ slug: string; title: string }[]> {
+  const client = getKnowledgeClient()
+  if (!client || slugs.length === 0) return []
+  try {
+    const rows = await client.fetch<{ slug: string; title: string }[]>(
+      `*[_type == "knowledgeArticle" && isPublished == true && slug.current in $slugs]{
+        "slug": slug.current, "title": coalesce(title.${locale}, title.en)
+      }`,
+      { slugs },
+    )
+    const bySlug = new Map((rows ?? []).map((r) => [r.slug, r]))
+    return slugs.map((s) => bySlug.get(s)).filter((r): r is { slug: string; title: string } => !!r?.title)
+  } catch {
+    return []
+  }
+}
+
+export const fetchKnowledgeLinks = sanityCache(fetchLinks, ['knowledge-links'], {
   revalidate: 3600,
   tags: [SANITY_TAGS.knowledgeArticle],
 })

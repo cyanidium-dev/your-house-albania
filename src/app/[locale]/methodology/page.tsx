@@ -1,3 +1,5 @@
+import { KnowledgeLinks } from "@/components/knowledge/KnowledgeLinks";
+import { KNOWLEDGE_LINKS_ON_METHODOLOGY } from "@/lib/knowledge/links";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
@@ -203,6 +205,7 @@ export default async function MethodologyPage({ params }: Props) {
                 ))}
               </ul>
             </div>
+            <KnowledgeLinks locale={locale} slugs={KNOWLEDGE_LINKS_ON_METHODOLOGY} as="h3" />
           </div>
         </div>
       </Section>

@@ -24,6 +24,8 @@ import { BlogKeyFacts } from "@/components/Blog/BlogKeyFacts";
 import { AuthorAvatar } from "@/components/Blog/AuthorAvatar";
 import { BlogFaq } from "@/components/Blog/BlogFaq";
 import { BlogSources } from "@/components/Blog/BlogSources";
+import { KnowledgeLinks } from "@/components/knowledge/KnowledgeLinks";
+import { KNOWLEDGE_LINKS_BY_BLOG_POST } from "@/lib/knowledge/links";
 import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
 import TrackPageView from "@/components/analytics/TrackPageView";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
@@ -376,6 +378,11 @@ export default async function Post({ params }: Props) {
               <BlogListingsBlock locale={locale} postSlug={detail.slug} />
               <BlogFaq faq={detail.faq} locale={locale} />
               <BlogSources sources={detail.sources} locale={locale} />
+              <KnowledgeLinks
+                locale={locale}
+                slugs={KNOWLEDGE_LINKS_BY_BLOG_POST[detail.slug] ?? []}
+                className="mt-10"
+              />
               {/* Last thing in the article, after the sources. Editors can also
                   place `blogQuoteCtaBlock` mid-article; that copy is independent. */}
               <BlogQuoteCta locale={locale} sourceLabel={detail.slug} />

@@ -96,7 +96,7 @@ export default function robots(): MetadataRoute.Robots {
       `${base}/sitemap-blog.xml`,
       `${base}/sitemap-landings.xml`,
       `${base}/sitemap-districts.xml`,
-      // sitemap-knowledge.xml: back with the first /knowledge document (see sitemap.xml).
+      `${base}/sitemap-knowledge.xml`,
     ],
   };
 }

@@ -23,6 +23,7 @@ export const FOOTER_PROPERTY_TAIL: readonly FooterNavItem[] = [
 /** Useful column: after the CMS guide links. */
 export const FOOTER_USEFUL_ITEMS: readonly FooterNavItem[] = [
   { key: "blog", href: "/blog" },
+  { key: "knowledge", href: "/knowledge" },
 ];
 
 /** Company column. */
