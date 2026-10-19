@@ -64,8 +64,7 @@ for a request that competes with the JS.
 
 | build | PSI mobile /en | LCP | FCP | TBT | PSI desktop /en | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| before (main 4cc0c6d) | 80 | 5.1 s | 1.35 s | 64 ms | 99 | /en/sale 80 (LCP 4.2 s), listing 80 (LCP 4.4 s) |
-| A (#85, 69ccf04) | 76 | 5.1 s | 1.7 s | 30 ms | | LCP unchanged, as expected: the stylesheet still arrives with the JS |
+| before (main 4cc0c6d) | 80 | 5.1 s | 1.35 s | 64 ms | 97 | |
 
 Local Lighthouse (simulated, mobile; 3 runs each): before 74–81 / LCP 4.1–4.5 s;
 step A 71–80 / LCP 4.3–4.4 s; step B 70–72 / LCP 4.1–4.2 s — noise, see above.
