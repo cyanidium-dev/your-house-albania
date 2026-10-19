@@ -80,7 +80,8 @@
       "blog": "Blog",
       "about": "Chi siamo",
       "contacts": "Contatti",
-      "addProperty": "Aggiungi il tuo immobile"
+      "addProperty": "Aggiungi il tuo immobile",
+      "knowledge": "Base di conoscenza"
     },
     "cities": {
       "empty": "Nessuna città da mostrare."
@@ -1156,7 +1157,22 @@
     "askIntro": "L’assistente usa questi stessi dati e mostra la fonte di ogni cifra.",
     "askCta": "Chiedi all’assistente",
     "related": "Pagine collegate",
-    "methodNote": "Gli importi sono convertiti in euro al cambio della Banca d’Albania indicato nella pagina. Il prezzo richiesto non è il prezzo di vendita, e l’affitto pubblicizzato non è quello effettivo."
+    "methodNote": "Gli importi sono convertiti in euro al cambio della Banca d’Albania indicato nella pagina. Il prezzo richiesto non è il prezzo di vendita, e l’affitto pubblicizzato non è quello effettivo.",
+    "topics": {
+      "buying": "Comprare da straniero",
+      "money": "Tasse e costi",
+      "ownership": "Possedere e affittare",
+      "process": "Procedura e rischi",
+      "geography": "Dove comprare"
+    },
+    "compiledBy": "Dati raccolti da",
+    "checkedBy": "Verificato da",
+    "updatedOn": "Aggiornato il",
+    "faqHeading": "Domande e risposte",
+    "accessed": "consultato il",
+    "linksHeading": "Dalla base di conoscenza",
+    "linksIntro": "Risposte brevi con cifre, date e fonti.",
+    "linksAll": "Tutte le domande della base di conoscenza"
   },
   "About": {
     "metaTitle": "Chi siamo: il team di Domlivo e come funziona il sito",

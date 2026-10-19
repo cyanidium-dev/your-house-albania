@@ -80,7 +80,8 @@
       "blog": "Blog",
       "about": "O nas",
       "contacts": "Kontakty",
-      "addProperty": "Dodaj nieruchomość"
+      "addProperty": "Dodaj nieruchomość",
+      "knowledge": "Baza wiedzy"
     },
     "cities": {
       "empty": "Brak miast do wyświetlenia."
@@ -1156,7 +1157,22 @@
     "askIntro": "Asystent korzysta z tych samych danych i pokazuje źródło każdej liczby.",
     "askCta": "Zapytaj asystenta",
     "related": "Powiązane strony",
-    "methodNote": "Kwoty przeliczono na euro po kursie Banku Albanii podanym na stronie. Cena ofertowa to nie cena transakcyjna, a czynsz z ogłoszenia to nie czynsz uzyskany."
+    "methodNote": "Kwoty przeliczono na euro po kursie Banku Albanii podanym na stronie. Cena ofertowa to nie cena transakcyjna, a czynsz z ogłoszenia to nie czynsz uzyskany.",
+    "topics": {
+      "buying": "Zakup przez cudzoziemca",
+      "money": "Podatki i opłaty",
+      "ownership": "Posiadanie i wynajem",
+      "process": "Procedura i ryzyka",
+      "geography": "Gdzie kupić"
+    },
+    "compiledBy": "Dane zebrał",
+    "checkedBy": "Sprawdził",
+    "updatedOn": "Zaktualizowano",
+    "faqHeading": "Pytania i odpowiedzi",
+    "accessed": "dostęp",
+    "linksHeading": "Z bazy wiedzy",
+    "linksIntro": "Krótkie odpowiedzi z liczbami, datami i źródłami.",
+    "linksAll": "Wszystkie pytania w bazie wiedzy"
   },
   "About": {
     "metaTitle": "O Domlivo: zespół i zasady działania serwisu",

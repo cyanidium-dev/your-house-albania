@@ -80,7 +80,8 @@
       "blog": "Blog",
       "about": "Rreth nesh",
       "contacts": "Kontakte",
-      "addProperty": "Shtoni pronën tuaj"
+      "addProperty": "Shtoni pronën tuaj",
+      "knowledge": "Baza e njohurive"
     },
     "cities": {
       "empty": "Nuk ka qytete për të shfaqur."
@@ -1156,7 +1157,22 @@
     "askIntro": "Asistenti punon mbi të njëjtat të dhëna dhe tregon burimin e çdo shifre.",
     "askCta": "Pyet asistentin",
     "related": "Faqe të lidhura",
-    "methodNote": "Shumat janë sjellë në euro me kursin e Bankës së Shqipërisë të shënuar në faqe. Çmimi i kërkuar nuk është çmimi i shitjes, dhe qiraja e publikuar nuk është qiraja e realizuar."
+    "methodNote": "Shumat janë sjellë në euro me kursin e Bankës së Shqipërisë të shënuar në faqe. Çmimi i kërkuar nuk është çmimi i shitjes, dhe qiraja e publikuar nuk është qiraja e realizuar.",
+    "topics": {
+      "buying": "Blerja si i huaj",
+      "money": "Taksat dhe tarifat",
+      "ownership": "Pronësia dhe dhënia me qira",
+      "process": "Procedura dhe rreziqet",
+      "geography": "Ku të blini"
+    },
+    "compiledBy": "Të dhënat i mblodhi",
+    "checkedBy": "E kontrolloi",
+    "updatedOn": "Përditësuar më",
+    "faqHeading": "Pyetje dhe përgjigje",
+    "accessed": "parë më",
+    "linksHeading": "Nga baza e njohurive",
+    "linksIntro": "Përgjigje të shkurtra me shifra, data dhe burime.",
+    "linksAll": "Të gjitha pyetjet e bazës së njohurive"
   },
   "About": {
     "metaTitle": "Rreth Domlivo: ekipi dhe si funksionon faqja",

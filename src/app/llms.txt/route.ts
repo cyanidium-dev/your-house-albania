@@ -3,6 +3,9 @@ import { getSiteBaseUrl } from '@/lib/siteUrl'
 import { fetchPriceIndexSnapshot } from '@/lib/sanity/client'
 import { keyFiguresMarkdown } from '@/lib/priceIndex/llmsText'
 import type { PriceIndexSnapshot } from '@/lib/priceIndex/snapshot'
+import { interpolatePriceIndexTokens } from '@/lib/priceIndex/tokens'
+import { fetchKnowledgeQuestionPages, type KnowledgeArticle } from '@/lib/sanity/queries/knowledge'
+import { referenceFactsMarkdown } from '@/lib/knowledge/llmsText'
 
 /**
  * `/llms.txt`: a plain-text map of the site for AI assistants.
@@ -17,10 +20,12 @@ import type { PriceIndexSnapshot } from '@/lib/priceIndex/snapshot'
  *
  * "Key figures" is the Domlivo Price Index line per city, from the same
  * snapshot as the `/info` pages, so the file is regenerated hourly with them.
+ * "Reference facts" is one line per knowledge-base question page: question,
+ * answer, URL (lib/knowledge/llmsText).
  */
 export const revalidate = 3600
 
-function buildLlmsTxt(base: string, snapshot: PriceIndexSnapshot | null): string {
+function buildLlmsTxt(base: string, snapshot: PriceIndexSnapshot | null, knowledge: KnowledgeArticle[]): string {
   const u = (path: string) => `${base}${path}`
   return `# Domlivo
 
@@ -32,7 +37,7 @@ Every page exists in seven languages under its locale prefix: /en, /sq, /ru, /uk
 
 Figures on the price pages come from two places and are labelled as such: the Domlivo Price Index, asking prices computed from the listings live on Domlivo (median and 20th–80th percentile price per m², sample size, by city and district, refreshed hourly, CC BY 4.0, method at ${u('/en/methodology')}), and published market research, each cited on the page with a link.
 
-${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}## Listings
+${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}${knowledge.length ? `${referenceFactsMarkdown(knowledge, base)}\n\n` : ''}## Listings
 
 - [Property for sale in Albania](${u('/en/sale')}): all sale listings with filters for city, district, type, price and area
 - [Durrës: apartments and property for sale](${u('/en/albania/durres')}): the largest section, with links to each district and to one-bedroom, two-bedroom, near-the-sea, new-build and under €100k selections
@@ -56,6 +61,7 @@ ${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}## Listings
 - [Durrës or Vlorë](${u('/en/guides/durres-vs-vlore')}), [Tirana or Durrës](${u('/en/guides/tirana-vs-durres')}), [Vlorë or Sarandë](${u('/en/guides/vlora-vs-saranda')}), [Sarandë or Ksamil](${u('/en/guides/saranda-vs-ksamil')}), [Golem or Plazh](${u('/en/guides/golem-vs-plazh')}): city and district comparisons
 - [Albania or Montenegro](${u('/en/guides/albania-vs-montenegro')}), [Albania or Croatia](${u('/en/guides/albania-vs-croatia')}), [Albania or Greece](${u('/en/guides/albania-vs-greece')}): country comparisons for buyers
 - [Blog](${u('/en/blog')}): legal steps, documents, taxes, rental income, district choice, market outlook
+- [Knowledge base](${u('/en/knowledge')}): one question per page, answered with a figure, a date and its sources (laws by number and article, ASHK and notary tariffs, tax treaties, the price index), plus what is still unverified
 
 ## About
 
@@ -71,8 +77,9 @@ ${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}## Listings
 
 export async function GET() {
   const base = getSiteBaseUrl().replace(/\/$/, '')
-  const snapshot = await fetchPriceIndexSnapshot()
-  return new NextResponse(buildLlmsTxt(base, snapshot), {
+  const [snapshot, pages] = await Promise.all([fetchPriceIndexSnapshot(), fetchKnowledgeQuestionPages('en')])
+  const knowledge = interpolatePriceIndexTokens(pages, snapshot, 'en')
+  return new NextResponse(buildLlmsTxt(base, snapshot, knowledge), {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
       'Cache-Control': 'public, max-age=3600, s-maxage=3600',

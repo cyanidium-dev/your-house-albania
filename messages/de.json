@@ -80,7 +80,8 @@
       "blog": "Blog",
       "about": "Über uns",
       "contacts": "Kontakte",
-      "addProperty": "Immobilie inserieren"
+      "addProperty": "Immobilie inserieren",
+      "knowledge": "Wissensdatenbank"
     },
     "cities": {
       "empty": "Keine Städte vorhanden."
@@ -1156,7 +1157,22 @@
     "askIntro": "Der Assistent arbeitet mit denselben Daten und zeigt die Quelle jeder Zahl.",
     "askCta": "Assistenten fragen",
     "related": "Verwandte Seiten",
-    "methodNote": "Beträge sind zum auf der Seite angegebenen Kurs der Bank of Albania in Euro umgerechnet. Angebotspreise sind keine Transaktionspreise, inserierte Mieten keine erzielten Mieten."
+    "methodNote": "Beträge sind zum auf der Seite angegebenen Kurs der Bank of Albania in Euro umgerechnet. Angebotspreise sind keine Transaktionspreise, inserierte Mieten keine erzielten Mieten.",
+    "topics": {
+      "buying": "Kauf als Ausländer",
+      "money": "Steuern und Gebühren",
+      "ownership": "Besitzen und vermieten",
+      "process": "Ablauf und Risiken",
+      "geography": "Wo kaufen"
+    },
+    "compiledBy": "Daten zusammengestellt von",
+    "checkedBy": "Geprüft von",
+    "updatedOn": "Aktualisiert",
+    "faqHeading": "Fragen und Antworten",
+    "accessed": "abgerufen",
+    "linksHeading": "Aus der Wissensdatenbank",
+    "linksIntro": "Kurze Antworten mit Zahlen, Datum und Quellen.",
+    "linksAll": "Alle Fragen der Wissensdatenbank"
   },
   "About": {
     "metaTitle": "Über Domlivo: Team und Arbeitsweise",

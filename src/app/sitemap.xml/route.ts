@@ -27,9 +27,11 @@ export async function GET() {
     "/sitemap-blog.xml",
     "/sitemap-landings.xml",
     "/sitemap-districts.xml",
-    // `/sitemap-knowledge.xml` returns to the index the day `/knowledge`
-    // publishes its first document: until then it is an empty urlset that
-    // advertises a section with nothing in it (audit 2026-10-18).
+    // Back since 2026-10-19, when the first 30 question pages were published.
+    // It had been out while it was an empty urlset advertising a section with
+    // nothing in it (audit 2026-10-18); it empties itself again if every page
+    // is unpublished.
+    "/sitemap-knowledge.xml",
   ];
   const xml = buildSitemapIndexXml(paths.map((p) => `${base}${p}`));
   return new NextResponse(xml, {

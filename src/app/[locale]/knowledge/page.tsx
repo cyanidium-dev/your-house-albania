@@ -1,11 +1,20 @@
 import type { Metadata } from 'next'
 import Link from "@/components/shared/Link";
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { balancedGridClass, CONTAINER } from '@/components/shared/layout'
+import {
+  balancedGridClass,
+  CONTAINER,
+  SECTION_TITLE,
+  SPLIT,
+  SPLIT_ASIDE,
+  SPLIT_MAIN,
+} from '@/components/shared/layout'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { BreadcrumbJsonLd } from '@/components/shared/BreadcrumbJsonLd'
 import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { fetchKnowledgeIndex } from '@/lib/sanity/queries/knowledge'
+import { fetchPriceIndexSnapshot } from '@/lib/sanity/queries/priceIndex'
+import { interpolatePriceIndexTokens } from '@/lib/priceIndex/tokens'
 import { buildFlatCrumbs, toBreadcrumbJsonLdItems } from '@/lib/routes/breadcrumbs'
 import { getBaseUrl } from '@/lib/seo/baseUrl'
 import { buildSimplePageMetadata } from '@/lib/seo/simplePageMetadata'
@@ -29,7 +38,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
-/** Topic groups, in the order a buyer meets them. */
+/** Question pages: sections in the order a buyer meets them. */
+const TOPIC_GROUPS = ['buying', 'money', 'ownership', 'process', 'geography'] as const
+
+/** Research data sheets, grouped by category. */
 const GROUPS: { key: string; categories: string[] }[] = [
   { key: 'costs', categories: ['electricity', 'water', 'internet', 'gas', 'heating', 'air_conditioning', 'building_fees', 'cleaning', 'utilities'] },
   { key: 'market', categories: ['property_prices', 'real_estate', 'market_analysis', 'districts'] },
@@ -49,7 +61,11 @@ export default async function KnowledgeIndexPage({ params }: Props) {
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Knowledge')
-  const entries = await fetchKnowledgeIndex(locale)
+  const rawEntries = await fetchKnowledgeIndex(locale)
+  // Answers quote the price index through tokens; fill them before printing.
+  const entries = JSON.stringify(rawEntries).includes('{{')
+    ? interpolatePriceIndexTokens(rawEntries, await fetchPriceIndexSnapshot(), locale)
+    : rawEntries
 
   const crumbs = buildFlatCrumbs({
     locale,
@@ -59,18 +75,24 @@ export default async function KnowledgeIndexPage({ params }: Props) {
   const baseUrl = await getBaseUrl()
 
   const used = new Set<string>()
-  const groups = GROUPS.map((group) => {
+  const topicGroups = TOPIC_GROUPS.map((key) => {
+    const items = entries.filter((entry) => entry.topicGroup === key)
+    items.forEach((entry) => used.add(entry.documentId))
+    return { key: `topics.${key}`, items }
+  }).filter((group) => group.items.length > 0)
+  const sheetGroups = GROUPS.map((group) => {
     const items = entries.filter((entry) => {
       if (used.has(entry.documentId)) return false
       if (!group.categories.includes(entry.category)) return false
       used.add(entry.documentId)
       return true
     })
-    return { key: group.key, items }
+    return { key: `groups.${group.key}`, items }
   }).filter((group) => group.items.length > 0)
 
   const rest = entries.filter((entry) => !used.has(entry.documentId))
-  if (rest.length > 0) groups.push({ key: 'other', items: rest })
+  if (rest.length > 0) sheetGroups.push({ key: 'groups.other', items: rest })
+  const groups = [...topicGroups, ...sheetGroups]
 
   return (
     <main>
@@ -92,10 +114,36 @@ export default async function KnowledgeIndexPage({ params }: Props) {
           {entries.length === 0 ? (
             <p className="mt-10 text-dark/60 dark:text-white/60">{t('empty')}</p>
           ) : (
-            groups.map((group) => (
+            groups.map((group) =>
+              group.key.startsWith('topics.') ? (
+                // Question pages: the question is the link, the answer's first
+                // line under it — a reading list, not a card grid.
+                <section key={group.key} className={`mt-14 ${SPLIT}`} aria-labelledby={`kb-${group.key}`}>
+                  <div className={SPLIT_ASIDE}>
+                    <h2 id={`kb-${group.key}`} className={SECTION_TITLE}>
+                      {t(group.key as never)}
+                    </h2>
+                  </div>
+                  <ul className={`${SPLIT_MAIN} divide-y divide-dark/10 dark:divide-white/10`}>
+                    {group.items.map((entry) => (
+                      <li key={entry.documentId} className="py-4 first:pt-0">
+                        <Link
+                          href={`/${locale}/knowledge/${entry.slug}`}
+                          className="text-lg font-semibold text-dark hover:text-primary dark:text-white"
+                        >
+                          {entry.title}
+                        </Link>
+                        {entry.summary ? (
+                          <p className="mt-1.5 line-clamp-2 text-sm text-dark/65 dark:text-white/65">{entry.summary}</p>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : (
               <section key={group.key} className="mt-12">
                 <h2 className="text-2xl md:text-[1.75rem] tracking-tight font-bold text-dark dark:text-white">
-                  {t(`groups.${group.key}` as never)}
+                  {t(group.key as never)}
                 </h2>
                 <ul className={`mt-5 ${balancedGridClass(group.items.length)}`}>
                   {group.items.map((entry) => (
@@ -130,7 +178,8 @@ export default async function KnowledgeIndexPage({ params }: Props) {
                   ))}
                 </ul>
               </section>
-            ))
+              ),
+            )
           )}
 
           <section className="mt-14 rounded-2xl bg-primary/8 p-6">
