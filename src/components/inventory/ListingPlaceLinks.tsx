@@ -6,11 +6,22 @@ import { resolveCityDisplayName } from "@/lib/seo/listingSeoCopy";
 import { resolveCatalogTargets } from "@/lib/inventoryLinks/places";
 import { isListingTopicIndexable } from "@/lib/inventoryLinks/indexing";
 import { cityInfoHrefIfIndexable } from "@/lib/inventoryLinks/server";
+import { fetchPartnerPlaceListings } from "@/lib/sanity/queries/partnerLandings";
+import {
+  PARTNER_LANDING_MIN_LISTINGS,
+  PARTNER_NAME,
+  PARTNER_SLUG,
+  partnerLandingForPlace,
+  partnerLandingPath,
+} from "@/lib/partnerLandings/config";
+import { selectPartnerListings } from "@/lib/partnerLandings/facts";
 
 type Props = {
   locale: string;
   citySlug?: string | null;
   districtSlug?: string | null;
+  /** The lister's slug: a partner with a landing for this place gets a link to it. */
+  agentSlug?: string | null;
 };
 
 /**
@@ -20,7 +31,7 @@ type Props = {
  * `districtLinkTargets`); the price page when the city has one. Nothing when
  * neither exists.
  */
-export async function ListingPlaceLinks({ locale, citySlug, districtSlug }: Props) {
+export async function ListingPlaceLinks({ locale, citySlug, districtSlug, agentSlug }: Props) {
   const city = (citySlug ?? "").trim().toLowerCase();
   if (!city) return null;
   const district = (districtSlug ?? "").trim().toLowerCase() || undefined;
@@ -60,6 +71,21 @@ export async function ListingPlaceLinks({ locale, citySlug, districtSlug }: Prop
     });
   }
   if (infoHref) links.push({ href: infoHref, label: t("cityPrices", { city: cityName }) });
+  // The partner's selection in this place (lib/partnerLandings), on the partner's own listings.
+  const partnerLanding = agentSlug === PARTNER_SLUG ? partnerLandingForPlace({ city, district }) : null;
+  if (partnerLanding) {
+    const count = selectPartnerListings(await fetchPartnerPlaceListings(partnerLanding), partnerLanding).length;
+    if (count >= PARTNER_LANDING_MIN_LISTINGS) {
+      const tPartner = await getTranslations({ locale, namespace: "PartnerLanding" });
+      const placeLabel = partnerLanding.place.district
+        ? options.districts.find((d) => d.value.toLowerCase() === partnerLanding.place.district)?.label || partnerLanding.place.district
+        : cityName;
+      links.push({
+        href: partnerLandingPath(locale, partnerLanding),
+        label: tPartner("linkFromPlace", { partner: PARTNER_NAME, place: placeLabel, count }),
+      });
+    }
+  }
   if (links.length === 0) return null;
 
   return (

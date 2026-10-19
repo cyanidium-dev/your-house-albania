@@ -4,6 +4,7 @@ import { truncateMetaDescription } from "@/lib/seo/propertyMeta";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
+import { PartnerPlaceLandingLink } from "@/components/partnerLandings/PartnerPlaceLandingLink";
 import { ListingFacetNav } from "@/components/catalog/ListingFacetNav";
 import { ListingFactsLine } from "@/components/catalog/ListingFactsLine";
 import PropertiesListing from "@/components/Properties/PropertyList";
@@ -642,6 +643,20 @@ export async function GeoListingPage({ params, search }: Props) {
                   }
                   districtSlug={pathDistrict || undefined}
                   districtLabel={districtLabel}
+                />
+              ) : null}
+              {/* The partner's selection in this place, when it has a landing (lib/partnerLandings). */}
+              {!typeSlug && !facet ? (
+                <PartnerPlaceLandingLink
+                  locale={locale}
+                  citySlug={geo.listingCitySlug}
+                  districtSlug={pathDistrict || undefined}
+                  placeLabel={
+                    districtLabel ||
+                    options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label ||
+                    geo.listingCitySlug
+                  }
+                  className="text-white underline-offset-2 hover:underline"
                 />
               ) : null}
             </div>
