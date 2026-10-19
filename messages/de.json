@@ -1279,5 +1279,38 @@
       "stageUnderConstruction": "im Bau",
       "stageCompleted": "fertiggestellt"
     }
+  },
+  "Capture": {
+    "ask": {
+      "title": "Frage zu diesem Objekt stellen",
+      "placeholder": "Ihre Frage zu diesem Objekt",
+      "submit": "Frage senden",
+      "required": "Bitte schreiben Sie Ihre Frage."
+    },
+    "neighbours": {
+      "cheaper": "Ähnlich, aber günstiger",
+      "pricier": "Ähnlich, aber teurer"
+    },
+    "district": {
+      "title": "In diesem Viertel finden",
+      "budgetLabel": "Budget",
+      "bands": {
+        "under70": "Bis 70 Tsd. €",
+        "70to120": "70–120 Tsd. €",
+        "120to200": "120–200 Tsd. €",
+        "over200": "Über 200 Tsd. €"
+      }
+    },
+    "selection": {
+      "title": "Wir senden Ihnen eine Auswahl nach Ihren Kriterien",
+      "criteria": "Ihre Kriterien"
+    },
+    "trust": {
+      "phone": "Telefon",
+      "address": "Adresse",
+      "testimonialsTitle": "Was Kunden sagen",
+      "officePhotoAlt": "Unser Büro",
+      "sectionLabel": "Kontakt und Bewertungen"
+    }
   }
 }

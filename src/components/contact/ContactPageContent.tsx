@@ -17,6 +17,8 @@ import { nonMessengerLinks, resolveMessengers } from '@/lib/contacts/messengers'
 import { getMessengerContext } from '@/lib/contacts/messengerContext.server'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 import type { SocialLinkInput } from '@/lib/footer/socialChannels'
+import { SiteTrustContactLines } from '@/components/capture/SiteTrust'
+import { mapSiteTrust } from '@/lib/sanity/trustFromSiteSettings'
 
 type ContactPageContentProps = {
   locale: string
@@ -46,6 +48,9 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
     await getMessengerContext({ locale, placement: 'contact-page', pageUrl: `${getSiteBaseUrl()}/${locale}/contacts` })
   )
   const followLinks = nonMessengerLinks(manager.socialLinks)
+  // Phone, reply time and address as the owner enters them in Site Settings;
+  // nothing is printed for an empty field.
+  const trust = mapSiteTrust(siteSettings, locale)
   // The owners' address, for the day the CMS field is empty.
   const email = manager.email ?? 'hello@domlivo.com'
 
@@ -101,6 +106,7 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                       className="flex gap-3 [&>a]:h-12 [&>a]:text-base"
                     />
                   </div>
+                  <SiteTrustContactLines locale={locale} trust={trust} className="mb-3" />
                   {email ? (
                     <a
                       href={`mailto:${email}`}

@@ -1,4 +1,5 @@
 import { indexableRobots, isIndexingEnabled } from "@/lib/seo/envSeo";
+import { TRANSLATOR_DOM_GUARD_SCRIPT } from "@/lib/dom/translatorGuard";
 import { preconnect, preload } from "react-dom";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
@@ -207,6 +208,8 @@ export default async function LocaleLayout({ children, params }: Props) {
         {/* Holds Chromium's install event for the engagement-gated invitation;
             see lib/pwa/earlyCapture. Must run before the event can fire. */}
         <script dangerouslySetInnerHTML={{ __html: PWA_EARLY_CAPTURE_SCRIPT }} />
+        {/* Keeps a translated page working: see lib/dom/translatorGuard. */}
+        <script dangerouslySetInnerHTML={{ __html: TRANSLATOR_DOM_GUARD_SCRIPT }} />
         {analyticsEnabled && (
           <>
             {/* Consent Mode v2 + Clarity bootstrap: default denied, then

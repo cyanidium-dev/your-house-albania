@@ -1279,5 +1279,38 @@
       "stageUnderConstruction": "строится",
       "stageCompleted": "построено"
     }
+  },
+  "Capture": {
+    "ask": {
+      "title": "Задать вопрос об этом объекте",
+      "placeholder": "Ваш вопрос об этом объекте",
+      "submit": "Отправить вопрос",
+      "required": "Напишите ваш вопрос."
+    },
+    "neighbours": {
+      "cheaper": "Похожие дешевле",
+      "pricier": "Похожие дороже"
+    },
+    "district": {
+      "title": "Подобрать в этом районе",
+      "budgetLabel": "Бюджет",
+      "bands": {
+        "under70": "До €70 тыс.",
+        "70to120": "€70–120 тыс.",
+        "120to200": "€120–200 тыс.",
+        "over200": "От €200 тыс."
+      }
+    },
+    "selection": {
+      "title": "Пришлём подборку по вашим критериям",
+      "criteria": "Ваши критерии"
+    },
+    "trust": {
+      "phone": "Телефон",
+      "address": "Адрес",
+      "testimonialsTitle": "Отзывы клиентов",
+      "officePhotoAlt": "Наш офис",
+      "sectionLabel": "Контакты и отзывы"
+    }
   }
 }

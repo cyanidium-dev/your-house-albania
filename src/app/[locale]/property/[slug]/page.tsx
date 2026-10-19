@@ -45,6 +45,10 @@ import { resolveMessengers } from '@/lib/contacts/messengers';
 import { messengerContext, messengerPriceLabel } from '@/lib/contacts/messengerContext';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
+import { AskAboutListing } from '@/components/capture/AskAboutListing';
+import { PriceNeighbours } from '@/components/capture/PriceNeighbours';
+import { fetchPriceNeighbours } from '@/lib/sanity/queries/catalog';
+import { MIN_PLAUSIBLE_AREA_SQM } from '@/lib/catalog/listingPriceSummary';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 // `catalogPath` already returns a locale-prefixed path, so this uses next/link
 // rather than the i18n Link, which would prefix the locale a second time.
@@ -204,7 +208,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const comparableTypes = comparableTypeSlugs(
     (sanityProperty as { type?: { slug?: string } })?.type?.slug ?? null,
   );
-  const [similarCandidates, zoneMetrics, districtPriceRows] = await Promise.all([
+  // The listing's total, the yardstick of "similar for less / for more": a
+  // per-m² rate counts only with a plausible area (as in the catalogue sort).
+  const priceFacts = sanityProperty as { price?: number; priceUnit?: string; area?: number; status?: string; type?: { slug?: string } };
+  const priceTotal =
+    typeof priceFacts.price === 'number' && priceFacts.price > 0
+      ? priceFacts.priceUnit === 'per-sqm'
+        ? typeof priceFacts.area === 'number' && priceFacts.area >= MIN_PLAUSIBLE_AREA_SQM
+          ? priceFacts.price * priceFacts.area
+          : 0
+        : priceFacts.price
+      : 0;
+  const neighbourTypeSlug = priceFacts.type?.slug;
+  const [similarCandidates, zoneMetrics, districtPriceRows, priceNeighbours] = await Promise.all([
     fetchSimilarPropertyCandidates(
       (sanityProperty as { _id: string })._id,
       citySlug ?? null,
@@ -212,10 +228,25 @@ export default async function PropertyDetailsPage({ params }: Props) {
     ),
     districtId ? fetchLatestZoneMetricsByZoneId(districtId) : Promise.resolve(null),
     districtId && comparableTypes ? fetchDistrictPriceRows(districtId, comparableTypes) : Promise.resolve([]),
+    citySlug && neighbourTypeSlug && priceTotal > 0
+      ? fetchPriceNeighbours({
+          excludeId: (sanityProperty as { _id: string })._id,
+          city: citySlug,
+          type: neighbourTypeSlug,
+          deal: priceFacts.status || undefined,
+          priceTotal,
+        })
+      : Promise.resolve({ cheaper: [], pricier: [] }),
   ]);
-  const similarItems = await attachMarketPositionToCards(
-    similarCandidates.map((c) => mapCatalogPropertyToCard(c, locale))
-  );
+  // The carousel leaves out what the price rows already show.
+  const neighbourIds = new Set([...priceNeighbours.cheaper, ...priceNeighbours.pricier].map((c) => c._id));
+  const [similarItems, cheaperItems, pricierItems] = await Promise.all([
+    attachMarketPositionToCards(
+      similarCandidates.filter((c) => !neighbourIds.has(c._id)).map((c) => mapCatalogPropertyToCard(c, locale)),
+    ),
+    attachMarketPositionToCards(priceNeighbours.cheaper.map((c) => mapCatalogPropertyToCard(c, locale))),
+    attachMarketPositionToCards(priceNeighbours.pricier.map((c) => mapCatalogPropertyToCard(c, locale))),
+  ]);
 
   const sanityFields = mapSanityPropertyToDetailsFields(sanityProperty as never, locale);
 
@@ -584,6 +615,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           area={area}
                           rateEur={rawProperty.priceUnit === 'per-sqm' ? rawProperty.price ?? null : null}
                         />
+                        {!isSold ? (
+                          <AskAboutListing
+                            locale={locale}
+                            propertySlug={keySlug}
+                            propertyTitle={title || keySlug}
+                            subject={{ propertySlug: keySlug, ...propertyLeadAnalytics }}
+                          />
+                        ) : null}
                         <PropertyPriceHistorySection
                           locale={locale}
                           history={(sanityProperty as { priceHistory?: Array<{ date?: string; price?: number; priceUnit?: string | null }> }).priceHistory}
@@ -682,6 +721,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         </div>
                     </div>
                 </div>
+                <PriceNeighbours locale={locale} cheaper={cheaperItems} pricier={pricierItems} />
                 {similarItems.length > 0 && (
                   // Already inside the page container: a second one here set the
                   // block 20px in from everything above it. content-visibility:

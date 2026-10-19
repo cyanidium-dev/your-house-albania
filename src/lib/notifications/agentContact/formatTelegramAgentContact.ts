@@ -62,8 +62,12 @@ export function formatAgentContactTelegramMessage(
     // Callback request: the operator promised a quote within an hour, so the
     // phone number and the originating page lead the message.
     return [
-      '⏱ Quote request (call back within 1h)',
+      // A question asked on a listing page names the listing first.
+      data.propertySlug ? '❓ Question about a listing' : '⏱ Quote request (call back within 1h)',
       '',
+      ...(data.propertySlug
+        ? [`Property: ${emptyToDash(data.propertyTitle)}`, ...(data.propertyUrl ? [`Link: ${data.propertyUrl}`] : []), '']
+        : []),
       `Phone: ${data.phone}`,
       `Name: ${emptyToDash(data.customerName)}`,
       `Language: ${languageLabel(data.locale)}`,

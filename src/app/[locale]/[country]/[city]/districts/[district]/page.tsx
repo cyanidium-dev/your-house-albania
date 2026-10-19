@@ -5,6 +5,7 @@ import { asSections } from "@/components/landing/sectionRenderers/helpers";
 import { DistrictsBreadcrumb } from "@/components/shared/DistrictsBreadcrumb";
 import { DistrictPageBody } from "@/components/district/DistrictPageBody";
 import { DistrictExploreSection } from "@/components/district/DistrictExploreSection";
+import { DistrictFindBlock } from "@/components/capture/DistrictFindBlock";
 import { PlaceJsonLd } from "@/components/shared/PlaceJsonLd";
 import { getBaseUrl } from "@/lib/seo/baseUrl";
 import { cityInfoPath, districtInfoPath } from "@/lib/routes/catalog";
@@ -178,6 +179,11 @@ export default async function DistrictInfoPage({ params }: Props) {
     />
   );
 
+  // Budget chips and the quick form, right under the hero.
+  const findBlock = (
+    <DistrictFindBlock locale={locale} countrySlug={cmsCountry} citySlug={citySlug} districtSlug={districtSlug} />
+  );
+
   // Two-level rendering: dedicated district landing (builder) wins over the fallback template.
   const landing = await fetchDistrictLandingBySlugs(citySlug, districtSlug);
   if (landing) {
@@ -202,6 +208,7 @@ export default async function DistrictInfoPage({ params }: Props) {
             landing={landing as never}
             citySlug={citySlug}
             breadcrumb={breadcrumb}
+            afterHero={findBlock}
           />
         </>
       );
@@ -212,7 +219,7 @@ export default async function DistrictInfoPage({ params }: Props) {
           <div className="container mx-auto max-w-8xl px-5 2xl:px-0">{breadcrumb}</div>
         </section>
         {placeJsonLd}
-        <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} />
+        <LandingRenderer locale={locale} landing={landing as never} citySlug={citySlug} afterHero={findBlock} />
       </>
     );
   }
@@ -226,6 +233,7 @@ export default async function DistrictInfoPage({ params }: Props) {
         citySlug={citySlug}
         district={districtDoc}
       />
+      {findBlock}
       {explore}
     </>
   );

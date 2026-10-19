@@ -28,6 +28,7 @@ import { getTranslations } from 'next-intl/server'
 import { LISTINGS_ANCHOR_ID } from '@/lib/routes/currentCityListing'
 import { telegramBotUrl, telegramBotUsername } from '@/lib/contacts/messengerLinks'
 import { buildSearchStartPayload } from '@/lib/telegram/startPayload'
+import { buildSelectionCriteria } from '@/lib/catalog/selectionRequest'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -354,6 +355,49 @@ async function PropertiesListing({
     collapsedByDefault: false,
   }
 
+  // "We'll send a selection by your criteria", shown from page 2 (the client
+  // decides when; see showsSelectionBlock). The filters go along twice: as
+  // chips for the visitor and as plain lines for the operator.
+  const [tCapture, tQuickLead, tBot, tDeal] = await Promise.all([
+    getTranslations({ locale, namespace: 'Capture.selection' }),
+    getTranslations({ locale, namespace: 'QuickLead' }),
+    getTranslations({ locale, namespace: 'TelegramBot.search' }),
+    getTranslations({ locale, namespace: 'Shared.propertyDetail' }),
+  ])
+  const eurFormat = new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+  const dealLabelKey =
+    dealFilter === 'sale' ? 'dealTypeSale' : dealFilter === 'rent' ? 'dealTypeRent' : dealFilter === 'short-term' ? 'dealTypeShortTerm' : null
+  const labelOf = (options: Array<{ value: string; label: string }>, value: string) =>
+    options.find((o) => o.value.toLowerCase() === value.toLowerCase())?.label
+  const selectionCriteria = buildSelectionCriteria(
+    {
+      city: cityFilter ? { slug: cityFilter, label: labelOf(locationOptions, cityFilter) } : undefined,
+      district: districtFilter ? { slug: districtFilter, label: labelOf(districtOptions, districtFilter) } : undefined,
+      type: typeFilter ? { slug: typeFilter, label: labelOf(typeOptions, typeFilter) } : undefined,
+      deal: dealFilter ? { value: dealFilter, label: dealLabelKey ? tDeal(dealLabelKey) : undefined } : undefined,
+      minPrice: minPriceFilter || undefined,
+      maxPrice: maxPriceFilter || undefined,
+      beds: bedsFilter || undefined,
+      bedsExact: bedsExactFilter || undefined,
+    },
+    {
+      money: (n) => eurFormat.format(n),
+      priceRange: (from, to) => tQuickLead('budgetRange', { from, to }),
+      priceUpTo: (amount) => tQuickLead('budgetUpTo', { amount }),
+      priceOver: (amount) => tQuickLead('budgetOver', { amount }),
+      bedsFrom: (n) => tBot('bedsFrom', { n }),
+      bedsExact: (n) => tBot('bedsExact', { n }),
+    },
+  )
+  const selection = agentSlugFilter
+    ? undefined
+    : {
+        title: tCapture('title'),
+        criteriaLabel: tCapture('criteria'),
+        chips: selectionCriteria.chips,
+        message: selectionCriteria.message,
+      }
+
   const tDepth = heading && !('text' in heading) ? await getTranslations({ locale, namespace: 'Catalog.depth' }) : null
   const headingText = !heading
     ? ''
@@ -400,6 +444,7 @@ async function PropertiesListing({
             searchAlertHref={searchAlertHref}
             serverSearch={serverSearch}
             afterFilters={afterFilters}
+            selection={selection}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (

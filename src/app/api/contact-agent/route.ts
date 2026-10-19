@@ -35,7 +35,7 @@ type Body = {
   phone?: string
   email?: string
   message?: string
-  /** Property-page context (agent submissions). */
+  /** Property-page context (agent submissions, and quote questions about a listing). */
   propertySlug?: string
   propertyTitle?: string
   /** Quote submissions: same-site path the widget was on, and a short placement label. */
@@ -147,11 +147,27 @@ export async function POST(request: Request) {
     const rawPath = typeof body.sourcePath === 'string' ? body.sourcePath.trim() : ''
     // Only same-site paths — never echo an attacker-supplied absolute URL.
     const safePath = rawPath.startsWith('/') && !rawPath.startsWith('//') ? rawPath : `/${urlLocale}`
+    // "Ask about this listing" sends the listing's slug with its question: the
+    // lead becomes a property inquiry, and the listing decides whose it is,
+    // exactly as the contact modal's does.
+    let quoteProperty: { propertySlug: string; propertyTitle?: string; propertyUrl: string } | undefined
+    let quoteAgent = { agentSlug: '—', agentName: '—' }
+    if (isNonEmptyString(body.propertySlug)) {
+      const s = body.propertySlug.trim()
+      if (!SLUG_REGEX.test(s)) return jsonError(400, 'Invalid property')
+      listing = await lookupLeadProperty(s)
+      quoteAgent = resolveListingAgent({ clientAgentSlug: '—', clientAgentName: '—', listing })
+      const title = isNonEmptyString(body.propertyTitle) ? body.propertyTitle.trim().slice(0, MAX_TITLE) : listing?.title
+      quoteProperty = {
+        propertySlug: listing?.slug ?? s,
+        ...(title ? { propertyTitle: title } : {}),
+        propertyUrl: `${getSiteBaseUrl()}/${urlLocale}/property/${listing?.slug ?? s}`,
+      }
+    }
 
     normalized = {
       submissionKind: 'quote',
-      agentSlug: '—',
-      agentName: '—',
+      ...quoteAgent,
       locale,
       location: undefined,
       propertyType: undefined,
@@ -168,6 +184,7 @@ export async function POST(request: Request) {
       sourceUrl: `${getSiteBaseUrl()}${safePath}`,
       ...(quoteBudget ? { budgetLabel: quoteBudget } : {}),
       ...(quoteLandingSlug ? { landingSlug: quoteLandingSlug } : {}),
+      ...(quoteProperty ?? {}),
     }
   } else if (isGeneral) {
     normalized = {
@@ -267,7 +284,9 @@ export async function POST(request: Request) {
       ? normalized.propertySlug
         ? 'property_inquiry'
         : 'agent_contact'
-      : 'contact_form'
+      : normalized.submissionKind === 'quote' && normalized.propertySlug
+        ? 'property_inquiry'
+        : 'contact_form'
   const defaultPlacement: LeadPlacement =
     normalized.submissionKind === 'general'
       ? 'contact-page'

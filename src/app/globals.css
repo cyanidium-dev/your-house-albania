@@ -20,9 +20,11 @@
   --shadow-auth: 0 20px 25px -5px #0000001a;
   --shadow-dark-auth: rgba(255, 255, 255, 0.1) 0px 12px 28px 0px, rgba(255, 255, 255, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 
-  /* Typefaces: Bricolage Grotesque for headings, Inter for text. */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Typefaces: Bricolage Grotesque for headings, Inter for text. The
+     "Android Fallback" faces (below the theme) stand in on phones without
+     Arial — see docs/ux/cls-2026-10.md. */
+  --font-sans: var(--font-inter), "Inter Android Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), "Bricolage Android Fallback", var(--font-inter), "Inter Android Fallback", ui-sans-serif, system-ui, sans-serif;
 
   /* font size */
   --text-xm: 1.125rem;
@@ -81,6 +83,35 @@
       height: 0;
     }
   }
+}
+
+/* Metric-matched stand-ins on Roboto while the web fonts load. next/font's own
+   fallbacks ("Inter Fallback", "Bricolage Grotesque Fallback") are local Arial,
+   which Android does not have: there the text first painted in plain Roboto
+   and reflowed when Inter arrived — field CLS 0.41 against a lab CLS of ~0
+   (Windows and iOS have Arial). Same formula as next/font (capsize metrics,
+   next/dist/server/capsize-font-metrics.json): size-adjust = font xWidthAvg /
+   Roboto xWidthAvg, ascent/descent divided by it. Where Arial exists the Arial
+   face comes first and these are never used. */
+@font-face {
+  font-family: "Inter Android Fallback";
+  src: local("Roboto"), local("Roboto Regular"), local("Roboto-Regular");
+  size-adjust: 107.35%;
+  ascent-override: 90.24%;
+  descent-override: 22.47%;
+  line-gap-override: 0%;
+}
+/* Latin only, like Bricolage itself: Cyrillic in a heading falls through to
+   Inter (and its stand-in), as it does once Bricolage has loaded. */
+@font-face {
+  font-family: "Bricolage Android Fallback";
+  src: local("Roboto"), local("Roboto Regular"), local("Roboto-Regular");
+  size-adjust: 105.66%;
+  ascent-override: 88.02%;
+  descent-override: 25.55%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 html {

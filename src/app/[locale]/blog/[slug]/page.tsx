@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import Image from "next/image";
+import { ZoomableImage } from "@/components/shared/ZoomableImage";
 import Link from "@/components/shared/Link";
 import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import {getTranslations, setRequestLocale} from "next-intl/server";
@@ -220,6 +221,7 @@ export default async function Post({ params }: Props) {
   const t = await getTranslations("Shared");
   const tBlog = await getTranslations("Shared.blog");
   const tBlogCard = await getTranslations("Shared.blogCard");
+  const tLightbox = await getTranslations("Shared.lightbox");
   const primaryCategory = detail.categories[0];
 
   const introBlock = (
@@ -302,7 +304,12 @@ export default async function Post({ params }: Props) {
 
   const heroImage = detail.coverImageUrl && (
     <div className="flex-shrink-0 w-full lg:w-[45%] lg:min-w-[360px]">
-      <div className="overflow-hidden rounded-2xl lg:rounded-3xl">
+      <ZoomableImage
+        url={detail.coverImageUrl}
+        alt={detail.title || detail.coverImageAlt || ""}
+        label={tLightbox("viewImageFullscreen")}
+        className="overflow-hidden rounded-2xl lg:rounded-3xl"
+      >
         <Image
           src={detail.coverImageUrl}
           // The localised title first: the CMS cover alt is one plain string,
@@ -320,7 +327,7 @@ export default async function Post({ params }: Props) {
           priority
           className="h-full w-full object-cover object-center"
         />
-      </div>
+      </ZoomableImage>
     </div>
   );
 

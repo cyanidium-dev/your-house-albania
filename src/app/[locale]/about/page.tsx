@@ -15,6 +15,9 @@ import { buildAboutJsonLd } from "@/lib/seo/aboutJsonLd";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { SiteTrustSection } from "@/components/capture/SiteTrust";
+import { fetchSiteSettings } from "@/lib/sanity/client";
+import { mapSiteTrust } from "@/lib/sanity/trustFromSiteSettings";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -33,8 +36,10 @@ type Props = { params: Promise<{ locale: string }> };
  * icon discs and the contact band only.
  *
  * Static: the copy lives in `messages/*.json`, the people in
- * `src/lib/about/team.ts`. No CMS fetch of its own, no `headers()`/`cookies()`,
- * so the locale layout's `generateStaticParams` prerenders all seven URLs.
+ * `src/lib/about/team.ts`. No `headers()`/`cookies()`, so the locale layout's
+ * `generateStaticParams` prerenders all seven URLs. The one CMS read is the
+ * cached Site Settings: phone, address, office photo, reply time and reviews,
+ * each shown only once the owner fills it in (SiteTrustSection).
  */
 export const revalidate = 3600;
 
@@ -92,6 +97,7 @@ export default async function AboutPage({ params }: Props) {
   const tPhoto = await getTranslations("AlbaniaPhotos");
   const baseUrl = getSiteBaseUrl().replace(/\/$/, "");
   const hero = ALBANIA_PHOTOS.durres;
+  const trust = mapSiteTrust(await fetchSiteSettings(), locale);
 
   const jsonLd = buildAboutJsonLd({
     baseUrl,
@@ -305,6 +311,8 @@ export default async function AboutPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      <SiteTrustSection locale={locale} trust={trust} withContacts />
 
       {/* Contact: the one green surface on the page. */}
       <section className="pb-20 md:pb-28" aria-labelledby="about-contact" data-lead-placement="page">

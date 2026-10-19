@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
-import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
+import { leadContextForRequest, trackFormLead, type LeadSubject } from '@/lib/analytics/leadEvents'
 import type { LeadPlacement } from '@/lib/leads/types'
 import { brandButtonClass } from '@/components/shared/BrandButton'
 import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
@@ -31,6 +31,23 @@ type Props = {
   showMessengers?: boolean
   /** CMS landing slug, so the lead and the Telegram message name the landing. */
   landingSlug?: string
+  /** Placeholder of the free-text field; the dictionary's when empty. */
+  messagePlaceholder?: string
+  /** The free-text field must be filled; this is the error shown when it is not. */
+  messageRequiredError?: string
+  /**
+   * Sent with the visitor's text (or alone): context the operator needs and
+   * the visitor should not have to type, such as the catalogue filters.
+   */
+  contextMessage?: string
+  /**
+   * The listing a question is about. The server then records a property
+   * inquiry for that listing and routes it to the listing's agent.
+   */
+  propertySlug?: string
+  propertyTitle?: string
+  /** Listing dimensions for the analytics events. */
+  subject?: LeadSubject
 }
 
 const inputClass =
@@ -61,6 +78,12 @@ export function QuickLeadForm({
   withMessage = false,
   showMessengers = true,
   landingSlug,
+  messagePlaceholder,
+  messageRequiredError,
+  contextMessage,
+  propertySlug,
+  propertyTitle,
+  subject,
 }: Props) {
   const t = useTranslations('QuickLead')
 
@@ -79,6 +102,10 @@ export function QuickLeadForm({
     e.preventDefault()
     if (submitting) return
     setError(null)
+    if (withMessage && messageRequiredError && !message.trim()) {
+      setError(messageRequiredError)
+      return
+    }
     if (!isPlausiblePhone(phone)) {
       setError(t('errorInvalidPhone'))
       return
@@ -95,7 +122,9 @@ export function QuickLeadForm({
           phone: phone.trim(),
           name: name.trim() || undefined,
           budget: budget || undefined,
-          message: message.trim() || undefined,
+          message: [message.trim(), contextMessage?.trim()].filter(Boolean).join('\n\n') || undefined,
+          propertySlug: propertySlug || undefined,
+          propertyTitle: propertyTitle || undefined,
           landingSlug: landingSlug || undefined,
           sourceLabel,
           sourcePath: typeof window === 'undefined' ? undefined : window.location.pathname,
@@ -109,8 +138,9 @@ export function QuickLeadForm({
         return
       }
       trackFormLead({
-        leadType: 'contact_form',
+        leadType: propertySlug ? 'property_inquiry' : 'contact_form',
         placement,
+        ...(subject || propertySlug ? { subject: { propertySlug, ...subject } } : {}),
         legacy: { kind: 'quote', source: sourceLabel },
       })
       setSent(true)
@@ -137,6 +167,23 @@ export function QuickLeadForm({
     )
   }
 
+  // A question form leads with the question; elsewhere the text is optional
+  // and follows the phone.
+  const questionFirst = withMessage && Boolean(messageRequiredError)
+  const messageField = (
+    <textarea
+      name="quoteMessage"
+      value={message}
+      onChange={(e) => setMessage(e.target.value)}
+      rows={3}
+      maxLength={2000}
+      placeholder={messagePlaceholder?.trim() || t('messagePlaceholder')}
+      aria-label={messagePlaceholder?.trim() || t('messagePlaceholder')}
+      required={Boolean(messageRequiredError)}
+      className={`${inputClass} rounded-3xl resize-y min-h-24`}
+    />
+  )
+
   return (
     <form onSubmit={onSubmit} className={`flex flex-col gap-3 ${className ?? ''}`} noValidate>
       <input
@@ -151,6 +198,7 @@ export function QuickLeadForm({
       />
 
       <div className={stacked ? 'flex flex-col gap-3' : 'flex flex-col gap-3 sm:flex-row'}>
+        {questionFirst ? messageField : null}
         {withName ? (
           <input
             type="text"
@@ -191,18 +239,7 @@ export function QuickLeadForm({
             ))}
           </select>
         ) : null}
-        {withMessage ? (
-          <textarea
-            name="quoteMessage"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            rows={3}
-            maxLength={2000}
-            placeholder={t('messagePlaceholder')}
-            aria-label={t('messagePlaceholder')}
-            className={`${inputClass} rounded-3xl resize-y min-h-24`}
-          />
-        ) : null}
+        {withMessage && !questionFirst ? messageField : null}
         <button type="submit" disabled={submitting} className={buttonClass}>
           {submitting ? t('submitting') : submitLabel?.trim() || t('submit')}
         </button>

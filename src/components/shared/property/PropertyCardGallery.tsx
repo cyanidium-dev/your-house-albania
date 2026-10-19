@@ -265,7 +265,9 @@ export function PropertyCardGallery({
         {stats && (stats.views || stats.saves) ? (
           <span
             className={cn(
-              'pointer-events-none absolute z-30 inline-flex items-center gap-2 rounded-full bg-black/55 px-2 py-0.5 text-xs font-semibold leading-5 text-white backdrop-blur-sm',
+              // `!`: the overlay's `[&>*]:pointer-events-auto` would otherwise win and
+              // turn the badge into a dead spot over the card's link (Clarity, 18.10).
+              'pointer-events-none! absolute z-30 inline-flex items-center gap-2 rounded-full bg-black/55 px-2 py-0.5 text-xs font-semibold leading-5 text-white backdrop-blur-sm',
               view === 'large' ? 'bottom-3 left-5' : 'bottom-1.5 left-1.5',
             )}
             title={stats.label}
@@ -362,7 +364,9 @@ export function PropertyCardGallery({
           </button>
         )}
         {hasMultipleImages && view === 'large' && (
-          <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1 pointer-events-none">
+          // A full-width strip at the foot of the photo: without `!` it caught
+          // the taps meant for the card's link and did nothing (dead clicks).
+          <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1 pointer-events-none!">
             {imageList.map((_, i) => (
               <span
                 key={i}

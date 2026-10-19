@@ -7,6 +7,8 @@ import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import { CatalogSearchAlert } from "@/components/catalog/CatalogSearchAlert";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
+import { CatalogSelectionRequest } from "@/components/capture/CatalogSelectionRequest";
+import { showsSelectionBlock } from "@/lib/catalog/selectionRequest";
 import PropertyCard from "@/components/shared/property/PropertyCard";
 import { useCatalogView } from "@/contexts/CatalogViewContext";
 import { cn } from "@/lib/utils";
@@ -89,6 +91,12 @@ export type CatalogBodyClientProps = {
   serverSearch?: string;
   /** Bot deep link that subscribes to this search; `null` without a bot or a filter. */
   searchAlertHref?: string | null;
+  /**
+   * "We'll send a selection by your criteria": a quick lead form with the
+   * current filters, under the cards once page 2 is reached or loaded.
+   * Absent on an agent's page.
+   */
+  selection?: { title: string; criteriaLabel: string; chips: string[]; message: string };
 };
 
 type BannerSlot = "top" | { afterProperty: number };
@@ -196,6 +204,7 @@ export function CatalogBodyClient({
   loadMoreQuery,
   serverSearch = "",
   searchAlertHref = null,
+  selection,
 }: CatalogBodyClientProps) {
   const { viewMode, getCurrentView } = useCatalogView();
   const tMap = useTranslations("Shared.map");
@@ -820,6 +829,9 @@ export function CatalogBodyClient({
               <CatalogEmptyState locale={locale} searchAlertHref={searchAlertHref} />
             ) : (
               <>
+                {selection && showsSelectionBlock(currentPage, allItems.length, pageSize) ? (
+                  <CatalogSelectionRequest locale={locale} {...selection} />
+                ) : null}
                 {/* One control: a link to the next page for crawlers, an in-place
                     append for people. See PropertyPagination. */}
                 {totalPages > 1 && (
