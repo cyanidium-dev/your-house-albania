@@ -9,18 +9,8 @@ import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { getCurrencyMeta } from '@/lib/currency/registry'
 import { cn } from '@/lib/utils'
-import { persistCurrencyInUrl } from '../CurrencySwitcher'
-
-/** Each language in its own name: a visitor looks for the one they read. */
-const LOCALE_NAMES: Record<string, string> = {
-  en: 'English',
-  uk: 'Українська',
-  ru: 'Русский',
-  sq: 'Shqip',
-  it: 'Italiano',
-  pl: 'Polski',
-  de: 'Deutsch',
-}
+import { persistCurrencyInUrl } from '@/lib/currency/persistCurrencyInUrl'
+import { localeName } from '@/lib/i18n/localeNames'
 
 const fieldLabel = 'mb-1.5 block text-[12px] font-medium text-dark/55 dark:text-white/55'
 const selectShell =
@@ -73,7 +63,7 @@ export default function DrawerSettings() {
           <select className={selectEl} value={locale} onChange={(e) => onLocale(e.target.value)}>
             {routing.locales.map((loc) => (
               <option key={loc} value={loc} lang={loc}>
-                {LOCALE_NAMES[loc] ?? loc.toUpperCase()}
+                {localeName(loc)}
               </option>
             ))}
           </select>
