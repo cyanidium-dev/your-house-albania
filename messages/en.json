@@ -734,6 +734,17 @@
         "source": "Rates: Ministry of Justice Order 279/2012 (notary scale), the ASHK fee schedule, market practice for agency fees. Confirm the exact amounts with your notary.",
         "guideForeigners": "Can foreigners buy property in Albania?",
         "guideLegal": "Legal guide for buyers"
+      },
+      "answer": {
+        "line": "Median asking price in {placeIn}: {sqm} per m², across {count, plural, one {# flat} other {# flats}} listed on Domlivo ({date}). Flats from {from}.",
+        "meta": "Median asking price {sqm}/m² across {count} flats ({date})."
+      },
+      "recent": {
+        "title": "New in {placeIn} this fortnight",
+        "lead": "Listings added in the last {days} days, newest first. Every one is on the page with its photos and price.",
+        "leadNewest": "The most recently added listings. Every one is on the page with its photos and price.",
+        "all": "All new listings in {placeIn}",
+        "added": "added {date}"
       }
     },
     "saleHub": {

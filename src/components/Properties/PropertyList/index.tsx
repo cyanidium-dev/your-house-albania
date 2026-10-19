@@ -57,6 +57,7 @@ async function PropertiesListing({
   urlSearch,
   catalogSeo,
   heading,
+  headingLead,
   afterFilters,
 }: {
   locale: string
@@ -82,6 +83,8 @@ async function PropertiesListing({
    * The national hub has no place to name and passes its two lines ready-made.
    */
   heading?: { place: string; placeIn: string; filtered: boolean } | { text: (count: number) => string; aboutText: string }
+  /** One sentence of figures under the heading (lib/catalog/placeAnswer). */
+  headingLead?: string
   /** Rendered between the filter bar and the card grid: the place's facet chips. */
   afterFilters?: ReactNode
 }) {
@@ -433,12 +436,17 @@ async function PropertiesListing({
       )}
       <div className='container max-w-8xl mx-auto px-5 2xl:px-0 overflow-x-clip'>
         {headingText && totalItems > 0 ? (
+          <>
           <h2
             id={LISTINGS_ANCHOR_ID}
             className='scroll-mt-28 pt-6 text-dark dark:text-white text-xl md:text-2xl font-semibold'
           >
             {headingText}
           </h2>
+            {headingLead ? (
+              <p className='mt-2 max-w-3xl text-base text-dark/75 dark:text-white/75'>{headingLead}</p>
+            ) : null}
+          </>
         ) : null}
         <CatalogViewProvider initialView={viewMode}>
           <CatalogBodyClient

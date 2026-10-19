@@ -734,6 +734,17 @@
         "source": "Tariffe: Ordinanza 279/2012 del Ministero della Giustizia (tariffe notarili), tariffario ASHK, prassi di mercato per le provvigioni. Verifica gli importi esatti con il notaio.",
         "guideForeigners": "Gli stranieri possono comprare casa in Albania?",
         "guideLegal": "Guida legale per chi compra"
+      },
+      "answer": {
+        "line": "Prezzo richiesto mediano a {placeIn}: {sqm} al m², su {count, plural, one {# appartamento} other {# appartamenti}} in vendita su Domlivo ({date}). Appartamenti da {from}.",
+        "meta": "Prezzo richiesto mediano {sqm}/m² su {count} appartamenti ({date})."
+      },
+      "recent": {
+        "title": "Novità a {placeIn} nelle ultime due settimane",
+        "lead": "Annunci aggiunti negli ultimi {days} giorni, dal più recente. Ognuno ha la sua pagina con foto e prezzo.",
+        "leadNewest": "Gli annunci aggiunti più di recente. Ognuno ha la sua pagina con foto e prezzo.",
+        "all": "Tutti i nuovi annunci a {placeIn}",
+        "added": "aggiunto il {date}"
       }
     },
     "saleHub": {

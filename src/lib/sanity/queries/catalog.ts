@@ -1353,3 +1353,75 @@ export const fetchDistrictListingCounts = sanityCache(
   ['sanity-district-listing-counts'],
   { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
 );
+
+export type RecentListingRow = {
+  slug: string;
+  localizedSlug?: LocalizedSlug | null;
+  title?: unknown;
+  price?: number | null;
+  priceUnit?: 'total' | 'per-sqm' | null;
+  area?: number | null;
+  bedrooms?: number | null;
+  districtTitle?: unknown;
+  districtSlug?: string | null;
+  createdAt: string;
+};
+
+const RECENT_PROJECTION = `{
+    "slug": slug.current,
+    localizedSlug,
+    title,
+    price,
+    priceUnit,
+    area,
+    bedrooms,
+    "districtTitle": district->title,
+    "districtSlug": district->slug.current,
+    "createdAt": _createdAt
+  }`;
+
+/**
+ * The listings added to a place in the last `days` days, newest first — the
+ * "new this fortnight" block on city and district pages, which hands the
+ * crawler fresh stock from a page it already visits. When fewer than `min`
+ * are that new, the newest `limit` listings of the place instead, flagged
+ * with `recent: false` so the page says "newest" rather than "this week".
+ */
+export const fetchRecentListingsForPlace = sanityCache(
+  async (input: {
+    citySlug: string;
+    districtSlug?: string | null;
+    days?: number;
+    limit?: number;
+    min?: number;
+  }): Promise<{ rows: RecentListingRow[]; recent: boolean }> => {
+    const client = getClient();
+    if (!client) return { rows: [], recent: false };
+    const limit = input.limit ?? 10;
+    const days = input.days ?? 14;
+    const min = input.min ?? 3;
+    const since = new Date(Date.now() - days * 24 * 3600 * 1000).toISOString();
+    const place = input.districtSlug
+      ? `city->slug.current == $city && district->slug.current == $district`
+      : `city->slug.current == $city`;
+    const params = { city: input.citySlug, district: input.districtSlug ?? '', since, limit };
+    const base = `_type == "property" && ${publishedPropertyFilter()} && ${place}`;
+    try {
+      const fresh = await client.fetch<RecentListingRow[]>(
+        `*[${base} && dateTime(_createdAt) > dateTime($since)] | order(_createdAt desc)[0...$limit] ${RECENT_PROJECTION}`,
+        params,
+      );
+      if (Array.isArray(fresh) && fresh.length >= min) return { rows: fresh, recent: true };
+      const newest = await client.fetch<RecentListingRow[]>(
+        `*[${base}] | order(_createdAt desc)[0...$limit] ${RECENT_PROJECTION}`,
+        params,
+      );
+      return { rows: Array.isArray(newest) ? newest : [], recent: false };
+    } catch (err) {
+      console.warn('[Sanity] fetchRecentListingsForPlace failed:', err);
+      return { rows: [], recent: false };
+    }
+  },
+  ['sanity-recent-listings-for-place'],
+  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district] },
+);
