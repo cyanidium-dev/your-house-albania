@@ -405,19 +405,29 @@ export function mapSanityPropertyToCard(
     districtId: p.district?._id,
     yearBuilt: typeof p.yearBuilt === 'number' && Number.isFinite(p.yearBuilt) ? p.yearBuilt : undefined,
     plotArea: normalizePlotArea(p.plotArea) ?? undefined,
-    teaser: localizedDescription || undefined,
+    // The card cuts the teaser at 220 characters; the full description stayed
+    // in every card's client props (up to 700+ characters each).
+    teaser: localizedDescription ? localizedDescription.slice(0, 240) : undefined,
     coordinates: lat !== undefined || lng !== undefined ? { lat, lng } : undefined,
     locationPrecision:
       p.locationPrecision === 'exact' || p.locationPrecision === 'approximate' ? p.locationPrecision : undefined,
   };
 }
 
+/** Photos a card carries to the client; the page shows the rest. */
+const CARD_IMAGES_MAX = 6;
+
 /** Build images array for PropertyHomes from catalog item (gallery or single main). */
 function catalogImages(p: CatalogProperty): { src: string }[] {
   const urls = Array.isArray(p.galleryUrls) && p.galleryUrls.length > 0
     ? p.galleryUrls
     : (p.mainImageUrl ? [p.mainImageUrl] : []);
-  return urls.filter((url): url is string => typeof url === 'string' && url.length > 0).map((src) => ({ src }));
+  // Every card's whole gallery (10–20 URLs of 120 chars) travelled in the RSC
+  // payload of the home and catalogue pages; the card's carousel shows a few.
+  return urls
+    .filter((url): url is string => typeof url === 'string' && url.length > 0)
+    .slice(0, CARD_IMAGES_MAX)
+    .map((src) => ({ src }));
 }
 
 /** Maps catalog query result item to PropertyHomes for listing/card UI. */

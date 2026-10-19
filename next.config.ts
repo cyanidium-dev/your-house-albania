@@ -19,9 +19,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     // Next's default is eight candidates up to 3840px, and every `sizes` given
     // in vw units emits all of them — 1.5 KB of `srcset` per image, which on a
-    // listing page was 422 KB of the HTML document. Six candidates cover the
-    // real layouts; the widest is a full-bleed hero on a retina laptop.
-    deviceSizes: [640, 750, 828, 1080, 1920, 2560],
+    // listing page was 422 KB of the HTML document. The loader caps Sanity
+    // photos at the 1600 px canonical file, so anything above 1600 here only
+    // repeated that URL (three identical candidates per card, 2026-10-19).
+    deviceSizes: [640, 750, 828, 1080, 1600],
+    // The small end is for icons and avatars; the eight Next defaults below
+    // 256 px never match a card or hero `sizes`.
+    imageSizes: [256, 384],
   },
   // /api/og draws social cards on the site's own photographs, read from disk
   // (see src/app/api/og/route.tsx); the tracer cannot see a path built at

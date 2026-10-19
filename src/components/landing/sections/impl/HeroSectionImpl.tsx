@@ -134,6 +134,10 @@ const Hero: React.FC<{ locale: string; heroData?: HeroData; breadcrumb?: React.R
             // the document, not after the lazy-loading pass.
             priority
             fetchPriority="high"
+            // The LCP image: decode in the paint that first has it instead of
+            // a later frame (PSI 2026-10-19: 1.5 s of "element render delay"
+            // after the bytes had arrived).
+            decoding="sync"
           />
         </div>
         {/* Scrim. A photo can be any brightness, so the text needs its own
