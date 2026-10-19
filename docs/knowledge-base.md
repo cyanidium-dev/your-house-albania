@@ -8,7 +8,7 @@ One question per page, answered with a figure, a date and its sources. Built on
 
 - **H1** is the question as a buyer asks it ("Is there a 2% transfer tax when you buy property in Albania?").
 - **First paragraph** (`summary`) answers it in 2–3 sentences with a figure and a date.
-- **Sections** with prose and **tables**. Every table row can point at the `knowledgeFact` documents behind it; the row then gets a citable anchor (`#DATA-PURCHASE-0007`) and a "Sources" drop-down with value, confidence, period and link.
+- **Sections** with prose (`bodyText`, plain text: paragraphs split by a blank line, "- " bullets) and **tables**. Every table row can point at the `knowledgeFact` documents behind it; the row then gets a citable anchor (`#DATA-PURCHASE-0007`) and a "Sources" drop-down with value, confidence, period and link.
 - **FAQ** (3–5 pairs, `FaqAccordion`), **Sources** (every `knowledgeSource` the page lists plus any fact source it did not), **What is missing** (`gaps`).
 - **Byline**: "Data compiled by Fedir Alpatov" (`author`). "Checked by …" appears **only** when `reviewedBy` is set.
 
@@ -21,7 +21,7 @@ Structured data: `Article` (author = the founder Person node from `teamPersonNod
 | Schemas | domlivo-admin `schemaTypes/documents/knowledgeArticle.ts` (`topicGroup`, `author`, `reviewedBy`, `reviewedAt`, `faq`, `sources` added 2026-10-19), `knowledgeFact.ts`, `knowledgeSource.ts`, `objects/knowledgeTable.ts` (`localizedCells`) |
 | English master of the 30 pages | domlivo-admin `scripts/data/knowledge-base-2026-10-19/` (`articles*.ts`, `facts.ts`, `sources.ts`) |
 | Seed | domlivo-admin `scripts/seedKnowledgeBase20261019.ts` |
-| Translation | domlivo-admin `scripts/translateLocaleGaps.ts --types knowledgeArticle` (handles plain-paragraph section bodies too) |
+| Translation | domlivo-admin `scripts/translateLocaleGaps.ts --types knowledgeArticle` (`questionSet` is skipped: it stays English) |
 | Queries | `src/lib/sanity/queries/knowledge.ts` |
 | Pages | `src/app/[locale]/knowledge/page.tsx` (index by topic group), `[slug]/page.tsx` |
 | JSON-LD | `src/lib/seo/knowledgeArticleJsonLd.ts` |
@@ -43,6 +43,10 @@ Structured data: `Article` (author = the founder Person node from `teamPersonNod
 3. `--execute` writes a backup of whatever it replaces, then the documents. A page is published only when every fact it cites has a source and the page lists at least one source. Translations of unchanged English text survive a re-run.
 4. `npx tsx scripts/translateLocaleGaps.ts --execute --types knowledgeArticle --locales de` (one locale per run keeps each request small; repeat for `it pl uk ru sq`, then once without `--locales` to fill anything a failed batch left).
 5. Add the page to `src/lib/knowledge/links.ts` so at least two existing pages link to it (the test fails otherwise).
+
+## The 2,000-attribute cap
+
+The Sanity dataset accepts at most 2,000 unique attribute paths (path + datatype, across all documents). The first run of 2026-10-19 wrote section prose as Portable Text in seven languages, about eleven paths per language, and the Russian and Albanian translations were refused (`Total attribute/datatype count 2011 exceeds limit of 2000`). The prose now lives in `bodyText` (one path per language), the rich `body` was removed from the question pages and `questionSet` stays English. Keep new knowledge fields plain, and prefer an existing field shape over a new one: every new path counts against the whole site.
 
 ## Changing a fact
 

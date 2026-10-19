@@ -9,6 +9,7 @@ import { BreadcrumbJsonLd } from '@/components/shared/BreadcrumbJsonLd'
 import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { FaqAccordion } from '@/components/shared/faq/FaqAccordion'
 import KnowledgeTable, { assignRowAnchors } from '@/components/knowledge/KnowledgeTable'
+import KnowledgeProse from '@/components/knowledge/KnowledgeProse'
 import {
   fetchKnowledgeArticle,
   fetchKnowledgeSlugs,
@@ -227,7 +228,11 @@ export default async function KnowledgeArticlePage({ params }: Props) {
               {(article.sections ?? []).map((section) => (
                 <section key={section.sectionKey} id={section.sectionKey} className="mt-12 first:mt-0 scroll-mt-28">
                   <h2 className={H2}>{section.heading}</h2>
-                  {Array.isArray(section.body) && section.body.length > 0 ? (
+                  {section.bodyText ? (
+                    <div className="mt-4">
+                      <KnowledgeProse text={section.bodyText} />
+                    </div>
+                  ) : Array.isArray(section.body) && section.body.length > 0 ? (
                     <div className="mt-4">
                       <PortableText value={section.body as PortableTextBlock[]} components={knowledgeBodyComponents} />
                     </div>

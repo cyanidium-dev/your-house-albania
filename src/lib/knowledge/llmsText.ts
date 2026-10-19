@@ -89,7 +89,7 @@ export function knowledgeFullText(pages: KnowledgeArticle[], base: string): stri
       parts.push("", oneLine(page.summary ?? ""), "");
       for (const section of page.sections ?? []) {
         parts.push(`#### ${oneLine(section.heading)}`, "");
-        const body = blocksToText(section.body);
+        const body = section.bodyText?.trim() || blocksToText(section.body);
         if (body) parts.push(body, "");
         for (const table of section.tables ?? []) {
           if (table.title) parts.push(`${oneLine(table.title)}:`, "");

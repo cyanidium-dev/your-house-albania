@@ -131,6 +131,8 @@ export type KnowledgeSection = {
   sectionKey: string
   heading: string
   body?: unknown[]
+  /** Plain prose of the question pages: paragraphs split by a blank line, "- " bullets. */
+  bodyText?: string
   tables: KnowledgeTable[]
 }
 
@@ -342,6 +344,7 @@ const ARTICLE_PROJECTION = (locale: string) => `{
       sectionKey,
       "heading": coalesce(heading.${locale}, heading.en),
       "body": coalesce(body.${locale}, body.en),
+      "bodyText": coalesce(bodyText.${locale}, bodyText.en),
       tables[]{
         tableId,
         "title": coalesce(title.${locale}, title.en),
