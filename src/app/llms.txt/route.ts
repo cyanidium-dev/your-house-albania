@@ -45,6 +45,7 @@ ${snapshot ? `${keyFiguresMarkdown(snapshot, base)}\n\n` : ''}## Listings
 - [Tirana: prices and districts](${u('/en/albania/tirana/info')})
 - [Vlorë: prices and districts](${u('/en/albania/vlore/info')})
 - [Sarandë: prices and districts](${u('/en/albania/sarande/info')})
+- [Property prices in Albania by city](${u('/en/prices')}): one table of every city's median and 20th–80th percentile asking price per m², new builds against completed stock, FAQ
 - [Price index methodology](${u('/en/methodology')}): what an asking price is, the sample, filters, the 30-flat threshold, how to cite, licence
 - [Price index data (JSON)](${u('/data/prices/index.json')}) and one CSV per city at ${u('/data/prices/<city>.csv')}
 - [Full text for language models](${u('/llms-full.txt')}): the methodology and every city's district table
