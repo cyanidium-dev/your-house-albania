@@ -11,3 +11,7 @@ documented in `docs/ux/DESIGN-SYSTEM.md`.
 - Vertical rhythm: `SECTION_Y`. Notes and sources belong inside their section.
 - Card grids: `balancedGridClass(n)`; every card has an image slot (`NoPhotoPlate` when there is no photo).
 - FAQ lists: `FaqAccordion` only.
+
+## Hard-coded project specifics (read before adding any)
+
+Anything wired into the code for Domlivo, Albania or one partner (brand, domain, contacts, analytics ids, city/district/page lists, partner landings, texts with geography) gets a row in `docs/HANDOVER.md` in the same PR. That file is the map for selling or copying Domlivo as code; the refactor into a single site config is deferred, the map is not.
