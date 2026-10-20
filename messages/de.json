@@ -238,7 +238,14 @@
       "plotArea": "Grundstück {value} m²",
       "plotAreaUnknown": "Grundstücksfläche: nicht angegeben",
       "seaDistance": "{m} m zum Meer",
-      "beachfront": "Erste Reihe am Meer"
+      "beachfront": "Erste Reihe am Meer",
+      "quickAnswer": {
+        "intro": "{layout}, {area} m², {place}: {price} ({rate}/m²).",
+        "introNoLayout": "{area} m², {place}: {price} ({rate}/m²).",
+        "median": " {pct} % {cmp, select, below {unter} other {über}} dem Viertel-Median von {median}/m² aus {count, plural, one {# Angebot} other {# Angeboten}}.",
+        "medianSame": " Auf Höhe des Viertel-Medians ({median}/m², {count, plural, one {# Angebot} other {# Angebote}}).",
+        "sea": " {approx, select, yes {≈ } other {}}{m} m zum Meer."
+      }
     },
     "propertyCard": {
       "bedrooms": "Schlafzimmer",

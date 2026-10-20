@@ -25,6 +25,8 @@ import { PropertyOwnershipCostsSection } from '@/components/shared/property/Prop
 import { PropertyPriceHistorySection } from '@/components/shared/property/PropertyPriceHistorySection';
 import { GuideDownloadCard } from '@/components/guides/GuideDownloadCard';
 import { comparableTypeSlugs, computeOwnershipCosts, rankInDistrict } from '@/lib/property/ownershipCosts';
+import { buildQuickAnswer } from '@/lib/property/quickAnswer';
+import { formatMoney } from '@/lib/currency/format';
 import { utilityCityFor } from '@/lib/calculators/utilities';
 import TrackPageView from "@/components/analytics/TrackPageView";
 import MobileStickyBar from "@/components/property/MobileStickyBar";
@@ -347,6 +349,32 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const tPropertyDetail = await getTranslations('Shared.propertyDetail');
   const tContactBar = await getTranslations('ContactBar');
   const tQuickContact = await getTranslations('QuickContact');
+  // One paragraph of figures above the partner's description: layout, area,
+  // place, price, €/m² against the district median, metres to the sea
+  // (lib/property/quickAnswer, SEO hypothesis 7). Null without a price, an
+  // area or a district median (fewer than 8 comparable listings).
+  const quickAnswer = buildQuickAnswer(
+    {
+      price: rawProperty.price,
+      priceUnit: rawProperty.priceUnit,
+      area,
+      beds,
+      rooms,
+      seaDistanceMeters: galleryFacts.seaDistanceMeters ?? null,
+      seaApproximate: locationIsApproximate,
+      place: location || null,
+      districtRank,
+    },
+    {
+      intro: (a) => tPropertyDetail('quickAnswer.intro', a),
+      introNoLayout: (a) => tPropertyDetail('quickAnswer.introNoLayout', a),
+      median: (a) => tPropertyDetail('quickAnswer.median', a),
+      medianSame: (a) => tPropertyDetail('quickAnswer.medianSame', a),
+      sea: (a) => tPropertyDetail('quickAnswer.sea', a),
+      bedrooms: (a) => t('bedroomsCount', a),
+    },
+    (n) => formatMoney(n, 'EUR', locale),
+  );
   // A house is bought with its land, so the tile is always there on a house —
   // saying "not specified" beats leaving the buyer to wonder whether we forgot.
   const plotFact = showsPlotArea(propertyTypeSlug)
@@ -591,6 +619,13 @@ export default async function PropertyDetailsPage({ params }: Props) {
                           closeLabel={tPropertyDetail('close')}
                         />
                         )}
+                        {quickAnswer ? (
+                          // The figures first, the partner's prose second
+                          // (lib/property/quickAnswer, SEO hypothesis 7).
+                          <p className='mb-5 text-dark dark:text-white text-[17px] font-medium leading-relaxed'>
+                            {quickAnswer}
+                          </p>
+                        ) : null}
                         {sanityFields.description ? (
                           <p className='text-dark/85 dark:text-white/85 text-[17px] leading-relaxed whitespace-pre-line'>
                             {sanityFields.description}

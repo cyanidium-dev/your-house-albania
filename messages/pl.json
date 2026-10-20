@@ -227,7 +227,14 @@
       "plotArea": "Działka {value} m²",
       "plotAreaUnknown": "Powierzchnia działki: nie podano",
       "seaDistance": "{m} m do morza",
-      "beachfront": "Pierwsza linia od morza"
+      "beachfront": "Pierwsza linia od morza",
+      "quickAnswer": {
+        "intro": "{layout}, {area} m², {place}: {price} ({rate}/m²).",
+        "introNoLayout": "{area} m², {place}: {price} ({rate}/m²).",
+        "median": " O {pct}% {cmp, select, below {poniżej} other {powyżej}} mediany dzielnicy {median}/m² z {count, plural, one {# oferty} few {# ofert} many {# ofert} other {# ofert}}.",
+        "medianSame": " Na poziomie mediany dzielnicy ({median}/m², {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}).",
+        "sea": " {approx, select, yes {≈ } other {}}{m} m do morza."
+      }
     },
     "propertyCard": {
       "bedrooms": "Sypialnie",
