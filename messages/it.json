@@ -238,7 +238,14 @@
       "plotArea": "Terreno {value} m²",
       "plotAreaUnknown": "Superficie del terreno: non specificata",
       "seaDistance": "{m} m dal mare",
-      "beachfront": "Prima linea sul mare"
+      "beachfront": "Prima linea sul mare",
+      "quickAnswer": {
+        "intro": "{layout}, {area} m², {place}: {price} ({rate}/m²).",
+        "introNoLayout": "{area} m², {place}: {price} ({rate}/m²).",
+        "median": " {pct}% {cmp, select, below {sotto} other {sopra}} la mediana di zona di {median}/m² su {count, plural, one {# annuncio} other {# annunci}}.",
+        "medianSame": " In linea con la mediana di zona ({median}/m², {count, plural, one {# annuncio} other {# annunci}}).",
+        "sea": " {approx, select, yes {≈ } other {}}{m} m dal mare."
+      }
     },
     "propertyCard": {
       "bedrooms": "Camere",

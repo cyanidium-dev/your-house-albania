@@ -238,7 +238,14 @@
       "plotArea": "Truall {value} m²",
       "plotAreaUnknown": "Sipërfaqja e truallit: nuk është specifikuar",
       "seaDistance": "{m} m nga deti",
-      "beachfront": "Vija e parë nga deti"
+      "beachfront": "Vija e parë nga deti",
+      "quickAnswer": {
+        "intro": "{layout}, {area} m², {place}: {price} ({rate}/m²).",
+        "introNoLayout": "{area} m², {place}: {price} ({rate}/m²).",
+        "median": " {pct}% {cmp, select, below {nën} other {mbi}} medianën e zonës prej {median}/m² mbi {count, plural, one {# njoftim} other {# njoftime}}.",
+        "medianSame": " Në nivelin e medianës së zonës ({median}/m², {count, plural, one {# njoftim} other {# njoftime}}).",
+        "sea": " {approx, select, yes {≈ } other {}}{m} m nga deti."
+      }
     },
     "propertyCard": {
       "bedrooms": "Dhoma gjumi",

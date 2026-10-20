@@ -238,7 +238,14 @@
       "plotArea": "Ділянка {value} м²",
       "plotAreaUnknown": "Площа ділянки: не вказано",
       "seaDistance": "{m} м до моря",
-      "beachfront": "Перша лінія від моря"
+      "beachfront": "Перша лінія від моря",
+      "quickAnswer": {
+        "intro": "{layout}, {area} м², {place}: {price} ({rate}/м²).",
+        "introNoLayout": "{area} м², {place}: {price} ({rate}/м²).",
+        "median": " На {pct}% {cmp, select, below {нижче} other {вище}} медіани району {median}/м² за {count, plural, one {# об'єктом} few {# об'єктами} many {# об'єктами} other {# об'єктами}}.",
+        "medianSame": " На рівні медіани району ({median}/м², {count, plural, one {# об'єкт} few {# об'єкти} many {# об'єктів} other {# об'єкти}}).",
+        "sea": " До моря {approx, select, yes {≈ } other {}}{m} м."
+      }
     },
     "propertyCard": {
       "bedrooms": "Спальні",

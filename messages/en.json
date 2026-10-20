@@ -238,7 +238,14 @@
       "plotArea": "Plot {value} m²",
       "plotAreaUnknown": "Plot area: not specified",
       "seaDistance": "{m} m to the sea",
-      "beachfront": "First line to the sea"
+      "beachfront": "First line to the sea",
+      "quickAnswer": {
+        "intro": "{layout}, {area} m², {place}: {price} ({rate}/m²).",
+        "introNoLayout": "{area} m², {place}: {price} ({rate}/m²).",
+        "median": " {pct}% {cmp, select, below {below} other {above}} the district median of {median}/m² across {count, plural, one {# listing} other {# listings}}.",
+        "medianSame": " At the district median ({median}/m², {count, plural, one {# listing} other {# listings}}).",
+        "sea": " {approx, select, yes {≈ } other {}}{m} m to the sea."
+      }
     },
     "propertyCard": {
       "bedrooms": "Bedrooms",
