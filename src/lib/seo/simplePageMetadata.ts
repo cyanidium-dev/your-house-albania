@@ -16,6 +16,8 @@ export type SimplePageMetadataInput = {
   /** Photograph for the drawn card; falls back to the default coast image. */
   photo?: LandingOgPhoto;
   robots?: Metadata["robots"];
+  /** The locales the page exists in (hreflang); every locale when omitted. */
+  locales?: readonly string[];
 };
 
 /**
@@ -35,7 +37,7 @@ export type SimplePageMetadataInput = {
  * picture.
  */
 export function buildSimplePageMetadata(input: SimplePageMetadataInput): Metadata {
-  const { locale, title, description, pathAfterLocale, photo, robots } = input;
+  const { locale, title, description, pathAfterLocale, photo, robots, locales } = input;
   const path = pathAfterLocale.replace(/^\/+/, "");
   const base = getSiteBaseUrl().replace(/\/$/, "");
   const canonical = `${base}/${locale}${path ? `/${path}` : ""}`;
@@ -61,7 +63,7 @@ export function buildSimplePageMetadata(input: SimplePageMetadataInput): Metadat
     };
   }
 
-  const hreflang = buildHreflangAlternates(path ? `/${path}` : "");
+  const hreflang = buildHreflangAlternates(path ? `/${path}` : "", locales);
 
   return {
     title: { absolute: withBrand(title) },

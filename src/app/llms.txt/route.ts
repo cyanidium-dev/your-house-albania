@@ -68,6 +68,7 @@ One page per place where the partner agency Cactus Real Estate lists enough flat
 - [Durrës or Vlorë](${u('/en/guides/durres-vs-vlore')}), [Tirana or Durrës](${u('/en/guides/tirana-vs-durres')}), [Vlorë or Sarandë](${u('/en/guides/vlora-vs-saranda')}), [Sarandë or Ksamil](${u('/en/guides/saranda-vs-ksamil')}), [Golem or Plazh](${u('/en/guides/golem-vs-plazh')}): city and district comparisons
 - [Albania or Montenegro](${u('/en/guides/albania-vs-montenegro')}), [Albania or Croatia](${u('/en/guides/albania-vs-croatia')}), [Albania or Greece](${u('/en/guides/albania-vs-greece')}): country comparisons for buyers
 - [Blog](${u('/en/blog')}): legal steps, documents, taxes, rental income, district choice, market outlook
+- [Immobilien in Albanien kaufen](${u('/de/albanien-immobilien')}): the German market hub, in German only: prices by city from the index, flats by the sea, the five German guides, FAQ on who may buy, costs, process, areas, prices and financing
 - [Knowledge base](${u('/en/knowledge')}): one question per page, answered with a figure, a date and its sources (laws by number and article, ASHK and notary tariffs, tax treaties, the price index), plus what is still unverified
 
 ## About

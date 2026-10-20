@@ -34,7 +34,21 @@ describe("static code pages in sitemap-static.xml", () => {
     expect(xml).toContain(`<loc>${BASE}/de/about</loc>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="pl" href="${BASE}/pl/about"/>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE}/en/about"/>`);
-    expect(xml.match(/<url>/g)).toHaveLength(routing.locales.length * STATIC_CODE_PAGES.length);
+    const expectedUrls = STATIC_CODE_PAGES.reduce((n, p) => n + (p.locales?.length ?? routing.locales.length), 0);
+    expect(xml.match(/<url>/g)).toHaveLength(expectedUrls);
+  });
+
+  // The German market hub (SEO hypothesis 3): one locale, so one URL, one alternate, x-default on itself.
+  it("emits a single-locale page once, with that locale as its only alternate and x-default", () => {
+    const entries = buildStaticCodePageEntries(BASE, routing.locales, [
+      { path: "albanien-immobilien", lastModified: "2026-10-20", locales: ["de"] },
+    ]);
+    expect(entries.map((e) => e.loc)).toEqual([`${BASE}/de/albanien-immobilien`]);
+    expect(entries[0].alternates).toEqual({
+      de: `${BASE}/de/albanien-immobilien`,
+      "x-default": `${BASE}/de/albanien-immobilien`,
+    });
+    expect(STATIC_CODE_PAGES.find((p) => p.path === "albanien-immobilien")?.locales).toEqual(["de"]);
   });
 
   it("leaves a sitemap without alternates exactly as it was", () => {

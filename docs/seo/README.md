@@ -48,6 +48,7 @@ registry.ts  SEO_PAGE_FAMILIES: URL shape, canonical path, copy source, sections
 | Titles, descriptions, H1 | `src/lib/seo/listingSeoCopy.ts` + `messages/*.json` `Seo.listing.*`; CMS `catalogSeoPage` overrides per place |
 | URL building | `src/lib/routes/listingRoutes.ts` (`buildListingPath`) |
 | Editorial pages (city `/info`, districts, guides, blog) | Sanity `landingPage` / `blogPost` with CMS `seo.noIndex`; outside this registry (see [ADR 001](decisions/001-seo-page-registry.md) § Scope) |
+| The German market hub (`/de/albanien-immobilien`, German only) | `src/lib/germanHub/config.ts` (lead cities, guide slugs), figures from `facts.ts` over the Price Index and the sea listings; sitemap as a single-locale `STATIC_CODE_PAGES` entry; outside the listing families (SEO hypothesis 3, 2026-10-19) |
 | Partner selection landings (`/partners/cactus/{slug}`) | `src/lib/partnerLandings/config.ts` (which pages exist, min 5 flats or `noindex`), figures from `facts.ts`; sitemap via `src/lib/seo/partnerLandingPages.ts`; outside the listing families |
 
 ## Page families
