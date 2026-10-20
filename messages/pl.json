@@ -144,7 +144,7 @@
       "q1": "1. Czy mogę spersonalizować swój dom Domlivo?",
       "q2": "2. Gdzie mogę znaleźć domy Domlivo?",
       "q3": "3. Jakie są kroki, aby kupić nieruchomość Domlivo?",
-      "answer": "Odkryj szeroki wybór nieruchomości premium — od luksusowych apartamentów po przestronne wille, dopasowane do Twoich potrzeb."
+      "answer": "Odkryj szeroki wybór nieruchomości premium - od luksusowych apartamentów po przestronne wille, dopasowane do Twoich potrzeb."
     },
     "blog": {
       "badge": "Blog",
@@ -192,7 +192,7 @@
       "rented": "Wynajęte",
       "soldLeadTitle": "Ta nieruchomość została sprzedana. Znajdziemy podobną",
       "unavailableLeadTitle": "Ta oferta nie jest już dostępna. Znajdziemy podobną",
-      "soldLeadBody": "Zostaw numer i napisz, czego szukasz — wyślemy podobne oferty z aktualnymi cenami.",
+      "soldLeadBody": "Zostaw numer i napisz, czego szukasz - wyślemy podobne oferty z aktualnymi cenami.",
       "soldFindSimilar": "Znajdź podobną",
       "propertyDetails": "Szczegóły nieruchomości",
       "checkAllAmenities": "Zobacz wszystkie udogodnienia",
@@ -223,7 +223,7 @@
       "goToImage": "Przejdź do zdjęcia {n}",
       "hideThumbnails": "Ukryj miniatury",
       "showThumbnails": "Pokaż miniatury",
-      "approximateLocation": "Lokalizacja przybliżona — zaznaczony obszar wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie konkretny budynek.",
+      "approximateLocation": "Lokalizacja przybliżona - zaznaczony obszar wskazuje dzielnicę lub pobliski punkt orientacyjny, a nie konkretny budynek.",
       "plotArea": "Działka {value} m²",
       "plotAreaUnknown": "Powierzchnia działki: nie podano",
       "seaDistance": "{m} m do morza",
@@ -409,11 +409,11 @@
     },
     "priceAnswer": {
       "title": "{city}: realne ceny mieszkań, {month}",
-      "intro": "Na podstawie {count} mieszkań i kawalerek wystawionych na sprzedaż na Domlivo na dzień {date}: przedział to 20.–80. percentyl ceny ofertowej za metr kwadratowy, obok mediana.",
+      "intro": "Na podstawie {count} mieszkań i kawalerek wystawionych na sprzedaż na Domlivo na dzień {date}: przedział to 20.-80. percentyl ceny ofertowej za metr kwadratowy, obok mediana.",
       "wholeCity": "Całe miasto {city}",
       "completed": "Mieszkania gotowe (rynek wtórny i oddane nowe budynki)",
       "newBuild": "Nowe budownictwo w budowie lub w planie",
-      "range": "{from}–{to} €/m²",
+      "range": "{from}-{to} €/m²",
       "median": "mediana {value} €",
       "flats": "{count, plural, one {# mieszkanie} few {# mieszkania} other {# mieszkań}}",
       "note": "Ceny ofertowe z aktywnych ogłoszeń, nie ceny transakcyjne; przeliczane co godzinę. Pełna tabela według dzielnic znajduje się niżej na stronie."
@@ -439,10 +439,10 @@
       "lead": "Mediana ceny ofertowej za metr kwadratowy mieszkań i kawalerek wystawionych na sprzedaż na Domlivo, według miast i dzielnic Albanii, przeliczana co godzinę z aktywnych ogłoszeń. Do swobodnego wykorzystania na licencji CC BY 4.0.",
       "figuresTitle": "Aktualne dane",
       "figuresLead": "Stan na {date}. Gdy próba miasta liczy mniej niż {min} mieszkań, zamiast głównej liczby podajemy jej wielkość.",
-      "figuresCaption": "Domlivo Price Index według miast, {date}: mediana i 20.–80. percentyl ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo",
+      "figuresCaption": "Domlivo Price Index według miast, {date}: mediana i 20.-80. percentyl ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo",
       "colCity": "Miasto",
       "colMedian": "Mediana, €/m²",
-      "colRange": "20.–80. percentyl, €/m²",
+      "colRange": "20.-80. percentyl, €/m²",
       "colCount": "Mieszkań w próbie",
       "lowSampleCell": "za mało danych",
       "methodTitle": "Metodologia",
@@ -455,7 +455,7 @@
       "thresholdTitle": "Próg {min} mieszkań",
       "thresholdBody": "Mediana z mniej niż {min} mieszkań nigdy nie jest pokazywana jako główna liczba. Strony piszą „za mało danych” z liczbą mieszkań, tabele oznaczają ją gwiazdką, a pliki polem low_sample.",
       "medianTitle": "Mediana i przedział",
-      "medianBody": "Mediana to środkowa wartość cen za m² (przy parzystej liczbie wartości średnia dwóch środkowych), zaokrąglona do euro. Przedział to 20.–80. percentyl z interpolacją liniową, więc jedna błędnie wpisana cena go nie przesuwa.",
+      "medianBody": "Mediana to środkowa wartość cen za m² (przy parzystej liczbie wartości średnia dwóch środkowych), zaokrąglona do euro. Przedział to 20.-80. percentyl z interpolacją liniową, więc jedna błędnie wpisana cena go nie przesuwa.",
       "frequencyTitle": "Jak często aktualizujemy",
       "frequencyBody": "Przeliczamy z aktywnych ogłoszeń najwyżej raz na godzinę, a każda liczba ma datę obliczenia. Miesięczne wydanie ukazuje się na blogu tylko wtedy, gdy dane zmieniły się od poprzedniego.",
       "researchTitle": "Inne dane na stronie",
@@ -474,17 +474,17 @@
     },
     "prices": {
       "metaTitle": "Ceny nieruchomości w Albanii według miast 2026: mediana €/m² (Domlivo Price Index)",
-      "metaDescription": "Ceny ofertowe mieszkań w Albanii według miast: mediana i 20.–80. percentyl €/m² dla Durrës, Tirany, Wlory, Sarandy i innych, z aktywnych ogłoszeń, aktualizacja co godzinę. Otwarte dane, CC BY 4.0.",
+      "metaDescription": "Ceny ofertowe mieszkań w Albanii według miast: mediana i 20.-80. percentyl €/m² dla Durrës, Tirany, Wlory, Sarandy i innych, z aktywnych ogłoszeń, aktualizacja co godzinę. Otwarte dane, CC BY 4.0.",
       "breadcrumb": "Ceny według miast",
       "h1": "Ceny nieruchomości w Albanii według miast",
       "lead": "Mediana ceny ofertowej za metr kwadratowy mieszkań i kawalerek na sprzedaż na Domlivo, miasto po mieście, obliczona {date} na podstawie {listings} ogłoszeń. Miasto, które ma w próbie mniej niż {min} mieszkań, pokazuje wielkość próby zamiast liczby.",
       "leadNoData": "Liczby są przeliczane. Spróbuj ponownie za kilka minut.",
       "tableTitle": "Mediana ceny ofertowej za m², według miast",
       "tableLead": "Miasta według liczby ogłoszeń. Każde miasto otwiera swoje dzielnice i źródła.",
-      "tableCaption": "Ceny nieruchomości w Albanii według miast, {date}: mediana i 20.–80. percentyl ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo oraz liczba mieszkań w próbie",
+      "tableCaption": "Ceny nieruchomości w Albanii według miast, {date}: mediana i 20.-80. percentyl ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo oraz liczba mieszkań w próbie",
       "colCity": "Miasto",
       "colMedian": "Mediana, €/m²",
-      "colRange": "20.–80. percentyl, €/m²",
+      "colRange": "20.-80. percentyl, €/m²",
       "colCount": "Mieszkań w próbie",
       "lowSampleCell": "za mało danych",
       "stageTitle": "Nowe budownictwo a gotowe mieszkania",
@@ -517,7 +517,7 @@
     "totalInterest": "Suma odsetek",
     "ltvLabel": "LTV",
     "ltvOk": "W granicach limitu LTV",
-    "ltvExceeded": "Przekracza limit LTV wynoszący {limit}% — banki mogą wymagać wyższego wkładu własnego",
+    "ltvExceeded": "Przekracza limit LTV wynoszący {limit}% - banki mogą wymagać wyższego wkładu własnego",
     "presetLabel": "Domyślne wartości strefy",
     "manualMode": "Wprowadzanie ręczne",
     "rentalType": "Rodzaj najmu",
@@ -594,7 +594,7 @@
     "districtMedian": "Mediana podobnych nieruchomości w {district} na Domlivo: <amount></amount>/m², {count} ogłoszeń.",
     "districtMedianNoName": "Mediana podobnych nieruchomości w tej dzielnicy na Domlivo: <amount></amount>/m², {count} ogłoszeń.",
     "purchaseTitle": "Jednorazowe koszty zakupu",
-    "notary": "Notariusz (0,23–0,35% ceny)",
+    "notary": "Notariusz (0,23-0,35% ceny)",
     "registration": "Rejestracja własności (ASHK)",
     "agency": "Prowizja agencji dla kupującego (zwykle 1%)",
     "purchaseTotal": "Ponad cenę ({pct}%)",
@@ -621,7 +621,7 @@
       "previousPage": "Poprzednia strona",
       "nextPage": "Następna strona",
       "showMore": "Pokaż więcej ofert",
-      "shownRange": "{from}–{to} z {total}"
+      "shownRange": "{from}-{to} z {total}"
     },
     "heroIntroFallback": "Przeglądaj naszą ofertę nieruchomości.",
     "agentTitle": "Nieruchomości agenta {name}",
@@ -709,8 +709,8 @@
       "medianPerSqm": "mediana {price} €/m² za mieszkania"
     },
     "depth": {
-      "listingsHeading": "{place}: mieszkania i nieruchomości na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-      "listingsHeadingFiltered": "{place}: pasujące oferty — {count}",
+      "listingsHeading": "{place}: mieszkania i nieruchomości na sprzedaż - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+      "listingsHeadingFiltered": "{place}: pasujące oferty - {count}",
       "aboutTitle": "{place}: o zakupie nieruchomości",
       "prices": {
         "title": "{place}: ceny nieruchomości",
@@ -734,7 +734,7 @@
       "costs": {
         "title": "Zakup przez cudzoziemca: ile to kosztuje",
         "lead": "Cudzoziemcy kupują mieszkania, domy i lokale użytkowe w Albanii na takich samych zasadach prawnych jak obywatele; ograniczenie dotyczy tylko gruntów rolnych. Własność przechodzi wyłącznie na podstawie aktu notarialnego. Oprócz ceny kupujący płaci:",
-        "notary": "Notariusz: {min}–{max}% ceny według oficjalnej taryfy",
+        "notary": "Notariusz: {min}-{max}% ceny według oficjalnej taryfy",
         "registration": "Wpis własności do katastru (ASHK): {lek} leków, około {eur} €",
         "agency": "Prowizja agencji po stronie kupującego: zwykle {pct}%",
         "example": "Dla mieszkania w tutejszej cenie medianowej, <price></price>, to około <total></total> ({pct}% ceny).",
@@ -786,7 +786,7 @@
     "badge": "Nowe inwestycje",
     "heading": "Nowe inwestycje i nieruchomości inwestycyjne w Albanii",
     "intro": "Nieruchomość kupiona przed odbiorem kosztuje mniej i niesie ryzyka, których nie ma gotowe mieszkanie: termin może się przesunąć, a akt własności bywa jeszcze w toku. Każde ogłoszenie tutaj podaje, na jakim etapie jest budynek i kiedy obiecano klucze.",
-    "empty": "W tej chwili nie ma budynków w budowie. Wszystko na stronie jest ukończone i odebrane — przejrzyj pełny katalog.",
+    "empty": "W tej chwili nie ma budynków w budowie. Wszystko na stronie jest ukończone i odebrane - przejrzyj pełny katalog.",
     "emptyCta": "Wszystkie nieruchomości",
     "breadcrumbHome": "Strona główna"
   },
@@ -794,7 +794,7 @@
     "metaTitle": "Kontakt",
     "metaDescription": "Wyślij zapytanie, a nasz zespół skontaktuje się z Tobą z ofertami dopasowanymi do Twoich potrzeb.",
     "heroH1": "Nie znalazłeś odpowiedniego domu?",
-    "heroH2": "Zostaw zapytanie — przygotujemy dopasowaną ofertę!",
+    "heroH2": "Zostaw zapytanie - przygotujemy dopasowaną ofertę!",
     "heroDescription": "Wypełnij poniższy formularz, a nasz opiekun skontaktuje się z Tobą z ofertami dopasowanymi do Twoich potrzeb. Szybko, prosto i bez zbędnych formalności.",
     "heroImageAlt": "Skontaktuj się z nami",
     "managerPhotoAlt": "Nasz opiekun",
@@ -847,7 +847,7 @@
     "metaDescription": "Obejrzyj demo i dowiedz się, jak publikować nieruchomości na Domlivo i otrzymywać zapytania na Telegramie.",
     "heroTitle": "Jak publikować nieruchomości na Domlivo",
     "heroSubtitle": "Obejrzyj demo i dowiedz się, jak otrzymywać realne zapytania",
-    "heroBody": "Wszystko jest proste — dodaj swoją nieruchomość i zacznij otrzymywać klientów bezpośrednio.",
+    "heroBody": "Wszystko jest proste - dodaj swoją nieruchomość i zacznij otrzymywać klientów bezpośrednio.",
     "heroCta": "Obejrzyj demo",
     "block2Title": "Jak działa platforma Domlivo",
     "block2Body": "Rejestrujesz się, dodajesz nieruchomości i otrzymujesz zapytania od klientów bezpośrednio na Telegramie. Wszystko jest proste, bez pośredników.",
@@ -973,7 +973,7 @@
   "QuickLead": {
     "badge": "Bezpłatnie · bez zobowiązań",
     "heading": "Otrzymaj ofertę w ciągu 1 godziny",
-    "body": "Zostaw numer telefonu — oddzwonimy z zestawieniem dopasowanym do Twojego budżetu, z realnymi cenami i dostępnością.",
+    "body": "Zostaw numer telefonu - oddzwonimy z zestawieniem dopasowanym do Twojego budżetu, z realnymi cenami i dostępnością.",
     "phonePlaceholder": "Twój numer telefonu",
     "namePlaceholder": "Imię (opcjonalnie)",
     "submit": "Odbierz ofertę",
@@ -985,7 +985,7 @@
     "budgetPlaceholder": "Budżet",
     "messagePlaceholder": "Czego szukasz? (opcjonalnie)",
     "budgetUpTo": "do {amount}",
-    "budgetRange": "{from} – {to}",
+    "budgetRange": "{from} - {to}",
     "budgetOver": "powyżej {amount}",
     "errorInvalidPhone": "Sprawdź numer telefonu."
   },
@@ -993,7 +993,7 @@
     "badge": "Bezpłatny PDF",
     "title": "Pobierz przewodnik po kupnie w Durrës (PDF)",
     "body": "Ceny ofertowe według dzielnic na dzień {date}, co zakup dokłada do ceny, kroki i dokumenty dla cudzoziemca, roczne koszty utrzymania i pytania do sprzedającego. Ze źródłami i oznaczeniami pewności.",
-    "meta": "PDF, 6–7 stron, w Twoim języku. Domlivo, wrzesień 2026.",
+    "meta": "PDF, 6-7 stron, w Twoim języku. Domlivo, wrzesień 2026.",
     "emailPlaceholder": "Twój e-mail",
     "emailLabel": "E-mail",
     "consent": "Zgadzam się otrzymać przewodnik i od czasu do czasu oferty z Durrës e-mailem. <privacy>Polityka prywatności</privacy>",
@@ -1009,7 +1009,7 @@
     "close": "Zamknij kontakty",
     "callbackAction": "Zamów rozmowę",
     "formHeading": "Oferta w ciągu 1 godziny",
-    "formBody": "Zostaw numer — oddzwonimy.",
+    "formBody": "Zostaw numer - oddzwonimy.",
     "channel": {
       "telegram": "Napisz na Telegramie",
       "whatsapp": "Napisz na WhatsAppie",
@@ -1036,7 +1036,7 @@
       "typeTitle": "{type} w Albanii na sprzedaż",
       "typeDescription": "{type} na sprzedaż w Albanii: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
       "cityTypeTitle": "{type} na sprzedaż — {city}, Albania",
-      "cityTypeDescription": "{type} na sprzedaż — {city}, Albania: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
+      "cityTypeDescription": "{type} na sprzedaż - {city}, Albania: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
       "types": {
         "apartment": "Mieszkania",
         "house": "Domy",
@@ -1052,13 +1052,13 @@
       "cityDistrictDescription": "Mieszkania, domy i wille na sprzedaż w dzielnicy {district}, {city}: aktualne ceny, zdjęcia i bezpośredni kontakt z właścicielami i agencjami, bez prowizji.",
       "facets": {
         "title": {
-          "1-1": "{place}: mieszkania dwupokojowe na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "2-1": "{place}: mieszkania trzypokojowe na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "3-1": "{place}: mieszkania czteropokojowe i większe — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "under-80k": "{place}: mieszkania do 80 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "under-100k": "{place}: mieszkania do 100 000 € — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "new-builds": "{place}: nowe inwestycje na sprzedaż — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
-          "near-the-sea": "{place}: mieszkania i apartamenty nad morzem — {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
+          "1-1": "{place}: mieszkania dwupokojowe na sprzedaż - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "2-1": "{place}: mieszkania trzypokojowe na sprzedaż - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "3-1": "{place}: mieszkania czteropokojowe i większe - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "under-80k": "{place}: mieszkania do 80 000 € - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "under-100k": "{place}: mieszkania do 100 000 € - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "new-builds": "{place}: nowe inwestycje na sprzedaż - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "near-the-sea": "{place}: mieszkania i apartamenty nad morzem - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
         },
         "what": {
           "1-1": "mieszkania dwupokojowe (1+1) na sprzedaż",
@@ -1094,7 +1094,7 @@
     "inputFallbackPlaceholder": "Opisz, czego szukasz",
     "inputLabel": "Opisz nieruchomość, której szukasz",
     "submit": "Szukaj",
-    "heroHint": "Zapytaj własnymi słowami — asystent przeszuka nasze oferty",
+    "heroHint": "Zapytaj własnymi słowami - asystent przeszuka nasze oferty",
     "headerLink": "Wyszukiwanie AI",
     "metaTitle": "Wyszukiwanie nieruchomości z AI — DomLivo",
     "metaDescription": "Opisz własnymi słowami, czego szukasz, a asystent znajdzie pasujące oferty w Albanii.",
@@ -1116,7 +1116,7 @@
     "errors": {
       "unavailable": "Wyszukiwanie AI jest chwilowo niedostępne. Pełny katalog działa jak zwykle.",
       "rate_limited": "Zbyt wiele zapytań. Spróbuj nieco później.",
-      "too_long": "Wiadomość jest za długa — spróbuj krócej.",
+      "too_long": "Wiadomość jest za długa - spróbuj krócej.",
       "too_many_turns": "Rozmowa zrobiła się długa. Zacznij nową, aby kontynuować.",
       "failed": "Coś poszło nie tak. Spróbuj wysłać ponownie.",
       "budget_exhausted": "Wyszukiwanie AI jest dziś wstrzymane z powodu dużego obciążenia. Pełny katalog działa jak zwykle.",
@@ -1293,29 +1293,29 @@
         "telegram": "Napisz na Telegramie"
       },
       "hint": {
-        "whatsapp": "Wiadomość jest gotowa — wystarczy ją wysłać.",
-        "telegram": "Naciśnij przycisk na dole czatu — bot przekaże Twoje pytanie menedżerowi."
+        "whatsapp": "Wiadomość jest gotowa - wystarczy ją wysłać.",
+        "telegram": "Naciśnij przycisk na dole czatu - bot przekaże Twoje pytanie menedżerowi."
       },
       "open": {
         "whatsapp": "Otwórz WhatsApp",
         "telegram": "Otwórz Telegram"
       },
-      "orPhone": "albo zostaw numer — napiszemy do Ciebie",
+      "orPhone": "albo zostaw numer - napiszemy do Ciebie",
       "close": "Zamknij"
     }
   },
   "TelegramBot": {
-    "greeting": "Dzień dobry, {name}! Tu Domlivo — nieruchomości w Albanii.",
-    "greetingNoName": "Dzień dobry! Tu Domlivo — nieruchomości w Albanii.",
+    "greeting": "Dzień dobry, {name}! Tu Domlivo - nieruchomości w Albanii.",
+    "greetingNoName": "Dzień dobry! Tu Domlivo - nieruchomości w Albanii.",
     "aboutProperty": "Pytasz o tę ofertę:",
-    "askProperty": "Napisz tutaj swoje pytanie albo wyślij numer telefonu — menedżer odpowie w tym czacie.",
-    "askGeneral": "Napisz, czego szukasz — miasto, budżet, rodzaj mieszkania — albo wyślij numer telefonu. Menedżer odpowie w tym czacie.",
+    "askProperty": "Napisz tutaj swoje pytanie albo wyślij numer telefonu - menedżer odpowie w tym czacie.",
+    "askGeneral": "Napisz, czego szukasz, miasto, budżet, rodzaj mieszkania, albo wyślij numer telefonu. Menedżer odpowie w tym czacie.",
     "shareContact": "📱 Wyślij mój numer",
     "openListing": "Otwórz w Domlivo",
     "priceOnRequest": "Cena na zapytanie",
     "contactReceived": "Dziękujemy! Menedżer wkrótce się z Tobą skontaktuje.",
     "commandStart": "Rozpocznij czat z menedżerem",
-    "description": "Domlivo — nieruchomości w Albanii. Zapytaj o dowolną ofertę z domlivo.com albo napisz, czego szukasz: menedżer odpowie tutaj.",
+    "description": "Domlivo - nieruchomości w Albanii. Zapytaj o dowolną ofertę z domlivo.com albo napisz, czego szukasz: menedżer odpowie tutaj.",
     "shortDescription": "Nieruchomości w Albanii: zapytaj menedżera Domlivo o dowolną ofertę.",
     "commandStop": "Wyłącz powiadomienia o nowych ofertach",
     "search": {
@@ -1333,10 +1333,10 @@
       "dealRent": "na wynajem",
       "priceFrom": "od {amount}",
       "priceTo": "do {amount}",
-      "priceBetween": "{min} – {max}",
+      "priceBetween": "{min} - {max}",
       "areaFrom": "od {n} m²",
       "areaTo": "do {n} m²",
-      "areaBetween": "{min}–{max} m²",
+      "areaBetween": "{min}-{max} m²",
       "bedsFrom": "{n}+ sypialni",
       "bedsExact": "sypialnie: {n}",
       "nearSea": "blisko morza",
@@ -1351,7 +1351,7 @@
     "title": "Oferty na sprzedaż i ceny",
     "districtListings": "{district}: nieruchomości na sprzedaż",
     "cityListings": "{city}: wszystkie nieruchomości na sprzedaż",
-    "typeListings": "{type} na sprzedaż — {city}",
+    "typeListings": "{type} na sprzedaż - {city}",
     "nationalListings": "Wszystkie nieruchomości na sprzedaż w Albanii",
     "cityPrices": "{city}: ceny nieruchomości",
     "nationalPrices": "Ceny nieruchomości w Albanii"
@@ -1372,8 +1372,8 @@
       "budgetLabel": "Budżet",
       "bands": {
         "under70": "Do 70 tys. €",
-        "70to120": "70–120 tys. €",
-        "120to200": "120–200 tys. €",
+        "70to120": "70-120 tys. €",
+        "120to200": "120-200 tys. €",
         "over200": "Powyżej 200 tys. €"
       }
     },

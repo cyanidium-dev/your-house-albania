@@ -203,7 +203,7 @@
       "rented": "E dhënë me qira",
       "soldLeadTitle": "Kjo pronë është shitur. Do të gjejmë një të ngjashme",
       "unavailableLeadTitle": "Kjo pronë nuk është më e disponueshme. Do të gjejmë një të ngjashme",
-      "soldLeadBody": "Lini numrin tuaj dhe na tregoni çfarë kërkoni — do t'ju dërgojmë prona të ngjashme me çmime aktuale.",
+      "soldLeadBody": "Lini numrin tuaj dhe na tregoni çfarë kërkoni - do t'ju dërgojmë prona të ngjashme me çmime aktuale.",
       "soldFindSimilar": "Gjej një të ngjashme",
       "propertyDetails": "Detajet e pronës",
       "checkAllAmenities": "Shiko të gjitha pajisjet",
@@ -214,7 +214,7 @@
       "getInTouch": "Na kontaktoni",
       "listedBy": "Publikuar nga <link>{name}</link>",
       "contactHeading": "Ju intereson kjo pronë?",
-      "contactIntro": "Lini kontaktet tuaja — do t'ju kontaktojmë për këtë njoftim.",
+      "contactIntro": "Lini kontaktet tuaja - do t'ju kontaktojmë për këtë njoftim.",
       "contactSuccessTitle": "Kërkesa u dërgua!",
       "contactSuccessBody": "Morëm mesazhin tuaj dhe do t'ju kontaktojmë së shpejti.",
       "contactClose": "Mbyll",
@@ -234,7 +234,7 @@
       "goToImage": "Shko te foto {n}",
       "hideThumbnails": "Fsheh miniaturat",
       "showThumbnails": "Shfaq miniaturat",
-      "approximateLocation": "Vendndodhje e përafërt — zona e theksuar tregon lagjen ose një pikë orientimi afër, jo ndërtesën e saktë.",
+      "approximateLocation": "Vendndodhje e përafërt - zona e theksuar tregon lagjen ose një pikë orientimi afër, jo ndërtesën e saktë.",
       "plotArea": "Truall {value} m²",
       "plotAreaUnknown": "Sipërfaqja e truallit: nuk është specifikuar",
       "seaDistance": "{m} m nga deti",
@@ -413,7 +413,7 @@
       "wholeCity": "I gjithë qyteti {city}",
       "completed": "Banesa të përfunduara (rishitje dhe ndërtime të dorëzuara)",
       "newBuild": "Ndërtime të reja në ndërtim ose në projekt",
-      "range": "{from}–{to} €/m²",
+      "range": "{from}-{to} €/m²",
       "median": "mediana {value} €",
       "flats": "{count, plural, one {# apartament} other {# apartamente}}",
       "note": "Çmime të kërkuara nga njoftimet aktive, jo çmime transaksionesh; rillogariten çdo orë. Tabela e plotë sipas lagjeve është më poshtë në faqe."
@@ -439,10 +439,10 @@
       "lead": "Mediana e çmimit të kërkuar për metër katror e apartamenteve dhe studiove në shitje në Domlivo, sipas qyteteve dhe lagjeve në Shqipëri, e rillogaritur çdo orë nga njoftimet aktive. E lirë për ripërdorim me licencën CC BY 4.0.",
       "figuresTitle": "Shifrat aktuale",
       "figuresLead": "Llogaritur më {date}. Kur mostra e një qyteti ka më pak se {min} apartamente, në vend të shifrës kryesore tregohet madhësia e saj.",
-      "figuresCaption": "Domlivo Price Index sipas qyteteve, {date}: mediana dhe përqindëshi 20–80 i çmimit të kërkuar për m² të apartamenteve dhe studiove në shitje në Domlivo",
+      "figuresCaption": "Domlivo Price Index sipas qyteteve, {date}: mediana dhe përqindëshi 20-80 i çmimit të kërkuar për m² të apartamenteve dhe studiove në shitje në Domlivo",
       "colCity": "Qyteti",
       "colMedian": "Mediana, €/m²",
-      "colRange": "Përqindëshi 20–80, €/m²",
+      "colRange": "Përqindëshi 20-80, €/m²",
       "colCount": "Apartamente në mostër",
       "lowSampleCell": "të dhëna të pakta",
       "methodTitle": "Metodologjia",
@@ -517,7 +517,7 @@
     "totalInterest": "Interesi total",
     "ltvLabel": "LTV",
     "ltvOk": "Brenda limitit LTV",
-    "ltvExceeded": "Tejkalon limitin LTV prej {limit}% — bankat mund të kërkojnë paradhënie më të madhe",
+    "ltvExceeded": "Tejkalon limitin LTV prej {limit}% - bankat mund të kërkojnë paradhënie më të madhe",
     "presetLabel": "Zona e paracaktuar",
     "manualMode": "Vendosje manuale",
     "rentalType": "Lloji i qirasë",
@@ -594,7 +594,7 @@
     "districtMedian": "Mediana për prona të ngjashme në {district} në Domlivo: <amount></amount>/m², nga {count} njoftime.",
     "districtMedianNoName": "Mediana për prona të ngjashme në këtë zonë në Domlivo: <amount></amount>/m², nga {count} njoftime.",
     "purchaseTitle": "Kostot e njëhershme të blerjes",
-    "notary": "Noteri (0,23–0,35% e çmimit)",
+    "notary": "Noteri (0,23-0,35% e çmimit)",
     "registration": "Regjistrimi i pronësisë (ASHK)",
     "agency": "Komisioni i agjencisë për blerësin (zakonisht 1%)",
     "purchaseTotal": "Mbi çmimin ({pct}%)",
@@ -621,7 +621,7 @@
       "previousPage": "Faqja e mëparshme",
       "nextPage": "Faqja tjetër",
       "showMore": "Shfaq më shumë prona",
-      "shownRange": "{from}–{to} nga {total}"
+      "shownRange": "{from}-{to} nga {total}"
     },
     "heroIntroFallback": "Shfletoni përzgjedhjen tonë të pronave.",
     "agentTitle": "Pronat nga {name}",
@@ -734,7 +734,7 @@
       "costs": {
         "title": "Blerja si i huaj: sa kushton",
         "lead": "Të huajt blejnë apartamente, shtëpi dhe prona tregtare në Shqipëri me të njëjtat kushte ligjore si shtetasit; kufizohet vetëm toka bujqësore. Pronësia kalon vetëm me akt noterial. Përveç çmimit, blerësi paguan:",
-        "notary": "Noteri: {min}–{max}% e çmimit, sipas tarifës zyrtare",
+        "notary": "Noteri: {min}-{max}% e çmimit, sipas tarifës zyrtare",
         "registration": "Regjistrimi i pronësisë në kadastër (ASHK): {lek} lekë, rreth {eur} €",
         "agency": "Komisioni i agjencisë për blerësin: zakonisht {pct}%",
         "example": "Për një apartament me çmimin median këtu, <price></price>, kjo bën rreth <total></total> ({pct}% e çmimit).",
@@ -786,7 +786,7 @@
     "badge": "Ndërtime të reja",
     "heading": "Ndërtime të reja dhe prona për investim në Shqipëri",
     "intro": "Një pronë e blerë para se të përfundojë kushton më pak, por mbart rreziqe që një banesë e gatshme nuk i ka: dorëzimi mund të vonohet dhe certifikata e pronësisë mund të jetë ende në proces. Çdo shpallje këtu thotë në ç’fazë është ndërtesa dhe kur premtohen çelësat.",
-    "empty": "Për momentin nuk ka ndërtesa në ndërtim. Gjithçka në faqe është e përfunduar dhe e dorëzuar — shihni katalogun e plotë.",
+    "empty": "Për momentin nuk ka ndërtesa në ndërtim. Gjithçka në faqe është e përfunduar dhe e dorëzuar - shihni katalogun e plotë.",
     "emptyCta": "Shiko të gjitha pronat",
     "breadcrumbHome": "Kryefaqja"
   },
@@ -847,7 +847,7 @@
     "metaDescription": "Shikoni demo dhe mësoni si të publikoni objekte në Domlivo dhe të merrni kërkesa në Telegram.",
     "heroTitle": "Si të publikoni objektet në Domlivo",
     "heroSubtitle": "Shikoni demo dhe mësoni si të merrni kërkesa reale",
-    "heroBody": "Gjithçka është e thjeshtë — shtoni objektin dhe filloni të merrni klientë direkt.",
+    "heroBody": "Gjithçka është e thjeshtë - shtoni objektin dhe filloni të merrni klientë direkt.",
     "heroCta": "Shiko demo",
     "block2Title": "Si funksionon platforma Domlivo",
     "block2Body": "Regjistroheni, shtoni objektet dhe merrni kërkesa nga klientët direkt në Telegram. Gjithçka është e thjeshtë dhe pa ndërmjetës.",
@@ -924,7 +924,7 @@
   "ImageCredits": {
     "title": "Kreditet e fotove",
     "description": "Fotografët, licencat dhe burimet për çdo fotografi të përdorur në Domlivo.",
-    "intro": "Çdo fotografi në këtë faqe ka licencë të lirë. Kjo faqe emërton fotografin, licencën dhe burimin e skedarit — kështu plotësohen licencat me atribuim më poshtë.",
+    "intro": "Çdo fotografi në këtë faqe ka licencë të lirë. Kjo faqe emërton fotografin, licencën dhe burimin e skedarit - kështu plotësohen licencat me atribuim më poshtë.",
     "attributedHeading": "Fotografi që kërkojnë atribuim",
     "attributedNote": "Përdoren sipas licencave Creative Commons që kërkojnë kreditimin e fotografit.",
     "freeHeading": "Domen publik dhe CC0",
@@ -973,7 +973,7 @@
   "QuickLead": {
     "badge": "Falas · pa asnjë detyrim",
     "heading": "Merrni një ofertë të personalizuar brenda 1 ore",
-    "body": "Lini numrin tuaj — ju kthejmë përgjigje me një përzgjedhje sipas buxhetit tuaj, me çmime reale dhe çfarë është vërtet e lirë.",
+    "body": "Lini numrin tuaj - ju kthejmë përgjigje me një përzgjedhje sipas buxhetit tuaj, me çmime reale dhe çfarë është vërtet e lirë.",
     "phonePlaceholder": "Numri juaj i telefonit",
     "namePlaceholder": "Emri (opsional)",
     "submit": "Merr ofertën",
@@ -985,7 +985,7 @@
     "budgetPlaceholder": "Buxheti",
     "messagePlaceholder": "Çfarë kërkoni? (opsionale)",
     "budgetUpTo": "deri në {amount}",
-    "budgetRange": "{from} – {to}",
+    "budgetRange": "{from} - {to}",
     "budgetOver": "mbi {amount}",
     "errorInvalidPhone": "Kontrolloni numrin e telefonit."
   },
@@ -993,7 +993,7 @@
     "badge": "PDF falas",
     "title": "Merrni udhëzuesin e blerjes në Durrës (PDF)",
     "body": "Çmimet e kërkuara sipas zonave më {date}, çfarë shton blerja mbi çmimin, hapat dhe dokumentet për një të huaj, kostot vjetore të mbajtjes dhe pyetjet për shitësin. Me burime dhe shënime besueshmërie.",
-    "meta": "PDF, 6–7 faqe, në gjuhën tuaj. Domlivo, shtator 2026.",
+    "meta": "PDF, 6-7 faqe, në gjuhën tuaj. Domlivo, shtator 2026.",
     "emailPlaceholder": "Email-i juaj",
     "emailLabel": "Email",
     "consent": "Pranoj të marr udhëzuesin dhe herë pas here shpallje nga Durrësi me email. <privacy>Politika e privatësisë</privacy>",
@@ -1009,7 +1009,7 @@
     "close": "Mbyll kontaktet",
     "callbackAction": "Kërko telefonatë",
     "formHeading": "Ofertë brenda 1 ore",
-    "formBody": "Lini numrin — ju kthejmë telefonatë.",
+    "formBody": "Lini numrin - ju kthejmë telefonatë.",
     "channel": {
       "telegram": "Na shkruani në Telegram",
       "whatsapp": "Na shkruani në WhatsApp",
@@ -1052,13 +1052,13 @@
       "cityDistrictDescription": "Apartamente 1+1 dhe 2+1, shtëpi dhe vila në shitje në {district}, {city}: çmime aktuale, foto dhe kontakt i drejtpërdrejtë me pronarët dhe agjencitë, pa komision.",
       "facets": {
         "title": {
-          "1-1": "Apartamente 1+1 në shitje në {place} — {count} prona",
-          "2-1": "Apartamente 2+1 në shitje në {place} — {count} prona",
-          "3-1": "Apartamente 3+1 e më të mëdha në shitje në {place} — {count} prona",
-          "under-80k": "Apartamente deri në 80 000 € në {place} — {count} prona",
-          "under-100k": "Apartamente deri në 100 000 € në {place} — {count} prona",
-          "new-builds": "Prona në ndërtim në shitje në {place} — {count} prona",
-          "near-the-sea": "Apartamente buzë detit në shitje në {place} — {count} prona"
+          "1-1": "Apartamente 1+1 në shitje në {place} - {count} prona",
+          "2-1": "Apartamente 2+1 në shitje në {place} - {count} prona",
+          "3-1": "Apartamente 3+1 e më të mëdha në shitje në {place} - {count} prona",
+          "under-80k": "Apartamente deri në 80 000 € në {place} - {count} prona",
+          "under-100k": "Apartamente deri në 100 000 € në {place} - {count} prona",
+          "new-builds": "Prona në ndërtim në shitje në {place} - {count} prona",
+          "near-the-sea": "Apartamente buzë detit në shitje në {place} - {count} prona"
         },
         "what": {
           "1-1": "apartamente 1+1 në shitje",
@@ -1094,7 +1094,7 @@
     "inputFallbackPlaceholder": "Përshkruani çfarë kërkoni",
     "inputLabel": "Përshkruani pronën që kërkoni",
     "submit": "Kërko",
-    "heroHint": "Pyesni me fjalët tuaja — asistenti kërkon te pronat tona",
+    "heroHint": "Pyesni me fjalët tuaja - asistenti kërkon te pronat tona",
     "headerLink": "Kërkim me AI",
     "metaTitle": "Kërkim pronash me AI — DomLivo",
     "metaDescription": "Përshkruani me fjalët tuaja çfarë kërkoni dhe asistenti gjen pronat e përshtatshme në Shqipëri.",
@@ -1116,7 +1116,7 @@
     "errors": {
       "unavailable": "Kërkimi me AI nuk është i disponueshëm tani. Katalogu i plotë është i hapur si zakonisht.",
       "rate_limited": "Shumë kërkesa. Provoni pak më vonë.",
-      "too_long": "Mesazhi është shumë i gjatë — provoni një më të shkurtër.",
+      "too_long": "Mesazhi është shumë i gjatë - provoni një më të shkurtër.",
       "too_many_turns": "Biseda u zgjat. Filloni një të re për të vazhduar.",
       "failed": "Diçka shkoi keq. Provoni ta dërgoni sërish.",
       "budget_exhausted": "Kërkimi me AI është pezulluar sot për shkak të ngarkesës së lartë. Katalogu i plotë është i hapur si zakonisht.",
@@ -1293,29 +1293,29 @@
         "telegram": "Shkruani në Telegram"
       },
       "hint": {
-        "whatsapp": "Mesazhi është gati — thjesht dërgojeni.",
-        "telegram": "Shtypni butonin në fund të bisedës — boti ia kalon pyetjen tuaj një menaxheri."
+        "whatsapp": "Mesazhi është gati - thjesht dërgojeni.",
+        "telegram": "Shtypni butonin në fund të bisedës - boti ia kalon pyetjen tuaj një menaxheri."
       },
       "open": {
         "whatsapp": "Hap WhatsApp",
         "telegram": "Hap Telegram"
       },
-      "orPhone": "ose lini numrin — ju shkruajmë ne",
+      "orPhone": "ose lini numrin - ju shkruajmë ne",
       "close": "Mbyll"
     }
   },
   "TelegramBot": {
-    "greeting": "Përshëndetje, {name}! Ky është Domlivo — prona në Shqipëri.",
-    "greetingNoName": "Përshëndetje! Ky është Domlivo — prona në Shqipëri.",
+    "greeting": "Përshëndetje, {name}! Ky është Domlivo - prona në Shqipëri.",
+    "greetingNoName": "Përshëndetje! Ky është Domlivo - prona në Shqipëri.",
     "aboutProperty": "Po pyesni për këtë pronë:",
-    "askProperty": "Shkruani pyetjen tuaj këtu ose dërgoni numrin e telefonit — një menaxher do t’ju përgjigjet në këtë bisedë.",
-    "askGeneral": "Na tregoni çfarë kërkoni — qytetin, buxhetin, llojin e banesës — ose dërgoni numrin e telefonit. Një menaxher do t’ju përgjigjet në këtë bisedë.",
+    "askProperty": "Shkruani pyetjen tuaj këtu ose dërgoni numrin e telefonit - një menaxher do t’ju përgjigjet në këtë bisedë.",
+    "askGeneral": "Na tregoni çfarë kërkoni, qytetin, buxhetin, llojin e banesës, ose dërgoni numrin e telefonit. Një menaxher do t’ju përgjigjet në këtë bisedë.",
     "shareContact": "📱 Dërgo numrin tim",
     "openListing": "Hape në Domlivo",
     "priceOnRequest": "Çmimi sipas kërkesës",
     "contactReceived": "Faleminderit! Një menaxher do t’ju kontaktojë së shpejti.",
     "commandStart": "Fillo një bisedë me menaxherin",
-    "description": "Domlivo — prona në Shqipëri. Pyetni për çdo pronë në domlivo.com ose na tregoni çfarë kërkoni: një menaxher përgjigjet këtu.",
+    "description": "Domlivo - prona në Shqipëri. Pyetni për çdo pronë në domlivo.com ose na tregoni çfarë kërkoni: një menaxher përgjigjet këtu.",
     "shortDescription": "Prona në Shqipëri: pyetni një menaxher të Domlivo për çdo pronë.",
     "commandStop": "Ndalo njoftimet për prona të reja",
     "search": {
@@ -1333,10 +1333,10 @@
       "dealRent": "me qira",
       "priceFrom": "nga {amount}",
       "priceTo": "deri në {amount}",
-      "priceBetween": "{min} – {max}",
+      "priceBetween": "{min} - {max}",
       "areaFrom": "nga {n} m²",
       "areaTo": "deri në {n} m²",
-      "areaBetween": "{min}–{max} m²",
+      "areaBetween": "{min}-{max} m²",
       "bedsFrom": "{n}+ dhoma gjumi",
       "bedsExact": "{n} dhoma gjumi",
       "nearSea": "pranë detit",
@@ -1372,8 +1372,8 @@
       "budgetLabel": "Buxheti",
       "bands": {
         "under70": "Nën €70 mijë",
-        "70to120": "€70–120 mijë",
-        "120to200": "€120–200 mijë",
+        "70to120": "€70-120 mijë",
+        "120to200": "€120-200 mijë",
         "over200": "Mbi €200 mijë"
       }
     },

@@ -214,7 +214,7 @@
       "getInTouch": "Contattaci",
       "listedBy": "Pubblicato da <link>{name}</link>",
       "contactHeading": "Ti interessa questo immobile?",
-      "contactIntro": "Lascia i tuoi contatti — ti ricontatteremo per questo annuncio.",
+      "contactIntro": "Lascia i tuoi contatti - ti ricontatteremo per questo annuncio.",
       "contactSuccessTitle": "Richiesta inviata!",
       "contactSuccessBody": "Abbiamo ricevuto il tuo messaggio e ti contatteremo presto.",
       "contactClose": "Chiudi",
@@ -413,7 +413,7 @@
       "wholeCity": "Tutta la città di {city}",
       "completed": "Case pronte (usato e nuove costruzioni consegnate)",
       "newBuild": "Nuove costruzioni in cantiere o su carta",
-      "range": "{from}–{to} €/m²",
+      "range": "{from}-{to} €/m²",
       "median": "mediana {value} €",
       "flats": "{count, plural, one {# appartamento} other {# appartamenti}}",
       "note": "Prezzi richiesti dagli annunci attivi, non prezzi di compravendita; ricalcolati ogni ora. La tabella completa per quartiere è più in basso nella pagina."
@@ -517,7 +517,7 @@
     "totalInterest": "Interessi totali",
     "ltvLabel": "LTV",
     "ltvOk": "Entro il limite LTV",
-    "ltvExceeded": "Supera il limite LTV del {limit}% — la banca può richiedere un anticipo maggiore",
+    "ltvExceeded": "Supera il limite LTV del {limit}% - la banca può richiedere un anticipo maggiore",
     "presetLabel": "Preset di zona",
     "manualMode": "Inserimento manuale",
     "rentalType": "Tipo di affitto",
@@ -594,7 +594,7 @@
     "districtMedian": "Mediana per immobili simili a {district} su Domlivo: <amount></amount>/m² su {count} annunci.",
     "districtMedianNoName": "Mediana per immobili simili in questa zona su Domlivo: <amount></amount>/m² su {count} annunci.",
     "purchaseTitle": "Costi una tantum all'acquisto",
-    "notary": "Notaio (0,23–0,35% del prezzo)",
+    "notary": "Notaio (0,23-0,35% del prezzo)",
     "registration": "Registrazione della proprietà (ASHK)",
     "agency": "Provvigione d'agenzia per l'acquirente (di solito 1%)",
     "purchaseTotal": "Oltre al prezzo ({pct}%)",
@@ -621,7 +621,7 @@
       "previousPage": "Pagina precedente",
       "nextPage": "Pagina successiva",
       "showMore": "Mostra altri immobili",
-      "shownRange": "{from}–{to} di {total}"
+      "shownRange": "{from}-{to} di {total}"
     },
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",
@@ -734,7 +734,7 @@
       "costs": {
         "title": "Comprare da straniero: quanto costa",
         "lead": "Gli stranieri acquistano appartamenti, case e immobili commerciali in Albania alle stesse condizioni legali dei cittadini; l'unica limitazione riguarda i terreni agricoli. La proprietà si trasferisce solo con atto notarile. Oltre al prezzo, l'acquirente paga:",
-        "notary": "Notaio: {min}–{max}% del prezzo, secondo la tariffa ufficiale",
+        "notary": "Notaio: {min}-{max}% del prezzo, secondo la tariffa ufficiale",
         "registration": "Registrazione della proprietà al catasto (ASHK): {lek} lek, circa {eur} €",
         "agency": "Provvigione dell'agenzia a carico dell'acquirente: di norma {pct}%",
         "example": "Per un appartamento al prezzo mediano di questa zona, <price></price>, si tratta di circa <total></total> ({pct}% del prezzo).",
@@ -786,7 +786,7 @@
     "badge": "Nuove costruzioni",
     "heading": "Nuove costruzioni e immobili da investimento in Albania",
     "intro": "Un immobile comprato prima della consegna costa meno e porta rischi che una casa finita non ha: la consegna può slittare e il certificato di proprietà può essere ancora in lavorazione. Ogni annuncio qui dichiara a che punto è l’edificio e quando sono promesse le chiavi.",
-    "empty": "Al momento non ci sono edifici in costruzione. Tutto ciò che è sul sito è finito e consegnato — sfoglia il catalogo completo.",
+    "empty": "Al momento non ci sono edifici in costruzione. Tutto ciò che è sul sito è finito e consegnato - sfoglia il catalogo completo.",
     "emptyCta": "Tutti gli immobili",
     "breadcrumbHome": "Home"
   },
@@ -985,7 +985,7 @@
     "budgetPlaceholder": "Budget",
     "messagePlaceholder": "Cosa cerchi? (facoltativo)",
     "budgetUpTo": "fino a {amount}",
-    "budgetRange": "{from} – {to}",
+    "budgetRange": "{from} - {to}",
     "budgetOver": "oltre {amount}",
     "errorInvalidPhone": "Controlla il numero di telefono."
   },
@@ -993,7 +993,7 @@
     "badge": "PDF gratuito",
     "title": "Ricevi la guida all’acquisto a Durazzo (PDF)",
     "body": "Prezzi richiesti per zona al {date}, cosa l’acquisto aggiunge al prezzo, passaggi e documenti per uno straniero, costi annui di gestione e le domande da fare al venditore. Con fonti e note di affidabilità.",
-    "meta": "PDF, 6–7 pagine, nella tua lingua. Domlivo, settembre 2026.",
+    "meta": "PDF, 6-7 pagine, nella tua lingua. Domlivo, settembre 2026.",
     "emailPlaceholder": "La tua email",
     "emailLabel": "Email",
     "consent": "Accetto di ricevere la guida e, di tanto in tanto, annunci di Durazzo via email. <privacy>Informativa sulla privacy</privacy>",
@@ -1052,13 +1052,13 @@
       "cityDistrictDescription": "Appartamenti, case e ville in vendita a {district}, {city}: prezzi aggiornati, foto e contatto diretto con proprietari e agenzie, senza commissioni.",
       "facets": {
         "title": {
-          "1-1": "Bilocali in vendita a {place} — {count} immobili",
-          "2-1": "Trilocali in vendita a {place} — {count} immobili",
-          "3-1": "Quadrilocali e più grandi in vendita a {place} — {count} immobili",
-          "under-80k": "Appartamenti sotto 80.000 € a {place} — {count} immobili",
-          "under-100k": "Appartamenti sotto 100.000 € a {place} — {count} immobili",
-          "new-builds": "Nuove costruzioni in vendita a {place} — {count} immobili",
-          "near-the-sea": "Case e appartamenti al mare in vendita a {place} — {count} immobili"
+          "1-1": "Bilocali in vendita a {place} - {count} immobili",
+          "2-1": "Trilocali in vendita a {place} - {count} immobili",
+          "3-1": "Quadrilocali e più grandi in vendita a {place} - {count} immobili",
+          "under-80k": "Appartamenti sotto 80.000 € a {place} - {count} immobili",
+          "under-100k": "Appartamenti sotto 100.000 € a {place} - {count} immobili",
+          "new-builds": "Nuove costruzioni in vendita a {place} - {count} immobili",
+          "near-the-sea": "Case e appartamenti al mare in vendita a {place} - {count} immobili"
         },
         "what": {
           "1-1": "bilocali (1+1) in vendita",
@@ -1094,7 +1094,7 @@
     "inputFallbackPlaceholder": "Descriva cosa sta cercando",
     "inputLabel": "Descriva l'immobile che sta cercando",
     "submit": "Cerca",
-    "heroHint": "Chieda con parole sue — l'assistente cerca tra i nostri immobili",
+    "heroHint": "Chieda con parole sue - l'assistente cerca tra i nostri immobili",
     "headerLink": "Ricerca AI",
     "metaTitle": "Ricerca immobili con AI — DomLivo",
     "metaDescription": "Descriva con parole sue cosa cerca e l'assistente trova gli immobili adatti in Albania.",
@@ -1116,7 +1116,7 @@
     "errors": {
       "unavailable": "La ricerca AI non è disponibile al momento. Il catalogo completo è aperto come sempre.",
       "rate_limited": "Troppe richieste. Riprovi tra poco.",
-      "too_long": "Il messaggio è troppo lungo — ne provi uno più breve.",
+      "too_long": "Il messaggio è troppo lungo - ne provi uno più breve.",
       "too_many_turns": "La conversazione si è allungata. Ne inizi una nuova per continuare.",
       "failed": "Qualcosa è andato storto. Provi a inviare di nuovo.",
       "budget_exhausted": "La ricerca AI è sospesa oggi per carico elevato. Il catalogo completo è aperto come sempre.",
@@ -1305,17 +1305,17 @@
     }
   },
   "TelegramBot": {
-    "greeting": "Buongiorno, {name}! Qui è Domlivo — immobili in Albania.",
-    "greetingNoName": "Buongiorno! Qui è Domlivo — immobili in Albania.",
+    "greeting": "Buongiorno, {name}! Qui è Domlivo - immobili in Albania.",
+    "greetingNoName": "Buongiorno! Qui è Domlivo - immobili in Albania.",
     "aboutProperty": "Ci chiedi di questo immobile:",
     "askProperty": "Scrivi qui la tua domanda o invia il tuo numero di telefono: un consulente ti risponderà in questa chat.",
-    "askGeneral": "Raccontaci cosa cerchi — città, budget, tipo di casa — oppure invia il tuo numero di telefono. Un consulente ti risponderà in questa chat.",
+    "askGeneral": "Raccontaci cosa cerchi, città, budget, tipo di casa, oppure invia il tuo numero di telefono. Un consulente ti risponderà in questa chat.",
     "shareContact": "📱 Invia il mio numero",
     "openListing": "Apri su Domlivo",
     "priceOnRequest": "Prezzo su richiesta",
     "contactReceived": "Grazie! Un consulente ti contatterà a breve.",
     "commandStart": "Inizia una chat con un consulente",
-    "description": "Domlivo — immobili in Albania. Chiedi di qualsiasi annuncio su domlivo.com o raccontaci cosa cerchi: un consulente risponde qui.",
+    "description": "Domlivo - immobili in Albania. Chiedi di qualsiasi annuncio su domlivo.com o raccontaci cosa cerchi: un consulente risponde qui.",
     "shortDescription": "Immobili in Albania: chiedi a un consulente Domlivo di qualsiasi annuncio.",
     "commandStop": "Interrompi gli avvisi sui nuovi annunci",
     "search": {
@@ -1333,10 +1333,10 @@
       "dealRent": "in affitto",
       "priceFrom": "da {amount}",
       "priceTo": "fino a {amount}",
-      "priceBetween": "{min} – {max}",
+      "priceBetween": "{min} - {max}",
       "areaFrom": "da {n} m²",
       "areaTo": "fino a {n} m²",
-      "areaBetween": "{min}–{max} m²",
+      "areaBetween": "{min}-{max} m²",
       "bedsFrom": "{n}+ camere",
       "bedsExact": "{n} camere",
       "nearSea": "vicino al mare",
@@ -1372,8 +1372,8 @@
       "budgetLabel": "Budget",
       "bands": {
         "under70": "Fino a €70k",
-        "70to120": "€70–120k",
-        "120to200": "€120–200k",
+        "70to120": "€70-120k",
+        "120to200": "€120-200k",
         "over200": "Oltre €200k"
       }
     },
