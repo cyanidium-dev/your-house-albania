@@ -12,6 +12,7 @@ import {
   FOOTER_COMPANY_ITEMS,
   FOOTER_LEAD_LANDING,
   FOOTER_MARKET_GUIDE,
+  FOOTER_MARKET_HUB,
   FOOTER_PROPERTY_HEAD,
   FOOTER_PROPERTY_TAIL,
   FOOTER_USEFUL_ITEMS,
@@ -243,6 +244,13 @@ export default function Footer({
                     </Link>
                   </li>
                 ))}
+                {FOOTER_MARKET_HUB[locale] ? (
+                  <li>
+                    <Link href={resolveStableHref(FOOTER_MARKET_HUB[locale].href, locale)} className={colLinkClass}>
+                      {navT(FOOTER_MARKET_HUB[locale].labelKey)}
+                    </Link>
+                  </li>
+                ) : null}
                 {FOOTER_MARKET_GUIDE[locale] ? (
                   <li>
                     <Link href={resolveStableHref(FOOTER_MARKET_GUIDE[locale], locale)} className={colLinkClass}>

@@ -1,3 +1,5 @@
+import { GERMAN_HUB_LAST_MODIFIED, GERMAN_HUB_LOCALE, GERMAN_HUB_PATH } from "@/lib/germanHub/config";
+
 /**
  * Indexable pages that exist only in code — no CMS document behind them, so
  * neither the landing query nor the registry can discover them for a sitemap.
@@ -10,6 +12,13 @@ export type StaticCodePage = {
   /** Path after the locale, no leading slash. */
   path: string;
   lastModified: string;
+  /**
+   * The locales the page exists in; every locale when omitted. A page of one
+   * market (the German hub) is emitted once, with that locale as its only
+   * alternate and as `x-default`, the same way `buildHreflangAlternates`
+   * treats a locale-scoped landing.
+   */
+  locales?: readonly string[];
 };
 
 export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
@@ -20,6 +29,8 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: "methodology", lastModified: "2026-10-19" },
   // Property prices by city: one table over the live index (AI prompt audit 2026-10-19).
   { path: "prices", lastModified: "2026-10-19" },
+  // The German market hub (SEO hypothesis 3, 2026-10-19): German only, see lib/germanHub.
+  { path: GERMAN_HUB_PATH, lastModified: GERMAN_HUB_LAST_MODIFIED, locales: [GERMAN_HUB_LOCALE] },
 ];
 
 export type StaticCodePageEntry = {
@@ -37,12 +48,13 @@ export function buildStaticCodePageEntries(
   const base = baseUrl.replace(/\/$/, "");
   const entries: StaticCodePageEntry[] = [];
   for (const page of pages) {
+    const pageLocales = page.locales ? locales.filter((l) => page.locales!.includes(l)) : locales;
     const alternates: Record<string, string> = {};
-    for (const locale of locales) alternates[locale] = `${base}/${locale}/${page.path}`;
+    for (const locale of pageLocales) alternates[locale] = `${base}/${locale}/${page.path}`;
     // Same rule as `buildHreflangAlternates`: English when it exists.
-    const xDefault = locales.includes("en") ? "en" : locales[0];
+    const xDefault = pageLocales.includes("en") ? "en" : pageLocales[0];
     if (xDefault) alternates["x-default"] = `${base}/${xDefault}/${page.path}`;
-    for (const locale of locales) {
+    for (const locale of pageLocales) {
       entries.push({
         loc: alternates[locale],
         lastmod: new Date(page.lastModified),

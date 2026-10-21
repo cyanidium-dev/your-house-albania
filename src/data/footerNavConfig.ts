@@ -68,3 +68,13 @@ export const FOOTER_MARKET_GUIDE: Readonly<Record<string, `/${string}`>> = {
   pl: "/blog/albania-property-for-polish-buyers-2026",
   sq: "/blog/albania-reference-prices-2026-by-city",
 };
+
+/**
+ * The market hub of a locale that has one: the German hub
+ * `/de/albanien-immobilien` (SEO hypothesis 3, 2026-10-20), linked from the
+ * Useful column above the market guide so every German page passes it a link.
+ * Label: `Footer.nav.germanHub` in that locale's messages.
+ */
+export const FOOTER_MARKET_HUB: Readonly<Record<string, { href: `/${string}`; labelKey: string }>> = {
+  de: { href: "/albanien-immobilien", labelKey: "germanHub" },
+};

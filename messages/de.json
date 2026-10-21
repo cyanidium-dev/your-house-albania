@@ -81,7 +81,8 @@
       "about": "Über uns",
       "contacts": "Kontakte",
       "addProperty": "Immobilie inserieren",
-      "knowledge": "Wissensdatenbank"
+      "knowledge": "Wissensdatenbank",
+      "germanHub": "Immobilien in Albanien kaufen"
     },
     "cities": {
       "empty": "Keine Städte vorhanden."
@@ -1496,5 +1497,67 @@
     },
     "firstLine": "in erster Reihe, direkt am Strand",
     "metres": "{n} m"
+  },
+  "GermanHub": {
+    "metaTitle": "Immobilien in Albanien kaufen: Preise 2026",
+    "metaDescription": "Immobilien in Albanien kaufen: Angebotspreise pro m² ({figures}), {sea} Wohnungen am Meer, Ablauf, Nebenkosten, Steuern und fünf Ratgeber auf Deutsch.",
+    "metaDescriptionShort": "Immobilien in Albanien kaufen als Deutscher: Preise nach Stadt, Wohnungen am Meer, Ablauf, Kaufnebenkosten und Steuern, fünf Ratgeber auf Deutsch.",
+    "breadcrumb": "Immobilien in Albanien",
+    "label": "Für Käufer aus Deutschland",
+    "h1": "Immobilien in Albanien kaufen",
+    "lead": "Angebotspreise pro m² am {date}: {figures}. Auf dieser Seite: Preise nach Stadt aus dem Domlivo Price Index, {sea, plural, one {# Wohnung} other {# Wohnungen}} am Meer, fünf Ratgeber zu Ablauf, Kosten und Steuern und die Antworten auf die häufigsten Fragen.",
+    "leadNoData": "Auf dieser Seite: Preise nach Stadt aus dem Domlivo Price Index, Wohnungen am Meer, fünf Ratgeber zu Ablauf, Kosten und Steuern und die Antworten auf die häufigsten Fragen.",
+    "leadFigure": "{city} {median}/m² ({count, plural, one {# Wohnung} other {# Wohnungen}})",
+    "heroAlt": "Eine Wohnung am Meer in Albanien, inseriert auf Domlivo",
+    "allSale": "Alle Immobilien zum Kauf in Albanien",
+    "table": {
+      "title": "Immobilienpreise in Albanien nach Stadt",
+      "lead": "Median des Angebotspreises pro m² für Wohnungen und Studios, günstigste Wohnung und Zahl der Inserate. Jede Stadt öffnet ihre Angebote auf Deutsch.",
+      "colCity": "Stadt",
+      "colMedian": "Median, €/m²",
+      "colFrom": "Wohnungen ab",
+      "colCount": "Inserate",
+      "colSample": "Wohnungen in der Stichprobe",
+      "lowSample": "zu wenig Daten",
+      "caption": "Immobilienpreise in Albanien nach Stadt, {date}: Median des Angebotspreises pro m² für Wohnungen und Studios zum Kauf auf Domlivo, niedrigster Wohnungspreis und Inserate je Stadt",
+      "footnote": "Angebotspreise aus aktiven Inseraten, stündlich neu berechnet. Ein Median über weniger als {min} Wohnungen ist ein Richtwert; die Stichprobe steht daneben.",
+      "pricesLink": "Alle Städte mit Spanne und Bauphase",
+      "methodologyLink": "Methodik des Index"
+    },
+    "sea": {
+      "title": "{count, plural, one {# Wohnung} other {# Wohnungen}} am Meer",
+      "lead": "Wohnungen und Studios bis {metres} m vom Meer oder in erster Reihe, sortiert nach Preis pro m² im Verhältnis zum Median ihrer Stadt: die günstigsten zuerst, aus jeder Stadt höchstens {perCity}.",
+      "all": "Alle Immobilien am Meer"
+    },
+    "guides": {
+      "title": "Ratgeber auf Deutsch",
+      "lead": "Fünf Artikel für Käufer aus Deutschland, veröffentlicht am 19. Oktober 2026: Ablauf und Kosten des Kaufs, Preise an der Küste, Steuern für deutsche Eigentümer, Albanien im Vergleich mit Montenegro und Kroatien, Ruhestand in Albanien.",
+      "readMore": "Weiterlesen",
+      "allBlog": "Alle Artikel"
+    },
+    "faq": {
+      "title": "Häufige Fragen",
+      "lead": "Kurz beantwortet mit den Fakten aus unseren Ratgebern; jede Antwort verlinkt den Artikel mit den Quellen.",
+      "q1": "Dürfen Deutsche in Albanien eine Immobilie kaufen?",
+      "a1": "Ja. Deutsche kaufen Wohnungen, Häuser und Gewerbeimmobilien zu denselben Bedingungen wie albanische Staatsbürger und dürfen sie frei verkaufen und vererben. Nur landwirtschaftliche Flächen sind ausgenommen: Sie lassen sich bis zu 99 Jahre pachten oder über eine albanische Gesellschaft erwerben. Wer eine Immobilie besitzt, kann nach Art. 84 des Gesetzes 79/2021 eine Aufenthaltserlaubnis für ein Jahr beantragen; einen Mindestkaufpreis nennt das Gesetz nicht.",
+      "q2": "Welche Steuern und Notarkosten kommen zum Kaufpreis hinzu?",
+      "a2": "Bei einer Wohnung für 100.000 € liegen die Kaufnebenkosten typischerweise bei etwa 2.300 €, also 2,3 %: Notar, Katasteramt, Anwalt, Übersetzer und Makler. Der Notar berechnet 0,35 % des Werts bis 6 Mio. Lek und 0,30 % bis 15 Mio. Lek; das Katasteramt ASHK verlangt seit 2025 5.000 Lek für die Eintragung. Die Übertragungssteuer von 2 % schuldet gesetzlich der Verkäufer, im Vertrag wird sie aber manchmal auf den Käufer abgewälzt; mit allen optionalen Posten am oberen Ende sind es dann etwa 6.600 €. Auf Wohnungen fällt keine Mehrwertsteuer an. Die jährliche Gebäudesteuer beträgt 0,05 % des steuerlichen Werts.",
+      "q3": "Wie läuft der Kauf ab und wie lange dauert er?",
+      "a3": "Ein Kauf ist nur als notarielle Urkunde wirksam; ein privatschriftlicher Vertrag ist nichtig. Die Prüfung der Unterlagen dauert ein bis zwei Wochen, die Beurkundung einen Tag und die Eintragung beim Katasteramt in der Praxis zwei bis vier Wochen. Mit sauberen Unterlagen sind es von der Reservierung bis zum neuen Eigentumsblatt vier bis acht Wochen. Bei Wohnungen im Bau dauert es länger, weil die Urkunde erst nach der Fertigstellung folgt.",
+      "q4": "Welche Gegenden eignen sich für Käufer aus Deutschland?",
+      "a4": "Durrës ist der günstigste große Küstenmarkt mit dem meisten Angebot: Am {date} verlangten die dort inserierten Wohnungen im Median {durresMedian} pro m², in Golem und Shkëmbi i Kavajës werden 1.100 bis 1.500 € verlangt. An der Promenade von Vlora sind es 2.500 bis 3.500 € pro m², im Zentrum beginnen die Preise bei 800 €. Saranda kostet im Zentrum 1.600 bis 1.800 €, an der Promenade 3.000 bis 3.500 €, Ksamil 1.800 bis 3.000 €. Shëngjin im Norden liegt bei 1.100 bis 2.000 €. Die Vergleiche Tirana oder Vlora, Tirana oder Saranda und Durrës oder Saranda helfen bei der Wahl.",
+      "a4NoData": "Durrës ist der günstigste große Küstenmarkt mit dem meisten Angebot: In Golem und Shkëmbi i Kavajës werden 1.100 bis 1.500 € pro m² verlangt. An der Promenade von Vlora sind es 2.500 bis 3.500 € pro m², im Zentrum beginnen die Preise bei 800 €. Saranda kostet im Zentrum 1.600 bis 1.800 €, an der Promenade 3.000 bis 3.500 €, Ksamil 1.800 bis 3.000 €. Shëngjin im Norden liegt bei 1.100 bis 2.000 €. Die Vergleiche Tirana oder Vlora, Tirana oder Saranda und Durrës oder Saranda helfen bei der Wahl.",
+      "q5": "Was kosten Immobilien in Albanien 2026?",
+      "a5": "Am {date} verlangten die auf Domlivo inserierten Wohnungen im Median {figures}. Das sind Angebotspreise, keine Verkaufspreise; in Durrës reicht die Spanne vom 20. bis zum 80. Perzentil von {durresP20} bis {durresP80} pro m². Laut Deloitte kostete eine albanische Wohnimmobilie 2025 im Schnitt etwa 1.720 € pro m², gegenüber 2.557 € für Neubauwohnungen in Montenegro und rund 3.000 € in Kroatien. Die Tabelle oben zeigt jede Stadt mit Stichprobe und Datum.",
+      "a5NoData": "Laut Deloitte kostete eine albanische Wohnimmobilie 2025 im Schnitt etwa 1.720 € pro m², gegenüber 2.557 € für Neubauwohnungen in Montenegro und rund 3.000 € in Kroatien. Die aktuellen Angebotspreise je Stadt, mit Stichprobe und Datum, stehen auf der Seite Preise nach Stadt.",
+      "q6": "Bekommen Deutsche in Albanien eine Hypothek?",
+      "a6": "In der Praxis so gut wie nie: Albanische Banken sind nicht darauf ausgelegt, Kredite an gebietsfremde Käufer zu vergeben. Das übliche Finanzierungsinstrument des Marktes sind zinsfreie Ratenzahlungen an den Bauträger bis zur Schlüsselübergabe, die die meisten Neubauverkäufe standardmäßig anbieten. Mieteinnahmen aus der Wohnung werden in Albanien mit 15 % besteuert; nach dem Doppelbesteuerungsabkommen von 2010 stellt Deutschland sie frei, bezieht sie aber in den Steuersatz für Ihr übriges Einkommen ein.",
+      "more": "Mehr dazu"
+    },
+    "contact": {
+      "title": "Welche Wohnung suchen Sie?",
+      "subtitle": "Nennen Sie uns Budget und Ort. Wir schicken passende Angebote aus dem aktuellen Bestand mit Preis und Verfügbarkeit."
+    },
+    "linkFromSale": "Für Käufer aus Deutschland: Preise nach Stadt, Wohnungen am Meer, Ablauf und Steuern"
   }
 }

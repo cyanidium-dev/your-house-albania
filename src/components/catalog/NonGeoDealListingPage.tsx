@@ -14,6 +14,7 @@ import { buildTypeListingSeo } from "@/lib/seo/listingSeoCopy";
 import type { PropertiesDealParam } from "@/lib/catalog/propertiesDealFromLanding";
 import { listingUrlHasQueryParams } from "@/lib/seo/catalogListingMetadata";
 import { SaleHubDepthSections } from "@/components/catalog/saleHub/SaleHubDepthSections";
+import { GermanHubLink } from "@/components/germanHub/GermanHubLink";
 
 function normalizeSeg(s: string): string {
   return decodeURIComponent(s).trim().toLowerCase();
@@ -125,6 +126,8 @@ export async function NonGeoDealListingPage({
             propertyType={propertyTypeSegment || undefined}
           />
         }
+        // The bare German sale hub links the German market hub (renders nothing elsewhere).
+        footer={showDepth ? <GermanHubLink locale={locale} /> : undefined}
       />
       <PropertiesListing
         locale={locale}
