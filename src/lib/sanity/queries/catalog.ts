@@ -345,7 +345,7 @@ const cachedFetchCatalogProperties = sanityCache(
   if (sort === 'recommended') {
     try {
       const rows = await client.fetch<RotationRow[]>(
-        `${baseFilter} | order(${promotionOrder}, _createdAt desc) { _id, promoted, promotionType, "agent": agent->slug.current }`,
+        `${baseFilter} | order(${promotionOrder}, _createdAt desc) { _id, promoted, promotionType, "agent": agent->slug.current, "photos": count(gallery), "views": ${LISTING_COUNTER}.total, "saves": ${LISTING_COUNTER}.favorites, "price": ${PRICE_TOTAL_KEY}, area, "createdAt": _createdAt }`,
         params,
       );
       const ordered = rotateCatalog(Array.isArray(rows) ? rows : [], rotationSeed());
