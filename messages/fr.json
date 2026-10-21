@@ -725,7 +725,7 @@
     "registration": "Enregistrement de la propriété (ASHK)",
     "agency": "Commission d’agence côté acheteur (1 % en général)",
     "purchaseTotal": "En plus du prix ({pct} %)",
-    "transferTaxNote": "La taxe de mutation de 2 % est payée par le vendeur.",
+    "transferTaxNote": "L’acheteur ne paie pas de taxe de mutation, les impôts sur la vente sont à la charge du vendeur.",
     "annualTitle": "Charges courantes",
     "propertyTax": "Taxe foncière",
     "utilities": "Énergie, internet, charges de copropriété",
@@ -1679,7 +1679,7 @@
       "q1": "Un Français peut-il acheter un bien immobilier en Albanie ?",
       "a1": "Oui. Un étranger achète un appartement, une maison ou un local commercial aux mêmes conditions qu’un Albanais, et peut le revendre ou le transmettre librement. Seules les terres agricoles sont exclues : elles se louent jusqu’à 99 ans ou s’achètent par une société albanaise. Un propriétaire peut demander un titre de séjour d’un an au titre de l’article 84 de la loi 79/2021 ; la loi ne fixe pas de prix minimum.",
       "q2": "Quels frais s’ajoutent au prix ?",
-      "a2": "Pour un appartement à 100 000 €, les frais d’achat tournent autour de 2 300 €, soit 2,3 % : notaire, cadastre, avocat, traducteur et agence. Le notaire facture 0,35 % de la valeur jusqu’à 6 millions de leks et 0,30 % jusqu’à 15 millions ; le cadastre (ASHK) prend 5 000 leks pour l’inscription depuis 2025. La taxe de transfert de 2 % est due par le vendeur selon la loi, mais le contrat la reporte parfois sur l’acheteur : avec tous les postes optionnels au plus haut, on arrive vers 6 600 €. Pas de TVA sur les appartements.",
+      "a2": "Pour un appartement à 100 000 €, les frais d’achat tournent autour de 2 300 €, soit 2,3 % : notaire, cadastre, avocat, traducteur et agence. Le notaire facture 0,35 % de la valeur jusqu’à 6 millions de leks et 0,30 % jusqu’à 15 millions ; le cadastre (ASHK) prend 5 000 leks pour l’inscription depuis 2025. Avec tous les postes optionnels au plus haut, on arrive vers 4 600 €. L’acheteur ne paie pas de taxe de transfert : les impôts sur la vente sont à la charge du vendeur. Pas de TVA sur les appartements.",
       "q3": "Combien de temps dure un achat ?",
       "a3": "Une vente n’est valable que par acte notarié. La vérification des documents prend une à deux semaines, la signature chez le notaire une journée, l’inscription au cadastre deux à quatre semaines en pratique. Avec un dossier propre, comptez quatre à huit semaines de la réservation au nouveau titre de propriété. Pour un appartement en construction, l’acte suit la livraison.",
       "q4": "Où acheter sur la côte ?",
@@ -1727,12 +1727,12 @@
         "cadastre": "Cadastre (ASHK)",
         "cadastreRule": "5 000 leks pour l’inscription, depuis 2025",
         "transfer": "Taxe de transfert",
-        "transferRule": "2 %, due par le vendeur selon la loi ; parfois reportée sur l’acheteur par le contrat",
+        "transferRule": "aucune pour l’acheteur d’un appartement ; les impôts sur la vente sont à la charge du vendeur",
         "vat": "TVA",
         "vatRule": "aucune sur les appartements",
         "yearly": "Taxe annuelle sur le bâti",
         "yearlyRule": "0,05 % de la valeur fiscale",
-        "total": "Au total, avocat, traducteur et agence compris, les frais tournent autour de 2 300 € (2,3 %) pour un appartement à 100 000 €, et vers 6 600 € si la taxe de transfert vous est reportée et que tous les postes optionnels sont au plus haut."
+        "total": "Au total, avocat, traducteur et agence compris, les frais tournent autour de 2 300 € (2,3 %) pour un appartement à 100 000 €, et vers 4 600 € si tous les postes optionnels sont au plus haut."
       },
       "taxes": {
         "title": "Impôts : en Albanie et en France",
