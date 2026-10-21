@@ -36,3 +36,24 @@ describe('resolveLocalizedStringStrict', () => {
     expect(resolveLocalizedStringStrict(null, 'en')).toBe('')
   })
 })
+
+describe('repository translations (fr)', () => {
+  // `fr` has no values in Sanity: the text comes from src/data/contentTranslations/fr.json.
+  const district = { en: 'City Center', de: 'Stadtzentrum' }
+
+  it('translates an English value that has an entry', () => {
+    expect(resolveLocalizedString(district, 'fr')).toBe('Centre-ville')
+    expect(resolveLocalizedStringStrict(district, 'fr')).toBe('Centre-ville')
+  })
+
+  it('falls back to English, and strict to empty, without an entry', () => {
+    const field = { en: 'A sentence nobody translated' }
+    expect(resolveLocalizedString(field, 'fr')).toBe('A sentence nobody translated')
+    expect(resolveLocalizedStringStrict(field, 'fr')).toBe('')
+  })
+
+  it('leaves the other locales to Sanity', () => {
+    expect(resolveLocalizedString(district, 'de')).toBe('Stadtzentrum')
+    expect(resolveLocalizedString(district, 'pl')).toBe('City Center')
+  })
+})

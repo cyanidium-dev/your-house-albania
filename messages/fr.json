@@ -81,7 +81,8 @@
       "about": "À propos",
       "contacts": "Contact",
       "addProperty": "Publier votre bien",
-      "knowledge": "Base de connaissances"
+      "knowledge": "Base de connaissances",
+      "frenchHub": "Immobilier en Albanie : guide en français"
     },
     "cities": {
       "empty": "Aucune ville à afficher."
@@ -1501,5 +1502,152 @@
     },
     "firstLine": "en première ligne, face à la plage",
     "metres": "{n} m"
+  },
+  "FrenchPilot": {
+    "breadcrumb": "Immobilier en Albanie",
+    "label": "Pour les acheteurs francophones",
+    "leadFigure": "{city} {median}/m² ({count, plural, one {# appartement} other {# appartements}})",
+    "heroAlt": "Un appartement à Durrës, en vente sur Domlivo",
+    "allDurres": "Tous les biens à vendre à Durrës",
+    "updated": "Mis à jour le {date}",
+    "hub": {
+      "metaTitle": "Immobilier en Albanie : prix 2026 et appartements à Durrës",
+      "metaDescription": "Acheter un bien en Albanie : prix affichés au m² ({figures}), {count} appartements à Durrës avec fiche en français, frais, impôts et deux guides.",
+      "metaDescriptionShort": "Acheter un bien en Albanie : prix par ville, appartements à Durrës avec fiche en français, frais d’achat, impôts en Albanie et en France.",
+      "h1": "Immobilier en Albanie : acheter à Durrës et sur la côte",
+      "lead": "Prix affichés au m² le {date} : {figures}. Sur cette page : les prix par ville du Domlivo Price Index, {count, plural, one {# appartement} other {# appartements}} à Durrës avec une fiche en français, deux guides et les réponses aux questions les plus fréquentes.",
+      "leadNoData": "Sur cette page : les prix par ville du Domlivo Price Index, des appartements à Durrës avec une fiche en français, deux guides et les réponses aux questions les plus fréquentes."
+    },
+    "table": {
+      "title": "Prix de l’immobilier en Albanie par ville",
+      "lead": "Médiane du prix affiché au m² des appartements et studios, appartement le moins cher et nombre d’annonces. Les fiches en français couvrent Durrës ; les autres villes s’ouvrent avec le texte des annonces.",
+      "colCity": "Ville",
+      "colMedian": "Médiane, €/m²",
+      "colFrom": "Appartements dès",
+      "colCount": "Annonces",
+      "colSample": "Appartements dans l’échantillon",
+      "lowSample": "trop peu de données",
+      "caption": "Prix de l’immobilier en Albanie par ville, {date} : médiane du prix affiché au m² des appartements et studios à vendre sur Domlivo, appartement le moins cher et annonces par ville",
+      "footnote": "Prix affichés des annonces actives, recalculés toutes les heures. Une médiane sur moins de {min} appartements est indicative ; l’échantillon est indiqué à côté.",
+      "pricesLink": "Toutes les villes, avec fourchette et stade de construction",
+      "methodologyLink": "Méthode de l’indice"
+    },
+    "districts": {
+      "title": "Durrës, quartier par quartier",
+      "lead": "Médiane du prix affiché au m² des appartements et studios dans chaque quartier de Durrës, appartement le moins cher et taille de l’échantillon. Les cinq premiers quartiers ont leur page en français.",
+      "colDistrict": "Quartier",
+      "caption": "Prix des appartements à Durrës par quartier, {date} : médiane au m², appartement le moins cher et échantillon"
+    },
+    "listings": {
+      "title": "{count, plural, one {# appartement} other {# appartements}} à Durrës",
+      "lead": "Appartements et studios de cinq quartiers de Durrës, classés par prix au m² par rapport à la médiane de leur quartier : les moins chers d’abord. La fiche de chacun est traduite en français."
+    },
+    "guides": {
+      "title": "Deux guides en français",
+      "lead": "Écrits pour un acheteur qui vit en France, en Belgique ou en Suisse, avec les chiffres de l’indice et les textes de loi.",
+      "read": "Lire le guide"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "lead": "Réponses courtes ; les guides donnent le détail et les sources.",
+      "q1": "Un Français peut-il acheter un bien immobilier en Albanie ?",
+      "a1": "Oui. Un étranger achète un appartement, une maison ou un local commercial aux mêmes conditions qu’un Albanais, et peut le revendre ou le transmettre librement. Seules les terres agricoles sont exclues : elles se louent jusqu’à 99 ans ou s’achètent par une société albanaise. Un propriétaire peut demander un titre de séjour d’un an au titre de l’article 84 de la loi 79/2021 ; la loi ne fixe pas de prix minimum.",
+      "q2": "Quels frais s’ajoutent au prix ?",
+      "a2": "Pour un appartement à 100 000 €, les frais d’achat tournent autour de 2 300 €, soit 2,3 % : notaire, cadastre, avocat, traducteur et agence. Le notaire facture 0,35 % de la valeur jusqu’à 6 millions de leks et 0,30 % jusqu’à 15 millions ; le cadastre (ASHK) prend 5 000 leks pour l’inscription depuis 2025. La taxe de transfert de 2 % est due par le vendeur selon la loi, mais le contrat la reporte parfois sur l’acheteur : avec tous les postes optionnels au plus haut, on arrive vers 6 600 €. Pas de TVA sur les appartements.",
+      "q3": "Combien de temps dure un achat ?",
+      "a3": "Une vente n’est valable que par acte notarié. La vérification des documents prend une à deux semaines, la signature chez le notaire une journée, l’inscription au cadastre deux à quatre semaines en pratique. Avec un dossier propre, comptez quatre à huit semaines de la réservation au nouveau titre de propriété. Pour un appartement en construction, l’acte suit la livraison.",
+      "q4": "Où acheter sur la côte ?",
+      "a4": "Durrës est le grand marché côtier le moins cher et celui qui a le plus d’offre : le {date}, la médiane des appartements affichés y était de {durresMedian} au m². Sur le front de mer de Vlora, on demande 2 500 à 3 500 € au m², au centre dès 800 €. Saranda coûte 1 600 à 1 800 € au centre, 3 000 à 3 500 € sur la promenade, Ksamil 1 800 à 3 000 €. Shëngjin, au nord, se situe entre 1 100 et 2 000 €.",
+      "a4NoData": "Durrës est le grand marché côtier le moins cher et celui qui a le plus d’offre : Golem et Shkëmbi i Kavajës affichent 1 100 à 1 500 € au m². Sur le front de mer de Vlora, on demande 2 500 à 3 500 € au m², au centre dès 800 €. Saranda coûte 1 600 à 1 800 € au centre, 3 000 à 3 500 € sur la promenade, Ksamil 1 800 à 3 000 €. Shëngjin, au nord, se situe entre 1 100 et 2 000 €.",
+      "q5": "Peut-on obtenir un crédit immobilier en Albanie ?",
+      "a5": "Presque jamais : les banques albanaises ne prêtent pas aux acheteurs non résidents. Le marché finance autrement, par un paiement échelonné sans intérêts au promoteur jusqu’à la remise des clés, proposé par la plupart des programmes neufs. Un crédit en France sur un autre bien reste l’autre voie.",
+      "q6": "Comment les loyers sont-ils imposés, en Albanie et en France ?",
+      "a6": "Les loyers d’un bien en Albanie y sont imposés à 15 %. Un résident de France les déclare aussi en France : selon la convention fiscale franco-albanaise du 24 décembre 2002 (article 24), ils entrent dans le calcul de l’impôt français, et un crédit d’impôt égal à l’impôt français sur ces loyers évite de payer deux fois. Le guide d’achat détaille aussi la plus-value et la taxe annuelle.",
+      "more": "Lire le guide"
+    },
+    "contact": {
+      "title": "Quel appartement cherchez-vous ?",
+      "subtitle": "Indiquez votre budget et le quartier. Nous vous envoyons les annonces qui correspondent, avec le prix et la disponibilité."
+    },
+    "buying": {
+      "metaTitle": "Acheter un appartement en Albanie depuis la France",
+      "metaDescription": "Étapes, délais, frais de notaire, impôts en Albanie et en France (convention de 2002), séjour et vols : acheter un appartement à Durrës depuis la France.",
+      "cardTitle": "Acheter en Albanie depuis la France",
+      "cardLead": "Étapes et délais, frais sur un achat de 100 000 €, impôts des deux côtés, titre de séjour, vols depuis Paris.",
+      "label": "Guide d’achat",
+      "h1": "Acheter un appartement en Albanie depuis la France",
+      "lead": "Ce qu’il faut savoir avant de réserver un appartement à Durrës ou ailleurs sur la côte : qui peut acheter, les étapes, les frais, les impôts en Albanie et en France, le séjour et le trajet depuis Paris.",
+      "who": {
+        "title": "Qui peut acheter",
+        "p1": "Un étranger achète un appartement, une maison ou un local commercial aux mêmes conditions qu’un Albanais, et peut le revendre ou le transmettre librement. Seules les terres agricoles sont exclues : elles se louent jusqu’à 99 ans ou s’achètent par une société albanaise.",
+        "p2": "Il n’y a pas de visa à demander : un citoyen de l’Union européenne séjourne en Albanie jusqu’à 90 jours sur 180. Un propriétaire peut demander un titre de séjour d’un an au titre de l’article 84 de la loi 79/2021, sans prix minimum fixé par la loi."
+      },
+      "steps": {
+        "title": "Les étapes et les délais",
+        "s1": "Réservation : un acompte retire l’appartement de la vente, souvent quelques milliers d’euros.",
+        "s2": "Vérification : l’avocat contrôle le titre de propriété au cadastre (ASHK), les hypothèques et le permis de construire. Une à deux semaines.",
+        "s3": "Acte notarié : seul un acte signé chez le notaire rend la vente valable ; un contrat sous seing privé est nul. Une journée, avec un traducteur si vous ne parlez pas albanais.",
+        "s4": "Paiement : par virement bancaire, au moment de l’acte ou selon l’échéancier du promoteur pour un appartement neuf.",
+        "s5": "Inscription au cadastre : deux à quatre semaines en pratique, puis vous recevez le nouveau titre de propriété.",
+        "total": "Avec un dossier propre, comptez quatre à huit semaines de la réservation au titre. Pour un appartement en construction, l’acte définitif suit la livraison."
+      },
+      "costs": {
+        "title": "Ce que coûte l’achat",
+        "lead": "Les postes qui s’ajoutent au prix, et ce qu’ils représentent pour un appartement à 100 000 €.",
+        "colItem": "Poste",
+        "colRule": "Règle",
+        "notary": "Notaire",
+        "notaryRule": "0,35 % de la valeur jusqu’à 6 millions de leks, 0,30 % jusqu’à 15 millions",
+        "cadastre": "Cadastre (ASHK)",
+        "cadastreRule": "5 000 leks pour l’inscription, depuis 2025",
+        "transfer": "Taxe de transfert",
+        "transferRule": "2 %, due par le vendeur selon la loi ; parfois reportée sur l’acheteur par le contrat",
+        "vat": "TVA",
+        "vatRule": "aucune sur les appartements",
+        "yearly": "Taxe annuelle sur le bâti",
+        "yearlyRule": "0,05 % de la valeur fiscale",
+        "total": "Au total, avocat, traducteur et agence compris, les frais tournent autour de 2 300 € (2,3 %) pour un appartement à 100 000 €, et vers 6 600 € si la taxe de transfert vous est reportée et que tous les postes optionnels sont au plus haut."
+      },
+      "taxes": {
+        "title": "Impôts : en Albanie et en France",
+        "p1": "Les loyers d’un appartement en Albanie y sont imposés à 15 %. La convention fiscale franco-albanaise du 24 décembre 2002, en vigueur depuis le 1er octobre 2005, laisse l’Albanie imposer ces revenus (article 6).",
+        "p2": "Un résident de France les déclare aussi en France. Ils entrent dans le calcul de l’impôt français, mais l’article 24 donne droit à un crédit d’impôt égal à l’impôt français sur ces loyers : vous ne payez pas deux fois, et ils peuvent relever le taux appliqué à vos autres revenus.",
+        "p3": "Pour une plus-value à la revente, le crédit d’impôt est égal à l’impôt payé en Albanie, sans dépasser l’impôt français correspondant. Un compte bancaire ouvert en Albanie se déclare chaque année (formulaire 3916). Les prélèvements sociaux dépendent de votre situation : faites valider le montage par un conseiller fiscal avant la signature."
+      },
+      "finance": {
+        "title": "Financement",
+        "p1": "Les banques albanaises ne prêtent presque jamais aux acheteurs non résidents. Le marché finance autrement : la plupart des programmes neufs proposent un paiement échelonné sans intérêts au promoteur jusqu’à la remise des clés. Pour un appartement ancien, le prix se paie en une fois à l’acte."
+      },
+      "travel": {
+        "title": "Se rendre à Durrës",
+        "p1": "Des vols directs relient Paris à Tirana en 2 h 35 environ. L’aéroport de Tirana est à une trentaine de kilomètres de Durrës : une visite d’appartements tient dans un long week-end."
+      },
+      "listingsTitle": "Six appartements à Durrës pour commencer",
+      "sources": "Sources : convention fiscale entre la France et l’Albanie du 24 décembre 2002 (articles 6, 13 et 24), loi albanaise 79/2021 sur les étrangers (article 84), barème des notaires albanais, tarifs du cadastre ASHK 2025."
+    },
+    "seaside": {
+      "metaTitle": "Prix de l’immobilier en bord de mer en Albanie (2026)",
+      "metaDescription": "Prix au m² en bord de mer en Albanie : Durrës quartier par quartier ({durresMedian} en médiane), Vlora, Saranda, Ksamil, et des appartements à moins de 500 m de la mer.",
+      "metaDescriptionShort": "Prix au m² en bord de mer en Albanie : Durrës quartier par quartier, Vlora, Saranda, Ksamil, et des appartements à moins de 500 m de la mer.",
+      "cardTitle": "Prix en bord de mer",
+      "cardLead": "Durrës quartier par quartier, les autres villes de la côte, la comparaison avec la Croatie et le Monténégro.",
+      "label": "Prix 2026",
+      "h1": "Prix de l’immobilier en bord de mer en Albanie",
+      "lead": "Le {date}, les appartements affichés à Durrës avaient une médiane de {median} au m², et 60 % d’entre eux se situaient entre {p20} et {p80}. Ville par ville et quartier par quartier, avec des appartements à moins de {metres} m de la mer.",
+      "leadNoData": "Durrës quartier par quartier, les autres villes de la côte et des appartements à moins de 500 m de la mer, avec les prix affichés du Domlivo Price Index.",
+      "coast": {
+        "title": "Les autres villes de la côte",
+        "p1": "Durrës reste le grand marché côtier le moins cher. Sur le front de mer de Vlora, on demande 2 500 à 3 500 € au m², au centre dès 800 €. Saranda coûte 1 600 à 1 800 € au centre et 3 000 à 3 500 € sur la promenade ; Ksamil, en face de Corfou, 1 800 à 3 000 €. Shëngjin, au nord, se situe entre 1 100 et 2 000 €.",
+        "p2": "Selon Deloitte, un logement en Albanie coûtait en moyenne 1 720 € au m² en 2025, contre 2 557 € pour un appartement neuf au Monténégro et environ 3 000 € en Croatie."
+      },
+      "sea": {
+        "title": "{count, plural, one {# appartement} other {# appartements}} à moins de {metres} m de la mer",
+        "lead": "Appartements et studios de Durrës au bord de l’eau ou à une distance indiquée de {metres} m au plus, classés par prix au m² par rapport à la médiane de leur quartier."
+      },
+      "read": {
+        "title": "Comment lire ces prix",
+        "p1": "Ce sont des prix affichés, pas des prix de vente : l’écart se négocie, surtout sur l’ancien. La médiane porte sur les appartements et studios à vendre avec un prix total et une surface, recalculée toutes les heures. Une médiane sur moins de {min} appartements est indicative."
+      }
+    }
   }
 }
