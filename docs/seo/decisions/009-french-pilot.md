@@ -11,6 +11,7 @@ Two constraints shape how: the Sanity dataset is at its attribute cap (2026/2000
 ## Decision
 
 - `fr` joins `routing.locales` as a partial locale (`PARTIAL_LOCALE_PATHS`). Indexed: the French hub `/fr/immobilier-albanie`, two guides under it, `/fr/albania/durres` and five districts (also gated by the registry, `durres-property` lists `fr`), and 30 listings. Every other `/fr` URL renders and is `noindex, follow`, out of hreflang, sitemaps and IndexNow.
+- Added 2026-10-21: the two calculator pages, `/fr/calculators/purchase-costs` and `/fr/calculators/rental-yield` (`lib/calculatorPages`). Every word on them, the calculators' labels included, is in `messages/fr.json`, so they are indexed like the other locales' copies.
 - The interface is translated in `messages/fr.json`. The Sanity text those pages show is translated in the repository, `src/data/contentTranslations/fr.json`, keyed by the English source text and resolved in `lib/sanity/localized.ts`. A changed English source falls back to English until re-translated.
 - Listing addresses in `fr` are derived from the English ones (`apartment-` → `appartement-`), because `localizedSlug.fr` cannot be stored.
 

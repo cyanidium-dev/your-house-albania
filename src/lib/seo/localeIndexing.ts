@@ -6,6 +6,7 @@ import {
   FRENCH_PILOT_DISTRICTS,
   FRENCH_PILOT_LISTINGS,
 } from "@/lib/frenchPilot/config";
+import { CALCULATOR_PATHS } from "@/lib/calculatorPages/config";
 
 /**
  * Locales that are live but only partly written.
@@ -38,6 +39,9 @@ export const PARTIAL_LOCALE_PATHS: PartialLocalePaths = {
     new RegExp(`^/${FRENCH_HUB_PATH}(/(${anyOf(Object.values(FRENCH_GUIDE_PATHS))}))?$`),
     new RegExp(`^/albania/${FRENCH_PILOT_CITY}(/(${anyOf(FRENCH_PILOT_DISTRICTS)}))?$`),
     new RegExp(`^/property/(${anyOf(FRENCH_PILOT_LISTINGS)})$`),
+    // The two calculator pages (2026-10-21, lib/calculatorPages): their copy and
+    // the calculators' labels are written in messages/fr.json.
+    new RegExp(`^/(${anyOf(Object.values(CALCULATOR_PATHS))})$`),
   ],
 };
 

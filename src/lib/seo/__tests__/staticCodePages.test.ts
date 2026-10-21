@@ -17,6 +17,17 @@ describe("static code pages in sitemap-static.xml", () => {
     expect(STATIC_CODE_PAGES.map((p) => p.path)).toContain("contacts");
   });
 
+  it("lists both calculator pages in every locale, French included", () => {
+    const entries = buildStaticCodePageEntries(BASE, routing.locales, [
+      { path: "calculators/purchase-costs", lastModified: "2026-10-21" },
+    ]);
+    const xml = buildUrlsetXml(entries);
+    for (const locale of routing.locales) expect(xml).toContain(`<loc>${BASE}/${locale}/calculators/purchase-costs</loc>`);
+    expect(STATIC_CODE_PAGES.map((p) => p.path)).toEqual(
+      expect.arrayContaining(["calculators/purchase-costs", "calculators/rental-yield"]),
+    );
+  });
+
   it("emits one URL per locale, each with every locale plus x-default as alternates", () => {
     const entries = buildStaticCodePageEntries(BASE + "/", routing.locales, [
       { path: "about", lastModified: "2026-09-20" },
@@ -35,9 +46,10 @@ describe("static code pages in sitemap-static.xml", () => {
     expect(xml).toContain(`<loc>${BASE}/de/about</loc>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="pl" href="${BASE}/pl/about"/>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE}/en/about"/>`);
-    // A partial locale (fr) lists only its pilot pages, none of them static code pages.
-    const indexable = routing.locales.filter((l) => isLocalePathIndexable(l, "/about"));
-    const expectedUrls = STATIC_CODE_PAGES.reduce((n, p) => n + (p.locales?.length ?? indexable.length), 0);
+    // A partial locale (fr) lists only its pilot pages: of the all-locale code
+    // pages, just the two calculators.
+    const indexable = (path: string) => routing.locales.filter((l) => isLocalePathIndexable(l, `/${path}`)).length;
+    const expectedUrls = STATIC_CODE_PAGES.reduce((n, p) => n + (p.locales?.length ?? indexable(p.path)), 0);
     expect(xml.match(/<url>/g)).toHaveLength(expectedUrls);
   });
 

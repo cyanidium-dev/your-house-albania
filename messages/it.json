@@ -558,6 +558,122 @@
     "onTopOfPrice": "Oltre al prezzo",
     "capped": "con tetto"
   },
+  "CalculatorPages": {
+    "shared": {
+      "faqTitle": "Domande e risposte",
+      "methodTitle": "Come si calcola",
+      "relatedTitle": "Pagine correlate",
+      "linkTitle": "Link a questo calcolatore",
+      "linkLead": "Scrivi di immobili in Albania? Incolla questo HTML nel tuo articolo. Il calcolatore è gratuito e non richiede registrazione.",
+      "linkCopy": "Copia l'HTML",
+      "linkCopied": "Copiato",
+      "linkField": "Codice HTML del link",
+      "percentRule": "{pct} del prezzo",
+      "percentCapRule": "{pct} del prezzo, al massimo {cap}",
+      "fixedRule": "{amount}, importo fisso",
+      "related": {
+        "prices": "Prezzi degli immobili in Albania per città",
+        "purchaseCalc": "Calcolatore dei costi d'acquisto",
+        "rentalCalc": "Calcolatore del rendimento da affitto",
+        "guideLegal": "Guida legale per chi compra",
+        "guideForeigners": "Gli stranieri possono comprare casa in Albania?",
+        "frenchGuide": "Comprare in Albania dalla Francia",
+        "city": "{city}: prezzi e quartieri",
+        "cityListings": "Immobili in vendita a {city}"
+      },
+      "cities": {
+        "durres": "Durazzo",
+        "tirana": "Tirana",
+        "vlore": "Valona",
+        "sarande": "Saranda"
+      }
+    },
+    "purchase": {
+      "metaTitle": "Calcolatore dei costi d'acquisto di un immobile in Albania",
+      "metaDescription": "Quanto costa comprare un appartamento in Albania oltre al prezzo: notaio, registrazione ASHK, avvocato, traduttore giurato e provvigione d'agenzia. Inserisci il prezzo e vedi ogni voce.",
+      "breadcrumb": "Calcolatore dei costi d'acquisto",
+      "h1": "Calcolatore dei costi d'acquisto di un immobile in Albania",
+      "lead": "Quanto costa comprare un appartamento o una casa in Albania oltre al prezzo: il notaio, la registrazione della proprietà al catasto (ASHK), un avvocato se lo vuoi, un traduttore giurato e la provvigione d'agenzia. Inserisci il prezzo per vedere ogni voce e il totale. Chi compra non paga imposte sul trasferimento, quindi non c'è una riga per questo.",
+      "linkText": "Calcolatore dei costi d'acquisto di un immobile in Albania",
+      "totalNote": "Il totale è la somma delle righe qui sopra, e la quota sul prezzo è quel totale diviso per il prezzo.",
+      "noTransferTax": "Non c'è una riga per l'imposta di trasferimento: una persona fisica che compra un appartamento non la paga. I costi di possesso successivi, come l'imposta annuale sull'edificio, non fanno parte dell'acquisto.",
+      "faq1q": "Quanto costa comprare un appartamento in Albania oltre al prezzo?",
+      "faq1a": "Per un appartamento da {price}, il calcolatore aggiunge {total}, cioè il {pct} del prezzo: {lines}.",
+      "faq2q": "Chi compra paga un'imposta di trasferimento in Albania?",
+      "faq2a": "No. Una persona fisica che compra un appartamento non paga imposte sul trasferimento, quindi il calcolatore non ha una riga per questo: l'imposta sulla vendita spetta al venditore. Leggi comunque il contratto, perché una clausola può spostare i costi del venditore su chi compra.",
+      "faq3q": "Servono un avvocato e un traduttore giurato?",
+      "faq3a": "L'avvocato non è obbligatorio per legge, ma è consigliato: la verifica del titolo, dei gravami e dei permessi costa circa 500-2.000 €, e il calcolatore conta {lawyer}. Il traduttore giurato è obbligatorio se non parli albanese. Firma l'atto insieme a te e costa circa 50-150 €; il calcolatore conta {translator}.",
+      "faq4q": "Chi registra la proprietà e quanto costa?",
+      "faq4a": "È il notaio a presentare la registrazione al catasto statale (ASHK), con una tariffa fissa di circa {registration}. L'onorario del notaio segue la tabella ufficiale, circa lo 0,30-0,35% del prezzo (Ordinanza del Ministero della Giustizia n. 279/2012)."
+    },
+    "rental": {
+      "metaTitle": "Calcolatore del rendimento da affitto in Albania",
+      "metaDescription": "Rendimento lordo e netto di un appartamento in Albania, in affitto lungo o breve, dopo i costi di locazione, la gestione, le spese correnti e l'imposta del {tax}.",
+      "breadcrumb": "Calcolatore del rendimento da affitto",
+      "h1": "Calcolatore del rendimento da affitto in Albania",
+      "lead": "Calcola il rendimento lordo e netto di un appartamento in Albania, in affitto lungo o a breve termine per i turisti. Il calcolatore sottrae i costi di locazione, la gestione, le spese correnti e l'imposta del {tax} sui redditi da affitto. I preset contengono le nostre stime per un bilocale a Durazzo; scegli l'inserimento manuale per usare i tuoi numeri.",
+      "linkText": "Calcolatore del rendimento da affitto in Albania",
+      "methodGrossLabel": "Reddito lordo",
+      "methodGross": "Affitto lungo: il canone mensile × 12. Affitto breve: la tariffa a notte × le notti affittate, cioè 365 × l'occupazione, entro il limite della stagione se lo imposti.",
+      "methodLetLabel": "Costi di locazione",
+      "methodLet": "Affitto lungo: un mese vuoto all'anno e mezzo canone all'agenzia. Affitto breve: {platform} di commissioni delle piattaforme e {localTax} di tassa di soggiorno sul reddito lordo.",
+      "methodMgmtLabel": "Gestione",
+      "methodMgmt": "La commissione che imposti, in percentuale sul reddito lordo: 0% se gestisci tu l'appartamento.",
+      "methodRunningLabel": "Spese correnti",
+      "methodRunning": "Manutenzione al {repairs} del prezzo all'anno, assicurazione e imposta sull'edificio per {fixed} all'anno; gli affitti brevi aggiungono {utilities} all'anno di utenze.",
+      "methodTaxLabel": "Imposta",
+      "methodTax": "Il {tax} del reddito lordo, dedotti i costi di locazione o delle piattaforme.",
+      "methodGrossYieldLabel": "Rendimento lordo",
+      "methodGrossYield": "Il reddito lordo diviso per il prezzo.",
+      "methodNetYieldLabel": "Rendimento netto",
+      "methodNetYield": "Il reddito netto diviso per il prezzo più i costi d'acquisto: il {buyPct} del prezzo e {buyFixed} per notaio, agenzia, registrazione ASHK, avvocato e traduttore, come nel calcolatore dei costi d'acquisto.",
+      "presetsNote": "Un preset compila canone, occupazione, stagione e commissione di gestione; con l'inserimento manuale puoi cambiare ciascun valore.",
+      "faq1q": "Come si tassano i redditi da affitto in Albania?",
+      "faq1a": "Al {tax}, sia per gli affitti lunghi sia per quelli brevi. Il calcolatore applica l'imposta al canone lordo, dedotti i costi di locazione o delle piattaforme.",
+      "faq2q": "Che differenza c'è tra rendimento lordo e netto?",
+      "faq2a": "Il rendimento lordo è il canone di un anno diviso per il prezzo. Il rendimento netto è ciò che resta dopo costi di locazione, gestione, spese correnti e imposta, diviso per il prezzo più i costi d'acquisto.",
+      "faq2Example": "Per il preset dell'affitto lungo a {price}: {gross} lordo, {net} netto.",
+      "faq3q": "Rende di più l'affitto lungo o quello breve?",
+      "faq3a": "Con i nostri preset per un bilocale a Durazzo da {price}, il calcolatore dà questi rendimenti netti: {list}.",
+      "faq4q": "Da dove vengono i numeri dei preset?",
+      "faq4a": "Sono stime Domlivo di ottobre 2026 per un bilocale a Durazzo: {str} per gli affitti brevi e {ltr} per un affitto lungo. Non sono una garanzia di reddito; passa all'inserimento manuale per provare i tuoi numeri.",
+      "strFigures": "{adr} a notte con un'occupazione del {occupancy}, fino a {nights} notti a stagione",
+      "strFiguresNoCap": "{adr} a notte con un'occupazione del {occupancy}",
+      "ltrFigures": "{rent} al mese",
+      "presetYield": "{label}: {net}"
+    },
+    "cms": {
+      "purchaseDisclaimer": "Importi indicativi, non una consulenza legale; i costi esatti li conferma il notaio.",
+      "roiDisclaimer": "Stima Domlivo dell'8 ottobre 2026; non è una garanzia di reddito.",
+      "items": {
+        "cost0": {
+          "label": "Notaio (≈{pct})",
+          "note": "Circa lo 0,30-0,35% del prezzo secondo la tabella ufficiale (Ordinanza del Ministero della Giustizia n. 279/2012)."
+        },
+        "cost1": {
+          "label": "Registrazione ASHK",
+          "note": "Circa {amount} per registrare la proprietà al catasto statale. La pratica la presenta il notaio."
+        },
+        "cost2": {
+          "label": "Avvocato (facoltativo)",
+          "note": "500-2.000 € per la verifica del titolo, dei gravami e dei permessi. Non obbligatorio per legge, ma consigliato."
+        },
+        "cost3": {
+          "label": "Traduttore giurato",
+          "note": "50-150 €. Obbligatorio se non parli albanese; il traduttore firma l'atto insieme a te."
+        },
+        "cost4": {
+          "label": "Provvigione d'agenzia ({pct})",
+          "note": "Di solito l'1% per chi compra sugli annunci Domlivo; alcune agenzie non chiedono nulla all'acquirente."
+        }
+      },
+      "presets": {
+        "str": "Affitto breve, gestito da te",
+        "strm": "Affitto breve con un gestore ({pct})",
+        "ltr": "Affitto lungo"
+      }
+    }
+  },
   "Trackers": {
     "statusOnTrack": "In linea",
     "statusDelayed": "In ritardo",

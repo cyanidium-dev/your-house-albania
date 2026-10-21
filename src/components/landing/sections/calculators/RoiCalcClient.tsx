@@ -5,6 +5,7 @@ import { formatNumber } from '@/lib/currency/format'
 import { segmentedItemClass } from '@/components/shared/Segmented'
 import { useTranslations } from 'next-intl'
 import { calculateRoi } from '@/lib/calculators/roi'
+import { FilterSelect } from '@/components/catalog/FilterSelect'
 import {
   Accordion,
   AccordionContent,
@@ -31,6 +32,8 @@ import {
 const PRICE_MIN = 20_000
 const PRICE_MAX = 2_000_000
 const PRICE_STEP = 5_000
+/** Listbox value of the manual-input row (the state keeps '' for it). */
+const MANUAL_KEY = '__manual'
 
 export type RoiPreset = {
   key: string
@@ -127,26 +130,24 @@ export function RoiCalcClient({
   const inputs = (
     <>
       {presets.length > 0 ? (
-        <label className="block">
-          <span className="mb-1 flex items-center gap-2 text-xs font-medium text-dark/70 dark:text-white/80">
-            {t('presetLabel')}
-            {confidence ? (
-              <ConfidenceDot level={confidence} label={confidenceLabel(confidence)} />
-            ) : null}
-          </span>
-          <select
-            value={presetKey}
-            onChange={(e) => setPresetKey(e.target.value)}
-            className="h-11 w-full rounded-full border border-black/10 px-5 text-sm outline-primary focus:outline dark:border-white/10 bg-transparent text-dark dark:text-white dark:[&>option]:bg-dark"
-          >
-            {presets.map((p) => (
-              <option key={p.key} value={p.key}>
-                {p.label}
-              </option>
-            ))}
-            <option value="">{t('manualMode')}</option>
-          </select>
-        </label>
+        // The site's own listbox, not a native <select>: the OS draws that
+        // popup (white list, system font) over the dark theme.
+        <FilterSelect
+          label={t('presetLabel')}
+          labelExtra={
+            confidence ? <ConfidenceDot level={confidence} label={confidenceLabel(confidence)} /> : null
+          }
+          value={presetKey === '' ? MANUAL_KEY : presetKey}
+          onValueChange={(v) => setPresetKey(v === MANUAL_KEY ? '' : v)}
+          options={[
+            ...presets.map((p) => ({ value: p.key, label: p.label })),
+            { value: MANUAL_KEY, label: t('manualMode') },
+          ]}
+          includeAnyOption={false}
+          anyLabel={t('manualMode')}
+          radius="full"
+          className="h-11 px-5"
+        />
       ) : null}
 
       <CalcNumberInput

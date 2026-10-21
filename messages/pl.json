@@ -558,6 +558,122 @@
     "onTopOfPrice": "Dodatkowo do ceny",
     "capped": "ograniczone"
   },
+  "CalculatorPages": {
+    "shared": {
+      "faqTitle": "Pytania i odpowiedzi",
+      "methodTitle": "Jak to jest liczone",
+      "relatedTitle": "Powiązane strony",
+      "linkTitle": "Link do tego kalkulatora",
+      "linkLead": "Piszesz o nieruchomościach w Albanii? Wklej ten HTML do swojego artykułu. Kalkulator jest bezpłatny i nie wymaga rejestracji.",
+      "linkCopy": "Kopiuj HTML",
+      "linkCopied": "Skopiowano",
+      "linkField": "Kod HTML linku",
+      "percentRule": "{pct} ceny",
+      "percentCapRule": "{pct} ceny, najwyżej {cap}",
+      "fixedRule": "{amount}, kwota stała",
+      "related": {
+        "prices": "Ceny nieruchomości w Albanii według miast",
+        "purchaseCalc": "Kalkulator kosztów zakupu",
+        "rentalCalc": "Kalkulator rentowności najmu",
+        "guideLegal": "Przewodnik prawny dla kupujących",
+        "guideForeigners": "Czy cudzoziemcy mogą kupić nieruchomość w Albanii?",
+        "frenchGuide": "Zakup w Albanii z Francji",
+        "city": "{city}: ceny i dzielnice",
+        "cityListings": "Nieruchomości na sprzedaż: {city}"
+      },
+      "cities": {
+        "durres": "Durrës",
+        "tirana": "Tirana",
+        "vlore": "Vlorë",
+        "sarande": "Sarandë"
+      }
+    },
+    "purchase": {
+      "metaTitle": "Kalkulator kosztów zakupu nieruchomości w Albanii",
+      "metaDescription": "Ile kosztuje zakup mieszkania w Albanii ponad cenę: notariusz, rejestracja w ASHK, prawnik, tłumacz przysięgły i prowizja agencji. Wpisz cenę i zobacz każdą pozycję.",
+      "breadcrumb": "Kalkulator kosztów zakupu",
+      "h1": "Kalkulator kosztów zakupu nieruchomości w Albanii",
+      "lead": "Ile kosztuje zakup mieszkania lub domu w Albanii ponad cenę: notariusz, rejestracja własności w katastrze (ASHK), prawnik, jeśli go potrzebujesz, tłumacz przysięgły i prowizja agencji. Wpisz cenę, żeby zobaczyć każdą pozycję i sumę. Kupujący nie płaci podatku od przeniesienia własności, więc nie ma takiej pozycji.",
+      "linkText": "Kalkulator kosztów zakupu nieruchomości w Albanii",
+      "totalNote": "Suma to pozycje powyżej razem, a udział w cenie to ta suma podzielona przez cenę.",
+      "noTransferTax": "Nie ma pozycji z podatkiem od przeniesienia własności: osoba fizyczna kupująca mieszkanie go nie płaci. Koszty utrzymania mieszkania po zakupie, takie jak roczny podatek od budynku, nie są częścią zakupu.",
+      "faq1q": "Ile kosztuje zakup mieszkania w Albanii ponad cenę?",
+      "faq1a": "Przy mieszkaniu za {price} kalkulator dolicza {total}, czyli {pct} ceny: {lines}.",
+      "faq2q": "Czy kupujący płaci w Albanii podatek od przeniesienia własności?",
+      "faq2a": "Nie. Osoba fizyczna kupująca mieszkanie nie płaci podatku od przeniesienia własności, więc w kalkulatorze nie ma takiej pozycji: podatek od sprzedaży należy do sprzedającego. Mimo to przeczytaj umowę, bo jej zapis może przerzucić koszty sprzedającego na kupującego.",
+      "faq3q": "Czy potrzebuję prawnika i tłumacza przysięgłego?",
+      "faq3a": "Prawnik nie jest wymagany przez prawo, ale zalecany: sprawdzenie tytułu własności, obciążeń i pozwoleń kosztuje około 500-2000 €, a kalkulator liczy {lawyer}. Tłumacz przysięgły jest wymagany, jeśli nie mówisz po albańsku. Podpisuje akt razem z tobą i bierze około 50-150 €; kalkulator liczy {translator}.",
+      "faq4q": "Kto rejestruje własność i ile to kosztuje?",
+      "faq4a": "Notariusz sam składa wniosek o rejestrację w państwowym katastrze (ASHK), za stałą opłatą około {registration}. Wynagrodzenie notariusza wynika z oficjalnej taryfy: około 0,30-0,35% ceny (rozporządzenie Ministerstwa Sprawiedliwości nr 279/2012)."
+    },
+    "rental": {
+      "metaTitle": "Kalkulator rentowności najmu w Albanii",
+      "metaDescription": "Rentowność brutto i netto mieszkania w Albanii przy najmie długoterminowym lub krótkoterminowym, po kosztach najmu, zarządzania, utrzymania i podatku {tax}.",
+      "breadcrumb": "Kalkulator rentowności najmu",
+      "h1": "Kalkulator rentowności najmu w Albanii",
+      "lead": "Policz rentowność brutto i netto mieszkania w Albanii przy najmie długoterminowym albo krótkoterminowym dla turystów. Kalkulator odejmuje koszty najmu, zarządzanie, koszty utrzymania i podatek {tax} od przychodu z najmu. Gotowe warianty zawierają nasze szacunki dla mieszkania 1+1 w Durrës; wybierz wpisywanie ręczne, żeby podać własne liczby.",
+      "linkText": "Kalkulator rentowności najmu w Albanii",
+      "methodGrossLabel": "Przychód brutto",
+      "methodGross": "Najem długoterminowy: czynsz miesięczny × 12. Krótkoterminowy: stawka za noc × liczba wynajętych nocy, czyli 365 × obłożenie, najwyżej limit sezonu, jeśli go podasz.",
+      "methodLetLabel": "Koszty najmu",
+      "methodLet": "Najem długoterminowy: jeden pusty miesiąc w roku i pół miesięcznego czynszu dla pośrednika. Krótkoterminowy: {platform} prowizji platform i {localTax} opłaty turystycznej od przychodu brutto.",
+      "methodMgmtLabel": "Zarządzanie",
+      "methodMgmt": "Prowizja, którą ustawiasz, jako procent przychodu brutto: 0%, jeśli zarządzasz mieszkaniem sam.",
+      "methodRunningLabel": "Koszty utrzymania",
+      "methodRunning": "Naprawy: {repairs} ceny rocznie; ubezpieczenie i podatek od budynku: {fixed} rocznie; przy najmie krótkoterminowym dochodzi {utilities} rocznie na media.",
+      "methodTaxLabel": "Podatek",
+      "methodTax": "{tax} przychodu brutto po odjęciu kosztów najmu lub prowizji platform.",
+      "methodGrossYieldLabel": "Rentowność brutto",
+      "methodGrossYield": "Przychód brutto podzielony przez cenę.",
+      "methodNetYieldLabel": "Rentowność netto",
+      "methodNetYield": "Dochód netto podzielony przez cenę wraz z kosztami zakupu: {buyPct} ceny i {buyFixed} na notariusza, agencję, rejestrację w ASHK, prawnika i tłumacza, jak w kalkulatorze kosztów zakupu.",
+      "presetsNote": "Gotowy wariant wypełnia czynsz, obłożenie, sezon i prowizję za zarządzanie; przy wpisywaniu ręcznym możesz zmienić każdą z tych wartości.",
+      "faq1q": "Jak opodatkowany jest przychód z najmu w Albanii?",
+      "faq1a": "Stawką {tax}, tak samo przy najmie długo- i krótkoterminowym. Kalkulator stosuje ją do czynszu brutto po odjęciu kosztów najmu lub prowizji platform.",
+      "faq2q": "Czym różni się rentowność brutto od netto?",
+      "faq2a": "Rentowność brutto to roczny czynsz podzielony przez cenę. Rentowność netto to to, co zostaje po kosztach najmu, zarządzaniu, kosztach utrzymania i podatku, podzielone przez cenę wraz z kosztami zakupu.",
+      "faq2Example": "Dla wariantu najmu długoterminowego przy cenie {price}: {gross} brutto, {net} netto.",
+      "faq3q": "Co przynosi więcej: najem długoterminowy czy krótkoterminowy?",
+      "faq3a": "Przy naszych wariantach dla mieszkania 1+1 w Durrës za {price} kalkulator daje taką rentowność netto: {list}.",
+      "faq4q": "Skąd pochodzą liczby w gotowych wariantach?",
+      "faq4a": "To szacunki Domlivo z października 2026 roku dla mieszkania 1+1 w Durrës: {str} przy najmie krótkoterminowym i {ltr} przy długoterminowym. Nie są gwarancją dochodu; przejdź do wpisywania ręcznego, żeby sprawdzić własne liczby.",
+      "strFigures": "{adr} za noc przy obłożeniu {occupancy}, do {nights} nocy w sezonie",
+      "strFiguresNoCap": "{adr} za noc przy obłożeniu {occupancy}",
+      "ltrFigures": "{rent} miesięcznie",
+      "presetYield": "{label}: {net}"
+    },
+    "cms": {
+      "purchaseDisclaimer": "Kwoty orientacyjne, nie porada prawna; dokładne koszty potwierdza notariusz.",
+      "roiDisclaimer": "Szacunek Domlivo z 8 października 2026 roku; nie jest gwarancją dochodu.",
+      "items": {
+        "cost0": {
+          "label": "Notariusz (≈{pct})",
+          "note": "Około 0,30-0,35% ceny według oficjalnej taryfy (rozporządzenie Ministerstwa Sprawiedliwości nr 279/2012)."
+        },
+        "cost1": {
+          "label": "Rejestracja w ASHK",
+          "note": "Około {amount} za wpis własności do państwowego katastru. Wniosek składa notariusz."
+        },
+        "cost2": {
+          "label": "Prawnik (opcjonalnie)",
+          "note": "500-2000 € za sprawdzenie tytułu własności, obciążeń i pozwoleń. Niewymagany przez prawo, ale zalecany."
+        },
+        "cost3": {
+          "label": "Tłumacz przysięgły",
+          "note": "50-150 €. Wymagany, jeśli nie mówisz po albańsku; tłumacz podpisuje akt razem z tobą."
+        },
+        "cost4": {
+          "label": "Prowizja agencji ({pct})",
+          "note": "Zwykle 1% dla kupującego przy ofertach w Domlivo; niektóre agencje nie pobierają od kupującego nic."
+        }
+      },
+      "presets": {
+        "str": "Najem krótkoterminowy, samodzielnie",
+        "strm": "Najem krótkoterminowy z zarządcą ({pct})",
+        "ltr": "Najem długoterminowy"
+      }
+    }
+  },
   "Trackers": {
     "statusOnTrack": "Zgodnie z planem",
     "statusDelayed": "Opóźnione",

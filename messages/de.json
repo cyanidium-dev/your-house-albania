@@ -559,6 +559,122 @@
     "onTopOfPrice": "Zusätzlich zum Kaufpreis",
     "capped": "begrenzt"
   },
+  "CalculatorPages": {
+    "shared": {
+      "faqTitle": "Fragen und Antworten",
+      "methodTitle": "So wird gerechnet",
+      "relatedTitle": "Verwandte Seiten",
+      "linkTitle": "Auf diesen Rechner verlinken",
+      "linkLead": "Sie schreiben über Immobilien in Albanien? Fügen Sie dieses HTML in Ihren Artikel ein. Der Rechner ist kostenlos und ohne Anmeldung nutzbar.",
+      "linkCopy": "HTML kopieren",
+      "linkCopied": "Kopiert",
+      "linkField": "HTML-Code des Links",
+      "percentRule": "{pct} des Preises",
+      "percentCapRule": "{pct} des Preises, höchstens {cap}",
+      "fixedRule": "{amount}, fester Betrag",
+      "related": {
+        "prices": "Immobilienpreise in Albanien nach Stadt",
+        "purchaseCalc": "Kaufnebenkostenrechner",
+        "rentalCalc": "Mietrenditerechner",
+        "guideLegal": "Rechtsleitfaden für Käufer",
+        "guideForeigners": "Dürfen Ausländer in Albanien Immobilien kaufen?",
+        "frenchGuide": "In Albanien kaufen von Frankreich aus",
+        "city": "{city}: Preise und Stadtteile",
+        "cityListings": "Immobilien zum Kauf in {city}"
+      },
+      "cities": {
+        "durres": "Durrës",
+        "tirana": "Tirana",
+        "vlore": "Vlorë",
+        "sarande": "Saranda"
+      }
+    },
+    "purchase": {
+      "metaTitle": "Kaufnebenkostenrechner für Immobilien in Albanien",
+      "metaDescription": "Was der Kauf einer Wohnung in Albanien zusätzlich zum Preis kostet: Notar, ASHK-Eintragung, Anwalt, vereidigter Übersetzer und Maklerprovision. Preis eingeben und jeden Posten sehen.",
+      "breadcrumb": "Kaufnebenkostenrechner",
+      "h1": "Kaufnebenkostenrechner für Immobilien in Albanien",
+      "lead": "Was der Kauf einer Wohnung oder eines Hauses in Albanien zusätzlich zum Preis kostet: der Notar, die Eintragung des Eigentums im Kataster (ASHK), ein Anwalt, wenn Sie einen möchten, ein vereidigter Übersetzer und die Maklerprovision. Geben Sie den Preis ein, um jeden Posten und die Summe zu sehen. Der Käufer zahlt keine Grunderwerbsteuer, deshalb gibt es dafür keine Zeile.",
+      "linkText": "Kaufnebenkostenrechner für Immobilien in Albanien",
+      "totalNote": "Die Summe ergibt sich aus den Zeilen oben, der Anteil am Preis ist diese Summe geteilt durch den Preis.",
+      "noTransferTax": "Es gibt keine Zeile für eine Übertragungssteuer: Eine Privatperson, die eine Wohnung kauft, zahlt keine. Die laufenden Kosten danach, etwa die jährliche Gebäudesteuer, gehören nicht zum Kauf.",
+      "faq1q": "Was kostet der Kauf einer Wohnung in Albanien zusätzlich zum Preis?",
+      "faq1a": "Bei einer Wohnung für {price} rechnet der Rechner {total} hinzu, also {pct} des Preises: {lines}.",
+      "faq2q": "Zahlt der Käufer in Albanien eine Grunderwerbsteuer?",
+      "faq2a": "Nein. Eine Privatperson, die eine Wohnung kauft, zahlt keine Steuer auf die Eigentumsübertragung, deshalb hat der Rechner dafür keine Zeile: Die Steuer auf den Verkauf trägt der Verkäufer. Lesen Sie den Vertrag trotzdem genau, denn eine Klausel kann Kosten des Verkäufers auf den Käufer verlagern.",
+      "faq3q": "Brauche ich einen Anwalt und einen vereidigten Übersetzer?",
+      "faq3a": "Ein Anwalt ist gesetzlich nicht vorgeschrieben, aber empfehlenswert: Die Prüfung von Eigentumstitel, Belastungen und Genehmigungen kostet etwa 500-2.000 €, der Rechner setzt {lawyer} an. Ein vereidigter Übersetzer ist Pflicht, wenn Sie kein Albanisch sprechen. Er unterschreibt die Urkunde mit Ihnen und kostet etwa 50-150 €; der Rechner setzt {translator} an.",
+      "faq4q": "Wer trägt das Eigentum ein, und was kostet das?",
+      "faq4a": "Der Notar reicht die Eintragung beim staatlichen Kataster (ASHK) für Sie ein, gegen eine feste Gebühr von etwa {registration}. Das Honorar des Notars folgt der amtlichen Gebührenordnung, etwa 0,30-0,35 % des Preises (Verordnung des Justizministeriums Nr. 279/2012)."
+    },
+    "rental": {
+      "metaTitle": "Mietrenditerechner für Albanien",
+      "metaDescription": "Brutto- und Nettomietrendite einer Wohnung in Albanien bei Langzeit- oder Ferienvermietung, nach Vermietungskosten, Verwaltung, laufenden Kosten und {tax} Steuer.",
+      "breadcrumb": "Mietrenditerechner",
+      "h1": "Mietrenditerechner für Albanien",
+      "lead": "Berechnen Sie die Brutto- und Nettorendite einer Wohnung in Albanien, langfristig vermietet oder an Feriengäste. Der Rechner zieht Vermietungskosten, Verwaltung, laufende Kosten und {tax} Steuer auf Mieteinnahmen ab. Die Voreinstellungen enthalten unsere Schätzungen für eine 1+1-Wohnung in Durrës; wählen Sie die manuelle Eingabe für Ihre eigenen Zahlen.",
+      "linkText": "Mietrenditerechner für Albanien",
+      "methodGrossLabel": "Bruttoeinnahmen",
+      "methodGross": "Langzeitmiete: die Monatsmiete × 12. Ferienvermietung: der Preis pro Nacht × die vermieteten Nächte, also 365 × Auslastung, höchstens bis zur Saisongrenze, wenn Sie eine angeben.",
+      "methodLetLabel": "Vermietungskosten",
+      "methodLet": "Langzeitmiete: ein Leerstandsmonat im Jahr und eine halbe Monatsmiete für den Makler. Ferienvermietung: {platform} Plattformgebühren und {localTax} Kurtaxe auf die Bruttoeinnahmen.",
+      "methodMgmtLabel": "Verwaltung",
+      "methodMgmt": "Die Gebühr, die Sie einstellen, als Anteil der Bruttoeinnahmen: 0 %, wenn Sie die Wohnung selbst verwalten.",
+      "methodRunningLabel": "Laufende Kosten",
+      "methodRunning": "Reparaturen mit {repairs} des Preises im Jahr, Versicherung und Gebäudesteuer mit {fixed} im Jahr; bei Ferienvermietung kommen {utilities} im Jahr für Nebenkosten hinzu.",
+      "methodTaxLabel": "Steuer",
+      "methodTax": "{tax} der Bruttoeinnahmen abzüglich Vermietungs- oder Plattformkosten.",
+      "methodGrossYieldLabel": "Bruttorendite",
+      "methodGrossYield": "Bruttoeinnahmen geteilt durch den Preis.",
+      "methodNetYieldLabel": "Nettorendite",
+      "methodNetYield": "Nettoeinnahmen geteilt durch den Preis plus Kaufnebenkosten: {buyPct} des Preises und {buyFixed} für Notar, Makler, ASHK-Eintragung, Anwalt und Übersetzer, wie im Kaufnebenkostenrechner.",
+      "presetsNote": "Eine Voreinstellung füllt Miete, Auslastung, Saison und Verwaltungsgebühr aus; bei manueller Eingabe können Sie jeden Wert ändern.",
+      "faq1q": "Wie werden Mieteinnahmen in Albanien besteuert?",
+      "faq1a": "Mit {tax}, bei Langzeit- und Ferienvermietung gleichermaßen. Der Rechner wendet den Satz auf die Bruttomiete abzüglich Vermietungs- oder Plattformkosten an.",
+      "faq2q": "Was ist der Unterschied zwischen Brutto- und Nettorendite?",
+      "faq2a": "Die Bruttorendite ist die Jahresmiete geteilt durch den Preis. Die Nettorendite ist das, was nach Vermietungskosten, Verwaltung, laufenden Kosten und Steuer bleibt, geteilt durch den Preis plus Kaufnebenkosten.",
+      "faq2Example": "Für die Voreinstellung Langzeitmiete bei {price}: {gross} brutto, {net} netto.",
+      "faq3q": "Was bringt mehr, Langzeitmiete oder Ferienvermietung?",
+      "faq3a": "Mit unseren Voreinstellungen für eine 1+1-Wohnung in Durrës für {price} ergibt der Rechner diese Nettorenditen: {list}.",
+      "faq4q": "Woher stammen die Zahlen der Voreinstellungen?",
+      "faq4a": "Es sind Schätzungen von Domlivo vom Oktober 2026 für eine 1+1-Wohnung in Durrës: {str} bei Ferienvermietung und {ltr} bei Langzeitmiete. Sie sind keine Einkommensgarantie; mit der manuellen Eingabe können Sie eigene Zahlen ausprobieren.",
+      "strFigures": "{adr} pro Nacht bei {occupancy} Auslastung, bis zu {nights} Nächte pro Saison",
+      "strFiguresNoCap": "{adr} pro Nacht bei {occupancy} Auslastung",
+      "ltrFigures": "{rent} im Monat",
+      "presetYield": "{label}: {net}"
+    },
+    "cms": {
+      "purchaseDisclaimer": "Richtwerte, keine Rechtsberatung; die genauen Kosten bestätigt der Notar.",
+      "roiDisclaimer": "Schätzung von Domlivo vom 8. Oktober 2026; keine Einkommensgarantie.",
+      "items": {
+        "cost0": {
+          "label": "Notar (≈{pct})",
+          "note": "Etwa 0,30-0,35 % des Preises nach der amtlichen Gebührenordnung (Verordnung des Justizministeriums Nr. 279/2012)."
+        },
+        "cost1": {
+          "label": "ASHK-Eintragung",
+          "note": "Etwa {amount} für die Eintragung Ihres Eigentums im staatlichen Kataster. Der Notar reicht sie für Sie ein."
+        },
+        "cost2": {
+          "label": "Anwalt (optional)",
+          "note": "500-2.000 € für die Prüfung von Eigentumstitel, Belastungen und Genehmigungen. Gesetzlich nicht vorgeschrieben, aber empfohlen."
+        },
+        "cost3": {
+          "label": "Vereidigter Übersetzer",
+          "note": "50-150 €. Pflicht, wenn Sie kein Albanisch sprechen; der Übersetzer unterschreibt die Urkunde mit Ihnen."
+        },
+        "cost4": {
+          "label": "Maklerprovision ({pct})",
+          "note": "Meist 1 % für den Käufer bei Angeboten auf Domlivo; manche Makler verlangen vom Käufer nichts."
+        }
+      },
+      "presets": {
+        "str": "Ferienvermietung in Eigenregie",
+        "strm": "Ferienvermietung mit Verwalter ({pct})",
+        "ltr": "Langzeitmiete"
+      }
+    }
+  },
   "Trackers": {
     "statusOnTrack": "Im Zeitplan",
     "statusDelayed": "Verzögert",

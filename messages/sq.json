@@ -559,6 +559,122 @@
     "onTopOfPrice": "Mbi çmimin e pronës",
     "capped": "me tavan"
   },
+  "CalculatorPages": {
+    "shared": {
+      "faqTitle": "Pyetje dhe përgjigje",
+      "methodTitle": "Si llogaritet",
+      "relatedTitle": "Faqe të lidhura",
+      "linkTitle": "Lidhje te ky kalkulator",
+      "linkLead": "Shkruani për pronat në Shqipëri? Ngjitni këtë HTML në artikullin tuaj. Kalkulatori është falas dhe nuk kërkon regjistrim.",
+      "linkCopy": "Kopjo HTML-në",
+      "linkCopied": "U kopjua",
+      "linkField": "Kodi HTML i lidhjes",
+      "percentRule": "{pct} e çmimit",
+      "percentCapRule": "{pct} e çmimit, jo më shumë se {cap}",
+      "fixedRule": "{amount}, shumë fikse",
+      "related": {
+        "prices": "Çmimet e pronave në Shqipëri sipas qytetit",
+        "purchaseCalc": "Kalkulatori i kostove të blerjes",
+        "rentalCalc": "Kalkulatori i rendimentit nga qiraja",
+        "guideLegal": "Udhëzues ligjor për blerësit",
+        "guideForeigners": "A mund të blejnë të huajt pronë në Shqipëri?",
+        "frenchGuide": "Blerja në Shqipëri nga Franca",
+        "city": "{city}: çmimet dhe lagjet",
+        "cityListings": "Prona në shitje: {city}"
+      },
+      "cities": {
+        "durres": "Durrës",
+        "tirana": "Tiranë",
+        "vlore": "Vlorë",
+        "sarande": "Sarandë"
+      }
+    },
+    "purchase": {
+      "metaTitle": "Kalkulatori i kostove të blerjes së pronës në Shqipëri",
+      "metaDescription": "Sa kushton blerja e një apartamenti në Shqipëri përtej çmimit: noteri, regjistrimi në ASHK, avokati, përkthyesi i betuar dhe tarifa e agjencisë. Vendosni çmimin dhe shihni çdo zë.",
+      "breadcrumb": "Kalkulatori i kostove të blerjes",
+      "h1": "Kalkulatori i kostove të blerjes së pronës në Shqipëri",
+      "lead": "Sa kushton blerja e një apartamenti ose shtëpie në Shqipëri përtej çmimit: noteri, regjistrimi i pronësisë në kadastër (ASHK), avokati nëse ju duhet, përkthyesi i betuar dhe tarifa e agjencisë. Vendosni çmimin për të parë çdo zë dhe totalin. Blerësi nuk paguan taksë për kalimin e pronësisë, prandaj nuk ka rresht për të.",
+      "linkText": "Kalkulatori i kostove të blerjes së pronës në Shqipëri",
+      "totalNote": "Totali është shuma e rreshtave më sipër, ndërsa pjesa ndaj çmimit është totali i pjesëtuar me çmimin.",
+      "noTransferTax": "Nuk ka rresht për taksën e kalimit të pronësisë: një person fizik që blen apartament nuk e paguan atë. Kostot e mbajtjes së apartamentit më pas, si taksa vjetore e ndërtesës, nuk janë pjesë e blerjes.",
+      "faq1q": "Sa kushton blerja e një apartamenti në Shqipëri përtej çmimit?",
+      "faq1a": "Për një apartament me çmim {price}, kalkulatori shton {total}, pra {pct} të çmimit: {lines}.",
+      "faq2q": "A paguan blerësi taksë për kalimin e pronësisë në Shqipëri?",
+      "faq2a": "Jo. Një person fizik që blen apartament nuk paguan taksë për kalimin e pronësisë, prandaj kalkulatori nuk ka rresht për të: taksa e shitjes i takon shitësit. Megjithatë lexoni kontratën, sepse një klauzolë mund t'ia kalojë blerësit kostot e shitësit.",
+      "faq3q": "A më duhen avokat dhe përkthyes i betuar?",
+      "faq3a": "Avokati nuk kërkohet me ligj, por rekomandohet: kontrolli i titullit, barrëve dhe lejeve kushton rreth 500-2.000 €, dhe kalkulatori llogarit {lawyer}. Përkthyesi i betuar kërkohet nëse nuk flisni shqip. Ai e nënshkruan aktin bashkë me ju dhe merr rreth 50-150 €; kalkulatori llogarit {translator}.",
+      "faq4q": "Kush e regjistron pronësinë dhe sa kushton?",
+      "faq4a": "Noteri e dorëzon vetë regjistrimin në kadastrën shtetërore (ASHK), me një tarifë fikse rreth {registration}. Tarifa e vetë noterit ndjek skemën zyrtare, rreth 0,30-0,35% të çmimit (Urdhri i Ministrisë së Drejtësisë nr. 279/2012)."
+    },
+    "rental": {
+      "metaTitle": "Kalkulatori i rendimentit nga qiraja në Shqipëri",
+      "metaDescription": "Rendimenti bruto dhe neto i një apartamenti në Shqipëri me qira afatgjatë ose ditore, pas kostove të dhënies me qira, menaxhimit, mirëmbajtjes dhe tatimit {tax}.",
+      "breadcrumb": "Kalkulatori i rendimentit nga qiraja",
+      "h1": "Kalkulatori i rendimentit nga qiraja në Shqipëri",
+      "lead": "Llogaritni rendimentin bruto dhe neto të një apartamenti në Shqipëri, me qira afatgjatë ose ditore për turistët. Kalkulatori zbret kostot e dhënies me qira, menaxhimin, mirëmbajtjen dhe tatimin {tax} mbi të ardhurat nga qiraja. Opsionet e gatshme kanë vlerësimet tona për një apartament 1+1 në Durrës; zgjidhni futjen manuale për të vendosur shifrat tuaja.",
+      "linkText": "Kalkulatori i rendimentit nga qiraja në Shqipëri",
+      "methodGrossLabel": "Të ardhurat bruto",
+      "methodGross": "Qira afatgjatë: qiraja mujore × 12. Qira ditore: çmimi për natë × netët e dhëna me qira, pra 365 × shkalla e zënies, por jo më shumë se kufiri i sezonit nëse e vendosni.",
+      "methodLetLabel": "Kostot e dhënies me qira",
+      "methodLet": "Qira afatgjatë: një muaj bosh në vit dhe gjysmë qiraje mujore për agjentin. Qira ditore: {platform} komisione të platformave dhe {localTax} taksë turistike mbi të ardhurat bruto.",
+      "methodMgmtLabel": "Menaxhimi",
+      "methodMgmt": "Tarifa që vendosni, si pjesë e të ardhurave bruto: 0% nëse e menaxhoni vetë apartamentin.",
+      "methodRunningLabel": "Mirëmbajtja",
+      "methodRunning": "Riparime: {repairs} e çmimit në vit; sigurimi dhe taksa e ndërtesës: {fixed} në vit; për qiranë ditore edhe {utilities} në vit për shërbimet komunale.",
+      "methodTaxLabel": "Tatimi",
+      "methodTax": "{tax} e të ardhurave bruto pasi zbriten kostot e dhënies me qira ose komisionet e platformave.",
+      "methodGrossYieldLabel": "Rendimenti bruto",
+      "methodGrossYield": "Të ardhurat bruto të pjesëtuara me çmimin.",
+      "methodNetYieldLabel": "Rendimenti neto",
+      "methodNetYield": "Të ardhurat neto të pjesëtuara me çmimin plus kostot e blerjes: {buyPct} e çmimit dhe {buyFixed} për noterin, agjencinë, regjistrimin në ASHK, avokatin dhe përkthyesin, si në kalkulatorin e kostove të blerjes.",
+      "presetsNote": "Një opsion i gatshëm plotëson qiranë, shkallën e zënies, sezonin dhe tarifën e menaxhimit; me futjen manuale mund ta ndryshoni secilën.",
+      "faq1q": "Si tatohen të ardhurat nga qiraja në Shqipëri?",
+      "faq1a": "Me {tax}, njësoj për qiranë afatgjatë dhe atë ditore. Kalkulatori e zbaton mbi qiranë bruto pasi zbriten kostot e dhënies me qira ose komisionet e platformave.",
+      "faq2q": "Cili është ndryshimi midis rendimentit bruto dhe neto?",
+      "faq2a": "Rendimenti bruto është qiraja e një viti e pjesëtuar me çmimin. Rendimenti neto është ajo që mbetet pas kostove të dhënies me qira, menaxhimit, mirëmbajtjes dhe tatimit, e pjesëtuar me çmimin plus kostot e blerjes.",
+      "faq2Example": "Për opsionin e qirasë afatgjatë me çmim {price}: {gross} bruto, {net} neto.",
+      "faq3q": "Çfarë sjell më shumë, qiraja afatgjatë apo ajo ditore?",
+      "faq3a": "Me opsionet tona për një apartament 1+1 në Durrës me çmim {price}, kalkulatori jep këto rendimente neto: {list}.",
+      "faq4q": "Nga vijnë shifrat e opsioneve të gatshme?",
+      "faq4a": "Janë vlerësime të Domlivo të tetorit 2026 për një apartament 1+1 në Durrës: {str} për qiranë ditore dhe {ltr} për qiranë afatgjatë. Nuk janë garanci të ardhurash; kaloni te futja manuale për të provuar shifrat tuaja.",
+      "strFigures": "{adr} për natë me zënie {occupancy}, deri në {nights} net në sezon",
+      "strFiguresNoCap": "{adr} për natë me zënie {occupancy}",
+      "ltrFigures": "{rent} në muaj",
+      "presetYield": "{label}: {net}"
+    },
+    "cms": {
+      "purchaseDisclaimer": "Shuma orientuese, jo këshillë ligjore; kostot e sakta i konfirmon noteri.",
+      "roiDisclaimer": "Vlerësim i Domlivo i 8 tetorit 2026; nuk është garanci të ardhurash.",
+      "items": {
+        "cost0": {
+          "label": "Noteri (≈{pct})",
+          "note": "Rreth 0,30-0,35% e çmimit sipas skemës zyrtare (Urdhri i Ministrisë së Drejtësisë nr. 279/2012)."
+        },
+        "cost1": {
+          "label": "Regjistrimi në ASHK",
+          "note": "Rreth {amount} për regjistrimin e pronësisë në kadastrën shtetërore. Noteri e dorëzon për ju."
+        },
+        "cost2": {
+          "label": "Avokati (sipas dëshirës)",
+          "note": "500-2.000 € për kontrollin e titullit, barrëve dhe lejeve. Nuk kërkohet me ligj, por rekomandohet."
+        },
+        "cost3": {
+          "label": "Përkthyesi i betuar",
+          "note": "50-150 €. Kërkohet nëse nuk flisni shqip; përkthyesi e nënshkruan aktin bashkë me ju."
+        },
+        "cost4": {
+          "label": "Tarifa e agjencisë ({pct})",
+          "note": "Zakonisht 1% për blerësin në njoftimet e Domlivo; disa agjenci nuk i marrin asgjë blerësit."
+        }
+      },
+      "presets": {
+        "str": "Qira ditore, me menaxhim vetjak",
+        "strm": "Qira ditore me menaxher ({pct})",
+        "ltr": "Qira afatgjatë"
+      }
+    }
+  },
   "Trackers": {
     "statusOnTrack": "Sipas planit",
     "statusDelayed": "Me vonesë",

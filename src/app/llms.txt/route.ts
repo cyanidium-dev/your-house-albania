@@ -58,6 +58,8 @@ One page per place where the partner agency Cactus Real Estate lists enough flat
 - [Vlorë: prices and districts](${u('/en/albania/vlore/info')})
 - [Sarandë: prices and districts](${u('/en/albania/sarande/info')})
 - [Property prices in Albania by city](${u('/en/prices')}): one table of every city's median and 20th–80th percentile asking price per m², new builds against completed stock, FAQ
+- [Property purchase cost calculator for Albania](${u('/en/calculators/purchase-costs')}): notary, ASHK registration, lawyer, sworn translator and agency fee on top of the price, each line with its basis; no transfer tax for an individual buying a flat
+- [Rental yield calculator for Albania](${u('/en/calculators/rental-yield')}): gross and net yield of a long-term or short-term let after letting costs, management, running costs and the 15% rental income tax, with presets for a one-bedroom flat in Durrës
 - [Price index methodology](${u('/en/methodology')}): what an asking price is, the sample, filters, the 30-flat threshold, how to cite, licence
 - [Price index data (JSON)](${u('/data/prices/index.json')}) and one CSV per city at ${u('/data/prices/<city>.csv')}
 - [Full text for language models](${u('/llms-full.txt')}): the methodology and every city's district table

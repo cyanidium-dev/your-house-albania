@@ -559,6 +559,122 @@
     "onTopOfPrice": "En plus du prix",
     "capped": "plafonné"
   },
+  "CalculatorPages": {
+    "shared": {
+      "faqTitle": "Questions et réponses",
+      "methodTitle": "Comment le calcul est fait",
+      "relatedTitle": "Pages liées",
+      "linkTitle": "Faire un lien vers ce calculateur",
+      "linkLead": "Vous écrivez sur l'immobilier en Albanie ? Collez ce HTML dans votre article. Le calculateur est gratuit et sans inscription.",
+      "linkCopy": "Copier le HTML",
+      "linkCopied": "Copié",
+      "linkField": "Code HTML du lien",
+      "percentRule": "{pct} du prix",
+      "percentCapRule": "{pct} du prix, au plus {cap}",
+      "fixedRule": "{amount}, montant fixe",
+      "related": {
+        "prices": "Prix de l'immobilier en Albanie par ville",
+        "purchaseCalc": "Calculateur des frais d'achat",
+        "rentalCalc": "Calculateur de rendement locatif",
+        "guideLegal": "Guide juridique pour les acheteurs",
+        "guideForeigners": "Un étranger peut-il acheter en Albanie ?",
+        "frenchGuide": "Acheter en Albanie depuis la France",
+        "city": "{city} : prix et quartiers",
+        "cityListings": "Appartements à vendre à {city}"
+      },
+      "cities": {
+        "durres": "Durrës",
+        "tirana": "Tirana",
+        "vlore": "Vlorë",
+        "sarande": "Saranda"
+      }
+    },
+    "purchase": {
+      "metaTitle": "Calculateur des frais d'achat immobilier en Albanie",
+      "metaDescription": "Ce que coûte l'achat d'un appartement en Albanie en plus du prix : notaire, inscription à l'ASHK, avocat, traducteur assermenté et commission d'agence. Saisissez le prix et voyez chaque poste.",
+      "breadcrumb": "Calculateur des frais d'achat",
+      "h1": "Calculateur des frais d'achat immobilier en Albanie",
+      "lead": "Ce que coûte l'achat d'un appartement ou d'une maison en Albanie en plus du prix : le notaire, l'inscription de la propriété au cadastre (ASHK), un avocat si vous en voulez un, un traducteur assermenté et la commission d'agence. Saisissez le prix pour voir chaque poste et le total. L'acheteur ne paie pas de taxe de transfert, il n'y a donc pas de ligne pour elle.",
+      "linkText": "Calculateur des frais d'achat immobilier en Albanie",
+      "totalNote": "Le total est la somme des lignes ci-dessus, et la part du prix est ce total divisé par le prix.",
+      "noTransferTax": "Il n'y a pas de ligne pour la taxe de transfert : un particulier qui achète un appartement n'en paie pas. Les frais de détention ensuite, comme la taxe annuelle sur le bâti, ne font pas partie de l'achat.",
+      "faq1q": "Combien coûte l'achat d'un appartement en Albanie en plus du prix ?",
+      "faq1a": "Pour un appartement à {price}, le calculateur ajoute {total}, soit {pct} du prix : {lines}.",
+      "faq2q": "L'acheteur paie-t-il une taxe de transfert en Albanie ?",
+      "faq2a": "Non. Un particulier qui achète un appartement ne paie pas de taxe de transfert, le calculateur n'a donc pas de ligne pour elle : la taxe sur la vente revient au vendeur. Lisez tout de même le contrat, car une clause peut reporter les frais du vendeur sur l'acheteur.",
+      "faq3q": "Faut-il un avocat et un traducteur assermenté ?",
+      "faq3a": "L'avocat n'est pas obligatoire, mais conseillé : la vérification du titre, des hypothèques et des permis coûte environ 500 à 2 000 €, et le calculateur compte {lawyer}. Le traducteur assermenté est obligatoire si vous ne parlez pas albanais. Il signe l'acte avec vous et demande environ 50 à 150 € ; le calculateur compte {translator}.",
+      "faq4q": "Qui inscrit la propriété, et combien cela coûte-t-il ?",
+      "faq4a": "Le notaire dépose lui-même l'inscription au cadastre de l'État (ASHK), pour des frais fixes d'environ {registration}. Les honoraires du notaire suivent le barème officiel, environ 0,30 à 0,35 % du prix (arrêté du ministère de la Justice n° 279/2012)."
+    },
+    "rental": {
+      "metaTitle": "Calculateur de rendement locatif en Albanie",
+      "metaDescription": "Rendement locatif brut et net d'un appartement en Albanie, en location longue ou saisonnière, après frais de location, gestion, charges et impôt de {tax}.",
+      "breadcrumb": "Calculateur de rendement locatif",
+      "h1": "Calculateur de rendement locatif en Albanie",
+      "lead": "Calculez le rendement brut et net d'un appartement en Albanie, loué à l'année ou aux vacanciers. Le calculateur retire les frais de location, la gestion, les charges et l'impôt de {tax} sur les loyers. Les préréglages reprennent nos estimations pour un deux-pièces (1+1) à Durrës ; choisissez la saisie manuelle pour entrer vos propres chiffres.",
+      "linkText": "Calculateur de rendement locatif en Albanie",
+      "methodGrossLabel": "Revenu brut",
+      "methodGross": "Location longue : le loyer mensuel × 12. Location saisonnière : le prix par nuit × les nuits louées, soit 365 × le taux d'occupation, dans la limite de la saison si vous en fixez une.",
+      "methodLetLabel": "Frais de location",
+      "methodLet": "Location longue : un mois vide par an et un demi-loyer pour l'agence. Location saisonnière : {platform} de commissions des plateformes et {localTax} de taxe de séjour sur le revenu brut.",
+      "methodMgmtLabel": "Gestion",
+      "methodMgmt": "La commission que vous fixez, en part du revenu brut : 0 % si vous gérez l'appartement vous-même.",
+      "methodRunningLabel": "Charges",
+      "methodRunning": "Entretien à {repairs} du prix par an, assurance et taxe sur le bâti à {fixed} par an ; la location saisonnière ajoute {utilities} par an de consommations.",
+      "methodTaxLabel": "Impôt",
+      "methodTax": "{tax} du revenu brut, après déduction des frais de location ou des commissions des plateformes.",
+      "methodGrossYieldLabel": "Rendement brut",
+      "methodGrossYield": "Le revenu brut divisé par le prix.",
+      "methodNetYieldLabel": "Rendement net",
+      "methodNetYield": "Le revenu net divisé par le prix plus les frais d'achat : {buyPct} du prix et {buyFixed} pour le notaire, l'agence, l'inscription à l'ASHK, l'avocat et le traducteur, comme dans le calculateur des frais d'achat.",
+      "presetsNote": "Un préréglage remplit le loyer, l'occupation, la saison et la commission de gestion ; la saisie manuelle permet de changer chacun d'eux.",
+      "faq1q": "Comment les loyers sont-ils imposés en Albanie ?",
+      "faq1a": "À {tax}, pour la location longue comme pour la location saisonnière. Le calculateur applique ce taux au loyer brut, après déduction des frais de location ou des commissions des plateformes.",
+      "faq2q": "Quelle différence entre rendement brut et rendement net ?",
+      "faq2a": "Le rendement brut est le loyer d'une année divisé par le prix. Le rendement net est ce qui reste après frais de location, gestion, charges et impôt, divisé par le prix plus les frais d'achat.",
+      "faq2Example": "Pour le préréglage de location longue à {price} : {gross} brut, {net} net.",
+      "faq3q": "Qu'est-ce qui rapporte le plus, la location longue ou saisonnière ?",
+      "faq3a": "Avec nos préréglages pour un deux-pièces (1+1) à Durrës à {price}, le calculateur donne ces rendements nets : {list}.",
+      "faq4q": "D'où viennent les chiffres des préréglages ?",
+      "faq4a": "Ce sont des estimations Domlivo d'octobre 2026 pour un deux-pièces (1+1) à Durrës : {str} en location saisonnière et {ltr} en location longue. Ce n'est pas une garantie de revenu ; passez en saisie manuelle pour essayer vos propres chiffres.",
+      "strFigures": "{adr} la nuit avec {occupancy} d'occupation, jusqu'à {nights} nuits par saison",
+      "strFiguresNoCap": "{adr} la nuit avec {occupancy} d'occupation",
+      "ltrFigures": "{rent} par mois",
+      "presetYield": "{label} : {net}"
+    },
+    "cms": {
+      "purchaseDisclaimer": "Montants indicatifs, pas un conseil juridique ; le notaire confirme les frais exacts.",
+      "roiDisclaimer": "Estimation Domlivo du 8 octobre 2026 ; pas une garantie de revenu.",
+      "items": {
+        "cost0": {
+          "label": "Notaire (≈{pct})",
+          "note": "Environ 0,30 à 0,35 % du prix selon le barème officiel (arrêté du ministère de la Justice n° 279/2012)."
+        },
+        "cost1": {
+          "label": "Inscription à l'ASHK",
+          "note": "Environ {amount} pour inscrire votre propriété au cadastre de l'État. Le notaire s'en charge pour vous."
+        },
+        "cost2": {
+          "label": "Avocat (facultatif)",
+          "note": "500 à 2 000 € pour vérifier le titre, les hypothèques et les permis. Pas obligatoire, mais conseillé."
+        },
+        "cost3": {
+          "label": "Traducteur assermenté",
+          "note": "50 à 150 €. Obligatoire si vous ne parlez pas albanais ; le traducteur signe l'acte avec vous."
+        },
+        "cost4": {
+          "label": "Commission d'agence ({pct})",
+          "note": "En général 1 % pour l'acheteur sur les annonces Domlivo ; certaines agences ne demandent rien à l'acheteur."
+        }
+      },
+      "presets": {
+        "str": "Location saisonnière, gérée par vous",
+        "strm": "Location saisonnière avec un gestionnaire ({pct})",
+        "ltr": "Location longue durée"
+      }
+    }
+  },
   "Trackers": {
     "statusOnTrack": "Dans les délais",
     "statusDelayed": "En retard",
