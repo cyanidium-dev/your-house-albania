@@ -724,7 +724,7 @@
     "registration": "Rejestracja własności (ASHK)",
     "agency": "Prowizja agencji dla kupującego (zwykle 1%)",
     "purchaseTotal": "Ponad cenę ({pct}%)",
-    "transferTaxNote": "Podatek od przeniesienia własności 2% płaci sprzedający.",
+    "transferTaxNote": "Kupujący nie płaci podatku od przeniesienia własności, podatki od sprzedaży płaci sprzedający.",
     "annualTitle": "Koszty utrzymania",
     "propertyTax": "Podatek od nieruchomości",
     "utilities": "Media, internet, opłata za budynek",

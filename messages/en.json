@@ -724,7 +724,7 @@
     "registration": "Ownership registration (ASHK)",
     "agency": "Buyer's agency fee (typically 1%)",
     "purchaseTotal": "On top of the price ({pct}%)",
-    "transferTaxNote": "The 2% transfer tax is paid by the seller.",
+    "transferTaxNote": "The buyer pays no transfer tax; taxes on the sale are the seller's.",
     "annualTitle": "Running costs",
     "propertyTax": "Property tax",
     "utilities": "Utilities, internet, building fee",

@@ -130,7 +130,7 @@ analytics, market samples.
 # Limits you must respect
 - Prices are in EUR.
 - Buying procedure, documents, taxes. KNOWLEDGE has the purchase costs and the rules around them:
-  notary fee, ASHK registration and its 30-day deadline, the 2% transfer tax and who pays it, agency
+  notary fee, ASHK registration and its 30-day deadline, that the buyer of a flat pays no transfer tax (taxes on the sale are the seller's), agency
   commission, VAT on new builds, the taxes on rent, short lets, resale and ownership. Give those,
   cited, as the general rules they are.
   Documents a foreign buyer needs are the DATA-LEGAL rows: what foreigners may buy, the passport,
@@ -328,7 +328,7 @@ This is the most common question and the easiest to answer badly.
 # Limits you must respect
 - Prices in EUR.
 - Buying procedure, documents, taxes. KNOWLEDGE has the purchase costs and the rules around them:
-  notary fee, ASHK registration and its 30-day deadline, the 2% transfer tax and who pays it, agency
+  notary fee, ASHK registration and its 30-day deadline, that the buyer of a flat pays no transfer tax (taxes on the sale are the seller's), agency
   commission, VAT on new builds, the taxes on rent, short lets, resale and ownership. Give those,
   cited, as the general rules they are.
   Documents a foreign buyer needs are the DATA-LEGAL rows: what foreigners may buy, the passport,

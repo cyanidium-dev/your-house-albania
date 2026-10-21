@@ -725,7 +725,7 @@
     "registration": "Regjistrimi i pronësisë (ASHK)",
     "agency": "Komisioni i agjencisë për blerësin (zakonisht 1%)",
     "purchaseTotal": "Mbi çmimin ({pct}%)",
-    "transferTaxNote": "Tatimin 2% për kalimin e pronësisë e paguan shitësi.",
+    "transferTaxNote": "Blerësi nuk paguan taksë për kalimin e pronësisë, tatimet e shitjes i paguan shitësi.",
     "annualTitle": "Kostot e mbajtjes",
     "propertyTax": "Taksa e pronës",
     "utilities": "Shërbimet, interneti, tarifa e pallatit",

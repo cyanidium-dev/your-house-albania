@@ -724,7 +724,7 @@
     "registration": "Registrazione della proprietà (ASHK)",
     "agency": "Provvigione d'agenzia per l'acquirente (di solito 1%)",
     "purchaseTotal": "Oltre al prezzo ({pct}%)",
-    "transferTaxNote": "L'imposta di trasferimento del 2% è a carico del venditore.",
+    "transferTaxNote": "Chi compra non paga imposte di trasferimento: le imposte sulla vendita sono a carico del venditore.",
     "annualTitle": "Costi di gestione",
     "propertyTax": "Imposta sugli immobili",
     "utilities": "Utenze, internet, spese condominiali",
