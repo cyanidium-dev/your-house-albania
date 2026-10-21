@@ -10,9 +10,9 @@ import {
   resolveAgentContactTelegramRouting,
   resolveTelegramBotToken,
 } from '@/lib/notifications/agentContact/routing'
-import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { formatGuideLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
 import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 export const runtime = 'nodejs'
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
     generalChatId: resolveAgentContactTelegramRouting().generalChatId,
     agentChatId: property?.agentLeadChatId,
   })
-  const telegram = async () => {
+  const telegram = async (leadId: string | null) => {
     if (!botToken || chatIds.length === 0) {
       console.error('[guide-request] Telegram not configured', { hasBotToken: !!botToken, chats: chatIds.length })
       return { ok: false as const, reason: 'Telegram not configured' }
@@ -100,16 +100,20 @@ export async function POST(req: NextRequest) {
           }
         : {}),
     })
-    return sendTelegramTextMessage({ botToken, chatId: chatIds[0], text })
+    return postLeadToTeam({
+      chatIds: chatIds.slice(0, 1),
+      text,
+      leadId,
+      status: context?.internal === true ? 'spam' : 'new',
+    })
   }
 
-  const [lead, delivery] = await Promise.all([
-    createLead({
-      ...guideLeadInput(request, { ...(context ? { context } : {}), ...(country ? { country } : {}), now: new Date() }),
-      ...(request.propertySlug ? { property } : {}),
-    }),
-    telegram(),
-  ])
+  // The lead first: its id goes into the status buttons under the message.
+  const lead = await createLead({
+    ...guideLeadInput(request, { ...(context ? { context } : {}), ...(country ? { country } : {}), now: new Date() }),
+    ...(request.propertySlug ? { property } : {}),
+  })
+  const delivery = await telegram(lead.ok ? lead.id : null)
 
   if (!lead.ok) console.error('[guide-request] lead not saved', lead.reason)
   if (!delivery.ok) console.error('[guide-request] Telegram delivery failed', delivery.reason)

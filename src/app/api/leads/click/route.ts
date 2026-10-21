@@ -8,9 +8,9 @@ import {
   resolveAgentContactTelegramRouting,
   resolveTelegramBotToken,
 } from '@/lib/notifications/agentContact/routing'
-import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { formatClickLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
 import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 export const runtime = 'nodejs'
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       agentChatId: property?.agentLeadChatId,
     })
 
-    const telegram = async () => {
+    const telegram = async (leadId: string | null) => {
       if (!botToken || chatIds.length === 0) {
         console.error('[leads/click] Telegram not configured', { hasBotToken: !!botToken, chats: chatIds.length })
         return
@@ -89,23 +89,27 @@ export async function POST(req: NextRequest) {
             }
           : {}),
       })
-      const results = await Promise.all(chatIds.map((chatId) => sendTelegramTextMessage({ botToken, chatId, text })))
-      for (const result of results) if (!result.ok) console.error('[leads/click] Telegram delivery failed', result.reason)
+      const posted = await postLeadToTeam({
+        chatIds,
+        text,
+        leadId,
+        status: body.context?.internal === true ? 'spam' : 'new',
+      })
+      if (!posted.ok) console.error('[leads/click] Telegram delivery failed', posted.reason)
     }
 
-    const [lead] = await Promise.all([
-      createLead({
-        type: body.type,
-        placement: body.placement,
-        ...(locale ? { locale } : {}),
-        ...(body.context ? { context: body.context } : {}),
-        ...(country ? { country } : {}),
-        ...(body.propertySlug ? { propertySlug: body.propertySlug, property } : {}),
-        now: new Date(),
-      }),
-      telegram(),
-    ])
+    // The lead first: its id goes into the status buttons under the message.
+    const lead = await createLead({
+      type: body.type,
+      placement: body.placement,
+      ...(locale ? { locale } : {}),
+      ...(body.context ? { context: body.context } : {}),
+      ...(country ? { country } : {}),
+      ...(body.propertySlug ? { propertySlug: body.propertySlug, property } : {}),
+      now: new Date(),
+    })
     if (!lead.ok) console.error('[leads/click] lead not saved', lead.reason)
+    await telegram(lead.ok ? lead.id : null)
   })
 
   return status(202)

@@ -29,8 +29,8 @@
 | `NEXT_PUBLIC_ENABLE_INDEXING` | `true` только на проде | - |
 | `NEXT_PUBLIC_ENABLE_ANALYTICS` | включает GTM/GA4/Clarity/PostHog после согласия | - |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | PostHog EU (наш проект 312129) | свой проект PostHog |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_GENERAL_CHAT_ID`, `TELEGRAM_AGENT_CONTACT_CHAT_ID`, `TELEGRAM_API_BASE_URL` | внутренний бот лидов: куда падают заявки | свой бот через BotFather, свой чат |
-| `TELEGRAM_PUBLIC_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` | публичный бот для клиентов (наш @DomlivoAlbaniaBot) | свой бот; вебхук ставится `scripts/telegram-set-webhook.ts` |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_GENERAL_CHAT_ID`, `TELEGRAM_AGENT_CONTACT_CHAT_ID`, `TELEGRAM_API_BASE_URL`, `TELEGRAM_OWNER_CHAT_ID` (необяз.: личная воронка с 1 % по понедельникам) | внутренний бот лидов: куда падают заявки (запасной, когда публичный бот не может писать в чат) | свой бот через BotFather, свой чат |
+| `TELEGRAM_PUBLIC_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` | публичный бот для клиентов (наш @DomlivoAlbaniaBot); он же публикует заявки с кнопками статусов в чаты команды |  свой бот; вебхук ставится `scripts/telegram-set-webhook.ts` |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | номер WhatsApp для кнопок | свой |
 | `CRON_SECRET` | секрет крон-маршрутов (`api/cron/*`, `api/indexnow/*`) | придумать |
 | `INDEXNOW_KEY` | ключ IndexNow (Bing/Yandex), отдаётся по `/<key>.txt` | сгенерировать |
@@ -84,6 +84,7 @@
 | Валюты и курс по умолчанию | `src/lib/currency/*`, siteSettings `displayCurrencies` | - |
 | Фото Албании для пустых состояний | `messages/*.json` → `AlbaniaPhotos`, `public/**` | заменить |
 | Telegram-бот: сценарии, тексты, deep-links `p_/i_/g_/s_` | `src/lib/telegram/**`, `app/api/telegram/webhook`, `messages/*.json` → `TelegramBot` | механика общая, тексты с брендом |
+| Статусы заявок из Telegram (21.10.2026): кнопки «Связался / Просмотр / Торг / Сделка ✅ / Отказ / Спам» под каждой заявкой, вопрос цены сделки, сводка по понедельникам в каждый чат, воронка и 1 % владельца | `src/lib/leads/{status,funnel}.ts`, `src/lib/notifications/leads/postLeadToTeam.ts`, `src/lib/telegram/bot/leadStatus.ts`, `app/api/cron/leads-weekly` (`vercel.json`, пн 07:00 UTC), `scripts/leads-funnel.ts`, поля `lead.statusHistory/dealPrice/telegramPosts` в админке; описание `reports/domlivo-leads-funnel.md` | механика общая; русские подписи кнопок, доля 1 % (`OWNER_SHARE`) и часовой пояс Тираны - наши |
 | Крон-маршруты и IndexNow | `app/api/cron/*`, `app/api/indexnow/*`, `vercel.json` | общие |
 
 ### 3.4 Тексты в `messages/*.json`
