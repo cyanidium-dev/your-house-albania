@@ -1,3 +1,4 @@
+import { NUM, ROW_STRIPE, TABLE, TABLE_HEAD_ROW, TABLE_WRAP, TD, TH } from "@/components/shared/data/tableStyles";
 import Link from "@/components/shared/Link";
 import { getTranslations } from "next-intl/server";
 import { MarketMoney } from "@/components/shared/property/MarketMoney";
@@ -18,7 +19,7 @@ import {
   textLinkClass,
 } from "@/components/catalog/depthUi";
 
-const cellClass = "px-4 sm:px-5 py-3.5 text-right tabular-nums whitespace-nowrap";
+const cellClass = `${TD} ${NUM}`;
 
 /** A price table with one row says what the tiles above it already said. */
 const MIN_PRICE_TABLE_ROWS = 2;
@@ -105,36 +106,36 @@ export async function SaleHubDepthSections({ locale }: { locale: string }) {
           <SectionHeading id="hub-prices" title={t("prices.title")} lead={tDepth("prices.lead")} />
           <StatTiles stats={stats} />
           {showPriceTable ? (
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-dark/10 dark:border-white/15">
-              <table className="w-full border-collapse text-left text-sm sm:text-base text-dark dark:text-white">
+            <div className={`mt-8 ${TABLE_WRAP}`}>
+              <table className={TABLE}>
                 <caption className="sr-only">{t("prices.byCity")}</caption>
-                <thead className="bg-dark/[0.04] dark:bg-white/5">
+                <thead className={TABLE_HEAD_ROW}>
                   <tr>
-                    <th scope="col" className="px-4 sm:px-5 py-3.5 font-semibold border-b border-dark/10 dark:border-white/15">
+                    <th scope="col" className={TH}>
                       {t("prices.city")}
                     </th>
-                    <th scope="col" className={`${cellClass} font-semibold border-b border-dark/10 dark:border-white/15`}>
+                    <th scope="col" className={`${TH} text-right`}>
                       {tDepth("prices.listings")}
                     </th>
-                    <th scope="col" className={`${cellClass} font-semibold border-b border-dark/10 dark:border-white/15`}>
+                    <th scope="col" className={`${TH} text-right`}>
                       {tDepth("prices.medianPrice")}
                     </th>
-                    <th scope="col" className={`${cellClass} font-semibold border-b border-dark/10 dark:border-white/15`}>
+                    <th scope="col" className={`${TH} text-right`}>
                       {tDepth("prices.medianSqm")}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {priceRows.map((city) => (
-                    <tr key={city.citySlug} className="even:bg-dark/[0.02] dark:even:bg-white/[0.03]">
-                      <th scope="row" className="px-4 sm:px-5 py-3.5 font-medium border-t border-dark/5 dark:border-white/10">
+                    <tr key={city.citySlug} className={ROW_STRIPE}>
+                      <th scope="row" className={`${TD} font-medium`}>
                         {cityName(city, textLinkClass)}
                       </th>
-                      <td className={`${cellClass} border-t border-dark/5 dark:border-white/10`}>{number(city.count)}</td>
-                      <td className={`${cellClass} border-t border-dark/5 dark:border-white/10`}>
+                      <td className={cellClass}>{number(city.count)}</td>
+                      <td className={cellClass}>
                         {city.medianFlatPrice ? <MarketMoney min={city.medianFlatPrice} step={100} locale={locale} /> : "—"}
                       </td>
-                      <td className={`${cellClass} border-t border-dark/5 dark:border-white/10`}>
+                      <td className={cellClass}>
                         {city.medianFlatPricePerSqm ? (
                           <MarketMoney min={city.medianFlatPricePerSqm} step={10} locale={locale} />
                         ) : (
