@@ -12,6 +12,7 @@ import { isLandingInLocale, landingLocales } from "@/lib/landing/localeScope";
 import { setRequestLocale } from "next-intl/server";
 import { InventoryLinksSection } from "@/components/inventory/InventoryLinksSection";
 import { guideTopics } from "@/lib/inventoryLinks/places";
+import { SeoLabLinksSection } from "@/components/seoLab/SeoLabLinks";
 
 /**
  * ISR. Two exports, and the route needs both.
@@ -148,14 +149,18 @@ export default async function GuideLandingPage({ params }: Props) {
   // and gets none; one whose CMS sections already show listing cards (the
   // type × city guides' carousel) gets the links without a second card row.
   const topicTags = Array.isArray(landing.topicTags) ? landing.topicTags : [];
-  const inventoryLinks =
-    topicTags.length > 0 ? (
-      <InventoryLinksSection
-        locale={locale}
-        topics={(dir) => guideTopics(topicTags, dir)}
-        showCards={!sections.some((s) => s?._type === "propertyCarouselSection")}
-      />
-    ) : null;
+  const inventoryLinks = (
+    <>
+      <SeoLabLinksSection locale={locale} path={`/${locale}/guides/${guideSlug}`} />
+      {topicTags.length > 0 ? (
+        <InventoryLinksSection
+          locale={locale}
+          topics={(dir) => guideTopics(topicTags, dir)}
+          showCards={!sections.some((s) => s?._type === "propertyCarouselSection")}
+        />
+      ) : null}
+    </>
+  );
 
   // No visible date is added here on purpose: LandingRenderer already renders a
   // freshness badge from `contentUpdatedAt`, and a second one read as a bug.

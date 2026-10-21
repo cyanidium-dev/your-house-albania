@@ -1151,6 +1151,9 @@
     "retry": "Erneut versuchen",
     "newChat": "Neuer Chat"
   },
+  "SeoLab": {
+    "linksHeading": "Angebote und Preise zum Thema"
+  },
   "Knowledge": {
     "title": "Wissensdatenbank",
     "breadcrumbHome": "Startseite",

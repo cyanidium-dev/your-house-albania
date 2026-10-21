@@ -1150,6 +1150,9 @@
     "retry": "Повторить",
     "newChat": "Новый чат"
   },
+  "SeoLab": {
+    "linksHeading": "Квартиры и цены по теме"
+  },
   "Knowledge": {
     "title": "База знаний",
     "breadcrumbHome": "Главная",

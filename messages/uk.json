@@ -1150,6 +1150,9 @@
     "retry": "Спробувати ще раз",
     "newChat": "Новий чат"
   },
+  "SeoLab": {
+    "linksHeading": "Квартири й ціни на цю тему"
+  },
   "Knowledge": {
     "title": "База знань",
     "breadcrumbHome": "Головна",
