@@ -1040,7 +1040,10 @@
       "catalogTitle": "Immobilier à vendre en Albanie - toutes les annonces",
       "catalogDescription": "Tous les biens à vendre en Albanie : appartements, maisons, villas et terrains. Filtrez par ville, prix, surface et nombre de chambres.",
       "typeTitle": "{type} à vendre en Albanie",
+      "typeTitleFrom": "{type} à vendre en Albanie dès {from} €",
       "typeDescription": "{type} à vendre en Albanie avec les prix actuels, photos et emplacements. En direct des propriétaires et d’agences de confiance, sans commission.",
+      "typeDescriptionMedian": "{type} à vendre en Albanie : {count} annonces dès {from} €, médiane {median} €/m². Prix, photos et quartier de chaque bien ; posez vos questions sur WhatsApp ou Telegram.",
+      "typeDescriptionCount": "{type} à vendre en Albanie : {count} annonces dès {from} €. Prix, photos et emplacement de chaque bien ; posez vos questions sur WhatsApp ou Telegram.",
       "cityTypeTitle": "{type} à vendre à {city}, Albanie",
       "cityTypeDescription": "{type} à vendre à {city}, en Albanie : prix actuels, photos et emplacements. En direct des propriétaires et d’agences de confiance, sans commission.",
       "types": {
@@ -1649,5 +1652,8 @@
         "p1": "Ce sont des prix affichés, pas des prix de vente : l’écart se négocie, surtout sur l’ancien. La médiane porte sur les appartements et studios à vendre avec un prix total et une surface, recalculée toutes les heures. Une médiane sur moins de {min} appartements est indicative."
       }
     }
+  },
+  "SeoLab": {
+    "linksHeading": "Annonces et prix sur ce sujet"
   }
 }
