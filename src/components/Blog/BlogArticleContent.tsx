@@ -1,3 +1,4 @@
+import { ROW_STRIPE, TABLE, TABLE_HEAD_ROW, TABLE_WRAP, TD, TH } from "@/components/shared/data/tableStyles";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import Link from "@/components/shared/Link";
@@ -296,13 +297,14 @@ function createBlogComponents(
         if (rows.length === 0) return null;
         const headerCells = rows[0]?.cells ?? [];
         return (
-          <div className="my-8 overflow-x-auto">
+          <div className="my-8">
             {blockTitle && (
               <h4 className="text-dark dark:text-white font-medium mb-4">
                 {blockTitle}
               </h4>
             )}
-            <table className="w-full border-collapse border border-dark/10 dark:border-white/20">
+            <div className={TABLE_WRAP}>
+            <table className={`${TABLE} sm:text-sm`}>
               {blockTitle || tableContext ? (
                 // The visible title is the h4 above; the caption makes the table
                 // self-describing when it is lifted out of the article alone.
@@ -311,11 +313,12 @@ function createBlogComponents(
                 </caption>
               ) : null}
               <thead>
-                <tr>
+                <tr className={TABLE_HEAD_ROW}>
                   {headerCells.map((cell, i) => (
                     <th
                       key={i}
-                      className="border border-dark/10 dark:border-white/20 px-4 py-2 text-left text-dark dark:text-white font-medium"
+                      scope="col"
+                      className={TH}
                     >
                       {cell}
                     </th>
@@ -324,11 +327,11 @@ function createBlogComponents(
               </thead>
               <tbody>
                 {rows.slice(1).map((row, ri) => (
-                  <tr key={ri}>
+                  <tr key={ri} className={ROW_STRIPE}>
                     {(row.cells ?? []).map((cell, ci) => (
                       <td
                         key={ci}
-                        className="border border-dark/10 dark:border-white/20 px-4 py-2 text-dark/80 dark:text-white/80 text-sm"
+                        className={`${TD} text-dark/80 dark:text-white/80`}
                       >
                         {cell}
                       </td>
@@ -337,6 +340,7 @@ function createBlogComponents(
                 ))}
               </tbody>
             </table>
+            </div>
             {tableContext ? (
               <p className="mt-2 text-xs text-dark/50 dark:text-white/50">
                 <Link href={tableContext.methodologyHref} className="underline underline-offset-2 hover:text-primary">

@@ -79,13 +79,16 @@ export async function CityPriceAnswer({ locale, citySlug, cityLabel }: Props) {
           <p className="mt-2 max-w-3xl text-base text-dark/70 dark:text-white/70">
             {t('intro', { count: city.count, date })}
           </p>
-          <dl className="mt-5 grid gap-x-8 gap-y-3 md:grid-cols-2">
+          {/* Stacked rows: name, then the band, then median and sample. Side by
+              side, the three-part figure wrapped under a long name and hung off
+              the right edge on phones (owner, 2026-10-21). */}
+          <dl className="mt-5 grid gap-x-10 md:grid-cols-2">
             {rows.map((r) => {
               const l = line(r.band)
               if (!l) return null
               return (
-                <div key={r.key} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-dark/10 pb-3 dark:border-white/10">
-                  <dt className="text-base font-medium text-dark dark:text-white">
+                <div key={r.key} className="border-t border-dark/10 py-4 dark:border-white/10">
+                  <dt className="text-sm text-dark/60 dark:text-white/60">
                     {r.href ? (
                       <Link href={r.href} className="underline-offset-4 hover:text-primary hover:underline">
                         {r.label}
@@ -94,14 +97,18 @@ export async function CityPriceAnswer({ locale, citySlug, cityLabel }: Props) {
                       r.label
                     )}
                   </dt>
-                  <dd className="text-right text-base text-dark dark:text-white">
+                  <dd className="mt-1">
                     {'lowSample' in l ? (
                       <span className="text-sm text-dark/60 dark:text-white/60">{l.lowSample}</span>
                     ) : (
                       <>
-                        <span className="font-semibold tabular-nums">{l.range}</span>
-                        <span className="ml-2 text-sm text-dark/60 dark:text-white/60">
-                          {l.median} · {l.flats}
+                        <span className="block font-display text-xl font-semibold tabular-nums text-dark dark:text-white">
+                          {l.range}
+                        </span>
+                        <span className="mt-0.5 block text-sm text-dark/55 dark:text-white/55 tabular-nums">
+                          <span className="whitespace-nowrap">{l.median}</span>
+                          {' · '}
+                          <span className="whitespace-nowrap">{l.flats}</span>
                         </span>
                       </>
                     )}

@@ -1,3 +1,4 @@
+import { ROW_STRIPE, TABLE, TABLE_HEAD_ROW, TABLE_WRAP, TD, TH } from '@/components/shared/data/tableStyles'
 import { SpriteIcon as Icon } from '@/components/shared/SpriteIcon'
 import { cn } from '@/lib/utils'
 import type { KnowledgeFact, KnowledgeTable as KnowledgeTableData } from '@/lib/sanity/queries/knowledge'
@@ -102,15 +103,15 @@ export default function KnowledgeTable({
       ) : null}
 
       {/* Wide tables scroll inside their own box; the page never does. */}
-      <div className="overflow-x-auto rounded-xl border border-dark/10 dark:border-white/15">
-        <table className="w-full border-collapse text-sm">
+      <div className={TABLE_WRAP}>
+        <table className={cn(TABLE, 'sm:text-sm')}>
           <thead>
-            <tr className="bg-dark/4 text-left dark:bg-white/6">
+            <tr className={TABLE_HEAD_ROW}>
               {(table.columns ?? []).map((column, index) => (
                 <th
                   key={`${table.tableId}-h-${index}`}
                   scope="col"
-                  className="whitespace-nowrap px-3 py-2.5 font-semibold text-dark dark:text-white"
+                  className={cn(TH, 'min-w-[7rem]')}
                 >
                   {column}
                 </th>
@@ -125,15 +126,12 @@ export default function KnowledgeTable({
                 <tr
                   key={`${table.tableId}-${row.rowId}`}
                   id={anchor}
-                  className={cn(
-                    'border-t border-dark/8 align-top scroll-mt-28 dark:border-white/10',
-                    'target:bg-primary/10',
-                  )}
+                  className={cn('scroll-mt-28 target:bg-primary/10', ROW_STRIPE)}
                 >
                   {(row.cells ?? []).map((cell, index) => (
                     <td
                       key={`${table.tableId}-${row.rowId}-${index}`}
-                      className="px-3 py-2.5 text-dark/80 dark:text-white/80"
+                      className={cn(TD, 'text-dark/80 dark:text-white/80')}
                     >
                       {cell}
                     </td>
