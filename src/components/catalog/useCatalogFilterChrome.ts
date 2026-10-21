@@ -42,9 +42,20 @@ export function useCatalogFilterChrome({ startCollapsed = false }: { startCollap
       toggleAtRef.current = performance.now();
       setExpanded(v);
     };
+    // Condense only once the bar has actually reached the header and stuck.
+    // Condensing at a fixed 50 px left the reserved form-height band empty
+    // under the pill while the hero was still on screen, a blank gap above the
+    // results (feedback 2026-10-21). Until it sticks, the form scrolls with the page.
+    const bar = document.querySelector<HTMLElement>("[data-catalog-filters]");
+    function isStuck(y: number): boolean {
+      if (!bar) return y > 50;
+      const stickyTop = parseFloat(getComputedStyle(bar).top);
+      if (Number.isNaN(stickyTop)) return y > 50;
+      return y > 0 && bar.getBoundingClientRect().top <= stickyTop + 1;
+    }
     function handleScroll() {
       const y = window.scrollY;
-      const compact = y > 50;
+      const compact = isStuck(y);
       // Someone working in the form — advanced filters open, or a select /
       // dropdown inside the bar focused — scrolls to reach a list that opened
       // below the fold. Condensing then folded the form and took the open list
