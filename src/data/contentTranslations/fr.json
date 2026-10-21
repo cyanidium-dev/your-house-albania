@@ -3051,6 +3051,18 @@
    "text": "2+1 avec balcon, Golem, 83,1 m²"
   },
   {
+   "doc": "property-cactus-446679c3-cf3a-496e-9127-4a821bde1440",
+   "field": "description",
+   "en": "A 2+1 apartment is for sale in the Plazh area near the Bajram Curri school. It is located on the 8th floor of a building with an elevator. The total area is 95 m², with a living area of 87.76 m² according to the certificate. There is also a balcony. The apartment has a partial finish and needs renovation.",
+   "text": "Appartement 2+1 à vendre à Plazh, près de l’école Bajram Curri. Il se trouve au 8e étage d’un immeuble avec ascenseur. La surface totale est de 95 m², dont 87,76 m² habitables selon le titre de propriété. Il y a aussi un balcon. L’appartement est partiellement fini et demande des travaux."
+  },
+  {
+   "doc": "property-cactus-446679c3-cf3a-496e-9127-4a821bde1440",
+   "field": "shortDescription",
+   "en": "A 2+1 apartment of 95 m² with a balcony on the 8th floor of a building with an elevator in Plazh, near the Bajram Curri school; needs renovation.",
+   "text": "Appartement 2+1 de 95 m² avec balcon au 8e étage d’un immeuble avec ascenseur à Plazh, près de l’école Bajram Curri ; travaux à prévoir."
+  },
+  {
    "doc": "property-cactus-44a16fb6-9f81-4765-b29a-188bfd976052",
    "field": "title",
    "en": "1+1 with balcony, Golem, Liburna Residence, 64 m²",
@@ -3061,6 +3073,18 @@
    "field": "title",
    "en": "Land plot, Kryemëdhenj, Kavajë, 300 m²",
    "text": "Terrain, Kryemëdhenj, Kavajë, 300 m²"
+  },
+  {
+   "doc": "property-cactus-45e4805d-4b93-411a-bd88-c81f3450a1e4",
+   "field": "description",
+   "en": "A 2+1 apartment is for sale in Golem, a suburb of Durrës. The certified area is 88.2 m². The layout includes 2 bedrooms, a living room combined with a kitchen, a bathroom and a large balcony. The apartment is on the 3rd floor of a building without an elevator, just a 3-minute walk from the sea. It comes renovated and furnished.",
+   "text": "Appartement 2+1 à vendre à Golem, en périphérie de Durrës. La surface au titre de propriété est de 88,2 m². Il comprend 2 chambres, un séjour avec cuisine ouverte, une salle de bain et un grand balcon. L’appartement est au 3e étage d’un immeuble sans ascenseur, à 3 minutes à pied de la mer. Il est rénové et meublé."
+  },
+  {
+   "doc": "property-cactus-45e4805d-4b93-411a-bd88-c81f3450a1e4",
+   "field": "shortDescription",
+   "en": "A 2+1 apartment in Golem, a suburb of Durrës, a 3-minute walk from the sea.",
+   "text": "Appartement 2+1 à Golem, en périphérie de Durrës, à 3 minutes à pied de la mer."
   },
   {
    "doc": "property-cactus-45e4805d-4b93-411a-bd88-c81f3450a1e4",
@@ -6772,6 +6796,18 @@
   },
   {
    "doc": "property-getal-19276",
+   "field": "description",
+   "en": "A large 3+1 apartment on the 1st floor in a developed, well-established part of Golem, Durrës.\n\nThe layout includes a living room with kitchen, three bedrooms and one bathroom. Total area is 128 m², with 121.5 m² recorded on the ownership certificate. The apartment is sold unfurnished, so the new owner can furnish it to their own taste.\n\nThe generous size makes it a good fit for a family, whether as a home or as an investment.",
+   "text": "Grand appartement 3+1 au 1er étage, dans un quartier de Golem bien établi et équipé, à Durrës.\n\nIl comprend un séjour avec cuisine, trois chambres et une salle de bain. La surface totale est de 128 m², dont 121,5 m² inscrits au titre de propriété. Il est vendu non meublé : le nouveau propriétaire l’aménage à son goût.\n\nSa taille convient à une famille, pour y vivre comme pour louer."
+  },
+  {
+   "doc": "property-getal-19276",
+   "field": "shortDescription",
+   "en": "Unfurnished 3+1 apartment of 128 m² (121.5 m² on the certificate) on the 1st floor in Golem, Durrës, well suited to a family.",
+   "text": "Appartement 3+1 non meublé de 128 m² (121,5 m² au titre de propriété) au 1er étage à Golem, Durrës, adapté à une famille."
+  },
+  {
+   "doc": "property-getal-19276",
    "field": "title",
    "en": "Spacious 3+1 apartment, Golem, 128 m²",
    "text": "Appartement 3+1 spacieux, Golem, 128 m²"
@@ -7153,6 +7189,18 @@
    "field": "title",
    "en": "Duplex of 89 m² with two bedrooms, 80 m from the sea, Golem",
    "text": "Duplex de 89 m² avec deux chambres, à 80 m de la mer, Golem"
+  },
+  {
+   "doc": "property-getal-9828",
+   "field": "description",
+   "en": "A 2+1 apartment near the Qemal Mici School in Durrës, in one of the quietest and most popular residential parts of the city.\n\nThe total area is 114 m²: a living room, a separate kitchen, two bedrooms, one bathroom and two balconies, on the first floor. It is sold furnished, the building is managed, and the mortgage documentation is in order.\n\nThe listing states plainly that the building was not damaged in the earthquake - in Durrës, after November 2019, that is one of the first questions any informed buyer asks, and it is worth having it confirmed in the technical documentation rather than taken on trust.\n\nThis is a flat built for family life rather than holidays. A hundred and fourteen square metres for two bedrooms gives large rooms and a proper kitchen; the first floor means no dependence on the lift with a pushchair or shopping; and schools, hospitals, a playground and the everyday services are all close by. The one thing to weigh is a single bathroom for a flat of this size.",
+   "text": "Appartement 2+1 près de l’école Qemal Mici à Durrës, dans l’un des quartiers résidentiels les plus calmes et les plus demandés de la ville.\n\nLa surface totale est de 114 m² : un séjour, une cuisine séparée, deux chambres, une salle de bain et deux balcons, au premier étage. Il est vendu meublé, l’immeuble a un gestionnaire et les documents pour un crédit sont en règle.\n\nL’annonce précise que l’immeuble n’a pas été endommagé par le séisme. À Durrës, depuis novembre 2019, c’est l’une des premières questions d’un acheteur averti, et mieux vaut la voir confirmée dans les documents techniques que la croire sur parole.\n\nC’est un appartement pensé pour la vie de famille plutôt que pour les vacances. 114 m² pour deux chambres donnent de grandes pièces et une vraie cuisine ; au premier étage, on ne dépend pas de l’ascenseur avec une poussette ou les courses ; écoles, hôpitaux, aire de jeux et commerces sont proches. Le point à peser : une seule salle de bain pour cette surface."
+  },
+  {
+   "doc": "property-getal-9828",
+   "field": "shortDescription",
+   "en": "A spacious family flat on the first floor with a separate kitchen and two balconies, in a managed building undamaged by the 2019 earthquake.",
+   "text": "Grand appartement familial au premier étage avec cuisine séparée et deux balcons, dans un immeuble géré et non endommagé par le séisme de 2019."
   },
   {
    "doc": "property-getal-9828",
