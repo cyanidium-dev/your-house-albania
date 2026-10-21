@@ -10,7 +10,8 @@ export type GermanHubSeaCandidate = SeaListingRow & { _id: string; slug: string 
 /** A card's fields (the same the catalogue projects) for the listings the hub shows. */
 export type GermanHubSeaListing = CatalogProperty & { slug: string; citySlug?: string | null };
 
-const PROJECTION = `{
+/** A listing card with everything the hub grids print; the French pilot reads the same cards. */
+export const HUB_CARD_PROJECTION = `{
     _id,
     _type,
     title,
@@ -89,7 +90,7 @@ export const fetchGermanHubSeaCards = sanityCache(
     const client = getClient();
     if (!client || ids.length === 0) return [];
     try {
-      const rows = await client.fetch<GermanHubSeaListing[]>(`*[${SEA_FILTER} && _id in $ids] ${PROJECTION}`, {
+      const rows = await client.fetch<GermanHubSeaListing[]>(`*[${SEA_FILTER} && _id in $ids] ${HUB_CARD_PROJECTION}`, {
         ...SEA_PARAMS,
         ids: [...ids],
       });

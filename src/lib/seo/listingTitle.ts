@@ -13,6 +13,7 @@ import { MAX_LISTING_TITLE_LENGTH, fitListingTitle, withBrand } from "@/lib/seo/
 const PAGE_LABEL: Record<string, (page: number) => string> = {
   en: (n) => `Page ${n}`,
   de: (n) => `Seite ${n}`,
+  fr: (n) => `Page ${n}`,
   it: (n) => `Pagina ${n}`,
   pl: (n) => `Strona ${n}`,
   ru: (n) => `Страница ${n}`,

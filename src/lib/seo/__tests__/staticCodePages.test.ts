@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { routing } from "@/i18n/routing";
 import { buildUrlsetXml } from "../sitemapXml";
+import { isLocalePathIndexable } from "../localeIndexing";
 import { buildStaticCodePageEntries, STATIC_CODE_PAGES } from "../staticCodePages";
 import { FOOTER_STABLE_NAV_ITEMS } from "@/data/footerNavConfig";
 
@@ -34,7 +35,9 @@ describe("static code pages in sitemap-static.xml", () => {
     expect(xml).toContain(`<loc>${BASE}/de/about</loc>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="pl" href="${BASE}/pl/about"/>`);
     expect(xml).toContain(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE}/en/about"/>`);
-    const expectedUrls = STATIC_CODE_PAGES.reduce((n, p) => n + (p.locales?.length ?? routing.locales.length), 0);
+    // A partial locale (fr) lists only its pilot pages, none of them static code pages.
+    const indexable = routing.locales.filter((l) => isLocalePathIndexable(l, "/about"));
+    const expectedUrls = STATIC_CODE_PAGES.reduce((n, p) => n + (p.locales?.length ?? indexable.length), 0);
     expect(xml.match(/<url>/g)).toHaveLength(expectedUrls);
   });
 

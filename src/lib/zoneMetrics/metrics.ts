@@ -24,7 +24,7 @@ export function isMetricKey(value: unknown): value is MetricKey {
   return typeof value === 'string' && (METRIC_KEYS as readonly string[]).includes(value);
 }
 
-const LOCALE_TAG: Record<string, string> = { en: 'en', uk: 'uk', ru: 'ru', sq: 'sq', al: 'sq', it: 'it', pl: 'pl', de: 'de' };
+const LOCALE_TAG: Record<string, string> = { en: 'en', uk: 'uk', ru: 'ru', sq: 'sq', al: 'sq', it: 'it', pl: 'pl', de: 'de', fr: 'fr' };
 
 function nf(locale: string, fractionDigits: number): Intl.NumberFormat {
   return new Intl.NumberFormat(LOCALE_TAG[locale] ?? 'en', {

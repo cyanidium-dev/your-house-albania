@@ -13,11 +13,27 @@ const PARTIAL_DE: PartialLocalePaths = {
 };
 
 describe("localeIndexing", () => {
-  it("has no partial locale today: de is complete", () => {
-    expect(PARTIAL_LOCALE_PATHS).toEqual({});
+  it("has one partial locale today, the French pilot; de is complete", () => {
+    expect(Object.keys(PARTIAL_LOCALE_PATHS)).toEqual(["fr"]);
+    expect(isPartialLocale("fr")).toBe(true);
     expect(isPartialLocale("de")).toBe(false);
     expect(isLocalePathIndexable("de", "/blog/buying-in-durres")).toBe(true);
     expect(isSitePathIndexable("/de/guides/golem-vs-plazh")).toBe(true);
+  });
+
+  it("indexes only the French pilot pages", () => {
+    expect(isSitePathIndexable("/fr/immobilier-albanie")).toBe(true);
+    expect(isSitePathIndexable("/fr/immobilier-albanie/acheter-depuis-la-france")).toBe(true);
+    expect(isSitePathIndexable("/fr/albania/durres")).toBe(true);
+    expect(isSitePathIndexable("/fr/albania/durres/plazh")).toBe(true);
+    expect(isSitePathIndexable("/fr/property/appartement-1-1-golem-durres-64m2")).toBe(true);
+    expect(isSitePathIndexable("/fr")).toBe(false);
+    expect(isSitePathIndexable("/fr/albania/durres/qerret")).toBe(false);
+    expect(isSitePathIndexable("/fr/albania/durres/districts")).toBe(false);
+    expect(isSitePathIndexable("/fr/albania/tirana")).toBe(false);
+    expect(isSitePathIndexable("/fr/property/apartment-1-1-golem-durres-64m2")).toBe(false);
+    expect(isSitePathIndexable("/fr/blog/legal-guide-buyers")).toBe(false);
+    expect(isSitePathIndexable("/fr/immobilier-albanie/autre")).toBe(false);
   });
 
   it("leaves complete locales alone", () => {

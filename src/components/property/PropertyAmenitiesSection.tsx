@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import Image from 'next/image';
-import { resolvePropertyIconKey } from '@/lib/sanity/propertyAdapter';
+import { resolvePropertyIconKey } from '@/lib/sanity/propertyIconKey';
 import type { PropertyAmenityItem } from '@/lib/sanity/propertyAdapter';
 import { cn } from '@/lib/utils';
 

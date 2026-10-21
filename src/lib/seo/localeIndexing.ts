@@ -1,4 +1,11 @@
 import { routing } from "@/i18n/routing";
+import {
+  FRENCH_GUIDE_PATHS,
+  FRENCH_HUB_PATH,
+  FRENCH_PILOT_CITY,
+  FRENCH_PILOT_DISTRICTS,
+  FRENCH_PILOT_LISTINGS,
+} from "@/lib/frenchPilot/config";
 
 /**
  * Locales that are live but only partly written.
@@ -15,10 +22,24 @@ import { routing } from "@/i18n/routing";
  * /rent, /property/*, /cities) and became complete the same day, once the
  * blog, guides, comparisons and legal pages were translated. Add the next
  * partial locale here the same way, and remove its entry when it is complete.
+ *
+ * `fr` (2026-10-21) is partial by design, not on its way to complete: a
+ * pilot of about forty pages written for French buyers, see
+ * `lib/frenchPilot/config.ts`. Its city and district pages are also gated
+ * by the SEO registry (`keywordEvidence.ts`), like every locale's.
  */
 export type PartialLocalePaths = Readonly<Record<string, readonly RegExp[]>>;
 
-export const PARTIAL_LOCALE_PATHS: PartialLocalePaths = {};
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const anyOf = (values: readonly string[]) => values.map(escapeRe).join("|");
+
+export const PARTIAL_LOCALE_PATHS: PartialLocalePaths = {
+  fr: [
+    new RegExp(`^/${FRENCH_HUB_PATH}(/(${anyOf(Object.values(FRENCH_GUIDE_PATHS))}))?$`),
+    new RegExp(`^/albania/${FRENCH_PILOT_CITY}(/(${anyOf(FRENCH_PILOT_DISTRICTS)}))?$`),
+    new RegExp(`^/property/(${anyOf(FRENCH_PILOT_LISTINGS)})$`),
+  ],
+};
 
 function normalizePath(pathAfterLocale: string): string {
   const path = pathAfterLocale.split(/[?#]/)[0] ?? "";

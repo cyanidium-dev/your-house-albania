@@ -2,7 +2,7 @@ import { getClient, sanityCache, SANITY_TAGS } from './_core';
 import { blogListingProjection } from './blog';
 import { PUBLISHED_PROPERTY_FILTER, PUBLISHED_PROPERTY_DETAIL_FILTER, PUBLIC_DEAL_STATUS_FILTER } from '../groq/propertyFilters';
 import type { CatalogProperty } from '@/types/catalog';
-import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl';
+import { PROPERTY_SLUG_MATCH, propertySlugParams } from '@/lib/property/propertyUrl';
 
 /**
  * A hidden listing marked as a duplicate of another (`duplicateOf`) answers
@@ -20,7 +20,7 @@ export async function fetchPropertyDuplicateTarget(
       `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && defined(duplicateOf) && !(_id in path("drafts.**"))][0].duplicateOf->{
         "slug": slug.current, localizedSlug, isPublished
       }`,
-      { slug },
+      propertySlugParams(slug),
     );
     return t?.slug && t.isPublished === true ? { slug: t.slug, localizedSlug: t.localizedSlug ?? null } : null;
   } catch {
@@ -137,7 +137,7 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
     }
   }`;
   try {
-    const result = await client.fetch(query, { slug });
+    const result = await client.fetch(query, propertySlugParams(slug));
     if (process.env.NODE_ENV === 'development') {
       console.log('[Sanity] fetchPropertyBySlug:', slug, result ? 'found' : 'not found');
       if (result) {

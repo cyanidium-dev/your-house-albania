@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { messengerPriceLabel } from '@/lib/contacts/messengerContext'
-import { PROPERTY_SLUG_MATCH, propertyPath, type LocalizedSlug } from '@/lib/property/propertyUrl'
+import { PROPERTY_SLUG_MATCH, propertyPath, propertySlugParams, type LocalizedSlug } from '@/lib/property/propertyUrl'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
 import { getClient } from '@/lib/sanity/queries/_core'
 import { getWriteClient } from '@/lib/sanity/writeClient'
@@ -64,7 +64,7 @@ export async function lookupBotListing(
       payload.kind === 'property'
         ? await client.fetch<ListingRow | null>(
             `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && !(_id in path("drafts.**"))][0]${LISTING_PROJECTION}`,
-            { slug: payload.slug },
+            propertySlugParams(payload.slug),
           )
         : await client.fetch<ListingRow | null>(
             `*[_type == "property" && !(_id in path("drafts.**")) && (_id in $ids || string::startsWith(_id, $prefix))] | order(_id asc)[0]${LISTING_PROJECTION}`,

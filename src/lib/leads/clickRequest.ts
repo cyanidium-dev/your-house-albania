@@ -6,7 +6,7 @@
 import { cleanSlug, parseLeadContext, type LeadContext } from './context'
 import { isClickLeadType, isLeadPlacement, type ClickLeadType, type LeadPlacement } from './types'
 
-export const SITE_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
+export const SITE_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'fr'] as const
 
 export type ClickLeadBody = {
   type: ClickLeadType

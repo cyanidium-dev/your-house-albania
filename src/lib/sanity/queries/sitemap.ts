@@ -20,6 +20,7 @@ import { canonicalPropertyImageUrl, propertyImageSeoName, withImageSeoName } fro
 import { SITEMAP_IMAGES_PER_URL } from '@/lib/seo/propertySitemap';
 import { bulkTouchTimestamps, contentLastmod, latestDate, parseDateOrUndefined } from '@/lib/seo/contentLastmod';
 import { PROPERTY_URL_LOCALES } from '@/lib/property/propertyUrl';
+import { translateContent } from '@/lib/i18n/contentTranslations';
 
 /**
  * Every `lastModified` below is `undefined` when the document's dates say
@@ -490,6 +491,8 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
     "images": gallery[defined(asset)][0...${SITEMAP_IMAGES_PER_URL}].asset->url,
     "hasDescription": coalesce(length(description.en), 0) > 0 || coalesce(length(description.sq), 0) > 0,
     "ownText": { ${ownText} },
+    "enTitle": title.en,
+    "enDescription": description.en,
     bedrooms,
     "typeSlug": type->slug.current,
     "districtSlug": district->slug.current,
@@ -506,6 +509,8 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
         images?: Array<string | null>;
         hasDescription?: boolean;
         ownText?: Partial<Record<string, boolean>>;
+        enTitle?: string | null;
+        enDescription?: string | null;
         bedrooms?: number;
         typeSlug?: string;
         districtSlug?: string;
@@ -525,7 +530,12 @@ export async function fetchSitemapPropertyEntries(): Promise<SitemapPropertyEntr
         lastModified: contentLastmod(row, bulk, row._createdAt),
         images,
         complete: images.length > 0 && typeof row.price === 'number' && row.price > 0 && row.hasDescription === true,
-        ownTextLocales: PROPERTY_URL_LOCALES.filter((l) => row.ownText?.[l] === true),
+        ownTextLocales: [
+          ...PROPERTY_URL_LOCALES.filter((l) => row.ownText?.[l] === true),
+          // A locale translated in the repository (`fr`): its own text is the
+          // translation of the English title and description.
+          ...(translateContent('fr', row.enTitle) && translateContent('fr', row.enDescription) ? ['fr'] : []),
+        ],
       });
     }
     return out;

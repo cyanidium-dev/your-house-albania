@@ -33,7 +33,7 @@ function buildLlmsTxt(base: string, snapshot: PriceIndexSnapshot | null, knowled
 
 The idea behind it: an analytical marketplace that no single agency owns. Owners and many partner agencies publish on it, each listing names who listed it, and an AI assistant on the site searches the listings in the visitor's own words and answers questions about utilities, buying costs and rental income from Domlivo's own sourced research, with citations.
 
-Every page exists in seven languages under its locale prefix: /en, /sq, /ru, /uk, /it, /pl, /de. The English URLs are listed here.
+Every page exists in seven languages under its locale prefix: /en, /sq, /ru, /uk, /it, /pl, /de. French (/fr) is a pilot: only the French hub, its two guides, the Durrës catalogue with five districts and thirty listings are written in French. The English URLs are listed here.
 
 Figures on the price pages come from two places and are labelled as such: the Domlivo Price Index, asking prices computed from the listings live on Domlivo (median and 20th–80th percentile price per m², sample size, by city and district, refreshed hourly, CC BY 4.0, method at ${u('/en/methodology')}), and published market research, each cited on the page with a link.
 
@@ -70,6 +70,7 @@ One page per place where the partner agency Cactus Real Estate lists enough flat
 - [Blog](${u('/en/blog')}): legal steps, documents, taxes, rental income, district choice, market outlook
 - [Immobilien in Albanien kaufen](${u('/de/albanien-immobilien')}): the German market hub, in German only: prices by city from the index, flats by the sea, the five German guides, FAQ on who may buy, costs, process, areas, prices and financing
 - [Çmimet e referencës 2026](${u('/sq/cmimet-e-references')}): the official state reference prices per m² for flats (VKM 132/2018, Tirana zones per VKM 457/2023; Durrës 67,500 ALL/m²), the unapproved 2025 draft map, and a calculator for the reference value, the 15% capital-gains tax, the 5% revaluation of 2026 and the annual building tax, in Albanian only
+- [Immobilier en Albanie](${u('/fr/immobilier-albanie')}): the French market hub, in French only: prices by city and by Durrës district from the index, Durrës flats with French listing pages, FAQ; guides [acheter depuis la France](${u('/fr/immobilier-albanie/acheter-depuis-la-france')}) (steps, costs, the 2002 France-Albania tax treaty) and [prix en bord de mer](${u('/fr/immobilier-albanie/prix-bord-de-mer')})
 - [Knowledge base](${u('/en/knowledge')}): one question per page, answered with a figure, a date and its sources (laws by number and article, ASHK and notary tariffs, tax treaties, the price index), plus what is still unverified
 
 ## About

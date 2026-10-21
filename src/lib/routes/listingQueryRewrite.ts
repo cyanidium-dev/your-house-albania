@@ -30,6 +30,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "albanien-immobilien",
   // The Albanian reference-price page, `/sq/cmimet-e-references` (lib/referencePrices).
   "cmimet-e-references",
+  // The French market hub and its guides, `/fr/immobilier-albanie/**` (lib/frenchPilot).
+  "immobilier-albanie",
   "appartment",
   "blog",
   "catalog",
