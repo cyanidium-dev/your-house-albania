@@ -28,6 +28,17 @@ const preloadLightbox = () => {
   void loadLightbox()
 }
 
+/**
+ * Photo controls: one size and one inset per card so they line up on the
+ * photo's edges (favourite top right, expand bottom right, arrows mid-height,
+ * all on the same vertical). Compact cards 32px at 8px, large cards 40px at
+ * 16px. Favourite and expand share a solid ground; the arrows stay glass.
+ */
+const PHOTO_SOLID =
+  'bg-white/90 text-dark/75 shadow-sm backdrop-blur-sm hover:bg-white dark:bg-dark/80 dark:text-white/85 dark:hover:bg-dark'
+const PHOTO_GLASS =
+  'bg-black/35 text-white shadow-sm ring-1 ring-inset ring-white/20 backdrop-blur-sm hover:bg-black/50'
+
 export function PropertyCardGallery({
   images,
   name,
@@ -84,6 +95,9 @@ export function PropertyCardGallery({
 
   const isList = view === 'list'
   const isSmall = view === 'small'
+  const isLarge = !isList && !isSmall
+  const ctrlSize = isLarge ? 'size-10' : 'size-8'
+  const ctrlIcon = isLarge ? 20 : 16
 
   const imageAlt = alt?.trim() || name
   const imageList = (images?.length ? images : (images?.[0]?.src ? [images[0]] : [])).map((img, idx) =>
@@ -270,7 +284,8 @@ export function PropertyCardGallery({
               // `!`: the overlay's `[&>*]:pointer-events-auto` would otherwise win and
               // turn the badge into a dead spot over the card's link (Clarity, 18.10).
               'pointer-events-none! absolute z-30 inline-flex items-center gap-2 rounded-full bg-black/55 px-2 py-0.5 text-xs font-semibold leading-5 text-white backdrop-blur-sm',
-              view === 'large' ? 'bottom-3 left-5' : 'bottom-1.5 left-1.5',
+              // centred on the expand button's row: 24px badge, 32/40px button
+              isLarge ? 'bottom-6 left-4' : 'bottom-3 left-2',
             )}
             title={stats.label}
             aria-label={stats.label}
@@ -289,7 +304,7 @@ export function PropertyCardGallery({
             ) : null}
           </span>
         ) : null}
-        <div className={cn('absolute z-30', isList ? 'top-2 right-2' : 'top-6 right-6', isSmall && !isList && 'top-2 right-2')}>
+        <div className={cn('absolute z-30', isLarge ? 'top-4 right-4' : 'top-2 right-2')}>
           <FavoriteButton slug={slug} name={name} variant="overlay" size={isList || isSmall ? 'compact' : 'default'} imageUrl={imageList[0]?.src ?? null} />
         </div>
         {hasMultipleImages && (
@@ -299,19 +314,16 @@ export function PropertyCardGallery({
               type="button"
               aria-label={t('previousImage')}
               onClick={goPrev}
-              className="absolute inset-y-0 left-0 w-1/3 z-20 flex items-center justify-start px-1 sm:px-2 bg-transparent cursor-pointer"
+              className={cn('absolute inset-y-0 left-0 w-1/3 z-20 flex items-center justify-start bg-transparent cursor-pointer', isLarge ? 'px-4' : 'px-2')}
             >
               <span
                 className={cn(
-                  'inline-flex items-center justify-center rounded-full transition duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary/40',
-                  'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
-                  'hover:scale-105',
-                  view === 'large' && 'ml-5 p-2',
-                  (view === 'small' || view === 'list') && 'ml-1.5 p-1.5',
-                  isList && 'ml-2'
+                  'inline-flex items-center justify-center rounded-full transition duration-200 ease-out',
+                  PHOTO_GLASS,
+                  ctrlSize,
                 )}
               >
-                <SpriteIcon icon="solar:alt-arrow-left-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                <SpriteIcon icon="solar:alt-arrow-left-linear" width={ctrlIcon} height={ctrlIcon} />
               </span>
             </button>
             {/* Правая tappable-зона */}
@@ -319,19 +331,16 @@ export function PropertyCardGallery({
               type="button"
               aria-label={t('nextImage')}
               onClick={goNext}
-              className="absolute inset-y-0 right-0 w-1/3 z-20 flex items-center justify-end px-1 sm:px-2 bg-transparent cursor-pointer"
+              className={cn('absolute inset-y-0 right-0 w-1/3 z-20 flex items-center justify-end bg-transparent cursor-pointer', isLarge ? 'px-4' : 'px-2')}
             >
               <span
                 className={cn(
-                  'inline-flex items-center justify-center rounded-full transition duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary/40',
-                  'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
-                  'hover:scale-105',
-                  view === 'large' && 'mr-5 p-2',
-                  (view === 'small' || view === 'list') && 'mr-1.5 p-1.5',
-                  isList && 'mr-2'
+                  'inline-flex items-center justify-center rounded-full transition duration-200 ease-out',
+                  PHOTO_GLASS,
+                  ctrlSize,
                 )}
               >
-                <SpriteIcon icon="solar:alt-arrow-right-linear" width={view === 'large' ? 18 : 14} height={view === 'large' ? 18 : 14} />
+                <SpriteIcon icon="solar:alt-arrow-right-linear" width={ctrlIcon} height={ctrlIcon} />
               </span>
             </button>
           </>
@@ -348,27 +357,26 @@ export function PropertyCardGallery({
             onFocus={preloadLightbox}
             aria-label={tLightbox('viewImageFullscreen')}
             className={cn(
-              // tap-zone: the visible circle is 26-34px; the hit area is 44px.
+              // tap-zone: the visible circle is 32-40px; the hit area is 44px.
               'tap-zone absolute z-30 inline-flex items-center justify-center rounded-full',
-              'bg-black/20 dark:bg-white/20 text-white hover:bg-black/35 dark:hover:bg-white/35 backdrop-blur-[2px]',
-              'transition duration-200 ease-out hover:scale-105 cursor-pointer',
+              PHOTO_SOLID,
+              'transition-colors duration-200 ease-out cursor-pointer',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
-              view === 'large' && 'bottom-3 right-5 p-2',
-              (view === 'small' || view === 'list') && 'bottom-1.5 right-1.5 p-1.5',
-              isList && 'right-2 bottom-2',
+              ctrlSize,
+              isLarge ? 'bottom-4 right-4' : 'bottom-2 right-2',
             )}
           >
             <SpriteIcon
               icon="solar:maximize-square-minimalistic-linear"
-              width={view === 'large' ? 18 : 14}
-              height={view === 'large' ? 18 : 14}
+              width={ctrlIcon}
+              height={ctrlIcon}
             />
           </button>
         )}
         {hasMultipleImages && view === 'large' && (
           // A full-width strip at the foot of the photo: without `!` it caught
           // the taps meant for the card's link and did nothing (dead clicks).
-          <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1 pointer-events-none!">
+          <div className="absolute bottom-[34px] left-0 right-0 z-20 flex justify-center gap-1 pointer-events-none!">
             {imageList.map((_, i) => (
               <span
                 key={i}

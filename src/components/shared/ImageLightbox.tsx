@@ -103,7 +103,7 @@ export function ImageLightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
       role="dialog"
       aria-modal="true"
       aria-label={t("imageFullscreenView")}
@@ -112,9 +112,12 @@ export function ImageLightbox({
       <button type="button" onClick={onClose} className="absolute inset-0 z-0" aria-label={t("close")} />
 
       {/* Top bar: counter and close */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/60 to-transparent">
+      {/* Solid black ground: at 90% the site header showed through, and the
+          close button read as shifted against the ghost of the menu button.
+          Counter and close are one height (40px) on one line, clear of the notch. */}
+      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
         {hasMany ? (
-          <span className="px-3 py-1.5 rounded-full bg-black/50 text-white text-sm font-medium tabular-nums">
+          <span className="inline-flex h-10 items-center rounded-full bg-white/12 px-3.5 text-sm font-medium tabular-nums text-white backdrop-blur-md">
             {index + 1} / {count}
           </span>
         ) : (
@@ -126,10 +129,10 @@ export function ImageLightbox({
             e.stopPropagation();
             onClose();
           }}
-          className="p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
+          className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           aria-label={t("close")}
         >
-          <Icon icon="ph:x" width={28} height={28} />
+          <Icon icon="ph:x" width={20} height={20} />
         </button>
       </div>
 
@@ -141,10 +144,10 @@ export function ImageLightbox({
               e.stopPropagation();
               goPrev();
             }}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
+            className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-20 inline-flex size-11 cursor-pointer items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             aria-label={tCard("previousImage")}
           >
-            <Icon icon="ph:caret-left" width={32} height={32} />
+            <Icon icon="ph:caret-left" width={22} height={22} />
           </button>
           <button
             type="button"
@@ -152,17 +155,17 @@ export function ImageLightbox({
               e.stopPropagation();
               goNext();
             }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full text-white/90 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
+            className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-20 inline-flex size-11 cursor-pointer items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             aria-label={tCard("nextImage")}
           >
-            <Icon icon="ph:caret-right" width={32} height={32} />
+            <Icon icon="ph:caret-right" width={22} height={22} />
           </button>
         </>
       )}
 
       <div
         className={cn(
-          "absolute inset-x-0 top-0 z-10 flex items-center justify-center p-2 pt-14 sm:p-4 sm:pt-16",
+          "absolute inset-x-0 top-0 z-10 flex items-center justify-center p-2 pt-16 sm:p-4 sm:pt-16",
           hasMany || action ? "bottom-[calc(7rem+env(safe-area-inset-bottom,0px))] lg:bottom-[calc(9.5rem+env(safe-area-inset-bottom,0px))]" : "bottom-0",
         )}
         onTouchStart={onTouchStart}
@@ -197,7 +200,7 @@ export function ImageLightbox({
                   e.stopPropagation();
                   setShowThumbs((s) => !s);
                 }}
-                className="shrink-0 p-2 rounded-full bg-black/60 text-white/90 hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-white transition-colors duration-200"
+                className="inline-flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 aria-label={showThumbs ? tDetail("hideThumbnails") : tDetail("showThumbnails")}
               >
                 <Icon
@@ -216,8 +219,8 @@ export function ImageLightbox({
                 showThumbs ? "max-h-[140px] opacity-100" : "max-h-0 opacity-0",
               )}
             >
-              <div className="overflow-x-auto px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                <div className="flex items-center gap-3 py-2 px-2 min-w-max">
+              <div className="overflow-x-auto px-3 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex items-center gap-3 py-2 px-1 min-w-max">
                   {list.map((img, idx) => (
                     <button
                       key={`${img.url}-${idx}`}

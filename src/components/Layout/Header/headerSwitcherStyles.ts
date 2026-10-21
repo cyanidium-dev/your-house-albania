@@ -14,9 +14,11 @@ import { cn } from '@/lib/utils'
  * ground, not the page.
  */
 
-/** The 44px hit area every header control gets. */
+/** The 44px hit area every header control gets. On phones the box hugs the
+ *  visible icon and `tap-zone` keeps the 44px target, so the bar can space the
+ *  icons by one even gap (the 44px boxes left 10, 20 and 14 px between them). */
 export const HEADER_HIT_AREA =
-  'group relative inline-flex h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none'
+  'group tap-zone relative inline-flex h-11 min-w-6 md:min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none'
 
 /** Text/icon colour of the bare icon controls (AI, favourites, theme). */
 export function headerIconColorClass(overHero: boolean, sticky: boolean) {

@@ -97,7 +97,9 @@ function PropertyCard({
     'overflow-hidden relative shrink-0',
     isList ? 'w-36 sm:w-52 md:w-72 rounded-l-2xl aspect-[16/9]' : 'rounded-t-2xl w-full',
     isLarge && 'aspect-[22/15]',
-    isSmall && !isList && 'aspect-[16/10]'
+    // 4:3, not 16:10: at two columns on a phone the 112px-tall photo stacked
+    // favourite, arrow and expand edge to edge; 135px gives each its own air.
+    isSmall && !isList && 'aspect-[4/3]'
   )
 
   const imageClass = cn(
