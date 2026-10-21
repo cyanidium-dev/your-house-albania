@@ -6,6 +6,8 @@ import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { ListingPlaceInfoLink } from "@/components/catalog/ListingPlaceInfoLink";
 import { PartnerPlaceLandingLink } from "@/components/partnerLandings/PartnerPlaceLandingLink";
 import { ListingFacetNav } from "@/components/catalog/ListingFacetNav";
+import { ExperimentExposure } from "@/components/analytics/ExperimentExposure";
+import { CARD_MARKET_BADGE, CATALOG_COMPACT_HEAD } from "@/lib/experiments/bootFlags";
 import { ListingFactsLine } from "@/components/catalog/ListingFactsLine";
 import PropertiesListing from "@/components/Properties/PropertyList";
 import { CatalogBreadcrumb } from "@/components/shared/CatalogBreadcrumb";
@@ -620,6 +622,7 @@ export async function GeoListingPage({ params, search }: Props) {
         citySlug={geo.listingCitySlug}
         propertyType={typeSlug || undefined}
         deal={dealType || undefined}
+        compactExperiment={geo.mode === "fullGeo"}
         footer={
           geo.mode === "fullGeo" ? (
             <div className="flex flex-col items-start gap-3">
@@ -704,6 +707,8 @@ export async function GeoListingPage({ params, search }: Props) {
         headingLead={answer?.line}
         afterFilters={
           geo.mode === "fullGeo" && !typeSlug ? (
+            // E002 `compact`: on phones the chips wait in Filters, below the first cards' reach.
+            <div className="max-md:[[data-x-catalog-mobile-compact-head=compact]_&]:hidden">
             <ListingFacetNav
               locale={locale}
               countrySlug={geo.listingCountrySlug}
@@ -715,9 +720,16 @@ export async function GeoListingPage({ params, search }: Props) {
                 (options.locations.find((l) => l.value.toLowerCase() === geo.listingCitySlug)?.label || geo.listingCitySlug)
               }
             />
+            </div>
           ) : null
         }
       />
+      {geo.mode === "fullGeo" ? (
+        <>
+          <ExperimentExposure flag={CATALOG_COMPACT_HEAD.key} maxWidth={767} />
+          <ExperimentExposure flag={CARD_MARKET_BADGE.key} />
+        </>
+      ) : null}
       {showDepth && depthFamily && geo.mode === "fullGeo" ? (
         <ListingDepthSections
           locale={locale}

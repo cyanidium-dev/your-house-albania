@@ -1,0 +1,45 @@
+# E004 - Listing cards without the "Above market" label
+
+Status: proposed · 2026-10-21 · start when the PostHog experiment is launched · sample check **2026-11-04** · review **2026-11-18** · rules of [ADR 007](../seo/decisions/007-experiments.md)
+
+## Context
+
+Large listing cards carry a market label next to €/m²: "Below market", "In market range" or "Above market" (orange), from the district median. On /en/albania/durres/near-the-sea 10 of the first 24 cards say "Above market", the first card of the default sort among them. The page analytics report of 2026-10-20 found two kinds of listings that get leads: well below the district median (-14 … -69 %) and first-line sea views at +57-58 %. The second kind is labelled "Above market" on every card, before the visitor has seen why it costs more.
+
+The label is accurate, and the listing page explains it in full (the "Market in this district" block). The question is whether showing the negative label on the card, where there is no room for the reason, costs listing opens and conversations.
+
+## Hypothesis
+
+Dropping only the "Above market" label from cards (keeping "Below market", "In market range" and the full block on the listing page) raises the share of catalogue visitors who open a listing and start a conversation, because pricier listings with a reason (sea, terrace, new build) are no longer dismissed on a two-word label.
+
+## Design
+
+| | |
+|---|---|
+| Flag | PostHog multivariate flag `card-market-badge`, experiment of the same name |
+| Variants | `control` (all three labels) · `no-above` (no "Above market" on cards). 50/50 |
+| Changed | One `span` on `PropertyCard`, hidden by CSS, at all widths |
+| Not changed | €/m² on the card, the listing page's market block, sorting |
+| Who is in it | Visitors with analytics consent, from their second page view on (see E002) |
+| Exposure | `ExperimentExposure` on city, district and facet pages, all widths |
+| Code | `src/components/shared/property/PropertyCard.tsx`, `src/components/catalog/geoListing/GeoListingRoute.tsx`, `src/lib/experiments/bootFlags.ts` |
+
+## Metrics
+
+- **Primary - listing open rate**: share of exposed visitors with a `property_view` after exposure.
+- **Secondary - conversation rate**: `messenger_open`, `property_inquiry`, `contact_form`.
+- **Guardrail**: if opens rise but conversations fall by more than 20 % relative, the label was saving the visitor's time: the variant loses.
+
+## Sample size
+
+As E002 (same audience, same primary metric): about 920 per variant for a 20 % relative lift at a 30 % baseline; expect a few hundred in four weeks. Write the baseline on 2026-11-04.
+
+## Decision at review (2026-11-18)
+
+1. **`no-above` wins** (≥ 90 % on the primary metric, guardrail holds): drop the "Above market" label from cards for good, delete the flag.
+2. **`control` wins**, or the guardrail fails: keep the label, delete the flag.
+3. **No clear winner**: keep the label (it is accurate), delete the flag, record the reading.
+
+## Result
+
+_Fill in at the sample check and at review._

@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { heroPhotoFor } from "@/lib/media/albaniaPhotos";
 import { PhotoHeroFlag } from "@/components/shared/PhotoHeroFlag";
 import { HERO_LABEL, HERO_LEAD, HERO_TITLE } from "@/components/shared/layout";
+import { cn } from "@/lib/utils";
 
 const introComponents: PortableTextComponents = {
   block: {
@@ -42,7 +43,16 @@ type Props = {
   deal?: string;
   /** Rendered under the intro, e.g. the link to the place's prices page. */
   footer?: ReactNode;
+  /**
+   * Experiment E002 (docs/experiments/002): in the `compact` variant phones
+   * skip the intro and the hero's minimum height, so the first listing card
+   * reaches the first screen. Only the city/district/facet route opts in.
+   */
+  compactExperiment?: boolean;
 };
+
+/** E002 `compact` on phones; inert without the attribute bootFlags sets on <html>. */
+const E002_HIDE = "max-md:[[data-x-catalog-mobile-compact-head=compact]_&]:hidden";
 
 export function CatalogHero({
   title,
@@ -55,6 +65,7 @@ export function CatalogHero({
   propertyType,
   deal,
   footer,
+  compactExperiment = false,
 }: Props) {
   const t = useTranslations("Catalog");
   const tPhoto = useTranslations("AlbaniaPhotos");
@@ -68,20 +79,25 @@ export function CatalogHero({
   const photo = heroPhotoFor({ citySlug, propertyType, deal });
   const hasIntro = Array.isArray(intro) && intro.length > 0;
   const subtitle = hasIntro ? (
-    <div className="mt-3 max-w-2xl md:mt-4">
+    <div className={cn("mt-3 max-w-2xl md:mt-4", compactExperiment && E002_HIDE)}>
       <PortableText
         value={intro as PortableTextBlock[]}
         components={introComponents}
       />
     </div>
   ) : (
-    <p className={`${HERO_LEAD} mt-3 max-w-2xl md:mt-4`}>
+    <p className={cn(`${HERO_LEAD} mt-3 max-w-2xl md:mt-4`, compactExperiment && E002_HIDE)}>
       {effectiveFallback}
     </p>
   );
 
   return (
-    <section className="relative text-left pt-16 pb-10 md:pt-32 md:pb-16 min-h-[19rem] md:min-h-[26rem] flex flex-col justify-center overflow-x-hidden">
+    <section
+      className={cn(
+        "relative text-left pt-16 pb-10 md:pt-32 md:pb-16 min-h-[19rem] md:min-h-[26rem] flex flex-col justify-center overflow-x-hidden",
+        compactExperiment && "max-md:[[data-x-catalog-mobile-compact-head=compact]_&]:min-h-0 max-md:[[data-x-catalog-mobile-compact-head=compact]_&]:pb-6",
+      )}
+    >
       <PhotoHeroFlag />
       <div className="absolute inset-0 z-0">
         <Image

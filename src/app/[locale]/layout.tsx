@@ -30,7 +30,8 @@ import { Providers } from "./Providers";
 import { ConsentProvider } from "@/lib/cookie-consent";
 import { LeadTracker } from "@/components/analytics/LeadTracker";
 import { PostHogConsent } from "@/components/analytics/PostHogConsent";
-import { posthogEnabled } from "@/lib/analytics/posthog";
+import { POSTHOG_KEY, posthogEnabled } from "@/lib/analytics/posthog";
+import { experimentBootScript } from "@/lib/experiments/bootFlags";
 import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
 import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
 import { BUSINESS_TELEGRAM_URL, BUSINESS_WHATSAPP_URL } from "@/lib/contacts/businessContacts";
@@ -65,6 +66,7 @@ const sans = Inter({
 });
 
 const SITE_NAME = "Domlivo";
+const EXPERIMENT_BOOT_SCRIPT = posthogEnabled ? experimentBootScript(POSTHOG_KEY) : "";
 const DEFAULT_DESCRIPTION =
   "Apartments, villas, and commercial property in Albania — verified listings, current prices, no commission. Buy, rent, or invest in Tirana, Durrës, Vlorë, Sarandë and along the Adriatic coast.";
 
@@ -216,6 +218,8 @@ export default async function LocaleLayout({ children, params }: Props) {
         <script dangerouslySetInnerHTML={{ __html: PWA_EARLY_CAPTURE_SCRIPT }} />
         {/* Keeps a translated page working: see lib/dom/translatorGuard. */}
         <script dangerouslySetInnerHTML={{ __html: TRANSLATOR_DOM_GUARD_SCRIPT }} />
+        {/* Layout experiments E002-E004 before the first paint: lib/experiments/bootFlags. */}
+        {EXPERIMENT_BOOT_SCRIPT ? <script dangerouslySetInnerHTML={{ __html: EXPERIMENT_BOOT_SCRIPT }} /> : null}
         {analyticsEnabled && (
           <>
             {/* Consent Mode v2 + Clarity bootstrap: default denied, then
