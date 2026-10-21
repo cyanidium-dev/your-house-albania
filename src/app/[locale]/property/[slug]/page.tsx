@@ -493,8 +493,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
             {/* Experiment E003 (docs/experiments/003): `photo-first` puts the gallery
                 right under the breadcrumb below lg. Inert without the attribute
                 lib/experiments/bootFlags sets on <html>. */}
-            <div className="container mx-auto max-w-8xl px-5 2xl:px-0 max-lg:[[data-x-listing-mobile-photo-first=photo-first]_&]:flex max-lg:[[data-x-listing-mobile-photo-first=photo-first]_&]:flex-col">
-                <div className="max-lg:[[data-x-listing-mobile-photo-first=photo-first]_&]:-order-2">
+            <div className="container mx-auto max-w-8xl px-5 2xl:px-0 max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:flex max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:flex-col">
+                <div className="max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:-order-2">
                 <PropertyDetailBreadcrumb
                   locale={locale}
                   propertyTitle={title}
@@ -614,7 +614,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         )}
                     </div>
                 </div>
-                <div className="max-lg:[[data-x-listing-mobile-photo-first=photo-first]_&]:-order-1 max-lg:[[data-x-listing-mobile-photo-first=photo-first]_&]:mb-6">
+                <div className="max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:-order-1 max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:mb-6">
                 <PropertyGallery images={galleryImages} />
                 </div>
                 <ExperimentExposure flag={LISTING_PHOTO_FIRST.key} maxWidth={1023} />

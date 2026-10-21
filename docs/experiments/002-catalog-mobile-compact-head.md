@@ -16,7 +16,7 @@ Hiding the hero intro and the facet chips on phones, so the first card appears i
 
 | | |
 |---|---|
-| Flag | PostHog multivariate flag `catalog-mobile-compact-head`, experiment of the same name |
+| Flag | PostHog multivariate flag `catalog-mobile-compact-head`, used by the experiment "E002 Catalogue head on phones" (draft, id 102850) |
 | Variants | `control` (the page as it is) · `compact`. 50/50 |
 | Changed, phones below 768 px only | The hero intro is hidden and the hero loses its minimum height; the facet chips (`ListingFacetNav`) are hidden (Filters still has every option). The facts line (count, from, median), the links under it, the heading and its median paragraph stay. Dev server: first card 1 007 px → 551 px on /en/albania/durres/near-the-sea |
 | Where | City, district and facet pages (`GeoListingRoute`, full-geo routes) |

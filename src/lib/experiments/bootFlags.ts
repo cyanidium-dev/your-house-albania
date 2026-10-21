@@ -24,8 +24,8 @@ export type BootFlag = {
 }
 
 export const CATALOG_COMPACT_HEAD: BootFlag = { key: 'catalog-mobile-compact-head', variants: ['control', 'compact'] }
-export const LISTING_PHOTO_FIRST: BootFlag = { key: 'listing-mobile-photo-first', variants: ['control', 'photo-first'] }
-export const CARD_MARKET_BADGE: BootFlag = { key: 'card-market-badge', variants: ['control', 'no-above'] }
+export const LISTING_PHOTO_FIRST: BootFlag = { key: 'e003-listing-photo-first-on-phones', variants: ['control', 'photo-first'] }
+export const CARD_MARKET_BADGE: BootFlag = { key: 'e004-cards-without-above-market-label', variants: ['control', 'no-above'] }
 
 export const BOOT_FLAGS: readonly BootFlag[] = [CATALOG_COMPACT_HEAD, LISTING_PHOTO_FIRST, CARD_MARKET_BADGE]
 

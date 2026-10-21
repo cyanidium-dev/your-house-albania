@@ -210,7 +210,7 @@ function PropertyCard({
                 'shrink-0 rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none',
                 MARKET_POSITION_BADGE_CLASS[marketPosition.label],
                 // Experiment E004 (docs/experiments/004): `no-above` drops only this label.
-                marketPosition.label === 'above' && '[[data-x-card-market-badge=no-above]_&]:hidden'
+                marketPosition.label === 'above' && '[[data-x-e004-cards-without-above-market-label=no-above]_&]:hidden'
               )}
               title={tMarketPosition('disclaimer')}
             >

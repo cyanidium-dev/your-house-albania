@@ -18,19 +18,19 @@ describe('experimentBootScript', () => {
       [key]: JSON.stringify({
         $enabled_feature_flags: {
           'catalog-mobile-compact-head': 'compact',
-          'listing-mobile-photo-first': 'control',
+          'e003-listing-photo-first-on-phones': 'control',
           'listing-contact-order': 'messenger-first',
         },
       }),
     })
     expect(attrs).toEqual({
       'data-x-catalog-mobile-compact-head': 'compact',
-      'data-x-listing-mobile-photo-first': 'control',
+      'data-x-e003-listing-photo-first-on-phones': 'control',
     })
   })
 
   it('ignores unknown variants, booleans and broken storage', () => {
-    expect(run(experimentBootScript(token), { [key]: JSON.stringify({ $enabled_feature_flags: { 'card-market-badge': 'other', 'catalog-mobile-compact-head': true } }) })).toEqual({})
+    expect(run(experimentBootScript(token), { [key]: JSON.stringify({ $enabled_feature_flags: { 'e004-cards-without-above-market-label': 'other', 'catalog-mobile-compact-head': true } }) })).toEqual({})
     expect(run(experimentBootScript(token), { [key]: '{not json' })).toEqual({})
     expect(run(experimentBootScript(token), {})).toEqual({})
   })
