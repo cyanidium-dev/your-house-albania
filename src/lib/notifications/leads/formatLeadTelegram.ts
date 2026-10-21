@@ -39,6 +39,7 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
   'quick-contact': 'плавающая кнопка связи',
   'contact-page': 'страница контактов',
   'blog-cta': 'блок в статье',
+  'blog-top': 'объекты в начале статьи',
   landing: 'лендинг',
   'register-page': 'страница регистрации',
   guide: 'карточка PDF-гида',

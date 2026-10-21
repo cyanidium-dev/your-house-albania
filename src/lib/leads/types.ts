@@ -49,6 +49,8 @@ export const LEAD_PLACEMENTS = [
   'quick-contact',
   'contact-page',
   'blog-cta',
+  // The listings-and-messengers block under a blog post's key facts.
+  'blog-top',
   'landing',
   'register-page',
   'guide',

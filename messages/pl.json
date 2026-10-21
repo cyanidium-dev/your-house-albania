@@ -279,7 +279,11 @@
       "listingsTitle": "Oferty związane z artykułem",
       "listingsPlaceLink": "{place}: {count, plural, one {# oferta na sprzedaż} few {# oferty na sprzedaż} many {# ofert na sprzedaż} other {# oferty na sprzedaż}}",
       "listingsAllAlbania": "Wszystkie nieruchomości na sprzedaż w Albanii",
-      "reviewedBy": "Sprawdził: {name}"
+      "reviewedBy": "Sprawdził: {name}",
+      "earlyListings": {
+        "title": "Oferty, o których jest ten artykuł",
+        "ask": "Zapytaj o dowolną z nich w komunikatorze:"
+      }
     },
     "goBack": "Wróć",
     "entityCard": {

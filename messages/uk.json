@@ -290,7 +290,11 @@
       "listingsTitle": "Обʼєкти за темою",
       "listingsPlaceLink": "{place}: {count, plural, one {# обʼєкт у продажу} few {# обʼєкти у продажу} many {# обʼєктів у продажу} other {# обʼєкта у продажу}}",
       "listingsAllAlbania": "Уся нерухомість у продажу в Албанії",
-      "reviewedBy": "Перевірив: {name}"
+      "reviewedBy": "Перевірив: {name}",
+      "earlyListings": {
+        "title": "Об'єкти за темою статті",
+        "ask": "Запитайте про будь-який із них у месенджері:"
+      }
     },
     "goBack": "Назад",
     "entityCard": {

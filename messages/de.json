@@ -291,7 +291,11 @@
       "listingsTitle": "Immobilien zu diesem Thema",
       "listingsPlaceLink": "{place}: {count, plural, one {# Immobilie zu verkaufen} other {# Immobilien zu verkaufen}}",
       "listingsAllAlbania": "Alle Immobilien zum Verkauf in Albanien",
-      "reviewedBy": "Geprüft von {name}"
+      "reviewedBy": "Geprüft von {name}",
+      "earlyListings": {
+        "title": "Angebote zu diesem Artikel",
+        "ask": "Fragen Sie per Messenger nach einem dieser Angebote:"
+      }
     },
     "goBack": "Zurück",
     "entityCard": {
