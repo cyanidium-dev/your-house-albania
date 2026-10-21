@@ -69,7 +69,7 @@ const CAPTIONED = ['photo', 'video', 'document', 'audio', 'voice', 'animation'] 
 /** A second Start within this window is the same lead (a double tap, a reopened link). */
 const REPEAT_START_MS = 30 * 60 * 1000
 
-/** Unique when the visitor came from a listing, else general: every realtor chat. */
+/** Unique when the visitor came from a listing, else general; routing in `leadAudience`. */
 function teamChats(listingBound: boolean, agentLeadChatId?: string): Promise<{ scope: LeadScope; chatIds: string[] }> {
   return leadAudience({
     listingBound,

@@ -3,31 +3,49 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const fetchMock = vi.fn()
 vi.mock('@/lib/sanity/queries/_core', () => ({ getClient: () => ({ fetch: fetchMock }) }))
 
+const CACTUS = '-5422332960'
+const VIKTOR = '-1003333333333'
+const GENERAL = '-1001111111111'
+
 describe('leadAudience', () => {
   beforeEach(() => {
     vi.resetModules()
     fetchMock.mockReset()
   })
 
-  it('sends a listing lead to that agency only, labelled unique', async () => {
+  it('sends a Cactus listing lead to Cactus only, labelled unique', async () => {
+    fetchMock.mockResolvedValue(VIKTOR)
     const { leadAudience } = await import('../leadRecipients')
-    const r = await leadAudience({ listingBound: true, agentChatId: '-5422332960', generalChatId: '-1001111111111' })
-    expect(r).toEqual({ scope: 'unique', chatIds: ['-5422332960'] })
-    expect(fetchMock).not.toHaveBeenCalled()
+    const r = await leadAudience({ listingBound: true, agentChatId: CACTUS, generalChatId: GENERAL })
+    expect(r).toEqual({ scope: 'unique', chatIds: [CACTUS] })
   })
 
-  it('keeps a listing lead of an agency without a group in the general chat', async () => {
+  it('sends a listing lead of an agency without a group to the general chat and Viktor', async () => {
+    fetchMock.mockResolvedValue(VIKTOR)
     const { leadAudience } = await import('../leadRecipients')
-    const r = await leadAudience({ listingBound: true, agentChatId: null, generalChatId: '-1001111111111' })
-    expect(r).toEqual({ scope: 'unique', chatIds: ['-1001111111111'] })
+    const r = await leadAudience({ listingBound: true, agentChatId: null, generalChatId: GENERAL })
+    expect(r).toEqual({ scope: 'unique', chatIds: [GENERAL, VIKTOR] })
   })
 
-  it('sends a general lead to the general chat and every agency group, once each', async () => {
-    fetchMock.mockResolvedValue(['-5422332960', '-5422332960', 'junk', '-1002222222222'])
+  it("keeps Viktor's own listing leads in the general chat too", async () => {
+    fetchMock.mockResolvedValue(VIKTOR)
     const { leadAudience } = await import('../leadRecipients')
-    const r = await leadAudience({ listingBound: false, generalChatId: '-1001111111111' })
-    expect(r.scope).toBe('general')
-    expect(r.chatIds).toEqual(['-1001111111111', '-5422332960', '-1002222222222'])
+    const r = await leadAudience({ listingBound: true, agentChatId: VIKTOR, generalChatId: GENERAL })
+    expect(r.chatIds).toEqual([GENERAL, VIKTOR])
+  })
+
+  it('sends a general lead to the general chat and Viktor, never to Cactus', async () => {
+    fetchMock.mockResolvedValue(VIKTOR)
+    const { leadAudience } = await import('../leadRecipients')
+    const r = await leadAudience({ listingBound: false, generalChatId: GENERAL })
+    expect(r).toEqual({ scope: 'general', chatIds: [GENERAL, VIKTOR] })
+  })
+
+  it('falls back to the general chat while Viktor has no group', async () => {
+    fetchMock.mockResolvedValue(null)
+    const { leadAudience } = await import('../leadRecipients')
+    expect((await leadAudience({ listingBound: false, generalChatId: GENERAL })).chatIds).toEqual([GENERAL])
+    expect((await leadAudience({ listingBound: true, agentChatId: null, generalChatId: GENERAL })).chatIds).toEqual([GENERAL])
   })
 
   it('labels the two kinds', async () => {
