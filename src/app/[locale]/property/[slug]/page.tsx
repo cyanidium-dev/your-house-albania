@@ -47,7 +47,7 @@ import { MessengerButtons } from '@/components/contact/MessengerButtons';
 import { ListingContactBlock } from '@/components/property/ListingContactBlock';
 import { ExperimentExposure } from '@/components/analytics/ExperimentExposure';
 import { LISTING_PHOTO_FIRST } from '@/lib/experiments/bootFlags';
-import { resolveMessengers } from '@/lib/contacts/messengers';
+import { agentTelegramUrl, agentWhatsAppDigits, resolveMessengers } from '@/lib/contacts/messengers';
 import { messengerContext, messengerPriceLabel } from '@/lib/contacts/messengerContext';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
 import { PropertyArticlesSection } from '@/components/property/PropertyArticlesSection';
@@ -407,7 +407,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const findSimilarLabel = tPropertyDetail('soldFindSimilar');
   const priceClass = isSold ? 'line-through decoration-2 text-dark/40 dark:text-white/40' : '';
 
-  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string; noPublicLink?: boolean; phone?: string | null; telegramUrl?: string | null } | null }).agent ?? null;
+  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string; noPublicLink?: boolean; phone?: string | null; telegramUrl?: string | null; ownLeads?: boolean } | null }).agent ?? null;
+  // Direct contacts only for an agency that takes its own leads in its own
+  // Telegram group (Cactus): its phone and telegramUrl reach the person who
+  // answers. Another agent's telegramUrl may be a channel (Grinchenko's is),
+  // where a buyer cannot write, so those listings keep the platform's.
+  const listingAgentContacts = propertyAgent?.ownLeads ? propertyAgent : null;
+  const listingAgentWhatsApp = agentWhatsAppDigits(listingAgentContacts?.phone);
+  const listingAgentTelegram = agentTelegramUrl(listingAgentContacts?.telegramUrl);
 
   // Messengers next to the inquiry form, Telegram first for ru/uk: the
   // listing agent's own when the agent document has them, else the platform's.
@@ -436,9 +443,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
         id: (sanityProperty as { _id?: string })._id,
       },
     }),
-    // The listing's agent answers its messengers when the agent document has
-    // the contacts (Cactus: Pavel); every other listing keeps the platform's.
-    propertyAgent,
+    // The listing's agent answers its messengers when it takes its own leads
+    // and the agent document has the contacts (Cactus: Pavel).
+    listingAgentContacts,
   );
   const messengerAriaLabels = {
     whatsapp: tQuickContact('channel.whatsapp'),
@@ -455,6 +462,17 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   return (
         <section className="pt-20 md:pt-32 pb-24 lg:pb-20 relative">
+            {/* The listing agent's chats for LeadTracker: on this page every
+                WhatsApp / Telegram click (forms, footer) opens the agent, so a
+                buyer of a Cactus flat never lands in another agency's chat. */}
+            {listingAgentWhatsApp || listingAgentTelegram ? (
+              <div
+                hidden
+                data-listing-agent=""
+                data-listing-agent-whatsapp={listingAgentWhatsApp ?? undefined}
+                data-listing-agent-telegram={listingAgentTelegram ?? undefined}
+              />
+            ) : null}
             <TrackPageView
               kind="property"
               slug={keySlug}
