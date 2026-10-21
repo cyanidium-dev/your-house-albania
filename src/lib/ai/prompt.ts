@@ -25,6 +25,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   it: 'Italian',
   pl: 'Polish',
   de: 'German',
+  fr: 'French',
 }
 
 export function languageName(locale: string): string {

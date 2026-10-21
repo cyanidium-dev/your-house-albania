@@ -34,7 +34,8 @@ export type EvidenceSource =
   | "kp-albania-2026-09-17"
   | "kp-foreign4-2026-09-17"
   | "gsc-2026-09-17"
-  | "serp-2026-09-17";
+  | "serp-2026-09-17"
+  | "kp-fr-2026-10-21";
 
 /** One search intent with evidence of demand, targeting exactly one page. */
 export type KeywordCluster = {

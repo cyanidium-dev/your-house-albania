@@ -1,0 +1,1505 @@
+{
+  "Header": {
+    "menu": "Menu",
+    "signIn": "Connexion",
+    "signUp": "Inscription",
+    "contact": "Contact",
+    "nav": {
+      "buy": "Acheter",
+      "guides": "Guides",
+      "blog": "Blog",
+      "about": "À propos",
+      "contacts": "Contacts",
+      "prices": "Prix par ville",
+      "allListings": "Toutes les annonces",
+      "allCities": "Toutes les villes",
+      "allListingsCount": "{count, plural, one {# annonce} other {# annonces}} à vendre en Albanie",
+      "buyCities": "Annonces par ville",
+      "buyPrices": "Prix et quartiers",
+      "addProperty": "Publier votre bien",
+      "openBuyMenu": "Ouvrir le menu Acheter",
+      "closeBuyMenu": "Fermer le menu Acheter",
+      "expandPrices": "Afficher les prix par ville",
+      "collapsePrices": "Masquer les prix par ville",
+      "openGuidesMenu": "Ouvrir le menu Guides",
+      "closeGuidesMenu": "Fermer le menu Guides",
+      "guideTopics": "Thèmes",
+      "latestGuides": "Derniers articles",
+      "allGuides": "Tous les guides",
+      "allArticles": "Tous les articles",
+      "propertyTypes": "Types de biens"
+    },
+    "cta": {
+      "viewProperties": "Voir les biens"
+    },
+    "toggleMobileMenu": "Ouvrir ou fermer le menu mobile",
+    "switchToLightMode": "Passer en mode clair",
+    "switchToDarkMode": "Passer en mode sombre",
+    "favoritesCount": "Favoris ({count})",
+    "selectLanguage": "Choisir la langue",
+    "closeMobileMenu": "Fermer le menu mobile",
+    "mainNavigation": "Navigation principale",
+    "guideTopics": {
+      "investing": "Investir",
+      "buying": "Achat et droit",
+      "market": "Prix et marché",
+      "places": "Villes et quartiers",
+      "living": "Vivre en Albanie",
+      "comparisons": "Comparaisons"
+    },
+    "drawer": {
+      "title": "Menu",
+      "more": "Plus",
+      "settings": "Paramètres",
+      "language": "Langue",
+      "currency": "Devise",
+      "theme": "Thème",
+      "themeLight": "Clair",
+      "themeDark": "Sombre",
+      "getHelp": "Contacts et aide",
+      "viewAll": "Tout voir"
+    }
+  },
+  "Currency": {
+    "switchTo": "Passer la devise en {currency}",
+    "current": "Devise : {currency}"
+  },
+  "Footer": {
+    "columns": {
+      "property": "Immobilier",
+      "useful": "Ressources",
+      "company": "Société",
+      "contacts": "Contact",
+      "app": "Application"
+    },
+    "nav": {
+      "allListings": "Toutes les annonces",
+      "leadLanding": "Immobilier en bord de mer",
+      "marketGuide": "Guide d’achat",
+      "allCities": "Toutes les villes",
+      "blog": "Blog",
+      "about": "À propos",
+      "contacts": "Contact",
+      "addProperty": "Publier votre bien",
+      "knowledge": "Base de connaissances"
+    },
+    "cities": {
+      "empty": "Aucune ville à afficher."
+    },
+    "contacts": {
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "app": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "legal": {
+      "brandName": "Domlivo",
+      "createdBy": "Réalisé par",
+      "imageCredits": "Crédits photo"
+    },
+    "developer": {
+      "note": "Le site est développé et maintenu par Code Site Art. Chaque annonce relève de l’agence ou du propriétaire qui l’a publiée."
+    },
+    "contactCta": "Laisser une demande"
+  },
+  "Home": {
+    "hero": {
+      "location": "Palm springs, CA",
+      "title": "Refuge futuriste",
+      "getInTouch": "Nous contacter",
+      "viewDetails": "Voir les détails",
+      "bedrooms": "4 chambres",
+      "restroom": "4 salles de bain",
+      "parkingSpace": "Place de parking",
+      "price": "4 750 000 $",
+      "forSellingPrice": "Prix de vente",
+      "search": {
+        "tabs": {
+          "buy": "Acheter",
+          "sale": "Vente",
+          "rent": "Location",
+          "shortTerm": "Courte durée"
+        }
+      }
+    },
+    "topOffers": {
+      "title": "Meilleures offres",
+      "description": "Les annonces populaires, nouvelles et très demandées, au même endroit.",
+      "tabs": {
+        "popular": "Populaires",
+        "new": "Nouveautés",
+        "highDemand": "Très demandées"
+      },
+      "ctaAll": "Voir tous les biens",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "seeAllCount": "Voir toutes les annonces ({count, number})"
+    },
+    "faq": {
+      "badge": "FAQ",
+      "title": "Tout sur les biens Domlivo",
+      "description": "Acheter, vendre ou investir dans l’immobilier peut sembler compliqué. Voici quelques questions fréquentes pour vous guider.",
+      "q1": "1. Puis-je personnaliser mon logement Domlivo ?",
+      "q2": "2. Où trouver les biens Domlivo ?",
+      "q3": "3. Quelles sont les étapes pour acheter ?",
+      "answer": "Un large choix de biens haut de gamme, des appartements de standing aux villas spacieuses, selon vos besoins."
+    },
+    "blog": {
+      "badge": "Blog",
+      "title": "Analyses du marché immobilier",
+      "description": "Suivez le marché immobilier avec des conseils et des actualités d’experts",
+      "readAllArticles": "Lire tous les articles"
+    },
+    "testimonial": {
+      "badge": "Témoignages",
+      "title": "Ce que disent nos clients",
+      "goToSlide": "Aller à la diapositive {num}"
+    }
+  },
+  "Shared": {
+    "seoText": {
+      "contentMissing": "Le contenu SEO n’est pas disponible.",
+      "videoTitle": "Vidéo"
+    },
+    "relatedPages": {
+      "districtsOfCity": "Voir les quartiers",
+      "comparisons": "Comparaisons associées",
+      "guides": "Guides associés",
+      "related": "Pages associées"
+    },
+    "lightbox": {
+      "close": "Fermer",
+      "imageFullscreenView": "Image en plein écran",
+      "viewImageFullscreen": "Afficher l’image en plein écran"
+    },
+    "map": {
+      "approximateLegend": "≈ emplacement approximatif : le marqueur indique le quartier ou un lieu proche, pas l’immeuble",
+      "enterFullscreen": "Ouvrir la carte en plein écran",
+      "exitFullscreen": "Fermer la carte en plein écran",
+      "viewMode": "Vue carte",
+      "mapButton": "Carte · {count}",
+      "showMap": "Afficher la carte",
+      "hideMap": "Masquer la carte",
+      "openListing": "Voir l’annonce",
+      "approximateShort": "emplacement approximatif : le secteur, pas l’immeuble",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
+      "resetBearing": "Réorienter la carte vers le nord",
+      "offline": "La carte nécessite une connexion internet. Les annonces ci-dessous fonctionnent hors ligne.",
+      "buildingStack": "{count, plural, one {# appartement} other {# appartements}}",
+      "placeStack": "{count, plural, one {# annonce} other {# annonces}}",
+      "stackFrom": "dès {price}",
+      "stackPager": "{index} sur {count} dans cet immeuble",
+      "stackPagerPlace": "{index} sur {count} à cet endroit",
+      "stackPrevious": "Annonce précédente",
+      "stackNext": "Annonce suivante"
+    },
+    "propertyDetail": {
+      "sold": "Vendu",
+      "archived": "Plus disponible",
+      "reserved": "Réservé",
+      "rented": "Loué",
+      "soldLeadTitle": "Ce bien est vendu. Nous en trouverons un similaire",
+      "unavailableLeadTitle": "Cette annonce n’est plus disponible. Nous en trouverons une similaire",
+      "soldLeadBody": "Laissez votre numéro et dites-nous ce que vous cherchez : nous vous enverrons des annonces similaires, avec les prix actuels.",
+      "soldFindSimilar": "Trouver un bien similaire",
+      "propertyDetails": "Détails du bien",
+      "checkAllAmenities": "Voir tous les équipements",
+      "whatThisPropertyOffers": "Ce que propose ce bien",
+      "similarProperties": "Biens similaires",
+      "yearBuilt": "Construit en {year}",
+      "checkAllPhotos": "Voir toutes les photos",
+      "getInTouch": "Nous contacter",
+      "listedBy": "Proposé par <link>{name}</link>",
+      "contactHeading": "Ce bien vous intéresse ?",
+      "contactIntro": "Laissez vos coordonnées, nous vous recontacterons au sujet de cette annonce.",
+      "contactSuccessTitle": "Demande envoyée !",
+      "contactSuccessBody": "Nous avons bien reçu votre message et vous contacterons rapidement.",
+      "contactClose": "Fermer",
+      "dealTypeSale": "Vente",
+      "dealTypeRent": "Location",
+      "dealTypeShortTerm": "Location courte durée",
+      "dealTypeLongTerm": "Location longue durée",
+      "dealTypePrice": "Prix",
+      "dealTypeShortTermCompact": "Courte durée",
+      "dealTypeLongTermCompact": "Longue durée",
+      "close": "Fermer",
+      "imageGallery": "Galerie photos",
+      "openImage": "Ouvrir l’image {n}",
+      "propertyImageAlt": "Photo du bien {n}",
+      "imageAlt": "Image {n}",
+      "thumbnailAlt": "Miniature {n}",
+      "goToImage": "Aller à l’image {n}",
+      "hideThumbnails": "Masquer les miniatures",
+      "showThumbnails": "Afficher les miniatures",
+      "approximateLocation": "Emplacement approximatif : la zone en surbrillance correspond au quartier ou à un lieu proche, pas à l’immeuble exact.",
+      "plotArea": "Terrain {value} m²",
+      "plotAreaUnknown": "Surface du terrain : non précisée",
+      "seaDistance": "{m} m de la mer",
+      "beachfront": "En front de mer",
+      "quickAnswer": {
+        "intro": "{layout}, {area} m², {place} : {price} ({rate}/m²).",
+        "introNoLayout": "{area} m², {place} : {price} ({rate}/m²).",
+        "median": " {pct} % {cmp, select, below {sous} other {au-dessus de}} la médiane du quartier ({median}/m², {count, plural, one {# annonce} other {# annonces}}).",
+        "medianSame": " Au niveau de la médiane du quartier ({median}/m², {count, plural, one {# annonce} other {# annonces}}).",
+        "sea": " À {approx, select, yes {≈ } other {}}{m} m de la mer."
+      }
+    },
+    "propertyCard": {
+      "bedrooms": "Chambres",
+      "bathrooms": "Salles de bain",
+      "roomsCount": "{count, plural, one {# pièce} other {# pièces}}",
+      "bedroomsCount": "{count, plural, one {# chambre} other {# chambres}}",
+      "bathroomsCount": "{count, plural, one {# salle de bain} other {# salles de bain}}",
+      "areaUnit": "m²",
+      "pricePrefix": "$",
+      "previousImage": "Image précédente",
+      "nextImage": "Image suivante",
+      "premium": "Premium",
+      "top": "Top",
+      "sale": "Promo",
+      "discount": "-{value} %",
+      "propertyFallback": "Bien",
+      "closePreview": "Fermer l’aperçu",
+      "stageOffPlan": "Sur plan",
+      "stageUnderConstruction": "En construction",
+      "handoverYear": "livraison {year}",
+      "handoverQuarter": "livraison T{quarter} {year}",
+      "pricePerSqmFrom": "dès {amount} / m²",
+      "statsViews": "{count, plural, one {# vue} other {# vues}}",
+      "statsSaves": "{count, plural, one {enregistré # fois} other {enregistré # fois}}",
+      "requestInfo": "Envoyer une demande",
+      "plotArea": "Terrain {value} m²",
+      "plotAreaUnknown": "Terrain : non précisé",
+      "priceOnRequest": "Prix sur demande"
+    },
+    "blogCard": {
+      "imageAlt": "Image de l’article",
+      "ariaLabel": "Voir l’article",
+      "readMore": "Lire la suite",
+      "minRead": "{count} min de lecture"
+    },
+    "blogCta": {
+      "learnMore": "En savoir plus"
+    },
+    "blog": {
+      "relatedArticles": "Articles associés",
+      "relatedProperties": "Biens associés",
+      "listingsTitle": "Biens liés à ce sujet",
+      "listingsPlaceLink": "{place} : {count, plural, one {# bien à vendre} other {# biens à vendre}}",
+      "listingsAllAlbania": "Tous les biens à vendre en Albanie",
+      "reviewedBy": "Vérifié par {name}",
+      "earlyListings": {
+        "title": "Les annonces dont parle cet article",
+        "ask": "Posez une question sur l’une d’elles par messagerie :"
+      }
+    },
+    "goBack": "Retour",
+    "entityCard": {
+      "propertiesCountLabel": "{count, plural, one {bien} other {biens}}"
+    }
+  },
+  "NotFound": {
+    "badge": "Erreur 404",
+    "title": "Cette page n’existe pas",
+    "description": "Le lien est peut-être obsolète, ou la page a été déplacée. Voici comment revenir.",
+    "backHome": "Retour à l’accueil",
+    "browseListings": "Voir les annonces",
+    "readBlog": "Lire le blog"
+  },
+  "Listing": {
+    "properties": {
+      "badge": "Biens",
+      "title": "Des logements pensés avec soin.",
+      "description": "Élégance et confort dans nos villas de luxe exclusives, conçues pour un art de vivre raffiné."
+    },
+    "blogs": {
+      "badge": "Blog",
+      "title": "Blog immobilier Albanie : marché, prix et conseils d’achat",
+      "description": "Actualités du marché, données de prix et conseils d’achat étape par étape pour l’Albanie, de Durrës à Saranda.",
+      "metaTitle": "Blog immobilier Albanie : marché, prix et conseils d’achat"
+    }
+  },
+  "Cities": {
+    "title": "Villes",
+    "description": "Parcourez les biens par ville.",
+    "cityDescription": "Biens immobiliers à {city}."
+  },
+  "Breadcrumbs": {
+    "home": "Accueil",
+    "properties": "Biens",
+    "favorites": "Favoris",
+    "cities": "Villes",
+    "blog": "Blog",
+    "guides": "Guides",
+    "districts": "Quartiers",
+    "catalog": "Biens",
+    "saleCatalog": "Biens à vendre",
+    "agents": "Agents",
+    "propertyTypes": "Types de biens",
+    "contacts": "Contact",
+    "forRealtors": "Pour les agents immobiliers",
+    "howToPublish": "Comment publier",
+    "register": "Inscription",
+    "investment": "Investissement",
+    "navLabel": "Fil d’Ariane",
+    "newBuilds": "Programmes neufs",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d’utilisation",
+    "about": "À propos"
+  },
+  "Districts": {
+    "hubTitle": "Quartiers de {city}",
+    "hubDescription": "Parcourez les quartiers de {city} et choisissez le bon secteur pour votre futur logement.",
+    "hubMetaTitle": "Quartiers de {city} 2026 : où acheter et prix au m²",
+    "hubMetaDescription": "Dans quel quartier de {city} acheter : prix au m² du neuf et de l’ancien, valeur de référence de l’État et un avis en une ligne pour chaque secteur, avec les biens à vendre.",
+    "faqTitle": "Questions fréquentes",
+    "exploreTitle": "Pour aller plus loin",
+    "propertiesInDistrict": "Biens à {district}",
+    "aboutCity": "En savoir plus sur {city}",
+    "otherDistricts": "Autres quartiers de {city}",
+    "viewAllDistricts": "Voir tous les quartiers de {city}"
+  },
+  "Landing": {
+    "updatedAt": "Mis à jour : {date}",
+    "confidenceHigh": "Fiabilité élevée",
+    "confidenceMedium": "Fiabilité moyenne",
+    "confidenceLow": "Fiabilité faible",
+    "methodology": "Méthodologie",
+    "confidence": "Fiabilité",
+    "versus": "{diff} vs {other}",
+    "inventory": {
+      "count": "Annonces",
+      "fromPrice": "Prix le plus bas",
+      "medianPricePerSqm": "Prix médian au m²",
+      "nearSeaShare": "À moins de 300 m de la mer",
+      "newBuildShare": "Neuf (sur plan ou en construction)",
+      "note": "Prix affichés des annonces Domlivo correspondant à cette page, mis à jour toutes les heures."
+    }
+  },
+  "ZoneMetrics": {
+    "priceNew": "Neuf, €/m²",
+    "priceResale": "Ancien, €/m²",
+    "priceAll": "Ensemble du parc, €/m²",
+    "rent1br": "Loyer 1+1, €/mois",
+    "rent2br": "Loyer 2+1, €/mois",
+    "strAdr": "Prix par nuit, €",
+    "strOccupancy": "Taux d’occupation, %",
+    "yieldLtr": "Rendement brut, location longue durée",
+    "yieldStr": "Rendement brut, location saisonnière",
+    "referencePrice": "Prix de référence de l’État, leks/m²",
+    "rating": "Note DomLivo",
+    "zone": "Zone",
+    "sample": "{n} annonces",
+    "basisAsking": "prix affichés",
+    "basisTransaction": "transactions",
+    "basisOfficial": "barème officiel",
+    "basisCalculated": "valeur calculée",
+    "basisMixed": "sources mixtes",
+    "referenceEdition": "Barème de référence : {edition}",
+    "listingIndex": {
+      "title": "{city} : les prix affichés de nos annonces, par quartier",
+      "subtitle": "Calculé sur {count} annonces de vente en ligne sur Domlivo et actualisé toutes les heures. Les prix portent uniquement sur les appartements et les studios, et ce sont des prix affichés, pas des ventes conclues ; un quartier apparaît dans le tableau dès qu’il compte {min} appartements.",
+      "district": "Quartier",
+      "listings": "Annonces",
+      "from": "Appartements à partir de",
+      "median": "Prix médian d’un appartement",
+      "medianSqm": "Médiane €/m²",
+      "wholeCity": "Tout {city}",
+      "note": "Annonces Domlivo, mises à jour toutes les heures",
+      "versusMarket": "Les deux tableaux ne mesurent pas la même chose, d’où des chiffres différents : celui du dessus reprend des études de marché publiées, souvent sous forme de fourchette ; celui-ci donne le prix affiché médian des appartements en vente ici aujourd’hui."
+    },
+    "priceAnswer": {
+      "title": "{city} : les prix réellement affichés, {month}",
+      "intro": "D’après {count} appartements et studios en vente sur Domlivo le {date} : la fourchette va du 20e au 80e centile des prix affichés au mètre carré, avec la médiane à côté.",
+      "wholeCity": "Ville de {city} dans son ensemble",
+      "completed": "Logements achevés (ancien et neuf déjà livré)",
+      "newBuild": "Neuf en construction ou sur plan",
+      "range": "{from}-{to} €/m²",
+      "median": "médiane {value} €",
+      "flats": "{count, plural, one {# appartement} other {# appartements}}",
+      "note": "Prix affichés d’après les annonces en ligne, pas des prix de transaction ; recalculés toutes les heures. Le tableau complet par quartier se trouve plus bas sur la page."
+    }
+  },
+  "PriceIndex": {
+    "confidenceHigh": "Élevée",
+    "confidenceMedium": "Moyenne",
+    "confidenceLow": "Faible",
+    "rangeColumn": "Fourchette sur une même échelle, de {from} à {to}",
+    "methodologyLink": "Méthodologie",
+    "lowSample": "données insuffisantes : {count, plural, one {# appartement} other {# appartements}}",
+    "lowSampleNote": "* Moins de {min} appartements avec un prix au m² : valeur indicative, pas un chiffre de référence.",
+    "tableCaption": "Domlivo Price Index, {city}, {date} : prix affichés des appartements et studios par quartier, sur {flats} appartements avec un prix au m² parmi {listings} annonces de vente sur Domlivo",
+    "editionCaption": "Domlivo Price Index, {month} : prix affichés des appartements et studios mis en vente sur Domlivo",
+    "districtLowSample": "Moins de {min} appartements : valeur indicative.",
+    "districtSource": "Domlivo Price Index, {date}. <method>Méthodologie</method>",
+    "methodology": {
+      "metaTitle": "Domlivo Price Index : méthodologie et données ouvertes",
+      "metaDescription": "Comment est calculé le Domlivo Price Index des prix affichés en Albanie : échantillon, filtres, médiane et fourchette, règle des 30 appartements, citation, CSV et JSON.",
+      "breadcrumb": "Méthodologie de l’indice des prix",
+      "h1": "Domlivo Price Index : comment les chiffres sont calculés",
+      "lead": "Le prix affiché médian au mètre carré des appartements et studios en vente sur Domlivo, par ville et par quartier en Albanie, recalculé toutes les heures à partir des annonces en ligne. Libre de réutilisation sous licence CC BY 4.0.",
+      "figuresTitle": "Chiffres actuels",
+      "figuresLead": "Calculés le {date}. Une ville qui compte moins de {min} appartements dans l’échantillon affiche la taille de celui-ci au lieu d’un chiffre de référence.",
+      "figuresCaption": "Domlivo Price Index par ville, {date} : médiane et 20e-80e centile du prix affiché au m² des appartements et studios en vente sur Domlivo",
+      "colCity": "Ville",
+      "colMedian": "Médiane, €/m²",
+      "colRange": "20e-80e centile, €/m²",
+      "colCount": "Appartements dans l’échantillon",
+      "lowSampleCell": "données insuffisantes",
+      "methodTitle": "Méthode",
+      "askingTitle": "Ce qu’est un prix affiché",
+      "askingBody": "Le prix qu’un vendeur ou une agence indique dans une annonce. Ce n’est pas le prix auquel la vente a été conclue : les deux peuvent différer, et l’indice ne mesure que le premier.",
+      "sampleTitle": "L’échantillon",
+      "sampleBody": "Les annonces publiées sur domlivo.com, actives et proposées à la vente au moment du calcul. Les chiffres de prix portent uniquement sur les appartements et les studios ; maisons, villas, terrains et locaux commerciaux comptent dans le nombre d’annonces, pas dans les prix.",
+      "filtersTitle": "Filtres",
+      "filtersBody": "Une annonce sans prix est écartée. Pour une annonce affichée au m², c’est ce prix au m² qui est retenu ; sinon le prix total est divisé par la surface. Une surface inférieure à 15 m² est considérée comme une erreur de saisie et exclue des chiffres au m².",
+      "thresholdTitle": "Le seuil de {min} appartements",
+      "thresholdBody": "Une médiane calculée sur moins de {min} appartements n’est jamais présentée comme chiffre de référence. Les pages indiquent « données insuffisantes » avec le nombre d’appartements, les tableaux la signalent par un astérisque et les fichiers téléchargeables par un indicateur (low_sample).",
+      "medianTitle": "Médiane et fourchette",
+      "medianBody": "La médiane est la valeur centrale des prix au m² (la moyenne des deux valeurs centrales quand leur nombre est pair), arrondie à l’euro. La fourchette va du 20e au 80e centile, par interpolation linéaire, si bien qu’un prix mal saisi ne la déplace pas.",
+      "frequencyTitle": "Fréquence de mise à jour",
+      "frequencyBody": "Recalculé à partir des annonces en ligne au plus une fois par heure, et chaque chiffre porte sa date de calcul. Une édition mensuelle paraît sur le blog uniquement si les chiffres ont changé depuis la précédente.",
+      "researchTitle": "Autres chiffres sur le site",
+      "researchBody": "Les tableaux par zone avec une colonne de fiabilité reprennent des études de marché publiées, dont les sources sont citées à côté du tableau. Ils ne font pas partie de l’indice et peuvent s’en écarter.",
+      "useTitle": "Utiliser les données",
+      "citeTitle": "Comment citer",
+      "citeBody": "Indiquez l’indice, le lieu, la date des chiffres et la page d’où vous les tirez :",
+      "citeTemplate": "Domlivo Price Index, <ville>, <date>, <URL>",
+      "citeExample": "Par exemple :",
+      "licenceTitle": "Licence",
+      "licenceBody": "Les chiffres et les fichiers sont publiés sous licence Creative Commons Attribution 4.0 : vous pouvez les copier, les partager et les adapter, y compris à des fins commerciales, en citant le Domlivo Price Index avec un lien.",
+      "downloadsTitle": "Téléchargements",
+      "downloadsBody": "Régénérés toutes les heures avec les pages. Le CSV compte un fichier par ville, d’abord la ville entière puis ses quartiers ; le JSON contient toutes les villes et tous les quartiers, avec la description de chaque champ.",
+      "downloadAll": "Toutes les villes et tous les quartiers (JSON)",
+      "downloadCity": "{city} par quartier (CSV)"
+    },
+    "prices": {
+      "metaTitle": "Prix de l’immobilier en Albanie par ville 2026 : médiane €/m² (Domlivo Price Index)",
+      "metaDescription": "Prix affichés des appartements en Albanie par ville : médiane et 20e-80e centile en €/m² à Durrës, Tirana, Vlora, Saranda et ailleurs, d’après les annonces en ligne, mis à jour toutes les heures. Données ouvertes, CC BY 4.0.",
+      "breadcrumb": "Prix par ville",
+      "h1": "Prix de l’immobilier en Albanie par ville",
+      "lead": "Prix affiché médian au mètre carré des appartements et studios en vente sur Domlivo, ville par ville, calculé le {date} sur {listings} annonces. Une ville qui compte moins de {min} appartements dans l’échantillon affiche sa taille au lieu d’un chiffre.",
+      "leadNoData": "Les chiffres sont en cours de recalcul. Réessayez dans quelques minutes.",
+      "tableTitle": "Prix affiché médian au m², par ville",
+      "tableLead": "Villes classées par nombre d’annonces. Chaque ville donne accès à ses quartiers et à ses sources.",
+      "tableCaption": "Prix de l’immobilier en Albanie par ville, {date} : médiane et 20e-80e centile du prix affiché au m² des appartements et studios en vente sur Domlivo, et nombre d’appartements dans l’échantillon",
+      "colCity": "Ville",
+      "colMedian": "Médiane, €/m²",
+      "colRange": "20e-80e centile, €/m²",
+      "colCount": "Appartements dans l’échantillon",
+      "lowSampleCell": "données insuffisantes",
+      "stageTitle": "Neuf ou immeubles achevés",
+      "stageLead": "Les mêmes villes selon le stade de construction : sur plan et en construction d’un côté, immeubles achevés de l’autre. Un tiret signifie moins de {min} appartements dans ce groupe.",
+      "colNewBuild": "Neuf, €/m²",
+      "colCompleted": "Achevé, €/m²",
+      "stageCaption": "Prix affiché médian au m² par ville et stade de construction, {date}, Domlivo Price Index",
+      "howTitle": "Comment lire ces chiffres",
+      "howBody": "Ce sont des prix affichés, pas des prix de vente : ce que vendeurs et agences indiquent dans leurs annonces sur Domlivo. La médiane est la valeur centrale ; la fourchette va du 20e au 80e centile, si bien qu’un prix mal saisi ne la déplace pas. Une médiane calculée sur moins de {min} appartements n’est jamais affichée. La méthode, les filtres et l’échantillon sont décrits sur la page méthodologie ; les chiffres sont librement réutilisables avec un lien.",
+      "methodologyLink": "Lire la méthodologie",
+      "downloadJson": "Télécharger tous les chiffres (JSON)",
+      "faqTitle": "Questions",
+      "faq1q": "Dans quelle ville d’Albanie les appartements sont-ils les moins chers ?",
+      "faq1a": "{city} : un prix affiché médian de {median} € le m² au {date}, le plus bas parmi les villes dont l’échantillon est fiable sur Domlivo. Les prix varient davantage au sein d’une ville qu’entre les villes ; le tableau des quartiers sur chaque page de ville montre l’écart.",
+      "faq2q": "Quelle ville est la plus chère ?",
+      "faq2a": "{city} : prix affiché médian de {median} € le m² au {date}. Les premières lignes en bord de mer et la Riviera dépassent toutes les médianes des villes.",
+      "faq3q": "À quelle fréquence les chiffres sont-ils mis à jour ?",
+      "faq3a": "Au plus une fois par heure, à partir des annonces en ligne sur Domlivo à ce moment-là. Chaque tableau porte sa date de calcul ; des éditions mensuelles paraissent sur le blog."
+    }
+  },
+  "Calculators": {
+    "propertyPrice": "Prix du bien",
+    "enterPrice": "Saisissez le prix du bien pour voir les résultats",
+    "downPayment": "Apport",
+    "interestRate": "Taux d’intérêt",
+    "loanTerm": "Durée du prêt",
+    "years": "ans",
+    "monthlyPayment": "Mensualité",
+    "loanAmount": "Montant du prêt",
+    "totalInterest": "Total des intérêts",
+    "ltvLabel": "LTV",
+    "ltvOk": "Dans la limite de LTV",
+    "ltvExceeded": "Dépasse la limite de LTV de {limit} % : la banque peut exiger un apport plus important",
+    "presetLabel": "Préréglage de zone",
+    "manualMode": "Saisie manuelle",
+    "rentalType": "Type de location",
+    "ltr": "Longue durée",
+    "str": "Courte durée",
+    "monthlyRent": "Loyer mensuel",
+    "adr": "Prix moyen par nuit (ADR)",
+    "occupancy": "Taux d’occupation",
+    "nightsCap": "Plafond saisonnier de nuitées",
+    "mgmtFee": "Frais de gestion",
+    "taxRate": "Impôt sur les revenus locatifs",
+    "grossYield": "Rendement brut",
+    "netYield": "Rendement net",
+    "netIncomePerYear": "Revenu net / an",
+    "breakdown": "Détail du calcul",
+    "grossIncome": "Revenu annuel brut",
+    "nightsUsed": "Nuits louées par an",
+    "managementCost": "Gestion",
+    "taxCost": "Impôt",
+    "letCostsStr": "Frais de plateforme et taxe de séjour",
+    "letCostsLtr": "Mois de vacance et frais de location",
+    "runningCostsStr": "Charges, réparations, assurance, taxe foncière",
+    "runningCostsLtr": "Réparations, assurance, taxe foncière",
+    "totalInvested": "Investi (prix + frais d’achat)",
+    "netIncome": "Revenu annuel net",
+    "transactionCosts": "Frais d’acquisition",
+    "totalPurchaseCost": "Coût total de l’achat",
+    "onTopOfPrice": "En plus du prix",
+    "capped": "plafonné"
+  },
+  "Trackers": {
+    "statusOnTrack": "Dans les délais",
+    "statusDelayed": "En retard",
+    "statusBlocked": "Bloqué",
+    "statusDone": "Terminé",
+    "checkedAt": "Vérifié : {date}",
+    "showAllEvents": "Voir tous les événements ({count})",
+    "faqTitle": "Questions fréquentes",
+    "sourcesTitle": "Sources"
+  },
+  "Developers": {
+    "tierGreen": "Niveau vert",
+    "tierYellow": "Niveau jaune",
+    "tierRed": "Niveau rouge",
+    "reviewedAt": "Vérifié : {date}",
+    "staleNote": "Données peut-être obsolètes",
+    "disclaimerShort": "Évaluation de la rédaction fondée sur des sources publiques. Être cité dans une affaire judiciaire ne vaut pas condamnation.",
+    "about": "À propos",
+    "keyProjects": "Projets principaux",
+    "riskNotes": "Points de vigilance",
+    "sourcesTitle": "Sources",
+    "founded": "Fondé en {year}",
+    "developerLabel": "Promoteur",
+    "details": "Détails"
+  },
+  "PropertyMarketPosition": {
+    "title": "Le marché dans ce quartier",
+    "labelBelow": "Sous le marché",
+    "labelIn": "Dans les prix du marché",
+    "labelAbove": "Au-dessus du marché",
+    "marketValue": "Prix du marché pour {area} m²",
+    "thisListing": "Ce bien",
+    "perSqm": "<amount></amount>/m²",
+    "referenceValue": "Valeur de référence de l’État, pour l’impôt",
+    "districtYield": "Rendement du quartier : {pct} %",
+    "viewDistrict": "Voir la page du quartier",
+    "disclaimer": "Estimation fondée sur les fourchettes de prix du quartier, pas une évaluation de ce bien précis."
+  },
+  "PropertyOwnershipCosts": {
+    "title": "Coût de l’achat et de la détention",
+    "belowMedian": "{pct} % sous la médiane du quartier",
+    "aboveMedian": "{pct} % au-dessus de la médiane du quartier",
+    "atMedian": "Au niveau de la médiane du quartier",
+    "districtMedian": "Médiane des biens similaires à {district} sur Domlivo : <amount></amount>/m² sur {count} annonces.",
+    "districtMedianNoName": "Médiane des biens similaires dans ce quartier sur Domlivo : <amount></amount>/m² sur {count} annonces.",
+    "purchaseTitle": "Frais uniques à l’achat",
+    "notary": "Notaire (0,23-0,35 % du prix)",
+    "registration": "Enregistrement de la propriété (ASHK)",
+    "agency": "Commission d’agence côté acheteur (1 % en général)",
+    "purchaseTotal": "En plus du prix ({pct} %)",
+    "transferTaxNote": "La taxe de mutation de 2 % est payée par le vendeur.",
+    "annualTitle": "Charges courantes",
+    "propertyTax": "Taxe foncière",
+    "utilities": "Énergie, internet, charges de copropriété",
+    "perYear": "<amount></amount>/an",
+    "perMonth": "<amount></amount>/mois",
+    "monthlyTotal": "En moyenne par mois",
+    "fromRate": "Montants pour {area} m² à <rate></rate>/m², soit <total></total>.",
+    "disclaimer": "Estimation d’après le barème officiel des notaires, les frais de l’ASHK, l’impôt sur les bâtiments calculé sur la valeur de référence de l’État et les tarifs municipaux de l’eau et de l’électricité, pour deux occupants avec climatisation en saison. Faites confirmer les montants exacts par votre notaire."
+  },
+  "PropertyPriceHistory": {
+    "title": "Prix affiché sur Domlivo",
+    "listedAt": "Publié le {date} à <amount></amount>.",
+    "unchanged": "Inchangé depuis.",
+    "perSqm": "/m²",
+    "note": "Prix affichés tels que publiés ici. Un changement est enregistré quand le prix de l’annonce est mis à jour."
+  },
+  "Catalog": {
+    "pagination": {
+      "pagination": "Pagination",
+      "previousPage": "Page précédente",
+      "nextPage": "Page suivante",
+      "showMore": "Voir plus de biens",
+      "shownRange": "{from}-{to} sur {total}"
+    },
+    "heroIntroFallback": "Parcourez notre sélection de biens.",
+    "agentTitle": "Biens proposés par {name}",
+    "agentIntroFallback": "Annonces de cet agent",
+    "empty": {
+      "title": "Aucun bien trouvé",
+      "description": "Modifiez ou réinitialisez les filtres.",
+      "reset": "Réinitialiser les filtres"
+    },
+    "filters": {
+      "location": "Localisation",
+      "propertyType": "Type de bien",
+      "dealType": "Type de transaction",
+      "dealSale": "Vente",
+      "dealRent": "Location",
+      "dealShortTerm": "Location saisonnière",
+      "dealAll": "Tous",
+      "priceRange": "Budget",
+      "area": "Surface",
+      "areaFrom": "Min",
+      "areaTo": "Max",
+      "areaUnit": "m²",
+      "advancedFilters": "Filtres avancés",
+      "filtersShort": "Filtres",
+      "mobileSearchOpen": "Rechercher",
+      "closeModal": "Fermer",
+      "resetFilters": "Réinitialiser les filtres",
+      "search": "Rechercher",
+      "anyLocation": "Toutes localisations",
+      "anyType": "Tous types",
+      "any": "Indifférent",
+      "priceFrom": "Min",
+      "priceTo": "Max",
+      "bedrooms": "Chambres",
+      "bedsAtLeast": "{count}+",
+      "district": "Quartier",
+      "anyDistrict": "Tous quartiers",
+      "amenities": "Équipements",
+      "amenitiesSelected": "{count} sélectionné(s)",
+      "clear": "Effacer",
+      "done": "Valider",
+      "sortBy": "Trier par",
+      "sortNewest": "Plus récents",
+      "sortPopular": "Les plus consultés",
+      "sortPricePerSqmAsc": "Prix au m² (croissant)",
+      "sortPriceAsc": "Prix croissant",
+      "sortPriceDesc": "Prix décroissant",
+      "sortAreaDesc": "Surface (décroissante)",
+      "resultsPerPage": "Résultats par page",
+      "viewLabel": "Affichage",
+      "viewLarge": "Grandes cartes",
+      "viewSmall": "Petites cartes",
+      "viewList": "Liste",
+      "stage": "Stade de construction",
+      "stageAny": "Tous stades",
+      "stageUnfinished": "Non achevé",
+      "stageOffPlan": "Sur plan",
+      "stageUnderConstruction": "En construction",
+      "stageCompleted": "Achevé",
+      "sortHandoverAsc": "Livraison (la plus proche)",
+      "sortRecommended": "Recommandés"
+    },
+    "cityInfoLink": "{place} : prix et quartiers",
+    "districtInfoLink": "{place} : prix et guide du quartier",
+    "facetNav": {
+      "districts": "Quartiers",
+      "rooms": "Chambres",
+      "budget": "Budget",
+      "stage": "Stade",
+      "label": "Biens à {place}",
+      "chip": {
+        "1-1": "1+1 (T2)",
+        "2-1": "2+1 (T3)",
+        "3-1": "3+1 et plus",
+        "under-80k": "Moins de 80 000 €",
+        "under-100k": "Moins de 100 000 €",
+        "new-builds": "Neuf",
+        "near-the-sea": "Bord de mer"
+      },
+      "sea": "Mer"
+    },
+    "facts": {
+      "count": "{count, plural, one {# annonce} other {# annonces}}",
+      "from": "à partir de {price} €",
+      "medianPerSqm": "médiane {price} €/m² pour les appartements"
+    },
+    "depth": {
+      "listingsHeading": "Appartements et biens à vendre à {placeIn} : {count, plural, one {# annonce} other {# annonces}}",
+      "listingsHeadingFiltered": "Annonces correspondantes à {placeIn} : {count}",
+      "aboutTitle": "Acheter un bien à {placeIn}",
+      "prices": {
+        "title": "Prix de l’immobilier à {placeIn}",
+        "lead": "Les prix demandés aujourd’hui dans les annonces de vente sur Domlivo. Ce sont des prix affichés, pas des ventes conclues ; les médianes portent sur les appartements et les studios.",
+        "listings": "Annonces de vente",
+        "medianPrice": "Prix médian d’un appartement",
+        "medianSqm": "Prix médian au m²",
+        "from": "Appartements à partir de",
+        "slices": "Par taille et emplacement",
+        "asOf": "Données au {date}, d’après {count, plural, one {# annonce} other {# annonces}} sur Domlivo."
+      },
+      "districts": {
+        "title": "Biens par quartier à {placeIn}",
+        "siblingsTitle": "Autres quartiers à {cityIn}",
+        "allInCity": "Tous les biens à vendre à {cityIn}"
+      },
+      "faq": {
+        "title": "Acheter à {placeIn} : questions et réponses",
+        "more": "Plus de réponses sur {place}"
+      },
+      "costs": {
+        "title": "Acheter en tant qu’étranger : les frais",
+        "lead": "Les étrangers achètent appartements, maisons et locaux commerciaux en Albanie dans les mêmes conditions juridiques que les citoyens ; seules les terres agricoles font l’objet de restrictions. La propriété est transférée par le seul acte notarié. En plus du prix, l’acheteur paie :",
+        "notary": "Notaire : {min}-{max} % du prix, selon le barème officiel",
+        "registration": "Enregistrement de la propriété au cadastre (ASHK) : {lek} leks, environ {eur} €",
+        "agency": "Frais d’agence à la charge de l’acheteur : en général {pct} %",
+        "example": "Pour un appartement au prix médian local, <price></price>, cela représente environ <total></total> ({pct} % du prix).",
+        "source": "Taux : arrêté 279/2012 du ministère de la Justice (barème notarial), grille tarifaire de l’ASHK, usages du marché pour les frais d’agence. Faites confirmer les montants exacts par votre notaire.",
+        "guideForeigners": "Un étranger peut-il acheter un bien en Albanie ?",
+        "guideLegal": "Guide juridique pour les acheteurs"
+      },
+      "answer": {
+        "line": "Prix affiché médian à {placeIn} : {sqm} le m², sur {count, plural, one {# appartement} other {# appartements}} en vente sur Domlivo ({date}). Appartements à partir de {from}.",
+        "meta": "Prix affiché médian {sqm}/m² sur {count} appartements ({date})."
+      },
+      "recent": {
+        "title": "Nouveautés à {placeIn} ces deux dernières semaines",
+        "lead": "Annonces ajoutées ces {days} derniers jours, les plus récentes en premier. Chacune a sa page avec photos et prix.",
+        "leadNewest": "Les annonces ajoutées le plus récemment. Chacune a sa page avec photos et prix.",
+        "all": "Toutes les nouvelles annonces à {placeIn}",
+        "added": "ajoutée le {date}"
+      }
+    },
+    "saleHub": {
+      "listingsHeading": "Appartements et biens à vendre en Albanie : {count, plural, one {# annonce} other {# annonces}}",
+      "listingsHeadingFiltered": "Annonces correspondantes en Albanie : {count}",
+      "aboutTitle": "Acheter un bien en Albanie",
+      "prices": {
+        "title": "Prix de l’immobilier en Albanie",
+        "byCity": "Prix affichés par ville",
+        "city": "Ville"
+      },
+      "cities": {
+        "title": "Biens à vendre en Albanie par ville",
+        "districts": "{city} : principaux quartiers"
+      },
+      "types": {
+        "title": "Biens à vendre en Albanie par type"
+      }
+    },
+    "searchAlert": {
+      "barText": "Les nouvelles annonces de cette recherche, une fois par jour sur Telegram",
+      "cta": "Activer",
+      "title": "Recevez les nouvelles annonces de cette recherche sur Telegram",
+      "body": "Une fois par jour, le bot Domlivo envoie les annonces qui viennent de paraître et correspondent à ces filtres. Un clic pour démarrer, /stop pour arrêter.",
+      "ctaLong": "Recevoir les alertes sur Telegram",
+      "emptyTitle": "Aucun résultat pour l’instant"
+    }
+  },
+  "NewBuilds": {
+    "title": "Programmes neufs et investissement immobilier en Albanie",
+    "description": "Logements sur plan et en construction sur la côte albanienne, avec la date de livraison et l’état des papiers de propriété indiqués sur chaque annonce.",
+    "badge": "Neuf",
+    "heading": "Programmes neufs et investissement immobilier en Albanie",
+    "intro": "Un bien acheté avant la fin des travaux coûte moins cher, mais il comporte des risques qu’un appartement terminé n’a pas : la livraison peut prendre du retard, et le titre de propriété peut être encore en cours. Chaque annonce indique où en est le chantier et quand les clés sont promises. C’est à vous de peser les deux, nous n’enjolivons rien.",
+    "empty": "Aucun immeuble en construction n’est en ligne pour le moment. Tout ce qui figure sur le site est terminé et livré. Parcourez plutôt l’ensemble du catalogue.",
+    "emptyCta": "Voir tous les biens",
+    "breadcrumbHome": "Accueil"
+  },
+  "Contacts": {
+    "metaTitle": "Nous contacter",
+    "metaDescription": "Envoyez une demande et notre équipe vous répondra avec des biens adaptés à vos besoins.",
+    "heroH1": "Vous n’avez pas trouvé le bon logement ?",
+    "heroH2": "Laissez une demande, nous vous proposerons une sélection sur mesure !",
+    "heroDescription": "Remplissez le formulaire ci-dessous et notre conseiller vous contactera avec des biens adaptés à vos besoins. Rapide, simple et sans échanges inutiles.",
+    "heroImageAlt": "Nous contacter",
+    "managerPhotoAlt": "Notre conseiller",
+    "managerEmailLabel": "E-mail",
+    "follow": "Suivre",
+    "formHeading": "Envoyer une demande",
+    "formIntro": "Dites-nous comment vous joindre et ce que vous recherchez.",
+    "formName": "Nom",
+    "formPhone": "Numéro de téléphone",
+    "formEmail": "Adresse e-mail",
+    "formMessage": "Votre message",
+    "formSubmit": "Envoyer le message",
+    "formSubmitting": "Envoi…",
+    "errorSubmit": "Une erreur s’est produite. Veuillez réessayer.",
+    "addProperty": {
+      "title": "Propriétaires et agences",
+      "body": "Si vous êtes propriétaire d’un bien ou représentez une agence et souhaitez publier sur Domlivo, écrivez-nous sur WhatsApp ou Telegram. Nous vous expliquerons comment se passe la publication et quelles informations il nous faut.",
+      "howTo": "Comment se passe la publication",
+      "register": "Envoyer une demande de publication"
+    },
+    "errorInvalidPhone": "Vérifiez le numéro de téléphone.",
+    "errorInvalidEmail": "Vérifiez l’adresse e-mail."
+  },
+  "ContactThankYou": {
+    "metaTitle": "Merci",
+    "metaDescription": "Votre demande a bien été reçue. Notre équipe vous contactera bientôt.",
+    "title": "Merci ! Votre demande a bien été envoyée",
+    "description": "Notre conseiller vous contactera rapidement avec des biens correspondant à votre demande.",
+    "cta": "Voir les biens",
+    "imageAlt": "Photo d’intérieur"
+  },
+  "Favorites": {
+    "title": "Favoris",
+    "description": "Les biens que vous avez ajoutés à vos favoris.",
+    "clearFavorites": "Vider les favoris",
+    "clearModalTitle": "Vider tous les favoris ?",
+    "clearModalDescription": "Tous les biens seront retirés de vos favoris. Vous pourrez les ajouter à nouveau à tout moment.",
+    "clearModalConfirm": "Tout supprimer",
+    "clearModalCancel": "Annuler",
+    "emptyTitle": "Aucun favori pour l’instant",
+    "emptyDescription": "Parcourez les biens et touchez le cœur pour les ajouter ici.",
+    "browseProperties": "Voir les biens",
+    "noDataTitle": "Aucune donnée trouvée",
+    "noDataDescription": "Certains favoris n’existent peut-être plus.",
+    "addAria": "Ajouter {name} aux favoris",
+    "removeAria": "Retirer {name} des favoris"
+  },
+  "HowToPublish": {
+    "metaTitle": "Comment publier sur Domlivo",
+    "metaDescription": "Regardez la démo pour savoir comment publier des biens sur Domlivo et recevoir des demandes sur Telegram.",
+    "heroTitle": "Comment publier des biens sur Domlivo",
+    "heroSubtitle": "Regardez la démo et voyez comment obtenir de vraies demandes",
+    "heroBody": "C’est simple : ajoutez votre bien et recevez des clients en direct.",
+    "heroCta": "Voir la démo",
+    "block2Title": "Comment fonctionne la plateforme Domlivo",
+    "block2Body": "Vous vous inscrivez, ajoutez vos biens et recevez les demandes des clients directement sur Telegram. C’est simple et sans intermédiaires.",
+    "step1": "Inscription",
+    "step2": "Ajout des biens",
+    "step3": "Réception des demandes",
+    "block2Cta": "Essai gratuit de 7 jours"
+  },
+  "Register": {
+    "metaTitle": "Inscription agent immobilier",
+    "metaDescription": "Envoyez une demande d’inscription pour publier sur Domlivo et recevoir de vraies demandes de clients.",
+    "heroTitle": "Inscrivez-vous et recevez de vraies demandes",
+    "heroSubtitle": "Domlivo vous apporte des clients, vous travaillez en direct, sans commission",
+    "blockLeftTitle": "Tarifs et conditions",
+    "benefit1": "7 jours gratuits",
+    "benefit2": "80 €/mois",
+    "benefit3": "Sans commission",
+    "benefit4": "Demandes directes sur Telegram",
+    "benefit5": "Espace personnel",
+    "benefit6": "Gestion complète de vos biens depuis votre téléphone",
+    "benefit7": "Trafic depuis Google et l’IA",
+    "blockLeftFooter": "L’inscription prend 1 minute",
+    "imageAlt": "Photo d’intérieur",
+    "formHeading": "Remplissez le formulaire pour commencer",
+    "fieldName": "Nom",
+    "fieldPhone": "Téléphone",
+    "fieldEmail": "E-mail",
+    "fieldProfileType": "Type de profil",
+    "fieldTypeHint": "Facultatif. Indiquez si vous travaillez comme agent immobilier ou pour une agence.",
+    "typeNotSpecified": "Non précisé",
+    "typeRealtor": "Agent immobilier",
+    "typeAgency": "Agence",
+    "fieldLanguage": "Langue de communication",
+    "langSq": "Albanais",
+    "langEn": "Anglais",
+    "langRu": "Russe",
+    "langUk": "Ukrainien",
+    "langIt": "Italien",
+    "langPl": "Polonais",
+    "langDe": "Allemand",
+    "langFr": "Français",
+    "terms": "J’accepte les <link>règles de traitement des données personnelles</link>",
+    "submit": "Commencer maintenant",
+    "submitting": "Envoi…",
+    "footnote": "Nous vous contacterons rapidement",
+    "errorSubmit": "Un problème est survenu. Veuillez réessayer.",
+    "errorTerms": "Veuillez accepter les conditions pour continuer.",
+    "errorRequiredName": "Veuillez indiquer votre nom.",
+    "errorRequiredPhone": "Veuillez indiquer votre numéro de téléphone.",
+    "thankYouMetaTitle": "Merci",
+    "thankYouMetaDescription": "Votre demande d’inscription a bien été reçue.",
+    "thankYouTitle": "Merci",
+    "thankYouDescription": "Nous avons bien reçu votre demande et vous contacterons rapidement.",
+    "thankYouCta": "Retour à l’accueil",
+    "thankYouImageAlt": "Photo d’intérieur",
+    "errorInvalidPhone": "Vérifiez le numéro de téléphone.",
+    "errorInvalidEmail": "Vérifiez l’adresse e-mail."
+  },
+  "Guides": {
+    "title": "Guides pour acheter un bien en Albanie",
+    "description": "Comparatifs de villes, prix par quartier, étapes juridiques et frais : nos guides pour acheter en Albanie, en commençant par Durrës.",
+    "empty": "Aucun guide publié pour le moment.",
+    "breadcrumbHome": "Accueil",
+    "sectionGuides": "Guides",
+    "sectionComparisons": "Comparatifs : que choisir",
+    "searchLabel": "Rechercher dans les guides",
+    "searchPlaceholder": "Rechercher guides et articles : frais, Durrës, titre de séjour…",
+    "all": "Tous",
+    "noResults": "Aucun résultat. Essayez un autre mot ou choisissez un thème.",
+    "showAll": "Tout afficher ({count})",
+    "kindGuide": "Guide",
+    "kindArticle": "Article",
+    "clearSearch": "Effacer la recherche"
+  },
+  "ImageCredits": {
+    "title": "Crédits photo",
+    "description": "Photographes, licences et sources de chaque photo utilisée sur Domlivo.",
+    "intro": "Toutes les photos de ce site sont sous licence libre. Cette page indique le photographe, la licence et l’origine du fichier, comme l’exigent les licences d’attribution ci-dessous.",
+    "attributedHeading": "Photos avec attribution obligatoire",
+    "attributedNote": "Utilisées sous licences Creative Commons qui exigent de citer le photographe.",
+    "freeHeading": "Photos du domaine public et CC0",
+    "freeNote": "Aucune attribution n’est requise pour celles-ci. Elles figurent ici pour que chaque image du site puisse être reliée à sa source.",
+    "standIn": "Image de substitution",
+    "source": "Fichier source",
+    "empty": "Aucun crédit photo n’a encore été enregistré.",
+    "breadcrumbHome": "Accueil"
+  },
+  "AlbaniaPhotos": {
+    "tirana": "Tirana vue d’en haut",
+    "durres": "La plage de Durrës",
+    "vlore": "La crique d’Uji i Ftohtë à Vlora",
+    "sarande": "La baie et la ville de Saranda",
+    "shkoder": "Panorama de Shkodra",
+    "shengjin": "Shëngjin vu du ciel",
+    "himare": "La plage de Dhërmi sur la côte de Himara",
+    "ksamil": "La baie et les îles de Ksamil",
+    "coast": "La plage de Gjipe sur la Riviera albanaise",
+    "apartments": "Nouveaux immeubles résidentiels à Tirana",
+    "houses": "Maisons sur la côte près de Durrës",
+    "villas": "Une maison au-dessus de la mer à Vuno, sur la Riviera albanaise",
+    "offices": "Tours de bureaux sur la place Skanderbeg à Tirana"
+  },
+  "Blog": {
+    "tableOfContents": "Sommaire",
+    "keyFacts": "En bref",
+    "faqTitle": "Questions fréquentes",
+    "sourcesTitle": "Sources",
+    "zoneStatsTitle": "Données du marché",
+    "trackerLastChecked": "Vérifié",
+    "authorPostsTitle": "Articles de cet auteur",
+    "authorNoPosts": "Aucun article publié pour l’instant.",
+    "zoneStatsAll": "Tous les biens",
+    "zoneStatsNew": "Neuf",
+    "zoneStatsResale": "Ancien",
+    "zoneStatsYield": "Rendement brut",
+    "allCategories": "Tous",
+    "filterAll": "Tous",
+    "filterLabel": "Thèmes des articles"
+  },
+  "PropertyMeta": {
+    "areaUnit": "m²",
+    "perMonth": "mois"
+  },
+  "QuickLead": {
+    "badge": "Gratuit · sans engagement",
+    "heading": "Recevez une offre sur mesure en 1 heure",
+    "body": "Laissez votre numéro et nous vous rappelons avec une sélection adaptée à votre budget, avec les vrais prix et les disponibilités.",
+    "phonePlaceholder": "Votre numéro de téléphone",
+    "namePlaceholder": "Nom (facultatif)",
+    "submit": "Recevoir l’offre",
+    "submitting": "Envoi…",
+    "successTitle": "Demande reçue",
+    "successBody": "Nous vous rappelons dans l’heure, aux heures ouvrées.",
+    "error": "Envoi impossible. Réessayez ou écrivez-nous sur Telegram.",
+    "consent": "En envoyant ce formulaire, vous acceptez d’être contacté au sujet de votre demande.",
+    "budgetPlaceholder": "Budget",
+    "messagePlaceholder": "Que recherchez-vous ? (facultatif)",
+    "budgetUpTo": "jusqu’à {amount}",
+    "budgetRange": "{from} - {to}",
+    "budgetOver": "plus de {amount}",
+    "errorInvalidPhone": "Vérifiez le numéro de téléphone."
+  },
+  "DurresGuide": {
+    "badge": "PDF gratuit",
+    "title": "Recevez le guide d’achat à Durrës (PDF)",
+    "body": "Prix affichés par quartier au {date}, ce que l’achat ajoute au prix, les étapes et documents pour un acheteur étranger, les charges annuelles et les questions à poser au vendeur. Sources et niveaux de fiabilité inclus.",
+    "meta": "PDF, 6-7 pages, dans votre langue. Domlivo, septembre 2026.",
+    "emailPlaceholder": "Votre e-mail",
+    "emailLabel": "E-mail",
+    "consent": "J’accepte de recevoir le guide et, de temps en temps, des annonces à Durrës par e-mail. <privacy>Politique de confidentialité</privacy>",
+    "submit": "Recevoir le PDF",
+    "submitting": "Envoi…",
+    "successTitle": "Votre guide est prêt",
+    "successBody": "Le téléchargement a dû commencer. Sinon, utilisez le bouton ci-dessous.",
+    "download": "Télécharger le PDF",
+    "error": "Envoi impossible. Réessayez ou écrivez-nous sur Telegram."
+  },
+  "QuickContact": {
+    "open": "Nous contacter",
+    "close": "Fermer les contacts",
+    "callbackAction": "Être rappelé",
+    "formHeading": "Une offre en 1 heure",
+    "formBody": "Laissez votre numéro, nous vous rappelons.",
+    "channel": {
+      "telegram": "Écrire sur Telegram",
+      "whatsapp": "Écrire sur WhatsApp",
+      "phone": "Nous appeler",
+      "email": "Envoyer un e-mail"
+    },
+    "orWrite": "Ou écrivez-nous tout de suite :"
+  },
+  "ContactBar": {
+    "ask": "Demander",
+    "askProperty": "Poser une question sur ce bien",
+    "helpChoosing": "Se faire aider pour choisir",
+    "barLabel": "Moyens de contact",
+    "messageUs": "Écrivez-nous directement"
+  },
+  "Seo": {
+    "listing": {
+      "cityTitle": "Appartements et biens à vendre à {city}, Albanie",
+      "cityDescription": "Biens vérifiés à vendre à {city}, en Albanie : appartements, maisons et villas avec les prix actuels. En direct des propriétaires et d’agences de confiance, sans commission.",
+      "countryTitle": "Immobilier à vendre en Albanie - appartements, maisons et biens en bord de mer",
+      "countryDescription": "Acheter un bien en Albanie : appartements, maisons et villas en bord de mer à Durrës, Vlora et Saranda, et à Tirana. Annonces vérifiées avec les vrais prix.",
+      "catalogTitle": "Immobilier à vendre en Albanie - toutes les annonces",
+      "catalogDescription": "Tous les biens à vendre en Albanie : appartements, maisons, villas et terrains. Filtrez par ville, prix, surface et nombre de chambres.",
+      "typeTitle": "{type} à vendre en Albanie",
+      "typeDescription": "{type} à vendre en Albanie avec les prix actuels, photos et emplacements. En direct des propriétaires et d’agences de confiance, sans commission.",
+      "cityTypeTitle": "{type} à vendre à {city}, Albanie",
+      "cityTypeDescription": "{type} à vendre à {city}, en Albanie : prix actuels, photos et emplacements. En direct des propriétaires et d’agences de confiance, sans commission.",
+      "types": {
+        "apartment": "Appartements",
+        "house": "Maisons",
+        "villa": "Villas",
+        "studio": "Studios",
+        "penthouse": "Penthouses",
+        "land": "Terrains",
+        "office": "Bureaux",
+        "commercial-space": "Locaux commerciaux",
+        "short-term-rent": "Locations saisonnières"
+      },
+      "cityDistrictTitle": "Biens à vendre à {district}, {city}",
+      "cityDistrictDescription": "Appartements, maisons et villas à vendre à {district}, {city} : prix actuels, photos et contact direct avec les propriétaires et les agences, sans commission.",
+      "facets": {
+        "title": {
+          "1-1": "Appartements 1+1 (T2) à vendre à {place} - {count, plural, one {# annonce} other {# annonces}}",
+          "2-1": "Appartements 2+1 (T3) à vendre à {place} - {count, plural, one {# annonce} other {# annonces}}",
+          "3-1": "Appartements 3+1 (T4) et plus à vendre à {place} - {count, plural, one {# annonce} other {# annonces}}",
+          "under-80k": "Appartements à moins de 80 000 € à {place} - {count, plural, one {# annonce} other {# annonces}}",
+          "under-100k": "Appartements à moins de 100 000 € à {place} - {count, plural, one {# annonce} other {# annonces}}",
+          "new-builds": "Programmes neufs à vendre à {place} - {count, plural, one {# annonce} other {# annonces}}",
+          "near-the-sea": "Appartements et biens en bord de mer à vendre à {place} - {count, plural, one {# annonce} other {# annonces}}"
+        },
+        "what": {
+          "1-1": "appartements 1+1 (T2, une chambre) à vendre",
+          "2-1": "appartements 2+1 (T3, deux chambres) à vendre",
+          "3-1": "appartements de trois chambres ou plus à vendre",
+          "under-80k": "appartements et studios à moins de 80 000 €",
+          "under-100k": "appartements et studios à moins de 100 000 €",
+          "new-builds": "biens en construction",
+          "near-the-sea": "biens à moins de 300 m de la mer"
+        },
+        "description": "{count} {what} à {place}{hasPrice, select, yes {, à partir de {priceFrom} €} other {}}. Photos, surfaces et contact direct avec les propriétaires et les agences."
+      }
+    },
+    "og": {
+      "studio": "Studio",
+      "rooms": "{count}+1",
+      "plot": "Terrain {value} m²",
+      "plotUnknown": "Terrain : non précisé",
+      "forSale": "À vendre",
+      "forRent": "À louer",
+      "shortTerm": "Location saisonnière",
+      "priceOnRequest": "Prix sur demande",
+      "perSqm": "à partir de {amount}/m²",
+      "perMonth": "/mois"
+    }
+  },
+  "AiSearch": {
+    "examples": [
+      "Je cherche un appartement en bord de mer à moins de 100 000 €",
+      "Un 2+1 à Durrës à mettre en location",
+      "Quelque chose à Saranda avec vue sur la mer"
+    ],
+    "inputFallbackPlaceholder": "Décrivez ce que vous cherchez",
+    "inputLabel": "Décrivez le bien que vous cherchez",
+    "submit": "Chercher",
+    "heroHint": "Demandez avec vos mots, l’assistant cherche parmi nos annonces",
+    "headerLink": "Recherche IA",
+    "metaTitle": "Recherche immobilière par IA - DomLivo",
+    "metaDescription": "Décrivez ce que vous voulez avec vos mots, et l’assistant trouve les annonces correspondantes en Albanie.",
+    "title": "Recherche IA",
+    "subtitle": "Décrivez ce que vous cherchez : l’assistant choisit parmi nos annonces et les affiche ici.",
+    "goToCatalog": "Aller au catalogue",
+    "intro": {
+      "title": "Que cherchez-vous ?",
+      "body": "Écrivez-le comme vous le diriez à un agent : budget, ville, mer, et s’il s’agit d’y vivre ou de le louer."
+    },
+    "status": {
+      "thinking": "Réflexion…",
+      "searching": "Recherche dans les annonces…"
+    },
+    "seeAllInCatalog": "Tout voir dans le catalogue",
+    "chatPlaceholder": "Décrivez ce que vous cherchez",
+    "disclaimer": "L’assistant peut se tromper. Les prix et la disponibilité sont confirmés par un agent.",
+    "restart": "Recommencer",
+    "errors": {
+      "unavailable": "La recherche IA est indisponible pour le moment. Le catalogue complet reste accessible.",
+      "rate_limited": "Trop de demandes. Veuillez réessayer un peu plus tard.",
+      "too_long": "Ce message est trop long, essayez plus court.",
+      "too_many_turns": "Cette conversation est devenue longue. Commencez-en une nouvelle pour continuer.",
+      "failed": "Un problème est survenu. Essayez de renvoyer le message.",
+      "budget_exhausted": "La recherche IA est en pause aujourd’hui en raison d’une forte affluence. Le catalogue complet reste accessible.",
+      "interrupted": "La réponse a été coupée. Essayez de renvoyer le message."
+    },
+    "property": {
+      "heading": "Posez une question sur ce bien",
+      "subheading": "L’assistant connaît cette annonce et son quartier. Les prix et la disponibilité sont confirmés par un agent.",
+      "openCta": "Poser une question",
+      "chatPlaceholder": "Posez n’importe quelle question sur ce bien",
+      "examples": [
+        "Est-ce un bon investissement ?",
+        "Quel est le prix au m² ici ?",
+        "Comment se situe-t-il face aux annonces similaires ?",
+        "Comment est ce quartier ?"
+      ],
+      "intro": {
+        "title": "Que voulez-vous savoir ?",
+        "body": "Posez vos questions sur le plan, le quartier, le prix par rapport au secteur ou la comparaison avec d’autres annonces."
+      }
+    },
+    "sources": {
+      "heading": "Sources",
+      "verified": "vérifié",
+      "mayHaveChanged": "a pu changer"
+    },
+    "retry": "Réessayer",
+    "newChat": "Nouvelle conversation"
+  },
+  "Knowledge": {
+    "title": "Base de connaissances",
+    "breadcrumbHome": "Accueil",
+    "description": "Des chiffres sourcés sur ce que coûtent l’achat, l’entretien et la location d’un bien en Albanie.",
+    "intro": "Chaque chiffre ici vient d’une source nommée et datée : autorités de régulation, instituts statistiques, droit fiscal, analyses locatives et échantillons du marché. Quand nous n’avons pas de données, la page le dit.",
+    "empty": "Rien de publié pour l’instant.",
+    "groups": {
+      "costs": "Ce que coûte l’entretien",
+      "market": "Ce que vaut un bien",
+      "renting": "Ce qu’il rapporte",
+      "buying": "Ce qu’implique l’achat",
+      "outlook": "Où va le marché",
+      "other": "Autres"
+    },
+    "questionsShort": "questions",
+    "updated": "mis à jour",
+    "period": "Période",
+    "confidence": "Fiabilité",
+    "exchangeRate": "Taux de change",
+    "verified": "vérifié",
+    "method": "Méthode",
+    "estimateNote": "calculé, non mesuré",
+    "questionsHeading": "Les questions traitées sur cette page",
+    "sources": "Sources",
+    "gapsHeading": "Ce qui manque",
+    "gapsIntro": "Les lacunes que nous connaissons. Les signaler rend le reste plus fiable.",
+    "askHeading": "Posez une question sur votre cas",
+    "askIntro": "L’assistant utilise ces mêmes données et montre la source de chaque chiffre.",
+    "askCta": "Interroger l’assistant",
+    "related": "Pages associées",
+    "methodNote": "Les montants sont convertis en euros au taux de la Banque d’Albanie indiqué sur chaque page. Un prix demandé n’est pas un prix de vente, et un loyer affiché n’est pas un loyer obtenu : chaque ligne précise de quoi il s’agit.",
+    "topics": {
+      "buying": "Acheter en tant qu’étranger",
+      "money": "Taxes et frais",
+      "ownership": "Posséder et louer",
+      "process": "Démarches et risques",
+      "geography": "Où acheter"
+    },
+    "compiledBy": "Données compilées par",
+    "checkedBy": "Vérifié par",
+    "updatedOn": "Mis à jour le",
+    "faqHeading": "Questions et réponses",
+    "accessed": "consulté le",
+    "linksHeading": "Dans la base de connaissances",
+    "linksIntro": "Des réponses courtes, avec chiffres, dates et sources.",
+    "linksAll": "Toutes les questions de la base de connaissances"
+  },
+  "About": {
+    "metaTitle": "À propos de Domlivo : l’équipe et le fonctionnement du site",
+    "metaDescription": "Qui fait Domlivo, la plateforme immobilière pour l’Albanie : les trois fondateurs, l’origine des annonces, leur mise à jour et comment nous joindre.",
+    "h1": "À propos de Domlivo",
+    "intro1": "Domlivo est une plateforme d’annonces immobilières pour l’Albanie. On y trouve des appartements, maisons, villas, terrains et locaux commerciaux à vendre à Durrës, Tirana, Vlora, Saranda et le long de la côte, pour les acheteurs étrangers comme pour ceux qui vivent déjà sur place.",
+    "intro2": "Les annonces viennent de propriétaires et d’agences partenaires. Chaque annonce indique son prix et qui propose le bien. Vous traitez directement avec eux, et Domlivo n’ajoute aucune commission. Le site est disponible en huit langues : albanais, anglais, ukrainien, russe, italien, polonais, allemand et français.",
+    "mission": {
+      "title": "Notre idée",
+      "body1": "Nous construisons Domlivo comme une place de marché immobilière pour l’Albanie, décentralisée, analytique et appuyée sur l’IA. Le but est simple : l’acheteur trouve vite une annonce qui lui convient et reçoit les conseils d’un assistant IA directement dans le chat. L’assistant répond à partir des études de Domlivo : le coût des charges, le rendement d’un investissement, ce que coûte un achat en plus du prix.",
+      "body2": "Ici, « décentralisée » a un sens précis. Le catalogue n’appartient pas à une seule agence : des propriétaires et de nombreuses agences partenaires y publient, chaque annonce indique qui l’a publiée, et l’acheteur échange directement avec cette personne.",
+      "uspTitle": "Ce que propose le site aujourd’hui",
+      "usp": {
+        "item1": "Recherche IA : décrivez le logement avec vos mots ; l’assistant parcourt les annonces et répond à partir des études de Domlivo, en citant ses sources.",
+        "item2": "Des guides où chaque chiffre a une source et une date.",
+        "item3": "Les prix demandés par quartier sur les pages des villes, recalculés chaque heure à partir des annonces en ligne.",
+        "item4": "Un bloc « Ce que coûtent l’achat et la possession » sur les pages d’annonces.",
+        "item5": "Huit langues et un sélecteur de devise.",
+        "item6": "Des comparaisons côte à côte entre quartiers et villes.",
+        "item7": "Contact direct avec les propriétaires et les agences, sans commission."
+      }
+    },
+    "research": {
+      "title": "Des études, avec leurs sources",
+      "body": "En plus des annonces, nous publions des études de marché : guides d’achat, blog et pages de prix par ville et par quartier. Chaque chiffre a une source nommée et une date, et quand nous n’avons pas de données, la page le dit.",
+      "guides": "Guides",
+      "blog": "Blog",
+      "cities": "Villes"
+    },
+    "team": {
+      "title": "L’équipe",
+      "intro": "Domlivo a été lancé par trois personnes. L’un vend de l’immobilier en Albanie au quotidien ; les deux autres créent des sites web, c’est leur métier.",
+      "linksLabel": "Liens",
+      "members": {
+        "fedir": {
+          "role": "Cofondateur, analyse et développement",
+          "bio": "Analyste et marketeur. Il développe la plateforme Domlivo et les études de marché qui y sont publiées : les pages de prix, les guides et les données sur lesquelles ils reposent. Tech lead et fondateur du studio web Code-Site."
+        },
+        "viktor": {
+          "role": "Cofondateur, expert du marché immobilier albanais",
+          "bio": "Il vit en Albanie et dirige l’agence Grinchenko Real Estate. Ces dernières années, il y a vendu plus de 100 appartements. Il aide les acheteurs pour les documents, la mise en location et les questions qui se posent après l’achat. Il a créé une chaîne Telegram suivie sur l’Albanie. Sa règle : visiter chaque appartement en personne et dire la vérité à ceux qui regardent, avec les points forts et les points faibles."
+        },
+        "diana": {
+          "role": "Cofondatrice, design et expérience utilisateur",
+          "bio": "Elle est responsable du design, de la présentation et de l’expérience utilisateur de Domlivo ; les idées qui transforment une visite en demande viennent d’elle. Lead designer chez Code-Site. Pour elle, le design doit vendre : elle pense à la conversion avant de penser aux grilles et aux couleurs."
+        }
+      },
+      "links": {
+        "codeSite": "Code-Site",
+        "agency": "Grinchenko Real Estate",
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "codeSiteProfile": "Profil sur Code-Site",
+        "telegram": "Chaîne Telegram"
+      }
+    },
+    "listings": {
+      "title": "Comment les annonces arrivent sur Domlivo",
+      "intro": "Nous préférons décrire ce qui se passe vraiment plutôt que promettre plus que ce que nous faisons.",
+      "item1": "Les annonces sont ajoutées par les propriétaires et par les agences et agents partenaires inscrits sur le site.",
+      "item2": "Quand une agence ou un agent publie un bien, son nom figure dans l’annonce à côté du prix.",
+      "item3": "Le prix est indiqué dans l’annonce. Quand un bien est vendu ou retiré, l’annonce quitte le catalogue.",
+      "item4": "Une annonce vous semble périmée ou erronée ? Écrivez-nous, nous vérifierons auprès de la personne qui l’a publiée."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "Pour une question sur un bien, sur votre propre annonce ou sur le site :",
+      "form": "Formulaire de contact"
+    }
+  },
+  "Legal": {
+    "operatorNotice": "Ce site est exploité par l’équipe Domlivo. Vous pouvez nous joindre à l’adresse {email}, sur {whatsapp} ou sur {telegram}."
+  },
+  "Pwa": {
+    "installTitle": "Installer l’application Domlivo",
+    "installText": "Annonces enregistrées, carte et assistant en un geste depuis votre écran d’accueil. En plein écran, sans barre de navigateur.",
+    "installAction": "Installer",
+    "installNotNow": "Plus tard",
+    "installClose": "Fermer",
+    "installIos": "Dans Safari, touchez <share></share> Partager, puis « Sur l’écran d’accueil ».",
+    "installIosShare": "Partager",
+    "menuInstall": "Installer l’application",
+    "tabsLabel": "Navigation de l’application",
+    "tabSearch": "Recherche",
+    "tabMap": "Carte",
+    "tabFavorites": "Favoris",
+    "tabAssistant": "Assistant",
+    "tabContact": "Contact"
+  },
+  "Messengers": {
+    "whatsappText": {
+      "property": "Bonjour ! Je souhaite des informations sur {title}, {price} : {url}",
+      "propertyNoPrice": "Bonjour ! Je souhaite des informations sur {title} : {url}",
+      "general": "Bonjour ! J’aimerais de l’aide pour trouver un bien en Albanie"
+    },
+    "sheet": {
+      "title": {
+        "whatsapp": "Écrire sur WhatsApp",
+        "telegram": "Écrire sur Telegram"
+      },
+      "hint": {
+        "whatsapp": "Le message est prêt, il suffit de l’envoyer.",
+        "telegram": "Appuyez sur Démarrer en bas du chat : le bot transmet votre question à un conseiller."
+      },
+      "open": {
+        "whatsapp": "Ouvrir WhatsApp",
+        "telegram": "Ouvrir Telegram"
+      },
+      "orPhone": "ou laissez votre numéro, nous vous écrirons",
+      "close": "Fermer"
+    }
+  },
+  "TelegramBot": {
+    "greeting": "Bonjour {name} ! Ici Domlivo, l’immobilier en Albanie.",
+    "greetingNoName": "Bonjour ! Ici Domlivo, l’immobilier en Albanie.",
+    "aboutProperty": "Votre question porte sur cette annonce :",
+    "askProperty": "Écrivez votre question ici ou envoyez votre numéro de téléphone : un conseiller vous répondra dans ce chat.",
+    "askGeneral": "Dites-nous ce que vous cherchez (ville, budget, type de logement) ou envoyez votre numéro de téléphone. Un conseiller vous répondra dans ce chat.",
+    "shareContact": "📱 Envoyer mon numéro",
+    "openListing": "Ouvrir sur Domlivo",
+    "priceOnRequest": "Prix sur demande",
+    "contactReceived": "Merci ! Un conseiller vous contactera rapidement.",
+    "commandStart": "Discuter avec un conseiller",
+    "description": "Domlivo, l’immobilier en Albanie. Posez une question sur n’importe quelle annonce de domlivo.com ou dites-nous ce que vous cherchez : un conseiller vous répond ici.",
+    "shortDescription": "Immobilier en Albanie : interrogez un conseiller Domlivo sur n’importe quelle annonce.",
+    "commandStop": "Arrêter les alertes de recherche",
+    "search": {
+      "subscribed": "C’est fait. Les nouvelles annonces pour cette recherche arriveront ici, une fois par jour au maximum.",
+      "yourSearch": "Votre recherche : {summary}",
+      "latest": "Déjà sur Domlivo :",
+      "openSearch": "Ouvrir la recherche sur Domlivo",
+      "stopHint": "Pour arrêter les alertes, envoyez /stop.",
+      "stopped": "Les alertes sont désactivées. Appuyez sur la cloche d’une recherche sur domlivo.com pour les réactiver.",
+      "nothingToStop": "Vous n’avez aucune alerte active.",
+      "askMore": "Vous voulez qu’un conseiller sélectionne des biens pour vous ? Écrivez ici ou envoyez votre numéro.",
+      "newListings": "Nouveautés sur Domlivo pour votre recherche",
+      "anyListing": "toutes les annonces",
+      "dealSale": "à vendre",
+      "dealRent": "à louer",
+      "priceFrom": "à partir de {amount}",
+      "priceTo": "jusqu’à {amount}",
+      "priceBetween": "{min} - {max}",
+      "areaFrom": "à partir de {n} m²",
+      "areaTo": "jusqu’à {n} m²",
+      "areaBetween": "{min}-{max} m²",
+      "bedsFrom": "{n}+ chambres",
+      "bedsExact": "{n} chambres",
+      "nearSea": "près de la mer",
+      "investment": "pour investir",
+      "stageUnfinished": "encore en chantier",
+      "stageOffPlan": "sur plan",
+      "stageUnderConstruction": "en construction",
+      "stageCompleted": "achevé"
+    }
+  },
+  "InventoryLinks": {
+    "title": "Biens à vendre et prix",
+    "districtListings": "Biens à vendre à {district}",
+    "cityListings": "Tous les biens à vendre à {city}",
+    "typeListings": "{type} à vendre à {city}",
+    "nationalListings": "Tous les biens à vendre en Albanie",
+    "cityPrices": "Prix de l’immobilier à {city}",
+    "nationalPrices": "Prix de l’immobilier en Albanie"
+  },
+  "Capture": {
+    "ask": {
+      "title": "Poser une question sur ce bien",
+      "placeholder": "Votre question sur ce bien",
+      "submit": "Envoyer la question",
+      "required": "Veuillez saisir votre question."
+    },
+    "neighbours": {
+      "cheaper": "Similaires, moins chers",
+      "pricier": "Similaires, plus chers"
+    },
+    "district": {
+      "title": "Trouver un bien dans ce quartier",
+      "budgetLabel": "Budget",
+      "bands": {
+        "under70": "Moins de 70 k€",
+        "70to120": "70-120 k€",
+        "120to200": "120-200 k€",
+        "over200": "Plus de 200 k€"
+      }
+    },
+    "selection": {
+      "title": "Nous vous envoyons une sélection selon vos critères",
+      "criteria": "Vos critères"
+    },
+    "trust": {
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "testimonialsTitle": "Ce que disent nos clients",
+      "officePhotoAlt": "Notre bureau",
+      "sectionLabel": "Contact et avis"
+    }
+  },
+  "PartnerLanding": {
+    "crumb": "{partner}",
+    "label": "{partner} · {place}",
+    "title": "{place} : {count, plural, one {# appartement} other {# appartements}} de {partner}",
+    "metaTitle": "{place} : {count, plural, one {# appartement} other {# appartements}} de Cactus",
+    "metaDescription": "{count} appartements à vendre à {placeFull} proposés par {partner} : à partir de {from}, médiane {median}/m²{vsPlace}{sea}. Prix affichés d’après les annonces en ligne sur Domlivo.",
+    "metaVsPlace": ", {percent} % {direction, select, below {sous} above {au-dessus de} other {au niveau de}} la médiane du quartier",
+    "metaSea": " ; {within} à moins de 300 m de la mer",
+    "metaDescriptionShort": "{count} appartements à vendre à {placeFull}, proposés par {partner}. Prix affiché sur chaque annonce.",
+    "heroAlt": "Un appartement à {placeFull} proposé par {partner}",
+    "lead": "{count, plural, one {# appartement} other {# appartements}} à vendre à {placeFull}, publiés par {partner} avec le prix affiché sur chaque annonce.",
+    "allListings": "Les {count} annonces de {partner}",
+    "linkFromPlace": "{partner} à {place} : {count, plural, one {# appartement} other {# appartements}} avec plans et prix",
+    "stage": {
+      "mixed": "{completed, plural, one {# se trouve dans un immeuble achevé} other {# se trouvent dans des immeubles achevés}}, {unfinished, plural, one {# est encore en construction} other {# sont encore en construction}}, avec une livraison annoncée pour {years}.",
+      "allCompleted": "Les {count} se trouvent dans des immeubles achevés ; aucun n’est vendu sur plan.",
+      "mixedNoYear": "{completed, plural, one {# se trouve dans un immeuble achevé} other {# se trouvent dans des immeubles achevés}}, {unfinished, plural, one {# est encore en construction} other {# sont encore en construction}} ; la date de livraison n’est pas indiquée."
+    },
+    "stats": {
+      "listings": "Appartements à vendre",
+      "from": "Prix à partir de",
+      "medianSqm": "Prix médian au m²",
+      "nearSea": "À moins de {metres} m de la mer",
+      "vsPlaceNote": "La médiane au m² de cette sélection se situe {percent} % {direction, select, below {sous} above {au-dessus de} other {au niveau de}} la médiane de {place}, soit {placeMedian}/m² (Domlivo Price Index, appartements et studios).",
+      "nearestSea": "Les plus proches de la mer"
+    },
+    "thin": "Cette sélection compte pour l’instant moins de {min} appartements : la page reste hors des résultats de recherche jusqu’à ce que l’offre s’étoffe.",
+    "about": {
+      "title": "Ce que {partner} propose à {place}",
+      "lead": "Chaque ligne ci-dessous est calculée à partir des annonces de cette page ; rien n’est rédigé à la main.",
+      "price": "Prix affichés à partir de {from} ; la médiane est de {median} le m².",
+      "priceVsPlace": "Prix affichés à partir de {from} ; la médiane est de {median} le m², {percent} % {direction, select, below {sous} above {au-dessus de} other {au niveau de}} la médiane de {place} ({placeMedian}/m²).",
+      "layouts": "Typologies proposées : {list}.",
+      "sea": "{within} des {known} annonces indiquant une distance sont à moins de {metres} m de la mer ; la plus proche : {min}.",
+      "complexes": "Résidences citées dans les annonces",
+      "asOf": "Données au {date}, d’après {count, plural, one {# annonce} other {# annonces}} sur Domlivo.",
+      "seaNone": "Aucune des {known} annonces indiquant une distance n’est à moins de {metres} m de la mer ; la plus proche : {min}, la médiane : {median} m."
+    },
+    "layout": {
+      "studio": "Studio",
+      "oneOne": "1+1",
+      "twoOne": "2+1",
+      "threePlus": "3+1 et plus"
+    },
+    "table": {
+      "title": "Typologies et prix à {place}",
+      "lead": "Par typologie : le nombre d’annonces de {partner}, les surfaces, le prix affiché le plus bas et la médiane au m².",
+      "colLayout": "Typologie",
+      "colCount": "Annonces",
+      "colArea": "Surface",
+      "colFrom": "À partir de",
+      "colMedianSqm": "Médiane €/m²",
+      "caption": "Appartements à {placeFull} proposés par {partner}, par typologie, au {date}.",
+      "footnote": "Une médiane n’est indiquée qu’à partir de trois appartements dont la surface est renseignée."
+    },
+    "grid": {
+      "title": "Appartements à {place}",
+      "lead": "{shown} sur {count} : d’abord les annonces dont l’immeuble est situé sur la carte, puis les plus récentes.",
+      "all": "Les {count} annonces"
+    },
+    "place": {
+      "title": "À propos de {place}",
+      "allListings": "Tous les biens à vendre à {place}",
+      "prices": "{place} : prix et quartiers"
+    },
+    "faq": {
+      "priceQ": "Combien coûte un appartement de {partner} à {place} ?",
+      "priceA": "À partir de {from}. Le prix affiché médian est de {median} le m² sur {count} annonces, au {date}.",
+      "priceAWithPlace": "À partir de {from}. Le prix affiché médian est de {median} le m² sur {count} annonces, au {date} ; la médiane de {place} sur Domlivo est de {placeMedian}/m².",
+      "layoutsQ": "Quelles typologies sont proposées à {place} ?",
+      "layoutsA": "{list}.",
+      "layoutItem": "{layout} : {count, plural, one {# annonce} other {# annonces}}",
+      "layoutItemFrom": "{layout} : {count, plural, one {# annonce} other {# annonces}} à partir de {from}",
+      "seaQ": "À quelle distance de la mer se trouvent les appartements à {place} ?",
+      "seaA": "{within} des {known} annonces indiquant une distance sont à moins de {metres} m de la mer. La plus proche : {min}, la médiane : {median} m.",
+      "stageQ": "Certains sont-ils encore en construction ?",
+      "stageA": "{unfinished, plural, one {# est} other {# sont}} en construction, avec une livraison annoncée pour {years} ; {completed, plural, one {# se trouve} other {# se trouvent}} dans des immeubles achevés.",
+      "stageAllCompletedA": "Non. Les {count} se trouvent dans des immeubles achevés ; aucun n’est vendu sur plan.",
+      "sellerQ": "Qui vend ces appartements ?",
+      "sellerA": "Toutes les annonces de cette page sont publiées par {partner}, une agence partenaire de Domlivo. Le prix indiqué est le prix affiché par l’agence. Pour poser une question sur un appartement, utilisez le formulaire de cette page ou écrivez sur WhatsApp ou Telegram.",
+      "heading": "Questions sur {place}",
+      "stageANoYear": "{unfinished, plural, one {# est} other {# sont}} en construction, sans date de livraison indiquée ; {completed, plural, one {# se trouve} other {# se trouvent}} dans des immeubles achevés.",
+      "seaANone": "Aucune des {known} annonces indiquant une distance n’est à moins de {metres} m de la mer. La plus proche : {min}, la médiane : {median} m."
+    },
+    "contact": {
+      "title": "Une question sur les appartements à {place}",
+      "lead": "Un seul message : quel appartement, votre budget ou votre question. Il arrive à l’équipe Domlivo, qui travaille avec {partner} sur ces annonces.",
+      "placeholder": "Quel appartement, votre budget ou votre question",
+      "submit": "Envoyer"
+    },
+    "more": {
+      "title": "Plus d’annonces de {partner}",
+      "agent": "Toutes les annonces de {partner}",
+      "sellerNote": "Toutes les annonces de cette page sont publiées par {partner} ; le prix indiqué est le prix affiché par l’agence.",
+      "chips": {
+        "plazh_durres": "Plazh",
+        "golem_durres": "Golem",
+        "shkembi_i_kavajes_durres": "Shkëmbi i Kavajës",
+        "durres_city_centre": "Centre-ville de Durrës",
+        "mali_i_robit_durres": "Mali i Robit",
+        "qerret_durres": "Qerret",
+        "shengjin": "Shëngjin",
+        "tocak_plazh_durres": "Résidence Tocak, Plazh"
+      }
+    },
+    "firstLine": "en première ligne, face à la plage",
+    "metres": "{n} m"
+  }
+}

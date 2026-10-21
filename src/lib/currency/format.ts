@@ -14,7 +14,7 @@ import { CURRENCY_SYMBOL_FALLBACK_MAP } from './currencySymbolMap'
  *
  * The rules follow CLDR for the site's locales: English groups with a comma
  * and puts the symbol first; German and Italian group with a full stop;
- * Russian, Ukrainian, Polish and Albanian group with a no-break space; the
+ * Russian, Ukrainian, Polish, Albanian and French group with a no-break space; the
  * symbol follows the amount after a no-break space in every locale but
  * English. Italian, Polish and Albanian do not group a four-digit number.
  */
@@ -36,6 +36,7 @@ const RULES: Record<string, LocaleRule> = {
   uk: { group: NBSP, decimal: ',', minGroupingDigits: 1, symbolFirst: false },
   pl: { group: NBSP, decimal: ',', minGroupingDigits: 2, symbolFirst: false },
   sq: { group: NBSP, decimal: ',', minGroupingDigits: 2, symbolFirst: false },
+  fr: { group: NBSP, decimal: ',', minGroupingDigits: 1, symbolFirst: false },
 }
 
 function ruleFor(locale: string | undefined): LocaleRule {

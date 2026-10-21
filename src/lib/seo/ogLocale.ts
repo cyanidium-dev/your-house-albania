@@ -11,6 +11,7 @@ const OG_LOCALES: Record<string, string> = {
   it: "it_IT",
   pl: "pl_PL",
   de: "de_DE",
+  fr: "fr_FR",
 };
 
 export function ogLocale(locale: string | undefined): string | undefined {

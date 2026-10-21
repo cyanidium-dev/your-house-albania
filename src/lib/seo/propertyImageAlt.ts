@@ -18,7 +18,7 @@
  * strings on the server and hands them down.
  */
 
-export type PropertyImageAltLocale = "en" | "sq" | "ru" | "uk" | "it" | "pl" | "de";
+export type PropertyImageAltLocale = "en" | "sq" | "ru" | "uk" | "it" | "pl" | "de" | "fr";
 
 export type PropertyImageFeature = "seaView" | "nearSea" | "newBuild";
 
@@ -57,6 +57,16 @@ const DICTIONARY: Record<PropertyImageAltLocale, Dictionary> = {
     features: { seaView: "Meerblick", nearSea: "nah am Meer", newBuild: "Neubau" },
     photo: (n, total) => `Foto ${n} von ${total}`,
     inWord: "in",
+    head: typeThenRooms,
+  },
+  fr: {
+    property: "Bien",
+    areaUnit: "m²",
+    sale: "à vendre",
+    rent: "à louer",
+    features: { seaView: "vue mer", nearSea: "près de la mer", newBuild: "neuf" },
+    photo: (n, total) => `photo ${n} sur ${total}`,
+    inWord: "à",
     head: typeThenRooms,
   },
   sq: {

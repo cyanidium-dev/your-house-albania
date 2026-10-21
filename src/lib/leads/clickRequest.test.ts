@@ -29,7 +29,7 @@ describe('parseClickLeadBody', () => {
     [{ type: 'click_fax' }, 'Invalid type'],
     [{ type: 'click_phone', placement: 'sidebar' }, 'Invalid placement'],
     [{ type: 'click_phone', propertySlug: '../etc' }, 'Invalid property'],
-    [{ type: 'click_phone', locale: 'fr' }, 'Invalid locale'],
+    [{ type: 'click_phone', locale: 'es' }, 'Invalid locale'],
     [{ type: 'click_phone', context: { nope: true } }, 'Invalid context'],
     [{ type: 'click_phone', name: 'Ivan' }, 'Unexpected field: name'],
   ])('refuses %j', (body, error) => {

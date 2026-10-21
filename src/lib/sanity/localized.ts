@@ -1,6 +1,11 @@
+import { translateContent } from '@/lib/i18n/contentTranslations';
+
 /**
  * Resolves localized field from Sanity by project locale.
  * Sanity: en, uk, ru, sq, it, pl, de. Project: en, uk, ru, al, it, pl, de (al = sq).
+ * `fr` has no values in Sanity (the dataset is at its attribute cap): its
+ * text comes from the repository's translations of the English value
+ * (`lib/i18n/contentTranslations.ts`), else English.
  */
 const LOCALE_MAP: Record<string, string> = {
   en: 'en',
@@ -11,6 +16,7 @@ const LOCALE_MAP: Record<string, string> = {
   it: 'it',
   pl: 'pl',
   de: 'de',
+  fr: 'fr',
 };
 
 export function resolveLocalizedString(
@@ -19,7 +25,9 @@ export function resolveLocalizedString(
 ): string {
   if (!field) return '';
   const key = LOCALE_MAP[locale] ?? 'en';
-  return (field as Record<string, string>)[key] ?? field.en ?? '';
+  const value = (field as Record<string, string>)[key];
+  if (value != null) return value;
+  return translateContent(key, field.en) ?? field.en ?? '';
 }
 
 /**
@@ -37,7 +45,8 @@ export function resolveLocalizedStringStrict(
   if (!field) return '';
   const key = LOCALE_MAP[locale] ?? 'en';
   const value = (field as Record<string, string>)[key];
-  return typeof value === 'string' ? value.trim() : '';
+  if (typeof value === 'string' && value.trim()) return value.trim();
+  return translateContent(key, field.en)?.trim() ?? '';
 }
 
 /** Resolves localized portable text (content) by locale. Returns block array. */
@@ -86,9 +95,38 @@ export function resolveLocalizedContent(
   if (Array.isArray(field)) return field;
   if (typeof field === 'string') return textToPortableBlocks(field);
   const key = LOCALE_MAP[locale] ?? 'en';
-  const value = (field as Record<string, unknown>)[key] ?? (field as Record<string, unknown>).en;
+  const own = (field as Record<string, unknown>)[key];
+  const en = (field as Record<string, unknown>).en;
+  if (own == null && key !== 'en') {
+    if (typeof en === 'string') {
+      const text = translateContent(key, en);
+      if (text) return textToPortableBlocks(text, key);
+    } else if (Array.isArray(en)) {
+      return translatePortableBlocks(en, key);
+    }
+  }
+  const value = own ?? en;
   if (Array.isArray(value)) return value;
   // A `localizedText` field: the editor typed prose, not blocks.
   if (typeof value === 'string') return textToPortableBlocks(value, key);
   return [];
+}
+
+type PortableSpan = { _type?: string; text?: string; marks?: unknown[] };
+type PortableBlock = { _type?: string; _key?: string; children?: PortableSpan[]; markDefs?: unknown[] };
+
+/**
+ * English Portable Text in a locale whose text lives in the repository: each
+ * plain paragraph (no links or other annotations) with a translation becomes
+ * one span of the translated text; anything else stays as it is, so a link
+ * is never dropped to make a paragraph read in the other language.
+ */
+function translatePortableBlocks(blocks: unknown[], locale: string): unknown[] {
+  return blocks.map((raw) => {
+    const block = raw as PortableBlock;
+    if (block?._type !== 'block' || !Array.isArray(block.children) || (block.markDefs?.length ?? 0) > 0) return raw;
+    const text = translateContent(locale, block.children.map((c) => c.text ?? '').join(''));
+    if (!text) return raw;
+    return { ...block, children: [{ _type: 'span', _key: `${block._key ?? 'b'}-${locale}`, text, marks: [] }] };
+  });
 }

@@ -19,7 +19,7 @@ export type TelegramUser = {
   language_code?: string
 }
 
-export const SITE_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
+export const SITE_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'fr'] as const
 export type SiteLocale = (typeof SITE_LOCALES)[number]
 
 export function isSiteLocale(v: unknown): v is SiteLocale {

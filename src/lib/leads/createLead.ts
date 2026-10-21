@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { getClient } from '@/lib/sanity/queries/_core'
-import { PROPERTY_SLUG_MATCH } from '@/lib/property/propertyUrl'
+import { PROPERTY_SLUG_MATCH, propertySlugParams } from '@/lib/property/propertyUrl'
 import { getWriteClient } from '@/lib/sanity/writeClient'
 import { buildLeadDocument, type LeadInput } from './buildLeadDocument'
 
@@ -17,7 +17,7 @@ export type LeadProperty = {
   agentLeadChatId?: string
 }
 
-type LocalizedTitle = Partial<Record<'en' | 'ru' | 'uk' | 'sq' | 'it' | 'pl' | 'de', string>> | string | null
+type LocalizedTitle = Partial<Record<'en' | 'ru' | 'uk' | 'sq' | 'it' | 'pl' | 'de' | 'fr', string>> | string | null
 
 /**
  * Looks a listing up by slug for the lead's reference and the Telegram title.
@@ -40,7 +40,7 @@ export async function lookupLeadProperty(slug: string): Promise<LeadProperty | n
       `*[_type == "property" && ${PROPERTY_SLUG_MATCH} && !(_id in path("drafts.**"))][0]{
         _id, "slug": slug.current, title, "agentId": agent._ref, "agentSlug": agent->slug.current, "agentName": agent->name, "agentLeadChatId": agent->telegramLeadChatId
       }`,
-      { slug }
+      propertySlugParams(slug)
     )
     if (!row?._id) return null
     const t = row.title

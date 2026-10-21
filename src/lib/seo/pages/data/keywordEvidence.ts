@@ -13,6 +13,9 @@ import type { KeywordCluster } from "../types";
 
 const ALL_LOCALES = ["en", "uk", "ru", "sq", "it", "pl", "de"] as const;
 
+/** French pilot (2026-10-21): Durrës only, see docs/seo/keyword-research.md "French pilot". */
+const DURRES_LOCALES = [...ALL_LOCALES, "fr"] as const;
+
 export const KEYWORD_CLUSTERS: readonly KeywordCluster[] = [
   // ── Durrës ────────────────────────────────────────────────────────────────
   {
@@ -39,12 +42,20 @@ export const KEYWORD_CLUSTERS: readonly KeywordCluster[] = [
       "дуррес квартира",
       "недвижимость в дурресе",
       "квартири в дурресі",
+      "appartement durres",
     ],
     markets: ["AL", "XK", "MK", "IT", "DE", "AT", "CH", "GB", "US", "CA", "PL", "UA", "FR", "NL", "CZ"],
-    locales: ALL_LOCALES,
+    locales: DURRES_LOCALES,
     bucket: "100-1K",
     serp: "listings",
-    sources: ["kp-atlas-2026-09-16", "kp-albania-2026-09-17", "kp-foreign4-2026-09-17", "gsc-2026-09-17", "serp-2026-09-17"],
+    sources: [
+      "kp-atlas-2026-09-16",
+      "kp-albania-2026-09-17",
+      "kp-foreign4-2026-09-17",
+      "gsc-2026-09-17",
+      "serp-2026-09-17",
+      "kp-fr-2026-10-21",
+    ],
     notes:
       "Apartments and homes are one intent: the Albanian head SERPs return the same category pages, and apartments are 68% of Durrës stock. The city page is canonical for both.",
   },

@@ -11,10 +11,10 @@
  * neither city nor district, none carried a price, and 29 descriptions ran
  * past the ~160-character SERP cut. That is what this fixes.
  */
-/** German writes the sign after the amount ("78.000 €"); the other locales keep the title format they rank with. */
+/** German and French write the sign after the amount ("78.000 €", "78 000 €"); the other locales keep the title format they rank with. */
 function formatEuro(price: number, locale: string): string {
   const n = new Intl.NumberFormat(locale).format(price);
-  return locale === "de" ? `${n} €` : `€${n}`;
+  return locale === "de" || locale === "fr" ? `${n} €` : `€${n}`;
 }
 
 export type PropertyMetaTitleInput = {

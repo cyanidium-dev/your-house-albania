@@ -17,7 +17,7 @@ import { isPlausiblePhone } from '@/lib/contacts/validate'
 // docs/registration-request-sanity-frontend-contract.md
 // import { createRegistrationRequest } from '@/lib/sanity/writeClient'
 
-const ALLOWED_LANGUAGES = new Set(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'])
+const ALLOWED_LANGUAGES = new Set(['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'fr'])
 const ALLOWED_REALTOR_OR_AGENCY = new Set(['realtor', 'agency'])
 
 const MAX_LEN = 500

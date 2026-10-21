@@ -11,6 +11,7 @@ Demand evidence behind every indexable listing page. The machine-readable subset
 | Keyword Planner, **UK + DE + IT + US** combined | 2026-09-17 | same 50 phrases | `kp-foreign4-2026-09-17` |
 | Google Search Console `sc-domain:domlivo.com` | 3 months to 2026-09-14 | 165 queries, 299 pages, countries | `gsc-2026-09-17` |
 | Google SERP (Chrome, `pws=0`, local `gl`/`hl`) | 2026-09-17 | 10 head queries in sq, en, de, it, pl, ru | competitor and page-type check |
+| Keyword Planner, **all locations, all languages** | 2026-10-21 | 80 phrases in es, fr, nl, cs, sv, no, da, tr, ro, hu, el + baselines | `kp-fr-2026-10-21`; the French pilot, see reports/domlivo-locales-2026-10-21.md |
 
 **Volumes are buckets, not numbers.** The Ads account has no spend, so Keyword Planner returns 0–10 / 10–100 / 100–1K / 1K–10K. A phrase is **confirmed** when it has a bucket ≥ 10–100 (the atlas also required searches in ≥ 9 of 12 months). "No data" means below Google's threshold in that location — evidence of *absence*, not missing work.
 
@@ -103,6 +104,7 @@ Patterns: every commercial SERP is won by **category/listing pages with large in
 | it | `case in vendita durazzo`, `appartamenti in vendita durazzo` 10–100 (IT) |
 | pl | `apartament durres`, `mieszkanie durres` 10–100 (PL) |
 | uk, ru | `купить квартиру в дурресе`, `дуррес квартира` 10–100 (UA); GSC impressions on uk/ru Durrës pages |
+| fr | `appartement durres` 10–100; `immobilier albanie`, `appartement albanie`, `acheter maison albanie`, `immobilier albanie bord de mer` 100–1K each (all locations, 2026-10-21). French is a partial locale: only Durrës and its districts are indexed (pilot until 2026-11-18) |
 
 Sarandë: Keyword Planner showed no uk/ru demand, so the listing was first indexed in sq, en, de, it and pl. Search Console then showed `/ru/albania/sarande` at 20 impressions, position 9.4, for `купить квартиру в саранде` (3 months to 2026-09-14), so ru was added the same day. uk had 1 impression and stays out.
 

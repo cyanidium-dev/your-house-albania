@@ -46,17 +46,17 @@ describe("findDemand", () => {
   });
 
   it("takes the page's locales from its city, in routing order", () => {
-    expect(findDemand(golem).locales).toEqual(["en", "uk", "ru", "sq", "it", "pl", "de"]);
+    expect(findDemand(golem).locales).toEqual(["en", "uk", "ru", "sq", "it", "pl", "de", "fr"]);
     expect(findDemand({ family: "city", country: "albania", city: "sarande" }).locales).toEqual(["en", "ru", "sq", "it", "pl", "de"]);
   });
 });
 
 describe("evaluateSeoPage", () => {
-  it("indexes Durrës in every locale as tier 1", () => {
+  it("indexes Durrës in every locale, French pilot included, as tier 1", () => {
     const d = evaluateSeoPage({ key: durres, inventory: { count: 358 } });
     expect(d.status).toBe("index");
     expect(d.tier).toBe(1);
-    expect(d.indexableLocales).toHaveLength(7);
+    expect(d.indexableLocales).toHaveLength(8);
   });
 
   it("does not generate a page with no inventory, or a failed count", () => {

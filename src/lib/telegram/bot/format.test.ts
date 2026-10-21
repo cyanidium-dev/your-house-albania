@@ -46,7 +46,8 @@ describe('botLocale', () => {
     expect(botLocale('it', 'ru')).toBe('it')
     expect(botLocale(null, 'uk')).toBe('uk')
     expect(botLocale(undefined, 'de-AT')).toBe('de')
-    expect(botLocale('xx', 'fr')).toBe('en')
+    expect(botLocale(undefined, 'fr-FR')).toBe('fr')
+    expect(botLocale('xx', 'es')).toBe('en')
   })
 })
 

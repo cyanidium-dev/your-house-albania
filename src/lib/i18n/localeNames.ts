@@ -7,6 +7,7 @@ export const LOCALE_NAMES: Record<string, string> = {
   it: 'Italiano',
   pl: 'Polski',
   de: 'Deutsch',
+  fr: 'Français',
 }
 
 export function localeName(locale: string): string {

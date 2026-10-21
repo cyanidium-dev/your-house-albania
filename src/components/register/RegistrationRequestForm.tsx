@@ -10,7 +10,7 @@ import { LeadMessengerRow } from '@/components/contact/LeadMessengerRow'
 import { leadContextForRequest, trackFormLead } from '@/lib/analytics/leadEvents'
 import { isPlausibleEmail, isPlausiblePhone } from '@/lib/contacts/validate'
 
-const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de'] as const
+const ROUTING_LOCALES = ['en', 'uk', 'ru', 'sq', 'it', 'pl', 'de', 'fr'] as const
 
 function normalizeLocale(locale: string): (typeof ROUTING_LOCALES)[number] {
   return ROUTING_LOCALES.includes(locale as (typeof ROUTING_LOCALES)[number])
@@ -66,6 +66,7 @@ export function RegistrationRequestForm({ locale, className }: Props) {
       { value: 'it', label: t('langIt') },
       { value: 'pl', label: t('langPl') },
       { value: 'de', label: t('langDe') },
+      { value: 'fr', label: t('langFr') },
     ],
     [t]
   )
