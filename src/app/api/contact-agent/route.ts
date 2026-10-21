@@ -354,6 +354,7 @@ export async function POST(request: Request) {
     }),
     internal: context?.internal === true,
     agentChatId,
+    listingBound: hasAgent || Boolean(normalized.propertySlug),
     leadId: lead.ok ? lead.id : null,
   })
 

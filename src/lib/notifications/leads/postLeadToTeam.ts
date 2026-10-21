@@ -6,6 +6,7 @@ import { resolveTelegramBotToken } from '@/lib/notifications/agentContact/routin
 import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
 import { getWriteClient } from '@/lib/sanity/writeClient'
 import { botCall, publicBotToken } from '@/lib/telegram/bot/api'
+import { leadScopeLabel, type LeadScope } from '@/lib/notifications/leads/leadRecipients'
 
 export type PostLeadResult = { ok: true; posts: TelegramPost[] } | { ok: false; reason: string }
 
@@ -58,8 +59,11 @@ export async function postLeadToTeam(params: {
   /** The status the lead was saved with (`spam` for test traffic). */
   status?: string
   viaPublicBot?: boolean
+  /** Unique or general: the label goes on the first line. */
+  scope?: LeadScope
 }): Promise<PostLeadResult> {
-  const { chatIds, text, parseMode } = params
+  const { chatIds, parseMode } = params
+  const text = params.scope ? `${leadScopeLabel(params.scope)}\n\n${params.text}` : params.text
   if (chatIds.length === 0) return { ok: false, reason: 'no team chat configured' }
   const leadId = isLeadId(params.leadId) ? params.leadId : null
   const publicToken = publicBotToken()

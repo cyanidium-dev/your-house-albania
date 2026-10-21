@@ -4,7 +4,7 @@ import { capturePostHogServer } from '@/lib/analytics/posthogServer'
 import { createLead } from '@/lib/leads/createLead'
 import { isLeadPlacement, type LeadPlacement } from '@/lib/leads/types'
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
-import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { leadAudience, type LeadScope } from '@/lib/notifications/leads/leadRecipients'
 import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getWriteClient } from '@/lib/sanity/writeClient'
 import { parseStartPayload, type StartPayload } from '@/lib/telegram/startPayload'
@@ -69,8 +69,10 @@ const CAPTIONED = ['photo', 'video', 'document', 'audio', 'voice', 'animation'] 
 /** A second Start within this window is the same lead (a double tap, a reopened link). */
 const REPEAT_START_MS = 30 * 60 * 1000
 
-function teamChats(agentLeadChatId?: string): string[] {
-  return leadRecipientChatIds({
+/** Unique when the visitor came from a listing, else general: every realtor chat. */
+function teamChats(listingBound: boolean, agentLeadChatId?: string): Promise<{ scope: LeadScope; chatIds: string[] }> {
+  return leadAudience({
+    listingBound,
     generalChatId: resolveAgentContactTelegramRouting().generalChatId,
     agentChatId: agentLeadChatId,
   })
@@ -82,12 +84,25 @@ function teamChats(agentLeadChatId?: string): string[] {
  * bot is not in the chat yet, the delivery bot posts the same text instead:
  * the lead is never lost, only the reply relay and the buttons are.
  */
-async function postToTeam(chatIds: string[], html: string, leadId?: string | null): Promise<boolean> {
+async function postToTeam(
+  audience: { scope: LeadScope; chatIds: string[] },
+  html: string,
+  leadId?: string | null,
+  labelled = true,
+): Promise<boolean> {
+  const { chatIds } = audience
   if (chatIds.length === 0) {
     console.error('[telegram-bot] no team chat configured (TELEGRAM_GENERAL_CHAT_ID)')
     return false
   }
-  const posted = await postLeadToTeam({ chatIds, text: html, parseMode: 'HTML', leadId, viaPublicBot: true })
+  const posted = await postLeadToTeam({
+    chatIds,
+    text: html,
+    parseMode: 'HTML',
+    leadId,
+    viaPublicBot: true,
+    ...(labelled ? { scope: audience.scope } : {}),
+  })
   return posted.ok
 }
 
@@ -203,7 +218,7 @@ async function handleStart(token: string, message: TelegramMessage, user: Telegr
   })
 
   await postToTeam(
-    teamChats(listing?.agentLeadChatId),
+    await teamChats(Boolean(listing), listing?.agentLeadChatId),
     formatStartForTeam({
       user,
       locale,
@@ -298,7 +313,7 @@ async function handleSearchStart(
   })
 
   await postToTeam(
-    teamChats(),
+    await teamChats(false),
     formatStartForTeam({
       user,
       locale,
@@ -333,7 +348,8 @@ async function handleVisitorMessage(token: string, message: TelegramMessage, use
     lead = await latestBotLead(user.id)
   }
   const locale: SiteLocale = isSiteLocale(lead?.locale) ? lead.locale : botLocale(null, user.language_code)
-  const chats = teamChats(lead?.agentLeadChatId)
+  // Follow-ups go where the lead went; the label is on the first message only.
+  const chats = await teamChats(Boolean(lead?.propertySlug || lead?.agentLeadChatId), lead?.agentLeadChatId)
   const header = formatMessageHeader({ user, locale, ...(lead?.propertyTitle ? { propertyTitle: lead.propertyTitle } : {}) })
 
   if (message.contact) {
@@ -352,7 +368,7 @@ async function handleVisitorMessage(token: string, message: TelegramMessage, use
     await postToTeam(chats, `${header}\n\n${escapeHtml(message.text.slice(0, 3500))}`)
   } else {
     const captioned = CAPTIONED.some((k) => message[k] !== undefined)
-    for (const chatId of chats) {
+    for (const chatId of chats.chatIds) {
       if (captioned) {
         const caption = `${header}${message.caption ? `\n\n${escapeHtml(message.caption.slice(0, 800))}` : ''}`
         const copied = await botCall(token, 'copyMessage', {
@@ -362,7 +378,7 @@ async function handleVisitorMessage(token: string, message: TelegramMessage, use
           caption,
           parse_mode: 'HTML',
         })
-        if (!copied.ok) await postToTeam([chatId], `${header}\n\n(вложение — откройте чат с клиентом)`)
+        if (!copied.ok) await postToTeam({ scope: chats.scope, chatIds: [chatId] }, `${header}\n\n(вложение — откройте чат с клиентом)`, null, false)
       } else {
         // Stickers, locations, video notes take no caption: header, then the copy under it.
         const head = await botCall<{ message_id: number }>(token, 'sendMessage', {

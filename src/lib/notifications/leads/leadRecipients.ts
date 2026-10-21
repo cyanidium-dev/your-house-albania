@@ -64,3 +64,64 @@ export async function fetchAgentLeadChatId(agentSlug: string | undefined): Promi
     return null
   }
 }
+
+/**
+ * Unique or general (owner, 2026-10-22). A lead left on a listing (or on a
+ * partner landing) is unique: it goes to that agency only. Everything else -
+ * a selection request, a question from an article, the home page, the
+ * favourites - is general: every realtor chat gets it, and the message says so.
+ */
+export type LeadScope = 'unique' | 'general'
+
+/** First line of every lead message in Telegram. */
+export function leadScopeLabel(scope: LeadScope): string {
+  return scope === 'unique'
+    ? '🎯 Уникальная заявка: по конкретному объекту'
+    : '📣 Общая заявка: отправлена всем риелторам'
+}
+
+const ALL_AGENT_CHATS_TTL_MS = 10 * 60 * 1000
+let allAgentChats: { at: number; ids: string[] } | null = null
+
+/** Every agency lead group (`agent.telegramLeadChatId`), cached for ten minutes. */
+export async function fetchAllAgentLeadChatIds(): Promise<string[]> {
+  if (allAgentChats && Date.now() - allAgentChats.at < ALL_AGENT_CHATS_TTL_MS) return allAgentChats.ids
+  const client = getClient()
+  if (!client) return []
+  try {
+    const rows = await client.fetch<Array<string | null>>(
+      `*[_type == "agent" && defined(telegramLeadChatId) && !(_id in path("drafts.**"))].telegramLeadChatId`,
+      {},
+      { cache: 'no-store' } as never,
+    )
+    const ids = [...new Set((Array.isArray(rows) ? rows : []).map((v) => (typeof v === 'string' ? v.trim() : '')))]
+      .filter((v) => /^-?\d{5,20}$/.test(v))
+    allAgentChats = { at: Date.now(), ids }
+    return ids
+  } catch (err) {
+    console.error('[leads] agent chats not loaded', err instanceof Error ? err.message : err)
+    return allAgentChats?.ids ?? []
+  }
+}
+
+/**
+ * Who a lead goes to and how it is labelled. `listingBound`: the lead names a
+ * listing or a partner agency. Unique leads keep the old rule (the agency's
+ * group, else the general chat); general leads go to the general chat and to
+ * every agency group.
+ */
+export async function leadAudience(params: {
+  listingBound: boolean
+  agentChatId?: string | null
+  generalChatId?: string
+}): Promise<{ scope: LeadScope; chatIds: string[] }> {
+  if (params.listingBound) {
+    return {
+      scope: 'unique',
+      chatIds: leadRecipientChatIds({ generalChatId: params.generalChatId, agentChatId: params.agentChatId }),
+    }
+  }
+  const general = leadRecipientChatIds({ generalChatId: params.generalChatId })
+  const agents = await fetchAllAgentLeadChatIds()
+  return { scope: 'general', chatIds: [...new Set([...general, ...agents])] }
+}

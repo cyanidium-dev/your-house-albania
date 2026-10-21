@@ -11,7 +11,7 @@ import {
   resolveTelegramBotToken,
 } from '@/lib/notifications/agentContact/routing'
 import { formatGuideLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
-import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { leadAudience } from '@/lib/notifications/leads/leadRecipients'
 import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
@@ -75,7 +75,8 @@ export async function POST(req: NextRequest) {
   const property = request.propertySlug ? await lookupLeadProperty(request.propertySlug) : null
 
   const botToken = resolveTelegramBotToken()
-  const chatIds = leadRecipientChatIds({
+  const { scope, chatIds } = await leadAudience({
+    listingBound: Boolean(request.propertySlug),
     generalChatId: resolveAgentContactTelegramRouting().generalChatId,
     agentChatId: property?.agentLeadChatId,
   })
@@ -101,8 +102,9 @@ export async function POST(req: NextRequest) {
         : {}),
     })
     return postLeadToTeam({
-      chatIds: chatIds.slice(0, 1),
+      chatIds,
       text,
+      scope,
       leadId,
       status: context?.internal === true ? 'spam' : 'new',
     })
