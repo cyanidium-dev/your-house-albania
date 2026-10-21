@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { routing } from '@/i18n/routing'
 import { isIndexingEnabled } from '@/lib/seo/envSeo'
-import { fetchKnowledgeIndex } from '@/lib/sanity/queries/knowledge'
+import { fetchKnowledgeIndex, knowledgeArticleLocales } from '@/lib/sanity/queries/knowledge'
 import { latestDate, parseDateOrUndefined } from '@/lib/seo/contentLastmod'
 import { buildUrlsetXml } from '@/lib/seo/sitemapXml'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
@@ -33,6 +33,9 @@ export async function GET() {
     .filter((entry) => Boolean(entry.slug))
     .map((entry) => ({
       slug: entry.slug,
+      // A page is listed only in the locales it is written in; elsewhere it
+      // is the English fallback and `noindex` (see the article page).
+      locales: knowledgeArticleLocales(entry),
       lastmod: parseDateOrUndefined(entry.lastUpdated ? `${entry.lastUpdated}T00:00:00Z` : undefined),
     }))
   const indexLastmod = latestDate(...pages.map((p) => p.lastmod))
@@ -50,6 +53,7 @@ export async function GET() {
   for (const locale of routing.locales) {
     urls.push({ loc: `${base}/${locale}/knowledge`, lastmod: indexLastmod })
     for (const page of pages) {
+      if (!page.locales.includes(locale)) continue
       urls.push({
         loc: `${base}/${locale}/knowledge/${encodeURIComponent(page.slug)}`,
         lastmod: page.lastmod,

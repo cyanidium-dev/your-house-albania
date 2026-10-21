@@ -13,6 +13,7 @@ import KnowledgeProse from '@/components/knowledge/KnowledgeProse'
 import {
   fetchKnowledgeArticle,
   fetchKnowledgeSlugs,
+  knowledgeArticleLocales,
   type KnowledgeArticle,
   type KnowledgeSource,
 } from '@/lib/sanity/queries/knowledge'
@@ -84,12 +85,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const article = await loadArticle(slug, locale)
   if (!article) return { robots: indexingDisabledRobots }
+  // Written in this locale, or only the English fallback? The fallback stays
+  // reachable but is `noindex, follow` and drops out of hreflang, so a page
+  // translated into two languages is not indexed as six English copies.
+  const locales = knowledgeArticleLocales(article)
+  const written = locales.includes(locale)
   return buildSimplePageMetadata({
     locale,
     title: article.seoTitle || article.title,
     description: (article.seoDescription || article.summary)?.slice(0, 300),
     pathAfterLocale: `knowledge/${slug}`,
-    robots: isIndexingEnabled() ? indexableRobots : indexingDisabledRobots,
+    locales,
+    robots: !isIndexingEnabled() ? indexingDisabledRobots : written ? indexableRobots : { index: false, follow: true },
   })
 }
 

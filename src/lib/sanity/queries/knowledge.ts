@@ -16,6 +16,7 @@
 import { createClient } from '@sanity/client'
 import { getClient, sanityCache, SANITY_TAGS } from './_core'
 import { resolveLocalizedString } from '@/lib/sanity/localized'
+import { routing } from '@/i18n/routing'
 
 /**
  * Knowledge documents are read with a server-side token.
@@ -107,6 +108,12 @@ export type KnowledgeArticleSummary = {
   questionCount: number
   /** Section of /knowledge for the question pages; empty on research data sheets. */
   topicGroup?: string
+  /**
+   * Locales the page is written in (its title exists there). Every other
+   * locale renders the English fallback, which is `noindex, follow`, out of
+   * hreflang and out of the sitemap: see `knowledgeArticleLocales`.
+   */
+  locales?: string[] | null
 }
 
 /** A founder named on a page: who compiled the data, who checked it. */
@@ -280,6 +287,22 @@ export async function searchKnowledgeFacts(input: FactSearchInput): Promise<Know
 
 /* -------------------------------------------------------------- articles -- */
 
+/** The locales a page's title is written in; compacted, so missing ones drop out. */
+const LOCALES_PROJECTION = `"locales": array::compact([${routing.locales
+  .map((l) => `select(defined(title.${l}) => "${l}")`)
+  .join(', ')}])`
+
+/**
+ * Where a knowledge page may be indexed: the locales it is written in.
+ * Pages from before the field existed were translated into every locale,
+ * so an empty value means all of them.
+ */
+export function knowledgeArticleLocales(entry: Pick<KnowledgeArticleSummary, 'locales'>): string[] {
+  const written = (entry.locales ?? []).filter((l): l is string => typeof l === 'string' && l.length > 0)
+  return written.length ? written : [...routing.locales]
+}
+
+
 const ARTICLE_SUMMARY_PROJECTION = (locale: string) => `{
   documentId,
   "slug": slug.current,
@@ -291,7 +314,8 @@ const ARTICLE_SUMMARY_PROJECTION = (locale: string) => `{
   confidence,
   lastUpdated,
   "questionCount": count(questionSet),
-  topicGroup
+  topicGroup,
+  ${LOCALES_PROJECTION}
 }`
 
 async function fetchIndex(locale: string): Promise<KnowledgeArticleSummary[]> {
@@ -328,6 +352,7 @@ const ARTICLE_PROJECTION = (locale: string) => `{
     exchangeRateNote,
     sourceFile,
     topicGroup,
+    ${LOCALES_PROJECTION},
     tags,
     "questionCount": count(questionSet),
     "questions": questionSet[]{"v": coalesce(${locale}, en)}.v,
