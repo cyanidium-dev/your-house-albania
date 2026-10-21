@@ -625,7 +625,8 @@
       "previousPage": "Предыдущая страница",
       "nextPage": "Следующая страница",
       "showMore": "Показать ещё объекты",
-      "shownRange": "{from}-{to} из {total}"
+      "shownRange": "{from}-{to} из {total}",
+      "allPages": "Показать все страницы"
     },
     "heroIntroFallback": "Просмотрите нашу подборку объектов.",
     "agentTitle": "Объекты от {name}",

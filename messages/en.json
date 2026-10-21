@@ -625,7 +625,8 @@
       "previousPage": "Previous page",
       "nextPage": "Next page",
       "showMore": "Show more properties",
-      "shownRange": "{from}-{to} of {total}"
+      "shownRange": "{from}-{to} of {total}",
+      "allPages": "Show all pages"
     },
     "heroIntroFallback": "Browse our selection of properties.",
     "agentTitle": "Properties by {name}",

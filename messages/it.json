@@ -625,7 +625,8 @@
       "previousPage": "Pagina precedente",
       "nextPage": "Pagina successiva",
       "showMore": "Mostra altri immobili",
-      "shownRange": "{from}-{to} di {total}"
+      "shownRange": "{from}-{to} di {total}",
+      "allPages": "Mostra tutte le pagine"
     },
     "heroIntroFallback": "Sfoglia la nostra selezione di immobili.",
     "agentTitle": "Immobili di {name}",

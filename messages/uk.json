@@ -625,7 +625,8 @@
       "previousPage": "Попередня сторінка",
       "nextPage": "Наступна сторінка",
       "showMore": "Показати ще об’єкти",
-      "shownRange": "{from}-{to} з {total}"
+      "shownRange": "{from}-{to} з {total}",
+      "allPages": "Показати всі сторінки"
     },
     "heroIntroFallback": "Перегляньте нашу добірку об'єктів.",
     "agentTitle": "Об'єкти від {name}",
