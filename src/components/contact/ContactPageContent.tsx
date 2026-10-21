@@ -103,7 +103,7 @@ export async function ContactPageContent({ locale, manager }: ContactPageContent
                     <MessengerButtons
                       messengers={messengers}
                       ariaLabels={{ whatsapp: tQuick('channel.whatsapp'), telegram: tQuick('channel.telegram') }}
-                      className="flex gap-3 [&>a]:h-12 [&>a]:text-base"
+                      className="flex gap-3 [&>a]:h-12 [&>a]:text-sm sm:[&>a]:text-base"
                     />
                   </div>
                   <SiteTrustContactLines locale={locale} trust={trust} className="mb-3" />
