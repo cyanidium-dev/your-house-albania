@@ -45,6 +45,8 @@ import { SoldSimilarRequest } from '@/components/property/SoldSimilarRequest';
 import { inactiveListingStatus } from '@/lib/property/listingStatus';
 import { MessengerButtons } from '@/components/contact/MessengerButtons';
 import { ListingContactBlock } from '@/components/property/ListingContactBlock';
+import { ExperimentExposure } from '@/components/analytics/ExperimentExposure';
+import { LISTING_PHOTO_FIRST } from '@/lib/experiments/bootFlags';
 import { resolveMessengers } from '@/lib/contacts/messengers';
 import { messengerContext, messengerPriceLabel } from '@/lib/contacts/messengerContext';
 import { SimilarPropertiesCarousel } from '@/components/property/SimilarPropertiesCarousel';
@@ -488,7 +490,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
               seller={propertyAgent?.name ? { name: propertyAgent.name } : null}
               publisherId={organizationId(baseUrl)}
             />
-            <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
+            {/* Experiment E003 (docs/experiments/003): `photo-first` puts the gallery
+                right under the breadcrumb below lg. Inert without the attribute
+                lib/experiments/bootFlags sets on <html>. */}
+            <div className="container mx-auto max-w-8xl px-5 2xl:px-0 max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:flex max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:flex-col">
+                <div className="max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:-order-2">
                 <PropertyDetailBreadcrumb
                   locale={locale}
                   propertyTitle={title}
@@ -496,6 +502,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   citySlug={citySlug}
                   districtSlug={districtSlug}
                 />
+                </div>
                 {/* Title row answers the buyer's first questions before the
                     gallery: what and where on the left, how much and what to do
                     next on the right. The price used to appear only in the
@@ -607,7 +614,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                         )}
                     </div>
                 </div>
+                <div className="max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:-order-1 max-lg:[[data-x-e003-listing-photo-first-on-phones=photo-first]_&]:mb-6">
                 <PropertyGallery images={galleryImages} />
+                </div>
+                <ExperimentExposure flag={LISTING_PHOTO_FIRST.key} maxWidth={1023} />
                 {inactiveStatus ? <SoldSimilarRequest locale={locale} propertySlug={keySlug} status={inactiveStatus} /> : null}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10 items-start">
                     <div className="lg:col-span-8 min-w-0">
