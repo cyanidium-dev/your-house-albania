@@ -22,6 +22,7 @@ import {
   type TouchPoint,
 } from '@/lib/leads/context'
 import { classifyDevice, classifyTraffic, normalizeHost } from './trafficSource'
+import { readConsentCookie } from '@/lib/cookie-consent/core/consent-storage'
 
 const FIRST_TOUCH_KEY = 'domlivo:first-touch'
 const SESSION_KEY = 'domlivo:session'
@@ -49,7 +50,16 @@ type StorageKind = 'local' | 'session'
 /** Used when storage is unavailable, so a single page load still has a journey. */
 const memory = new Map<string, string>()
 
-function storage(kind: StorageKind): Storage | null {
+/**
+ * The browser's storage only once the visitor has accepted analytics. Before
+ * that the journey lives in `memory` for this page load, which is enough to
+ * attach the visit's source to a lead sent now; nothing is written to the
+ * device (ePrivacy art. 5(3): source tracking is not strictly necessary).
+ * Our own browsers' marker (`?domlivo_internal=1`) is the exception: it is set
+ * on purpose on the team's devices.
+ */
+function storage(kind: StorageKind, key?: string): Storage | null {
+  if (key !== INTERNAL_KEY && readConsentCookie()?.choices?.analytics !== true) return null
   try {
     return kind === 'local' ? window.localStorage : window.sessionStorage
   } catch {
@@ -58,13 +68,23 @@ function storage(kind: StorageKind): Storage | null {
 }
 
 function readRaw(kind: StorageKind, key: string): string | null {
+  const memKey = `${kind}:${key}`
   try {
-    const s = storage(kind)
-    if (s) return s.getItem(key)
+    const s = storage(kind, key)
+    if (s) {
+      const stored = s.getItem(key)
+      // Consent arrived after this page load started: keep what was gathered
+      // in memory before it, written through on first read.
+      if (stored === null && memory.has(memKey)) {
+        s.setItem(key, memory.get(memKey) as string)
+        return memory.get(memKey) as string
+      }
+      return stored
+    }
   } catch {
     // Fall through to memory.
   }
-  return memory.get(`${kind}:${key}`) ?? null
+  return memory.get(memKey) ?? null
 }
 
 function writeRaw(kind: StorageKind, key: string, value: string | null): void {
@@ -72,7 +92,7 @@ function writeRaw(kind: StorageKind, key: string, value: string | null): void {
   if (value === null) memory.delete(memKey)
   else memory.set(memKey, value)
   try {
-    const s = storage(kind)
+    const s = storage(kind, key)
     if (!s) return
     if (value === null) s.removeItem(key)
     else s.setItem(key, value)
