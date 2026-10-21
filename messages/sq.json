@@ -140,11 +140,11 @@
     "faq": {
       "badge": "Pyetje",
       "title": "Gjithçka rreth shtëpive Domlivo",
-      "description": "Blerja, shitja ose investimi në pasuri të paluajtshme mund të jetë stresues. Këtu janë përgjigjet e pyetjeve të shpeshta.",
+      "description": "Përgjigje të shkurtra për pyetjet që blerësit bëjnë më shpesh.",
       "q1": "1. A mund të personalizoj shtëpinë time Domlivo?",
       "q2": "2. Ku mund të gjej shtëpi Domlivo?",
       "q3": "3. Cilat janë hapat për blerje?",
-      "answer": "Zgjedhje e gjerë objektesh premium: nga apartamentet luksoze deri te vilat të mëdha."
+      "answer": "Apartamente, shtëpi, vila dhe toka në shitje në gjithë Shqipërinë. Çdo shpallje tregon çmimin dhe kush e shet pronën."
     },
     "blog": {
       "badge": "Blog",
@@ -313,7 +313,7 @@
     "properties": {
       "badge": "Prona",
       "title": "Zbuloni shtëpi me dizajn frymëzues.",
-      "description": "Elegancë dhe rehati në vilat tona ekskluzive për një jetesë të sofistikuar."
+      "description": "Apartamente, shtëpi, vila dhe toka në shitje në Shqipëri, me çmimin dhe shitësin në çdo shpallje."
     },
     "blogs": {
       "badge": "Blog",
@@ -352,7 +352,7 @@
   },
   "Districts": {
     "hubTitle": "Rrethet e {city}",
-    "hubDescription": "Eksploroni rrethet e {city} dhe zgjidhni zonën e duhur për shtëpinë tuaj të re.",
+    "hubDescription": "Krahasoni zonat e {city} dhe zgjidhni ku të blini.",
     "hubMetaTitle": "Rrethet e {city} 2026: çmimet për m² dhe ku të jetoni",
     "hubMetaDescription": "Krahasoni rrethet e {city} sipas çmimit për m² dhe karakterit, pastaj shikoni njoftimet aktuale në secilën zonë.",
     "faqTitle": "Pyetjet më të shpeshta",
@@ -799,7 +799,7 @@
     "metaDescription": "Dërgoni një kërkesë dhe ekipi ynë do t'ju përgjigjet me opsione që përputhen me nevojat tuaja.",
     "heroH1": "Nuk keni gjetur shtëpinë e duhur?",
     "heroH2": "Lërni një kërkesë, ne do t'ju ofrojmë zgjedhje individuale!",
-    "heroDescription": "Plotësoni formularin më poshtë, dhe menaxheri ynë do t'ju kontaktojë dhe do t'ju ofrojë opsionet që përputhen me kërkesat tuaja. Shpejt, lehtë dhe pa mesazhe të tepërta.",
+    "heroDescription": "Plotësoni formularin më poshtë dhe menaxheri ynë do t'ju kontaktojë me opsione sipas kërkesës suaj.",
     "heroImageAlt": "Na kontaktoni",
     "managerPhotoAlt": "Menaxheri ynë",
     "managerEmailLabel": "Email",
@@ -851,10 +851,10 @@
     "metaDescription": "Shikoni demo dhe mësoni si të publikoni objekte në Domlivo dhe të merrni kërkesa në Telegram.",
     "heroTitle": "Si të publikoni objektet në Domlivo",
     "heroSubtitle": "Shikoni demo dhe mësoni si të merrni kërkesa reale",
-    "heroBody": "Gjithçka është e thjeshtë - shtoni objektin dhe filloni të merrni klientë direkt.",
+    "heroBody": "Shtoni pronën tuaj dhe merrni klientë direkt.",
     "heroCta": "Shiko demo",
     "block2Title": "Si funksionon platforma Domlivo",
-    "block2Body": "Regjistroheni, shtoni objektet dhe merrni kërkesa nga klientët direkt në Telegram. Gjithçka është e thjeshtë dhe pa ndërmjetës.",
+    "block2Body": "Regjistroheni, shtoni pronat dhe merrni kërkesat e klientëve direkt në Telegram, pa ndërmjetës.",
     "step1": "Regjistrimi",
     "step2": "Shtimi i objekteve",
     "step3": "Merrni kërkesa",
@@ -864,7 +864,7 @@
     "metaTitle": "Regjistrohu si agjent",
     "metaDescription": "Dërgo një kërkesë regjistrimi për të listuar në Domlivo dhe për të marrë kërkesa nga klientët.",
     "heroTitle": "Regjistrohuni dhe filloni të merrni kërkesa reale",
-    "heroSubtitle": "Platforma Domlivo ju sjell klientë — ju punoni direkt, pa komision",
+    "heroSubtitle": "Domlivo ju sjell klientë dhe ju punoni me ta direkt, pa komision",
     "blockLeftTitle": "Tarifa dhe kushtet",
     "benefit1": "7 ditë falas",
     "benefit2": "80€/muaj",
@@ -1103,7 +1103,7 @@
     "metaTitle": "Kërkim pronash me AI — DomLivo",
     "metaDescription": "Përshkruani me fjalët tuaja çfarë kërkoni dhe asistenti gjen pronat e përshtatshme në Shqipëri.",
     "title": "Kërkim me AI",
-    "subtitle": "Përshkruani çfarë kërkoni — asistenti zgjedh nga pronat tona dhe i shfaq këtu.",
+    "subtitle": "Përshkruani çfarë kërkoni dhe asistenti zgjedh pronat që përputhen dhe i shfaq këtu.",
     "goToCatalog": "Shko te katalogu",
     "intro": {
       "title": "Çfarë kërkoni?",
@@ -1175,7 +1175,7 @@
     "questionsHeading": "Pyetjet që kjo faqe u përgjigjet",
     "sources": "Burimet",
     "gapsHeading": "Çfarë mungon",
-    "gapsIntro": "Boshllëqe që i dimë. Ta thuash hapur është ajo që e bën pjesën tjetër të besueshme.",
+    "gapsIntro": "Boshllëqe që i dimë: pyetje për të cilat ende nuk kemi të dhëna të besueshme.",
     "askHeading": "Pyet për rastin tënd",
     "askIntro": "Asistenti punon mbi të njëjtat të dhëna dhe tregon burimin e çdo shifre.",
     "askCta": "Pyet asistentin",
