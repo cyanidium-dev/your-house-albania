@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PartnerLandingView } from "@/components/partnerLandings/PartnerLandingView";
 import { ListingContactBar } from "@/components/catalog/ListingContactBar";
+import { fetchAgentMessengerContacts } from "@/lib/sanity/queries/agent";
+import { agentTelegramUrl, agentWhatsAppDigits } from "@/lib/contacts/messengers";
 import { loadPartnerLanding } from "@/lib/partnerLandings/load";
-import { PARTNER_LANDING_MIN_LISTINGS, PARTNER_LANDINGS, PARTNER_NAME, partnerLandingPathAfterLocale } from "@/lib/partnerLandings/config";
+import { PARTNER_LANDING_MIN_LISTINGS, PARTNER_LANDINGS, PARTNER_NAME, PARTNER_SLUG, partnerLandingPathAfterLocale } from "@/lib/partnerLandings/config";
 import { percentVsPlace } from "@/lib/partnerLandings/facts";
 import { buildSimplePageMetadata } from "@/lib/seo/simplePageMetadata";
 import { formatMoney } from "@/lib/currency/format";
@@ -59,10 +61,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PartnerLandingPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const data = await loadPartnerLanding(locale, slug);
+  const [data, agent] = await Promise.all([loadPartnerLanding(locale, slug), fetchAgentMessengerContacts(PARTNER_SLUG)]);
   if (!data) notFound();
+  const agentWhatsApp = agentWhatsAppDigits(agent?.phone);
+  const agentTelegram = agentTelegramUrl(agent?.telegramUrl);
   return (
     <>
+      {/* Every flat on this page is the partner's: messenger clicks open the
+          partner's agent and the click lead goes to the partner's group
+          (LeadTracker reads this marker). */}
+      {agent ? (
+        <div
+          hidden
+          data-listing-agent=""
+          data-listing-agent-slug={agent.slug}
+          data-listing-agent-whatsapp={agentWhatsApp ?? undefined}
+          data-listing-agent-telegram={agentTelegram ?? undefined}
+        />
+      ) : null}
       <PartnerLandingView locale={locale} data={data} />
       <ListingContactBar locale={locale} />
     </>

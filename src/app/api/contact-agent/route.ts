@@ -7,6 +7,7 @@ import { formatMinMaxLabel } from '@/lib/notifications/agentContact/formatTelegr
 import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
 import { deliverAgentContactTelegram } from '@/lib/notifications/agentContact/telegramDelivery'
 import { fetchAgentLeadChatId, resolveListingAgent } from '@/lib/notifications/leads/leadRecipients'
+import { PARTNER_NAME, PARTNER_SLUG } from '@/lib/partnerLandings/config'
 import { createLead, lookupLeadProperty, type LeadProperty } from '@/lib/leads/createLead'
 import type { NormalizedAgentContactSubmission } from '@/lib/notifications/agentContact/types'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
@@ -165,6 +166,12 @@ export async function POST(request: Request) {
       }
     }
 
+    // A request sent from a partner landing (/{locale}/partners/<slug>/…) is
+    // about the partner's flats: it goes to the partner's group. Derived from
+    // the page, not from a client field, so it cannot be pointed elsewhere.
+    if (!quoteProperty && new RegExp(`^/[a-z]{2}/partners/${PARTNER_SLUG}(/|$)`).test(safePath)) {
+      quoteAgent = { agentSlug: PARTNER_SLUG, agentName: PARTNER_NAME }
+    }
     normalized = {
       submissionKind: 'quote',
       ...quoteAgent,

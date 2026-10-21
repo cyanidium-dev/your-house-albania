@@ -9,7 +9,8 @@ import {
   resolveTelegramBotToken,
 } from '@/lib/notifications/agentContact/routing'
 import { formatClickLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
-import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { fetchAgentLeadChatId, leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { PARTNER_SLUG } from '@/lib/partnerLandings/config'
 import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
@@ -63,9 +64,13 @@ export async function POST(req: NextRequest) {
     const property = body.propertySlug ? await lookupLeadProperty(body.propertySlug) : null
 
     const botToken = resolveTelegramBotToken()
+    // A click on a partner landing names the partner (only the configured
+    // partner is honoured, so a client cannot route leads to any agency).
+    const partnerChatId =
+      !property && body.agentSlug === PARTNER_SLUG ? await fetchAgentLeadChatId(PARTNER_SLUG) : null
     const chatIds = leadRecipientChatIds({
       generalChatId: resolveAgentContactTelegramRouting().generalChatId,
-      agentChatId: property?.agentLeadChatId,
+      agentChatId: property?.agentLeadChatId ?? partnerChatId,
     })
 
     const telegram = async (leadId: string | null) => {

@@ -12,11 +12,13 @@ export type ClickLeadBody = {
   type: ClickLeadType
   placement: LeadPlacement
   propertySlug?: string
+  /** A partner agency's slug (partner landings); the route honours partner slugs only. */
+  agentSlug?: string
   locale?: string
   context?: LeadContext
 }
 
-const ALLOWED_KEYS = new Set(['type', 'placement', 'propertySlug', 'locale', 'context'])
+const ALLOWED_KEYS = new Set(['type', 'placement', 'propertySlug', 'agentSlug', 'locale', 'context'])
 
 /** Larger than any real context (20 pages × a few hundred bytes), small enough to refuse junk. */
 export const MAX_CLICK_BODY_BYTES = 32_000
@@ -42,6 +44,12 @@ export function parseClickLeadBody(
     if (!propertySlug) return { ok: false, error: 'Invalid property' }
   }
 
+  let agentSlug: string | undefined
+  if (body.agentSlug !== undefined) {
+    agentSlug = cleanSlug(body.agentSlug)
+    if (!agentSlug) return { ok: false, error: 'Invalid agent' }
+  }
+
   let locale: string | undefined
   if (body.locale !== undefined && body.locale !== '') {
     if (typeof body.locale !== 'string' || !(SITE_LOCALES as readonly string[]).includes(body.locale)) {
@@ -62,6 +70,7 @@ export function parseClickLeadBody(
       type: body.type,
       placement: isLeadPlacement(body.placement) ? body.placement : 'page',
       ...(propertySlug ? { propertySlug } : {}),
+      ...(agentSlug && !propertySlug ? { agentSlug } : {}),
       ...(locale ? { locale } : {}),
       ...(context ? { context } : {}),
     },

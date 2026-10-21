@@ -105,10 +105,16 @@ export function LeadTracker() {
         const locale = localeFromPath(path)
         // A repeat is not a second lead, but it still opens the sheet below.
         if (!repeat) {
+          // Off a listing, a page that belongs to one agency (a partner
+          // landing) names it, so the lead reaches that agency's group.
+          const pageAgentSlug = propertySlug
+            ? null
+            : document.querySelector('[data-listing-agent]')?.getAttribute('data-listing-agent-slug') || null
           trackContactClick({
             type,
             placement,
             ...(propertySlug ? { subject: { propertySlug } } : {}),
+            ...(pageAgentSlug ? { agentSlug: pageAgentSlug } : {}),
             locale,
           })
         }

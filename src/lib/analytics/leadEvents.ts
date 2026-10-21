@@ -81,6 +81,8 @@ export type ClickLeadPayload = {
   type: ClickLeadType
   placement: LeadPlacement
   propertySlug?: string
+  /** The agency a page belongs to when the click has no listing (partner landings). */
+  agentSlug?: string
   locale?: string
   context?: LeadContext
 }
@@ -120,6 +122,7 @@ export function trackContactClick(opts: {
   type: ClickLeadType
   placement: LeadPlacement
   subject?: LeadSubject
+  agentSlug?: string
   locale?: string
 }): void {
   track({
@@ -134,6 +137,7 @@ export function trackContactClick(opts: {
     type: opts.type,
     placement: opts.placement,
     ...(opts.subject?.propertySlug ? { propertySlug: opts.subject.propertySlug } : {}),
+    ...(opts.agentSlug && !opts.subject?.propertySlug ? { agentSlug: opts.agentSlug } : {}),
     ...(opts.locale ? { locale: opts.locale } : {}),
     ...(context ? { context } : {}),
   })
