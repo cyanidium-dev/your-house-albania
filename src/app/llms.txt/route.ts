@@ -69,6 +69,7 @@ One page per place where the partner agency Cactus Real Estate lists enough flat
 - [Albania or Montenegro](${u('/en/guides/albania-vs-montenegro')}), [Albania or Croatia](${u('/en/guides/albania-vs-croatia')}), [Albania or Greece](${u('/en/guides/albania-vs-greece')}): country comparisons for buyers
 - [Blog](${u('/en/blog')}): legal steps, documents, taxes, rental income, district choice, market outlook
 - [Immobilien in Albanien kaufen](${u('/de/albanien-immobilien')}): the German market hub, in German only: prices by city from the index, flats by the sea, the five German guides, FAQ on who may buy, costs, process, areas, prices and financing
+- [Çmimet e referencës 2026](${u('/sq/cmimet-e-references')}): the official state reference prices per m² for flats (VKM 132/2018, Tirana zones per VKM 457/2023; Durrës 67,500 ALL/m²), the unapproved 2025 draft map, and a calculator for the reference value, the 15% capital-gains tax, the 5% revaluation of 2026 and the annual building tax, in Albanian only
 - [Knowledge base](${u('/en/knowledge')}): one question per page, answered with a figure, a date and its sources (laws by number and article, ASHK and notary tariffs, tax treaties, the price index), plus what is still unverified
 
 ## About

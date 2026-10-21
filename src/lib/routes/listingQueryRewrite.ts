@@ -28,6 +28,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "ai-search",
   // The German market hub, `/de/albanien-immobilien` (lib/germanHub).
   "albanien-immobilien",
+  // The Albanian reference-price page, `/sq/cmimet-e-references` (lib/referencePrices).
+  "cmimet-e-references",
   "appartment",
   "blog",
   "catalog",

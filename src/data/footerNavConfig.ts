@@ -77,4 +77,5 @@ export const FOOTER_MARKET_GUIDE: Readonly<Record<string, `/${string}`>> = {
  */
 export const FOOTER_MARKET_HUB: Readonly<Record<string, { href: `/${string}`; labelKey: string }>> = {
   de: { href: "/albanien-immobilien", labelKey: "germanHub" },
+  sq: { href: "/cmimet-e-references", labelKey: "referencePrices" },
 };
