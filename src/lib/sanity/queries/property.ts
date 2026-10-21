@@ -94,7 +94,8 @@ export async function fetchPropertyBySlug(slug: string): Promise<unknown | null>
       "slug": slug.current,
       noPublicLink,
       phone,
-      telegramUrl
+      telegramUrl,
+      "ownLeads": defined(telegramLeadChatId)
     },
     gallery[] {
       asset-> { _id, url, metadata },

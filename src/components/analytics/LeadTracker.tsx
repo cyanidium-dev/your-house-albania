@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { whatsAppTextOf, withWhatsAppText } from '@/lib/contacts/messengerLinks'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 import {
@@ -38,6 +39,21 @@ const CLICK_DEDUPE_MS = 2000
  * is not counted again. Modifier clicks, middle clicks and links marked
  * `data-messenger-direct` go straight to the app as before.
  */
+/**
+ * The listing agent's chat for a messenger click, from the marker the listing
+ * page renders (`data-listing-agent-*`), or `null` off such a page. WhatsApp
+ * keeps the message the clicked link carried.
+ */
+function listingAgentHref(key: 'whatsapp' | 'telegram', href: string): string | null {
+  const marker = document.querySelector('[data-listing-agent]')
+  if (!marker) return null
+  if (key === 'telegram') return marker.getAttribute('data-listing-agent-telegram') || null
+  const digits = marker.getAttribute('data-listing-agent-whatsapp')
+  if (!digits) return null
+  const text = whatsAppTextOf(href)
+  return text ? withWhatsAppText(`https://wa.me/${digits}`, text, digits) : `https://wa.me/${digits}`
+}
+
 export function LeadTracker() {
   const pathname = usePathname()
   const [sheet, setSheet] = useState<MessengerSheetRequest | null>(null)
@@ -108,15 +124,22 @@ export function LeadTracker() {
           !anchor.closest('[data-messenger-direct]')
         ) {
           event.preventDefault()
+          const messenger = type === 'click_whatsapp' ? 'whatsapp' : 'telegram'
+          const rawHref = anchor.getAttribute('href') ?? ''
+          const isAgentLink = anchor.closest('[data-messenger-agent]') !== null
+          // On a listing whose agency answers its own chats, any other
+          // messenger link on the page (a form row, the footer) opens the
+          // agent too: the lead is theirs, so is the conversation.
+          const agentHref = isAgentLink ? null : listingAgentHref(messenger, rawHref)
           setSheet({
             id: now,
-            key: type === 'click_whatsapp' ? 'whatsapp' : 'telegram',
-            href: anchor.getAttribute('href') ?? '',
+            key: messenger,
+            href: agentHref ?? rawHref,
             locale: locale || 'en',
             placement,
             propertySlug: propertySlug ?? null,
             plain: anchor.closest('[data-messenger-plain]') !== null,
-            agent: anchor.closest('[data-messenger-agent]') !== null,
+            agent: isAgentLink || agentHref !== null,
           })
         }
       } catch {
