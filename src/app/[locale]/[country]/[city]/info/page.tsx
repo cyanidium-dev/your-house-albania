@@ -1,4 +1,5 @@
 import { KnowledgeLinksSection } from "@/components/knowledge/KnowledgeLinks";
+import { SeoLabLinksSection } from "@/components/seoLab/SeoLabLinks";
 import { KNOWLEDGE_LINKS_BY_CITY } from "@/lib/knowledge/links";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -127,6 +128,7 @@ export default async function CityInfoLandingPage({ params }: Props) {
       ) : null}
       <CityLandingPageBody locale={locale} citySlug={citySlug} />
       <KnowledgeLinksSection locale={locale} slugs={KNOWLEDGE_LINKS_BY_CITY[citySlug] ?? []} />
+      <SeoLabLinksSection locale={locale} path={`/${locale}/${countrySlug}/${citySlug}/info`} />
     </>
   );
 }

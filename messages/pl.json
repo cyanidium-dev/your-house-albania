@@ -1150,6 +1150,9 @@
     "retry": "Spróbuj ponownie",
     "newChat": "Nowy czat"
   },
+  "SeoLab": {
+    "linksHeading": "Oferty i ceny w tym temacie"
+  },
   "Knowledge": {
     "title": "Baza wiedzy",
     "breadcrumbHome": "Strona główna",

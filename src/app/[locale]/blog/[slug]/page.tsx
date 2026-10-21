@@ -42,6 +42,7 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { formatBlogDate } from "@/lib/date/formatLocale";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { SeoLabLinks } from "@/components/seoLab/SeoLabLinks";
 
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
@@ -411,6 +412,7 @@ export default async function Post({ params }: Props) {
                 pageUrl={`${getSiteBaseUrl()}/${locale}/blog/${detail.slug}`}
               />
               <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
+              <SeoLabLinks locale={locale} path={`/${locale}/blog/${detail.slug}`} className="mb-10" />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} postSlug={detail.slug} />
               <BlogFaq faq={detail.faq} locale={locale} />
               <BlogSources sources={detail.sources} locale={locale} />

@@ -1150,6 +1150,9 @@
     "retry": "Riprova",
     "newChat": "Nuova chat"
   },
+  "SeoLab": {
+    "linksHeading": "Annunci e prezzi su questo tema"
+  },
   "Knowledge": {
     "title": "Base di conoscenza",
     "breadcrumbHome": "Home",
