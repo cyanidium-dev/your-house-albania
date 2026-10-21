@@ -1039,6 +1039,9 @@
       "catalogDescription": "Të gjitha pronat në shitje në Shqipëri: apartamente, shtëpi, vila dhe tokë. Filtro sipas qytetit, çmimit dhe numrit të dhomave.",
       "typeTitle": "{type} në shitje në Shqipëri",
       "typeDescription": "{type} në shitje në Shqipëri: çmime aktuale, foto dhe vendndodhje. Drejtpërdrejt nga pronarët dhe agjencitë e besuara, pa komision.",
+      "typeTitleFrom": "{type} në shitje në Shqipëri nga {from} €",
+      "typeDescriptionMedian": "{type} në shitje në Shqipëri: {count} njoftime nga {from} €, mesatarja {median} €/m². Çmimi, fotot dhe lagjja e secilit; pyesni në WhatsApp ose Telegram.",
+      "typeDescriptionCount": "{type} në shitje në Shqipëri: {count} njoftime nga {from} €. Çmimi, fotot dhe vendndodhja e secilit; pyesni në WhatsApp ose Telegram.",
       "cityTypeTitle": "{type} në shitje në {city}",
       "cityTypeDescription": "{type} në shitje në {city}: çmime aktuale, foto dhe vendndodhje. Drejtpërdrejt nga pronarët dhe agjencitë e besuara, pa komision.",
       "types": {

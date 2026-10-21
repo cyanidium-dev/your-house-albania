@@ -1039,6 +1039,9 @@
       "catalogDescription": "Wszystkie nieruchomości na sprzedaż w Albanii: mieszkania, domy, wille i działki. Filtruj według miasta, ceny, metrażu i liczby pokoi.",
       "typeTitle": "{type} w Albanii na sprzedaż",
       "typeDescription": "{type} na sprzedaż w Albanii: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
+      "typeTitleFrom": "{type} w Albanii na sprzedaż od {from} €",
+      "typeDescriptionMedian": "{type} na sprzedaż w Albanii: {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}} od {from} €, mediana {median} €/m². Cena, zdjęcia i dzielnica każdej; zapytaj na WhatsApp lub Telegramie.",
+      "typeDescriptionCount": "{type} na sprzedaż w Albanii: {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}} od {from} €. Cena, zdjęcia i lokalizacja każdej; zapytaj na WhatsApp lub Telegramie.",
       "cityTypeTitle": "{type} na sprzedaż — {city}, Albania",
       "cityTypeDescription": "{type} na sprzedaż - {city}, Albania: aktualne ceny, zdjęcia i lokalizacje. Bezpośrednio od właścicieli i zaufanych agencji, bez prowizji.",
       "types": {

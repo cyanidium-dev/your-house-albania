@@ -1040,6 +1040,9 @@
       "catalogDescription": "Alle Immobilien zum Verkauf in Albanien: Wohnungen, Häuser, Villen und Grundstücke. Filtern nach Stadt, Preis, Fläche und Anzahl der Schlafzimmer.",
       "typeTitle": "{type} in Albanien kaufen",
       "typeDescription": "{type} zum Verkauf in Albanien mit aktuellen Preisen, Fotos und Lagen. Direkt von Eigentümern und geprüften Maklern - provisionsfrei.",
+      "typeTitleFrom": "{type} in Albanien kaufen ab {from} €",
+      "typeDescriptionMedian": "{type} zum Verkauf in Albanien: {count} Angebote ab {from} €, Median {median} €/m². Preis, Fotos und Stadtteil jedes Angebots; Fragen per WhatsApp oder Telegram.",
+      "typeDescriptionCount": "{type} zum Verkauf in Albanien: {count} Angebote ab {from} €. Preis, Fotos und Lage jedes Angebots; Fragen per WhatsApp oder Telegram.",
       "cityTypeTitle": "{type} kaufen in {city}, Albanien",
       "cityTypeDescription": "{type} zum Verkauf in {city}, Albanien: aktuelle Preise, Fotos und Lagen. Direkt von Eigentümern und geprüften Maklern - provisionsfrei.",
       "types": {
