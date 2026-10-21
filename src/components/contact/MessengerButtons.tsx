@@ -21,7 +21,10 @@ const focusRing =
 const base = `items-center justify-center rounded-full border border-dark/10 text-dark transition-colors duration-300 hover:border-primary hover:text-primary dark:border-white/15 dark:text-white dark:hover:text-primary ${focusRing}`
 
 const variantClass = {
-  pill: brandButtonClass('secondary', 'flex-1 min-w-0', 'md'),
+  // Two pills share a phone-width card: the 24px side padding of `md` left
+  // "Whats..." / "Teleg..." on the contacts page at 375-390px (CRO audit
+  // 2026-10-21), so the padding is smaller until `sm`.
+  pill: brandButtonClass('secondary', 'flex-1 min-w-0 px-3 sm:px-6', 'md'),
   icon: `flex h-11 w-11 shrink-0 ${base}`,
 } as const
 
