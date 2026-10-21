@@ -30,7 +30,7 @@ export default function HeaderFavoritesLink({
     >
       <Icon icon={'ph:heart'} width={24} height={24} aria-hidden className="h-6 w-6" />
       {favorites.length > 0 && (
-        <span className="absolute top-1 right-0.5 min-w-[16px] h-[16px] md:min-w-[18px] md:h-[18px] px-0.5 md:px-1 flex items-center justify-center rounded-full bg-primary text-white text-[10px] md:text-[11px] font-semibold">
+        <span className="absolute top-1 -right-2.5 md:right-0.5 min-w-[16px] h-[16px] md:min-w-[18px] md:h-[18px] px-0.5 md:px-1 flex items-center justify-center rounded-full bg-primary text-white text-[10px] md:text-[11px] font-semibold">
           {favorites.length > 99 ? '99+' : favorites.length}
         </span>
       )}

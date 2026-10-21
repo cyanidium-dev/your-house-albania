@@ -75,17 +75,19 @@ export function FavoriteButton({ slug, name, variant = "overlay", size = "defaul
     // `relative` gives the zone its anchor; an `absolute` from the caller wins.
     "tap-zone relative rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40";
 
+  // Photo controls share one size per card (see PropertyCardGallery): 32px on
+  // compact cards, 40px on large ones, the same solid ground as the expand button.
   const overlayStyles =
     size === "compact"
-      ? "p-1.5 bg-white/90 dark:bg-dark/90 shadow-sm hover:bg-primary/10 dark:hover:bg-white/10"
-      : "p-2.5 bg-white/90 dark:bg-dark/90 shadow-sm hover:bg-primary/10 dark:hover:bg-white/10";
+      ? "size-8 bg-white/90 dark:bg-dark/80 shadow-sm backdrop-blur-sm hover:bg-white dark:hover:bg-dark"
+      : "size-10 bg-white/90 dark:bg-dark/80 shadow-sm backdrop-blur-sm hover:bg-white dark:hover:bg-dark";
 
   const inlineStyles =
     size === "compact"
       ? "p-1.5 border border-dark/10 dark:border-white/20 hover:border-primary/30 hover:bg-primary/10"
       : "p-2 border border-dark/10 dark:border-white/20 hover:border-primary/30 hover:bg-primary/10";
 
-  const iconSize = size === "compact" ? 16 : 24;
+  const iconSize = variant === "overlay" ? (size === "compact" ? 16 : 20) : size === "compact" ? 16 : 24;
 
   return (
     <>
@@ -98,7 +100,7 @@ export function FavoriteButton({ slug, name, variant = "overlay", size = "defaul
         base,
         variant === "overlay" ? overlayStyles : inlineStyles,
         active && "text-primary",
-        !active && "text-dark/60 dark:text-white/60 hover:text-primary",
+        !active && (variant === "overlay" ? "text-dark/75 dark:text-white/85 hover:text-primary" : "text-dark/60 dark:text-white/60 hover:text-primary"),
         className
       )}
     >

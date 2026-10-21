@@ -86,7 +86,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                   padding on top of the gutter and sat 7 to 27px off the grid
                   (QA 2026-10-11). */}
               <div className={`${CONTAINER} h-full min-w-0 pt-[max(0.5rem,env(safe-area-inset-top))] md:pt-0`}>
-                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 px-2 md:py-2 md:px-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark bg-white/[0.97] dark:bg-dark/[0.97] backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
+                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 pl-4 pr-1.5 md:py-2 md:px-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark bg-white/[0.97] dark:bg-dark/[0.97] backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
                     {/* The logo never shrinks: the row's spare width goes to
                         the nav (lg+) and, below that, stays empty. `max-w-[45%]`
@@ -148,8 +148,10 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                     {/* Every control is a 44px hit area with its old-size
                         visual inside. Language, currency and theme share one
                         pill (HeaderPreferences), so a 360px phone holds it
-                        next to the AI, favourites and menu buttons. */}
-                    <div className='flex items-center gap-0 sm:gap-1 xl:gap-1.5 min-w-0 shrink-0 -mr-px'>
+                        next to the AI, favourites and menu buttons. On phones the
+                        burger circle sits 7px from the bar's top, bottom and
+                        right edge, concentric with the rounded end. */}
+                    <div className='flex items-center gap-3 md:gap-1 xl:gap-1.5 min-w-0 shrink-0 md:-mr-px'>
                       <HeaderPreferences overHero={overHero} sticky={sticky} />
                       {aiSearchEnabled ? (
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
