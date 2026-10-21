@@ -407,11 +407,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const findSimilarLabel = tPropertyDetail('soldFindSimilar');
   const priceClass = isSold ? 'line-through decoration-2 text-dark/40 dark:text-white/40' : '';
 
-  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string; noPublicLink?: boolean } | null }).agent ?? null;
+  const propertyAgent = (sanityProperty as { agent?: { name?: string; slug?: string; noPublicLink?: boolean; phone?: string | null; telegramUrl?: string | null } | null }).agent ?? null;
 
-  // Platform messengers next to the inquiry form, Telegram first for ru/uk.
-  // The listing carries no lister contact of its own (the agent projection is
-  // name + slug), so these are always the platform's.
+  // Messengers next to the inquiry form, Telegram first for ru/uk: the
+  // listing agent's own when the agent document has them, else the platform's.
   // WhatsApp opens with a message naming this listing; Telegram opens the bot
   // with the listing in its start payload (see messengerLinks).
   const [tMessengers, tPropertyCard] = await Promise.all([
@@ -437,6 +436,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
         id: (sanityProperty as { _id?: string })._id,
       },
     }),
+    // The listing's agent answers its messengers when the agent document has
+    // the contacts (Cactus: Pavel); every other listing keeps the platform's.
+    propertyAgent,
   );
   const messengerAriaLabels = {
     whatsapp: tQuickContact('channel.whatsapp'),

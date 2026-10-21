@@ -136,14 +136,18 @@ export function finishMessengerHref(input: {
   generalText: string
   botUsername: string | null
   whatsAppNumber: string | null
+  /** The listing agent's own chat: keep its number / profile, never the platform's. */
+  agent?: boolean
 }): string {
   if (input.key === 'whatsapp') {
     const current = whatsAppTextOf(input.href)
     const base = current || input.generalText
     if (!base) return input.href
     const text = input.pageUrl && !/https?:\/\//.test(base) ? `${base}\n${input.pageUrl}` : base
-    return withWhatsAppText(input.href, text, input.whatsAppNumber ?? whatsAppNumberOf(input.href))
+    const number = input.agent ? whatsAppNumberOf(input.href) : input.whatsAppNumber ?? whatsAppNumberOf(input.href)
+    return withWhatsAppText(input.href, text, number)
   }
+  if (input.agent) return input.href
   if (!input.botUsername) return input.href
   const parsed = parseStartPayload(telegramStartOf(input.href))
   if (parsed && parsed.kind !== 'general') return input.href

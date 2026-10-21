@@ -166,6 +166,13 @@ describe('finishMessengerHref (the sheet, at the click)', () => {
     expect(href.startsWith('https://wa.me/355681234567?text=')).toBe(true)
   })
 
+  it("keeps an agent's own chat: their WhatsApp number, their Telegram profile", () => {
+    const wa = finishMessengerHref({ ...base, key: 'whatsapp', href: 'https://wa.me/355694307494', agent: true })
+    expect(wa.startsWith('https://wa.me/355694307494?text=')).toBe(true)
+    const tg = finishMessengerHref({ ...base, key: 'telegram', href: 'https://t.me/domlivo_paul', agent: true })
+    expect(tg).toBe('https://t.me/domlivo_paul')
+  })
+
   it('keeps a listing message as the server wrote it', () => {
     const server =
       'https://wa.me/355681234567?text=' + encodeURIComponent('Mi interessa X: https://www.domlivo.com/it/property/x')

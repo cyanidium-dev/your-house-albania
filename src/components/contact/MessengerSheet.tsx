@@ -30,6 +30,8 @@ export type MessengerSheetRequest = {
   propertySlug: string | null
   /** No general "I'd like to find a home" message (`data-messenger-plain`). */
   plain: boolean
+  /** The listing agent's own chat (`data-messenger-agent`): keep its target. */
+  agent?: boolean
 }
 
 type Props = {
@@ -65,6 +67,7 @@ export default function MessengerSheet({ request, onClose }: Props) {
       generalText: request.plain ? '' : t('whatsappText.general'),
       botUsername: telegramBotUsername(),
       whatsAppNumber: configuredWhatsAppNumber(),
+      agent: request.agent === true,
     })
     // A desktop has WhatsApp Web more often than the app; wa.me there is only a
     // landing page. Needs the number, which a Business short link hides.
