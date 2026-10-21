@@ -232,19 +232,21 @@ export async function ListingDepthSections({
                     : formatMoney(row.price, "EUR", locale)
                   : "";
               return (
-                <li key={row.slug} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3">
-                  <div className="min-w-0">
-                    <Link href={propertyPath(locale, row.slug, row.localizedSlug ?? undefined)} className={`${textLinkClass} font-medium`}>
-                      {title}
-                    </Link>
-                    {facts.length > 0 ? (
-                      <span className="ml-2 text-sm text-dark/60 dark:text-white/60">{facts.join(" · ")}</span>
-                    ) : null}
-                  </div>
-                  <div className="shrink-0 text-sm text-dark/60 dark:text-white/60">
-                    {price ? <span className="font-semibold text-dark dark:text-white">{price}</span> : null}
-                    <span className="ml-3">{t("recent.added", { date: addedOn.format(new Date(row.createdAt)) })}</span>
-                  </div>
+                <li key={row.slug} className="py-3 sm:flex sm:items-baseline sm:justify-between sm:gap-6">
+                  {/* Title, then one muted line of price and facts. Inline facts
+                      after a two-line title broke "115 m²" onto its own line on
+                      phones (owner, 2026-10-21). */}
+                  <Link href={propertyPath(locale, row.slug, row.localizedSlug ?? undefined)} className={`${textLinkClass} block min-w-0 font-medium`}>
+                    {title}
+                  </Link>
+                  <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-sm text-dark/60 dark:text-white/60 sm:mt-0 sm:shrink-0 sm:justify-end">
+                    {price ? <span className="font-semibold text-dark tabular-nums dark:text-white">{price}</span> : null}
+                    {[...facts, t("recent.added", { date: addedOn.format(new Date(row.createdAt)) })].map((part) => (
+                      <span key={part} className="whitespace-nowrap before:mr-2 before:content-['·'] first:before:hidden">
+                        {part}
+                      </span>
+                    ))}
+                  </p>
                 </li>
               );
             })}
