@@ -304,51 +304,51 @@ export async function POST(request: Request) {
       : hasAgent
         ? await fetchAgentLeadChatId(normalized.agentSlug)
         : null
-  const [delivery, lead] = await Promise.all([
-    deliverAgentContactTelegram(normalized, routing, {
-      appendix: formatLeadAnalyticsBlock({
-        ...(context ? { context } : {}),
-        ...(country ? { country } : {}),
-        ...(leadLocale ? { locale: leadLocale } : {}),
-      }),
-      internal: context?.internal === true,
-      agentChatId,
-    }),
-    createLead({
-      type: leadType,
-      placement,
-      ...(leadLocale ? { locale: leadLocale } : {}),
+  // The lead first: its id goes into the status buttons under the message.
+  const lead = await createLead({
+    type: leadType,
+    placement,
+    ...(leadLocale ? { locale: leadLocale } : {}),
+    ...(context ? { context } : {}),
+    ...(country ? { country } : {}),
+    ...(normalized.propertySlug ? { propertySlug: normalized.propertySlug } : {}),
+    ...(listing !== undefined ? { property: listing } : {}),
+    ...(normalized.propertyTitle ? { propertyTitle: normalized.propertyTitle } : {}),
+    ...(hasAgent ? { agentSlug: normalized.agentSlug } : {}),
+    contact: {
+      ...(normalized.customerName !== '—' ? { name: normalized.customerName } : {}),
+      phone: normalized.phone,
+      ...(normalized.email !== '—' ? { email: normalized.email } : {}),
+      ...(normalized.message ? { message: normalized.message } : {}),
+    },
+    ...(normalized.submissionKind === 'quote' && normalized.budgetLabel
+      ? { interest: { budget: normalized.budgetLabel } }
+      : {}),
+    ...(normalized.landingSlug ? { landingSlug: normalized.landingSlug } : {}),
+    ...(normalized.submissionKind === 'general'
+      ? {
+          interest: {
+            location: normalized.location,
+            propertyType: normalized.propertyType,
+            dealType: normalized.dealType,
+            budget: normalized.priceRangeLabel === '—' ? undefined : normalized.priceRangeLabel,
+            area: normalized.areaRangeLabel === '—' ? undefined : normalized.areaRangeLabel,
+          },
+        }
+      : {}),
+    ...(normalized.sourceLabel ? { formLabel: normalized.sourceLabel } : {}),
+    now: new Date(),
+  })
+  const delivery = await deliverAgentContactTelegram(normalized, routing, {
+    appendix: formatLeadAnalyticsBlock({
       ...(context ? { context } : {}),
       ...(country ? { country } : {}),
-      ...(normalized.propertySlug ? { propertySlug: normalized.propertySlug } : {}),
-      ...(listing !== undefined ? { property: listing } : {}),
-      ...(normalized.propertyTitle ? { propertyTitle: normalized.propertyTitle } : {}),
-      ...(hasAgent ? { agentSlug: normalized.agentSlug } : {}),
-      contact: {
-        ...(normalized.customerName !== '—' ? { name: normalized.customerName } : {}),
-        phone: normalized.phone,
-        ...(normalized.email !== '—' ? { email: normalized.email } : {}),
-        ...(normalized.message ? { message: normalized.message } : {}),
-      },
-      ...(normalized.submissionKind === 'quote' && normalized.budgetLabel
-        ? { interest: { budget: normalized.budgetLabel } }
-        : {}),
-      ...(normalized.landingSlug ? { landingSlug: normalized.landingSlug } : {}),
-      ...(normalized.submissionKind === 'general'
-        ? {
-            interest: {
-              location: normalized.location,
-              propertyType: normalized.propertyType,
-              dealType: normalized.dealType,
-              budget: normalized.priceRangeLabel === '—' ? undefined : normalized.priceRangeLabel,
-              area: normalized.areaRangeLabel === '—' ? undefined : normalized.areaRangeLabel,
-            },
-          }
-        : {}),
-      ...(normalized.sourceLabel ? { formLabel: normalized.sourceLabel } : {}),
-      now: new Date(),
+      ...(leadLocale ? { locale: leadLocale } : {}),
     }),
-  ])
+    internal: context?.internal === true,
+    agentChatId,
+    leadId: lead.ok ? lead.id : null,
+  })
 
   if (!lead.ok) {
     // Telegram still went out; the lead is only missing from Studio.

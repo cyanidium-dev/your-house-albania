@@ -1,8 +1,8 @@
 import { withTestPrefix } from '@/lib/notifications/leads/formatLeadTelegram'
 import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { formatAgentContactTelegramMessage } from './formatTelegramAgentContact'
 import { resolveTelegramBotToken } from './routing'
-import { sendTelegramTextMessage } from './telegramBotSend'
 import type {
   AgentContactTelegramRouting,
   NormalizedAgentContactSubmission,
@@ -38,6 +38,8 @@ export async function deliverAgentContactTelegram(
      * set, the lead goes there instead of the general chat.
      */
     agentChatId?: string | null
+    /** The saved lead: the message gets its status buttons (`postLeadToTeam`). */
+    leadId?: string | null
   } = {}
 ): Promise<TelegramSendResult> {
   const botToken = resolveTelegramBotToken()
@@ -71,5 +73,11 @@ export async function deliverAgentContactTelegram(
     textLength: text.length,
   })
 
-  return sendTelegramTextMessage({ botToken, chatId, text })
+  const posted = await postLeadToTeam({
+    chatIds: [chatId],
+    text,
+    leadId: options.leadId,
+    status: options.internal === true ? 'spam' : 'new',
+  })
+  return posted.ok ? { ok: true } : posted
 }

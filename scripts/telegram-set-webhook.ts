@@ -78,7 +78,7 @@ async function main() {
   await call('setWebhook', {
     url,
     secret_token: secret,
-    allowed_updates: ['message'],
+    allowed_updates: ['message', 'callback_query', 'channel_post'],
     drop_pending_updates: true,
   })
   console.log(`Webhook → ${url}`)

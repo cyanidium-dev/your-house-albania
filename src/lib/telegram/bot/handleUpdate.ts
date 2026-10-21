@@ -3,13 +3,14 @@ import 'server-only'
 import { capturePostHogServer } from '@/lib/analytics/posthogServer'
 import { createLead } from '@/lib/leads/createLead'
 import { isLeadPlacement, type LeadPlacement } from '@/lib/leads/types'
-import { resolveAgentContactTelegramRouting, resolveTelegramBotToken } from '@/lib/notifications/agentContact/routing'
-import { sendTelegramTextMessage } from '@/lib/notifications/agentContact/telegramBotSend'
+import { resolveAgentContactTelegramRouting } from '@/lib/notifications/agentContact/routing'
 import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getWriteClient } from '@/lib/sanity/writeClient'
 import { parseStartPayload, type StartPayload } from '@/lib/telegram/startPayload'
 import { botCall, botUserId } from './api'
 import { latestBotLead, loadBotTexts, lookupBotListing, type BotListing } from './data'
+import { handleDealPriceReply, handleLeadCallback, type TelegramCallbackQuery } from './leadStatus'
 import {
   botLocale,
   displayName,
@@ -49,9 +50,18 @@ export type TelegramMessage = {
   voice?: unknown
   animation?: unknown
   reply_to_message?: TelegramMessage
+  /** Channel posts: who wrote it, when the channel signs messages. */
+  author_signature?: string
 }
 
-export type TelegramUpdate = { update_id: number; message?: TelegramMessage }
+export type TelegramUpdate = {
+  update_id: number
+  message?: TelegramMessage
+  /** A press on a status button under a lead (src/lib/telegram/bot/leadStatus.ts). */
+  callback_query?: TelegramCallbackQuery
+  /** A lead channel: the answer to the deal price question. */
+  channel_post?: TelegramMessage
+}
 
 /** Message kinds that take a caption, so a copy can carry the header itself. */
 const CAPTIONED = ['photo', 'video', 'document', 'audio', 'voice', 'animation'] as const
@@ -66,40 +76,19 @@ function teamChats(agentLeadChatId?: string): string[] {
   })
 }
 
-function htmlToPlain(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, '')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-}
-
 /**
  * Posts to the team chat as the public bot, so a manager's reply comes back to
- * the webhook. If that bot is not in the chat yet, the delivery bot posts the
- * same text instead: the lead is never lost, only the reply relay is.
+ * the webhook; with `leadId` the message carries the status buttons. If that
+ * bot is not in the chat yet, the delivery bot posts the same text instead:
+ * the lead is never lost, only the reply relay and the buttons are.
  */
-async function postToTeam(token: string, chatIds: string[], html: string): Promise<boolean> {
+async function postToTeam(chatIds: string[], html: string, leadId?: string | null): Promise<boolean> {
   if (chatIds.length === 0) {
     console.error('[telegram-bot] no team chat configured (TELEGRAM_GENERAL_CHAT_ID)')
     return false
   }
-  const results = await Promise.all(
-    chatIds.map(async (chatId) => {
-      const sent = await botCall(token, 'sendMessage', {
-        chat_id: chatId,
-        text: html,
-        parse_mode: 'HTML',
-        link_preview_options: { is_disabled: true },
-      })
-      if (sent.ok) return true
-      const deliveryToken = resolveTelegramBotToken()
-      if (!deliveryToken) return false
-      const fallback = await sendTelegramTextMessage({ botToken: deliveryToken, chatId, text: htmlToPlain(html) })
-      return fallback.ok
-    }),
-  )
-  return results.some(Boolean)
+  const posted = await postLeadToTeam({ chatIds, text: html, parseMode: 'HTML', leadId, viaPublicBot: true })
+  return posted.ok
 }
 
 function contactKeyboard(label: string) {
@@ -214,7 +203,6 @@ async function handleStart(token: string, message: TelegramMessage, user: Telegr
   })
 
   await postToTeam(
-    token,
     teamChats(listing?.agentLeadChatId),
     formatStartForTeam({
       user,
@@ -226,6 +214,7 @@ async function handleStart(token: string, message: TelegramMessage, user: Telegr
         ? { missingProperty: payload.kind === 'property' ? payload.slug : payload.idKey }
         : {}),
     }),
+    lead.ok ? lead.id : null,
   )
 }
 
@@ -309,7 +298,6 @@ async function handleSearchStart(
   })
 
   await postToTeam(
-    token,
     teamChats(),
     formatStartForTeam({
       user,
@@ -318,6 +306,7 @@ async function handleSearchStart(
       placement: 'catalog',
       search: { summary, url: catalogUrl },
     }),
+    lead.ok ? lead.id : null,
   )
 }
 
@@ -349,7 +338,7 @@ async function handleVisitorMessage(token: string, message: TelegramMessage, use
 
   if (message.contact) {
     const phone = message.contact.phone_number.replace(/[^\d+]/g, '').slice(0, 20)
-    await postToTeam(token, chats, `${header}\n\n📱 Номер: ${escapeHtml(phone.startsWith('+') ? phone : `+${phone}`)}`)
+    await postToTeam(chats, `${header}\n\n📱 Номер: ${escapeHtml(phone.startsWith('+') ? phone : `+${phone}`)}`)
     const texts = await loadBotTexts(locale)
     await botCall(token, 'sendMessage', {
       chat_id: message.chat.id,
@@ -360,7 +349,7 @@ async function handleVisitorMessage(token: string, message: TelegramMessage, use
   }
 
   if (typeof message.text === 'string') {
-    await postToTeam(token, chats, `${header}\n\n${escapeHtml(message.text.slice(0, 3500))}`)
+    await postToTeam(chats, `${header}\n\n${escapeHtml(message.text.slice(0, 3500))}`)
   } else {
     const captioned = CAPTIONED.some((k) => message[k] !== undefined)
     for (const chatId of chats) {
@@ -373,7 +362,7 @@ async function handleVisitorMessage(token: string, message: TelegramMessage, use
           caption,
           parse_mode: 'HTML',
         })
-        if (!copied.ok) await postToTeam(token, [chatId], `${header}\n\n(вложение — откройте чат с клиентом)`)
+        if (!copied.ok) await postToTeam([chatId], `${header}\n\n(вложение — откройте чат с клиентом)`)
       } else {
         // Stickers, locations, video notes take no caption: header, then the copy under it.
         const head = await botCall<{ message_id: number }>(token, 'sendMessage', {
@@ -431,6 +420,15 @@ async function handleManagerReply(token: string, message: TelegramMessage) {
 
 /** One webhook update. Never throws: Telegram retries anything but a 200. */
 export async function handleTelegramUpdate(update: TelegramUpdate, token: string): Promise<void> {
+  if (update.callback_query) {
+    await handleLeadCallback(token, update.callback_query)
+    return
+  }
+  if (update.channel_post) {
+    if (update.channel_post.reply_to_message) await handleDealPriceReply(token, update.channel_post)
+    return
+  }
+
   const message = update.message
   const from = message?.from
   if (!message || !from || from.is_bot) return
@@ -452,6 +450,10 @@ export async function handleTelegramUpdate(update: TelegramUpdate, token: string
 
   if (message.chat.type === 'group' || message.chat.type === 'supergroup') {
     const self = botUserId(token)
-    if (self && message.reply_to_message?.from?.id === self) await handleManagerReply(token, message)
+    if (self && message.reply_to_message?.from?.id === self) {
+      // The answer to "price of the deal?" stays in the chat; any other reply goes to the client.
+      if (await handleDealPriceReply(token, message)) return
+      await handleManagerReply(token, message)
+    }
   }
 }
