@@ -1,5 +1,5 @@
 import { withTestPrefix } from '@/lib/notifications/leads/formatLeadTelegram'
-import { leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { leadAudience } from '@/lib/notifications/leads/leadRecipients'
 import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { formatAgentContactTelegramMessage } from './formatTelegramAgentContact'
 import { resolveTelegramBotToken } from './routing'
@@ -38,12 +38,19 @@ export async function deliverAgentContactTelegram(
      * set, the lead goes there instead of the general chat.
      */
     agentChatId?: string | null
+    /** The lead names a listing or a partner agency: unique, not general. */
+    listingBound?: boolean
     /** The saved lead: the message gets its status buttons (`postLeadToTeam`). */
     leadId?: string | null
   } = {}
 ): Promise<TelegramSendResult> {
   const botToken = resolveTelegramBotToken()
-  const [chatId] = leadRecipientChatIds({ generalChatId: routing.generalChatId, agentChatId: options.agentChatId })
+  const { scope, chatIds } = await leadAudience({
+    listingBound: options.listingBound === true,
+    generalChatId: routing.generalChatId,
+    agentChatId: options.agentChatId,
+  })
+  const chatId = chatIds[0]
 
   if (!botToken || !chatId) {
     console.error('[contact-agent] Telegram not configured', {
@@ -74,8 +81,9 @@ export async function deliverAgentContactTelegram(
   })
 
   const posted = await postLeadToTeam({
-    chatIds: [chatId],
+    chatIds,
     text,
+    scope,
     leadId: options.leadId,
     status: options.internal === true ? 'spam' : 'new',
   })

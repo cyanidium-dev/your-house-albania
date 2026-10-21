@@ -9,7 +9,7 @@ import {
   resolveTelegramBotToken,
 } from '@/lib/notifications/agentContact/routing'
 import { formatClickLeadTelegram } from '@/lib/notifications/leads/formatLeadTelegram'
-import { fetchAgentLeadChatId, leadRecipientChatIds } from '@/lib/notifications/leads/leadRecipients'
+import { fetchAgentLeadChatId, leadAudience } from '@/lib/notifications/leads/leadRecipients'
 import { PARTNER_SLUG } from '@/lib/partnerLandings/config'
 import { postLeadToTeam } from '@/lib/notifications/leads/postLeadToTeam'
 import { getSiteBaseUrl } from '@/lib/siteUrl'
@@ -68,7 +68,8 @@ export async function POST(req: NextRequest) {
     // partner is honoured, so a client cannot route leads to any agency).
     const partnerChatId =
       !property && body.agentSlug === PARTNER_SLUG ? await fetchAgentLeadChatId(PARTNER_SLUG) : null
-    const chatIds = leadRecipientChatIds({
+    const { scope, chatIds } = await leadAudience({
+      listingBound: Boolean(body.propertySlug) || partnerChatId !== null,
       generalChatId: resolveAgentContactTelegramRouting().generalChatId,
       agentChatId: property?.agentLeadChatId ?? partnerChatId,
     })
@@ -97,6 +98,7 @@ export async function POST(req: NextRequest) {
       const posted = await postLeadToTeam({
         chatIds,
         text,
+        scope,
         leadId,
         status: body.context?.internal === true ? 'spam' : 'new',
       })
