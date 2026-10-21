@@ -34,6 +34,7 @@ import {
   PRICE_INDEX_NAME,
 } from "@/lib/priceIndex/publish";
 import { cn } from "@/lib/utils";
+import { PriceIndexEmbed, type PriceIndexEmbedItem } from "@/components/priceIndex/PriceIndexEmbed";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -137,6 +138,27 @@ export default async function PricesByCityPage({ params }: Props) {
       }
     : null;
 
+  // Embed code for other sites (CC BY 4.0): the card in a link to the city
+  // page and a caption crediting the index. Plain HTML, never an iframe, so
+  // the credit is a link of the host page itself.
+  const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const month = snapshot ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(snapshot.computedAt)) : "";
+  const embedItems: PriceIndexEmbedItem[] = cities
+    // Reliable samples only (30+ flats): the index never headlines a smaller one.
+    .filter((c) => c.reliable && c.median !== null)
+    .map((c) => {
+      const label = cityName(c, locale);
+      const imageUrl = `${base}/api/price-index/card?city=${c.slug}&locale=${locale}`;
+      const alt = t("embedAlt", { city: label, month });
+      const credit = `<a href="${base}/${locale}/prices">${esc(PRICE_INDEX_NAME)}</a>`;
+      const caption = esc(t("embedCaption", { name: "__NAME__", month })).replace("__NAME__", credit);
+      const snippet =
+        `<figure style="margin:1.5em 0"><a href="${base}/${locale}/${c.country}/${c.slug}/info">` +
+        `<img src="${imageUrl}" alt="${esc(alt)}" width="600" height="315" loading="lazy" style="max-width:100%;height:auto"></a>` +
+        `<figcaption style="font-size:14px">${caption}</figcaption></figure>`;
+      return { slug: c.slug, label, imageUrl, alt, snippet };
+    });
+
   return (
     <main>
       <BreadcrumbJsonLd items={jsonLdItems} baseUrl={base} />
@@ -205,6 +227,22 @@ export default async function PricesByCityPage({ params }: Props) {
             }}
           />
         </>
+      ) : null}
+
+      {embedItems.length > 0 ? (
+        <Section aria-labelledby="embed-heading">
+          <div className={SPLIT}>
+            <div className={SPLIT_ASIDE}>
+              <h2 id="embed-heading" className={SECTION_TITLE}>
+                {t("embedTitle")}
+              </h2>
+              <p className={cn(BODY_TEXT, "mt-4")}>{t("embedLead")}</p>
+            </div>
+            <div className={SPLIT_MAIN}>
+              <PriceIndexEmbed items={embedItems} copyLabel={t("embedCopy")} copiedLabel={t("embedCopied")} />
+            </div>
+          </div>
+        </Section>
       ) : null}
 
       <Section aria-labelledby="how-heading">

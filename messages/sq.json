@@ -507,7 +507,13 @@
       "faq2q": "Cili qytet është më i shtrenjti?",
       "faq2a": "{city}: €{median} për m² çmim mesatar i kërkuar më {date}. Vija e parë e bregdetit dhe Riviera qëndrojnë mbi çdo medianë qyteti.",
       "faq3q": "Sa shpesh përditësohen shifrat?",
-      "faq3a": "Më së shumti një herë në orë, nga njoftimet aktive në Domlivo në atë moment. Çdo tabelë mban datën e llogaritjes; botimet mujore publikohen në blog."
+      "faq3a": "Më së shumti një herë në orë, nga njoftimet aktive në Domlivo në atë moment. Çdo tabelë mban datën e llogaritjes; botimet mujore publikohen në blog.",
+      "embedTitle": "Përdorni këto shifra në faqen tuaj",
+      "embedLead": "Falas me licencën CC BY 4.0: kopjoni kodin më poshtë në artikullin ose blogun tuaj. Karta përditësohet vetë çdo ditë dhe nënshkrimi tregon burimin.",
+      "embedCopy": "Kopjo kodin",
+      "embedCopied": "U kopjua",
+      "embedCaption": "Burimi: {name}, {month}",
+      "embedAlt": "{city}: çmimet e ofertës për m², {month}"
     }
   },
   "Calculators": {

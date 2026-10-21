@@ -506,7 +506,13 @@
       "faq2q": "Które miasto jest najdroższe?",
       "faq2a": "{city}: €{median} za m² mediany ceny ofertowej w dniu {date}. Pierwsza linia brzegowa i Riwiera leżą powyżej każdej mediany miejskiej.",
       "faq3q": "Jak często aktualizowane są liczby?",
-      "faq3a": "Najwyżej raz na godzinę, na podstawie ogłoszeń aktywnych w tym momencie na Domlivo. Każda tabela ma datę obliczenia; wydania miesięczne ukazują się na blogu."
+      "faq3a": "Najwyżej raz na godzinę, na podstawie ogłoszeń aktywnych w tym momencie na Domlivo. Każda tabela ma datę obliczenia; wydania miesięczne ukazują się na blogu.",
+      "embedTitle": "Wykorzystaj te dane na swojej stronie",
+      "embedLead": "Za darmo na licencji CC BY 4.0: skopiuj poniższy kod do artykułu lub bloga. Karta aktualizuje się sama codziennie, a podpis wskazuje źródło.",
+      "embedCopy": "Kopiuj kod",
+      "embedCopied": "Skopiowano",
+      "embedCaption": "Źródło: {name}, {month}",
+      "embedAlt": "{city}: ceny ofertowe za m², {month}"
     }
   },
   "Calculators": {
