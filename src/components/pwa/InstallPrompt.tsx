@@ -2,11 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 import { track } from "@/lib/analytics/track";
-import { propertySlugFromPath } from "@/lib/analytics/attribution";
 import { useConsent } from "@/lib/cookie-consent";
 import { getFavorites } from "@/lib/favorites";
 import { promptInstall, useInstallState, type InstallTrigger } from "@/lib/pwa/installStore";
@@ -16,11 +14,14 @@ import { cn } from "@/lib/utils";
 /**
  * The invitation to install the site as an app.
  *
- * Shown on engagement, never on arrival: after the visitor saves a listing,
- * opens a second listing, or has spent about forty seconds on the site. Those
- * are the visitors for whom an icon on the home screen is worth something; a
- * banner thrown at a cold first paint is the most disliked PWA pattern there
- * is, and it would sit on top of the cookie banner on a first visit.
+ * Shown only after the visitor saves a listing: a visitor keeping a shortlist
+ * is the one for whom an icon on the home screen is worth something. It used
+ * to appear after about forty seconds on the site or on a second listing as
+ * well; in its first two days of PostHog data (19-21.10.2026) every one of
+ * the 19 showings came from the forty-second timer, nobody installed, and in
+ * Clarity it slid over the listing contact bar at 0:38-0:41 of the visits,
+ * the moment a visitor reads the listing and decides whether to write. Those
+ * two triggers are gone (CRO audit, 2026-10-21).
  *
  * - Chromium: a real one-click Install button, from the `beforeinstallprompt`
  *   event the layout holds back (no mini-infobar).
@@ -36,10 +37,6 @@ import { cn } from "@/lib/utils";
 
 const SNOOZE_KEY = "domlivo:pwa-install-snoozed-until";
 const SNOOZE_MS = 30 * 24 * 60 * 60 * 1000;
-const VIEWS_KEY = "domlivo:pwa-property-views";
-const VISIT_START_KEY = "domlivo:pwa-visit-start";
-const PROPERTY_VIEWS_NEEDED = 2;
-const TIME_ON_SITE_MS = 40_000;
 
 function readStorage(kind: "local" | "session", key: string): string | null {
   try {
@@ -66,31 +63,6 @@ function snooze() {
   writeStorage("local", SNOOZE_KEY, String(Date.now() + SNOOZE_MS));
 }
 
-/** Distinct listings opened in this visit, kept across full page loads. */
-function countPropertyView(slug: string): number {
-  let seen: string[] = [];
-  try {
-    const parsed = JSON.parse(readStorage("session", VIEWS_KEY) ?? "[]");
-    if (Array.isArray(parsed)) seen = parsed.filter((s): s is string => typeof s === "string");
-  } catch {
-    seen = [];
-  }
-  if (!seen.includes(slug)) {
-    seen = [...seen, slug].slice(-10);
-    writeStorage("session", VIEWS_KEY, JSON.stringify(seen));
-  }
-  return seen.length;
-}
-
-/** When this visit started, so a reload does not restart the forty seconds. */
-function visitStart(): number {
-  const stored = Number(readStorage("session", VISIT_START_KEY) ?? 0);
-  if (Number.isFinite(stored) && stored > 0) return stored;
-  const now = Date.now();
-  writeStorage("session", VISIT_START_KEY, String(now));
-  return now;
-}
-
 type Mode = "install" | "ios";
 
 function ShareIosIcon({ label }: { label: string }) {
@@ -115,7 +87,6 @@ function ShareIosIcon({ label }: { label: string }) {
 
 export default function InstallPrompt() {
   const t = useTranslations("Pwa");
-  const pathname = usePathname();
   const { promptOpen: consentOpen } = useConsent();
   const { canPrompt, installed, bannerRequest } = useInstallState();
 
@@ -137,16 +108,9 @@ export default function InstallPrompt() {
     setEligible(!isSnoozed() || flag !== null);
   }, []);
 
-  // Trigger: time on site.
+  // `next dev` screenshots (`?pwa-prompt=install|ios`) show it at once.
   useEffect(() => {
-    if (!eligible) return;
-    if (forced !== null) {
-      setTrigger((current) => current ?? "time");
-      return;
-    }
-    const remaining = Math.max(0, TIME_ON_SITE_MS - (Date.now() - visitStart()));
-    const timer = window.setTimeout(() => setTrigger((current) => current ?? "time"), remaining);
-    return () => window.clearTimeout(timer);
+    if (eligible && forced !== null) setTrigger((current) => current ?? "menu");
   }, [eligible, forced]);
 
   // Trigger: a listing saved. The short delay lets the heart's fly animation land.
@@ -168,16 +132,6 @@ export default function InstallPrompt() {
       window.clearTimeout(timer);
     };
   }, [eligible]);
-
-  // Trigger: a second listing opened.
-  useEffect(() => {
-    if (!eligible || !pathname) return;
-    const slug = propertySlugFromPath(pathname);
-    if (!slug) return;
-    if (countPropertyView(slug) >= PROPERTY_VIEWS_NEEDED) {
-      setTrigger((current) => current ?? "property_views");
-    }
-  }, [eligible, pathname]);
 
   // The menu entry asked for the iOS instructions: show them now.
   useEffect(() => {
@@ -217,7 +171,7 @@ export default function InstallPrompt() {
 
   const install = async () => {
     setHidden(true);
-    const outcome = await promptInstall(trigger ?? "time");
+    const outcome = await promptInstall(trigger ?? "favorite");
     // A "no" in the browser's own dialog is as clear as our close button.
     if (outcome === "dismissed") snooze();
   };
