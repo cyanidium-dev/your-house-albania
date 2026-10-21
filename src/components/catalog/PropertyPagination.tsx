@@ -42,10 +42,10 @@ type Props = {
  * their scroll position and decides when to load more. A visitor who lands on
  * `?page=3` from search also gets a link back to the page before.
  *
- * Under them, a quiet row of page numbers (2026-10-21: the filled page pills
- * competed with the button). It shows the ends and the pages around what is
- * on screen; the ellipsis reveals the rest, which stay in the HTML all along,
- * so the index still links every page of the listing (audit M-2).
+ * Under them, an index of every page of the listing (audit M-2), kept in the
+ * HTML for crawlers and screen readers but not drawn: a visible page row
+ * beside "Show more" made visitors choose between two controls (owner,
+ * 2026-10-21).
  * With 24 cards a page Durrës runs past twenty pages, and a next-link chain
  * put its oldest listings twenty clicks from the city page; from any page,
  * every page is now one click away and every listing two. The pages on screen
@@ -79,26 +79,6 @@ export function PropertyPagination({
     return qs ? `${pathname}?${qs}` : pathname;
   };
   const pageIndex = catalogPageIndex(currentPage, totalPages);
-  const [expanded, setExpanded] = React.useState(false);
-
-  // Pages already on screen: the one loaded plus any "Show more" appended.
-  const onScreenEnd = Math.max(currentPage, nextPage - 1);
-  const isOnScreen = (page: number) => page >= currentPage && page <= onScreenEnd;
-  // The quiet row shows the ends and the neighbourhood of what is on screen;
-  // the rest stay in the HTML (crawlers walk every page, audit M-2) and are
-  // revealed by the ellipsis.
-  const lastPage = pageIndex.length;
-  const inWindow = (page: number) =>
-    page === 1 || page === lastPage || (page >= currentPage - 1 && page <= onScreenEnd + 1);
-
-  const QUIET =
-    "inline-flex h-9 min-w-9 items-center justify-center rounded-full px-2 transition-colors duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
-  const MUTED = "text-dark/45 hover:text-dark dark:text-white/45 dark:hover:text-white";
-  // Pages on screen read as text, marked by a small dot, never a filled pill:
-  // the one green surface in this block is the "Show more" button.
-  const ON_SCREEN =
-    "relative font-semibold text-dark dark:text-white after:absolute after:bottom-1 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-primary";
-
   return (
     <nav className="mt-12 flex flex-col items-center gap-3" aria-label={t("pagination")}>
       {hasMore ? (
@@ -131,55 +111,31 @@ export function PropertyPagination({
       <p className="text-sm text-dark/50 dark:text-white/50 tabular-nums">
         {t("shownRange", { from, to, total })}
       </p>
+      {currentPage > 1 ? (
+        <Link
+          href={hrefFor(currentPage - 1)}
+          rel="prev"
+          className="inline-flex items-center gap-1 text-sm text-dark/50 underline-offset-4 hover:text-primary hover:underline dark:text-white/50"
+        >
+          <Icon icon="ph:caret-left" width={14} height={14} />
+          {t("previousPage")}
+        </Link>
+      ) : null}
+      {/* Every page of the listing, for crawlers and screen readers only
+          (audit M-2: each listing two clicks from the place page). On screen
+          the visitor has one control, "Show more" (owner, 2026-10-21: a page
+          row next to the button made people choose between the two). */}
       {pageIndex.length > 0 ? (
-        <ol className="flex max-w-full flex-wrap items-center justify-center gap-x-0.5 gap-y-1 text-sm tabular-nums">
-          {currentPage > 1 ? (
-            <li>
-              <Link href={hrefFor(currentPage - 1)} rel="prev" aria-label={t("previousPage")} className={`${QUIET} ${MUTED}`}>
-                <Icon icon="ph:caret-left" width={16} height={16} />
-              </Link>
+        <ol className="sr-only">
+          {pageIndex.map(({ page, current }) => (
+            <li key={page}>
+              {current ? (
+                <span aria-current="page">{page}</span>
+              ) : (
+                <Link href={hrefFor(page)}>{page}</Link>
+              )}
             </li>
-          ) : null}
-          {pageIndex.map(({ page, current }, i) => {
-            const shown = expanded || inWindow(page);
-            const prev = pageIndex[i - 1]?.page;
-            const gapBefore = !expanded && shown && prev !== undefined && !inWindow(prev);
-            return (
-              <React.Fragment key={page}>
-                {gapBefore ? (
-                  <li>
-                    <button
-                      type="button"
-                      onClick={() => setExpanded(true)}
-                      aria-label={t("allPages")}
-                      aria-expanded={false}
-                      className={`${QUIET} ${MUTED} cursor-pointer`}
-                    >
-                      …
-                    </button>
-                  </li>
-                ) : null}
-                <li className={shown ? undefined : "hidden"}>
-                  {current ? (
-                    <span aria-current="page" className={`${QUIET} ${ON_SCREEN}`}>
-                      {page}
-                    </span>
-                  ) : (
-                    <Link href={hrefFor(page)} className={`${QUIET} ${isOnScreen(page) ? ON_SCREEN : MUTED}`}>
-                      {page}
-                    </Link>
-                  )}
-                </li>
-              </React.Fragment>
-            );
-          })}
-          {hasMore ? (
-            <li>
-              <Link href={hrefFor(nextPage)} aria-label={t("nextPage")} className={`${QUIET} ${MUTED}`}>
-                <Icon icon="ph:caret-right" width={16} height={16} />
-              </Link>
-            </li>
-          ) : null}
+          ))}
         </ol>
       ) : null}
     </nav>

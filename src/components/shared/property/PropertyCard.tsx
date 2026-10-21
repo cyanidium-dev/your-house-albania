@@ -179,13 +179,27 @@ function PropertyCard({
           isList && 'justify-start gap-2 sm:gap-3 flex-wrap'
         )}
       >
-        <div className="min-w-0 flex items-center gap-2">
+        <div className="shrink-0 flex items-center gap-2">
           {formattedPrice && (
             <span className={cn(priceClass, 'whitespace-nowrap')}>
               {formattedPrice}
             </span>
           )}
         </div>
+        {/* The type rides beside the price (owner, 2026-10-21) so the place
+            gets a line of its own; a long type truncates, the price never
+            shrinks. The deal chip takes this spot only if rent ever returns. */}
+        {!showDeal && typeLine ? (
+          <span
+            className={cn(
+              'min-w-0 truncate text-right font-medium text-black/70 dark:text-white/70',
+              isSmall ? 'text-xs' : 'text-sm'
+            )}
+            title={typeLine}
+          >
+            {typeLine}
+          </span>
+        ) : null}
         {showDeal && (
           <span
             className={cn(
@@ -227,14 +241,10 @@ function PropertyCard({
         </p>
       )}
 
-      {/* type and place on one line ("Studio · Plazh, Durrës"); the type
-          used to take a line of its own. Kept (empty) when both are missing so
-          titles line up across one grid row. */}
-      <p className={cn('truncate font-normal', isSmall ? 'text-xs' : 'text-sm')}>
-        {typeLine ? <span className="font-medium text-black/80 dark:text-white/80">{typeLine}</span> : null}
-        {typeLine && displayLocation ? <span aria-hidden className="text-black/30 dark:text-white/30"> · </span> : null}
-        {displayLocation ? <span className="text-black/50 dark:text-white/50">{displayLocation}</span> : null}
-        {!typeLine && !displayLocation ? ' ' : null}
+      {/* place — a full line; kept (empty) when missing so titles line up
+          across one grid row */}
+      <p className={cn('truncate font-normal text-black/50 dark:text-white/50', isSmall ? 'text-xs' : 'text-sm')}>
+        {displayLocation || ' '}
       </p>
 
       {/* property title – min-h reserves 2-line space for even card height */}
