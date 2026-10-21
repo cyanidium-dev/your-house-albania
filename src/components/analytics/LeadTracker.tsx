@@ -116,6 +116,7 @@ export function LeadTracker() {
             placement,
             propertySlug: propertySlug ?? null,
             plain: anchor.closest('[data-messenger-plain]') !== null,
+            agent: anchor.closest('[data-messenger-agent]') !== null,
           })
         }
       } catch {

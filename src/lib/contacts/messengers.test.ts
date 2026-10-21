@@ -64,3 +64,29 @@ describe("nonMessengerLinks", () => {
     ).toEqual([{ platform: "LinkedIn", url: "https://linkedin.com/company/domlivo" }]);
   });
 });
+
+describe("resolveMessengers with the listing agent's contacts", () => {
+  const context = { whatsappText: "Hello, I'm interested in https://www.domlivo.com/en/property/x" };
+
+  it("sends both messengers to the agent and marks them", () => {
+    const links = resolveMessengers(undefined, "en", context, {
+      phone: "+355 69 430 7494",
+      telegramUrl: "https://t.me/domlivo_paul",
+    });
+    const wa = links.find((l) => l.key === "whatsapp")!;
+    const tg = links.find((l) => l.key === "telegram")!;
+    expect(wa.agent).toBe(true);
+    expect(wa.url.startsWith("https://wa.me/355694307494?text=")).toBe(true);
+    expect(tg).toEqual({ key: "telegram", url: "https://t.me/domlivo_paul", agent: true });
+  });
+
+  it("falls back to the platform for a contact the agent lacks", () => {
+    const links = resolveMessengers(undefined, "en", undefined, { phone: null, telegramUrl: "https://t.me/domlivo_paul" });
+    expect(links.find((l) => l.key === "whatsapp")).toEqual({ key: "whatsapp", url: BUSINESS_WHATSAPP_URL });
+  });
+
+  it("ignores contacts that are not a phone or a t.me profile", () => {
+    const links = resolveMessengers(undefined, "en", undefined, { phone: "call us", telegramUrl: "https://example.com/x" });
+    expect(links.every((l) => !l.agent)).toBe(true);
+  });
+});

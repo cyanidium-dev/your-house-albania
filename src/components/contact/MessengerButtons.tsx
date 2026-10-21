@@ -47,6 +47,7 @@ export function MessengerButtons({ messengers, ariaLabels, variant = 'pill', cla
           aria-label={ariaLabels[m.key]}
           title={ariaLabels[m.key]}
           data-messenger={m.key}
+          data-messenger-agent={m.agent ? '' : undefined}
           className={variantClass[variant]}
         >
           <Icon

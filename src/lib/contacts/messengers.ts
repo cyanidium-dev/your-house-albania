@@ -18,7 +18,31 @@ import {
 
 export type MessengerKey = "whatsapp" | "telegram";
 
-export type MessengerLink = { key: MessengerKey; url: string };
+export type MessengerLink = {
+  key: MessengerKey;
+  url: string;
+  /** The listing agent's own chat (not the platform's): the browser must not re-point it. */
+  agent?: boolean;
+};
+
+/**
+ * The agent who answers a listing's messengers directly (owner, 2026-10-22:
+ * Cactus listings go to Pavel). From the agent document: `phone` for WhatsApp,
+ * `telegramUrl` (t.me/username) for Telegram. Either may be missing.
+ */
+export type AgentMessengerContacts = { phone?: string | null; telegramUrl?: string | null };
+
+/** `https://t.me/<username>` from a t.me / telegram.me link, or `null`. */
+export function agentTelegramUrl(raw: string | null | undefined): string | null {
+  const m = /^(?:https?:\/\/)?(?:www\.)?(?:t|telegram)\.me\/([A-Za-z][A-Za-z0-9_]{4,31})\/?$/.exec((raw ?? "").trim());
+  return m ? `https://t.me/${m[1]}` : null;
+}
+
+/** E.164 digits of an agent phone, or `null`. */
+export function agentWhatsAppDigits(raw: string | null | undefined): string | null {
+  const digits = (raw ?? "").replace(/\D/g, "");
+  return digits.length >= 8 && digits.length <= 15 ? digits : null;
+}
 
 /** Display names; brand names are not translated. */
 export const MESSENGER_NAME: Record<MessengerKey, string> = {
@@ -100,9 +124,20 @@ export function resolveMessengers(
   links: SocialLinkInput[] | undefined,
   locale: string,
   context?: MessengerContext,
+  agent?: AgentMessengerContacts | null,
 ): MessengerLink[] {
   const bot = telegramBotUsername();
+  const agentWa = agentWhatsAppDigits(agent?.phone);
+  const agentTg = agentTelegramUrl(agent?.telegramUrl);
   return messengerOrder(locale).map((key) => {
+    // The listing's agent answers directly when the agent document has the
+    // contact: WhatsApp to their number with the ready message, Telegram to
+    // their profile. The click still becomes a lead in the agent's group.
+    if (key === "whatsapp" && agentWa) {
+      const url = `https://wa.me/${agentWa}`;
+      return { key, url: context?.whatsappText ? withWhatsAppText(url, context.whatsappText, agentWa) : url, agent: true };
+    }
+    if (key === "telegram" && agentTg) return { key, url: agentTg, agent: true };
     const url = cmsMessengerUrl(links, key) || BUSINESS_URL[key];
     if (key === "whatsapp" && context?.whatsappText) {
       return { key, url: withWhatsAppText(url, context.whatsappText, configuredWhatsAppNumber()) };
