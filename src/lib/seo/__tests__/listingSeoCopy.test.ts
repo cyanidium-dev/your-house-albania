@@ -45,6 +45,12 @@ vi.mock("@/lib/sanity/queries/district", () => ({
   fetchCityNameForms: (...args: unknown[]) => fetchCityNameForms(...args),
 }));
 
+// No price index by default: the type pages keep their plain copy.
+const fetchPriceIndexRows = vi.fn(async () => null as unknown);
+vi.mock("@/lib/sanity/queries/priceIndex", () => ({
+  fetchPriceIndexRows: () => fetchPriceIndexRows(),
+}));
+
 const { buildTypeListingSeo, buildCityTypeListingSeo, buildCityListingSeo } = await import(
   "../listingSeoCopy"
 );
@@ -58,6 +64,23 @@ beforeEach(() => {
 });
 
 describe("buildTypeListingSeo", () => {
+  it("puts live figures on the SEO lab E03 test types only", async () => {
+    const flat = (price: number, area: number) => ({ type: "apartment", price, area, priceUnit: null });
+    const rows = [
+      ...Array.from({ length: 11 }, (_, i) => flat(60_000 + i * 10_000, 50)),
+      flat(5_000, 8), // an implausible area stays out of every figure
+      { type: "land", price: 20_000, area: 500, priceUnit: null },
+    ];
+    fetchPriceIndexRows.mockImplementationOnce(async () => ({ rows }));
+    await expect(buildTypeListingSeo("apartment", "en")).resolves.toEqual({
+      title: "Apartments for Sale in Albania from €60,000",
+      description:
+        "Apartments for sale in Albania: 11 listings from €60,000, median €2,200/m². Price, photos and district of each one; ask about any of them on WhatsApp or Telegram.",
+    });
+    // Land is in the control group of the experiment: no read, plain copy.
+    await expect(buildTypeListingSeo("land", "en")).resolves.toMatchObject({ title: "Land for Sale in Albania" });
+  });
+
   it("targets the market's own phrasing rather than a translation of the English one", async () => {
     await expect(buildTypeListingSeo("apartment", "en")).resolves.toEqual({
       title: "Apartments for Sale in Albania",

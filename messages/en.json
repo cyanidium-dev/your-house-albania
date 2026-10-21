@@ -1039,6 +1039,9 @@
       "catalogDescription": "Browse every property for sale in Albania: apartments, houses, villas and land. Filter by city, price, area and number of bedrooms.",
       "typeTitle": "{type} for Sale in Albania",
       "typeDescription": "{type} for sale in Albania with current prices, photos and locations. Direct from owners and trusted agencies - no commission.",
+      "typeTitleFrom": "{type} for Sale in Albania from €{from}",
+      "typeDescriptionMedian": "{type} for sale in Albania: {count} listings from €{from}, median €{median}/m². Price, photos and district of each one; ask about any of them on WhatsApp or Telegram.",
+      "typeDescriptionCount": "{type} for sale in Albania: {count} listings from €{from}. Price, photos and location of each one; ask about any of them on WhatsApp or Telegram.",
       "cityTypeTitle": "{type} for Sale in {city}, Albania",
       "cityTypeDescription": "{type} for sale in {city}, Albania: current prices, photos and locations. Direct from owners and trusted agencies - no commission.",
       "types": {

@@ -13,6 +13,8 @@
 
 import { getTranslations } from "next-intl/server";
 import { fetchCityNameForms } from "@/lib/sanity/queries/district";
+import { fetchPriceIndexRows } from "@/lib/sanity/queries/priceIndex";
+import { MIN_PLAUSIBLE_AREA_SQM, median, pricesPerSqm, totalPrices } from "@/lib/catalog/listingPriceSummary";
 
 export type ListingSeoCopy = { title: string; description: string };
 
@@ -107,9 +109,52 @@ export async function buildTypeListingSeo(
   const type = await resolveTypeLabel(typeSlug, locale);
   if (!type) return null;
   const t = await getTranslations({ locale, namespace: "Seo.listing" });
+  const slug = typeSlug.trim().toLowerCase();
+  const figures = SEO_LAB_E03_TEST_TYPES.has(slug) ? await typeFigures(slug, locale) : null;
+  if (figures) {
+    return {
+      title: t("typeTitleFrom", { type, from: figures.from }),
+      description: figures.medianPerSqm
+        ? t("typeDescriptionMedian", { type, count: figures.count, from: figures.from, median: figures.medianPerSqm })
+        : t("typeDescriptionCount", { type, count: figures.count, from: figures.from }),
+    };
+  }
   return {
     title: t("typeTitle", { type }),
     description: t("typeDescription", { type }),
+  };
+}
+
+/**
+ * SEO lab experiment E03 (2026-10-21, review 2026-11-18): the national type
+ * pages for these types carry the live listing count, the lowest asking price
+ * and (flats) the median €/m² in the title and description; the other types
+ * keep the plain copy and are the control. See
+ * reports/domlivo-seo-lab/backlog.md (E03).
+ */
+const SEO_LAB_E03_TEST_TYPES = new Set(["apartment", "house"]);
+
+/** Fewer listings than this and the figures read as noise; keep the plain copy. */
+const MIN_TYPE_LISTINGS = 10;
+
+async function typeFigures(
+  typeSlug: string,
+  locale: string
+): Promise<{ count: number; from: string; medianPerSqm: string | null } | null> {
+  const data = await fetchPriceIndexRows();
+  const rows = (data?.rows ?? []).filter(
+    (r) => r.type === typeSlug && (typeof r.area !== "number" || r.area >= MIN_PLAUSIBLE_AREA_SQM)
+  );
+  const totals = totalPrices(rows);
+  if (rows.length < MIN_TYPE_LISTINGS || totals.length === 0) return null;
+  const nf = new Intl.NumberFormat(locale === "sq" ? "sq-AL" : locale, { maximumFractionDigits: 0 });
+  // A per-m² median across houses mixes a 90 m² cottage with a 400 m² villa
+  // plot; only flats get one.
+  const perSqm = typeSlug === "apartment" ? median(pricesPerSqm(rows)) : null;
+  return {
+    count: rows.length,
+    from: nf.format(Math.min(...totals)),
+    medianPerSqm: perSqm ? nf.format(perSqm) : null,
   };
 }
 

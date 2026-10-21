@@ -1039,6 +1039,9 @@
       "catalogDescription": "Tutti gli immobili in vendita in Albania: appartamenti, case, ville e terreni. Filtra per città, prezzo, superficie e numero di camere.",
       "typeTitle": "{type} in vendita in Albania",
       "typeDescription": "{type} in vendita in Albania: prezzi aggiornati, foto e posizione. Direttamente da proprietari e agenzie affidabili, senza commissioni.",
+      "typeTitleFrom": "{type} in vendita in Albania da {from} €",
+      "typeDescriptionMedian": "{type} in vendita in Albania: {count} annunci da {from} €, mediana {median} €/m². Prezzo, foto e zona di ognuno; chiedi su WhatsApp o Telegram.",
+      "typeDescriptionCount": "{type} in vendita in Albania: {count} annunci da {from} €. Prezzo, foto e posizione di ognuno; chiedi su WhatsApp o Telegram.",
       "cityTypeTitle": "{type} in vendita a {city}, Albania",
       "cityTypeDescription": "{type} in vendita a {city}, Albania: prezzi aggiornati, foto e posizione. Direttamente da proprietari e agenzie affidabili, senza commissioni.",
       "types": {
