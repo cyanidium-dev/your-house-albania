@@ -35,92 +35,44 @@ export function PropertyCardMeta({
   const columns = (showBeds ? 1 : 0) + (showBaths ? 1 : 0) + (showArea ? 1 : 0) + (showPlot ? 1 : 0)
   if (columns === 0) return null
 
-  const iconSize = isList ? 18 : isSmall ? 16 : 20
+  const compact = isSmall || isList
+  const iconSize = compact ? 14 : 16
+  const unit = t('areaUnit')
 
-  const metaItemClass = cn(
-    'flex flex-col font-normal text-black dark:text-white',
-    isList && 'gap-0.5 text-xs',
-    isSmall && !isList && 'gap-0.5 text-xs',
-    // A step down from lg, where large cards sit two to a row beside the map
-    // or four to a row without it, about 320 px wide: "2 Bedrooms" and
-    // "Plot: not specified" were cut to "2 Bedr…" at 16 px.
-    !isSmall && !isList && 'gap-1.5 text-sm mobile:text-base lg:text-sm'
-  )
-  // Large cards wrap a long label onto a second line instead of cutting it.
-  const labelClass = !isSmall && !isList
-    ? 'max-w-full text-center leading-tight [overflow-wrap:anywhere]'
-    : 'truncate max-w-full'
+  // One line of facts with small icons instead of a row of icon-over-label
+  // tiles: on two phone columns the tiles cut "1 Bedroom" to "1 Bedr…" and
+  // took a second line (owner, 2026-10-21). Compact cards show the figures;
+  // the full wording stays in the HTML for screen readers and search engines.
+  const items: { key: string; icon: string; short: string; full: string }[] = []
+  if (showBeds) items.push({ key: 'beds', icon: 'solar:bed-linear', short: String(beds), full: t('bedroomsCount', { count: beds }) })
+  if (showBaths) items.push({ key: 'baths', icon: 'solar:bath-linear', short: String(baths), full: t('bathroomsCount', { count: baths }) })
+  if (showArea) items.push({ key: 'area', icon: 'lineicons:arrow-all-direction', short: `${area} ${unit}`, full: `${area} ${unit}` })
+  if (showPlot) {
+    const full = plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')
+    items.push({ key: 'plot', icon: 'solar:map-linear', short: plotArea ? `${plotArea} ${unit}` : '–', full })
+  }
 
   return (
-    <div
+    <ul
       className={cn(
-        'grid w-full min-w-0',
-        columns === 4 ? 'grid-cols-4' : columns === 3 ? 'grid-cols-3' : columns === 2 ? 'grid-cols-2' : 'grid-cols-1',
+        'flex w-full min-w-0 flex-wrap items-center text-black/80 dark:text-white/80 tabular-nums',
+        compact ? 'gap-x-3 gap-y-1 text-xs' : 'gap-x-5 gap-y-1.5 text-sm',
         isList && 'mt-1 pt-1.5 border-t border-black/5 dark:border-white/10'
       )}
     >
-      {showBeds && (
-          <div
-            className={cn(
-              'flex border-e border-black/10 dark:border-white/20 items-center',
-              isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-              isList && 'gap-0.5 py-0.5 justify-start',
-              metaItemClass
-            )}
-          >
-            <SpriteIcon icon="solar:bed-linear" width={iconSize} height={iconSize} className="shrink-0" />
-            <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
-              {t('bedroomsCount', { count: beds })}
-            </span>
-          </div>
-      )}
-      {showBaths && (
-          <div
-            className={cn(
-              'flex border-e border-black/10 dark:border-white/20 items-center',
-              isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-              isList && 'gap-0.5 py-0.5 justify-start',
-              metaItemClass
-            )}
-          >
-            <SpriteIcon icon="solar:bath-linear" width={iconSize} height={iconSize} className="shrink-0" />
-            <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
-              {t('bathroomsCount', { count: baths })}
-            </span>
-          </div>
-      )}
-      {showArea && (
-        <div
-          className={cn(
-            'flex items-center min-w-0',
-            showPlot && 'border-e border-black/10 dark:border-white/20',
-            isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-            isList && 'gap-0.5 py-0.5 justify-start',
-            metaItemClass
+      {items.map((item) => (
+        <li key={item.key} className="inline-flex min-w-0 items-center gap-1.5 whitespace-nowrap" title={item.full}>
+          <SpriteIcon icon={item.icon} width={iconSize} height={iconSize} className="shrink-0 text-black/45 dark:text-white/45" />
+          {compact ? (
+            <>
+              <span aria-hidden>{item.short}</span>
+              <span className="sr-only">{item.full}</span>
+            </>
+          ) : (
+            <span>{item.full}</span>
           )}
-        >
-          <SpriteIcon icon="lineicons:arrow-all-direction" width={iconSize} height={iconSize} className="shrink-0" />
-          <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
-            {area}{t('areaUnit')}
-          </span>
-        </div>
-      )}
-      {showPlot && (
-        <div
-          className={cn(
-            'flex items-center min-w-0',
-            isSmall && !isList ? 'flex-row gap-1 py-0.5 justify-between' : 'flex-col gap-1.5 py-1 justify-center',
-            isList && 'gap-0.5 py-0.5 justify-start',
-            metaItemClass
-          )}
-          title={plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
-        >
-          <SpriteIcon icon="solar:map-linear" width={iconSize} height={iconSize} className="shrink-0" />
-          <span className={cn(labelClass, isSmall && !isList && 'min-w-0')}>
-            {plotArea ? t('plotArea', { value: plotArea }) : t('plotAreaUnknown')}
-          </span>
-        </div>
-      )}
-    </div>
+        </li>
+      ))}
+    </ul>
   )
 }

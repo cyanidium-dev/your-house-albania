@@ -16,6 +16,7 @@ import { PropertyContactButton } from '@/components/property/PropertyContactModa
 import { PropertyCardGallery } from './PropertyCardGallery'
 import { buildPropertyCardAlt, propertyCardImageSeoName } from '@/lib/property/propertyCardImages'
 import { PropertyCardMeta } from './PropertyCardMeta'
+import { PUBLIC_DEAL_TYPES } from '@/lib/catalog/publicDealTypes'
 
 const MARKET_POSITION_LABEL_KEY: Record<'below' | 'in' | 'above', 'labelBelow' | 'labelIn' | 'labelAbove'> = {
   below: 'labelBelow',
@@ -154,6 +155,10 @@ function PropertyCard({
       ? `${formatMoney(convertFromBaseEur(pricePerSqm, activeCurrency, rates), activeCurrency, locale)} / m²`
       : ''
 
+  // The deal chip only tells something when the site has more than one deal
+  // type. Domlivo sells only, and "Sale" on every card was noise (owner,
+  // 2026-10-21); it comes back by itself if rent returns.
+  const showDeal = !!status && PUBLIC_DEAL_TYPES.length > 1
   const typeLine = propertyType || ''
   const displayLocation = location
 
@@ -181,7 +186,7 @@ function PropertyCard({
             </span>
           )}
         </div>
-        {status && (
+        {showDeal && (
           <span
             className={cn(
               'inline-flex items-center rounded-full font-medium shrink-0',
@@ -222,25 +227,14 @@ function PropertyCard({
         </p>
       )}
 
-      {/* property type — the line is kept (empty) when missing so the title
-          and the rows below line up across the cards of one grid row */}
-      <p
-        className={cn(
-          'font-medium text-black/80 dark:text-white/80 truncate',
-          isSmall ? 'text-xs' : 'text-sm'
-        )}
-      >
-        {typeLine || ' '}
-      </p>
-
-      {/* location — same */}
-      <p
-        className={cn(
-          'font-normal text-black/50 dark:text-white/50 truncate',
-          isSmall ? 'text-xs' : 'text-sm'
-        )}
-      >
-        {displayLocation || ' '}
+      {/* type and place on one line ("Studio · Plazh, Durrës"); the type
+          used to take a line of its own. Kept (empty) when both are missing so
+          titles line up across one grid row. */}
+      <p className={cn('truncate font-normal', isSmall ? 'text-xs' : 'text-sm')}>
+        {typeLine ? <span className="font-medium text-black/80 dark:text-white/80">{typeLine}</span> : null}
+        {typeLine && displayLocation ? <span aria-hidden className="text-black/30 dark:text-white/30"> · </span> : null}
+        {displayLocation ? <span className="text-black/50 dark:text-white/50">{displayLocation}</span> : null}
+        {!typeLine && !displayLocation ? ' ' : null}
       </p>
 
       {/* property title – min-h reserves 2-line space for even card height */}
@@ -362,7 +356,7 @@ function PropertyCard({
                       {formattedPricePerSqm}
                     </span>
                   )}
-                  {status && (
+                  {showDeal && (
                     <span className="inline-flex items-center justify-center rounded-full text-xs px-3 h-7 leading-none border border-primary/80 text-primary bg-primary/5">
                       <span className="min-w-0 truncate whitespace-nowrap">
                         <span className="sm:hidden">{displayDealLabel(status, tDealType, { compact: true })}</span>
