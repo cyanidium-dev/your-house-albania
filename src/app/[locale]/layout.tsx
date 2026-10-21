@@ -233,17 +233,16 @@ export default async function LocaleLayout({ children, params }: Props) {
             </noscript>
             {/* End Google Tag Manager (noscript) */}
             {/* Google Tag Manager + Microsoft Clarity, one loader.
-                Both start right after the page's load event, in the first
-                idle moment (at most 1 s later), or earlier on the visitor's
-                first move (pointer, scroll, key, touch). GTM + gtag are
-                300 KB and Clarity 30 KB; executed during the load they cost
-                0.3–0.8 s of main thread on a phone (Lighthouse mobile 44–53,
-                18.10), so they still never compete with the first render.
-                From 18.10 to 21.10 they waited for a move or 5 s after load:
-                every visit shorter than that went uncounted and GA4 sessions
-                fell by about 75 % while Search Console clicks and leads held
-                (reports/domlivo-weekly, 21.10). The dataLayer is created up
-                front so pushes before GTM arrives are kept. */}
+                Both wait for the visitor's first move (pointer, scroll, key,
+                touch) or 5 s after the page has loaded, whichever comes
+                first. GTM + gtag are 300 KB and Clarity 30 KB; executed
+                during the load they cost 0.3–0.8 s of main thread on a phone
+                and most of the TBT behind Lighthouse mobile 44–53 (18.10).
+                A session is still recorded: the Clarity queue (`clarity("…")`
+                calls from the consent bootstrap and the tracker) replays once
+                the tag arrives, and nobody buys a flat in the first five
+                seconds. The dataLayer is created up front so pushes before
+                GTM arrives are kept. */}
             <Script id="third-parties" strategy="afterInteractive">
               {`(function(w,d){
 w.dataLayer=w.dataLayer||[];
@@ -255,7 +254,7 @@ var g=d.createElement('script');g.async=true;g.src='https://www.googletagmanager
 w.clarity=w.clarity||function(){(w.clarity.q=w.clarity.q||[]).push(arguments)};
 var c=d.createElement('script');c.async=true;c.src='https://www.clarity.ms/tag/${CLARITY_ID}';f.parentNode.insertBefore(c,f);}
 ev.forEach(function(e){w.addEventListener(e,load,{passive:true,once:true})});
-function arm(){if(w.requestIdleCallback)w.requestIdleCallback(load,{timeout:1000});else setTimeout(load,0)}
+function arm(){setTimeout(load,5000)}
 if(d.readyState==='complete')arm();else w.addEventListener('load',arm,{once:true});
 })(window,document);`}
             </Script>

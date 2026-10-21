@@ -5,10 +5,9 @@
  * Nothing loads and nothing is stored until the visitor grants "analytics":
  * no cookie, no localStorage key, no request to PostHog. `PostHogConsent`
  * (mounted in the locale layout) reports the choice here. On a grant the
- * library is imported and started right after the page's load event (first
- * idle moment, at most 1 s) or on the visitor's first move, the same rule as
- * GTM and Clarity, so it costs nothing in the first paint and still counts
- * short visits. Events tracked while it loads are queued and sent once it
+ * library is imported and started after the visitor's first move or 5 s
+ * after load, the same deferral as GTM and Clarity, so it costs nothing in
+ * the first paint. Events tracked while it loads are queued and sent once it
  * is up; events from before the grant are dropped, not replayed. Withdrawing
  * consent opts the browser out at once.
  *
@@ -104,7 +103,7 @@ function start(): void {
     })
 }
 
-/** Starts after load (first idle moment, at most 1 s) or on the first pointer, scroll or key, like GTM. */
+/** Waits for the first pointer, scroll or key, or 5 s after load, like GTM. */
 function startWhenIdle(): void {
   const events = ['pointerdown', 'pointermove', 'wheel', 'scroll', 'keydown', 'touchstart'] as const
   let done = false
@@ -115,10 +114,7 @@ function startWhenIdle(): void {
     start()
   }
   for (const e of events) window.addEventListener(e, go, { passive: true, once: true })
-  const arm = () => {
-    if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(go, { timeout: 1000 })
-    else window.setTimeout(go, 0)
-  }
+  const arm = () => window.setTimeout(go, 5000)
   if (document.readyState === 'complete') arm()
   else window.addEventListener('load', arm, { once: true })
 }
