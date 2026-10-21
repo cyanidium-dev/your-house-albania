@@ -1,4 +1,5 @@
 import { GERMAN_HUB_LAST_MODIFIED, GERMAN_HUB_LOCALE, GERMAN_HUB_PATH } from "@/lib/germanHub/config";
+import { REFERENCE_PRICES_CHECKED_ON, REFERENCE_PRICES_LOCALE, REFERENCE_PRICES_PATH } from "@/lib/referencePrices/data";
 
 /**
  * Indexable pages that exist only in code — no CMS document behind them, so
@@ -31,6 +32,8 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: "prices", lastModified: "2026-10-19" },
   // The German market hub (SEO hypothesis 3, 2026-10-19): German only, see lib/germanHub.
   { path: GERMAN_HUB_PATH, lastModified: GERMAN_HUB_LAST_MODIFIED, locales: [GERMAN_HUB_LOCALE] },
+  // Albanian reference prices with a calculator (SEO hypothesis 5, lab E01): Albanian only.
+  { path: REFERENCE_PRICES_PATH, lastModified: REFERENCE_PRICES_CHECKED_ON, locales: [REFERENCE_PRICES_LOCALE] },
 ];
 
 export type StaticCodePageEntry = {
