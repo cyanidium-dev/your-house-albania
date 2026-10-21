@@ -6,7 +6,7 @@
 export const REFERENCE_PRICES_COPY = {
   metaTitle: "Çmimet e referencës 2026: Durrës, Tiranë, Vlorë, Sarandë",
   metaDescription:
-    "Çmimet e referencës në fuqi për apartamentet: Durrës 67.500 lekë/m², Vlorë 61.800, Sarandë 56.000, Tiranë sipas zonave. Kalkulator për vlerën, tatimin 15% dhe rivlerësimin 5%.",
+    "Në fuqi për apartamentet: Durrës 67.500 lekë/m², Vlorë 61.800, Sarandë 56.000, Tirana sipas zonave. Kalkulator për tatimin 15% dhe rivlerësimin 5%.",
   breadcrumb: "Çmimet e referencës",
   h1: "Çmimet e referencës 2026 për apartamentet",
   lead:
