@@ -506,7 +506,13 @@
       "faq2q": "Which city is the most expensive?",
       "faq2a": "{city}: €{median} per m² median asking price on {date}. Seafront first lines and the Riviera sit above every city median.",
       "faq3q": "How often are the figures updated?",
-      "faq3a": "At most once an hour, from the listings live on Domlivo at that moment. Every table carries the date it was computed; monthly editions are published in the blog."
+      "faq3a": "At most once an hour, from the listings live on Domlivo at that moment. Every table carries the date it was computed; monthly editions are published in the blog.",
+      "embedTitle": "Use these figures on your site",
+      "embedLead": "Free under CC BY 4.0: copy the code below into your article or blog. The card updates itself every day, and the caption credits the source.",
+      "embedCopy": "Copy code",
+      "embedCopied": "Copied",
+      "embedCaption": "Source: {name}, {month}",
+      "embedAlt": "{city}: asking prices per m², {month}"
     }
   },
   "Calculators": {

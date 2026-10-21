@@ -507,7 +507,13 @@
       "faq2q": "Quelle ville est la plus chère ?",
       "faq2a": "{city} : prix affiché médian de {median} € le m² au {date}. Les premières lignes en bord de mer et la Riviera dépassent toutes les médianes des villes.",
       "faq3q": "À quelle fréquence les chiffres sont-ils mis à jour ?",
-      "faq3a": "Au plus une fois par heure, à partir des annonces en ligne sur Domlivo à ce moment-là. Chaque tableau porte sa date de calcul ; des éditions mensuelles paraissent sur le blog."
+      "faq3a": "Au plus une fois par heure, à partir des annonces en ligne sur Domlivo à ce moment-là. Chaque tableau porte sa date de calcul ; des éditions mensuelles paraissent sur le blog.",
+      "embedTitle": "Utilisez ces chiffres sur votre site",
+      "embedLead": "Gratuit sous licence CC BY 4.0 : copiez le code ci-dessous dans votre article ou blog. La carte se met à jour chaque jour et la légende cite la source.",
+      "embedCopy": "Copier le code",
+      "embedCopied": "Copié",
+      "embedCaption": "Source : {name}, {month}",
+      "embedAlt": "{city} : prix demandés au m², {month}"
     }
   },
   "Calculators": {

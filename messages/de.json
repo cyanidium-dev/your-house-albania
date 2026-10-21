@@ -507,7 +507,13 @@
       "faq2q": "Welche Stadt ist am teuersten?",
       "faq2a": "{city}: €{median} pro m² Median-Angebotspreis am {date}. Erste Meereslinie und Riviera liegen über jedem Stadtmedian.",
       "faq3q": "Wie oft werden die Zahlen aktualisiert?",
-      "faq3a": "Höchstens einmal pro Stunde, aus den in diesem Moment aktiven Inseraten auf Domlivo. Jede Tabelle trägt das Datum der Berechnung; monatliche Ausgaben erscheinen im Blog."
+      "faq3a": "Höchstens einmal pro Stunde, aus den in diesem Moment aktiven Inseraten auf Domlivo. Jede Tabelle trägt das Datum der Berechnung; monatliche Ausgaben erscheinen im Blog.",
+      "embedTitle": "Diese Zahlen auf Ihrer Website verwenden",
+      "embedLead": "Kostenlos unter CC BY 4.0: Kopieren Sie den Code unten in Ihren Artikel oder Blog. Die Karte aktualisiert sich täglich selbst, die Bildunterschrift nennt die Quelle.",
+      "embedCopy": "Code kopieren",
+      "embedCopied": "Kopiert",
+      "embedCaption": "Quelle: {name}, {month}",
+      "embedAlt": "{city}: Angebotspreise pro m², {month}"
     }
   },
   "Calculators": {

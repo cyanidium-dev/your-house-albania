@@ -506,7 +506,13 @@
       "faq2q": "Quale città è la più cara?",
       "faq2a": "{city}: €{median} al m² di prezzo richiesto mediano il {date}. Le prime linee sul mare e la Riviera stanno sopra ogni mediana cittadina.",
       "faq3q": "Ogni quanto si aggiornano le cifre?",
-      "faq3a": "Al massimo una volta all'ora, dagli annunci attivi su Domlivo in quel momento. Ogni tabella riporta la data del calcolo; le edizioni mensili escono sul blog."
+      "faq3a": "Al massimo una volta all'ora, dagli annunci attivi su Domlivo in quel momento. Ogni tabella riporta la data del calcolo; le edizioni mensili escono sul blog.",
+      "embedTitle": "Usa questi dati sul tuo sito",
+      "embedLead": "Gratis con licenza CC BY 4.0: copia il codice qui sotto nel tuo articolo o blog. La scheda si aggiorna da sola ogni giorno e la didascalia cita la fonte.",
+      "embedCopy": "Copia il codice",
+      "embedCopied": "Copiato",
+      "embedCaption": "Fonte: {name}, {month}",
+      "embedAlt": "{city}: prezzi richiesti al m², {month}"
     }
   },
   "Calculators": {
