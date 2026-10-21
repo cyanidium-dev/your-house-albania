@@ -141,11 +141,11 @@
     "faq": {
       "badge": "FAQ",
       "title": "Alles über Domlivo Immobilien",
-      "description": "Wir wissen, dass der Kauf, Verkauf oder die Investition in Immobilien überfordernd sein kann. Hier finden Sie häufige Fragen, die Sie durch den Prozess begleiten",
+      "description": "Kurze Antworten auf die Fragen, die Käufer am häufigsten stellen.",
       "q1": "1. Kann ich meine Domlivo Wohnung individuell gestalten?",
       "q2": "2. Wo finde ich Domlivo Immobilien?",
       "q3": "3. Welche Schritte sind für den Kauf nötig?",
-      "answer": "Entdecken Sie eine vielfältige Auswahl an Premium-Immobilien - von luxuriösen Wohnungen bis zu großzügigen Villen, passend zu Ihren Wünschen."
+      "answer": "Wohnungen, Häuser, Villen und Grundstücke zum Verkauf in ganz Albanien. Jedes Angebot nennt den Preis und wer die Immobilie anbietet."
     },
     "blog": {
       "badge": "Blog",
@@ -314,7 +314,7 @@
     "properties": {
       "badge": "Immobilien",
       "title": "Entdecken Sie inspirierend gestaltete Wohnungen.",
-      "description": "Erleben Sie Eleganz und Komfort in unseren exklusiven Luxusvillen, konzipiert für anspruchsvolles Wohnen."
+      "description": "Wohnungen, Häuser, Villen und Grundstücke zum Verkauf in Albanien, bei jedem Angebot mit Preis und Anbieter."
     },
     "blogs": {
       "badge": "Blog",
@@ -353,7 +353,7 @@
   },
   "Districts": {
     "hubTitle": "Stadtteile von {city}",
-    "hubDescription": "Entdecken Sie die Stadtteile von {city} und finden Sie die passende Lage für Ihr neues Zuhause.",
+    "hubDescription": "Vergleichen Sie die Stadtteile von {city} und wählen Sie, wo Sie kaufen.",
     "hubMetaTitle": "Stadtteile von {city} 2026: Preise pro m² und Wohnlagen",
     "hubMetaDescription": "Vergleichen Sie die Stadtteile von {city} nach Quadratmeterpreis und Charakter und sehen Sie die aktuellen Angebote in jeder Lage.",
     "faqTitle": "Häufige Fragen",
@@ -628,7 +628,7 @@
       "showMore": "Weitere Immobilien anzeigen",
       "shownRange": "{from}-{to} von {total}"
     },
-    "heroIntroFallback": "Entdecken Sie unsere Auswahl an Immobilien.",
+    "heroIntroFallback": "Unsere Immobilien im Überblick.",
     "agentTitle": "Immobilien von {name}",
     "agentIntroFallback": "Angebote dieses Maklers",
     "empty": {
@@ -800,7 +800,7 @@
     "metaDescription": "Senden Sie uns eine Anfrage - unser Team meldet sich mit passenden Angeboten für Ihre Wünsche.",
     "heroH1": "Noch nicht die passende Immobilie gefunden?",
     "heroH2": "Senden Sie eine Anfrage - wir stellen eine maßgeschneiderte Auswahl zusammen!",
-    "heroDescription": "Füllen Sie das Formular unten aus und unser Berater kontaktiert Sie mit Angeboten, die zu Ihren Wünschen passen. Schnell, unkompliziert und ohne unnötiges Hin und Her.",
+    "heroDescription": "Füllen Sie das Formular unten aus, und unser Berater meldet sich mit Angeboten, die zu Ihrer Anfrage passen.",
     "heroImageAlt": "Kontakt",
     "managerPhotoAlt": "Unser Berater",
     "managerEmailLabel": "E-Mail",
@@ -854,10 +854,10 @@
     "metaDescription": "Sehen Sie sich die Demo an und erfahren Sie, wie Sie Immobilien auf Domlivo veröffentlichen und Anfragen in Telegram erhalten.",
     "heroTitle": "So veröffentlichen Sie Immobilien auf Domlivo",
     "heroSubtitle": "Sehen Sie sich die Demo an und erfahren Sie, wie Sie echte Anfragen erhalten",
-    "heroBody": "Alles ist einfach - fügen Sie Ihre Immobilie hinzu und erhalten Sie Kunden direkt.",
+    "heroBody": "Fügen Sie Ihre Immobilie hinzu und erhalten Sie Kunden direkt.",
     "heroCta": "Demo ansehen",
     "block2Title": "So funktioniert die Domlivo-Plattform",
-    "block2Body": "Sie registrieren sich, fügen Immobilien hinzu und erhalten Anfragen von Kunden direkt in Telegram. Alles ist einfach und ohne Zwischenhändler.",
+    "block2Body": "Sie registrieren sich, fügen Ihre Immobilien hinzu und erhalten Kundenanfragen direkt in Telegram, ohne Vermittler.",
     "step1": "Registrierung",
     "step2": "Immobilien hinzufügen",
     "step3": "Anfragen erhalten",
@@ -867,7 +867,7 @@
     "metaTitle": "Als Makler registrieren",
     "metaDescription": "Senden Sie eine Registrierungsanfrage, um auf Domlivo zu inserieren und echte Kundenanfragen zu erhalten.",
     "heroTitle": "Registrieren Sie sich und erhalten Sie echte Anfragen",
-    "heroSubtitle": "Domlivo bringt Ihnen Kunden – Sie arbeiten direkt, provisionsfrei",
+    "heroSubtitle": "Domlivo bringt Ihnen Kunden, und Sie arbeiten direkt mit ihnen, provisionsfrei",
     "blockLeftTitle": "Preise und Bedingungen",
     "benefit1": "7 Tage kostenlos",
     "benefit2": "80 €/Monat",
@@ -1110,7 +1110,7 @@
     "metaTitle": "KI-Immobiliensuche — DomLivo",
     "metaDescription": "Beschreiben Sie in Ihren eigenen Worten, was Sie suchen, und der Assistent findet passende Immobilien in Albanien.",
     "title": "KI-Suche",
-    "subtitle": "Beschreiben Sie, was Sie suchen — der Assistent wählt aus unseren Angeboten aus und zeigt sie direkt hier.",
+    "subtitle": "Beschreiben Sie, was Sie suchen, und der Assistent wählt passende Angebote aus und zeigt sie direkt hier.",
     "goToCatalog": "Zum Katalog",
     "intro": {
       "title": "Was suchen Sie?",
@@ -1185,7 +1185,7 @@
     "questionsHeading": "Welche Fragen diese Seite beantwortet",
     "sources": "Quellen",
     "gapsHeading": "Was fehlt",
-    "gapsIntro": "Lücken, die wir kennen. Sie offen zu nennen macht den Rest vertrauenswürdig.",
+    "gapsIntro": "Bekannte Lücken: Fragen, zu denen wir noch keine verlässlichen Daten haben.",
     "askHeading": "Fragen Sie zu Ihrem Fall",
     "askIntro": "Der Assistent arbeitet mit denselben Daten und zeigt die Quelle jeder Zahl.",
     "askCta": "Assistenten fragen",

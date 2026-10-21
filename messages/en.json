@@ -140,11 +140,11 @@
     "faq": {
       "badge": "FAQs",
       "title": "Everything about Domlivo homes",
-      "description": "We know that buying, selling, or investing in real estate can be overwhelming. Here are some frequently asked questions to help guide you through the process",
+      "description": "Short answers to the questions buyers ask most often.",
       "q1": "1. Can I personalize my Domlivo home?",
       "q2": "2. Where can I find Domlivo homes?",
       "q3": "3. What steps to buy a Domlivo?",
-      "answer": "Discover a diverse range of premium properties, from luxurious apartments to spacious villas, tailored to your needs."
+      "answer": "Apartments, houses, villas and land for sale across Albania. Every listing shows the asking price and who is offering the property."
     },
     "blog": {
       "badge": "Blog",
@@ -313,7 +313,7 @@
     "properties": {
       "badge": "Properties",
       "title": "Discover inspiring designed homes.",
-      "description": "Experience elegance and comfort with our exclusive luxury villas, designed for sophisticated living."
+      "description": "Apartments, houses, villas and land for sale in Albania, with the asking price and the seller named on every listing."
     },
     "blogs": {
       "badge": "Blog",
@@ -352,7 +352,7 @@
   },
   "Districts": {
     "hubTitle": "Districts of {city}",
-    "hubDescription": "Explore the districts of {city} and choose the right area for your next home.",
+    "hubDescription": "Compare the districts of {city} and pick the area that suits you.",
     "hubMetaTitle": "{city} districts 2026: where to buy and prices per m²",
     "hubMetaDescription": "Which district of {city} to buy in: new-build and resale prices per m², the state reference price and a one-line verdict for each area, with listings for sale.",
     "faqTitle": "Frequently asked questions",
@@ -799,7 +799,7 @@
     "metaDescription": "Send a request and our team will get back to you with options that match your needs.",
     "heroH1": "Haven't found the right home?",
     "heroH2": "Leave a request - we'll offer a tailored selection!",
-    "heroDescription": "Fill in the form below and our manager will contact you with options that match your needs. Fast, straightforward, and without unnecessary back-and-forth.",
+    "heroDescription": "Fill in the form below and our manager will get back to you with options that match your request.",
     "heroImageAlt": "Contact us",
     "managerPhotoAlt": "Our manager",
     "managerEmailLabel": "Email",
@@ -853,10 +853,10 @@
     "metaDescription": "Watch the demo and learn how to publish properties on Domlivo and receive enquiries in Telegram.",
     "heroTitle": "How to publish properties on Domlivo",
     "heroSubtitle": "Watch the demo and learn how to get real enquiries",
-    "heroBody": "Everything is simple - add your property and start receiving clients directly.",
+    "heroBody": "Add your property and receive clients directly.",
     "heroCta": "Watch demo",
     "block2Title": "How the Domlivo platform works",
-    "block2Body": "You register, add properties, and receive enquiries from clients directly in Telegram. Everything is simple and without intermediaries.",
+    "block2Body": "You register, add your properties and get client enquiries straight to Telegram, with no intermediaries.",
     "step1": "Registration",
     "step2": "Adding properties",
     "step3": "Receiving enquiries",
@@ -866,7 +866,7 @@
     "metaTitle": "Register as a realtor",
     "metaDescription": "Submit a registration request to list on Domlivo and receive real client enquiries.",
     "heroTitle": "Register and start receiving real enquiries",
-    "heroSubtitle": "Domlivo brings you clients — you work directly, with no commission",
+    "heroSubtitle": "Domlivo brings you clients, and you work with them directly, with no commission",
     "blockLeftTitle": "Pricing and terms",
     "benefit1": "7 days free",
     "benefit2": "€80/month",
@@ -1109,7 +1109,7 @@
     "metaTitle": "AI property search — DomLivo",
     "metaDescription": "Describe what you want in your own words and the assistant finds matching listings in Albania.",
     "title": "AI search",
-    "subtitle": "Describe what you are looking for — the assistant picks from our listings and shows them right here.",
+    "subtitle": "Describe what you are looking for, and the assistant picks matching listings and shows them right here.",
     "goToCatalog": "Go to the catalog",
     "intro": {
       "title": "What are you looking for?",
@@ -1184,7 +1184,7 @@
     "questionsHeading": "Questions this page answers",
     "sources": "Sources",
     "gapsHeading": "What is missing",
-    "gapsIntro": "Gaps we know about. Saying so is what makes the rest worth trusting.",
+    "gapsIntro": "Gaps we know about: questions we have no reliable data for yet.",
     "askHeading": "Ask about your own case",
     "askIntro": "The assistant works from this same data and shows the sources behind every figure.",
     "askCta": "Ask the assistant",

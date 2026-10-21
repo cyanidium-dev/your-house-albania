@@ -140,11 +140,11 @@
     "faq": {
       "badge": "FAQ",
       "title": "Tutto sulle case Domlivo",
-      "description": "Acquistare, vendere o investire può essere stressante. Ecco alcune domande frequenti per guidarti.",
+      "description": "Risposte brevi alle domande che gli acquirenti fanno più spesso.",
       "q1": "1. Posso personalizzare la mia casa Domlivo?",
       "q2": "2. Dove trovo le case Domlivo?",
       "q3": "3. Quali passi per acquistare?",
-      "answer": "Scopri una vasta gamma di proprietà di lusso, da appartamenti eleganti a ville spaziose."
+      "answer": "Appartamenti, case, ville e terreni in vendita in tutta l'Albania. Ogni annuncio riporta il prezzo richiesto e chi vende l'immobile."
     },
     "blog": {
       "badge": "Blog",
@@ -313,7 +313,7 @@
     "properties": {
       "badge": "Immobili",
       "title": "Scopri case dal design ispiratore.",
-      "description": "Eleganza e comfort nelle nostre ville esclusive, pensate per una vita sofisticata."
+      "description": "Appartamenti, case, ville e terreni in vendita in Albania, con prezzo richiesto e venditore indicati in ogni annuncio."
     },
     "blogs": {
       "badge": "Blog",
@@ -352,7 +352,7 @@
   },
   "Districts": {
     "hubTitle": "Quartieri di {city}",
-    "hubDescription": "Esplora i quartieri di {city} e scegli la zona giusta per la tua prossima casa.",
+    "hubDescription": "Confronta i quartieri di {city} e scegli dove comprare.",
     "hubMetaTitle": "Quartieri di {city} 2026: prezzi al m² e dove vivere",
     "hubMetaDescription": "Confronta i quartieri di {city} per prezzo al m² e carattere, poi guarda gli annunci attuali in ogni zona.",
     "faqTitle": "Domande frequenti",
@@ -799,7 +799,7 @@
     "metaDescription": "Invia una richiesta: ti risponderemo con opzioni adatte alle tue esigenze.",
     "heroH1": "Non avete trovato la casa giusta?",
     "heroH2": "Lasciate una richiesta: vi offriremo una selezione su misura!",
-    "heroDescription": "Compilate il modulo qui sotto e il nostro manager vi contatterà con opzioni in linea con le vostre richieste. Veloce, semplice e senza messaggi superflui.",
+    "heroDescription": "Compilate il modulo qui sotto: il nostro manager vi ricontatterà con le opzioni adatte alla vostra richiesta.",
     "heroImageAlt": "Contattaci",
     "managerPhotoAlt": "Il nostro manager",
     "managerEmailLabel": "Email",
@@ -853,10 +853,10 @@
     "metaDescription": "Guarda la demo e scopri come pubblicare immobili su Domlivo e ricevere richieste su Telegram.",
     "heroTitle": "Come pubblicare immobili su Domlivo",
     "heroSubtitle": "Guarda la demo e scopri come ricevere richieste reali",
-    "heroBody": "È tutto semplice: aggiungi il tuo immobile e inizia a ricevere clienti direttamente.",
+    "heroBody": "Aggiungi il tuo immobile e ricevi clienti direttamente.",
     "heroCta": "Guarda la demo",
     "block2Title": "Come funziona la piattaforma Domlivo",
-    "block2Body": "Ti registri, aggiungi gli immobili e ricevi richieste dai clienti direttamente su Telegram. È tutto semplice e senza intermediari.",
+    "block2Body": "Ti registri, aggiungi gli immobili e ricevi le richieste dei clienti direttamente su Telegram, senza intermediari.",
     "step1": "Registrazione",
     "step2": "Aggiunta degli immobili",
     "step3": "Ricezione delle richieste",
@@ -1109,7 +1109,7 @@
     "metaTitle": "Ricerca immobili con AI — DomLivo",
     "metaDescription": "Descriva con parole sue cosa cerca e l'assistente trova gli immobili adatti in Albania.",
     "title": "Ricerca AI",
-    "subtitle": "Descriva cosa cerca — l'assistente sceglie tra i nostri immobili e li mostra qui.",
+    "subtitle": "Descriva cosa cerca: l'assistente sceglie gli immobili adatti e li mostra qui.",
     "goToCatalog": "Vai al catalogo",
     "intro": {
       "title": "Cosa sta cercando?",
@@ -1184,7 +1184,7 @@
     "questionsHeading": "A quali domande risponde questa pagina",
     "sources": "Fonti",
     "gapsHeading": "Cosa manca",
-    "gapsIntro": "Lacune note. Dichiararle è ciò che rende affidabile il resto.",
+    "gapsIntro": "Lacune note: domande per cui non abbiamo ancora dati affidabili.",
     "askHeading": "Chiedi per il tuo caso",
     "askIntro": "L’assistente usa questi stessi dati e mostra la fonte di ogni cifra.",
     "askCta": "Chiedi all’assistente",
