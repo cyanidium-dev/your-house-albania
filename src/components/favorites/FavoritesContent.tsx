@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import type { PropertyHomes } from "@/types/propertyHomes";
 import { catalogPath } from "@/lib/routes/catalog";
 import { brandButtonClass } from "@/components/shared/BrandButton";
+import { FavoritesSendPanel } from "@/components/favorites/FavoritesSendPanel";
 
 const SKELETON_COUNT = 6;
 
@@ -119,6 +120,7 @@ export function FavoritesContent({ locale }: Props) {
 
   return (
     <>
+      <FavoritesSendPanel locale={locale} items={properties} />
       <div className="flex justify-end mb-6">
         <Button
           variant="outline"

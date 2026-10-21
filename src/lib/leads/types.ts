@@ -54,6 +54,8 @@ export const LEAD_PLACEMENTS = [
   'landing',
   'register-page',
   'guide',
+  // "Send your shortlist" on the favourites page.
+  'favorites',
   'page',
   // The public Telegram bot, reached without a site link (search, a forward).
   'telegram-bot',

@@ -845,7 +845,9 @@
     "noDataTitle": "Keine Immobiliendaten gefunden",
     "noDataDescription": "Einige Favoriten sind möglicherweise nicht mehr verfügbar.",
     "addAria": "{name} zu den Favoriten hinzufügen",
-    "removeAria": "{name} aus den Favoriten entfernen"
+    "removeAria": "{name} aus den Favoriten entfernen",
+    "sendTitle": "Merkliste an einen Berater schicken",
+    "sendBody": "In WhatsApp ist die Nachricht mit den Links zu diesen Objekten schon fertig, Sie müssen sie nur senden. Ein Berater antwortet zu jedem Objekt."
   },
   "HowToPublish": {
     "metaTitle": "So veröffentlichen Sie auf Domlivo",
@@ -1290,7 +1292,8 @@
     "whatsappText": {
       "property": "Hallo! Ich interessiere mich für {title}, {price}: {url}",
       "propertyNoPrice": "Hallo! Ich interessiere mich für {title}: {url}",
-      "general": "Hallo! Ich suche eine Immobilie in Albanien"
+      "general": "Hallo! Ich suche eine Immobilie in Albanien",
+      "shortlist": "Hallo! Ich habe mir diese Objekte auf Domlivo gemerkt:\n{list}"
     },
     "sheet": {
       "title": {

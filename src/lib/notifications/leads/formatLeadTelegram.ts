@@ -43,6 +43,7 @@ const PLACEMENT_LABEL: Record<LeadPlacement, string> = {
   landing: 'лендинг',
   'register-page': 'страница регистрации',
   guide: 'карточка PDF-гида',
+  favorites: 'подборка из избранного',
   page: 'ссылка на странице',
   'telegram-bot': 'бот Telegram (без ссылки с сайта)',
 }

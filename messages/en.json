@@ -844,7 +844,9 @@
     "noDataTitle": "No property data found",
     "noDataDescription": "Some favorites may no longer exist.",
     "addAria": "Add {name} to favorites",
-    "removeAria": "Remove {name} from favorites"
+    "removeAria": "Remove {name} from favorites",
+    "sendTitle": "Send your shortlist to a manager",
+    "sendBody": "In WhatsApp the message with links to these listings is ready, just press send. A manager answers about each one."
   },
   "HowToPublish": {
     "metaTitle": "How to publish on Domlivo",
@@ -1289,7 +1291,8 @@
     "whatsappText": {
       "property": "Hello! I'm interested in {title}, {price}: {url}",
       "propertyNoPrice": "Hello! I'm interested in {title}: {url}",
-      "general": "Hello! I'd like help finding property in Albania"
+      "general": "Hello! I'd like help finding property in Albania",
+      "shortlist": "Hello! I've saved these listings on Domlivo:\n{list}"
     },
     "sheet": {
       "title": {

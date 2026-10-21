@@ -8,7 +8,7 @@ import { formatMoney } from '@/lib/currency/format'
 import { buildGeneralStartPayload, buildPropertyStartPayload } from '@/lib/telegram/startPayload'
 import type { MessengerContext } from './messengers'
 
-type TextKey = 'whatsappText.property' | 'whatsappText.propertyNoPrice' | 'whatsappText.general'
+type TextKey = 'whatsappText.property' | 'whatsappText.propertyNoPrice' | 'whatsappText.general' | 'whatsappText.shortlist'
 
 export type MessengerTranslator = (key: TextKey, values?: Record<string, string>) => string
 
@@ -66,5 +66,30 @@ export function messengerContext(
   return {
     whatsappText: input.pageUrl ? `${general}\n${input.pageUrl}` : general,
     telegramStart: buildGeneralStartPayload({ locale: input.locale, placement: input.placement }),
+  }
+}
+
+/** Listings named in one shortlist message; more would only make the link unwieldy. */
+export const SHORTLIST_MAX = 10
+
+/**
+ * The ready message for "send your shortlist" on the favourites page: every
+ * saved listing on its own line with its price and address, so whoever answers
+ * sees the whole list without asking. Telegram gets the general payload with
+ * the `favorites` placement, since a `start` payload cannot carry a list.
+ */
+export function shortlistMessengerContext(
+  t: MessengerTranslator,
+  input: {
+    locale: string
+    items: Array<{ title: string; price?: string; url: string }>
+  },
+): MessengerContext {
+  const lines = input.items
+    .slice(0, SHORTLIST_MAX)
+    .map((item) => `- ${[item.title.trim(), item.price].filter(Boolean).join(', ')}: ${item.url}`)
+  return {
+    whatsappText: t('whatsappText.shortlist', { list: lines.join('\n') }),
+    telegramStart: buildGeneralStartPayload({ locale: input.locale, placement: 'favorites' }),
   }
 }

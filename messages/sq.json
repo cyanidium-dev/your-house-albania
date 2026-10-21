@@ -844,7 +844,9 @@
     "noDataTitle": "Nuk u gjetën të dhëna për pronat",
     "noDataDescription": "Disa nga të preferuarat ndoshta nuk ekzistojnë më.",
     "addAria": "Shto {name} te të preferuarat",
-    "removeAria": "Hiq {name} nga të preferuarat"
+    "removeAria": "Hiq {name} nga të preferuarat",
+    "sendTitle": "Dërgojani listën një menaxheri",
+    "sendBody": "Në WhatsApp mesazhi me lidhjet e këtyre pronave është gati, mjafton ta dërgoni. Menaxheri përgjigjet për secilën."
   },
   "HowToPublish": {
     "metaTitle": "Si të publikoni në Domlivo",
@@ -1289,7 +1291,8 @@
     "whatsappText": {
       "property": "Përshëndetje! Më intereson {title}, {price}: {url}",
       "propertyNoPrice": "Përshëndetje! Më intereson {title}: {url}",
-      "general": "Përshëndetje! Dua të gjej një pronë në Shqipëri"
+      "general": "Përshëndetje! Dua të gjej një pronë në Shqipëri",
+      "shortlist": "Përshëndetje! I kam ruajtur këto prona në Domlivo:\n{list}"
     },
     "sheet": {
       "title": {
