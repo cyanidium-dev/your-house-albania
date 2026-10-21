@@ -58,7 +58,7 @@ export function FavoritesSendPanel({ locale, items }: Props) {
       <MessengerButtons
         messengers={messengers}
         ariaLabels={{ whatsapp: tQuick('channel.whatsapp'), telegram: tQuick('channel.telegram') }}
-        className="flex w-full shrink-0 gap-2 md:w-80 [&>a]:h-11 [&>a]:text-sm"
+        className="flex w-full shrink-0 gap-2 md:w-96 [&>a]:h-11 [&>a]:text-sm"
       />
     </section>
   )
