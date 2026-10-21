@@ -626,7 +626,8 @@
       "previousPage": "Page précédente",
       "nextPage": "Page suivante",
       "showMore": "Voir plus de biens",
-      "shownRange": "{from}-{to} sur {total}"
+      "shownRange": "{from}-{to} sur {total}",
+      "allPages": "Afficher toutes les pages"
     },
     "heroIntroFallback": "Parcourez notre sélection de biens.",
     "agentTitle": "Biens proposés par {name}",
