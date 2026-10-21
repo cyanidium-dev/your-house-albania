@@ -290,7 +290,11 @@
       "listingsTitle": "Prona që lidhen me artikullin",
       "listingsPlaceLink": "{place}: {count, plural, one {# pronë në shitje} other {# prona në shitje}}",
       "listingsAllAlbania": "Të gjitha pronat në shitje në Shqipëri",
-      "reviewedBy": "Kontrolloi: {name}"
+      "reviewedBy": "Kontrolloi: {name}",
+      "earlyListings": {
+        "title": "Prona për të cilat flet artikulli",
+        "ask": "Pyetni për cilëndo prej tyre në mesazh:"
+      }
     },
     "goBack": "Kthehu",
     "entityCard": {

@@ -28,11 +28,12 @@ import { BlogSources } from "@/components/Blog/BlogSources";
 import { KnowledgeLinks } from "@/components/knowledge/KnowledgeLinks";
 import { KNOWLEDGE_LINKS_BY_BLOG_POST } from "@/lib/knowledge/links";
 import { BlogQuoteCta } from "@/components/shared/QuickLead/BlogQuoteCta";
+import { BlogEarlyListings } from "@/components/Blog/BlogEarlyListings";
+import { loadTopicCards } from "@/lib/inventoryLinks/topicCards";
 import TrackPageView from "@/components/analytics/TrackPageView";
 import { BlogArticleSchema } from "@/components/Blog/BlogArticleSchema";
 import { BlogBreadcrumb } from "@/components/shared/BlogBreadcrumb";
 import { computeReadingTime } from "@/lib/blog/readingTime";
-import PropertyCard from "@/components/shared/property/PropertyCard";
 import { BlogCardClient } from "@/components/Blog/BlogCardClient";
 import { InventoryLinksSection } from "@/components/inventory/InventoryLinksSection";
 import { blogPostTopics } from "@/lib/inventoryLinks/places";
@@ -233,6 +234,22 @@ export default async function Post({ params }: Props) {
     detail.properties.length > 0 ||
     detail.contentBlocks.some((b) => (b as { _type?: string } | null)?._type === "blogPropertyEmbedBlock");
 
+  // Listings the article is about, near the top (BlogEarlyListings): the
+  // editor's own picks when there are any, else the article's places. The
+  // section under the article then shows other listings, not the same three.
+  const earlyListings =
+    detail.properties.length > 0
+      ? detail.properties.slice(0, 3)
+      : await loadTopicCards({
+          locale,
+          topics: (dir) => blogPostTopics(detail.slug, dir),
+          count: 3,
+          // Articles are about buying a home: a plot or a shop beside them reads as noise.
+          types: ["apartment", "studio", "penthouse"],
+        });
+  const socialLinks = (siteSettings as { socialLinks?: { platform: string; url: string; channel?: string }[] } | null)
+    ?.socialLinks;
+
   const introBlock = (
     <div className="min-w-0 flex-1 flex flex-col justify-between">
       <div>
@@ -374,19 +391,25 @@ export default async function Post({ params }: Props) {
               768px column centred under a left-aligned title. */}
           <div
             className={
-              finalRelatedPosts.length > 0 || detail.properties.length > 0
+              finalRelatedPosts.length > 0
                 ? "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 lg:items-start"
                 : undefined
             }
           >
             <div
               className={
-                finalRelatedPosts.length > 0 || detail.properties.length > 0
+                finalRelatedPosts.length > 0
                   ? "min-w-0 lg:col-span-7"
                   : "min-w-0 max-w-3xl"
               }
             >
               <BlogTableOfContents content={detail.contentBlocks} />
+              <BlogEarlyListings
+                locale={locale}
+                listings={earlyListings}
+                socialLinks={socialLinks}
+                pageUrl={`${getSiteBaseUrl()}/${locale}/blog/${detail.slug}`}
+              />
               <BlogKeyFacts keyFacts={detail.keyFacts} locale={locale} />
               <BlogArticleContent content={detail.contentBlocks} locale={locale} postSlug={detail.slug} />
               <BlogFaq faq={detail.faq} locale={locale} />
@@ -400,7 +423,7 @@ export default async function Post({ params }: Props) {
                   place `blogQuoteCtaBlock` mid-article; that copy is independent. */}
               <BlogQuoteCta locale={locale} sourceLabel={detail.slug} />
             </div>
-            {(finalRelatedPosts.length > 0 || detail.properties.length > 0) && (
+            {(finalRelatedPosts.length > 0) && (
               <aside className="space-y-10 lg:col-span-4 lg:col-start-9">
                 {finalRelatedPosts.length > 0 && (
                   <div>
@@ -410,23 +433,6 @@ export default async function Post({ params }: Props) {
                     <div className="flex flex-col gap-6">
                       {finalRelatedPosts.map((p) => (
                         <BlogCardClient key={p.slug} blog={p} locale={locale} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {detail.properties.length > 0 && (
-                  <div>
-                    <h3 className="text-dark dark:text-white text-xl font-semibold mb-6">
-                      {tBlog("relatedProperties")}
-                    </h3>
-                    <div className="flex flex-col gap-6">
-                      {detail.properties.map((item) => (
-                        <PropertyCard
-                          key={item.slug}
-                          item={item}
-                          locale={locale}
-                          view="large"
-                        />
                       ))}
                     </div>
                   </div>
@@ -442,6 +448,7 @@ export default async function Post({ params }: Props) {
         locale={locale}
         topics={(dir) => blogPostTopics(detail.slug, dir)}
         showCards={!hasCmsListings}
+        excludeSlugs={earlyListings.map((l) => l.slug)}
         className="pt-0 md:pt-0"
       />
     </>
