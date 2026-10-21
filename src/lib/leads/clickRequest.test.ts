@@ -94,3 +94,17 @@ describe('createClickThrottle', () => {
     expect(allow('1.2.3.4', 'click_whatsapp', 30_001)).toBe(true)
   })
 })
+
+describe('parseClickLeadBody agentSlug', () => {
+  it('keeps a partner slug when the click has no listing', () => {
+    const r = parseClickLeadBody({ type: 'click_telegram', placement: 'page', agentSlug: 'cactus' })
+    expect(r.ok && r.value.agentSlug).toBe('cactus')
+  })
+  it('drops it when the click names a listing (the listing decides)', () => {
+    const r = parseClickLeadBody({ type: 'click_telegram', placement: 'property', propertySlug: 'flat-1', agentSlug: 'cactus' })
+    expect(r.ok && r.value.agentSlug).toBeUndefined()
+  })
+  it('refuses a malformed slug', () => {
+    expect(parseClickLeadBody({ type: 'click_telegram', agentSlug: '../x' }).ok).toBe(false)
+  })
+})

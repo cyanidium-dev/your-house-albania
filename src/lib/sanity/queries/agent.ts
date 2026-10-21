@@ -52,3 +52,23 @@ export async function fetchAgentBySlug(
   }
 }
 
+
+
+/**
+ * The chats of an agency that answers its own leads (owner, 2026-10-22: the
+ * Cactus partner landings go to Pavel): phone and telegramUrl from the agent
+ * document, only when it has its own Telegram lead group.
+ */
+export async function fetchAgentMessengerContacts(
+  slug: string
+): Promise<{ slug: string; phone: string | null; telegramUrl: string | null } | null> {
+  const client = getClient();
+  if (!client || !AGENT_SLUG_REGEX.test(slug)) return null;
+  const doc = await client.fetch<{ slug?: string; phone?: string | null; telegramUrl?: string | null; ownLeads?: boolean } | null>(
+    `*[_type == "agent" && slug.current == $slug][0]{ "slug": slug.current, phone, telegramUrl, "ownLeads": defined(telegramLeadChatId) }`,
+    { slug },
+    { next: { revalidate: 3600, tags: ['sanity:agent'] } } as never,
+  );
+  if (!doc?.ownLeads || !doc.slug) return null;
+  return { slug: doc.slug, phone: doc.phone ?? null, telegramUrl: doc.telegramUrl ?? null };
+}
