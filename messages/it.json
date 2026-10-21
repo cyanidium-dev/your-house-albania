@@ -844,7 +844,9 @@
     "noDataTitle": "Nessun dato trovato",
     "noDataDescription": "Alcuni preferiti potrebbero non esistere più.",
     "addAria": "Aggiungi {name} ai preferiti",
-    "removeAria": "Rimuovi {name} dai preferiti"
+    "removeAria": "Rimuovi {name} dai preferiti",
+    "sendTitle": "Invia la tua selezione a un consulente",
+    "sendBody": "Su WhatsApp il messaggio con i link a questi immobili è già pronto, basta inviarlo. Un consulente risponde su ciascuno."
   },
   "HowToPublish": {
     "metaTitle": "Come pubblicare su Domlivo",
@@ -1296,7 +1298,8 @@
     "whatsappText": {
       "property": "Buongiorno! Mi interessa {title}, {price}: {url}",
       "propertyNoPrice": "Buongiorno! Mi interessa {title}: {url}",
-      "general": "Buongiorno! Vorrei trovare un immobile in Albania"
+      "general": "Buongiorno! Vorrei trovare un immobile in Albania",
+      "shortlist": "Buongiorno! Ho salvato questi immobili su Domlivo:\n{list}"
     },
     "sheet": {
       "title": {
