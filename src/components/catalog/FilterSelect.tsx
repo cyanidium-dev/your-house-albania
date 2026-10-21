@@ -41,6 +41,8 @@ type Props = {
   placeholder?: string;
   /** Optional one-line helper under the label (e.g. field context). */
   hint?: string;
+  /** Inline element after the label text (e.g. a confidence dot). */
+  labelExtra?: React.ReactNode;
   /** When false, only `options` are shown (no “any / all” row). Default true. */
   includeAnyOption?: boolean;
   anyLabel: string;
@@ -57,6 +59,7 @@ export function FilterSelect({
   options,
   placeholder,
   hint,
+  labelExtra,
   includeAnyOption = true,
   anyLabel,
   anyValue = "any",
@@ -114,8 +117,9 @@ export function FilterSelect({
 
   return (
     <div ref={containerRef} className="min-w-0 relative">
-      <label className="block text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
+      <label className="flex items-center gap-2 text-xs font-medium text-dark/70 dark:text-white/80 mb-1">
         {label}
+        {labelExtra}
       </label>
       {hint ? (
         <p className="mb-2 text-xs leading-relaxed text-dark/55 dark:text-white/50">{hint}</p>

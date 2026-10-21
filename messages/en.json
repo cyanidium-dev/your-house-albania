@@ -558,6 +558,122 @@
     "onTopOfPrice": "On top of the price",
     "capped": "capped"
   },
+  "CalculatorPages": {
+    "shared": {
+      "faqTitle": "Questions and answers",
+      "methodTitle": "How it is calculated",
+      "relatedTitle": "Related pages",
+      "linkTitle": "Link to this calculator",
+      "linkLead": "Writing about property in Albania? Paste this HTML into your article. The calculator is free to use, with no sign-up.",
+      "linkCopy": "Copy the HTML",
+      "linkCopied": "Copied",
+      "linkField": "HTML code of the link",
+      "percentRule": "{pct} of the price",
+      "percentCapRule": "{pct} of the price, at most {cap}",
+      "fixedRule": "{amount}, a fixed amount",
+      "related": {
+        "prices": "Property prices in Albania by city",
+        "purchaseCalc": "Property purchase cost calculator",
+        "rentalCalc": "Rental yield calculator",
+        "guideLegal": "Legal guide for buyers",
+        "guideForeigners": "Can foreigners buy property in Albania?",
+        "frenchGuide": "Buying in Albania from France",
+        "city": "{city}: prices and districts",
+        "cityListings": "Property for sale in {city}"
+      },
+      "cities": {
+        "durres": "Durrës",
+        "tirana": "Tirana",
+        "vlore": "Vlorë",
+        "sarande": "Sarandë"
+      }
+    },
+    "purchase": {
+      "metaTitle": "Property purchase cost calculator for Albania",
+      "metaDescription": "What buying a flat in Albania costs on top of the price: notary, ASHK registration, lawyer, sworn translator and agency fee. Enter the price and see each line.",
+      "breadcrumb": "Purchase cost calculator",
+      "h1": "Property purchase cost calculator for Albania",
+      "lead": "What buying a flat or a house in Albania costs on top of the price: the notary, registration of ownership with the cadastre (ASHK), a lawyer if you want one, a sworn translator and the agency fee. Enter the price to see each line and the total. The buyer pays no transfer tax, so there is no line for one.",
+      "linkText": "Property purchase cost calculator for Albania",
+      "totalNote": "The total is the sum of the lines above, and the share of the price is that total divided by the price.",
+      "noTransferTax": "There is no transfer tax line: an individual buying a flat pays none. The costs of owning the flat afterwards, such as the annual building tax, are not part of the purchase.",
+      "faq1q": "How much does it cost to buy a flat in Albania on top of the price?",
+      "faq1a": "For a flat at {price}, the calculator adds {total}, or {pct} of the price: {lines}.",
+      "faq2q": "Does the buyer pay a transfer tax in Albania?",
+      "faq2a": "No. An individual buying a flat pays no transfer tax, so the calculator has no line for it: the tax on the sale is the seller's. Read the contract all the same, because a clause can move the seller's costs to the buyer.",
+      "faq3q": "Do I need a lawyer and a sworn translator?",
+      "faq3a": "A lawyer is not required by law, but recommended: a check of the title, encumbrances and permits costs about €500-2,000, and the calculator counts {lawyer}. A sworn translator is required if you don't speak Albanian. The translator co-signs the deed with you and charges about €50-150; the calculator counts {translator}.",
+      "faq4q": "Who registers the ownership, and what does it cost?",
+      "faq4a": "The notary files the registration with the state cadastre (ASHK) for you, for a fixed fee of about {registration}. The notary's own fee follows the official scale, about 0.30-0.35% of the price (Ministry of Justice Order 279/2012)."
+    },
+    "rental": {
+      "metaTitle": "Rental yield calculator for Albania",
+      "metaDescription": "Gross and net rental yield of a flat in Albania, let long-term or short-term, after letting costs, management, running costs and the {tax} tax.",
+      "breadcrumb": "Rental yield calculator",
+      "h1": "Rental yield calculator for Albania",
+      "lead": "Work out the gross and net yield of a flat in Albania, let long-term or to holiday guests. The calculator takes off letting costs, management, running costs and the {tax} tax on rental income. The presets hold our estimates for a one-bedroom flat in Durrës; choose manual input to enter your own figures.",
+      "linkText": "Rental yield calculator for Albania",
+      "methodGrossLabel": "Gross income",
+      "methodGross": "Long let: the monthly rent × 12. Short let: the nightly rate × the nights let, which are 365 × occupancy, capped by the season limit if you set one.",
+      "methodLetLabel": "Letting costs",
+      "methodLet": "Long let: one empty month a year and half a month's rent to the letting agent. Short let: {platform} in platform fees and {localTax} tourist tax on the gross income.",
+      "methodMgmtLabel": "Management",
+      "methodMgmt": "The fee you set, as a share of the gross income: 0% if you manage the flat yourself.",
+      "methodRunningLabel": "Running costs",
+      "methodRunning": "Repairs at {repairs} of the price a year, insurance and building tax at {fixed} a year; short lets add {utilities} a year for utilities.",
+      "methodTaxLabel": "Tax",
+      "methodTax": "{tax} of the gross income less the letting or platform costs.",
+      "methodGrossYieldLabel": "Gross yield",
+      "methodGrossYield": "Gross income divided by the price.",
+      "methodNetYieldLabel": "Net yield",
+      "methodNetYield": "Net income divided by the price plus the buying costs: {buyPct} of the price and {buyFixed} for the notary, agency, ASHK registration, lawyer and translator, as in the purchase cost calculator.",
+      "presetsNote": "A preset fills in the rent, occupancy, season and management fee; manual input lets you change each of them.",
+      "faq1q": "How is rental income taxed in Albania?",
+      "faq1a": "At {tax}, for long and short lets alike. The calculator applies it to the gross rent less the letting or platform costs.",
+      "faq2q": "What is the difference between gross and net yield?",
+      "faq2a": "Gross yield is a year's rent divided by the price. Net yield is what is left after letting costs, management, running costs and tax, divided by the price plus the buying costs.",
+      "faq2Example": "For the long-let preset at {price}: {gross} gross, {net} net.",
+      "faq3q": "Which earns more, a long-term or a short-term let?",
+      "faq3a": "With our presets for a one-bedroom flat in Durrës at {price}, the calculator gives these net yields: {list}.",
+      "faq4q": "Where do the preset figures come from?",
+      "faq4a": "They are Domlivo estimates of October 2026 for a one-bedroom flat in Durrës: {str} for short lets and {ltr} for a long let. They are not a guarantee of income; switch to manual input to try your own figures.",
+      "strFigures": "{adr} a night at {occupancy} occupancy, up to {nights} nights a season",
+      "strFiguresNoCap": "{adr} a night at {occupancy} occupancy",
+      "ltrFigures": "{rent} a month",
+      "presetYield": "{label}: {net}"
+    },
+    "cms": {
+      "purchaseDisclaimer": "Indicative amounts, not legal advice; the notary confirms the exact costs.",
+      "roiDisclaimer": "Domlivo estimate of 8 October 2026; not a guarantee of income.",
+      "items": {
+        "cost0": {
+          "label": "Notary (≈{pct})",
+          "note": "About 0.30-0.35% of the price on the official scale (Ministry of Justice Order 279/2012)."
+        },
+        "cost1": {
+          "label": "ASHK registration",
+          "note": "About {amount} to register your ownership with the state cadastre. The notary files it for you."
+        },
+        "cost2": {
+          "label": "Lawyer (optional)",
+          "note": "€500-2,000 for a check of the title, encumbrances and permits. Not required by law, but recommended."
+        },
+        "cost3": {
+          "label": "Sworn translator",
+          "note": "€50-150. Required if you don't speak Albanian; the translator co-signs the deed with you."
+        },
+        "cost4": {
+          "label": "Agency fee ({pct})",
+          "note": "Typically 1% for the buyer on Domlivo listings; some agencies charge the buyer nothing."
+        }
+      },
+      "presets": {
+        "str": "Short-term let, self-managed",
+        "strm": "Short-term let with a manager ({pct})",
+        "ltr": "Long-term let"
+      }
+    }
+  },
   "Trackers": {
     "statusOnTrack": "On track",
     "statusDelayed": "Delayed",

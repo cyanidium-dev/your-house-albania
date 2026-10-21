@@ -825,3 +825,84 @@ export async function fetchCityLandingNavItems(locale: string): Promise<CityLand
   return cached();
 }
 
+/** One cost line of a `purchaseCostCalcSection`, as stored. */
+export type PurchaseCostCalcItemDoc = {
+  _key?: string;
+  label?: unknown;
+  kind?: string;
+  value?: number;
+  capEur?: number;
+  note?: unknown;
+};
+
+/** One preset of a `roiCalcSection`, as stored. */
+export type RoiCalcPresetDoc = {
+  _key?: string;
+  label?: unknown;
+  rentalType?: string;
+  monthlyRentEur?: number;
+  adrEur?: number;
+  occupancyPct?: number;
+  seasonNightsCap?: number;
+  mgmtFeePct?: number;
+  confidence?: string;
+};
+
+export type PurchaseCostCalcSectionDoc = {
+  enabled?: boolean;
+  title?: unknown;
+  subtitle?: unknown;
+  disclaimer?: unknown;
+  items?: PurchaseCostCalcItemDoc[];
+};
+
+export type RoiCalcSectionDoc = {
+  enabled?: boolean;
+  title?: unknown;
+  subtitle?: unknown;
+  disclaimer?: unknown;
+  taxRatePct?: number;
+  presets?: RoiCalcPresetDoc[];
+};
+
+export type CalculatorSectionsDoc = {
+  purchase: PurchaseCostCalcSectionDoc | null;
+  roi: RoiCalcSectionDoc | null;
+};
+
+/**
+ * The purchase-cost and ROI calculator sections of one landing, for the
+ * standalone calculator pages (`/calculators/*`, `lib/calculatorPages`): the
+ * landing stays the one place an editor changes a fee, a preset or the tax
+ * rate.
+ */
+export async function fetchCalculatorSections(landingSlug: string): Promise<CalculatorSectionsDoc> {
+  const cached = sanityCache(
+    async (): Promise<CalculatorSectionsDoc> => {
+      const empty: CalculatorSectionsDoc = { purchase: null, roi: null };
+      const client = getClient();
+      if (!client) return empty;
+      const query = `*[_type == "landingPage" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
+        "purchase": pageSections[_type == "purchaseCostCalcSection"][0]{
+          enabled, title, subtitle, disclaimer,
+          items[]{ _key, label, kind, value, capEur, note }
+        },
+        "roi": pageSections[_type == "roiCalcSection"][0]{
+          enabled, title, subtitle, disclaimer, taxRatePct,
+          presets[]{ _key, label, rentalType, monthlyRentEur, adrEur, occupancyPct, seasonNightsCap, mgmtFeePct, confidence }
+        }
+      }`;
+      try {
+        const doc = await client.fetch<Partial<CalculatorSectionsDoc> | null>(query, { slug: landingSlug });
+        return { purchase: doc?.purchase ?? null, roi: doc?.roi ?? null };
+      } catch (err) {
+        console.warn('[Sanity] fetchCalculatorSections failed:', err);
+        return empty;
+      }
+    },
+    ['sanity-calculator-sections-v1', landingSlug],
+    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
+  );
+  return cached();
+}
+

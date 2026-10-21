@@ -1,3 +1,4 @@
+import { CALCULATOR_PAGES_LAST_MODIFIED, CALCULATOR_PATHS } from "@/lib/calculatorPages/config";
 import { GERMAN_HUB_LAST_MODIFIED, GERMAN_HUB_LOCALE, GERMAN_HUB_PATH } from "@/lib/germanHub/config";
 import { REFERENCE_PRICES_CHECKED_ON, REFERENCE_PRICES_LOCALE, REFERENCE_PRICES_PATH } from "@/lib/referencePrices/data";
 import {
@@ -36,6 +37,9 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: "methodology", lastModified: "2026-10-19" },
   // Property prices by city: one table over the live index (AI prompt audit 2026-10-19).
   { path: "prices", lastModified: "2026-10-19" },
+  // The two calculator pages (link magnets, 2026-10-21), see lib/calculatorPages.
+  { path: CALCULATOR_PATHS.purchase, lastModified: CALCULATOR_PAGES_LAST_MODIFIED },
+  { path: CALCULATOR_PATHS.rental, lastModified: CALCULATOR_PAGES_LAST_MODIFIED },
   // The German market hub (SEO hypothesis 3, 2026-10-19): German only, see lib/germanHub.
   { path: GERMAN_HUB_PATH, lastModified: GERMAN_HUB_LAST_MODIFIED, locales: [GERMAN_HUB_LOCALE] },
   // Albanian reference prices with a calculator (SEO hypothesis 5, lab E01): Albanian only.

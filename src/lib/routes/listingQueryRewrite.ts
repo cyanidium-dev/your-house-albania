@@ -34,6 +34,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "immobilier-albanie",
   "appartment",
   "blog",
+  // The calculator pages, `/{locale}/calculators/*` (lib/calculatorPages).
+  "calculators",
   "catalog",
   "cities",
   "contact",
