@@ -26,7 +26,7 @@ describe("localeIndexing", () => {
     expect(isSitePathIndexable("/fr/immobilier-albanie/acheter-depuis-la-france")).toBe(true);
     expect(isSitePathIndexable("/fr/albania/durres")).toBe(true);
     expect(isSitePathIndexable("/fr/albania/durres/plazh")).toBe(true);
-    expect(isSitePathIndexable("/fr/property/appartement-1-1-golem-durres-64m2")).toBe(true);
+    expect(isSitePathIndexable("/fr/property/appartement-1-1-mali-i-robit-durres-72m2")).toBe(true);
     expect(isSitePathIndexable("/fr")).toBe(false);
     expect(isSitePathIndexable("/fr/albania/durres/qerret")).toBe(false);
     expect(isSitePathIndexable("/fr/albania/durres/districts")).toBe(false);
