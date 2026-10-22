@@ -47,4 +47,4 @@ export type AgentContactTelegramRouting = {
   agentChatId: string | undefined
 }
 
-export type TelegramSendResult = { ok: true } | { ok: false; reason: string }
+export type TelegramSendResult = { ok: true; messageId?: number } | { ok: false; reason: string }

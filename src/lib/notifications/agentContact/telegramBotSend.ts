@@ -44,6 +44,7 @@ export async function sendTelegramTextMessage(params: {
       ok?: boolean
       description?: string
       error_code?: number
+      result?: { message_id?: number }
     } | null
 
     if (!res.ok || !data || data.ok !== true) {
@@ -55,7 +56,7 @@ export async function sendTelegramTextMessage(params: {
       return { ok: false, reason: 'Telegram API rejected the message' }
     }
 
-    return { ok: true }
+    return { ok: true, messageId: data.result?.message_id }
   } catch (err) {
     console.error('[contact-agent] Telegram sendMessage network error', err)
     return { ok: false, reason: 'Telegram send failed' }
