@@ -246,11 +246,25 @@ export const KEYWORD_CLUSTERS: readonly KeywordCluster[] = [
     id: "shengjin-apartments",
     target: { family: "city", country: "albania", city: "shengjin" },
     primaryKeyword: "apartamente ne shitje shengjin",
-    secondaryKeywords: ["shengjin apartments for sale"],
-    markets: ["AL", "DE", "GB", "NL", "CH", "PL", "CZ", "XK", "MK", "US", "CA"],
-    locales: ["sq", "en"],
+    secondaryKeywords: [
+      "shengjin apartments for sale",
+      "shengjin immobilien",
+      "appartamenti shengjin",
+      "shengjin mieszkania",
+      "недвижимость шенджин",
+      "шенджин квартира",
+    ],
+    markets: ["AL", "DE", "GB", "NL", "CH", "PL", "CZ", "XK", "MK", "US", "CA", "IT", "UA", "RU"],
+    // sq and en from Keyword Planner. The other five from Search Console, 28
+    // days to 2026-10-19, while their city pages were still noindex: the
+    // Shëngjin guides, /info and district pages drew impressions in it (10 +
+    // 6 + 4), pl (10 + 6 + 1), uk (9 + 3), ru (4 + 1) and de (3 + 3 + 2), and
+    // Keyword Planner lists DE, CH, PL, CZ, IT among the markets of the
+    // English phrase. Opened on 2026-10-22, when the stock went from 20 to
+    // 123 listings (102 flats), the largest seaside market after Durrës.
+    locales: ["sq", "en", "ru", "uk", "de", "it", "pl"],
     bucket: "10-100",
     serp: "listings",
-    sources: ["kp-albania-2026-09-17", "kp-atlas-2026-09-16"],
+    sources: ["kp-albania-2026-09-17", "kp-atlas-2026-09-16", "gsc-2026-10-21"],
   },
 ];

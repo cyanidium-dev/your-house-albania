@@ -60,6 +60,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "rent",
   "residential-homes",
   "sale",
+  // The Shëngjin hub, `/{locale}/shengjin` (lib/shengjinHub).
+  "shengjin",
   "short-term-rent",
   "terms",
 ]);

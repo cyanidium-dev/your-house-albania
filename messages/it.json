@@ -81,7 +81,8 @@
       "about": "Chi siamo",
       "contacts": "Contatti",
       "addProperty": "Aggiungi il tuo immobile",
-      "knowledge": "Base di conoscenza"
+      "knowledge": "Base di conoscenza",
+      "shengjinHub": "Shëngjin: appartamenti al mare"
     },
     "cities": {
       "empty": "Nessuna città da mostrare."
@@ -1636,5 +1637,118 @@
     },
     "firstLine": "in prima linea, direttamente sulla spiaggia",
     "metres": "{n} m"
+  },
+  "ShengjinHub": {
+    "metaTitle": "Appartamenti al mare a Shëngjin da {from}: {listings} annunci",
+    "metaTitleShort": "Shëngjin, Albania: appartamenti al mare, prezzi e annunci",
+    "metaDescription": "Shëngjin è il mercato di mare più economico su Domlivo con un campione affidabile: mediana {median}/m² contro {durresMedian}/m² a Durazzo, appartamenti da {from}, {sea} di {listings} annunci entro 1 km dalla spiaggia. Prezzi, costi, domande.",
+    "metaDescriptionShort": "Appartamenti al mare a Shëngjin, nord dell'Albania: prezzi richiesti live contro Durazzo, Valona e Saranda, cosa si compra con un budget, gli appartamenti più economici vicino alla spiaggia, i costi d'acquisto e le domande frequenti.",
+    "breadcrumb": "Shëngjin",
+    "label": "Casa al mare in Albania a basso prezzo",
+    "h1": "Appartamenti al mare a Shëngjin, Albania",
+    "figures": "appartamenti da {from}, prezzo richiesto mediano {median}/m², {listings, plural, one {# annuncio} other {# annunci}}",
+    "lead": "Il {date} Domlivo elenca a Shëngjin {figures}, contro {durresMedian}/m² a Durazzo. {sea, plural, one {# di essi si trova} other {# di essi si trovano}} entro 1 km dalla spiaggia o in prima linea. Qui sotto: le cifre live, cosa si compra con un budget, gli appartamenti più economici al mare, i costi oltre al prezzo e le domande di chi compra.",
+    "leadNoDurres": "Il {date} Domlivo elenca a Shëngjin {figures}. {sea, plural, one {# di essi si trova} other {# di essi si trovano}} entro 1 km dalla spiaggia o in prima linea. Qui sotto: le cifre live, cosa si compra con un budget, gli appartamenti più economici al mare, i costi oltre al prezzo e le domande di chi compra.",
+    "leadNoData": "Shëngjin è una cittadina di porto e di spiaggia nel nord dell'Albania, a un'ora dall'aeroporto di Tirana, con i prezzi richiesti più bassi tra i mercati di mare su Domlivo. Qui sotto: cosa si compra con un budget, gli appartamenti più economici al mare, i costi oltre al prezzo e le domande di chi compra.",
+    "heroAlt": "Un appartamento al mare a Shëngjin, in vendita su Domlivo",
+    "allListings": "Tutti {count, plural, one {# annuncio} other {i # annunci}} a Shëngjin",
+    "tiles": {
+      "median": "Prezzo richiesto mediano",
+      "medianFlat": "Prezzo mediano di un appartamento",
+      "from": "Appartamento più economico",
+      "sea": "Entro {metres} m dal mare"
+    },
+    "why": {
+      "title": "Perché Shëngjin",
+      "tilesNote": "Prezzi richiesti live degli appartamenti e monolocali su Domlivo, {date}. Non prezzi di vendita.",
+      "p1": "Shëngjin è la spiaggia del nord dell'Albania: una piccola città portuale nel comune di Lezhë, a circa 45-50 km dall'aeroporto di Tirana, meno di un'ora in auto, e a 45 minuti da Scutari. Una lunga spiaggia di sabbia corre lungo la città, a nord ci sono le dune di Rana e Hedhun e a sud, verso Tale, le lagune di Kune-Vain, area protetta. D'estate si riempie di villeggianti dal Kosovo e dal nord del paese; fuori stagione è tranquilla.",
+      "p2": "Il punto per chi compra è il prezzo. Sul Domlivo Price Index gli appartamenti in vendita a Shëngjin chiedono una mediana di {median} al m², il {percent}% in meno di Durazzo a {durresMedian}, e molto meno di Valona e Saranda, dove i pochi appartamenti che pubblichiamo chiedono oltre 2.000 €/m². Con gli stessi soldi si compra un appartamento più grande o più vicino all'acqua.",
+      "p2NoData": "Il punto per chi compra è il prezzo: sul Domlivo Price Index a Shëngjin si chiede meno al m² che a Durazzo, e molto meno che a Valona e Saranda. Con gli stessi soldi si compra un appartamento più grande o più vicino all'acqua.",
+      "p3": "L'offerta è soprattutto di appartamenti 1+1, con i monolocali in basso e i 2+1 sopra; la maggior parte viene da costruttori e agenzie locali che pubblicano da noi, quindi le tabelle qui sotto si muovono con le vendite e i nuovi annunci. Ogni cifra di questa pagina è calcolata dagli annunci live all'ora indicata.",
+      "districtsLink": "Le zone di Shëngjin: il centro, Rana e Hedhun e Tale, con i prezzi al m²"
+    },
+    "compare": {
+      "title": "Shëngjin a confronto con le altre città di mare",
+      "lead": "Prezzo richiesto mediano al m² di appartamenti e monolocali, prezzo totale mediano, appartamento più economico e numero di annunci. Ogni città apre i suoi annunci.",
+      "colCity": "Città",
+      "colMedian": "Mediana, €/m²",
+      "colMedianFlat": "Appartamento mediano",
+      "colFrom": "Appartamenti da",
+      "colListings": "Annunci",
+      "colSample": "Appartamenti nel campione",
+      "indicative": "{value} (indicativo)",
+      "lowSample": "pochi dati",
+      "caption": "Le città di mare dell'Albania a confronto con Shëngjin, {date}: prezzo richiesto mediano al m² di appartamenti e monolocali in vendita su Domlivo, prezzo totale mediano, prezzo più basso e annunci per città",
+      "footnote": "Prezzi richiesti dagli annunci live, ricalcolati ogni ora. Una mediana su meno di {min} appartamenti è indicativa; il campione è accanto.",
+      "pricesLink": "Tutte le città con fascia e stato dei lavori",
+      "methodologyLink": "Come si calcola l'indice"
+    },
+    "budget": {
+      "title": "Cosa si compra con un budget a Shëngjin",
+      "lead": "Appartamenti e monolocali in vendita il {date}, per prezzo totale richiesto, e quanti di ogni fascia stanno entro 1 km dal mare o in prima linea.",
+      "caption": "Appartamenti in vendita a Shëngjin per prezzo totale richiesto, {date}, e quanti di essi sono al mare",
+      "colBudget": "Budget",
+      "colFlats": "Appartamenti",
+      "colSea": "Al mare",
+      "bandUnder": "Sotto {to}",
+      "band": "Da {from} a {to}",
+      "bandOver": "Oltre {from}",
+      "note": "Gli appartamenti quotati al m² senza totale non sono contati. Un annuncio conta come al mare quando indica una distanza a piedi fino a 1 km o la prima linea; gli annunci senza distanza non sono contati, quindi il numero reale è più alto."
+    },
+    "layouts": {
+      "caption": "Appartamenti in vendita a Shëngjin per tipologia, {date}: numero, prezzo richiesto più basso e mediano",
+      "colLayout": "Tipologia",
+      "colCount": "Annunci",
+      "colFrom": "Da",
+      "colMedian": "Prezzo mediano",
+      "studio": "Monolocale",
+      "1-1": "1+1 (una camera)",
+      "2-1": "2+1 (due camere)",
+      "3-1": "3+1 e oltre",
+      "fewFlats": "pochi appartamenti"
+    },
+    "facets": {
+      "near-the-sea": "Appartamenti al mare a Shëngjin ({count})",
+      "under-100k": "Appartamenti sotto i 100.000 € a Shëngjin ({count})",
+      "1-1": "Appartamenti 1+1 a Shëngjin ({count})",
+      "2-1": "Appartamenti 2+1 a Shëngjin ({count})"
+    },
+    "sea": {
+      "title": "{count, plural, one {L'appartamento al mare più economico} other {I # appartamenti al mare più economici}}",
+      "lead": "Appartamenti e monolocali entro {metres} m dal mare o in prima linea, prima i più economici al m², su {total} al mare. Prezzi e disponibilità come li indicano gli annunci.",
+      "all": "Tutti {count, plural, one {# annuncio} other {i # annunci}} a Shëngjin"
+    },
+    "costs": {
+      "title": "Quanto costa comprare",
+      "lead": "I costi oltre al prezzo, dalle fonti del nostro calcolatore dei costi d'acquisto.",
+      "p1": "Uno straniero compra un appartamento o una casa in Albania alle stesse condizioni di un cittadino e può venderlo o lasciarlo in eredità liberamente; solo i terreni agricoli sono esclusi. L'acquisto è valido solo come atto notarile. Il notaio chiede lo 0,35% del valore fino a 6 milioni di lek e lo 0,30% fino a 15 milioni; il catasto (ASHK) 5.000 lek per registrare la proprietà. Chi compra come privato non paga imposta di trasferimento, le imposte sulla vendita sono del venditore, e sull'appartamento non c'è IVA.",
+      "p2": "Su un appartamento da 100.000 € gli extra arrivano a circa 2.300 €, cioè il 2,3%, con avvocato, traduttore giurato e provvigione dell'agenzia; con ogni voce facoltativa al massimo della sua fascia circa 4.600 €. Dalla prenotazione al nuovo certificato passano di solito da quattro a otto settimane; per un appartamento in costruzione l'atto segue il completamento. L'imposta annuale sull'edificio è lo 0,05% del valore imponibile.",
+      "p3": "Le banche albanesi raramente prestano ai non residenti. Il mercato offre invece rate senza interessi al costruttore fino alla consegna, standard nella maggior parte delle vendite di nuove costruzioni. I redditi da affitto sono tassati al 15%. Possedere un immobile permette di chiedere un permesso di soggiorno annuale ai sensi dell'art. 84 della legge 79/2021; la legge non fissa un prezzo minimo.",
+      "calculatorLink": "Calcolatore dei costi d'acquisto",
+      "yieldLink": "Calcolatore del rendimento da affitto"
+    },
+    "faq": {
+      "title": "Le domande di chi compra",
+      "lead": "Risposte brevi con le cifre live; i confronti vanno più a fondo.",
+      "q1": "Quanto costa un appartamento a Shëngjin?",
+      "a1": "Il {date} gli appartamenti e i monolocali in vendita a Shëngjin su Domlivo chiedevano una mediana di {median} al m² su {count} appartamenti con prezzo; l'appartamento mediano chiedeva {medianFlat} e il più economico {from}. Sono prezzi richiesti, non di vendita. Le tabelle sopra li dividono per budget e tipologia.",
+      "a1NoData": "I prezzi richiesti a Shëngjin sono i più bassi tra i mercati di mare su Domlivo. La mediana live al m², il prezzo mediano di un appartamento e il più economico sono nelle tabelle sopra, calcolati ogni ora dagli annunci.",
+      "q2": "Shëngjin costa meno di Durazzo?",
+      "a2": "Sì. Il {date} il prezzo richiesto mediano a Shëngjin era di {median} al m² contro {durresMedian} a Durazzo, il {percent}% in meno. Durazzo ha molti più annunci e una città grande dietro la spiaggia; Shëngjin è una località più piccola, con un inverno più tranquillo e un prezzo d'ingresso più basso.",
+      "a2NoData": "Sì, secondo il Domlivo Price Index a Shëngjin si chiede meno al m² che a Durazzo. Durazzo ha molti più annunci e una città grande dietro la spiaggia; Shëngjin è una località più piccola, con un inverno più tranquillo e un prezzo d'ingresso più basso.",
+      "q3": "Uno straniero può comprare un appartamento a Shëngjin?",
+      "a3": "Sì. Gli stranieri comprano appartamenti e case in Albania alle stesse condizioni dei cittadini albanesi e possono venderli o lasciarli in eredità liberamente. Solo i terreni agricoli sono esclusi: si possono affittare fino a 99 anni o comprare tramite una società albanese. Possedere un immobile permette di chiedere un permesso di soggiorno annuale ai sensi dell'art. 84 della legge 79/2021, senza prezzo minimo nella legge.",
+      "q4": "Cosa pago oltre al prezzo?",
+      "a4": "Notaio 0,35% del valore fino a 6 milioni di lek (0,30% fino a 15 milioni), 5.000 lek al catasto per la registrazione e, se li usate, avvocato, traduttore giurato e provvigione dell'agenzia. Chi compra come privato non paga imposta di trasferimento né IVA sull'appartamento. Su un appartamento da 100.000 € sono circa 2.300 € in un caso tipico e circa 4.600 € con ogni opzione al massimo.",
+      "q5": "Come si arriva a Shëngjin?",
+      "a5": "Dall'aeroporto internazionale di Tirana sono circa 45-50 km di strada, meno di un'ora in auto o taxi. Scutari è a 45 minuti, Lezhë a pochi minuti. In città non c'è aeroporto né ferrovia; in stagione ci sono autobus da Lezhë.",
+      "q6": "Dove cercare a Shëngjin?",
+      "a6": "Il centro è intorno al porto e al lungomare, con negozi e ristoranti; Rana e Hedhun è la spiaggia di dune a nord della città, con residence più recenti; Tale è la lunga spiaggia a sud, oltre le lagune di Kune-Vain. {sea, plural, one {# annuncio indica} other {# annunci indicano}} una distanza a piedi fino a {metres} m dal mare o la prima linea; la griglia sopra mostra i più economici al m² tra questi."
+    },
+    "contact": {
+      "title": "Quale appartamento a Shëngjin cercate?",
+      "subtitle": "Diteci budget e tipologia. Vi mandiamo le offerte adatte dallo stock live con prezzo, distanza dalla spiaggia e disponibilità, in italiano."
+    },
+    "linkFromListing": "Guida a Shëngjin: prezzi a confronto con le altre città di mare, gli appartamenti al mare più economici, i costi d'acquisto"
   }
 }

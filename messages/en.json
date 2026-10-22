@@ -81,7 +81,8 @@
       "about": "About",
       "contacts": "Contacts",
       "addProperty": "List your property",
-      "knowledge": "Knowledge base"
+      "knowledge": "Knowledge base",
+      "shengjinHub": "Shëngjin: flats by the sea"
     },
     "cities": {
       "empty": "No cities to show."
@@ -1636,5 +1637,118 @@
     },
     "firstLine": "on the first line, right on the beach",
     "metres": "{n} m"
+  },
+  "ShengjinHub": {
+    "metaTitle": "Shëngjin flats by the sea from {from}: {listings} listings",
+    "metaTitleShort": "Shëngjin, Albania: flats by the sea, prices and listings",
+    "metaDescription": "Shëngjin is the cheapest seaside market Domlivo lists with a reliable sample: median {median}/m² against {durresMedian}/m² in Durrës, flats from {from}, {sea} of {listings} listings within 1 km of the beach. Prices, costs, FAQ.",
+    "metaDescriptionShort": "Flats by the sea in Shëngjin, northern Albania: live asking prices against Durrës, Vlorë and Sarandë, what a budget buys, the cheapest flats near the beach, buying costs and a FAQ.",
+    "breadcrumb": "Shëngjin",
+    "label": "Cheap seaside property in Albania",
+    "h1": "Flats by the sea in Shëngjin, Albania",
+    "figures": "flats from {from}, median asking price {median}/m², {listings, plural, one {# listing} other {# listings}}",
+    "lead": "On {date} Domlivo lists {figures}, against {durresMedian}/m² in Durrës. {sea, plural, one {# of them stands} other {# of them stand}} within 1 km of the beach or on the first line. Below: the live figures, what a budget buys here, the cheapest flats by the sea, the costs on top of the price and the questions buyers ask.",
+    "leadNoDurres": "On {date} Domlivo lists {figures}. {sea, plural, one {# of them stands} other {# of them stand}} within 1 km of the beach or on the first line. Below: the live figures, what a budget buys here, the cheapest flats by the sea, the costs on top of the price and the questions buyers ask.",
+    "leadNoData": "Shëngjin is a port and beach town in northern Albania, an hour from Tirana airport, with the lowest asking prices of the seaside markets on Domlivo. Below: what a budget buys here, the cheapest flats by the sea, the costs on top of the price and the questions buyers ask.",
+    "heroAlt": "A flat by the sea in Shëngjin, listed on Domlivo",
+    "allListings": "All {count, plural, one {# listing} other {# listings}} in Shëngjin",
+    "tiles": {
+      "median": "Median asking price",
+      "medianFlat": "Median flat price",
+      "from": "Cheapest flat",
+      "sea": "Within {metres} m of the sea"
+    },
+    "why": {
+      "title": "Why Shëngjin",
+      "tilesNote": "Live asking prices of the flats and studios listed on Domlivo, {date}. Not sale prices.",
+      "p1": "Shëngjin is the beach of northern Albania: a small port town in the Lezhë municipality, about 45-50 km from Tirana airport, under an hour by car, and 45 minutes from Shkodër. A long sandy beach runs along the town, the Rana e Hedhun dunes lie to the north and the Kune-Vain lagoons, a protected reserve, to the south towards Tale. In summer it fills with visitors from Kosovo and the north of the country; out of season it is quiet.",
+      "p2": "The point for a buyer is the price. On the Domlivo Price Index the flats listed in Shëngjin ask a median of {median} per m², {percent}% below Durrës at {durresMedian}, and well below Vlorë and Sarandë, where the few flats we list ask over €2,000/m². The same money buys a bigger flat or one closer to the water.",
+      "p2NoData": "The point for a buyer is the price: on the Domlivo Price Index Shëngjin asks less per m² than Durrës, and well below Vlorë and Sarandë. The same money buys a bigger flat or one closer to the water.",
+      "p3": "The stock is mostly 1+1 flats, with studios at the low end and 2+1 flats above; most of it comes from local developers and agencies that list with us, so the tables below move as they sell and add. Every figure on this page is computed from the live listings at the hour shown.",
+      "districtsLink": "Districts of Shëngjin: the centre, Rana e Hedhun and Tale, with prices per m²"
+    },
+    "compare": {
+      "title": "Shëngjin against the other seaside cities",
+      "lead": "Median asking price per m² of flats and studios, median total price, cheapest flat and the number of listings. Each city opens its listings.",
+      "colCity": "City",
+      "colMedian": "Median, €/m²",
+      "colMedianFlat": "Median flat",
+      "colFrom": "Flats from",
+      "colListings": "Listings",
+      "colSample": "Flats in the sample",
+      "indicative": "{value} (indicative)",
+      "lowSample": "too little data",
+      "caption": "Seaside cities of Albania against Shëngjin, {date}: median asking price per m² of flats and studios for sale on Domlivo, median total price, lowest flat price and listings per city",
+      "footnote": "Asking prices from live listings, recomputed hourly. A median over fewer than {min} flats is indicative; the sample stands beside it.",
+      "pricesLink": "Every city with its range and construction stage",
+      "methodologyLink": "How the index is computed"
+    },
+    "budget": {
+      "title": "What a budget buys in Shëngjin",
+      "lead": "Flats and studios for sale on {date}, by total asking price, and how many of each band stand within 1 km of the sea or on the first line.",
+      "caption": "Flats for sale in Shëngjin by total asking price, {date}, and how many of them are by the sea",
+      "colBudget": "Budget",
+      "colFlats": "Flats",
+      "colSea": "By the sea",
+      "bandUnder": "Under {to}",
+      "band": "{from} to {to}",
+      "bandOver": "Over {from}",
+      "note": "Flats quoted per m² without a total are not counted. A listing counts as by the sea when it states a walking distance of up to 1 km or stands on the first line; a listing without a distance is not counted, so the true number is higher."
+    },
+    "layouts": {
+      "caption": "Flats for sale in Shëngjin by layout, {date}: count, lowest and median asking price",
+      "colLayout": "Layout",
+      "colCount": "Listings",
+      "colFrom": "From",
+      "colMedian": "Median price",
+      "studio": "Studio",
+      "1-1": "1+1 (one bedroom)",
+      "2-1": "2+1 (two bedrooms)",
+      "3-1": "3+1 and larger",
+      "fewFlats": "too few flats"
+    },
+    "facets": {
+      "near-the-sea": "Flats by the sea in Shëngjin ({count})",
+      "under-100k": "Flats under €100,000 in Shëngjin ({count})",
+      "1-1": "1+1 flats in Shëngjin ({count})",
+      "2-1": "2+1 flats in Shëngjin ({count})"
+    },
+    "sea": {
+      "title": "{count, plural, one {The cheapest flat by the sea} other {The # cheapest flats by the sea}}",
+      "lead": "Flats and studios within {metres} m of the sea or on the first line, cheapest per m² first, out of {total} by the sea. Prices and availability as the listings state them.",
+      "all": "All {count, plural, one {# listing} other {# listings}} in Shëngjin"
+    },
+    "costs": {
+      "title": "What it costs to buy",
+      "lead": "The costs on top of the price, from the sources behind our purchase cost calculator.",
+      "p1": "A foreigner buys a flat or a house in Albania on the same terms as a citizen and may sell or leave it to heirs freely; only agricultural land is excluded. The purchase is valid only as a notarial deed. The notary charges 0.35% of the value up to 6 million lek and 0.30% up to 15 million; the cadastre (ASHK) takes 5,000 lek to register the title. An individual buyer pays no transfer tax, the taxes on the sale are the seller's, and there is no VAT on a flat.",
+      "p2": "On a €100,000 flat the extras come to about €2,300, or 2.3%, with a lawyer, a sworn translator and the agency fee; with every optional item at the top of its range about €4,600. From reservation to the new title it usually takes four to eight weeks; for a flat under construction the deed follows completion. The annual building tax is 0.05% of the taxable value.",
+      "p3": "Albanian banks rarely lend to non-residents. What the market offers instead is interest-free instalments to the developer until handover, standard on most new-build sales. Rental income is taxed at 15%. Owning a property lets you apply for a one-year residence permit under art. 84 of Law 79/2021; the law sets no minimum price.",
+      "calculatorLink": "Purchase cost calculator",
+      "yieldLink": "Rental yield calculator"
+    },
+    "faq": {
+      "title": "Questions buyers ask",
+      "lead": "Short answers with the live figures; the comparisons go deeper.",
+      "q1": "How much does a flat in Shëngjin cost?",
+      "a1": "On {date} the flats and studios listed for sale in Shëngjin on Domlivo asked a median of {median} per m² over {count} priced flats; the median flat asked {medianFlat} and the cheapest {from}. These are asking prices, not sale prices. The tables above split them by budget and layout.",
+      "a1NoData": "Asking prices in Shëngjin are the lowest of the seaside markets on Domlivo. The live median per m², the median flat price and the cheapest flat are in the tables above, computed hourly from the listings.",
+      "q2": "Is Shëngjin cheaper than Durrës?",
+      "a2": "Yes. On {date} the median asking price in Shëngjin was {median} per m² against {durresMedian} in Durrës, {percent}% less. Durrës has far more listings and a bigger city behind the beach; Shëngjin is a smaller resort with a quieter winter and a lower entry price.",
+      "a2NoData": "Yes, by the Domlivo Price Index Shëngjin asks less per m² than Durrës. Durrës has far more listings and a bigger city behind the beach; Shëngjin is a smaller resort with a quieter winter and a lower entry price.",
+      "q3": "Can a foreigner buy a flat in Shëngjin?",
+      "a3": "Yes. Foreigners buy flats and houses in Albania on the same terms as Albanian citizens and may sell or inherit them freely. Only agricultural land is excluded; it can be leased for up to 99 years or bought through an Albanian company. Owning a property allows an application for a one-year residence permit under art. 84 of Law 79/2021, with no minimum price in the law.",
+      "q4": "What do I pay on top of the price?",
+      "a4": "Notary 0.35% of the value up to 6 million lek (0.30% up to 15 million), 5,000 lek to the cadastre for registration, and, if you use them, a lawyer, a sworn translator and the agency fee. An individual buyer pays no transfer tax and no VAT on a flat. On a €100,000 flat that is about €2,300 in a typical case and about €4,600 with every option at the top of its range.",
+      "q5": "How do I get to Shëngjin?",
+      "a5": "From Tirana International Airport it is about 45-50 km by road, under an hour by car or taxi. Shkodër is 45 minutes away, Lezhë a few minutes. There is no airport or railway in the town; buses run from Lezhë in season.",
+      "q6": "Where in Shëngjin should I look?",
+      "a6": "The centre sits around the port and the promenade, with the shops and restaurants; Rana e Hedhun is the dune beach north of the town, with newer residences; Tale is the long beach to the south, past the Kune-Vain lagoons. {sea, plural, one {# listing states} other {# listings state}} a walking distance of up to {metres} m to the sea or a first-line position; the grid above shows the cheapest of them per m²."
+    },
+    "contact": {
+      "title": "Which flat in Shëngjin are you looking for?",
+      "subtitle": "Tell us the budget and the layout. We send matching offers from the live stock with the price, the distance to the beach and availability, in your language."
+    },
+    "linkFromListing": "Shëngjin guide: prices against the other seaside cities, the cheapest flats by the sea, buying costs"
   }
 }
