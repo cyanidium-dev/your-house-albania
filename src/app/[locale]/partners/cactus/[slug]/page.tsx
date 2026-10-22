@@ -21,7 +21,7 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
  * still being built. See `lib/partnerLandings/config.ts` for which pages
  * exist and why they live in code.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => PARTNER_LANDINGS.map((l) => ({ locale, slug: l.slug })));

@@ -82,7 +82,7 @@ const cachedFetchSiteSettings = sanityCache(
     }
   },
   ['sanity-site-settings'],
-  { revalidate: 3600, tags: [SANITY_TAGS.siteSettings] }
+  { revalidate: 86400, tags: [SANITY_TAGS.siteSettings] }
 );
 
 /** Fetch siteSettings singleton. Returns null if not found or client not configured. */

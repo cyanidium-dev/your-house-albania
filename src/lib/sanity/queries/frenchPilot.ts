@@ -43,5 +43,5 @@ export const fetchFrenchPilotListings = sanityCache(
     }
   },
   ['sanity-french-pilot-listings'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );

@@ -17,7 +17,7 @@ import { setRequestLocale } from "next-intl/server";
  * (`/api/revalidate/sanity`) purges the tags a mutated document touches, so an
  * edit reaches the page as soon as the webhook fires.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return [];

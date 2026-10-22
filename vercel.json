@@ -12,6 +12,11 @@
     {
       "path": "/api/cron/leads-weekly",
       "schedule": "0 7 * * 1"
+    },
+    {
+      "path": "/api/cron/sanity-changes",
+      "schedule": "5 * * * *"
     }
-  ]
+  ],
+  "ignoreCommand": "[ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]"
 }

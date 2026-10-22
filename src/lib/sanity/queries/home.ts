@@ -179,7 +179,7 @@ const cachedFetchHomePage = sanityCache(
       const seoSection = Array.isArray(doc?.homepageSections)
         ? doc?.homepageSections.find((s) => s._type === 'homeSeoTextSection')
         : undefined;
-      console.log('[Sanity] fetchHomePage OK, hasSeoSection:', !!seoSection);
+      if (process.env.NODE_ENV === 'development') console.log('[Sanity] fetchHomePage OK, hasSeoSection:', !!seoSection);
     }
     return result;
   } catch (err) {
@@ -189,7 +189,7 @@ const cachedFetchHomePage = sanityCache(
   },
   ['sanity-home-page'],
   {
-    revalidate: 3600,
+    revalidate: 86400,
     tags: [
       SANITY_TAGS.homePage,
       SANITY_TAGS.property,

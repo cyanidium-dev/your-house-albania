@@ -81,7 +81,7 @@ const cachedFetch = sanityCache(
   },
   ['sanity-partner-place-listings'],
   {
-    revalidate: 3600,
+    revalidate: 86400,
     tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType],
   },
 );

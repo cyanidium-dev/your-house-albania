@@ -65,7 +65,7 @@ export async function fetchImageCredits(): Promise<ImageCreditDoc[]> {
       }
     },
     ['sanity-image-credits-v1'],
-    { revalidate: 3600, tags: [SANITY_TAGS.all, SANITY_TAGS.imageCredit] },
+    { revalidate: 86400, tags: [SANITY_TAGS.all, SANITY_TAGS.imageCredit] },
   );
   return cached();
 }

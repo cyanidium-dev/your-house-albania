@@ -41,7 +41,7 @@ type Props = { params: Promise<{ locale: string }> };
  * cached Site Settings: phone, address, office photo, reply time and reviews,
  * each shown only once the owner fills it in (SiteTrustSection).
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const LINK_ICONS: Record<TeamMemberLink["labelKey"], string> = {
   codeSite: "ph:code",

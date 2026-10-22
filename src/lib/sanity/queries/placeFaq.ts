@@ -36,7 +36,7 @@ export async function fetchPlaceFaqItems(citySlug: string, districtSlug?: string
       }
     },
     ['sanity-place-faq-items-v1', city, district],
-    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 86400, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();
 }

@@ -64,7 +64,7 @@ const H2 = 'text-2xl md:text-[1.75rem] leading-tight tracking-tight font-bold te
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export async function generateStaticParams() {
   const slugs = await fetchKnowledgeSlugs()

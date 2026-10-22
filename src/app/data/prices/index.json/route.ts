@@ -8,7 +8,7 @@ import { getSiteBaseUrl } from "@/lib/siteUrl";
  * district, CC BY 4.0. Same snapshot as the `/info` pages; regenerated at most
  * hourly. Outside `/api/`, which robots.txt closes to crawlers.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function GET() {
   const snapshot = await fetchPriceIndexSnapshot();

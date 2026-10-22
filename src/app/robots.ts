@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { isIndexingEnabled } from "@/lib/seo/envSeo";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /**
  * Link-preview fetchers. They draw the card from `og:image`, which is

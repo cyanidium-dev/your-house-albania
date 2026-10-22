@@ -24,7 +24,7 @@ const TERMS_LANDING_SLUG = "terms";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

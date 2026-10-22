@@ -16,7 +16,7 @@ type Props = { params: Promise<{ locale: string }> };
  * `lib/shengjinHub/config.ts`. The title and description carry the live
  * figures: the lowest flat price, the median €/m² and the listing count.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

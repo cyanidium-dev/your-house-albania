@@ -47,7 +47,7 @@ type Props = { params: Promise<{ locale: string }> };
  * snapshot, so the page never describes a city the index does not have.
  * Carries the `DataCatalog` whose parts are the city datasets on `/info`.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const METHOD_ITEMS = ["asking", "sample", "filters", "threshold", "median", "frequency", "research"] as const;
 

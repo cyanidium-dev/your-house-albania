@@ -306,7 +306,7 @@ const cachedFetchActivePropertyTypes = sanityCache(
     }
   },
   ['sanity-active-property-types'],
-  { revalidate: 3600, tags: [SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.propertyType] },
 );
 
 /** Fetch active property types for homePropertyTypesSection when propertyTypes is empty. */
@@ -339,7 +339,7 @@ export async function fetchDistrictPriceRows(districtId: string, typeSlugs: stri
       }
     },
     ['sanity-district-price-rows-v1', id, types.join(',')],
-    { revalidate: 3600, tags: [SANITY_TAGS.property] },
+    { revalidate: 86400, tags: [SANITY_TAGS.property] },
   );
   return cached();
 }

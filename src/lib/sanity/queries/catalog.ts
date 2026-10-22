@@ -51,7 +51,7 @@ const cachedFetchCatalogAreaBoundsFromData = sanityCache(
     }
   },
   ['sanity-catalog-area-bounds'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property] },
 );
 
 /**
@@ -386,7 +386,7 @@ const cachedFetchCatalogProperties = sanityCache(
   },
   ['sanity-catalog-properties'],
   {
-    revalidate: 3600,
+    revalidate: 86400,
     tags: [
       SANITY_TAGS.property,
       SANITY_TAGS.city,
@@ -426,7 +426,7 @@ export const fetchCatalogInventorySummary = sanityCache(
     }
   },
   ['sanity-catalog-inventory-summary'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 /**
@@ -450,7 +450,7 @@ export const fetchCatalogCardBySlug = sanityCache(
     }
   },
   ['sanity-catalog-card-by-slug'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property] },
 );
 
 /** Up to three listings either side of a price: see `fetchPriceNeighbours`. */
@@ -495,7 +495,7 @@ export const fetchPriceNeighbours = sanityCache(
     }
   },
   ['sanity-catalog-price-neighbours'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.propertyType] },
 );
 
 /**
@@ -517,7 +517,7 @@ export const fetchDistrictSalePrices = sanityCache(
     }
   },
   ['sanity-district-sale-prices'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
 );
 
 export type CatalogMapPoint = {
@@ -570,7 +570,7 @@ export const fetchCatalogMapPoints = sanityCache(
     }
   },
   ['sanity-catalog-map-points'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 export type CatalogListingStats = {
@@ -610,7 +610,7 @@ export const fetchCatalogListingStats = sanityCache(
     }
   },
   ['sanity-catalog-listing-stats'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 /**
@@ -976,7 +976,7 @@ function getCachedFetchCatalogFilterOptions(
       },
       ['sanity-catalog-filter-options', locale],
       {
-        revalidate: 3600,
+        revalidate: 86400,
         tags: [
           SANITY_TAGS.city,
           SANITY_TAGS.propertyType,
@@ -1013,7 +1013,7 @@ const fetchCatalogCountryDocumentSlugsCached = sanityCache(
     }
   },
   ['sanity-country-document-slugs'],
-  { revalidate: 3600, tags: [SANITY_TAGS.country] }
+  { revalidate: 86400, tags: [SANITY_TAGS.country] }
 );
 
 /** Slugs of published `country` documents (for validating `/{locale}/[country]` hub segments). */
@@ -1082,7 +1082,7 @@ export async function fetchFooterCitiesByCountry(
       }
     },
     ['sanity-footer-cities-by-count-v2', key, locale, String(safeLimit)],
-    { revalidate: 3600, tags: [SANITY_TAGS.city, SANITY_TAGS.property] }
+    { revalidate: 86400, tags: [SANITY_TAGS.city, SANITY_TAGS.property] }
   )();
 }
 
@@ -1109,7 +1109,7 @@ export async function fetchCityCountrySlugByCitySlug(citySlug: string): Promise<
       }
     },
     ['sanity-city-country', key],
-    { revalidate: 3600, tags: [SANITY_TAGS.city, SANITY_TAGS.country] }
+    { revalidate: 86400, tags: [SANITY_TAGS.city, SANITY_TAGS.country] }
   )();
 }
 
@@ -1140,7 +1140,7 @@ export async function fetchCountryTitleBySlug(
       }
     },
     ['sanity-country-title', key, locale],
-    { revalidate: 3600, tags: [SANITY_TAGS.country] }
+    { revalidate: 86400, tags: [SANITY_TAGS.country] }
   )();
 }
 
@@ -1164,7 +1164,7 @@ export async function fetchCityExistsBySlug(citySlug: string): Promise<boolean> 
       }
     },
     ['sanity-city-exists', key],
-    { revalidate: 3600, tags: [SANITY_TAGS.city] }
+    { revalidate: 86400, tags: [SANITY_TAGS.city] }
   )();
 }
 
@@ -1210,7 +1210,7 @@ const cachedFetchCatalogSeoPageRoot = sanityCache(
     }
   },
   ['sanity-catalog-seo-root'],
-  { revalidate: 3600, tags: [SANITY_TAGS.catalogSeoPage] }
+  { revalidate: 86400, tags: [SANITY_TAGS.catalogSeoPage] }
 );
 
 /** Fetch catalog SEO page for properties root. Returns null if none or inactive. */
@@ -1351,7 +1351,7 @@ export const fetchDistrictListingCounts = sanityCache(
     }
   },
   ['sanity-district-listing-counts'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.district] },
 );
 
 export type RecentListingRow = {
@@ -1423,5 +1423,5 @@ export const fetchRecentListingsForPlace = sanityCache(
     }
   },
   ['sanity-recent-listings-for-place'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district] },
 );

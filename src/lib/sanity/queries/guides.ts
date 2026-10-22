@@ -66,7 +66,7 @@ export async function fetchGuideIndexEntries(): Promise<GuideIndexEntry[]> {
       }
     },
     ['sanity-guide-index-v2'],
-    { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
+    { revalidate: 86400, tags: [SANITY_TAGS.landingPage] },
   );
   return cached();
 }

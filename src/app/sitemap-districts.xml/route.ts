@@ -7,7 +7,7 @@ import { latestDate } from "@/lib/seo/contentLastmod";
 import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function GET() {
   if (!isIndexingEnabled()) {

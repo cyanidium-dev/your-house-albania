@@ -201,7 +201,7 @@ async function fetchAllCurrentFacts(): Promise<KnowledgeFact[]> {
 
 /** Every current fact. Cached: this is the assistant's prompt payload. */
 export const fetchKnowledgeFactRows = sanityCache(fetchAllCurrentFacts, ['knowledge-facts'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: [SANITY_TAGS.knowledgeFact, SANITY_TAGS.knowledgeSource, SANITY_TAGS.knowledgeArticle],
 })
 
@@ -333,7 +333,7 @@ async function fetchIndex(locale: string): Promise<KnowledgeArticleSummary[]> {
 }
 
 export const fetchKnowledgeIndex = sanityCache(fetchIndex, ['knowledge-index'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: [SANITY_TAGS.knowledgeArticle],
 })
 
@@ -399,7 +399,7 @@ async function fetchArticle(slug: string, locale: string): Promise<KnowledgeArti
 }
 
 export const fetchKnowledgeArticle = sanityCache(fetchArticle, ['knowledge-article'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: [SANITY_TAGS.knowledgeArticle, SANITY_TAGS.knowledgeFact, SANITY_TAGS.knowledgeSource],
 })
 
@@ -417,7 +417,7 @@ async function fetchSlugs(): Promise<string[]> {
 }
 
 export const fetchKnowledgeSlugs = sanityCache(fetchSlugs, ['knowledge-slugs'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: [SANITY_TAGS.knowledgeArticle],
 })
 
@@ -441,7 +441,7 @@ async function fetchQuestionPages(locale: string): Promise<KnowledgeArticle[]> {
 }
 
 export const fetchKnowledgeQuestionPages = sanityCache(fetchQuestionPages, ['knowledge-question-pages'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: [SANITY_TAGS.knowledgeArticle, SANITY_TAGS.knowledgeFact, SANITY_TAGS.knowledgeSource],
 })
 
@@ -464,7 +464,7 @@ async function fetchLinks(slugs: string[], locale: string): Promise<{ slug: stri
 }
 
 export const fetchKnowledgeLinks = sanityCache(fetchLinks, ['knowledge-links'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: [SANITY_TAGS.knowledgeArticle],
 })
 

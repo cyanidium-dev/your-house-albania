@@ -45,7 +45,7 @@ type Props = { params: Promise<{ locale: string }> };
  * figures are the live Domlivo Price Index snapshot, the same one the city
  * pages and the downloads publish; the copy is in `PriceIndex.prices`.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

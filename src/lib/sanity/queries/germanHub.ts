@@ -81,7 +81,7 @@ export const fetchGermanHubSeaCandidates = sanityCache(
     }
   },
   ['sanity-german-hub-sea-candidates'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 /** The cards of the selected listings, in the order of `ids`; the same filter, so a listing gone since the ranking drops out. */
@@ -106,7 +106,7 @@ export const fetchGermanHubSeaCards = sanityCache(
     }
   },
   ['sanity-german-hub-sea-cards'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 export type GermanHubGuide = {
@@ -150,5 +150,5 @@ export const fetchGermanHubGuides = sanityCache(
     }
   },
   ['sanity-german-hub-guides'],
-  { revalidate: 3600, tags: [SANITY_TAGS.blogPost] },
+  { revalidate: 86400, tags: [SANITY_TAGS.blogPost] },
 );

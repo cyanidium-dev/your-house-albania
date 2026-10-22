@@ -7,7 +7,7 @@ import { buildPropertySitemapXml } from "@/lib/seo/propertySitemap";
 import { propertyExperimentArm } from "@/lib/seo/propertyLocaleExperiment";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /**
  * Listings of the experiment's *full* arm, in every locale. The trimmed arm

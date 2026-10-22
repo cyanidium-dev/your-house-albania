@@ -14,7 +14,7 @@ type Props = { params: Promise<{ locale: string }> };
  * 2026-10-21). French only: every other locale is a 404, and the metadata
  * declares `fr` as the only alternate. See `lib/frenchPilot/config.ts`.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return [{ locale: FRENCH_PILOT_LOCALE }];
