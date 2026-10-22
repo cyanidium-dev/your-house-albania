@@ -1279,6 +1279,8 @@
       "mayHaveChanged": "may have changed"
     },
     "retry": "Try again",
+    "fallbackCatalog": "Open the catalogue",
+    "fallbackTelegram": "Ask a realtor in Telegram",
     "newChat": "New chat"
   },
   "SeoLab": {

@@ -12,6 +12,8 @@ import { brandButtonClass } from '@/components/shared/BrandButton'
 import { parseAiEvent, type AiChatMessage, type AiErrorCode } from '@/lib/ai/events'
 import { AI_MAX_MESSAGE_CHARS, AI_MAX_TURNS } from '@/lib/ai/limits'
 import { track } from '@/lib/analytics/track'
+import { catalogPath } from '@/lib/routes/catalog'
+import { telegramBotUrl, telegramBotUsername } from '@/lib/contacts/messengerLinks'
 import { clearChat, loadChat, saveChat, type StoredTurn } from './chatStorage'
 import type { PropertyHomes } from '@/types/propertyHomes'
 import type { AiCitation } from '@/lib/ai/knowledgeTools'
@@ -502,6 +504,25 @@ export default function AiSearchChat({
             >
               {t('retry')}
             </button>
+          ) : null}
+          {errorCode === 'unavailable' || errorCode === 'budget_exhausted' || errorCode === 'failed' ? (
+            // The assistant is down: the catalogue and a realtor in Telegram
+            // are still there, and the Telegram question becomes a lead.
+            <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+              <Link href={catalogPath(locale)} className="inline-flex min-h-[44px] items-center font-semibold underline underline-offset-2">
+                {t('fallbackCatalog')}
+              </Link>
+              {telegramBotUsername() ? (
+                <a
+                  href={telegramBotUrl(telegramBotUsername()!, `g_${locale}_page`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[44px] items-center font-semibold underline underline-offset-2"
+                >
+                  {t('fallbackTelegram')}
+                </a>
+              ) : null}
+            </span>
           ) : null}
         </p>
       ) : null}
