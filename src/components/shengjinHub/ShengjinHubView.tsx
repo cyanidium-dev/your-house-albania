@@ -115,7 +115,6 @@ export async function ShengjinHubView({ locale, data }: { locale: string; data: 
   const jsonLdCrumbs = toBreadcrumbJsonLdItems(crumbs, pagePath);
 
   const cards = await attachMarketPositionToCards(seaListings.map((row) => mapCatalogPropertyToCard(row, locale)));
-  const hero = seaListings[0];
 
   const figures =
     median !== null && from !== null && date
@@ -188,7 +187,9 @@ export async function ShengjinHubView({ locale, data }: { locale: string; data: 
         label={t("label")}
         title={t("h1")}
         lead={lead}
-        image={hero?.mainImageUrl ? { src: hero.mainImageUrl, alt: t("heroAlt") } : null}
+        // The page sells the town by the sea: its beach, not one flat's room.
+        image={null}
+        place={SHENGJIN_CITY}
         footer={
           <Link href={shengjinHref} className={`${textLinkClass} !text-white`}>
             {t("allListings", { count: listings })}

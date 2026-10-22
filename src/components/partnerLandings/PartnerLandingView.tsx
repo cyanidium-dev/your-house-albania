@@ -174,6 +174,7 @@ export async function PartnerLandingView({ locale, data }: { locale: string; dat
         title={title}
         lead={lead}
         image={hero?.heroImageUrl ? { src: hero.heroImageUrl, alt: t("heroAlt", { placeFull: names.placeFull, partner }) } : null}
+        place={city}
         footer={
           <Link href={allHref} className={`${textLinkClass} !text-white`}>
             {t("allListings", { count: facts.count, partner })}

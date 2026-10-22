@@ -8,6 +8,7 @@ import type { DistrictDoc } from "@/lib/sanity/client";
 import { resolveLocalizedString } from "@/lib/sanity/localized";
 import { resolveLocaleHref } from "@/lib/routes/resolveLocaleHref";
 import { photoForCity } from "@/lib/media/albaniaPhotos";
+import { isHeroQuality } from "@/lib/images/heroQuality";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 
 type Props = {
@@ -37,7 +38,10 @@ export async function DistrictPageBody({ locale, countrySlug, citySlug, district
     resolveLocalizedString(district.heroSubtitle as never, locale) ||
     resolveLocalizedString(district.shortDescription as never, locale);
   const shortLine = resolveLocalizedString(district.heroShortLine as never, locale);
-  const heroImageUrl = district.heroImage?.asset?.url;
+  // A district photo under 1200px (a dozen are 800px phone shots) is a blur
+  // in the 1280px frame: the city's photograph is used instead.
+  const rawHeroUrl = district.heroImage?.asset?.url;
+  const heroImageUrl = isHeroQuality(rawHeroUrl, 1200) ? rawHeroUrl : undefined;
   // Roughly a fifth of the districts have no photograph in the CMS. Showing
   // the parent city instead of an empty hero is honest as long as the alt
   // text says what the picture is, which it does — it comes from the photo,
