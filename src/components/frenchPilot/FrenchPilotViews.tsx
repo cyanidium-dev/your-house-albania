@@ -209,6 +209,7 @@ export async function FrenchHubView({ locale, data }: { locale: string; data: Fr
         title={t("hub.h1")}
         lead={figures && date ? t("hub.lead", { date, figures, count: cards.length }) : t("hub.leadNoData")}
         image={hero?.mainImageUrl ? { src: hero.mainImageUrl, alt: t("heroAlt") } : null}
+        place="durres"
         footer={
           durres ? (
             <Link href={cityHref(durres)} className={`${textLinkClass} !text-white`}>
@@ -394,6 +395,7 @@ export async function FrenchGuideView({ locale, data, guide }: { locale: string;
         title={t(`${guide}.h1`)}
         lead={lead}
         image={hero?.mainImageUrl ? { src: hero.mainImageUrl, alt: t("heroAlt") } : null}
+        place="durres"
         footer={
           <Link href={frenchHubPath()} className={`${textLinkClass} !text-white`}>
             {t("breadcrumb")}

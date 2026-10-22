@@ -65,11 +65,13 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
   return (
     <HeaderVisualState>
       {({ sticky, overHero, isCatalog }) => {
-        // Airbnb-style: on catalog/listing routes the header condenses while scrolled.
-        const shrink = sticky && isCatalog
-        const logoSizeClass = shrink
-          ? "md:h-12 md:w-[105px]"
-          : "md:h-[68px] md:w-[150px]"
+        // One bar on every page (owner, 2026-10-22): the desktop header used
+        // to be 88px tall on content pages and 56px on the catalogue, with the
+        // CTA 16px from the right end but 6px from the top and bottom. Now it
+        // is 56px everywhere and the CTA (40px) sits 8px from the top, bottom
+        // and right, concentric with the rounded end; the logo starts 24px in.
+        void isCatalog
+        const logoSizeClass = "md:h-10 md:w-[140px]"
         // Floating over the hero photograph, before the bar gets its own
         // background. The CMS logo is dark artwork, so it has to be knocked out
         // to white in BOTH themes here — `dark:` alone left it black-on-black
@@ -78,7 +80,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
         return (
         <HeaderMobileController>
           {({ open: navbarOpen, onClose, onToggle }) => (
-            <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : ""} min-h-[3.25rem] md:min-h-0 ${shrink ? "md:h-16" : "md:h-24"} md:py-1`}>
+            <header className={`fixed left-0 right-0 z-50 bg-transparent transition-all duration-300 top-0 ${sticky ? "md:top-3" : "md:top-2"} min-h-[3.25rem] md:min-h-0 md:h-14`}>
               {/* The bar's content box is the page container (CONTAINER), so
                   the logo and the last control line up with every section's
                   edges at every width. The bar's background, once it has one,
@@ -86,7 +88,12 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                   padding on top of the gutter and sat 7 to 27px off the grid
                   (QA 2026-10-11). */}
               <div className={`${CONTAINER} h-full min-w-0 pt-[max(0.5rem,env(safe-area-inset-top))] md:pt-0`}>
-                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 pl-4 pr-1.5 md:py-2 md:px-4 ${sticky ? "shadow-sm md:shadow-lg border md:border-0 md:bg-white md:dark:bg-dark bg-white/[0.97] dark:bg-dark/[0.97] backdrop-blur-md border-white/20 dark:border-white/10 border-dark/10" : "shadow-none bg-transparent border border-transparent"}`}>
+                {/* Desktop, once scrolled: liquid glass - a light frosted
+                    tint, a strong blur with extra saturation so the page
+                    colours glow through, a hairline rim and an inner top
+                    highlight. Phones keep their near-solid bar (iOS paints the
+                    address bar from it). */}
+                <nav className={`-mx-2 md:-mx-4 min-w-0 h-full flex items-center justify-between rounded-full transition-[background-color,box-shadow,border-color] duration-300 ease-out py-0.5 pl-4 pr-1.5 md:py-0 md:pl-6 md:pr-[7px]${sticky ? "shadow-sm border bg-white/[0.97] dark:bg-dark/[0.97] backdrop-blur-md border-dark/10 dark:border-white/10 md:bg-white/60 md:dark:bg-dark/55 md:backdrop-blur-2xl md:backdrop-saturate-[1.8] md:border-white/60 md:dark:border-white/[0.12] md:shadow-[0_12px_32px_-12px_rgba(16,24,40,0.28),inset_0_1px_0_rgba(255,255,255,0.65)] md:dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)]" : "shadow-none bg-transparent border border-transparent"}`}>
                   <div className='flex justify-between items-center gap-1.5 md:gap-2 w-full min-w-0'>
                     {/* The logo never shrinks: the row's spare width goes to
                         the nav (lg+) and, below that, stays empty. `max-w-[45%]`
@@ -151,7 +158,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                         next to the AI, favourites and menu buttons. On phones the
                         burger circle sits 7px from the bar's top, bottom and
                         right edge, concentric with the rounded end. */}
-                    <div className='flex items-center gap-3 md:gap-1 xl:gap-1.5 min-w-0 shrink-0 md:-mr-px'>
+                    <div className='flex items-center gap-3 md:gap-1 xl:gap-1.5 min-w-0 shrink-0'>
                       <HeaderPreferences overHero={overHero} sticky={sticky} />
                       {aiSearchEnabled ? (
                         <HeaderAiSearchLink locale={locale} overHero={overHero} sticky={sticky} />
@@ -162,7 +169,7 @@ const HeaderClient: React.FC<HeaderClientProps> = ({
                       <div className="hidden md:block lg:hidden xl:block md:ml-2">
                         <Link
                           href={propertiesHref}
-                          className={brandButtonClass('light', 'shadow-sm whitespace-nowrap', 'md')}
+                          className={brandButtonClass('light', 'shadow-sm whitespace-nowrap !min-h-10 h-10 !py-0 !px-5 !text-[15px]', 'md')}
                         >
                           {t.cta.viewProperties}
                         </Link>

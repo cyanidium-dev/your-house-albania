@@ -77,11 +77,11 @@ const PHOTOS = {
   },
   shengjin: {
     src: '/images/albania/shengjin.jpg',
-    title: 'Shëngjin seen from the air',
-    author: 'Albinfo',
-    licence: 'cc-by-4.0',
-    licenceUrl: 'https://creativecommons.org/licenses/by/4.0/',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Sh%C3%ABngjin_2020_aerial_view.jpg',
+    title: 'The beach and seafront at Shëngjin (cropped, colour adjusted)',
+    author: 'Drdenn3',
+    licence: 'cc-by-sa-3.0',
+    licenceUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Shengjin_beach_faceing_noth.jpg',
   },
   himare: {
     src: '/images/albania/himare.jpg',
