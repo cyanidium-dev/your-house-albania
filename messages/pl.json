@@ -262,7 +262,8 @@
       "requestInfo": "Zostaw zgłoszenie",
       "plotArea": "Działka {value} m²",
       "plotAreaUnknown": "Działka: nie podano",
-      "priceOnRequest": "Cena na zapytanie"
+      "priceOnRequest": "Cena na zapytanie",
+      "noPhoto": "Brak zdjęć"
     },
     "blogCard": {
       "imageAlt": "Zdjęcie artykułu na blogu",
@@ -1516,7 +1517,9 @@
     },
     "selection": {
       "title": "Wyślemy wybór ofert według Twoich kryteriów",
-      "criteria": "Twoje kryteria"
+      "criteria": "Twoje kryteria",
+      "lead": "Nic nie pasuje?",
+      "cta": "Otrzymaj zestawienie"
     },
     "trust": {
       "phone": "Telefon",

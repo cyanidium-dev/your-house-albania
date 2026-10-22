@@ -99,11 +99,17 @@ export function useCatalogFilterChrome({ startCollapsed = false }: { startCollap
     // shrinks on collapse, and anchoring would otherwise shift scrollY to keep
     // content fixed — which fights the direction-aware reveal (and re-triggers it
     // mid-animation). With anchoring off the sticky bar simply pushes the results.
+    // On <body> too: Chrome anchored there regardless of <html>, and on "Show
+    // more" it held the button on screen, pushing the cards just loaded above
+    // the viewport (owner, 2026-10-22: "it throws me down to the form").
     const prevAnchor = document.documentElement.style.overflowAnchor;
+    const prevBodyAnchor = document.body.style.overflowAnchor;
     document.documentElement.style.overflowAnchor = "none";
+    document.body.style.overflowAnchor = "none";
     return () => {
       delete document.documentElement.dataset.catalog;
       document.documentElement.style.overflowAnchor = prevAnchor;
+      document.body.style.overflowAnchor = prevBodyAnchor;
     };
   }, []);
 

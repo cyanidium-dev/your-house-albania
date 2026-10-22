@@ -274,7 +274,8 @@
       "requestInfo": "Lini një kërkesë",
       "plotArea": "Truall {value} m²",
       "plotAreaUnknown": "Trualli: nuk është specifikuar",
-      "priceOnRequest": "Çmimi sipas kërkesës"
+      "priceOnRequest": "Çmimi sipas kërkesës",
+      "noPhoto": "Ende pa foto"
     },
     "blogCard": {
       "imageAlt": "Imazhi i artikullit të blogut",
@@ -1517,7 +1518,9 @@
     },
     "selection": {
       "title": "Ju dërgojmë një përzgjedhje sipas kritereve tuaja",
-      "criteria": "Kriteret tuaja"
+      "criteria": "Kriteret tuaja",
+      "lead": "Nuk gjetët atë që kërkoni?",
+      "cta": "Merrni një përzgjedhje"
     },
     "trust": {
       "phone": "Telefoni",

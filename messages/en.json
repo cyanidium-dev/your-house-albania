@@ -273,7 +273,8 @@
       "requestInfo": "Leave a request",
       "plotArea": "Plot {value} m²",
       "plotAreaUnknown": "Plot: not specified",
-      "priceOnRequest": "Price on request"
+      "priceOnRequest": "Price on request",
+      "noPhoto": "No photo yet"
     },
     "blogCard": {
       "imageAlt": "Blog post image",
@@ -1516,7 +1517,9 @@
     },
     "selection": {
       "title": "We'll send a selection by your criteria",
-      "criteria": "Your criteria"
+      "criteria": "Your criteria",
+      "lead": "Didn't find the right one?",
+      "cta": "Get a selection"
     },
     "trust": {
       "phone": "Phone",
