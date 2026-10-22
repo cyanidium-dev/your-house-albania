@@ -131,6 +131,12 @@ export function PropertyCardGallery({
   const isSlideNearby = (idx: number) =>
     idx === imageIndex || (nearViewport && Math.abs(idx - imageIndex) <= 1)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  // Photos that failed to load: the slide shows the no-photo plate instead of
+  // an empty box that reads as a broken page.
+  const [broken, setBroken] = useState<Set<number>>(() => new Set())
+  const markBroken = useCallback((idx: number) => {
+    setBroken((prev) => (prev.has(idx) ? prev : new Set(prev).add(idx)))
+  }, [])
 
   /**
    * The whole card is a link, and on `fullClickable` cards an invisible anchor
@@ -235,6 +241,19 @@ export function PropertyCardGallery({
    * the listing — ten or so per card, two hundred elements on a listing page
    * that the browser laid out and React hydrated for nothing.
    */
+  // No photograph yet (or none that loads): a calm plate that says so,
+  // instead of an empty box (owner, 2026-10-22).
+  const noPhotoPlate = (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-primary/15 via-primary/[0.05] to-transparent text-dark/50 dark:from-primary/25 dark:via-primary/10 dark:text-white/55">
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-60 [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:14px_14px] text-primary/20 dark:text-primary/30"
+      />
+      <SpriteIcon icon="ph:camera-slash" width={isSmall || isList ? 22 : 28} height={isSmall || isList ? 22 : 28} className="relative" aria-hidden />
+      <span className={cn('relative font-medium', isSmall || isList ? 'text-xs' : 'text-sm')}>{t('noPhoto')}</span>
+    </div>
+  )
+
   const slideTrack =
     displayImages.length > 0 ? (
       <div className="relative h-full w-full overflow-hidden">
@@ -253,13 +272,19 @@ export function PropertyCardGallery({
           {displayImages.map((img, idx) =>
             isSlideNearby(idx) ? (
               <div key={idx} className="absolute inset-y-0 w-full" style={{ left: `${idx * 100}%` }}>
-                <Image src={img.src} alt={imageAlt} fill sizes={imageSizes} className={imageClass} />
+                {broken.has(idx) ? (
+                  noPhotoPlate
+                ) : (
+                  <Image src={img.src} alt={imageAlt} fill sizes={imageSizes} className={imageClass} onError={() => markBroken(idx)} />
+                )}
               </div>
             ) : null
           )}
         </div>
       </div>
-    ) : null
+    ) : (
+      <div className="relative h-full w-full">{noPhotoPlate}</div>
+    )
 
   return (
     <div

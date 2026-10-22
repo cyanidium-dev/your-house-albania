@@ -8,6 +8,16 @@ import { cn } from "@/lib/utils";
 
 export type LightboxImage = { url: string; alt?: string };
 
+/** The photo on screen first, then three ahead and one behind, without repeats. */
+function preloadIndexes(index: number, count: number): number[] {
+  const out: number[] = [];
+  for (const step of [0, 1, 2, 3, -1]) {
+    const idx = (index + step + count) % count;
+    if (!out.includes(idx)) out.push(idx);
+  }
+  return out;
+}
+
 type Props = {
   /** One image — the blog's case. Ignored when `images` is given. */
   url?: string;
@@ -78,7 +88,7 @@ export function ImageLightbox({
 
   if (!isOpen || count === 0) return null;
 
-  const current = list[Math.min(index, count - 1)];
+  const at = Math.min(index, count - 1);
   const hasMany = count > 1;
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -173,14 +183,27 @@ export function ImageLightbox({
         onClick={(e) => e.stopPropagation()}
         role="presentation"
       >
-        <Image
-          key={current.url}
-          src={current.url}
-          alt={current.alt ?? alt}
-          fill
-          className="object-contain object-center"
-          sizes="100vw"
-        />
+        {/* The photo on screen and its neighbours (three ahead, one behind)
+            stay mounted, the others hidden: while the visitor looks at one,
+            the next ones load, so the arrow never lands on a black screen
+            (owner, 2026-10-22). Keyed by URL, so a loaded photo is reused. */}
+        {preloadIndexes(at, count).map((idx) => {
+          const img = list[idx];
+          const shown = idx === at;
+          return (
+            <Image
+              key={img.url}
+              src={img.url}
+              alt={shown ? (img.alt ?? alt) : ""}
+              aria-hidden={shown ? undefined : true}
+              fill
+              loading="eager"
+              fetchPriority={shown ? "high" : "low"}
+              className={cn("object-contain object-center", !shown && "invisible")}
+              sizes="100vw"
+            />
+          );
+        })}
       </div>
 
       {(hasMany || action) && (

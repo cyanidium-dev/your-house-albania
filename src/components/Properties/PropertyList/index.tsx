@@ -358,9 +358,9 @@ async function PropertiesListing({
     collapsedByDefault: false,
   }
 
-  // "We'll send a selection by your criteria", shown from page 2 (the client
-  // decides when; see showsSelectionBlock). The filters go along twice: as
-  // chips for the visitor and as plain lines for the operator.
+  // "We'll send a selection by your criteria": one line under the listing,
+  // the form in a dialog (CatalogSelectionRequest). The filters go along
+  // twice: as chips for the visitor and as plain lines for the operator.
   const [tCapture, tQuickLead, tBot, tDeal] = await Promise.all([
     getTranslations({ locale, namespace: 'Capture.selection' }),
     getTranslations({ locale, namespace: 'QuickLead' }),
@@ -397,6 +397,8 @@ async function PropertiesListing({
     : {
         title: tCapture('title'),
         criteriaLabel: tCapture('criteria'),
+        lead: tCapture('lead'),
+        cta: tCapture('cta'),
         chips: selectionCriteria.chips,
         message: selectionCriteria.message,
       }

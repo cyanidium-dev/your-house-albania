@@ -46,6 +46,7 @@ const ICONS = [
   "ph:fire-fill",
   "ph:heart",
   "ph:heart-fill",
+  "ph:camera-slash",
   "ph:house-simple-fill",
   "ph:image",
   "ph:list",

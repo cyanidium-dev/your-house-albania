@@ -274,7 +274,8 @@
       "requestInfo": "Anfrage senden",
       "plotArea": "Grundstück {value} m²",
       "plotAreaUnknown": "Grundstück: nicht angegeben",
-      "priceOnRequest": "Preis auf Anfrage"
+      "priceOnRequest": "Preis auf Anfrage",
+      "noPhoto": "Noch kein Foto"
     },
     "blogCard": {
       "imageAlt": "Bild zum Blogbeitrag",
@@ -1517,7 +1518,9 @@
     },
     "selection": {
       "title": "Wir senden Ihnen eine Auswahl nach Ihren Kriterien",
-      "criteria": "Ihre Kriterien"
+      "criteria": "Ihre Kriterien",
+      "lead": "Nichts Passendes gefunden?",
+      "cta": "Auswahl anfordern"
     },
     "trust": {
       "phone": "Telefon",

@@ -273,7 +273,8 @@
       "requestInfo": "Lascia una richiesta",
       "plotArea": "Terreno {value} m²",
       "plotAreaUnknown": "Terreno: non specificato",
-      "priceOnRequest": "Prezzo su richiesta"
+      "priceOnRequest": "Prezzo su richiesta",
+      "noPhoto": "Foto non ancora disponibile"
     },
     "blogCard": {
       "imageAlt": "Immagine articolo blog",
@@ -1516,7 +1517,9 @@
     },
     "selection": {
       "title": "Ti inviamo una selezione in base ai tuoi criteri",
-      "criteria": "I tuoi criteri"
+      "criteria": "I tuoi criteri",
+      "lead": "Non hai trovato quello giusto?",
+      "cta": "Ricevi una selezione"
     },
     "trust": {
       "phone": "Telefono",
