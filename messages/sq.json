@@ -1280,6 +1280,8 @@
       "mayHaveChanged": "mund të ketë ndryshuar"
     },
     "retry": "Provo përsëri",
+    "fallbackCatalog": "Hap katalogun",
+    "fallbackTelegram": "Pyet një agjent në Telegram",
     "newChat": "Bisedë e re"
   },
   "SeoLab": {

@@ -1279,6 +1279,8 @@
       "mayHaveChanged": "могло измениться"
     },
     "retry": "Повторить",
+    "fallbackCatalog": "Открыть каталог",
+    "fallbackTelegram": "Спросить риелтора в Telegram",
     "newChat": "Новый чат"
   },
   "SeoLab": {

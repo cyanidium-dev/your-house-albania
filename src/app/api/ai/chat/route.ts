@@ -304,7 +304,14 @@ export async function POST(req: NextRequest) {
         send({ type: 'done' })
       } catch (err) {
         console.error('[ai] chat turn failed:', err)
-        send({ type: 'error', code: 'failed' })
+        // An empty API balance or a revoked key will not fix itself on a
+        // retry (2026-10-23: the balance ran out and every visitor got "try
+        // again"): say the assistant is unavailable and let the page offer
+        // the catalogue and a realtor instead.
+        const status = (err as { status?: number })?.status
+        const message = err instanceof Error ? err.message : ''
+        const unavailable = status === 401 || status === 403 || /credit balance|billing/i.test(message)
+        send({ type: 'error', code: unavailable ? 'unavailable' : 'failed' })
       } finally {
         controller.close()
       }

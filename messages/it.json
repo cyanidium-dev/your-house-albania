@@ -1279,6 +1279,8 @@
       "mayHaveChanged": "potrebbe essere cambiato"
     },
     "retry": "Riprova",
+    "fallbackCatalog": "Apri il catalogo",
+    "fallbackTelegram": "Chiedi a un agente su Telegram",
     "newChat": "Nuova chat"
   },
   "SeoLab": {

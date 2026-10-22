@@ -1278,6 +1278,8 @@
       "mayHaveChanged": "a pu changer"
     },
     "retry": "Réessayer",
+    "fallbackCatalog": "Ouvrir le catalogue",
+    "fallbackTelegram": "Demander à un agent sur Telegram",
     "newChat": "Nouvelle conversation"
   },
   "Knowledge": {

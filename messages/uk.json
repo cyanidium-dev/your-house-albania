@@ -1279,6 +1279,8 @@
       "mayHaveChanged": "могло змінитися"
     },
     "retry": "Спробувати ще раз",
+    "fallbackCatalog": "Відкрити каталог",
+    "fallbackTelegram": "Запитати рієлтора в Telegram",
     "newChat": "Новий чат"
   },
   "SeoLab": {

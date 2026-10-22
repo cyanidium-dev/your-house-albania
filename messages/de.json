@@ -1280,6 +1280,8 @@
       "mayHaveChanged": "kann sich geändert haben"
     },
     "retry": "Erneut versuchen",
+    "fallbackCatalog": "Katalog öffnen",
+    "fallbackTelegram": "Makler auf Telegram fragen",
     "newChat": "Neuer Chat"
   },
   "SeoLab": {
