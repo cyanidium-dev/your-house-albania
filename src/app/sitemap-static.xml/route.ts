@@ -13,7 +13,7 @@ import { buildStaticCodePageEntries } from "@/lib/seo/staticCodePages";
 import { buildPartnerLandingSitemapEntries } from "@/lib/seo/partnerLandingPages";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /**
  * True for an `investment/{deal}` path whose page sets `noindex` because the

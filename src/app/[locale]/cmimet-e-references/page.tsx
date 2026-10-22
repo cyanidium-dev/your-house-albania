@@ -16,7 +16,7 @@ type Props = { params: Promise<{ locale: string }> };
  * calculator (SEO hypothesis 5, lab experiment E01, 2026-10-21). Albanian
  * only: every other locale is a 404. See `lib/referencePrices/data.ts`.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return [{ locale: REFERENCE_PRICES_LOCALE }];

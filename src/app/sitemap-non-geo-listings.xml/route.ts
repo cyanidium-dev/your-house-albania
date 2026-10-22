@@ -5,7 +5,7 @@ import { fetchSitemapNonGeoListingEntries } from "@/lib/sanity/client";
 import { buildUrlsetXml } from "@/lib/seo/sitemapXml";
 import { getSiteBaseUrl } from "@/lib/siteUrl";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /** National deal category + deal/type listing URLs (not editorial `investment/*`). */
 export async function GET() {

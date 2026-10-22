@@ -15,7 +15,7 @@ import en from '../../../messages/en.json'
  * same hourly snapshot as the `/info` pages. After it, every knowledge-base
  * question page in full (lib/knowledge/llmsText).
  */
-export const revalidate = 3600
+export const revalidate = 86400
 
 export async function GET() {
   const [snapshot, pages] = await Promise.all([fetchPriceIndexSnapshot(), fetchKnowledgeQuestionPages('en')])

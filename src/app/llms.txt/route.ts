@@ -23,7 +23,7 @@ import { referenceFactsMarkdown } from '@/lib/knowledge/llmsText'
  * "Reference facts" is one line per knowledge-base question page: question,
  * answer, URL (lib/knowledge/llmsText).
  */
-export const revalidate = 3600
+export const revalidate = 86400
 
 function buildLlmsTxt(base: string, snapshot: PriceIndexSnapshot | null, knowledge: KnowledgeArticle[]): string {
   const u = (path: string) => `${base}${path}`

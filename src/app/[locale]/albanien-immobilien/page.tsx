@@ -16,7 +16,7 @@ type Props = { params: Promise<{ locale: string }> };
  * 2026-10-19). German only: every other locale is a 404, and the metadata
  * declares `de` as the only alternate. See `lib/germanHub/config.ts`.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return [{ locale: GERMAN_HUB_LOCALE }];

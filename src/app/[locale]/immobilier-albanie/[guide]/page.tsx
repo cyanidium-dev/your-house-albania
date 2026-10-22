@@ -20,7 +20,7 @@ type Props = { params: Promise<{ locale: string; guide: string }> };
  * The French pilot's two guides, `/fr/immobilier-albanie/{guide}`: buying
  * from France and seaside prices. French only, like the hub.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 export const dynamicParams = false;
 
 function guideKey(segment: string): FrenchGuideKey | null {

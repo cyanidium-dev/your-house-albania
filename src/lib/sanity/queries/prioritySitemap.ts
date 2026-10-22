@@ -109,7 +109,7 @@ export const fetchPrioritySitemapSources = sanityCache(
   },
   ['sanity-priority-sitemap-sources'],
   {
-    revalidate: 3600,
+    revalidate: 86400,
     tags: [SANITY_TAGS.landingPage, SANITY_TAGS.blogPost, SANITY_TAGS.city],
   },
 );

@@ -40,7 +40,7 @@ export async function fetchNavGuidePosts(): Promise<NavGuidePost[]> {
       }
     },
     ['sanity-nav-guide-posts'],
-    { revalidate: 3600, tags: [SANITY_TAGS.blogPost, SANITY_TAGS.blogCategory] },
+    { revalidate: 86400, tags: [SANITY_TAGS.blogPost, SANITY_TAGS.blogCategory] },
   )();
 }
 
@@ -65,6 +65,6 @@ export async function fetchNavPropertyTypes(): Promise<NavPropertyType[]> {
       }
     },
     ['sanity-nav-property-types'],
-    { revalidate: 3600, tags: [SANITY_TAGS.propertyType, SANITY_TAGS.property] },
+    { revalidate: 86400, tags: [SANITY_TAGS.propertyType, SANITY_TAGS.property] },
   )();
 }

@@ -37,7 +37,7 @@ type Props = { params: Promise<{ locale: string }> };
  * rate come from the `roiCalcSection` of the source landing; the cost model
  * is `lib/calculators/roi.ts`, and the method block prints its constants.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /** Used when Sanity has no section to read the rate from; the same default as `RoiCalcSection`. */
 const DEFAULT_TAX_PCT = 15;

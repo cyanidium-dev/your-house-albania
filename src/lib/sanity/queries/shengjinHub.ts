@@ -38,7 +38,7 @@ export const fetchShengjinFlats = sanityCache(
     }
   },
   ['sanity-shengjin-hub-flats'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 /** The cards of the selected listings, in the order of `ids`; a listing gone since the ranking drops out. */
@@ -63,7 +63,7 @@ export const fetchShengjinCards = sanityCache(
     }
   },
   ['sanity-shengjin-hub-cards'],
-  { revalidate: 3600, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
+  { revalidate: 86400, tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType] },
 );
 
 export type ShengjinGuide = {
@@ -100,5 +100,5 @@ export const fetchShengjinGuides = sanityCache(
     }
   },
   ['sanity-shengjin-hub-guides'],
-  { revalidate: 3600, tags: [SANITY_TAGS.landingPage] },
+  { revalidate: 86400, tags: [SANITY_TAGS.landingPage] },
 );

@@ -18,7 +18,7 @@ import { generateNonGeoDealRouteMetadata } from "@/lib/seo/nonGeoDealRouteMetada
  * hour is a backstop; the Sanity webhook purges by tag. Do not lower it: a 60 s
  * window exhausted the ISR write quota on 2026-09-19.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return [];

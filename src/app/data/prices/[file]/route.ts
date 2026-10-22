@@ -8,7 +8,7 @@ import { findIndexCity } from "@/lib/priceIndex/snapshot";
  * city first and then its districts, CC BY 4.0. Regenerated at most hourly
  * from the same snapshot as the city's `/info` page.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 type Params = { params: Promise<{ file: string }> };
 

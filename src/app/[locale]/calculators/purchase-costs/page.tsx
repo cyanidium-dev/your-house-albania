@@ -27,7 +27,7 @@ type Props = { params: Promise<{ locale: string }> };
  * page of its own, for other sites to link to (lib/calculatorPages). The cost
  * lines come from the `purchaseCostCalcSection` of the source landing.
  */
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

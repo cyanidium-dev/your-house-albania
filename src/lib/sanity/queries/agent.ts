@@ -67,7 +67,7 @@ export async function fetchAgentMessengerContacts(
   const doc = await client.fetch<{ slug?: string; phone?: string | null; telegramUrl?: string | null; ownLeads?: boolean } | null>(
     `*[_type == "agent" && slug.current == $slug][0]{ "slug": slug.current, phone, telegramUrl, "ownLeads": defined(telegramLeadChatId) }`,
     { slug },
-    { next: { revalidate: 3600, tags: ['sanity:agent'] } } as never,
+    { next: { revalidate: 86400, tags: ['sanity:agent'] } } as never,
   );
   if (!doc?.ownLeads || !doc.slug) return null;
   return { slug: doc.slug, phone: doc.phone ?? null, telegramUrl: doc.telegramUrl ?? null };

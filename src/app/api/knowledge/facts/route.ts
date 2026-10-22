@@ -7,7 +7,7 @@ import {
 import { getSiteBaseUrl } from '@/lib/siteUrl'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
+export const revalidate = 86400
 
 /**
  * Public, read-only access to the sourced figures behind the knowledge base.
