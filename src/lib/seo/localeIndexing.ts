@@ -7,6 +7,7 @@ import {
   FRENCH_PILOT_LISTINGS,
 } from "@/lib/frenchPilot/config";
 import { CALCULATOR_PATHS } from "@/lib/calculatorPages/config";
+import { SHENGJIN_HUB_PATH } from "@/lib/shengjinHub/config";
 
 /**
  * Locales that are live but only partly written.
@@ -42,6 +43,9 @@ export const PARTIAL_LOCALE_PATHS: PartialLocalePaths = {
     // The two calculator pages (2026-10-21, lib/calculatorPages): their copy and
     // the calculators' labels are written in messages/fr.json.
     new RegExp(`^/(${anyOf(Object.values(CALCULATOR_PATHS))})$`),
+    // The Shëngjin hub (2026-10-22, lib/shengjinHub): its copy is written in
+    // messages/fr.json, its figures and cards are language-neutral.
+    new RegExp(`^/${escapeRe(SHENGJIN_HUB_PATH)}$`),
   ],
 };
 

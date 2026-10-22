@@ -35,7 +35,9 @@ export type EvidenceSource =
   | "kp-foreign4-2026-09-17"
   | "gsc-2026-09-17"
   | "serp-2026-09-17"
-  | "kp-fr-2026-10-21";
+  | "kp-fr-2026-10-21"
+  // Search Console pages report, 28 days to 2026-10-19 (seo lab raw/2026-10-21).
+  | "gsc-2026-10-21";
 
 /** One search intent with evidence of demand, targeting exactly one page. */
 export type KeywordCluster = {

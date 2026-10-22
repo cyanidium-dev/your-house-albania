@@ -15,6 +15,7 @@ import {
   partnerLandingPath,
 } from "@/lib/partnerLandings/config";
 import { selectPartnerListings } from "@/lib/partnerLandings/facts";
+import { SHENGJIN_CITY, shengjinHubPath } from "@/lib/shengjinHub/config";
 
 type Props = {
   locale: string;
@@ -71,6 +72,11 @@ export async function ListingPlaceLinks({ locale, citySlug, districtSlug, agentS
     });
   }
   if (infoHref) links.push({ href: infoHref, label: t("cityPrices", { city: cityName }) });
+  // The Shëngjin hub (lib/shengjinHub): prices against the other seaside cities, the cheapest flats by the sea, costs.
+  if (city === SHENGJIN_CITY) {
+    const tHub = await getTranslations({ locale, namespace: "ShengjinHub" });
+    links.push({ href: shengjinHubPath(locale), label: tHub("linkFromListing") });
+  }
   // The partner's selection in this place (lib/partnerLandings), on the partner's own listings.
   const partnerLanding = agentSlug === PARTNER_SLUG ? partnerLandingForPlace({ city, district }) : null;
   if (partnerLanding) {

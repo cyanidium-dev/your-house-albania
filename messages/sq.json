@@ -82,7 +82,8 @@
       "about": "Rreth nesh",
       "contacts": "Kontakte",
       "addProperty": "Shtoni pronën tuaj",
-      "knowledge": "Baza e njohurive"
+      "knowledge": "Baza e njohurive",
+      "shengjinHub": "Shëngjin: apartamente buzë detit"
     },
     "cities": {
       "empty": "Nuk ka qytete për të shfaqur."
@@ -1637,5 +1638,118 @@
     },
     "firstLine": "në vijën e parë, buzë plazhit",
     "metres": "{n} m"
+  },
+  "ShengjinHub": {
+    "metaTitle": "Apartamente buzë detit në Shëngjin nga {from}: {listings} njoftime",
+    "metaTitleShort": "Shëngjin: apartamente buzë detit, çmime dhe njoftime",
+    "metaDescription": "Shëngjini është tregu bregdetar më i lirë në Domlivo me kampion të besueshëm: mediana {median}/m² kundrejt {durresMedian}/m² në Durrës, apartamente nga {from}, {sea} nga {listings} njoftime brenda 1 km nga plazhi. Çmime, kosto, pyetje.",
+    "metaDescriptionShort": "Apartamente buzë detit në Shëngjin: çmimet e kërkuara live kundrejt Durrësit, Vlorës dhe Sarandës, çfarë blihet me një buxhet, apartamentet më të lira pranë plazhit, kostot e blerjes dhe pyetjet e blerësve.",
+    "breadcrumb": "Shëngjin",
+    "label": "Pronë e lirë buzë detit në Shqipëri",
+    "h1": "Apartamente buzë detit në Shëngjin",
+    "figures": "apartamente nga {from}, çmimi mesatar i kërkuar {median}/m², {listings, plural, one {# njoftim} other {# njoftime}}",
+    "lead": "Më {date} Domlivo liston në Shëngjin {figures}, kundrejt {durresMedian}/m² në Durrës. {sea, plural, one {# prej tyre ndodhet} other {# prej tyre ndodhen}} brenda 1 km nga plazhi ose në vijë të parë. Më poshtë: shifrat live, çfarë blihet këtu me një buxhet, apartamentet më të lira buzë detit, kostot mbi çmimin dhe pyetjet e blerësve.",
+    "leadNoDurres": "Më {date} Domlivo liston në Shëngjin {figures}. {sea, plural, one {# prej tyre ndodhet} other {# prej tyre ndodhen}} brenda 1 km nga plazhi ose në vijë të parë. Më poshtë: shifrat live, çfarë blihet këtu me një buxhet, apartamentet më të lira buzë detit, kostot mbi çmimin dhe pyetjet e blerësve.",
+    "leadNoData": "Shëngjini është një qytet porti dhe plazhi në veri të Shqipërisë, një orë nga aeroporti i Tiranës, me çmimet e kërkuara më të ulëta mes tregjeve bregdetare në Domlivo. Më poshtë: çfarë blihet këtu me një buxhet, apartamentet më të lira buzë detit, kostot mbi çmimin dhe pyetjet e blerësve.",
+    "heroAlt": "Një apartament buzë detit në Shëngjin, i listuar në Domlivo",
+    "allListings": "Të gjitha {count, plural, one {# njoftim} other {# njoftimet}} në Shëngjin",
+    "tiles": {
+      "median": "Çmimi mesatar i kërkuar",
+      "medianFlat": "Çmimi mesatar i apartamentit",
+      "from": "Apartamenti më i lirë",
+      "sea": "Deri në {metres} m nga deti"
+    },
+    "why": {
+      "title": "Pse Shëngjini",
+      "tilesNote": "Çmime të kërkuara live të apartamenteve dhe garsonierave në Domlivo, {date}. Jo çmime shitjeje.",
+      "p1": "Shëngjini është plazhi i veriut: një qytet i vogël porti në bashkinë Lezhë, rreth 45-50 km nga aeroporti i Tiranës, më pak se një orë me makinë, dhe 45 minuta nga Shkodra. Përgjatë qytetit shtrihet një plazh i gjatë me rërë, në veri janë dunat e Ranës së Hedhun dhe në jug, drejt Tales, lagunat e Kune-Vainit, zonë e mbrojtur. Në verë mbushet me pushues nga Kosova dhe veriu i vendit; jashtë sezonit është i qetë.",
+      "p2": "Thelbi për një blerës është çmimi. Sipas Indeksit të Çmimeve Domlivo, apartamentet e listuara në Shëngjin kërkojnë një medianë prej {median} për m², {percent}% më pak se Durrësi me {durresMedian}, dhe shumë më pak se Vlora dhe Saranda, ku një kampion i besueshëm as nuk ekziston, sepse pothuajse asgjë nuk listohet nën 2 000 €/m². Me të njëjtat para këtu blihet një apartament më i madh ose më afër ujit.",
+      "p2NoData": "Thelbi për një blerës është çmimi: sipas Indeksit të Çmimeve Domlivo, në Shëngjin kërkohet më pak për m² se në Durrës dhe shumë më pak se në Vlorë dhe Sarandë. Me të njëjtat para këtu blihet një apartament më i madh ose më afër ujit.",
+      "p3": "Oferta është kryesisht apartamente 1+1, me garsoniera në fund dhe 2+1 më lart; pjesa më e madhe vjen nga ndërtues dhe agjenci vendase që listojnë tek ne, kështu që tabelat më poshtë lëvizin me shitjet dhe njoftimet e reja. Çdo shifër në këtë faqe llogaritet nga njoftimet live në orën e treguar.",
+      "districtsLink": "Zonat e Shëngjinit: qendra, Rana e Hedhun dhe Tale, me çmimet për m²"
+    },
+    "compare": {
+      "title": "Shëngjini kundrejt qyteteve të tjera bregdetare",
+      "lead": "Çmimi mesatar i kërkuar për m² i apartamenteve dhe garsonierave, çmimi total mesatar, apartamenti më i lirë dhe numri i njoftimeve. Çdo qytet hap njoftimet e tij.",
+      "colCity": "Qyteti",
+      "colMedian": "Mediana, €/m²",
+      "colMedianFlat": "Apartamenti mesatar",
+      "colFrom": "Apartamente nga",
+      "colListings": "Njoftime",
+      "colSample": "Apartamente në kampion",
+      "indicative": "{value} (orientues)",
+      "lowSample": "pak të dhëna",
+      "caption": "Qytetet bregdetare të Shqipërisë kundrejt Shëngjinit, {date}: çmimi mesatar i kërkuar për m² i apartamenteve dhe garsonierave në shitje në Domlivo, çmimi total mesatar, çmimi më i ulët i apartamentit dhe njoftimet për qytet",
+      "footnote": "Çmime të kërkuara nga njoftimet live, të rillogaritura çdo orë. Një medianë mbi më pak se {min} apartamente është orientuese; kampioni qëndron pranë.",
+      "pricesLink": "Çdo qytet me diapazonin dhe fazën e ndërtimit",
+      "methodologyLink": "Si llogaritet indeksi"
+    },
+    "budget": {
+      "title": "Çfarë blihet me një buxhet në Shëngjin",
+      "lead": "Apartamente dhe garsoniera në shitje më {date}, sipas çmimit total të kërkuar, dhe sa prej çdo brezi ndodhen brenda 1 km nga deti ose në vijë të parë.",
+      "caption": "Apartamente në shitje në Shëngjin sipas çmimit total të kërkuar, {date}, dhe sa prej tyre janë buzë detit",
+      "colBudget": "Buxheti",
+      "colFlats": "Apartamente",
+      "colSea": "Buzë detit",
+      "bandUnder": "Nën {to}",
+      "band": "{from} - {to}",
+      "bandOver": "Mbi {from}",
+      "note": "Apartamentet me çmim për m² pa total nuk numërohen. Një njoftim llogaritet buzë detit kur tregon një distancë në këmbë deri në 1 km ose vijë të parë; njoftimet pa distancë nuk numërohen, kështu që numri real është më i lartë."
+    },
+    "layouts": {
+      "caption": "Apartamente në shitje në Shëngjin sipas tipologjisë, {date}: numri, çmimi më i ulët dhe mesatar i kërkuar",
+      "colLayout": "Tipologjia",
+      "colCount": "Njoftime",
+      "colFrom": "Nga",
+      "colMedian": "Çmimi mesatar",
+      "studio": "Garsonierë",
+      "1-1": "1+1",
+      "2-1": "2+1",
+      "3-1": "3+1 e më të mëdha",
+      "fewFlats": "pak apartamente"
+    },
+    "facets": {
+      "near-the-sea": "Apartamente buzë detit në Shëngjin ({count})",
+      "under-100k": "Apartamente nën 100 000 € në Shëngjin ({count})",
+      "1-1": "Apartamente 1+1 në Shëngjin ({count})",
+      "2-1": "Apartamente 2+1 në Shëngjin ({count})"
+    },
+    "sea": {
+      "title": "{count, plural, one {Apartamenti më i lirë buzë detit} other {# apartamentet më të lira buzë detit}}",
+      "lead": "Apartamente dhe garsoniera deri në {metres} m nga deti ose në vijë të parë, më të lirat për m² të parat, nga {total} buzë detit. Çmimet dhe disponueshmëria siç i tregojnë njoftimet.",
+      "all": "Të gjitha {count, plural, one {# njoftim} other {# njoftimet}} në Shëngjin"
+    },
+    "costs": {
+      "title": "Sa kushton blerja",
+      "lead": "Kostot mbi çmimin, nga burimet e kalkulatorit tonë të kostove të blerjes.",
+      "p1": "Një i huaj blen apartament ose shtëpi në Shqipëri me të njëjtat kushte si një shtetas dhe mund ta shesë ose ta lërë trashëgim lirisht; përjashtohet vetëm toka bujqësore. Blerja është e vlefshme vetëm si akt noterial. Noteri merr 0,35% të vlerës deri në 6 milionë lekë dhe 0,30% deri në 15 milionë; kadastra (ASHK) merr 5 000 lekë për regjistrimin e pronësisë. Blerësi individ nuk paguan taksë kalimi, taksat e shitjes i takojnë shitësit, dhe apartamenti nuk ka TVSH.",
+      "p2": "Për një apartament 100 000 € shpenzimet shtesë arrijnë rreth 2 300 €, pra 2,3%, me avokat, përkthyes të betuar dhe komisionin e agjencisë; me çdo zë opsional në kufirin e sipërm rreth 4 600 €. Nga rezervimi deri te certifikata e re zakonisht duhen katër deri në tetë javë; për një apartament në ndërtim akti pason përfundimin. Taksa vjetore e ndërtesës është 0,05% e vlerës së tatueshme.",
+      "p3": "Bankat shqiptare rrallë u japin kredi jorezidentëve. Tregu ofron në vend të saj pagesë me këste pa interes te ndërtuesi deri në dorëzim, standard në shumicën e shitjeve të reja. Të ardhurat nga qiraja tatohen me 15%. Pronësia lejon aplikimin për leje qëndrimi njëvjeçare sipas nenit 84 të ligjit 79/2021; ligji nuk cakton çmim minimal.",
+      "calculatorLink": "Kalkulatori i kostove të blerjes",
+      "yieldLink": "Kalkulatori i kthimit nga qiraja"
+    },
+    "faq": {
+      "title": "Pyetjet e blerësve",
+      "lead": "Përgjigje të shkurtra me shifrat live; krahasimet shkojnë më thellë.",
+      "q1": "Sa kushton një apartament në Shëngjin?",
+      "a1": "Më {date} apartamentet dhe garsonierat në shitje në Shëngjin në Domlivo kërkonin një medianë prej {median} për m² mbi {count} apartamente me çmim; apartamenti mesatar kërkonte {medianFlat} dhe më i liri {from}. Këto janë çmime të kërkuara, jo çmime shitjeje. Tabelat më lart i ndajnë sipas buxhetit dhe tipologjisë.",
+      "a1NoData": "Çmimet e kërkuara në Shëngjin janë më të ulëtat mes tregjeve bregdetare në Domlivo. Mediana live për m², çmimi mesatar i apartamentit dhe apartamenti më i lirë janë në tabelat më lart, të llogaritura çdo orë nga njoftimet.",
+      "q2": "A është Shëngjini më i lirë se Durrësi?",
+      "a2": "Po. Më {date} çmimi mesatar i kërkuar në Shëngjin ishte {median} për m² kundrejt {durresMedian} në Durrës, {percent}% më pak. Durrësi ka shumë më tepër njoftime dhe një qytet të madh pas plazhit; Shëngjini është një vendpushim më i vogël me dimër më të qetë dhe çmim hyrjeje më të ulët.",
+      "a2NoData": "Po, sipas Indeksit të Çmimeve Domlivo në Shëngjin kërkohet më pak për m² se në Durrës. Durrësi ka shumë më tepër njoftime dhe një qytet të madh pas plazhit; Shëngjini është një vendpushim më i vogël me dimër më të qetë dhe çmim hyrjeje më të ulët.",
+      "q3": "A mund të blejë një i huaj apartament në Shëngjin?",
+      "a3": "Po. Të huajt blejnë apartamente dhe shtëpi në Shqipëri me të njëjtat kushte si shtetasit shqiptarë dhe mund t'i shesin ose t'i trashëgojnë lirisht. Përjashtohet vetëm toka bujqësore: ajo mund të merret me qira deri në 99 vjet ose të blihet përmes një shoqërie shqiptare. Pronësia lejon aplikimin për leje qëndrimi njëvjeçare sipas nenit 84 të ligjit 79/2021, pa çmim minimal në ligj.",
+      "q4": "Çfarë paguaj mbi çmimin?",
+      "a4": "Noteri 0,35% të vlerës deri në 6 milionë lekë (0,30% deri në 15 milionë), 5 000 lekë kadastrës për regjistrimin dhe, nëse i përdorni, avokat, përkthyes të betuar dhe komisionin e agjencisë. Blerësi individ nuk paguan taksë kalimi dhe as TVSH për apartamentin. Për një apartament 100 000 € kjo është rreth 2 300 € në një rast tipik dhe rreth 4 600 € me çdo opsion në kufirin e sipërm.",
+      "q5": "Si arrihet në Shëngjin?",
+      "a5": "Nga Aeroporti Ndërkombëtar i Tiranës janë rreth 45-50 km rrugë, më pak se një orë me makinë ose taksi. Shkodra është 45 minuta larg, Lezha disa minuta. Qyteti nuk ka aeroport apo hekurudhë; në sezon ka autobusë nga Lezha.",
+      "q6": "Ku në Shëngjin duhet të kërkoj?",
+      "a6": "Qendra është rreth portit dhe shëtitores, me dyqanet dhe restorantet; Rana e Hedhun është plazhi me duna në veri të qytetit, me rezidenca më të reja; Tale është plazhi i gjatë në jug, pas lagunave të Kune-Vainit. {sea, plural, one {# njoftim tregon} other {# njoftime tregojnë}} distancë në këmbë deri në {metres} m nga deti ose vijë të parë; rrjeta më lart tregon më të lirat prej tyre për m²."
+    },
+    "contact": {
+      "title": "Cilin apartament në Shëngjin kërkoni?",
+      "subtitle": "Na tregoni buxhetin dhe tipologjinë. Ju dërgojmë oferta përkatëse nga stoku live me çmimin, distancën nga plazhi dhe disponueshmërinë."
+    },
+    "linkFromListing": "Udhëzuesi i Shëngjinit: çmimet kundrejt qyteteve të tjera bregdetare, apartamentet më të lira buzë detit, kostot e blerjes"
   }
 }

@@ -81,7 +81,8 @@
       "about": "O nas",
       "contacts": "Kontakty",
       "addProperty": "Dodaj nieruchomość",
-      "knowledge": "Baza wiedzy"
+      "knowledge": "Baza wiedzy",
+      "shengjinHub": "Shëngjin: mieszkania nad morzem"
     },
     "cities": {
       "empty": "Brak miast do wyświetlenia."
@@ -1636,5 +1637,118 @@
     },
     "firstLine": "w pierwszej linii, tuż przy plaży",
     "metres": "{n} m"
+  },
+  "ShengjinHub": {
+    "metaTitle": "Mieszkania nad morzem w Shëngjin od {from}: {listings} ofert",
+    "metaTitleShort": "Shëngjin, Albania: mieszkania nad morzem, ceny i oferty",
+    "metaDescription": "Shëngjin to najtańszy nadmorski rynek na Domlivo z wiarygodną próbą: mediana {median}/m² wobec {durresMedian}/m² w Durrës, mieszkania od {from}, {sea} z {listings} ofert do 1 km od plaży. Ceny, koszty, pytania.",
+    "metaDescriptionShort": "Mieszkania nad morzem w Shëngjin, północ Albanii: aktualne ceny ofertowe wobec Durrës, Wlory i Sarandy, co kupi się za dany budżet, najtańsze mieszkania blisko plaży, koszty zakupu i odpowiedzi na pytania.",
+    "breadcrumb": "Shëngjin",
+    "label": "Tania nieruchomość nad morzem w Albanii",
+    "h1": "Mieszkania nad morzem w Shëngjin, Albania",
+    "figures": "mieszkania od {from}, mediana ceny ofertowej {median}/m², {listings, plural, one {# oferta} few {# oferty} many {# ofert} other {# ofert}}",
+    "lead": "Na {date} Domlivo ma w Shëngjin {figures}, wobec {durresMedian}/m² w Durrës. {sea, plural, one {# z nich stoi} few {# z nich stoją} many {# z nich stoi} other {# z nich stoi}} do 1 km od plaży lub w pierwszej linii. Poniżej: aktualne liczby, co kupi się tu za dany budżet, najtańsze mieszkania nad morzem, koszty ponad cenę i pytania kupujących.",
+    "leadNoDurres": "Na {date} Domlivo ma w Shëngjin {figures}. {sea, plural, one {# z nich stoi} few {# z nich stoją} many {# z nich stoi} other {# z nich stoi}} do 1 km od plaży lub w pierwszej linii. Poniżej: aktualne liczby, co kupi się tu za dany budżet, najtańsze mieszkania nad morzem, koszty ponad cenę i pytania kupujących.",
+    "leadNoData": "Shëngjin to portowe i plażowe miasteczko na północy Albanii, godzinę od lotniska w Tiranie, z najniższymi cenami ofertowymi wśród nadmorskich rynków na Domlivo. Poniżej: co kupi się tu za dany budżet, najtańsze mieszkania nad morzem, koszty ponad cenę i pytania kupujących.",
+    "heroAlt": "Mieszkanie nad morzem w Shëngjin, wystawione na Domlivo",
+    "allListings": "Wszystkie {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# ofert}} w Shëngjin",
+    "tiles": {
+      "median": "Mediana ceny ofertowej",
+      "medianFlat": "Mediana ceny mieszkania",
+      "from": "Najtańsze mieszkanie",
+      "sea": "Do {metres} m od morza"
+    },
+    "why": {
+      "title": "Dlaczego Shëngjin",
+      "tilesNote": "Aktualne ceny ofertowe mieszkań i kawalerek na Domlivo, {date}. Nie ceny transakcyjne.",
+      "p1": "Shëngjin to plaża północnej Albanii: małe portowe miasteczko w gminie Lezhë, około 45-50 km od lotniska w Tiranie, niecałą godzinę samochodem, i 45 minut od Szkodry. Wzdłuż miasta ciągnie się długa piaszczysta plaża, na północ leżą wydmy Rana e Hedhun, a na południe, w stronę Tale, laguny Kune-Vain, obszar chroniony. Latem zjeżdżają tu wczasowicze z Kosowa i północy kraju; poza sezonem jest spokojnie.",
+      "p2": "Dla kupującego liczy się cena. Według Domlivo Price Index mieszkania wystawione w Shëngjin mają medianę {median} za m², o {percent}% mniej niż Durrës z {durresMedian}, i znacznie mniej niż Wlora i Saranda, gdzie wiarygodnej próby nawet nie ma, bo prawie nic nie jest wystawione poniżej 2 000 €/m². Za te same pieniądze kupi się tu większe mieszkanie albo bliżej wody.",
+      "p2NoData": "Dla kupującego liczy się cena: według Domlivo Price Index w Shëngjin żąda się mniej za m² niż w Durrës i znacznie mniej niż we Wlorze i Sarandzie. Za te same pieniądze kupi się tu większe mieszkanie albo bliżej wody.",
+      "p3": "Oferta to głównie mieszkania 1+1, z kawalerkami na dole i 2+1 wyżej; większość pochodzi od lokalnych deweloperów i agencji, które publikują u nas, więc tabele poniżej zmieniają się wraz ze sprzedażą i nowymi ofertami. Każda liczba na tej stronie jest policzona z aktualnych ogłoszeń o podanej godzinie.",
+      "districtsLink": "Dzielnice Shëngjin: centrum, Rana e Hedhun i Tale, z cenami za m²"
+    },
+    "compare": {
+      "title": "Shëngjin na tle innych nadmorskich miast",
+      "lead": "Mediana ceny ofertowej za m² mieszkań i kawalerek, mediana ceny całkowitej, najtańsze mieszkanie i liczba ofert. Każde miasto otwiera swoje ogłoszenia.",
+      "colCity": "Miasto",
+      "colMedian": "Mediana, €/m²",
+      "colMedianFlat": "Mediana mieszkania",
+      "colFrom": "Mieszkania od",
+      "colListings": "Ofert",
+      "colSample": "Mieszkań w próbie",
+      "indicative": "{value} (orientacyjnie)",
+      "lowSample": "za mało danych",
+      "caption": "Nadmorskie miasta Albanii na tle Shëngjin, {date}: mediana ceny ofertowej za m² mieszkań i kawalerek na sprzedaż na Domlivo, mediana ceny całkowitej, najniższa cena mieszkania i liczba ofert w mieście",
+      "footnote": "Ceny ofertowe z aktualnych ogłoszeń, przeliczane co godzinę. Mediana z mniej niż {min} mieszkań jest orientacyjna; próba stoi obok.",
+      "pricesLink": "Wszystkie miasta z przedziałem i etapem budowy",
+      "methodologyLink": "Jak liczony jest indeks"
+    },
+    "budget": {
+      "title": "Co kupi się za dany budżet w Shëngjin",
+      "lead": "Mieszkania i kawalerki na sprzedaż na {date}, według ceny całkowitej, i ile z każdego przedziału stoi do 1 km od morza lub w pierwszej linii.",
+      "caption": "Mieszkania na sprzedaż w Shëngjin według ceny całkowitej, {date}, i ile z nich jest nad morzem",
+      "colBudget": "Budżet",
+      "colFlats": "Mieszkań",
+      "colSea": "Nad morzem",
+      "bandUnder": "Do {to}",
+      "band": "{from} - {to}",
+      "bandOver": "Powyżej {from}",
+      "note": "Mieszkania z ceną za m² bez ceny całkowitej nie są liczone. Oferta liczy się jako nad morzem, gdy podaje odległość pieszo do 1 km lub pierwszą linię; oferty bez odległości nie są liczone, więc prawdziwa liczba jest wyższa."
+    },
+    "layouts": {
+      "caption": "Mieszkania na sprzedaż w Shëngjin według układu, {date}: liczba, najniższa i mediana ceny ofertowej",
+      "colLayout": "Układ",
+      "colCount": "Ofert",
+      "colFrom": "Od",
+      "colMedian": "Mediana ceny",
+      "studio": "Kawalerka",
+      "1-1": "1+1 (jedna sypialnia)",
+      "2-1": "2+1 (dwie sypialnie)",
+      "3-1": "3+1 i większe",
+      "fewFlats": "za mało mieszkań"
+    },
+    "facets": {
+      "near-the-sea": "Mieszkania nad morzem w Shëngjin ({count})",
+      "under-100k": "Mieszkania do 100 000 € w Shëngjin ({count})",
+      "1-1": "Mieszkania 1+1 w Shëngjin ({count})",
+      "2-1": "Mieszkania 2+1 w Shëngjin ({count})"
+    },
+    "sea": {
+      "title": "{count, plural, one {Najtańsze mieszkanie nad morzem} other {# najtańszych mieszkań nad morzem}}",
+      "lead": "Mieszkania i kawalerki do {metres} m od morza lub w pierwszej linii, najtańsze za m² najpierw, z {total} nad morzem. Ceny i dostępność jak w ogłoszeniach.",
+      "all": "Wszystkie {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# ofert}} w Shëngjin"
+    },
+    "costs": {
+      "title": "Ile kosztuje zakup",
+      "lead": "Koszty ponad cenę, ze źródeł naszego kalkulatora kosztów zakupu.",
+      "p1": "Cudzoziemiec kupuje mieszkanie lub dom w Albanii na tych samych zasadach co obywatel i może je swobodnie sprzedać lub zapisać w spadku; wyjątkiem jest tylko ziemia rolna. Zakup jest ważny tylko jako akt notarialny. Notariusz pobiera 0,35% wartości do 6 mln leków i 0,30% do 15 mln; kataster (ASHK) 5 000 leków za wpis własności. Kupujący jako osoba fizyczna nie płaci podatku od przeniesienia, podatki od sprzedaży obciążają sprzedającego, a mieszkanie nie ma VAT.",
+      "p2": "Przy mieszkaniu za 100 000 € dodatkowe koszty to około 2 300 €, czyli 2,3%, z prawnikiem, tłumaczem przysięgłym i prowizją agencji; z każdą pozycją opcjonalną na górnej granicy około 4 600 €. Od rezerwacji do nowego zaświadczenia własności mija zwykle cztery do ośmiu tygodni; przy mieszkaniu w budowie akt następuje po odbiorze. Roczny podatek od budynku to 0,05% wartości podatkowej.",
+      "p3": "Albańskie banki rzadko kredytują nierezydentów. Rynek oferuje zamiast tego nieoprocentowane raty u dewelopera do przekazania kluczy, standard w większości sprzedaży nowych mieszkań. Dochód z najmu jest opodatkowany 15%. Własność pozwala ubiegać się o roczne zezwolenie na pobyt na podstawie art. 84 ustawy 79/2021; ustawa nie określa ceny minimalnej.",
+      "calculatorLink": "Kalkulator kosztów zakupu",
+      "yieldLink": "Kalkulator rentowności najmu"
+    },
+    "faq": {
+      "title": "Pytania kupujących",
+      "lead": "Krótkie odpowiedzi z aktualnymi liczbami; porównania idą głębiej.",
+      "q1": "Ile kosztuje mieszkanie w Shëngjin?",
+      "a1": "Na {date} mieszkania i kawalerki na sprzedaż w Shëngjin na Domlivo miały medianę {median} za m² z {count} mieszkań z ceną; mediana mieszkania wynosiła {medianFlat}, a najtańsze {from}. To ceny ofertowe, nie transakcyjne. Tabele powyżej dzielą je według budżetu i układu.",
+      "a1NoData": "Ceny ofertowe w Shëngjin są najniższe wśród nadmorskich rynków na Domlivo. Aktualna mediana za m², mediana ceny mieszkania i najtańsze mieszkanie są w tabelach powyżej, przeliczane co godzinę z ogłoszeń.",
+      "q2": "Czy Shëngjin jest tańszy niż Durrës?",
+      "a2": "Tak. Na {date} mediana ceny ofertowej w Shëngjin wynosiła {median} za m² wobec {durresMedian} w Durrës, o {percent}% mniej. Durrës ma znacznie więcej ofert i duże miasto za plażą; Shëngjin to mniejszy kurort ze spokojniejszą zimą i niższym progiem wejścia.",
+      "a2NoData": "Tak, według Domlivo Price Index w Shëngjin żąda się mniej za m² niż w Durrës. Durrës ma znacznie więcej ofert i duże miasto za plażą; Shëngjin to mniejszy kurort ze spokojniejszą zimą i niższym progiem wejścia.",
+      "q3": "Czy cudzoziemiec może kupić mieszkanie w Shëngjin?",
+      "a3": "Tak. Cudzoziemcy kupują mieszkania i domy w Albanii na tych samych zasadach co obywatele Albanii i mogą je swobodnie sprzedawać i dziedziczyć. Wyjątkiem jest tylko ziemia rolna: można ją dzierżawić do 99 lat lub kupić przez albańską spółkę. Własność pozwala ubiegać się o roczne zezwolenie na pobyt na podstawie art. 84 ustawy 79/2021, bez ceny minimalnej w ustawie.",
+      "q4": "Co płacę ponad cenę?",
+      "a4": "Notariusz 0,35% wartości do 6 mln leków (0,30% do 15 mln), 5 000 leków do katastru za wpis oraz, jeśli z nich korzystacie, prawnik, tłumacz przysięgły i prowizja agencji. Kupujący jako osoba fizyczna nie płaci podatku od przeniesienia ani VAT od mieszkania. Przy mieszkaniu za 100 000 € to około 2 300 € w typowym przypadku i około 4 600 € z każdą opcją na górnej granicy.",
+      "q5": "Jak dojechać do Shëngjin?",
+      "a5": "Z międzynarodowego lotniska w Tiranie to około 45-50 km drogą, niecała godzina samochodem lub taksówką. Do Szkodry 45 minut, do Lezhë kilka minut. W miasteczku nie ma lotniska ani kolei; w sezonie jeżdżą autobusy z Lezhë.",
+      "q6": "Gdzie w Shëngjin szukać?",
+      "a6": "Centrum leży wokół portu i promenady, ze sklepami i restauracjami; Rana e Hedhun to plaża z wydmami na północ od miasta, z nowszymi rezydencjami; Tale to długa plaża na południu, za lagunami Kune-Vain. {sea, plural, one {# oferta podaje} few {# oferty podają} many {# ofert podaje} other {# ofert podaje}} odległość pieszo do {metres} m od morza lub pierwszą linię; siatka powyżej pokazuje najtańsze z nich za m²."
+    },
+    "contact": {
+      "title": "Jakiego mieszkania w Shëngjin szukacie?",
+      "subtitle": "Podajcie budżet i układ. Wyślemy pasujące oferty z aktualnej bazy z ceną, odległością od plaży i dostępnością, po polsku."
+    },
+    "linkFromListing": "Przewodnik po Shëngjin: ceny na tle innych nadmorskich miast, najtańsze mieszkania nad morzem, koszty zakupu"
   }
 }

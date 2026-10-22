@@ -82,7 +82,8 @@
       "contacts": "Kontakte",
       "addProperty": "Immobilie inserieren",
       "knowledge": "Wissensdatenbank",
-      "germanHub": "Immobilien in Albanien kaufen"
+      "germanHub": "Immobilien in Albanien kaufen",
+      "shengjinHub": "Shëngjin: Wohnungen am Meer"
     },
     "cities": {
       "empty": "Keine Städte vorhanden."
@@ -1699,5 +1700,118 @@
       "subtitle": "Nennen Sie uns Budget und Ort. Wir schicken passende Angebote aus dem aktuellen Bestand mit Preis und Verfügbarkeit."
     },
     "linkFromSale": "Für Käufer aus Deutschland: Preise nach Stadt, Wohnungen am Meer, Ablauf und Steuern"
+  },
+  "ShengjinHub": {
+    "metaTitle": "Wohnungen am Meer in Shëngjin ab {from}: {listings} Inserate",
+    "metaTitleShort": "Shëngjin, Albanien: Wohnungen am Meer, Preise und Inserate",
+    "metaDescription": "Shëngjin ist der günstigste Küstenmarkt auf Domlivo mit verlässlicher Stichprobe: Median {median}/m² gegenüber {durresMedian}/m² in Durrës, Wohnungen ab {from}, {sea} von {listings} Inseraten bis 1 km vom Strand. Preise, Kosten, Fragen.",
+    "metaDescriptionShort": "Wohnungen am Meer in Shëngjin, Nordalbanien: aktuelle Angebotspreise gegenüber Durrës, Vlora und Saranda, was ein Budget kauft, die günstigsten Wohnungen am Strand, Kaufnebenkosten und Antworten auf häufige Fragen.",
+    "breadcrumb": "Shëngjin",
+    "label": "Günstige Immobilien am Meer in Albanien",
+    "h1": "Wohnungen am Meer in Shëngjin, Albanien",
+    "figures": "Wohnungen ab {from}, Median des Angebotspreises {median}/m², {listings, plural, one {# Inserat} other {# Inserate}}",
+    "lead": "Am {date} listet Domlivo in Shëngjin {figures}, gegenüber {durresMedian}/m² in Durrës. {sea, plural, one {# davon liegt} other {# davon liegen}} bis 1 km vom Strand oder in erster Reihe. Unten: die aktuellen Zahlen, was ein Budget hier kauft, die günstigsten Wohnungen am Meer, die Kosten über den Preis hinaus und die Fragen der Käufer.",
+    "leadNoDurres": "Am {date} listet Domlivo in Shëngjin {figures}. {sea, plural, one {# davon liegt} other {# davon liegen}} bis 1 km vom Strand oder in erster Reihe. Unten: die aktuellen Zahlen, was ein Budget hier kauft, die günstigsten Wohnungen am Meer, die Kosten über den Preis hinaus und die Fragen der Käufer.",
+    "leadNoData": "Shëngjin ist eine Hafen- und Badestadt in Nordalbanien, eine Stunde vom Flughafen Tirana, mit den niedrigsten Angebotspreisen der Küstenmärkte auf Domlivo. Unten: was ein Budget hier kauft, die günstigsten Wohnungen am Meer, die Kosten über den Preis hinaus und die Fragen der Käufer.",
+    "heroAlt": "Eine Wohnung am Meer in Shëngjin, inseriert auf Domlivo",
+    "allListings": "Alle {count, plural, one {# Inserat} other {# Inserate}} in Shëngjin",
+    "tiles": {
+      "median": "Median des Angebotspreises",
+      "medianFlat": "Median des Wohnungspreises",
+      "from": "Günstigste Wohnung",
+      "sea": "Bis {metres} m vom Meer"
+    },
+    "why": {
+      "title": "Warum Shëngjin",
+      "tilesNote": "Aktuelle Angebotspreise der Wohnungen und Studios auf Domlivo, {date}. Keine Verkaufspreise.",
+      "p1": "Shëngjin ist der Strand Nordalbaniens: eine kleine Hafenstadt in der Gemeinde Lezhë, etwa 45-50 km vom Flughafen Tirana, unter einer Stunde mit dem Auto, und 45 Minuten von Shkodra. Ein langer Sandstrand zieht sich an der Stadt entlang, im Norden liegen die Dünen von Rana e Hedhun, im Süden Richtung Tale die Lagunen von Kune-Vain, ein Schutzgebiet. Im Sommer füllt sich der Ort mit Gästen aus dem Kosovo und dem Norden des Landes, außerhalb der Saison ist es ruhig.",
+      "p2": "Für Käufer zählt der Preis. Im Domlivo Price Index verlangen die in Shëngjin inserierten Wohnungen im Median {median} pro m², {percent}% weniger als Durrës mit {durresMedian}, und deutlich weniger als Vlora und Saranda, wo es nicht einmal eine verlässliche Stichprobe gibt, weil kaum etwas unter 2.000 €/m² inseriert ist. Für dasselbe Geld gibt es hier eine größere Wohnung oder eine näher am Wasser.",
+      "p2NoData": "Für Käufer zählt der Preis: Im Domlivo Price Index wird in Shëngjin weniger pro m² verlangt als in Durrës und deutlich weniger als in Vlora und Saranda. Für dasselbe Geld gibt es hier eine größere Wohnung oder eine näher am Wasser.",
+      "p3": "Das Angebot besteht vor allem aus 1+1-Wohnungen, mit Studios am unteren und 2+1-Wohnungen am oberen Ende; das meiste kommt von örtlichen Bauträgern und Agenturen, die bei uns inserieren, sodass sich die Tabellen unten mit Verkäufen und neuen Inseraten bewegen. Jede Zahl auf dieser Seite ist aus den aktuellen Inseraten zur angegebenen Stunde berechnet.",
+      "districtsLink": "Die Viertel von Shëngjin: Zentrum, Rana e Hedhun und Tale, mit Preisen pro m²"
+    },
+    "compare": {
+      "title": "Shëngjin im Vergleich mit den anderen Küstenstädten",
+      "lead": "Median des Angebotspreises pro m² für Wohnungen und Studios, Median des Gesamtpreises, günstigste Wohnung und Zahl der Inserate. Jede Stadt öffnet ihre Inserate.",
+      "colCity": "Stadt",
+      "colMedian": "Median, €/m²",
+      "colMedianFlat": "Median Wohnung",
+      "colFrom": "Wohnungen ab",
+      "colListings": "Inserate",
+      "colSample": "Wohnungen in der Stichprobe",
+      "indicative": "{value} (Richtwert)",
+      "lowSample": "zu wenig Daten",
+      "caption": "Albaniens Küstenstädte im Vergleich mit Shëngjin, {date}: Median des Angebotspreises pro m² für Wohnungen und Studios zum Kauf auf Domlivo, Median des Gesamtpreises, niedrigster Wohnungspreis und Inserate je Stadt",
+      "footnote": "Angebotspreise aus aktiven Inseraten, stündlich neu berechnet. Ein Median über weniger als {min} Wohnungen ist ein Richtwert; die Stichprobe steht daneben.",
+      "pricesLink": "Alle Städte mit Spanne und Bauphase",
+      "methodologyLink": "Wie der Index berechnet wird"
+    },
+    "budget": {
+      "title": "Was ein Budget in Shëngjin kauft",
+      "lead": "Wohnungen und Studios zum Kauf am {date}, nach Gesamtpreis, und wie viele jeder Spanne bis 1 km vom Meer oder in erster Reihe liegen.",
+      "caption": "Wohnungen zum Kauf in Shëngjin nach Gesamtpreis, {date}, und wie viele davon am Meer liegen",
+      "colBudget": "Budget",
+      "colFlats": "Wohnungen",
+      "colSea": "Am Meer",
+      "bandUnder": "Unter {to}",
+      "band": "{from} bis {to}",
+      "bandOver": "Über {from}",
+      "note": "Wohnungen mit Preis pro m² ohne Gesamtpreis sind nicht gezählt. Ein Inserat zählt als am Meer, wenn es einen Fußweg bis 1 km oder die erste Reihe angibt; Inserate ohne Entfernung sind nicht gezählt, die wahre Zahl ist also höher."
+    },
+    "layouts": {
+      "caption": "Wohnungen zum Kauf in Shëngjin nach Grundriss, {date}: Zahl, niedrigster und mittlerer Angebotspreis",
+      "colLayout": "Grundriss",
+      "colCount": "Inserate",
+      "colFrom": "Ab",
+      "colMedian": "Median-Preis",
+      "studio": "Studio",
+      "1-1": "1+1 (ein Schlafzimmer)",
+      "2-1": "2+1 (zwei Schlafzimmer)",
+      "3-1": "3+1 und größer",
+      "fewFlats": "zu wenige Wohnungen"
+    },
+    "facets": {
+      "near-the-sea": "Wohnungen am Meer in Shëngjin ({count})",
+      "under-100k": "Wohnungen unter 100.000 € in Shëngjin ({count})",
+      "1-1": "1+1-Wohnungen in Shëngjin ({count})",
+      "2-1": "2+1-Wohnungen in Shëngjin ({count})"
+    },
+    "sea": {
+      "title": "{count, plural, one {Die günstigste Wohnung am Meer} other {Die # günstigsten Wohnungen am Meer}}",
+      "lead": "Wohnungen und Studios bis {metres} m vom Meer oder in erster Reihe, die günstigsten pro m² zuerst, von {total} am Meer. Preise und Verfügbarkeit wie in den Inseraten angegeben.",
+      "all": "Alle {count, plural, one {# Inserat} other {# Inserate}} in Shëngjin"
+    },
+    "costs": {
+      "title": "Was der Kauf kostet",
+      "lead": "Die Kosten über den Preis hinaus, aus den Quellen unseres Kaufnebenkostenrechners.",
+      "p1": "Ein Ausländer kauft eine Wohnung oder ein Haus in Albanien zu denselben Bedingungen wie ein Staatsbürger und darf frei verkaufen und vererben; nur landwirtschaftliche Flächen sind ausgenommen. Der Kauf ist nur als notarielle Urkunde wirksam. Der Notar berechnet 0,35% des Werts bis 6 Mio. Lek und 0,30% bis 15 Mio.; das Katasteramt (ASHK) verlangt 5.000 Lek für die Eintragung. Ein privater Käufer zahlt keine Grunderwerbsteuer, die Steuern auf den Verkauf trägt der Verkäufer, und auf eine Wohnung fällt keine Mehrwertsteuer an.",
+      "p2": "Bei einer Wohnung für 100.000 € liegen die Nebenkosten bei etwa 2.300 €, also 2,3%, mit Anwalt, beeidigtem Übersetzer und Maklerprovision; mit jedem optionalen Posten am oberen Ende etwa 4.600 €. Von der Reservierung bis zum neuen Eigentumsblatt dauert es meist vier bis acht Wochen; bei einer Wohnung im Bau folgt die Urkunde der Fertigstellung. Die jährliche Gebäudesteuer beträgt 0,05% des steuerlichen Werts.",
+      "p3": "Albanische Banken vergeben kaum Kredite an Gebietsfremde. Der Markt bietet stattdessen zinsfreie Raten an den Bauträger bis zur Übergabe, Standard bei den meisten Neubauverkäufen. Mieteinnahmen werden mit 15% besteuert. Wer eine Immobilie besitzt, kann nach Art. 84 des Gesetzes 79/2021 eine Aufenthaltserlaubnis für ein Jahr beantragen; einen Mindestpreis nennt das Gesetz nicht.",
+      "calculatorLink": "Kaufnebenkostenrechner",
+      "yieldLink": "Mietrenditerechner"
+    },
+    "faq": {
+      "title": "Fragen der Käufer",
+      "lead": "Kurze Antworten mit den aktuellen Zahlen; die Vergleiche gehen tiefer.",
+      "q1": "Was kostet eine Wohnung in Shëngjin?",
+      "a1": "Am {date} verlangten die in Shëngjin auf Domlivo zum Kauf inserierten Wohnungen und Studios im Median {median} pro m² über {count} Wohnungen mit Preis; die mittlere Wohnung kostete {medianFlat}, die günstigste {from}. Das sind Angebotspreise, keine Verkaufspreise. Die Tabellen oben teilen sie nach Budget und Grundriss auf.",
+      "a1NoData": "Die Angebotspreise in Shëngjin sind die niedrigsten der Küstenmärkte auf Domlivo. Der aktuelle Median pro m², der Median des Wohnungspreises und die günstigste Wohnung stehen in den Tabellen oben, stündlich aus den Inseraten berechnet.",
+      "q2": "Ist Shëngjin günstiger als Durrës?",
+      "a2": "Ja. Am {date} lag der Median des Angebotspreises in Shëngjin bei {median} pro m² gegenüber {durresMedian} in Durrës, {percent}% weniger. Durrës hat weit mehr Inserate und eine große Stadt hinter dem Strand; Shëngjin ist ein kleinerer Badeort mit ruhigerem Winter und niedrigerem Einstiegspreis.",
+      "a2NoData": "Ja, nach dem Domlivo Price Index wird in Shëngjin weniger pro m² verlangt als in Durrës. Durrës hat weit mehr Inserate und eine große Stadt hinter dem Strand; Shëngjin ist ein kleinerer Badeort mit ruhigerem Winter und niedrigerem Einstiegspreis.",
+      "q3": "Darf ein Ausländer in Shëngjin eine Wohnung kaufen?",
+      "a3": "Ja. Ausländer kaufen Wohnungen und Häuser in Albanien zu denselben Bedingungen wie albanische Staatsbürger und dürfen sie frei verkaufen und vererben. Nur landwirtschaftliche Flächen sind ausgenommen: Sie lassen sich bis zu 99 Jahre pachten oder über eine albanische Gesellschaft erwerben. Wer eine Immobilie besitzt, kann nach Art. 84 des Gesetzes 79/2021 eine Aufenthaltserlaubnis für ein Jahr beantragen; einen Mindestpreis nennt das Gesetz nicht.",
+      "q4": "Was zahle ich über den Preis hinaus?",
+      "a4": "Notar 0,35% des Werts bis 6 Mio. Lek (0,30% bis 15 Mio.), 5.000 Lek ans Katasteramt für die Eintragung und, falls genutzt, Anwalt, beeidigter Übersetzer und Maklerprovision. Ein privater Käufer zahlt keine Grunderwerbsteuer und keine Mehrwertsteuer auf eine Wohnung. Bei einer Wohnung für 100.000 € sind das im typischen Fall etwa 2.300 € und mit jeder Option am oberen Ende etwa 4.600 €.",
+      "q5": "Wie komme ich nach Shëngjin?",
+      "a5": "Vom internationalen Flughafen Tirana sind es etwa 45-50 km Straße, unter einer Stunde mit Auto oder Taxi. Shkodra ist 45 Minuten entfernt, Lezhë wenige Minuten. Im Ort gibt es weder Flughafen noch Bahn; in der Saison fahren Busse von Lezhë.",
+      "q6": "Wo in Shëngjin soll ich suchen?",
+      "a6": "Das Zentrum liegt um den Hafen und die Promenade, mit den Geschäften und Restaurants; Rana e Hedhun ist der Dünenstrand nördlich der Stadt mit neueren Wohnanlagen; Tale ist der lange Strand im Süden, hinter den Lagunen von Kune-Vain. {sea, plural, one {# Inserat gibt} other {# Inserate geben}} einen Fußweg bis {metres} m zum Meer oder die erste Reihe an; das Raster oben zeigt die günstigsten davon pro m²."
+    },
+    "contact": {
+      "title": "Welche Wohnung in Shëngjin suchen Sie?",
+      "subtitle": "Nennen Sie uns Budget und Grundriss. Wir schicken passende Angebote aus dem aktuellen Bestand mit Preis, Entfernung zum Strand und Verfügbarkeit, auf Deutsch."
+    },
+    "linkFromListing": "Shëngjin-Guide: Preise im Vergleich mit den anderen Küstenstädten, die günstigsten Wohnungen am Meer, Kaufnebenkosten"
   }
 }

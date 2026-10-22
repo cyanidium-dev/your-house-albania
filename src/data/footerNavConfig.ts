@@ -80,3 +80,10 @@ export const FOOTER_MARKET_HUB: Readonly<Record<string, { href: `/${string}`; la
   sq: { href: "/cmimet-e-references", labelKey: "referencePrices" },
   fr: { href: "/immobilier-albanie", labelKey: "frenchHub" },
 };
+
+/**
+ * The place hub of every locale: the Shëngjin hub `/{locale}/shengjin`
+ * (2026-10-22, lib/shengjinHub), under the market hub in the Useful column so
+ * every page passes it a link. Label: `Footer.nav.shengjinHub`.
+ */
+export const FOOTER_PLACE_HUB: { href: `/${string}`; labelKey: string } = { href: "/shengjin", labelKey: "shengjinHub" };

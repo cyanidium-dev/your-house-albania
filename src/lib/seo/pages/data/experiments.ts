@@ -57,8 +57,39 @@ const DURRES_DISTRICT_FACETS: readonly SeoExperiment[] = [
   durresDistrictFacet("shkembi-durres", "2-1", 19),
 ];
 
+/**
+ * Shëngjin facet pages (2026-10-22). The stock went from 20 to 123 listings
+ * (102 flats) when a local developer's catalogue was imported on 21-22.10,
+ * which made Shëngjin the second seaside market of the site; the city has a
+ * cluster (sq, en from Keyword Planner, five more locales from Search
+ * Console), but no facet does, and the phrases ("apartamente ne shitje
+ * shengjin buze detit", "1+1 shengjin") are too small for Keyword Planner.
+ * Each slice is a distinct purchase: by the sea, a price ceiling, a layout.
+ * Listing count at launch in the hypothesis; `under-80k` is left out as a
+ * twin of `under-100k`, `new-builds` has four listings.
+ */
+function shengjinFacet(facet: ListingFacetSlug, listings: number): SeoExperiment {
+  return {
+    id: `shengjin-${facet}`,
+    target: { family: "facet", country: "albania", city: "shengjin", facet },
+    hypothesis: `Shëngjin long tail: ${listings} of 123 listings match ${facet}; the SERP for the town is holiday rentals and two aggregators with a handful of flats each, so a page with this many live listings has no competitor of its kind.`,
+    successCriteria:
+      "Indexed (not 'crawled - not indexed') and impressions from Shëngjin queries on this URL in at least two locales within the period. Stop rule: under 30% of the batch indexed after three weeks, roll the batch back.",
+    startedAt: "2026-10-22",
+    reviewAt: "2026-11-26",
+  };
+}
+
+const SHENGJIN_FACETS: readonly SeoExperiment[] = [
+  shengjinFacet("near-the-sea", 66),
+  shengjinFacet("under-100k", 69),
+  shengjinFacet("1-1", 78),
+  shengjinFacet("2-1", 26),
+];
+
 export const SEO_EXPERIMENTS: readonly SeoExperiment[] = [
   ...DURRES_DISTRICT_FACETS,
+  ...SHENGJIN_FACETS,
   {
     id: "durres-under-100k",
     target: { family: "facet", country: "albania", city: "durres", facet: "under-100k" },
