@@ -40,6 +40,10 @@ export const KNOWLEDGE_SLUGS = {
   durresVlore: "durres-or-vlore-where-to-buy",
   plazhGolem: "plazh-or-golem-durres-where-to-buy",
   seaCentre: "durres-seafront-or-city-centre-prices",
+  // Topic-mapping batch of 2026-10-23 (questions from Google autocomplete).
+  mortgage: "mortgage-in-albania-interest-rates-down-payment",
+  stayByCitizenship: "how-long-can-you-stay-in-albania-without-a-visa-by-citizenship",
+  italianPension: "italian-pension-tax-if-you-move-to-albania",
 } as const;
 
 const K = KNOWLEDGE_SLUGS;
@@ -59,7 +63,7 @@ export const KNOWLEDGE_LINKS_BY_BLOG_POST: Record<string, readonly string[]> = {
   "legalized-property-albania-how-to-check": [K.legalisation, K.informal, K.ashk],
   "durres-documents-checklist": [K.documents, K.steps, K.powerOfAttorney],
   "utilities-in-albania-monthly-costs": [K.utilities, K.propertyTax],
-  "retiring-to-albania-property-costs": [K.utilities, K.propertyTax, K.residence],
+  "retiring-to-albania-property-costs": [K.italianPension, K.utilities, K.residence],
   "albania-rental-yield-for-investors": [K.yields, K.management, K.rentalTax],
   "durres-rental-investment-2026": [K.yields, K.plazhGolem, K.management],
   "short-term-rental-albanian-riviera": [K.management, K.rentalTax],
@@ -70,9 +74,12 @@ export const KNOWLEDGE_LINKS_BY_BLOG_POST: Record<string, readonly string[]> = {
   "tirana-buy-without-agent": [K.steps, K.timeline, K.developer],
   "moving-to-albania-with-family": [K.residence, K.utilities, K.ukraine],
   "investment-albania": [K.payment, K.uk, K.ukraine],
-  "living-albanian-riviera": [K.uk, K.residence],
+  "living-albanian-riviera": [K.uk, K.residence, K.stayByCitizenship],
+  "best-districts-tirana": [K.stayByCitizenship, K.tiranaDurres],
+  "albania-investment-by-budget-and-goal": [K.mortgage, K.yields],
+  "buying-apartment-durres-complete-guide": [K.mortgage, K.steps, K.notary],
   "market-outlook-2026": [K.vat, K.offPlan, K.timeline],
-  "albania-seaside-property-prices-by-town-2026": [K.durresVlore, K.italy],
+  "albania-seaside-property-prices-by-town-2026": [K.durresVlore, K.italy, K.italianPension],
   "property-investment-potential-vlore-sarande": [K.durresVlore, K.italy],
   "price-per-square-metre-albania-cities-2026": [K.tiranaDurres, K.durresVlore, K.seaCentre],
   "albania-property-market-h1-2026": [K.foreigners, K.tiranaDurres],
