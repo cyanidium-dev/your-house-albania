@@ -48,7 +48,9 @@ async function recordPosts(leadId: string, posts: TelegramPost[]): Promise<void>
  *
  * If the public bot cannot post in a chat (not a member, or not an admin of
  * a channel), the delivery bot posts the same text without buttons: the lead
- * is never lost, only the buttons are.
+ * is never lost, only the buttons are. That post is recorded on the lead too
+ * (owner, 2026-10-22: a click on a Grinchenko listing showed no delivery in
+ * the base, because only the public bot's posts were written down).
  */
 export async function postLeadToTeam(params: {
   chatIds: string[]
@@ -100,6 +102,7 @@ export async function postLeadToTeam(params: {
         chatId,
         text: parseMode === 'HTML' ? htmlToPlain(text) : text,
       })
+      if (fallback.ok && fallback.messageId) posts.push({ chatId, messageId: fallback.messageId })
       return fallback.ok
     }),
   )
