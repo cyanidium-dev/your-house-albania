@@ -65,7 +65,14 @@ export const fetchSeoPageDecisions = sanityCache(
       return null;
     }
   },
-  ['sanity-seo-page-decisions'],
+  // The decisions depend on the code (keyword evidence, experiments, policy)
+  // as much as on the data, and the Vercel data cache outlives a deployment:
+  // a registry change showed as `noindex` on the listing pages for hours
+  // after its deploy (French pilot 2026-10-21, Shëngjin 2026-10-22) until a
+  // Sanity publish purged the tags. The deployment id in the key makes every
+  // deployment compute them afresh; the sitemaps, which read other caches,
+  // flipped at once and disagreed with the pages meanwhile.
+  ['sanity-seo-page-decisions', process.env.VERCEL_DEPLOYMENT_ID ?? process.env.VERCEL_GIT_COMMIT_SHA ?? 'local'],
   {
     revalidate: 86400,
     tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType, SANITY_TAGS.catalogSeoPage],
