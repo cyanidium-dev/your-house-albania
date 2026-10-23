@@ -44,6 +44,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "favorites",
   "for-realtors",
   "guides",
+  // Houses by the sea for German buyers, `/de/haus-am-meer-albanien-kaufen` (lib/seaHouses).
+  "haus-am-meer-albanien-kaufen",
   "how-to-publish",
   "image-credits",
   "investment",

@@ -2,6 +2,7 @@ import { CALCULATOR_PAGES_LAST_MODIFIED, CALCULATOR_PATHS } from "@/lib/calculat
 import { GERMAN_HUB_LAST_MODIFIED, GERMAN_HUB_LOCALE, GERMAN_HUB_PATH } from "@/lib/germanHub/config";
 import { REFERENCE_PRICES_CHECKED_ON, REFERENCE_PRICES_LOCALE, REFERENCE_PRICES_PATH } from "@/lib/referencePrices/data";
 import { SHENGJIN_HUB_LAST_MODIFIED, SHENGJIN_HUB_PATH } from "@/lib/shengjinHub/config";
+import { SEA_HOUSES_LAST_MODIFIED, SEA_HOUSES_LOCALE, SEA_HOUSES_PATH } from "@/lib/seaHouses/config";
 import {
   FRENCH_GUIDE_PATHS,
   FRENCH_HUB_PATH,
@@ -45,6 +46,8 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: SHENGJIN_HUB_PATH, lastModified: SHENGJIN_HUB_LAST_MODIFIED },
   // The German market hub (SEO hypothesis 3, 2026-10-19): German only, see lib/germanHub.
   { path: GERMAN_HUB_PATH, lastModified: GERMAN_HUB_LAST_MODIFIED, locales: [GERMAN_HUB_LOCALE] },
+  // Houses and villas by the sea for German buyers (long-tail plan F2, 2026-10-24): German only, see lib/seaHouses.
+  { path: SEA_HOUSES_PATH, lastModified: SEA_HOUSES_LAST_MODIFIED, locales: [SEA_HOUSES_LOCALE] },
   // Albanian reference prices with a calculator (SEO hypothesis 5, lab E01): Albanian only.
   { path: REFERENCE_PRICES_PATH, lastModified: REFERENCE_PRICES_CHECKED_ON, locales: [REFERENCE_PRICES_LOCALE] },
   // The French pilot (2026-10-21): the hub and its two guides, French only, see lib/frenchPilot.
