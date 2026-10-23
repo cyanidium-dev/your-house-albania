@@ -29,7 +29,7 @@ export async function PriceNeighbours({
     <CaptureClickTracker
       block="price-neighbours"
       placement="property"
-      className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20 [content-visibility:auto] [contain-intrinsic-size:auto_1100px] space-y-12"
+      className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20 space-y-12"
     >
       {rows.map((row) => (
         <section key={row.key} aria-labelledby={`price-neighbours-${row.key}`}>

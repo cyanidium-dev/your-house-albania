@@ -72,7 +72,7 @@ export async function SiteTrustSection({
   if (!trust.officePhoto && trust.testimonials.length === 0 && !hasContacts) return null
   const t = await getTranslations({ locale, namespace: 'Capture.trust' })
   return (
-    <Section className="[content-visibility:auto] [contain-intrinsic-size:auto_720px]" aria-label={t('sectionLabel')}>
+    <Section aria-label={t('sectionLabel')}>
       {trust.officePhoto || hasContacts ? (
         <div className={cn(SPLIT, 'items-center')}>
           {hasContacts ? (

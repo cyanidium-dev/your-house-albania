@@ -1,14 +1,10 @@
 'use client'
 
 import * as React from 'react'
-import dynamic from 'next/dynamic'
 import { cn } from '@/lib/utils'
 import type { PropertyLocationMapProps } from './PropertyLocationMap'
 
-const PropertyLocationMap = dynamic(
-  () => import('./PropertyLocationMap').then((m) => m.PropertyLocationMap),
-  { ssr: false, loading: () => null }
-)
+type MapComponent = React.ComponentType<PropertyLocationMapProps>
 
 /**
  * Mounts the location map only once its slot is within 600 px of the
@@ -19,34 +15,46 @@ const PropertyLocationMap = dynamic(
  * parsed it during hydration, and every page that links to properties (the
  * home page, the listings) prefetched it as part of the property route
  * (measured 2026-09-30: 3.7 s of main-thread time on a phone). The
- * placeholder has the map's height, so nothing moves when it loads.
+ * placeholder has the map's height and stays until the map's code has loaded
+ * (next/dynamic rendered nothing in between, and the caption under the map
+ * jumped up and back: CLS on a phone, 23.10).
  */
 export function PropertyLocationMapLazy(props: PropertyLocationMapProps) {
   const ref = React.useRef<HTMLDivElement | null>(null)
-  const [near, setNear] = React.useState(false)
+  const [LoadedMap, setLoadedMap] = React.useState<MapComponent | null>(null)
 
   React.useEffect(() => {
     const el = ref.current
-    if (!el || near) return
+    if (!el || LoadedMap) return
+    let cancelled = false
+    const load = () =>
+      import('./PropertyLocationMap').then((m) => {
+        if (!cancelled) setLoadedMap(() => m.PropertyLocationMap)
+      })
     if (!('IntersectionObserver' in window)) {
-      setNear(true)
-      return
+      void load()
+      return () => {
+        cancelled = true
+      }
     }
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setNear(true)
           observer.disconnect()
+          void load()
         }
       },
       // 600 px started the 270 KB map library early on desktop.
       { rootMargin: '200px 0px' }
     )
     observer.observe(el)
-    return () => observer.disconnect()
-  }, [near])
+    return () => {
+      cancelled = true
+      observer.disconnect()
+    }
+  }, [LoadedMap])
 
-  if (near) return <PropertyLocationMap {...props} />
+  if (LoadedMap) return <LoadedMap {...props} />
   return (
     <div
       ref={ref}

@@ -12,7 +12,7 @@ import { buildListingUrl } from '@/lib/routes/catalog'
  * the quick lead form — district pages are where the form leads come from.
  * A chip appears only for a band the district has listings in today, so none
  * opens an empty catalogue; the count on it is the catalogue's own.
- * Server-rendered below the hero, laid out lazily (content-visibility).
+ * Server-rendered below the hero.
  */
 export async function DistrictFindBlock({
   locale,
@@ -32,7 +32,7 @@ export async function DistrictFindBlock({
   ])
   const bands = liveBudgetBands(rows)
   return (
-    <Section className="[content-visibility:auto] [contain-intrinsic-size:auto_640px]" aria-labelledby="district-find">
+    <Section aria-labelledby="district-find">
       <div className={`${SPLIT} items-start`}>
         <div className={SPLIT_ASIDE}>
           <h2 id="district-find" className={SECTION_TITLE}>
