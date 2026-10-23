@@ -829,6 +829,7 @@
         "under-80k": "Unter 80.000 €",
         "under-100k": "Unter 100.000 €",
         "new-builds": "Neubauten",
+        "sea-view": "Meerblick",
         "near-the-sea": "Am Meer"
       },
       "sea": "Meer"
@@ -1194,6 +1195,7 @@
           "under-80k": "Wohnungen unter 80.000 € in {place} - {count, plural, one {# Angebot} other {# Angebote}}",
           "under-100k": "Wohnungen unter 100.000 € in {place} - {count, plural, one {# Angebot} other {# Angebote}}",
           "new-builds": "Neubauwohnungen in {place} kaufen - {count, plural, one {# Angebot} other {# Angebote}}",
+          "sea-view": "Wohnungen & Immobilien mit Meerblick in {place} kaufen - {count, plural, one {# Angebot} other {# Angebote}}",
           "near-the-sea": "Wohnungen & Immobilien am Meer in {place} kaufen - {count, plural, one {# Angebot} other {# Angebote}}"
         },
         "what": {
@@ -1203,6 +1205,7 @@
           "under-80k": "Wohnungen und Studios unter 80.000 €",
           "under-100k": "Wohnungen und Studios unter 100.000 €",
           "new-builds": "Immobilien im Bau",
+          "sea-view": "Immobilien mit Meerblick",
           "near-the-sea": "Immobilien bis 300 m zum Meer"
         },
         "description": "{count} {what} in {place}{hasPrice, select, yes {, ab {priceFrom} €} other {}}. Fotos, Wohnflächen und direkter Kontakt zu Eigentümern und Maklern."
@@ -1776,7 +1779,9 @@
       "3-1": "3+1 und größer",
       "fewFlats": "zu wenige Wohnungen"
     },
+    "types": { "studio": "Studios in Shëngjin ({count})" },
     "facets": {
+      "sea-view": "Wohnungen mit Meerblick in Shëngjin ({count})",
       "near-the-sea": "Wohnungen am Meer in Shëngjin ({count})",
       "under-100k": "Wohnungen unter 100.000 € in Shëngjin ({count})",
       "1-1": "1+1-Wohnungen in Shëngjin ({count})",

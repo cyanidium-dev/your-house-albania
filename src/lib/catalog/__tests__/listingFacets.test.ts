@@ -80,3 +80,15 @@ describe("near the sea", () => {
     expect(facetCatalogFilters("near-the-sea")).toEqual({ nearSea: true });
   });
 });
+
+describe("sea view", () => {
+  const facet = LISTING_FACETS["sea-view"];
+  it("takes the stated amenity only, not the distance or the first line", () => {
+    expect(facet.matches({ amenitySlugs: ["balcony", "sea-view"] })).toBe(true);
+    expect(facet.matches({ amenitySlugs: ["balcony"], beachfront: true, seaDistanceMeters: 0 })).toBe(false);
+    expect(facet.matches({ amenitySlugs: null })).toBe(false);
+    expect(facet.matches({})).toBe(false);
+    expect(facet.kind).toBe("sea");
+    expect(facetCatalogFilters("sea-view")).toEqual({ amenities: ["sea-view"] });
+  });
+});

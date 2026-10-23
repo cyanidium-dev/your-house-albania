@@ -828,6 +828,7 @@
         "under-80k": "Do 80 000 €",
         "under-100k": "Do 100 000 €",
         "new-builds": "W budowie",
+        "sea-view": "Widok na morze",
         "near-the-sea": "Nad morzem"
       },
       "sea": "Morze"
@@ -1193,6 +1194,7 @@
           "under-80k": "{place}: mieszkania do 80 000 € - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "under-100k": "{place}: mieszkania do 100 000 € - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "new-builds": "{place}: nowe inwestycje na sprzedaż - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
+          "sea-view": "{place}: mieszkania i apartamenty z widokiem na morze - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}",
           "near-the-sea": "{place}: mieszkania i apartamenty nad morzem - {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}}"
         },
         "what": {
@@ -1202,6 +1204,7 @@
           "under-80k": "mieszkania i kawalerki do 80 000 €",
           "under-100k": "mieszkania i kawalerki do 100 000 €",
           "new-builds": "nieruchomości w budowie",
+          "sea-view": "nieruchomości z widokiem na morze",
           "near-the-sea": "nieruchomości do 300 m od morza"
         },
         "description": "{place}: {what}{hasPrice, select, yes {, od {priceFrom} €} other {}}. {count, plural, one {# oferta} few {# oferty} many {# ofert} other {# oferty}} ze zdjęciami, metrażem i bezpośrednim kontaktem z właścicielami i agencjami."
@@ -1712,7 +1715,9 @@
       "3-1": "3+1 i większe",
       "fewFlats": "za mało mieszkań"
     },
+    "types": { "studio": "Kawalerki w Shëngjin ({count})" },
     "facets": {
+      "sea-view": "Mieszkania z widokiem na morze w Shëngjin ({count})",
       "near-the-sea": "Mieszkania nad morzem w Shëngjin ({count})",
       "under-100k": "Mieszkania do 100 000 € w Shëngjin ({count})",
       "1-1": "Mieszkania 1+1 w Shëngjin ({count})",

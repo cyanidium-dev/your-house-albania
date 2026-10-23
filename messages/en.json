@@ -828,6 +828,7 @@
         "under-80k": "Under €80k",
         "under-100k": "Under €100k",
         "new-builds": "New builds",
+        "sea-view": "Sea view",
         "near-the-sea": "By the sea"
       },
       "sea": "Sea"
@@ -1193,6 +1194,7 @@
           "under-80k": "Apartments under €80,000 in {place} - {count} Listings",
           "under-100k": "Apartments under €100,000 in {place} - {count} Listings",
           "new-builds": "New Builds for Sale in {place} - {count} Listings",
+          "sea-view": "Sea View Apartments & Property for Sale in {place} - {count} Listings",
           "near-the-sea": "Beach Apartments & Property for Sale in {place} - {count} Listings"
         },
         "what": {
@@ -1202,6 +1204,7 @@
           "under-80k": "apartments and studios under €80,000",
           "under-100k": "apartments and studios under €100,000",
           "new-builds": "properties under construction",
+          "sea-view": "properties with a sea view",
           "near-the-sea": "properties within 300 m of the sea"
         },
         "description": "{count} {what} in {place}{hasPrice, select, yes {, from €{priceFrom}} other {}}. Photos, floor areas and direct contact with owners and agencies."
@@ -1712,7 +1715,9 @@
       "3-1": "3+1 and larger",
       "fewFlats": "too few flats"
     },
+    "types": { "studio": "Studios in Shëngjin ({count})" },
     "facets": {
+      "sea-view": "Flats with a sea view in Shëngjin ({count})",
       "near-the-sea": "Flats by the sea in Shëngjin ({count})",
       "under-100k": "Flats under €100,000 in Shëngjin ({count})",
       "1-1": "1+1 flats in Shëngjin ({count})",
