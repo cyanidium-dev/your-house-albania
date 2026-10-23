@@ -12,8 +12,8 @@
  */
 export const AI_MAX_TOKENS = 1600
 
-/** Tool round-trips per user message. One is the normal case; two covers a retry. */
-export const AI_MAX_TOOL_HOPS = 3
+/** Tool round-trips per user message: search, show, look up, cite, and one retry. */
+export const AI_MAX_TOOL_HOPS = 4
 
 /** User messages allowed in one conversation before the UI asks to start over. */
 export const AI_MAX_TURNS = 14

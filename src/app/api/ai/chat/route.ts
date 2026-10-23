@@ -3,6 +3,7 @@ import { after, type NextRequest } from 'next/server'
 import { createAnthropicClient } from '@/lib/ai/client'
 import { routing } from '@/i18n/routing'
 import { getCatalogSnapshot } from '@/lib/ai/catalogSnapshot'
+import { runSearchProperties } from '@/lib/ai/searchProperties'
 import { getKnowledgeSnapshot } from '@/lib/ai/knowledgeSnapshot'
 import { buildPropertySystemBlocks, buildSystemBlocks } from '@/lib/ai/prompt'
 import { buildPropertyContext } from '@/lib/ai/propertyContext'
@@ -233,6 +234,16 @@ export async function POST(req: NextRequest) {
                   type: 'tool_result',
                   tool_use_id: toolUse.id,
                   content: JSON.stringify(output),
+                })
+                continue
+              }
+
+              if (toolUse.name === 'search_properties') {
+                console.log('[ai] search', JSON.stringify(toolUse.input))
+                results.push({
+                  type: 'tool_result',
+                  tool_use_id: toolUse.id,
+                  content: runSearchProperties(toolUse.input, snapshot),
                 })
                 continue
               }

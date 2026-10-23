@@ -1,10 +1,13 @@
 /**
- * The whole public catalog, compressed into something a model can hold in one
- * prompt.
+ * The whole public catalog, one compact line per listing, plus the structured
+ * fields the `search_properties` tool filters on.
  *
- * With ~43 published listings this replaces retrieval entirely: the model sees
- * every property at once and does the semantic matching ("by the sea", "quiet",
- * "for renting out") that the GROQ filter vocabulary cannot express. The
+ * With ~43 listings the lines went into the prompt and replaced retrieval. At
+ * 900+ they were ~50k tokens re-sent with every dialogue, most of the AI bill
+ * (2026-10-23: ~$0.21 a dialogue), so the model now searches: the prompt keeps
+ * the facets (cities, districts, types, price range) and the tool returns the
+ * matching lines, still to be read for the semantic part ("quiet", "for
+ * renting out"). The
  * snapshot is built through `PUBLISHED_PROPERTY_FILTER`, so a draft, sold or
  * archived listing cannot reach the model in the first place.
  *
@@ -55,9 +58,30 @@ export type CatalogFacets = {
   total: number
 }
 
+/** A listing as the search tool filters it. */
+export type CatalogItem = {
+  slug: string
+  /** The line the model reads. */
+  line: string
+  city: string
+  district: string
+  type: string
+  /** Total asking price in EUR; for an off-plan rate, rate × area; 0 when unknown. */
+  price: number
+  area: number
+  bedrooms: number
+  /** Metres to the sea; 0 for beachfront; null when unknown. */
+  sea: number | null
+  newBuild: boolean
+  amenities: string[]
+  /** Lower-cased title, description teaser and amenities: what keywords match against. */
+  text: string
+}
+
 export type CatalogSnapshot = {
-  /** One line per listing, ready to paste into the system prompt. */
+  /** One line per listing: what the search tool returns. */
   lines: string[]
+  items: CatalogItem[]
   facets: CatalogFacets
 }
 
@@ -81,6 +105,7 @@ function tally(entries: { slug: string; label: string }[]): Map<string, { label:
 
 function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
   const lines: string[] = []
+  const items: CatalogItem[] = []
   const cityEntries: { slug: string; label: string }[] = []
   const typeEntries: { slug: string; label: string }[] = []
   const districtCounts = new Map<string, { label: string; citySlug: string; count: number }>()
@@ -157,7 +182,28 @@ function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
       amenities.join(',') || '',
       compactText(resolveLocalizedString(row.description as never, 'en'), TEASER_CHARS),
     ]
-    lines.push(cells.filter((cell) => cell !== '').join(' | '))
+    const line = cells.filter((cell) => cell !== '').join(' | ')
+    lines.push(line)
+    items.push({
+      slug,
+      line,
+      city: citySlug,
+      district: districtSlug,
+      type: typeSlug,
+      price: isRate ? (rawPrice > 0 && area > 0 ? rawPrice * area : 0) : price,
+      area,
+      bedrooms: typeof row.bedrooms === 'number' ? row.bedrooms : 0,
+      sea: row.beachfront ? 0 : typeof row.seaDistanceMeters === 'number' && row.seaDistanceMeters >= 0 ? row.seaDistanceMeters : null,
+      newBuild: row.constructionStage === 'under-construction' || row.constructionStage === 'off-plan',
+      amenities,
+      text: [
+        resolveLocalizedString(row.title as never, 'en'),
+        compactText(resolveLocalizedString(row.description as never, 'en'), 400),
+        amenities.join(' '),
+      ]
+        .join(' ')
+        .toLowerCase(),
+    })
   }
 
   const cityTally = tally(cityEntries)
@@ -165,6 +211,7 @@ function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
 
   return {
     lines,
+    items,
     facets: {
       cities: [...cityTally.entries()]
         .map(([slug, v]) => ({ slug, label: v.label, count: v.count }))
@@ -185,6 +232,7 @@ function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
 
 const EMPTY_SNAPSHOT: CatalogSnapshot = {
   lines: [],
+  items: [],
   facets: {
     cities: [],
     districts: [],
