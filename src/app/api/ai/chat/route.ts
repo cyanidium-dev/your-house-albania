@@ -144,6 +144,7 @@ export async function POST(req: NextRequest) {
   // Sanity write rather than two. Declared out here so the `after` callback
   // below closes over the final value.
   let turnUsage = EMPTY_USAGE
+  let showedCards = false
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
@@ -290,6 +291,7 @@ export async function POST(req: NextRequest) {
                 propertyContext ? propertySlug : undefined,
               )
               if (ui.items.length > 0) {
+                showedCards = true
                 send({ type: 'cards', items: ui.items, catalogUrl: ui.catalogUrl })
               }
               results.push({
@@ -338,7 +340,7 @@ export async function POST(req: NextRequest) {
   after(async () => {
     if (turnUsage.inputTokens === 0 && turnUsage.outputTokens === 0) return
     console.log('[ai] turn cost', { usd: estimateUsd(turnUsage).toFixed(4) })
-    await recordUsage(turnUsage, { newDialogue: userTurns === 1 })
+    await recordUsage(turnUsage, { newDialogue: userTurns === 1, showedCards })
   })
 
   return new Response(stream, {

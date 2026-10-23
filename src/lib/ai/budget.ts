@@ -122,66 +122,76 @@ export async function isBudgetExhausted(now = new Date()): Promise<boolean> {
   }
 }
 
+/** The day's counter id: `ai-usage-YYYY-MM-DD` (UTC). Never read by the budget check. */
+export function usageDayDocId(now = new Date()): string {
+  return `${usageDocId(now)}-${String(now.getUTCDate()).padStart(2, '0')}`
+}
+
 /**
- * Adds one turn to the month's counter. Called once per turn rather than per
- * API hop, so a two-hop answer costs one write.
+ * Adds one turn to the month's counter and to the day's. The month is what
+ * the budget check reads; the day is for measuring (dialogues per day before
+ * and after a change, 2026-10-24). Called once per turn rather than per API
+ * hop, so a two-hop answer costs two writes, not more.
  *
  * Never throws: a counter that failed to increment is a reporting problem, not
  * a reason to lose an answer the visitor already paid for.
  */
 export async function recordUsage(
   usage: TurnUsage,
-  opts: { newDialogue?: boolean; now?: Date } = {},
+  opts: { newDialogue?: boolean; showedCards?: boolean; now?: Date } = {},
 ): Promise<void> {
   const now = opts.now ?? new Date()
   const client = writeClientOrWarn()
   if (!client) return
-  const id = usageDocId(now)
-  const month = id.replace('ai-usage-', '')
+  const month = usageDocId(now)
+  const day = usageDayDocId(now)
+  await Promise.all([bumpCounter(client, month, month.replace('ai-usage-', ''), usage, opts, now), bumpCounter(client, day, day.replace('ai-usage-', ''), usage, opts, now)])
+}
+
+async function bumpCounter(
+  client: NonNullable<ReturnType<typeof writeClientOrWarn>>,
+  id: string,
+  period: string,
+  usage: TurnUsage,
+  opts: { newDialogue?: boolean; showedCards?: boolean },
+  now: Date,
+): Promise<void> {
+  const increments = {
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+    cacheReadTokens: usage.cacheReadTokens,
+    cacheWriteTokens: usage.cacheWriteTokens,
+    turns: 1,
+    // A dialogue is counted on its first message, so `turns / dialogues`
+    // reads as "how many questions people ask before they stop".
+    dialogues: opts.newDialogue ? 1 : 0,
+    // Turns that ended with listing cards on screen.
+    cardTurns: opts.showedCards ? 1 : 0,
+    estimatedUsd: estimateUsd(usage),
+  }
   try {
     await client
       .patch(id)
       .setIfMissing({
         _type: 'aiUsageCounter',
-        month,
+        month: period,
         inputTokens: 0,
         outputTokens: 0,
         cacheReadTokens: 0,
         cacheWriteTokens: 0,
         turns: 0,
         dialogues: 0,
+        cardTurns: 0,
         estimatedUsd: 0,
       })
-      .inc({
-        inputTokens: usage.inputTokens,
-        outputTokens: usage.outputTokens,
-        cacheReadTokens: usage.cacheReadTokens,
-        cacheWriteTokens: usage.cacheWriteTokens,
-        turns: 1,
-        // A dialogue is counted on its first message, so `turns / dialogues`
-        // reads as "how many questions people ask before they stop".
-        dialogues: opts.newDialogue ? 1 : 0,
-        estimatedUsd: estimateUsd(usage),
-      })
+      .inc(increments)
       .set({ updatedAt: now.toISOString() })
       .commit()
   } catch (err) {
     // A patch on a document that does not exist yet fails rather than creating
     // it, so seed it once and let the next turn increment normally.
     try {
-      await client.createIfNotExists({
-        _id: id,
-        _type: 'aiUsageCounter',
-        month,
-        inputTokens: usage.inputTokens,
-        outputTokens: usage.outputTokens,
-        cacheReadTokens: usage.cacheReadTokens,
-        cacheWriteTokens: usage.cacheWriteTokens,
-        turns: 1,
-        dialogues: opts.newDialogue ? 1 : 0,
-        estimatedUsd: estimateUsd(usage),
-        updatedAt: now.toISOString(),
-      })
+      await client.createIfNotExists({ _id: id, _type: 'aiUsageCounter', month: period, ...increments, updatedAt: now.toISOString() })
     } catch (createErr) {
       console.warn('[ai] usage counter write failed:', createErr, err)
     }
