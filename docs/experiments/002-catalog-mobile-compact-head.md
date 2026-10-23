@@ -1,6 +1,6 @@
 # E002 - Catalogue on phones: listings in the first screen
 
-Status: proposed · 2026-10-21 · start when the PostHog experiment is launched · sample check **2026-11-04** · review **2026-11-18** · rules of [ADR 007](../seo/decisions/007-experiments.md) (hypothesis, success criteria, fixed review date, no silent extension)
+Status: running from 2026-10-24 (proposed 2026-10-21) · sample check **2026-11-07** · review **2026-11-21** · rules of [ADR 007](../seo/decisions/007-experiments.md) (hypothesis, success criteria, fixed review date, no silent extension)
 
 ## Context
 
@@ -16,7 +16,7 @@ Hiding the hero intro and the facet chips on phones, so the first card appears i
 
 | | |
 |---|---|
-| Flag | PostHog multivariate flag `catalog-mobile-compact-head`, used by the experiment "E002 Catalogue head on phones" (draft, id 102850) |
+| Flag | PostHog multivariate flag `catalog-mobile-compact-head`, used by the experiment "E002 Catalogue head on phones" (id 102850, running since 2026-10-24) |
 | Variants | `control` (the page as it is) · `compact`. 50/50 |
 | Changed, phones below 768 px only | The hero intro is hidden and the hero loses its minimum height; the facet chips (`ListingFacetNav`) are hidden (Filters still has every option). The facts line (count, from, median), the links under it, the heading and its median paragraph stay. Dev server: first card 1 007 px → 551 px on /en/albania/durres/near-the-sea |
 | Where | City, district and facet pages (`GeoListingRoute`, full-geo routes) |
@@ -41,7 +41,7 @@ Per exposed visitor, in the PostHog experiment (`$feature/catalog-mobile-compact
 
 Baselines unknown (PostHog has data from 2026-10-20). At a 30 % listing open rate, a 20 % relative lift (30 → 36 %) needs about 920 exposed visitors per variant (two-sided, 5 %, 80 % power). Consented phone traffic is roughly 300-400 visitors a month, so four weeks will not get there unless the effect is large. On 2026-11-04 write the baseline and the weekly exposures into the Result below.
 
-## Decision at review (2026-11-18)
+## Decision at review (2026-11-21)
 
 Never by extending the date silently. One of:
 
