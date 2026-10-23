@@ -3,14 +3,17 @@ import { useTranslations } from "next-intl";
 import { catalogPath } from "@/lib/routes/catalog";
 import { brandButtonClass } from "@/components/shared/BrandButton";
 import { CatalogSearchAlert } from "@/components/catalog/CatalogSearchAlert";
+import { CatalogAiPrompt } from "@/components/catalog/CatalogAiPrompt";
 
 type Props = {
   locale: string;
   /** Bot deep link for this search: "we'll tell you when something appears". */
   searchAlertHref?: string | null;
+  /** Offer the assistant: it can widen a search the filters made too narrow. */
+  aiSearch?: boolean;
 };
 
-export function CatalogEmptyState({ locale, searchAlertHref = null }: Props) {
+export function CatalogEmptyState({ locale, searchAlertHref = null, aiSearch = false }: Props) {
   const t = useTranslations("Catalog.empty");
 
   return (
@@ -27,6 +30,7 @@ export function CatalogEmptyState({ locale, searchAlertHref = null }: Props) {
       >
         {t("reset")}
       </Link>
+      {aiSearch ? <CatalogAiPrompt locale={locale} empty /> : null}
       {searchAlertHref ? <CatalogSearchAlert href={searchAlertHref} variant="panel" className="mt-10 w-full" /> : null}
     </div>
   );

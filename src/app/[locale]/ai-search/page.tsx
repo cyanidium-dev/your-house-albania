@@ -1,3 +1,4 @@
+import type { AiSearchEntry } from '@/lib/analytics/track'
 import type { Metadata } from 'next'
 import Link from "@/components/shared/Link";
 import { getTranslations } from 'next-intl/server'
@@ -47,7 +48,9 @@ export default async function AiSearchPage({ params, searchParams }: Props) {
   const t = await getTranslations({ locale, namespace: 'AiSearch' })
   const initialQuery = firstParam(query.q)?.trim().slice(0, AI_MAX_MESSAGE_CHARS)
   // Where the visitor came from, for the analytics event the chat fires on mount.
-  const entry = initialQuery ? 'hero' : firstParam(query.from) === 'header' ? 'header' : 'direct'
+  const from = firstParam(query.from)
+  const entry: AiSearchEntry =
+    from === 'catalog' || from === 'catalog_empty' ? from : initialQuery ? 'hero' : from === 'header' ? 'header' : 'direct'
 
   return (
     // The site container with a start-aligned reading measure: the page used

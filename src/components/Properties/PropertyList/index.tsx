@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { permanentRedirect } from 'next/navigation'
 import { CatalogBodyClient } from '@/components/catalog/CatalogBodyClient'
+import { isAiSearchEnabled } from '@/lib/ai/config'
 import { CatalogSeoText } from '@/components/catalog/CatalogSeoText'
 import { CatalogViewProvider } from '@/contexts/CatalogViewContext'
 import { ItemListJsonLd } from '@/components/shared/ItemListJsonLd'
@@ -465,6 +466,7 @@ async function PropertiesListing({
             serverSearch={serverSearch}
             afterFilters={afterFilters}
             selection={selection}
+            aiSearch={isAiSearchEnabled()}
           />
         </CatalogViewProvider>
         {catalogSeo?.bottomText && catalogSeo.bottomText.length > 0 && (

@@ -19,8 +19,20 @@ const ROTATE_MS = 4200
  * dedicated assistant page, which is where the conversation belongs. Keeping
  * the hero free of chat state also keeps the homepage a server component.
  */
-export default function AiSearchInput({ locale }: { locale: string }) {
+type Props = {
+  locale: string
+  /** `surface` sits on the page background (catalog), `hero` on a photo. */
+  tone?: 'hero' | 'surface'
+  /** Sent as `?from=` so the assistant's open event says where it came from. */
+  from?: 'catalog' | 'catalog_empty'
+  /** Replaces the hint under the field; `null` hides it. */
+  hint?: string | null
+  className?: string
+}
+
+export default function AiSearchInput({ locale, tone = 'hero', from, hint, className }: Props) {
   const t = useTranslations('AiSearch')
+  const inputId = `ai-search-${from ?? 'hero'}`
   const router = useRouter()
   const [value, setValue] = useState('')
   const [exampleIndex, setExampleIndex] = useState(0)
@@ -74,23 +86,24 @@ export default function AiSearchInput({ locale }: { locale: string }) {
   function onSubmit(event: FormEvent) {
     event.preventDefault()
     const query = value.trim()
-    if (!query) {
-      router.push(aiSearchPath(locale))
-      return
-    }
-    router.push(`${aiSearchPath(locale)}?q=${encodeURIComponent(query.slice(0, AI_MAX_MESSAGE_CHARS))}`)
+    const params = new URLSearchParams()
+    if (query) params.set('q', query.slice(0, AI_MAX_MESSAGE_CHARS))
+    if (from) params.set('from', from)
+    const qs = params.toString()
+    router.push(qs ? `${aiSearchPath(locale)}?${qs}` : aiSearchPath(locale))
   }
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-2xl" role="search">
-      <label htmlFor="ai-search-hero" className="sr-only">
+    <form onSubmit={onSubmit} className={cn('w-full max-w-2xl', className)} role="search">
+      <label htmlFor={inputId} className="sr-only">
         {t('inputLabel')}
       </label>
       <div
         className={cn(
           'group flex items-center gap-2 rounded-full py-2 pl-4 pr-2 sm:pl-5',
-          'bg-white/95 dark:bg-dark/90 backdrop-blur-md',
-          'border border-white/40 dark:border-white/15 shadow-lg',
+          tone === 'hero'
+            ? 'bg-white/95 dark:bg-dark/90 backdrop-blur-md border border-white/40 dark:border-white/15 shadow-lg'
+            : 'bg-white dark:bg-dark border border-dark/15 dark:border-white/20',
           'focus-within:border-primary/60 transition-colors duration-200',
         )}
       >
@@ -103,7 +116,7 @@ export default function AiSearchInput({ locale }: { locale: string }) {
         />
         <input
           ref={inputRef}
-          id="ai-search-hero"
+          id={inputId}
           type="text"
           value={value}
           maxLength={AI_MAX_MESSAGE_CHARS}
@@ -128,7 +141,16 @@ export default function AiSearchInput({ locale }: { locale: string }) {
           <Icon icon="ph:arrow-right" width={18} height={18} aria-hidden />
         </button>
       </div>
-      <p className="mt-2 pl-4 text-xs text-white/90 dark:text-white/80 sm:pl-5">{t('heroHint')}</p>
+      {hint === null ? null : (
+        <p
+          className={cn(
+            'mt-2 pl-4 text-xs sm:pl-5',
+            tone === 'hero' ? 'text-white/90 dark:text-white/80' : 'text-dark/60 dark:text-white/60',
+          )}
+        >
+          {hint ?? t('heroHint')}
+        </p>
+      )}
     </form>
   )
 }
