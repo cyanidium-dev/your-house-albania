@@ -24,6 +24,9 @@ import { capturePostHog } from './posthog'
 import { toPostHogEvent } from './posthogEvents'
 import type { LeadPlacement, LeadType } from '@/lib/leads/types'
 
+/** Where a visitor opened the assistant from. */
+export type AiSearchEntry = 'hero' | 'header' | 'catalog' | 'catalog_empty' | 'direct'
+
 export type { LeadPlacement, LeadType }
 
 /** GA4 parameters shared by every lead event. All optional; none identify a person. */
@@ -56,7 +59,7 @@ export type AnalyticsEvent =
   /** A blog article was opened. */
   | { event: 'blog_view'; slug: string; category?: string }
   /** The assistant page was opened, and from where. */
-  | { event: 'ai_search_open'; entry: 'hero' | 'header' | 'direct' }
+  | { event: 'ai_search_open'; entry: AiSearchEntry }
   /** A question was sent. `queryLength` stands in for the text itself. */
   | { event: 'ai_search_query'; queryLength: number; turn: number }
   /** An answer came back, with how many listings it showed. */

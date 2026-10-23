@@ -1,5 +1,6 @@
 'use client'
 
+import type { AiSearchEntry } from '@/lib/analytics/track'
 import { SpriteIcon as Icon } from "@/components/shared/SpriteIcon";
 import Link from "@/components/shared/Link";
 import { useTranslations } from 'next-intl'
@@ -80,7 +81,7 @@ export default function AiSearchChat({
   /** Question carried over from the home hero; sent automatically on mount. */
   initialQuery?: string
   /** Where the visitor arrived from, for the analytics event on mount. */
-  entry?: 'hero' | 'header' | 'direct'
+  entry?: AiSearchEntry
   /**
    * When set, the conversation is about this one listing: the route loads its
    * facts and zone figures, and the prompts and suggestions change with it.

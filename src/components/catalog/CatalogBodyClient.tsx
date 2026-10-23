@@ -4,6 +4,7 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { PropertySearchBar } from "@/components/catalog/PropertySearchBar";
+import { CatalogAiPrompt } from "@/components/catalog/CatalogAiPrompt";
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import { CatalogSearchAlert } from "@/components/catalog/CatalogSearchAlert";
 import { PropertyPagination } from "@/components/catalog/PropertyPagination";
@@ -74,6 +75,8 @@ export type CatalogFilterProps = {
 export type CatalogBodyClientProps = {
   /** Rendered between the sticky filter bar and the grid (facet chips). */
   afterFilters?: React.ReactNode;
+  /** The assistant is configured: its field goes into the listings and the empty state. */
+  aiSearch?: boolean;
   filterProps: CatalogFilterProps;
   /** Filtered catalog page. Map + list use this. */
   pageItems: PropertyHomes[];
@@ -101,7 +104,8 @@ export type CatalogBodyClientProps = {
 type BannerSlot = "top" | { afterProperty: number };
 type ComposedItem =
   | { kind: "banner"; banner: PropertyCatalogBanner; key: string }
-  | { kind: "property"; item: PropertyHomes; key: string };
+  | { kind: "property"; item: PropertyHomes; key: string }
+  | { kind: "ai"; key: string };
 
 /**
  * Cards per row for the view mode, the window width and whether the map
@@ -131,12 +135,20 @@ function getBannerSlots(columns: number): BannerSlot[] {
   return ["top", { afterProperty: first }, { afterProperty: second }];
 }
 
+/** The assistant's row: after about six cards, on a row boundary. */
+function aiPromptSlot(columns: number): number {
+  const row = Math.max(columns, 1);
+  return row * Math.ceil(6 / row);
+}
+
 function composeCatalogFlowItems(args: {
   pageItems: PropertyHomes[];
   banners: PropertyCatalogBanner[];
   slots: BannerSlot[];
+  /** Cards before the assistant's row; null leaves it out. */
+  aiAfter?: number | null;
 }): ComposedItem[] {
-  const { pageItems, banners, slots } = args;
+  const { pageItems, banners, slots, aiAfter = null } = args;
   const selectedSlots = slots.slice(0, banners.length);
 
   const top: PropertyCatalogBanner[] = [];
@@ -169,6 +181,9 @@ function composeCatalogFlowItems(args: {
       for (const b of pending) out.push({ kind: "banner", banner: b, key: `banner-after-${propertyCount}-${b.key}` });
       afterProperty.delete(propertyCount);
     }
+    if (aiAfter !== null && propertyCount === Math.min(aiAfter, pageItems.length)) {
+      out.push({ kind: "ai", key: "ai-prompt" });
+    }
   }
 
   // If page has fewer properties than slot targets, render remaining banners at end.
@@ -193,6 +208,7 @@ const COMPACT_FILTER_BAR_PX = 72;
 export function CatalogBodyClient({
   filterProps,
   afterFilters,
+  aiSearch = false,
   pageItems,
   banners = [],
   locale,
@@ -725,8 +741,14 @@ export function CatalogBodyClient({
 
   const columns = columnCount(viewMode, windowWidth, split);
   const composedItems = React.useMemo(
-    () => composeCatalogFlowItems({ pageItems: allItems, banners, slots: getBannerSlots(columns) }),
-    [columns, allItems, banners]
+    () =>
+      composeCatalogFlowItems({
+        pageItems: allItems,
+        banners,
+        slots: getBannerSlots(columns),
+        aiAfter: aiSearch ? aiPromptSlot(columns) : null,
+      }),
+    [columns, allItems, banners, aiSearch]
   );
 
   const previewItem = React.useMemo(
@@ -786,6 +808,9 @@ export function CatalogBodyClient({
             {searchAlertHref && allItems.length > 0 ? <CatalogSearchAlert href={searchAlertHref} /> : null}
             <div className={gridClass}>
               {composedItems.map((entry) => {
+                if (entry.kind === "ai") {
+                  return <CatalogAiPrompt key={entry.key} locale={locale} />;
+                }
                 if (entry.kind === "banner") {
                   return (
                     <div key={entry.key} className="min-w-0 col-span-full">
@@ -820,7 +845,7 @@ export function CatalogBodyClient({
               })}
             </div>
             {allItems.length === 0 ? (
-              <CatalogEmptyState locale={locale} searchAlertHref={searchAlertHref} />
+              <CatalogEmptyState locale={locale} searchAlertHref={searchAlertHref} aiSearch={aiSearch} />
             ) : (
               <>
                 {/* One control: a link to the next page for crawlers, an in-place
