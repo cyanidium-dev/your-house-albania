@@ -1818,5 +1818,23 @@
       "subtitle": "Nennen Sie uns Budget und Grundriss. Wir schicken passende Angebote aus dem aktuellen Bestand mit Preis, Entfernung zum Strand und Verfügbarkeit, auf Deutsch."
     },
     "linkFromListing": "Shëngjin-Guide: Preise im Vergleich mit den anderen Küstenstädten, die günstigsten Wohnungen am Meer, Kaufnebenkosten"
+  },
+  "WelcomeBack": {
+    "promptTitle": "Willkommen zurück!",
+    "promptText": "{count, plural, one {Wir haben # Objekt ausgewählt} other {Wir haben # Objekte ausgewählt}}, passend zu dem, was Sie angesehen haben.",
+    "promptFresh": "{count, plural, one {# ist neu} other {# sind neu}} seit Ihrem letzten Besuch.",
+    "promptOpen": "Ansehen",
+    "notNow": "Nicht jetzt",
+    "close": "Schließen",
+    "feedTitle": "Für Sie ausgewählt",
+    "feedLead": "Nach den Objekten, die Sie angesehen haben: {summary}",
+    "freshTitle": "{count, plural, one {Neu seit Ihrem letzten Besuch} other {Neu seit Ihrem letzten Besuch (#)}}",
+    "picksTitle": "Ähnlich wie das, was Sie angesehen haben",
+    "realtorTitle": "Sollen wir Ihnen eine Auswahl schicken?",
+    "realtorText": "Schreiben Sie uns: Wir suchen weitere Angebote und beantworten Ihre Fragen.",
+    "realtorMessage": "Guten Tag! Bitte schicken Sie mir eine Auswahl an Objekten: {summary}.",
+    "summaryFallback": "ähnlich wie die, die ich auf der Website angesehen habe",
+    "studio": "Studio",
+    "upTo": "bis {price}"
   }
 }

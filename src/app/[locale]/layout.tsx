@@ -36,6 +36,7 @@ import { SiteJsonLd } from "@/components/shared/SiteJsonLd";
 import { TEAM_MEMBERS, teamMemberId } from "@/lib/about/team";
 import { BUSINESS_TELEGRAM_URL, BUSINESS_WHATSAPP_URL } from "@/lib/contacts/businessContacts";
 import PwaRoot from "@/components/pwa/PwaRoot";
+import WelcomeBack from "@/components/personalization/WelcomeBack";
 import { PWA_EARLY_CAPTURE_SCRIPT } from "@/lib/pwa/earlyCapture";
 import { isAiSearchEnabled } from "@/lib/ai/config";
 // Hidden 2026-09-02 together with its mount below.
@@ -298,6 +299,8 @@ if(d.readyState==='complete')arm();else w.addEventListener('load',arm,{once:true
           <LeadTracker />
           {/* PostHog funnels and flags; loads only after analytics consent. */}
           {posthogEnabled && <PostHogConsent />}
+          {/* E002: picks for a returning visitor; shows only in the test group. */}
+          {posthogEnabled && <WelcomeBack />}
           <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
           {children}
           <Footer

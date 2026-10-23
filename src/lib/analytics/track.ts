@@ -56,6 +56,16 @@ export type AnalyticsEvent =
       propertyType?: string
       priceEur?: number
     }
+  /** E002 "welcome back": the prompt appeared, with how many listings it offers. */
+  | { event: 'welcome_back_shown'; picks: number; fresh: number }
+  /** The visitor opened the picks from the prompt. */
+  | { event: 'welcome_back_open' }
+  /** Closed: `prompt` = "not now" (hidden for a week), `feed` = the picks closed. */
+  | { event: 'welcome_back_dismiss'; stage: 'prompt' | 'feed' }
+  /** A listing in the picks was opened. */
+  | { event: 'welcome_back_card_click'; slug: string; section: 'fresh' | 'picks' }
+  /** "Ask a realtor for a selection" in the picks. */
+  | { event: 'welcome_back_realtor'; messenger: 'whatsapp' | 'telegram' }
   /** A blog article was opened. */
   | { event: 'blog_view'; slug: string; category?: string }
   /** The assistant page was opened, and from where. */

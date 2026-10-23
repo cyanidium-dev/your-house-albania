@@ -1756,5 +1756,23 @@
       "subtitle": "Na tregoni buxhetin dhe tipologjinë. Ju dërgojmë oferta përkatëse nga stoku live me çmimin, distancën nga plazhi dhe disponueshmërinë."
     },
     "linkFromListing": "Udhëzuesi i Shëngjinit: çmimet kundrejt qyteteve të tjera bregdetare, apartamentet më të lira buzë detit, kostot e blerjes"
+  },
+  "WelcomeBack": {
+    "promptTitle": "Mirë se u rikthyet!",
+    "promptText": "{count, plural, one {Zgjodhëm # pronë} other {Zgjodhëm # prona}} sipas asaj që shikuat.",
+    "promptFresh": "{count, plural, one {# është e re} other {# janë të reja}} që nga vizita e fundit.",
+    "promptOpen": "Shiko",
+    "notNow": "Jo tani",
+    "close": "Mbyll",
+    "feedTitle": "Zgjedhur për ju",
+    "feedLead": "Sipas pronave që shikuat: {summary}",
+    "freshTitle": "{count, plural, one {E re që nga vizita juaj e fundit} other {Të reja që nga vizita juaj e fundit (#)}}",
+    "picksTitle": "Të ngjashme me ato që shikuat",
+    "realtorTitle": "Dëshironi t'ju dërgojmë një përzgjedhje?",
+    "realtorText": "Na shkruani dhe do t'ju gjejmë më shumë mundësi e do t'u përgjigjemi pyetjeve.",
+    "realtorMessage": "Përshëndetje! Ju lutem më dërgoni një përzgjedhje pronash: {summary}.",
+    "summaryFallback": "të ngjashme me ato që pashë në faqe",
+    "studio": "garsoniere",
+    "upTo": "deri në {price}"
   }
 }

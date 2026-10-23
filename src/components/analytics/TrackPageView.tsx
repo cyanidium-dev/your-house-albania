@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { track, type AnalyticsEvent } from '@/lib/analytics/track'
 import type { ViewKind } from '@/lib/metrics/viewCounter'
+import { recordListingView } from '@/lib/personalization/visitHistory'
 
 type Props = {
   kind: ViewKind
@@ -25,6 +26,9 @@ export default function TrackPageView({ kind, slug, event }: Props) {
     // React runs effects twice in development; the page is one view either way.
     if (sent.current) return
     sent.current = true
+
+    // "Welcome back" (E002) remembers the listing in this browser only.
+    if (kind === 'property') recordListingView(slug)
 
     const storageKey = `viewed:${kind}:${slug}`
     let alreadyThisSession = false

@@ -1755,5 +1755,23 @@
       "subtitle": "Diteci budget e tipologia. Vi mandiamo le offerte adatte dallo stock live con prezzo, distanza dalla spiaggia e disponibilità, in italiano."
     },
     "linkFromListing": "Guida a Shëngjin: prezzi a confronto con le altre città di mare, gli appartamenti al mare più economici, i costi d'acquisto"
+  },
+  "WelcomeBack": {
+    "promptTitle": "Bentornato!",
+    "promptText": "{count, plural, one {Abbiamo scelto # immobile} other {Abbiamo scelto # immobili}} in base a ciò che ha guardato.",
+    "promptFresh": "{count, plural, one {# è nuovo} other {# sono nuovi}} dalla sua ultima visita.",
+    "promptOpen": "Mostra",
+    "notNow": "Non ora",
+    "close": "Chiudi",
+    "feedTitle": "Scelti per lei",
+    "feedLead": "In base agli immobili che ha guardato: {summary}",
+    "freshTitle": "{count, plural, one {Nuovo dalla sua ultima visita} other {Nuovi dalla sua ultima visita (#)}}",
+    "picksTitle": "Simili a quelli che ha guardato",
+    "realtorTitle": "Vuole che le inviamo una selezione?",
+    "realtorText": "Ci scriva: troveremo altre opzioni e risponderemo alle sue domande.",
+    "realtorMessage": "Buongiorno! Mi mandi per favore una selezione di immobili: {summary}.",
+    "summaryFallback": "simili a quelli che ho guardato sul sito",
+    "studio": "monolocale",
+    "upTo": "fino a {price}"
   }
 }

@@ -34,6 +34,7 @@ export const CLIENT_MESSAGE_NAMESPACES = [
   "QuickLead",
   "Register",
   "Shared",
+  "WelcomeBack",
 ] as const;
 
 export function pickClientMessages(messages: AbstractIntlMessages): AbstractIntlMessages {
