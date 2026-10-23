@@ -807,10 +807,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 <PriceNeighbours locale={locale} cheaper={cheaperItems} pricier={pricierItems} />
                 {similarItems.length > 0 && (
                   // Already inside the page container: a second one here set the
-                  // block 20px in from everything above it. content-visibility:
-                  // the carousel's cards lay out when scrolled near, not with
-                  // the first paint.
-                  <section className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20 [content-visibility:auto] [contain-intrinsic-size:auto_560px]">
+                  // block 20px in from everything above it.
+                  <section className="mt-16 pt-12 border-t border-dark/10 dark:border-white/20">
                     <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-dark dark:text-white mb-6">{tPropertyDetail('similarProperties')}</h2>
                     <SimilarPropertiesCarousel items={similarItems} locale={locale} />
                   </section>

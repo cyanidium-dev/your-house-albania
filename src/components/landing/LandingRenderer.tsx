@@ -139,21 +139,9 @@ export async function LandingRenderer({
     })
     if (!node) continue
     lastRenderedType = section?._type
-    // Sections below the first screen render lazily: with `content-visibility`
-    // the browser skips their style and layout until they scroll near, and
-    // style/layout was 1.3 s of the main thread on a phone (Lighthouse
-    // 18.10, home 9,700px tall). The intrinsic size keeps the scrollbar
-    // honest until then. The hero and the section right after it still lay
-    // out at once, so the first paint and the LCP are unaffected.
-    nodes.push(
-      i >= 2 ? (
-        <div key={(section as { _key?: string })._key ?? i} className="[content-visibility:auto] [contain-intrinsic-size:auto_720px]">
-          {node}
-        </div>
-      ) : (
-        node
-      ),
-    )
+    // No `content-visibility: auto` here: a guessed intrinsic size made each
+    // section jump when it laid out on scroll (CLS 0.41 in Clarity, 23.10).
+    nodes.push(<React.Fragment key={(section as { _key?: string })._key ?? i}>{node}</React.Fragment>)
   }
 
   if (beforeCta) {
