@@ -35,6 +35,7 @@ export type SeoDecisionSourceRows = {
     constructionStage?: string | null;
     seaDistanceMeters?: number | null;
     beachfront?: boolean | null;
+    amenitySlugs?: (string | null)[] | null;
     _updatedAt?: string;
     _createdAt?: string;
   }>;
@@ -120,6 +121,7 @@ export function decideSeoPages(
       constructionStage: p.constructionStage,
       seaDistanceMeters: p.seaDistanceMeters,
       beachfront: p.beachfront,
+      amenitySlugs: p.amenitySlugs,
       lastModified: updated,
     });
   }

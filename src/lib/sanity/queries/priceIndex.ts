@@ -37,7 +37,8 @@ export const fetchPriceIndexRows = sanityCache(
           "rows": *[_type == "property" && ${publishedPropertyFilter()} && status == "sale"]{
             price, priceUnit, area, "type": type->slug.current, "stage": constructionStage,
             "c": city->slug.current, "d": district->slug.current,
-            bedrooms, "sea": seaDistanceMeters, "beach": beachfront
+            bedrooms, "sea": seaDistanceMeters, "beach": beachfront,
+            "amen": amenitiesRefs[]->slug.current
           },
           "cities": *[_type == "city" && isPublished != false && defined(slug.current)]{
             "slug": slug.current, title, "country": country->slug.current

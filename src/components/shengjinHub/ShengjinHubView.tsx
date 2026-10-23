@@ -42,6 +42,7 @@ import {
   SHENGJIN_CITY,
   SHENGJIN_COUNTRY,
   SHENGJIN_HUB_FACETS,
+  SHENGJIN_HUB_TYPES,
   SHENGJIN_SEA_MAX_METERS,
   shengjinHubPath,
 } from "@/lib/shengjinHub/config";
@@ -103,6 +104,31 @@ export async function ShengjinHubView({ locale, data }: { locale: string; data: 
       },
     ];
   });
+
+  // City + type pages (`/albania/shengjin/sale/studio`) the registry indexes in this locale, counted over the live flats.
+  const typeLinks = SHENGJIN_HUB_TYPES.flatMap((type) => {
+    const key = seoPageKeyFromListingRoute({ country: SHENGJIN_COUNTRY, city: SHENGJIN_CITY, dealSegment: "sale", type });
+    if (!key || !decisions) return [];
+    const id = seoPageId(key);
+    const row = decisions.find((r) => seoPageId(r.decision.key) === id);
+    if (!row || !isSeoPageIndexableIn(row.decision, locale)) return [];
+    const count = flats.filter((f) => f.typeSlug === type).length;
+    if (count === 0) return [];
+    return [
+      {
+        href: catalogFilterPath({
+          locale,
+          country: SHENGJIN_COUNTRY,
+          trustedCityCountrySlug: SHENGJIN_COUNTRY,
+          city: SHENGJIN_CITY,
+          dealType: "sale",
+          propertyType: type,
+        }),
+        label: t(`types.${type}`, { count }),
+      },
+    ];
+  });
+  const sliceLinks = [...facetLinks, ...typeLinks];
 
   const guideLinks = guides.flatMap((g) => {
     if (g.noIndex === true) return [];
@@ -273,10 +299,10 @@ export async function ShengjinHubView({ locale, data }: { locale: string; data: 
                 {t("budget.title")}
               </h2>
               <p className={cn(SECTION_LEAD, "mt-3")}>{t("budget.lead", { date })}</p>
-              {facetLinks.length > 0 ? (
+              {sliceLinks.length > 0 ? (
                 <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
-                  {facetLinks.map((link) => (
-                    <li key={link.facet}>
+                  {sliceLinks.map((link) => (
+                    <li key={link.href}>
                       <Link href={link.href} className={textLinkClass}>
                         {link.label}
                       </Link>

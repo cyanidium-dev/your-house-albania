@@ -50,7 +50,10 @@ export const SHENGJIN_FLAT_TYPES: readonly string[] = ["apartment", "studio"];
 export const SHENGJIN_BUDGET_CEILINGS: readonly number[] = [50_000, 80_000, 100_000];
 
 /** The facet pages the hub links when the registry indexes them in the locale. */
-export const SHENGJIN_HUB_FACETS = ["near-the-sea", "under-100k", "1-1", "2-1"] as const;
+export const SHENGJIN_HUB_FACETS = ["near-the-sea", "sea-view", "under-100k", "1-1", "2-1"] as const;
+
+/** The city + type pages the hub links when the registry indexes them in the locale (`/albania/shengjin/sale/{type}`). */
+export const SHENGJIN_HUB_TYPES = ["studio"] as const;
 
 /**
  * The two comparisons the site already has for the town (Sanity `landingPage`

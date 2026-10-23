@@ -67,6 +67,11 @@ const DURRES_DISTRICT_FACETS: readonly SeoExperiment[] = [
  * Each slice is a distinct purchase: by the sea, a price ceiling, a layout.
  * Listing count at launch in the hypothesis; `under-80k` is left out as a
  * twin of `under-100k`, `new-builds` has four listings.
+ *
+ * `sea-view` added 2026-10-24 (45 of 123 listings carry the amenity, only 14
+ * of them on the first line, 28 within `near-the-sea`): Google suggests
+ * "apartamente ne shitje shengjin me pamje nga deti" and "sea view apartments
+ * for sale shengjin albania" after the town, Ahrefs volumes due 2026-10-26.
  */
 function shengjinFacet(facet: ListingFacetSlug, listings: number): SeoExperiment {
   return {
@@ -82,6 +87,7 @@ function shengjinFacet(facet: ListingFacetSlug, listings: number): SeoExperiment
 
 const SHENGJIN_FACETS: readonly SeoExperiment[] = [
   shengjinFacet("near-the-sea", 66),
+  shengjinFacet("sea-view", 45),
   shengjinFacet("under-100k", 69),
   shengjinFacet("1-1", 78),
   shengjinFacet("2-1", 26),
@@ -90,6 +96,16 @@ const SHENGJIN_FACETS: readonly SeoExperiment[] = [
 export const SEO_EXPERIMENTS: readonly SeoExperiment[] = [
   ...DURRES_DISTRICT_FACETS,
   ...SHENGJIN_FACETS,
+  {
+    id: "shengjin-studios",
+    target: { family: "cityType", country: "albania", city: "shengjin", type: "studio" },
+    hypothesis:
+      "Studios are 17 of 123 Shëngjin listings (€35,200-65,000, the cheapest way in), a distinct purchase from a 1+1; Google suggests \"garsoniere shengjin\", \"shitet garsoniere shengjin\", \"garsoniere ne shitje shengjin\" (2026-10-24), too small for Keyword Planner. One listing above the cityType minimum: the page drops to noindex on its own if two studios sell.",
+    successCriteria:
+      "Indexed and impressions from garsoniere / studio queries on this URL in sq within the period, Ahrefs volume for the phrase recorded on 2026-10-26.",
+    startedAt: "2026-10-24",
+    reviewAt: "2026-11-26",
+  },
   {
     id: "durres-under-100k",
     target: { family: "facet", country: "albania", city: "durres", facet: "under-100k" },

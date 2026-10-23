@@ -44,6 +44,8 @@ export type PriceIndexListingRow = ListingPriceRow & {
   sea?: number | null;
   /** First line. */
   beach?: boolean | null;
+  /** Amenity slugs (`sea-view` is a facet): read by the facet figures only. */
+  amen?: (string | null)[] | null;
   /** City slug. */
   c?: string | null;
   /** District slug. */
@@ -152,6 +154,7 @@ export function facetFigures(rows: readonly PriceIndexListingRow[]): Partial<Rec
         constructionStage: r.stage,
         seaDistanceMeters: r.sea,
         beachfront: r.beach,
+        amenitySlugs: r.amen,
       }),
     );
     if (slice.length > 0) out[facet] = computePriceIndexFigures(slice);

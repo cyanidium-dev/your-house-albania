@@ -53,6 +53,7 @@ export const fetchSeoPageDecisions = sanityCache(
         constructionStage,
         seaDistanceMeters,
         beachfront,
+        "amenitySlugs": amenitiesRefs[]->slug.current,
         _updatedAt,
         _createdAt
       }

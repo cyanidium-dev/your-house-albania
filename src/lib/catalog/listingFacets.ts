@@ -15,7 +15,7 @@
  * The test in `__tests__/listingFacets.test.ts` holds them together.
  */
 
-export const LISTING_FACET_SLUGS = ["near-the-sea", "1-1", "2-1", "3-1", "under-80k", "under-100k", "new-builds"] as const;
+export const LISTING_FACET_SLUGS = ["near-the-sea", "sea-view", "1-1", "2-1", "3-1", "under-80k", "under-100k", "new-builds"] as const;
 export type ListingFacetSlug = (typeof LISTING_FACET_SLUGS)[number];
 
 export type ListingFacetKind = "sea" | "rooms" | "budget" | "stage";
@@ -27,6 +27,14 @@ export type ListingFacetKind = "sea" | "rooms" | "budget" | "stage";
  */
 export const NEAR_SEA_MAX_METERS = 300;
 
+/**
+ * "Sea view": the listing carries the `sea-view` amenity (Sanity `amenity`
+ * slug). The import sets it from the listing text, so it is the one view the
+ * data states rather than infers; in Shëngjin the 45 listings with the amenity
+ * are exactly the 45 whose description mentions the view (2026-10-24).
+ */
+export const SEA_VIEW_AMENITY = "sea-view";
+
 /** Minimal property shape the sitemap reads to count facet pages. */
 export type FacetPropertyRow = {
   typeSlug?: string | null;
@@ -36,6 +44,8 @@ export type FacetPropertyRow = {
   constructionStage?: string | null;
   seaDistanceMeters?: number | null;
   beachfront?: boolean | null;
+  /** Amenity slugs of the listing (`amenitiesRefs[]->slug.current`). */
+  amenitySlugs?: readonly (string | null)[] | null;
 };
 
 type FacetDefinition = {
@@ -55,6 +65,11 @@ export const LISTING_FACETS: Record<ListingFacetSlug, FacetDefinition> = {
     query: { nearSea: "1" },
     matches: (r) =>
       r.beachfront === true || (typeof r.seaDistanceMeters === "number" && r.seaDistanceMeters <= NEAR_SEA_MAX_METERS),
+  },
+  "sea-view": {
+    kind: "sea",
+    query: { amenities: SEA_VIEW_AMENITY },
+    matches: (r) => Array.isArray(r.amenitySlugs) && r.amenitySlugs.includes(SEA_VIEW_AMENITY),
   },
   "1-1": {
     kind: "rooms",
@@ -110,6 +125,7 @@ export function facetCatalogFilters(facet: ListingFacetSlug): {
   maxPrice?: number;
   stage?: "unfinished";
   nearSea?: boolean;
+  amenities?: string[];
 } {
   const q = LISTING_FACETS[facet].query;
   return {
@@ -120,5 +136,6 @@ export function facetCatalogFilters(facet: ListingFacetSlug): {
     ...(q.maxPrice ? { maxPrice: Number(q.maxPrice) } : {}),
     ...(q.stage === "unfinished" ? { stage: "unfinished" as const } : {}),
     ...(q.nearSea === "1" ? { nearSea: true } : {}),
+    ...(q.amenities ? { amenities: q.amenities.split(",") } : {}),
   };
 }
