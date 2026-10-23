@@ -22,12 +22,13 @@ import { calculateRoi } from '@/lib/calculators/roi'
 import { calculateMortgage } from '@/lib/calculators/mortgage'
 import { AI_MAX_CARDS } from './limits'
 import { KNOWLEDGE_TOOLS } from './knowledgeTools'
+import { SEARCH_PROPERTIES_TOOL } from './searchProperties'
 
 export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
   name: 'show_properties',
   description:
-    'Display listings to the visitor as picture cards. Pass the slugs you picked from the catalog ' +
-    'in the system prompt, best match first. Call this every time you name specific properties — ' +
+    'Display listings to the visitor as picture cards. Pass slugs exactly as search_properties ' +
+    'returned them, best match first. Call this every time you name specific properties — ' +
     'the visitor sees cards, not your text, so never describe a listing without calling it. ' +
     'Optionally pass catalogLink to render a "see all" button pointing at the ordinary catalog ' +
     'page with those filters applied.',
@@ -38,7 +39,7 @@ export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
     properties: {
       slugs: {
         type: 'array',
-        description: `Property slugs, exactly as written in the catalog. Best match first, at most ${AI_MAX_CARDS}.`,
+        description: `Property slugs, exactly as search_properties returned them. Best match first, at most ${AI_MAX_CARDS}.`,
         items: { type: 'string' },
         minItems: 1,
         maxItems: AI_MAX_CARDS,
@@ -61,7 +62,7 @@ export const SHOW_PROPERTIES_TOOL: Anthropic.Tool = {
 }
 
 /** Catalog conversation: find listings, and answer the money questions from the knowledge base. */
-export const AI_TOOLS: Anthropic.Tool[] = [SHOW_PROPERTIES_TOOL, ...KNOWLEDGE_TOOLS]
+export const AI_TOOLS: Anthropic.Tool[] = [SEARCH_PROPERTIES_TOOL, SHOW_PROPERTIES_TOOL, ...KNOWLEDGE_TOOLS]
 
 type CatalogLinkInput = {
   city?: string
@@ -338,6 +339,7 @@ export function runCalcMortgage(rawInput: unknown): unknown {
 
 /** One listing in view: the catalog tool, the calculators, and the knowledge base. */
 export const AI_PROPERTY_TOOLS: Anthropic.Tool[] = [
+  SEARCH_PROPERTIES_TOOL,
   SHOW_PROPERTIES_TOOL,
   CALC_ROI_TOOL,
   CALC_MORTGAGE_TOOL,
