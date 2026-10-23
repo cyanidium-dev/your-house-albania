@@ -36,6 +36,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "blog",
   // The calculator pages, `/{locale}/calculators/*` (lib/calculatorPages).
   "calculators",
+  // Seaside flats landing for Italian buyers, `/it/case-al-mare-albania` (lib/seaFlats).
+  "case-al-mare-albania",
   "catalog",
   "cities",
   "contact",
@@ -52,6 +54,8 @@ export const NON_LISTING_FIRST_SEGMENTS: ReadonlySet<string> = new Set([
   "knowledge",
   "luxury-villa",
   "methodology",
+  // Seaside flats landing for Russian-speaking buyers, `/ru/nedvizhimost-v-albanii-u-morya` (lib/seaFlats).
+  "nedvizhimost-v-albanii-u-morya",
   "prices",
   "office-spaces",
   "partners",
