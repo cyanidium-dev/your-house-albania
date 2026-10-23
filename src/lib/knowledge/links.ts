@@ -44,6 +44,8 @@ export const KNOWLEDGE_SLUGS = {
   mortgage: "mortgage-in-albania-interest-rates-down-payment",
   stayByCitizenship: "how-long-can-you-stay-in-albania-without-a-visa-by-citizenship",
   italianPension: "italian-pension-tax-if-you-move-to-albania",
+  whereToLive: "where-to-live-in-albania-as-a-foreigner",
+  digitalNomad: "digital-nomad-visa-albania-remote-work-permit",
 } as const;
 
 const K = KNOWLEDGE_SLUGS;
@@ -62,20 +64,20 @@ export const KNOWLEDGE_LINKS_BY_BLOG_POST: Record<string, readonly string[]> = {
   "notary-fees-albania-2026": [K.notary, K.ashk, K.transferTax],
   "legalized-property-albania-how-to-check": [K.legalisation, K.informal, K.ashk],
   "durres-documents-checklist": [K.documents, K.steps, K.powerOfAttorney],
-  "utilities-in-albania-monthly-costs": [K.utilities, K.propertyTax],
+  "utilities-in-albania-monthly-costs": [K.utilities, K.propertyTax, K.digitalNomad],
   "retiring-to-albania-property-costs": [K.italianPension, K.utilities, K.residence],
   "albania-rental-yield-for-investors": [K.yields, K.management, K.rentalTax],
   "durres-rental-investment-2026": [K.yields, K.plazhGolem, K.management],
   "short-term-rental-albanian-riviera": [K.management, K.rentalTax],
-  "how-to-choose-tirana-durres-vlore": [K.tiranaDurres, K.durresVlore],
+  "how-to-choose-tirana-durres-vlore": [K.tiranaDurres, K.durresVlore, K.whereToLive],
   "durres-beach-vs-center": [K.seaCentre, K.plazhGolem],
   "albania-property-types-investment-risk": [K.offPlan, K.developer, K.informal],
   "durres-choose-area-2026": [K.plazhGolem, K.seaCentre, K.developer],
   "tirana-buy-without-agent": [K.steps, K.timeline, K.developer],
   "moving-to-albania-with-family": [K.residence, K.utilities, K.ukraine],
   "investment-albania": [K.payment, K.uk, K.ukraine],
-  "living-albanian-riviera": [K.uk, K.residence, K.stayByCitizenship],
-  "best-districts-tirana": [K.stayByCitizenship, K.tiranaDurres],
+  "living-albanian-riviera": [K.uk, K.digitalNomad, K.stayByCitizenship],
+  "best-districts-tirana": [K.stayByCitizenship, K.tiranaDurres, K.whereToLive],
   "albania-investment-by-budget-and-goal": [K.mortgage, K.yields],
   "buying-apartment-durres-complete-guide": [K.mortgage, K.steps, K.notary],
   "market-outlook-2026": [K.vat, K.offPlan, K.timeline],
@@ -93,7 +95,7 @@ export const KNOWLEDGE_LINKS_BY_BLOG_POST: Record<string, readonly string[]> = {
 /** City slug → question pages shown on its /info page. */
 export const KNOWLEDGE_LINKS_BY_CITY: Record<string, readonly string[]> = {
   durres: [K.yields, K.plazhGolem, K.seaCentre],
-  tirana: [K.tiranaDurres],
+  tirana: [K.tiranaDurres, K.whereToLive],
   vlore: [K.durresVlore],
 };
 
