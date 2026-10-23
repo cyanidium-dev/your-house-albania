@@ -1,6 +1,6 @@
 /**
  * "Welcome back": listings picked from what a returning visitor looked at
- * (experiment E002, docs/experiments/002-welcome-back-feed.md).
+ * (experiment E005, docs/experiments/005-welcome-back-feed.md).
  *
  * The browser sends only the slugs it viewed and when its last visit ended;
  * the profile (city, type, rooms, budget) is read here from the catalog

@@ -1,4 +1,4 @@
-# E002 — "Welcome back": picks for a returning visitor
+# E005 — "Welcome back": picks for a returning visitor
 
 Status: running from 2026-10-24 · review **2026-12-21** · sample check 2026-11-07 · follows [ADR 007](../seo/decisions/007-experiments.md) (hypothesis, success criteria, fixed review date, no silent extension)
 

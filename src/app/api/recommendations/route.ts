@@ -13,7 +13,7 @@ const LOCALE = /^[a-z]{2}$/
 const NO_STORE = { 'Cache-Control': 'no-store' }
 
 /**
- * "Welcome back" listings for a returning visitor (E002). Body: the slugs the
+ * "Welcome back" listings for a returning visitor (E005). Body: the slugs the
  * browser remembers viewing and when its previous visit ended. Nothing is
  * stored: the answer is computed from the cached catalog snapshot.
  */

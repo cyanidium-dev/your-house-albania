@@ -299,7 +299,7 @@ if(d.readyState==='complete')arm();else w.addEventListener('load',arm,{once:true
           <LeadTracker />
           {/* PostHog funnels and flags; loads only after analytics consent. */}
           {posthogEnabled && <PostHogConsent />}
-          {/* E002: picks for a returning visitor; shows only in the test group. */}
+          {/* E005: picks for a returning visitor; shows only in the test group. */}
           {posthogEnabled && <WelcomeBack />}
           <Header siteSettings={siteSettings} locale={locale} countrySlugs={countrySlugs} />
           {children}

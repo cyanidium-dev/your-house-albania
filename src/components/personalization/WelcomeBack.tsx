@@ -37,7 +37,7 @@ function writeSession(key: string, value: unknown): void {
 }
 
 /**
- * "You were here before; we picked listings for you" (E002). Mounted once in
+ * "You were here before; we picked listings for you" (E005). Mounted once in
  * the layout: on every page it keeps the visit clock; on the home page and the
  * listing pages of a returning visitor it fetches picks, reads the flag and,
  * in the test group, asks at the bottom of the screen. Fixed position, so it
