@@ -45,6 +45,7 @@ import {
   germanHubPath,
 } from "@/lib/germanHub/config";
 import type { GermanHubData } from "@/lib/germanHub/load";
+import { seaHousesPath } from "@/lib/seaHouses/config";
 import { cn } from "@/lib/utils";
 
 const loc = (value: string) => ({ en: value, uk: value, ru: value, sq: value, it: value, pl: value, de: value });
@@ -207,6 +208,12 @@ export async function GermanHubView({ locale, data }: { locale: string; data: Ge
               <PropertyCard key={card.slug} item={card} locale={locale} fillHeight />
             ))}
           </div>
+          {/* Houses and villas by the sea have a page of their own (lib/seaHouses, 2026-10-24). */}
+          <p className={cn(BODY_TEXT, "mt-6")}>
+            <Link href={seaHousesPath()} className={textLinkClass}>
+              {t("sea.houses")}
+            </Link>
+          </p>
         </Section>
       ) : null}
 

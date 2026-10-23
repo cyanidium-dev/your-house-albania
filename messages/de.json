@@ -1673,7 +1673,8 @@
     "sea": {
       "title": "{count, plural, one {# Wohnung} other {# Wohnungen}} am Meer",
       "lead": "Wohnungen und Studios bis {metres} m vom Meer oder in erster Reihe, sortiert nach Preis pro m² im Verhältnis zum Median ihrer Stadt: die günstigsten zuerst, aus jeder Stadt höchstens {perCity}.",
-      "all": "Alle Immobilien am Meer"
+      "all": "Alle Immobilien am Meer",
+      "houses": "Haus am Meer in Albanien kaufen: Häuser und Villen an der Küste, Preise nach Ort"
     },
     "guides": {
       "title": "Ratgeber auf Deutsch",
@@ -1836,5 +1837,82 @@
     "summaryFallback": "ähnlich wie die, die ich auf der Website angesehen habe",
     "studio": "Studio",
     "upTo": "bis {price}"
+  },
+  "SeaHouses": {
+    "metaTitle": "Haus am Meer in Albanien kaufen: {count} Häuser ab {from}",
+    "metaTitleShort": "Haus am Meer in Albanien kaufen: Häuser und Villen an der Küste",
+    "metaDescription": "{count} Häuser und Villen bis 1 km vom Meer, {beachfront} davon in erster Reihe, ab {from}, Median {median}. Preise nach Ort, die günstigsten zuerst, Kaufnebenkosten und die Antworten für Käufer aus Deutschland.",
+    "metaDescriptionShort": "Häuser und Villen bis 1 km vom Meer in Albanien: Preise nach Ort, die günstigsten zuerst, Kaufnebenkosten und die Antworten für Käufer aus Deutschland.",
+    "breadcrumb": "Haus am Meer kaufen",
+    "label": "Für Käufer aus Deutschland",
+    "h1": "Haus am Meer in Albanien kaufen",
+    "lead": "Am {date} stehen auf Domlivo {count, plural, one {# Haus} other {# Häuser}} und Villen bis 1 km vom Meer oder in erster Reihe zum Verkauf, ab {from}, von insgesamt {total} Häusern in Albanien. Alle liegen zurzeit an der Küste von {city}. Unten: was ein Haus am Meer je nach Ort kostet, die günstigsten zuerst, die Kosten über den Preis hinaus und die Fragen, die Käufer aus Deutschland stellen.",
+    "leadManyCities": "Am {date} stehen auf Domlivo {count, plural, one {# Haus} other {# Häuser}} und Villen bis 1 km vom Meer oder in erster Reihe zum Verkauf, ab {from}, von insgesamt {total} Häusern in Albanien. Unten: was ein Haus am Meer je nach Ort kostet, die günstigsten zuerst, die Kosten über den Preis hinaus und die Fragen, die Käufer aus Deutschland stellen.",
+    "leadNoData": "Häuser und Villen bis 1 km vom Meer in Albanien: was sie je nach Ort kosten, die Kosten über den Preis hinaus und die Fragen, die Käufer aus Deutschland stellen.",
+    "allHouses": "Alle {count, plural, one {# Haus} other {# Häuser}} in Albanien",
+    "tiles": {
+      "sea": "Bis {metres} m vom Meer",
+      "from": "Günstigstes Haus am Meer",
+      "median": "Median-Preis am Meer",
+      "beachfront": "In erster Reihe"
+    },
+    "why": {
+      "title": "Was Sie hier finden",
+      "tilesNote": "Angebotspreise der aktiven Inserate auf Domlivo, {date}. Keine Verkaufspreise.",
+      "p1": "Ein Haus am Meer heißt in Albanien zurzeit vor allem: ein Haus an der Küste von {city}. Dort stehen die meisten unserer Häuser und Villen, in den Vierteln hinter dem Strand und oben auf den Hängen, mit Garten, Garage und oft drei bis sechs Schlafzimmern. Die Tabelle unten zeigt, wo sie stehen und was dort verlangt wird; Vlora, Saranda und die Riviera kommen hinzu, sobald dort Häuser inseriert sind.",
+      "p1ManyCities": "Unsere Häuser und Villen am Meer stehen in mehreren Küstenstädten, in den Vierteln hinter dem Strand und oben auf den Hängen, mit Garten, Garage und oft drei bis sechs Schlafzimmern. Die Tabelle unten zeigt, wo sie stehen und was dort verlangt wird.",
+      "p2": "Die Zahl ist kleiner als bei Wohnungen, und das ist ehrlich so: Albaniens Küste wird mit Wohnblocks bebaut, freistehende Häuser am Wasser sind selten und meist aus zweiter Hand. Wer eines sucht, bekommt hier jedes, das wir haben, mit Preis, Grundstück, Entfernung zum Meer und Fotos, und sieht sofort, ob es in erster Reihe steht oder ein paar Straßen dahinter.",
+      "p3": "Alles auf dieser Seite wird aus den aktiven Inseraten berechnet, zur angegebenen Stunde. Ein Haus, das verkauft ist, verschwindet; ein neues erscheint in der Tabelle und, wenn es günstig genug ist, im Raster.",
+      "hubLink": "Immobilien in Albanien kaufen: Preise nach Stadt, Wohnungen am Meer, Ablauf und Steuern"
+    },
+    "table": {
+      "title": "Häuser am Meer nach Ort",
+      "lead": "Häuser und Villen bis 1 km vom Meer oder in erster Reihe am {date}: wie viele, ab welchem Preis, der Median und die mittlere Wohnfläche. Jeder Ort öffnet seine Inserate.",
+      "caption": "Häuser und Villen am Meer in Albanien nach Ort, {date}: Zahl, niedrigster und mittlerer Angebotspreis, mittlere Wohnfläche",
+      "colPlace": "Ort",
+      "colCount": "Häuser",
+      "colFrom": "Ab",
+      "colMedian": "Median-Preis",
+      "colArea": "Wohnfläche (Median)",
+      "otherIn": "Übriges {city}",
+      "fewHouses": "zu wenige Häuser",
+      "note": "Ein Median über weniger als drei Häuser wird nicht gedruckt. Ein Inserat zählt als am Meer, wenn es einen Fußweg bis 1 km oder die erste Reihe angibt; Häuser ohne Entfernungsangabe sind nicht gezählt, die wahre Zahl ist also eher höher."
+    },
+    "cards": {
+      "title": "{count, plural, one {Das günstigste Haus am Meer} other {Die # günstigsten Häuser am Meer}}",
+      "lead": "Häuser und Villen bis {metres} m vom Meer oder in erster Reihe, die günstigsten zuerst, von {total} am Meer. Preise und Verfügbarkeit wie in den Inseraten angegeben.",
+      "all": "Alle {count, plural, one {# Haus} other {# Häuser}} in Albanien",
+      "villas": "Nur Villen: alle Villen zum Kauf in Albanien"
+    },
+    "costs": {
+      "title": "Was der Kauf eines Hauses kostet",
+      "lead": "Die Kosten über den Preis hinaus, aus den Quellen unseres Kaufnebenkostenrechners.",
+      "p1": "Deutsche kaufen Häuser und Wohnungen in Albanien zu denselben Bedingungen wie albanische Staatsbürger und dürfen sie frei verkaufen und vererben. Das Grundstück unter dem Haus gehört dazu; ausgenommen sind nur landwirtschaftliche Flächen, die sich bis zu 99 Jahre pachten oder über eine albanische Gesellschaft erwerben lassen. Der Kauf ist nur als notarielle Urkunde wirksam.",
+      "p2": "Der Notar berechnet 0,35 % des Werts bis 6 Mio. Lek und 0,30 % bis 15 Mio.; das Katasteramt ASHK verlangt 5.000 Lek für die Eintragung. Ein privater Käufer zahlt keine Grunderwerbsteuer, die Steuern auf den Verkauf trägt der Verkäufer. Bei einem Haus für 250.000 € liegen die Nebenkosten mit Anwalt, beeidigtem Übersetzer und Makler typischerweise bei 2 bis 3 % des Preises. Die jährliche Gebäudesteuer beträgt 0,05 % des steuerlichen Werts.",
+      "p3": "Bei einem Haus aus zweiter Hand prüft der Anwalt vor der Beurkundung das Eigentumsblatt, die Baugenehmigung und ob der Anbau oder der Garten legalisiert sind: Nachträglich errichtete Teile ohne Legalisierung sind an der Küste häufig und drücken den Preis zu Recht. Von der Reservierung bis zum neuen Eigentumsblatt dauert es mit sauberen Unterlagen vier bis acht Wochen.",
+      "calculatorLink": "Kaufnebenkostenrechner: Ihr Haus durchrechnen"
+    },
+    "faq": {
+      "title": "Fragen von Käufern aus Deutschland",
+      "lead": "Kurz beantwortet mit den aktuellen Zahlen; der Marktführer für Albanien vertieft Ablauf, Steuern und Gegenden.",
+      "q1": "Was kostet ein Haus am Meer in Albanien?",
+      "a1": "Am {date} verlangten die {count} auf Domlivo inserierten Häuser und Villen bis 1 km vom Meer ab {from}, im Median {median}. Das sind Angebotspreise aus aktiven Inseraten, keine Verkaufspreise; nach unserer Erfahrung wird bei Häusern aus zweiter Hand verhandelt. Die Tabelle oben teilt sie nach Ort auf.",
+      "a1NoData": "Die aktuellen Angebotspreise der Häuser und Villen bis 1 km vom Meer stehen in der Tabelle oben, stündlich aus den Inseraten berechnet; das sind Angebotspreise, keine Verkaufspreise.",
+      "q2": "Wo in Albanien gibt es Häuser am Meer zu kaufen?",
+      "a2": "Zurzeit vor allem an der Küste von {city}: in den Vierteln hinter dem Strand und auf den Hängen darüber. Die albanische Küste wird überwiegend mit Wohnanlagen bebaut, freistehende Häuser direkt am Wasser sind selten; in Vlora und Saranda haben wir zurzeit Wohnungen, aber kaum Häuser inseriert. Die Tabelle oben zeigt jeden Ort mit Zahl und Preisen.",
+      "a2NoData": "In den Küstenstädten, in den Vierteln hinter dem Strand und auf den Hängen darüber; die Tabelle oben zeigt jeden Ort mit Zahl und Preisen. Die albanische Küste wird überwiegend mit Wohnanlagen bebaut, freistehende Häuser direkt am Wasser sind selten.",
+      "q3": "Dürfen Deutsche in Albanien ein Haus mit Grundstück kaufen?",
+      "a3": "Ja. Ein Haus mit seinem Bauland kaufen Deutsche zu denselben Bedingungen wie Albaner und dürfen es frei verkaufen und vererben. Ausgenommen sind nur landwirtschaftliche Flächen: Ein Olivenhain neben dem Haus lässt sich bis zu 99 Jahre pachten oder über eine albanische Gesellschaft erwerben. Wer eine Immobilie besitzt, kann nach Art. 84 des Gesetzes 79/2021 eine Aufenthaltserlaubnis für ein Jahr beantragen; einen Mindestpreis nennt das Gesetz nicht.",
+      "q4": "Welche Nebenkosten kommen beim Hauskauf hinzu?",
+      "a4": "Notar 0,35 % des Werts bis 6 Mio. Lek (0,30 % bis 15 Mio.), 5.000 Lek ans Katasteramt für die Eintragung und, falls genutzt, Anwalt, beeidigter Übersetzer und Maklerprovision. Ein privater Käufer zahlt keine Grunderwerbsteuer. Bei einem Haus für 250.000 € sind das typischerweise 2 bis 3 % des Preises. Der Rechner oben rechnet Ihr Haus durch.",
+      "q5": "Bekomme ich für ein Haus in Albanien eine Finanzierung?",
+      "a5": "In der Praxis so gut wie nie von einer albanischen Bank: Sie vergeben kaum Kredite an Gebietsfremde. Bei Häusern aus zweiter Hand wird bar oder per Überweisung gezahlt, oft in zwei Schritten (Anzahlung bei der Reservierung, Rest bei der Beurkundung). Zinsfreie Raten an den Bauträger, bei Neubauwohnungen üblich, gibt es bei Bestandshäusern nicht. Eine Finanzierung läuft in der Regel über eine Bank in Deutschland auf eine dortige Sicherheit.",
+      "q6": "Was heißt auf dieser Seite \"am Meer\"?",
+      "a6": "Ein Haus zählt als am Meer, wenn sein Inserat einen Fußweg bis {metres} m zum Strand angibt oder das Haus in erster Reihe steht; beides steht auf der Seite des Hauses. Häuser ohne Entfernungsangabe sind nicht mitgezählt, auch wenn sie nahe am Wasser stehen könnten; die vollständige Liste öffnet der Link zu allen Häusern."
+    },
+    "contact": {
+      "title": "Welches Haus suchen Sie?",
+      "subtitle": "Nennen Sie uns Budget, Ort und Zahl der Schlafzimmer. Wir schicken passende Häuser aus dem aktuellen Bestand mit Preis, Grundstück, Entfernung zum Meer und Verfügbarkeit, auf Deutsch."
+    }
   }
 }
