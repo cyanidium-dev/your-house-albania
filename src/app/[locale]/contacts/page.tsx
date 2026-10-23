@@ -4,7 +4,6 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { fetchSiteSettings } from '@/lib/sanity/client'
 import { mapContactsManagerFromSiteSettings } from '@/lib/sanity/contactsManagerFromSiteSettings'
-import { ContactsHero } from '@/components/contact/ContactsHero'
 import { FlatBreadcrumb } from "@/components/shared/FlatBreadcrumb"
 import { ContactPageContent } from '@/components/contact/ContactPageContent'
 import { AddPropertyNote } from '@/components/contact/AddPropertyNote'
@@ -54,13 +53,11 @@ export default async function ContactsPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="pt-28 md:pt-36">
-        <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-          <FlatBreadcrumb locale={locale} labelKey="contacts" path="contacts" />
-        </div>
-      </section>
-      <ContactsHero locale={locale} />
-      <ContactPageContent locale={locale} manager={manager} />
+      <ContactPageContent
+        locale={locale}
+        manager={manager}
+        breadcrumb={<FlatBreadcrumb locale={locale} labelKey="contacts" path="contacts" />}
+      />
       <SiteTrustSection locale={locale} trust={mapSiteTrust(raw, locale)} />
       <AddPropertyNote locale={locale} messengers={messengers} />
     </>
