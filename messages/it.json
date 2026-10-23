@@ -82,7 +82,8 @@
       "contacts": "Contatti",
       "addProperty": "Aggiungi il tuo immobile",
       "knowledge": "Base di conoscenza",
-      "shengjinHub": "Shëngjin: appartamenti al mare"
+      "shengjinHub": "Shëngjin: appartamenti al mare",
+      "seaFlats": "Case al mare"
     },
     "cities": {
       "empty": "Nessuna città da mostrare."
@@ -1773,5 +1774,84 @@
     "summaryFallback": "simili a quelli che ho guardato sul sito",
     "studio": "monolocale",
     "upTo": "fino a {price}"
+  },
+  "SeaFlats": {
+    "metaTitle": "Case al mare in Albania: {count} appartamenti da {from}",
+    "metaTitleShort": "Case al mare in Albania: appartamenti vicino alla spiaggia, prezzi per città",
+    "metaDescription": "{count} appartamenti e monolocali entro 1 km dal mare in {cities} città dell'Albania, {beachfront} in prima linea, da {from}, mediana {median}/m². Prezzi per città, i più convenienti al mare, i costi d'acquisto e le risposte alle domande.",
+    "metaDescriptionShort": "Appartamenti e monolocali entro 1 km dal mare in Albania: prezzi per città, i più convenienti vicino alla spiaggia, i costi d'acquisto e le risposte di chi compra.",
+    "country": "Albania",
+    "breadcrumb": "Case al mare",
+    "label": "Appartamenti al mare",
+    "h1": "Case al mare in Albania",
+    "cityFigure": "{city} {count}",
+    "lead": "Il {date} Domlivo elenca {count, plural, one {# appartamento} other {# appartamenti}} e monolocali entro 1 km dal mare o in prima linea, su {total} appartamenti in vendita, da {from}: {cities}. Qui sotto: quanto costa un appartamento al mare in ogni città, i più convenienti rispetto alla loro città, i costi oltre al prezzo e le domande di chi compra.",
+    "leadNoData": "Appartamenti e monolocali entro 1 km dal mare in Albania: quanto costano in ogni città, i più convenienti vicino alla spiaggia, i costi oltre al prezzo e le domande di chi compra.",
+    "allSale": "Tutti gli immobili in vendita in Albania",
+    "tiles": {
+      "sea": "Entro {metres} m dal mare",
+      "from": "Appartamento al mare più economico",
+      "medianPerSqm": "Mediana al mare",
+      "beachfront": "In prima linea"
+    },
+    "why": {
+      "title": "Cosa c'è in questa pagina",
+      "tilesNote": "Prezzi richiesti degli annunci attivi su Domlivo, {date}. Non prezzi di vendita.",
+      "p1": "La costa albanese sono più di 400 chilometri, da Velipoja al confine con il Montenegro fino a Ksamil davanti a Corfù, e la casa al mare costa in modo molto diverso: le spiagge di sabbia del nord e di Durazzo sono nettamente più economiche della Riviera a sud. In questa pagina c'è ogni appartamento e monolocale del nostro catalogo il cui annuncio indica una distanza a piedi dal mare entro un chilometro o la prima linea, con prezzo, metratura e foto. Dall'Italia si arriva in traghetto a Durazzo da Bari e Ancona o in un'ora e mezza di volo a Tirana.",
+      "p2": "L'ingresso più accessibile oggi è {city}: la mediana del prezzo richiesto al mare è di {median} al m². Durazzo con i quartieri di Golem, Plazh e Shkëmbi i Kavajës offre la scelta più ampia, Valona e Saranda hanno i metri quadri più cari e pochi annunci. La tabella qui sotto mostra ogni città con il numero di appartamenti, la prima linea, il prezzo \"da\" e la mediana.",
+      "p2NoData": "Durazzo con i quartieri di Golem, Plazh e Shkëmbi i Kavajës offre la scelta più ampia, Shëngjin a nord i prezzi più bassi, Valona e Saranda i metri quadri più cari. La tabella qui sotto mostra ogni città con il numero di appartamenti, la prima linea, il prezzo \"da\" e la mediana.",
+      "p3": "Tutto in questa pagina è calcolato dagli annunci attivi all'ora indicata: un appartamento venduto sparisce, uno nuovo compare nella tabella e, se è più conveniente dei vicini della sua città, nella selezione. La distanza dal mare e la prima linea vengono dal testo dell'annuncio, non le aggiungiamo noi.",
+      "shengjinLink": "Shëngjin: il mercato di mare più economico, con i prezzi per budget"
+    },
+    "table": {
+      "title": "Appartamenti al mare per città",
+      "lead": "Appartamenti e monolocali entro 1 km dal mare o in prima linea il {date}: quanti, di cui in prima linea, da quale prezzo e la mediana al m². Ogni città apre i suoi annunci.",
+      "caption": "Appartamenti al mare in Albania per città, {date}: numero di annunci, prima linea, prezzo più basso e mediana del prezzo richiesto al m²",
+      "colCity": "Città",
+      "colCount": "Appartamenti",
+      "colBeachfront": "Prima linea",
+      "colFrom": "Da",
+      "colMedian": "Mediana, €/m²",
+      "fewFlats": "pochi appartamenti",
+      "note": "Una mediana su meno di tre appartamenti non viene stampata. Un annuncio conta come al mare quando indica una distanza a piedi fino a 1 km o la prima linea; gli annunci senza distanza non sono contati, quindi il numero reale è più alto.",
+      "pricesLink": "Prezzi per città: tutto l'indice",
+      "methodologyLink": "Come si calcola l'indice"
+    },
+    "cards": {
+      "title": "{count, plural, one {L'appartamento al mare più conveniente} other {I # appartamenti al mare più convenienti}}",
+      "lead": "Appartamenti e monolocali entro {metres} m dal mare o in prima linea, prima i più economici al m² rispetto alla mediana della loro città, al massimo {perCity} per città, su {total} al mare. Prezzi e disponibilità come negli annunci.",
+      "all": "Tutti gli immobili in vendita"
+    },
+    "costs": {
+      "title": "Quanto costa comprare",
+      "lead": "I costi oltre al prezzo, dalle fonti del nostro calcolatore dei costi d'acquisto.",
+      "p1": "Un italiano compra un appartamento in Albania alle stesse condizioni di un cittadino albanese e può venderlo o lasciarlo in eredità liberamente; solo i terreni agricoli sono esclusi. L'acquisto è valido solo come atto notarile. Il notaio chiede lo 0,35% del valore fino a 6 milioni di lek e lo 0,30% fino a 15 milioni; il catasto (ASHK) 5.000 lek per registrare la proprietà. Chi compra come privato non paga imposta di trasferimento, le imposte sulla vendita sono del venditore, e sull'appartamento non c'è IVA.",
+      "p2": "Su un appartamento da 100.000 € gli extra arrivano a circa 2.300 €, cioè il 2,3%, con avvocato, traduttore giurato e provvigione dell'agenzia; con ogni voce facoltativa al massimo della sua fascia circa 4.600 €. Dalla prenotazione al nuovo certificato passano di solito da quattro a otto settimane; per un appartamento in costruzione l'atto segue il completamento. L'imposta annuale sull'edificio è lo 0,05% del valore imponibile.",
+      "p3": "Le banche albanesi raramente prestano ai non residenti; lo strumento del mercato sono le rate senza interessi al costruttore fino alla consegna, standard nella maggior parte delle nuove costruzioni. I redditi da affitto sono tassati al 15%. Possedere un immobile permette di chiedere un permesso di soggiorno annuale ai sensi dell'art. 84 della legge 79/2021, senza prezzo minimo nella legge.",
+      "calculatorLink": "Calcolatore dei costi d'acquisto",
+      "yieldLink": "Calcolatore del rendimento da affitto"
+    },
+    "faq": {
+      "title": "Le domande di chi compra",
+      "lead": "Risposte brevi con le cifre live; le guide e i confronti tra città vanno più a fondo.",
+      "q1": "Quanto costa un appartamento al mare in Albania?",
+      "a1": "Il {date} i {count} appartamenti e monolocali entro 1 km dal mare su Domlivo partivano da {from}; la mediana del prezzo richiesto al mare era di {medianPerSqm} al m², l'appartamento mediano {medianPrice}. Sono prezzi richiesti, non di vendita, e dipendono molto dalla città: la tabella sopra le mostra tutte.",
+      "a1NoData": "I prezzi richiesti degli appartamenti al mare per città sono nella tabella sopra, ricalcolati ogni ora dagli annunci attivi. Sono prezzi richiesti, non di vendita.",
+      "q2": "Dove costa meno una casa al mare in Albania?",
+      "a2": "Sui nostri annunci del {date}: {city}, con una mediana di {median} al m² su {count} appartamenti al mare. Seguono i quartieri di Durazzo (Golem, Shkëmbi i Kavajës, Plazh), mentre Valona e Saranda a sud sono le più care. Il metro quadro al mare nel nord costa da una volta e mezza a due volte meno che sulla Riviera.",
+      "a2NoData": "A nord: Shëngjin e i quartieri di Durazzo (Golem, Shkëmbi i Kavajës, Plazh) sono i mercati di mare più accessibili, Valona e Saranda a sud i più cari. La tabella sopra mostra la mediana di ogni città.",
+      "q3": "Un italiano può comprare casa al mare in Albania?",
+      "a3": "Sì. Gli stranieri comprano appartamenti e case alle stesse condizioni dei cittadini albanesi e possono venderli o lasciarli in eredità liberamente. Solo i terreni agricoli sono esclusi: si possono affittare fino a 99 anni o comprare tramite una società albanese. Possedere un immobile permette di chiedere un permesso di soggiorno annuale ai sensi dell'art. 84 della legge 79/2021, senza prezzo minimo nella legge.",
+      "q4": "Cosa pago oltre al prezzo?",
+      "a4": "Notaio 0,35% del valore fino a 6 milioni di lek (0,30% fino a 15 milioni), 5.000 lek al catasto per la registrazione e, se li usate, avvocato, traduttore giurato e provvigione dell'agenzia. Chi compra come privato non paga imposta di trasferimento né IVA sull'appartamento. Su un appartamento da 100.000 € sono circa 2.300 € in un caso tipico e circa 4.600 € con ogni opzione al massimo.",
+      "q5": "Ci sono rate o un mutuo?",
+      "a5": "Un mutuo a un non residente le banche albanesi quasi non lo concedono. La maggior parte delle nuove costruzioni offre però rate senza interessi al costruttore fino alla consegna: acconto alla prenotazione, il resto a tranche fino al completamento. Per gli appartamenti usati non ci sono rate, si paga all'atto. Le condizioni del singolo appartamento le conferma l'agente dal modulo qui sotto.",
+      "q6": "Cosa significa \"al mare\" in questa pagina?",
+      "a6": "Un appartamento conta come al mare quando l'annuncio indica una distanza a piedi fino a {metres} m dalla spiaggia o la prima linea; entrambe si leggono sulla pagina dell'appartamento. Gli annunci senza distanza non sono contati, anche se l'edificio potrebbe essere vicino all'acqua; l'elenco completo si apre dal link a tutti gli immobili."
+    },
+    "contact": {
+      "title": "Quale appartamento al mare cercate?",
+      "subtitle": "Diteci budget, città e tipologia. Vi mandiamo le offerte adatte dal catalogo live con prezzo, distanza dalla spiaggia e disponibilità, in italiano."
+    }
   }
 }

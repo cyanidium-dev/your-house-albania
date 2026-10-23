@@ -79,6 +79,9 @@ export const FOOTER_MARKET_HUB: Readonly<Record<string, { href: `/${string}`; la
   de: { href: "/albanien-immobilien", labelKey: "germanHub" },
   sq: { href: "/cmimet-e-references", labelKey: "referencePrices" },
   fr: { href: "/immobilier-albanie", labelKey: "frenchHub" },
+  // Seaside flats landings (lib/seaFlats, 2026-10-24): Footer.nav.seaFlats.
+  ru: { href: "/nedvizhimost-v-albanii-u-morya", labelKey: "seaFlats" },
+  it: { href: "/case-al-mare-albania", labelKey: "seaFlats" },
 };
 
 /**
