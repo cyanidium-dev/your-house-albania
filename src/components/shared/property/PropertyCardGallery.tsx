@@ -313,8 +313,10 @@ export function PropertyCardGallery({
               isLarge ? 'bottom-6 left-4' : 'bottom-3 left-2',
             )}
             title={stats.label}
-            aria-label={stats.label}
           >
+            {/* Text, not aria-label: a plain span may not carry one, and
+                Lighthouse's agentic-browsing check failed on it (24.10). */}
+            <span className="sr-only">{stats.label}</span>
             {stats.views ? (
               <span className="inline-flex items-center gap-1" aria-hidden>
                 <Icon icon="ph:eye" width={13} height={13} />
