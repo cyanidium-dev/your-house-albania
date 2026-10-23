@@ -1900,5 +1900,23 @@
       "subtitle": "Indiquez-nous le budget et le type. Nous envoyons les offres correspondantes du stock en direct avec le prix, la distance à la plage et la disponibilité, en français."
     },
     "linkFromListing": "Guide de Shëngjin : prix face aux autres villes côtières, les appartements en bord de mer les moins chers, frais d'achat"
+  },
+  "WelcomeBack": {
+    "promptTitle": "Bon retour !",
+    "promptText": "{count, plural, one {Nous avons choisi # bien} other {Nous avons choisi # biens}} d’après ce que vous avez consulté.",
+    "promptFresh": "{count, plural, one {# est nouveau} other {# sont nouveaux}} depuis votre dernière visite.",
+    "promptOpen": "Voir",
+    "notNow": "Pas maintenant",
+    "close": "Fermer",
+    "feedTitle": "Choisis pour vous",
+    "feedLead": "D’après les biens que vous avez consultés : {summary}",
+    "freshTitle": "{count, plural, one {Nouveau depuis votre dernière visite} other {Nouveaux depuis votre dernière visite (#)}}",
+    "picksTitle": "Similaires à ceux que vous avez consultés",
+    "realtorTitle": "Voulez-vous que nous vous envoyions une sélection ?",
+    "realtorText": "Écrivez-nous : nous trouverons d’autres options et répondrons à vos questions.",
+    "realtorMessage": "Bonjour ! Pouvez-vous m’envoyer une sélection de biens : {summary}.",
+    "summaryFallback": "similaires à ceux que j’ai consultés sur le site",
+    "studio": "studio",
+    "upTo": "jusqu’à {price}"
   }
 }
