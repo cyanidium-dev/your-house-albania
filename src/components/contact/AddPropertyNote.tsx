@@ -29,7 +29,7 @@ export async function AddPropertyNote({ locale, messengers }: Props) {
       data-messenger-plain=""
     >
       <div className="container mx-auto max-w-8xl px-5 2xl:px-0">
-        <div className="grid gap-6 rounded-2xl border border-dark/10 bg-dark/[0.03] p-6 dark:border-white/10 dark:bg-white/[0.04] md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-center md:gap-10 md:p-8">
+        <div className="grid gap-6 rounded-2xl border border-dark/10 bg-dark/[0.03] p-6 dark:border-white/10 dark:bg-white/[0.04] md:p-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-10">
           <div>
             <h2 id="add-property-heading" className="font-display text-2xl font-semibold text-dark dark:text-white md:text-3xl">
               {t('title')}
@@ -42,7 +42,7 @@ export async function AddPropertyNote({ locale, messengers }: Props) {
             <MessengerButtons
               messengers={messengers}
               ariaLabels={{ whatsapp: tQuick('channel.whatsapp'), telegram: tQuick('channel.telegram') }}
-              className="flex flex-wrap gap-3 [&>a]:h-12 [&>a]:text-base"
+              className="flex flex-wrap gap-3 [&>a]:h-12 [&>a]:min-w-[9.5rem] [&>a]:text-base"
             />
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
               <Link
