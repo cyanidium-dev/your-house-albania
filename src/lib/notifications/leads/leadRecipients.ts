@@ -67,9 +67,9 @@ export async function fetchAgentLeadChatId(agentSlug: string | undefined): Promi
 
 /**
  * Unique or general (owner, 2026-10-22). A lead left on a listing (or on a
- * partner landing) is unique: it goes to that agency only. Everything else -
- * a selection request, a question from an article, the home page, the
- * favourites - is general: every realtor chat gets it, and the message says so.
+ * partner landing) is unique; everything else - a selection request, a
+ * question from an article, the home page, the favourites - is general, and
+ * the message says which.
  */
 export type LeadScope = 'unique' | 'general'
 
@@ -77,51 +77,47 @@ export type LeadScope = 'unique' | 'general'
 export function leadScopeLabel(scope: LeadScope): string {
   return scope === 'unique'
     ? '🎯 Уникальная заявка: по конкретному объекту'
-    : '📣 Общая заявка: отправлена всем риелторам'
+    : '📣 Общая заявка: не по конкретному объекту'
 }
 
-const ALL_AGENT_CHATS_TTL_MS = 10 * 60 * 1000
-let allAgentChats: { at: number; ids: string[] } | null = null
+/**
+ * The agency that receives every lead no other agency group claims (owner,
+ * 2026-10-22): Viktor Grinchenko, "Grinchenko Real Estate". Its Sanity
+ * `telegramLeadChatId` is his group; until it is set, those leads stay in the
+ * general chat only.
+ */
+export const DEFAULT_LEAD_AGENT_SLUG = 'real-estate-al'
 
-/** Every agency lead group (`agent.telegramLeadChatId`), cached for ten minutes. */
-export async function fetchAllAgentLeadChatIds(): Promise<string[]> {
-  if (allAgentChats && Date.now() - allAgentChats.at < ALL_AGENT_CHATS_TTL_MS) return allAgentChats.ids
-  const client = getClient()
-  if (!client) return []
-  try {
-    const rows = await client.fetch<Array<string | null>>(
-      `*[_type == "agent" && defined(telegramLeadChatId) && !(_id in path("drafts.**"))].telegramLeadChatId`,
-      {},
-      { cache: 'no-store' } as never,
-    )
-    const ids = [...new Set((Array.isArray(rows) ? rows : []).map((v) => (typeof v === 'string' ? v.trim() : '')))]
-      .filter((v) => /^-?\d{5,20}$/.test(v))
-    allAgentChats = { at: Date.now(), ids }
-    return ids
-  } catch (err) {
-    console.error('[leads] agent chats not loaded', err instanceof Error ? err.message : err)
-    return allAgentChats?.ids ?? []
-  }
+const DEFAULT_CHAT_TTL_MS = 10 * 60 * 1000
+let defaultChat: { at: number; id: string | null } | null = null
+
+/** The default agency's lead group, cached for ten minutes. */
+export async function fetchDefaultLeadChatId(): Promise<string | null> {
+  if (defaultChat && Date.now() - defaultChat.at < DEFAULT_CHAT_TTL_MS) return defaultChat.id
+  const id = await fetchAgentLeadChatId(DEFAULT_LEAD_AGENT_SLUG)
+  defaultChat = { at: Date.now(), id }
+  return id
 }
 
 /**
  * Who a lead goes to and how it is labelled. `listingBound`: the lead names a
- * listing or a partner agency. Unique leads keep the old rule (the agency's
- * group, else the general chat); general leads go to the general chat and to
- * every agency group.
+ * listing or a partner agency.
+ *
+ * - A listing of an agency with its own group (Cactus): that group only.
+ * - Every other lead, on a listing or general: the general chat and the
+ *   default agency's group (Viktor). Cactus never gets those, and Viktor never
+ *   gets Cactus's.
  */
 export async function leadAudience(params: {
   listingBound: boolean
   agentChatId?: string | null
   generalChatId?: string
 }): Promise<{ scope: LeadScope; chatIds: string[] }> {
-  if (params.listingBound) {
-    return {
-      scope: 'unique',
-      chatIds: leadRecipientChatIds({ generalChatId: params.generalChatId, agentChatId: params.agentChatId }),
-    }
-  }
+  const scope: LeadScope = params.listingBound ? 'unique' : 'general'
+  const defaultChatId = await fetchDefaultLeadChatId()
+  const own = leadRecipientChatIds({ agentChatId: params.agentChatId })
+  if (params.listingBound && own.length > 0 && own[0] !== defaultChatId) return { scope, chatIds: own }
   const general = leadRecipientChatIds({ generalChatId: params.generalChatId })
-  const agents = await fetchAllAgentLeadChatIds()
-  return { scope: 'general', chatIds: [...new Set([...general, ...agents])] }
+  const viktor = leadRecipientChatIds({ agentChatId: defaultChatId })
+  return { scope, chatIds: [...new Set([...general, ...viktor])] }
 }
