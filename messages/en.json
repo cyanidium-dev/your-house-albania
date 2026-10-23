@@ -1755,5 +1755,23 @@
       "subtitle": "Tell us the budget and the layout. We send matching offers from the live stock with the price, the distance to the beach and availability, in your language."
     },
     "linkFromListing": "Shëngjin guide: prices against the other seaside cities, the cheapest flats by the sea, buying costs"
+  },
+  "WelcomeBack": {
+    "promptTitle": "Welcome back!",
+    "promptText": "{count, plural, one {We picked # listing} other {We picked # listings}} based on what you viewed.",
+    "promptFresh": "{count, plural, one {# is new} other {# are new}} since your last visit.",
+    "promptOpen": "Show me",
+    "notNow": "Not now",
+    "close": "Close",
+    "feedTitle": "Picked for you",
+    "feedLead": "Based on what you viewed: {summary}",
+    "freshTitle": "{count, plural, one {New since your last visit} other {New since your last visit (#)}}",
+    "picksTitle": "Similar to what you viewed",
+    "realtorTitle": "Want us to send you a selection?",
+    "realtorText": "Write to us and we will pick more options and answer your questions.",
+    "realtorMessage": "Hello! Please send me a selection of properties: {summary}.",
+    "summaryFallback": "like the ones I viewed on the site",
+    "studio": "studio",
+    "upTo": "up to {price}"
   }
 }

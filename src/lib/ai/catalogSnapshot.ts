@@ -45,6 +45,7 @@ type SnapshotRow = {
   seaDistanceMeters?: number | null
   beachfront?: boolean | null
   constructionStage?: string | null
+  createdAt?: string
 }
 
 export type CatalogFacets = {
@@ -76,6 +77,8 @@ export type CatalogItem = {
   amenities: string[]
   /** Lower-cased title, description teaser and amenities: what keywords match against. */
   text: string
+  /** When the listing was created (ISO); '' when unknown. "New since your last visit" reads it. */
+  createdAt: string
 }
 
 export type CatalogSnapshot = {
@@ -203,6 +206,7 @@ function buildSnapshot(rows: SnapshotRow[]): CatalogSnapshot {
       ]
         .join(' ')
         .toLowerCase(),
+      createdAt: typeof row.createdAt === 'string' ? row.createdAt : '',
     })
   }
 
@@ -268,7 +272,8 @@ async function fetchCatalogSnapshot(): Promise<CatalogSnapshot> {
     priceUnit,
     seaDistanceMeters,
     beachfront,
-    constructionStage
+    constructionStage,
+    "createdAt": _createdAt
   }`
 
   try {
@@ -289,7 +294,8 @@ async function fetchCatalogSnapshot(): Promise<CatalogSnapshot> {
  */
 export const getCatalogSnapshot = sanityCache(
   fetchCatalogSnapshot,
-  ['ai-catalog-snapshot'],
+  // v2: items carry createdAt (2026-10-24).
+  ['ai-catalog-snapshot-v2'],
   {
     revalidate: 600,
     tags: [SANITY_TAGS.property, SANITY_TAGS.city, SANITY_TAGS.district, SANITY_TAGS.propertyType],

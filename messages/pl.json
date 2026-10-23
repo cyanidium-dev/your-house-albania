@@ -1755,5 +1755,23 @@
       "subtitle": "Podajcie budżet i układ. Wyślemy pasujące oferty z aktualnej bazy z ceną, odległością od plaży i dostępnością, po polsku."
     },
     "linkFromListing": "Przewodnik po Shëngjin: ceny na tle innych nadmorskich miast, najtańsze mieszkania nad morzem, koszty zakupu"
+  },
+  "WelcomeBack": {
+    "promptTitle": "Witamy ponownie!",
+    "promptText": "{count, plural, one {Wybraliśmy # ofertę} few {Wybraliśmy # oferty} many {Wybraliśmy # ofert} other {Wybraliśmy # oferty}} na podstawie tego, co oglądałeś.",
+    "promptFresh": "{count, plural, one {# jest nowa} few {# są nowe} many {# jest nowych} other {# nowej}} od ostatniej wizyty.",
+    "promptOpen": "Zobacz",
+    "notNow": "Nie teraz",
+    "close": "Zamknij",
+    "feedTitle": "Wybrane dla Ciebie",
+    "feedLead": "Na podstawie ofert, które oglądałeś: {summary}",
+    "freshTitle": "{count, plural, one {Nowa od Twojej ostatniej wizyty} other {Nowe od Twojej ostatniej wizyty (#)}}",
+    "picksTitle": "Podobne do tych, które oglądałeś",
+    "realtorTitle": "Chcesz, żebyśmy przysłali Ci wybór ofert?",
+    "realtorText": "Napisz do nas - dobierzemy więcej opcji i odpowiemy na pytania.",
+    "realtorMessage": "Dzień dobry! Proszę o wybór nieruchomości: {summary}.",
+    "summaryFallback": "podobne do tych, które oglądałem na stronie",
+    "studio": "kawalerka",
+    "upTo": "do {price}"
   }
 }
