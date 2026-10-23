@@ -1433,7 +1433,7 @@
       },
       "hint": {
         "whatsapp": "Le message est prêt, il suffit de l’envoyer.",
-        "telegram": "Appuyez sur Démarrer en bas du chat : le bot transmet votre question à un conseiller."
+        "telegram": "Un agent vous répond dans ce chat. Indiquez le bien qui vous intéresse."
       },
       "open": {
         "whatsapp": "Ouvrir WhatsApp",

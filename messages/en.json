@@ -1438,7 +1438,7 @@
       },
       "hint": {
         "whatsapp": "The message is ready - just press send.",
-        "telegram": "Press Start - the bot passes your question to a manager."
+        "telegram": "A realtor answers in this chat. Tell them which property you are asking about."
       },
       "open": {
         "whatsapp": "Open WhatsApp",

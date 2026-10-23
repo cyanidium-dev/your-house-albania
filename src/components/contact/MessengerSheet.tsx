@@ -12,7 +12,6 @@ import {
   finishMessengerHref,
   shareablePageUrl,
   telegramBotUsername,
-  telegramStartOf,
   whatsAppTextOf,
   whatsAppWebUrl,
 } from '@/lib/contacts/messengerLinks'
@@ -42,8 +41,8 @@ type Props = {
 /**
  * The small sheet a WhatsApp or Telegram click opens, one for the whole site
  * (mounted by `LeadTracker`, which intercepts the click). One tap on the main
- * button still opens the chat — with the ready message or the bot's start
- * payload — and under it the visitor can leave a number instead, for those on
+ * button still opens the chat — WhatsApp with the ready message, Telegram
+ * with a person (the agent or the business account) — and under it the visitor can leave a number instead, for those on
  * a desktop without the app or who would rather be written to.
  *
  * A native modal `<dialog>`: it sits in the top layer above the cookie banner
@@ -76,7 +75,8 @@ export default function MessengerSheet({ request, onClose }: Props) {
     return {
       href: web ?? finished,
       isDesktopWeb: web !== null,
-      ready: request.key === 'whatsapp' ? whatsAppTextOf(finished) !== '' : telegramStartOf(finished) !== '',
+      // Telegram cannot pre-fill a chat with a person: its hint says what to write.
+      ready: request.key === 'whatsapp' ? whatsAppTextOf(finished) !== '' : true,
     }
   }, [request, t])
 

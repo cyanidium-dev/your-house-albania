@@ -136,11 +136,11 @@ describe('resolveMessengers with a context', () => {
     expect(tg).toEqual({ key: 'telegram', url: 'https://t.me/real_estate_al' })
   })
 
-  it('points Telegram at the bot and WhatsApp at the configured number', () => {
+  it('keeps Telegram on a person even with the bot configured; WhatsApp gets the number', () => {
     vi.stubEnv('NEXT_PUBLIC_TELEGRAM_BOT_USERNAME', 'DomlivoBot')
     vi.stubEnv('NEXT_PUBLIC_WHATSAPP_NUMBER', '+355 69 000 0000')
     const [tg, wa] = resolveMessengers(links, 'ru', ctx)
-    expect(tg.url).toBe('https://t.me/DomlivoBot?start=g_en_footer')
+    expect(tg.url).toBe('https://t.me/real_estate_al')
     expect(wa.url).toBe('https://wa.me/355690000000?text=Hello')
   })
 
@@ -189,27 +189,19 @@ describe('finishMessengerHref (the sheet, at the click)', () => {
     expect(finishMessengerHref({ ...base, key: 'whatsapp', href, generalText: '' })).toBe(href)
   })
 
-  it('points any Telegram link at the bot with the real placement', () => {
+  it('keeps a Telegram link to a person', () => {
     expect(finishMessengerHref({ ...base, key: 'telegram', href: 'https://t.me/real_estate_al' })).toBe(
-      'https://t.me/DomlivoBot?start=g_it_footer',
+      'https://t.me/real_estate_al',
     )
-    expect(finishMessengerHref({ ...base, key: 'telegram', href: 'https://t.me/DomlivoBot?start=g_it_page' })).toBe(
-      'https://t.me/DomlivoBot?start=g_it_footer',
-    )
-  })
-
-  it('uses the listing in the address on a property page', () => {
     expect(
       finishMessengerHref({ ...base, key: 'telegram', href: 'https://t.me/real_estate_al', propertySlug: 'villa-in-vlore' }),
-    ).toBe('https://t.me/DomlivoBot?start=p_it_villa-in-vlore')
+    ).toBe('https://t.me/real_estate_al')
   })
 
-  it('keeps a listing payload, and the old link without a bot', () => {
-    const listing = 'https://t.me/DomlivoBot?start=p_it_villa'
-    expect(finishMessengerHref({ ...base, key: 'telegram', href: listing })).toBe(listing)
-    expect(
-      finishMessengerHref({ ...base, key: 'telegram', href: 'https://t.me/real_estate_al', botUsername: null }),
-    ).toBe('https://t.me/real_estate_al')
+  it('sends a link to the bot (cached page, any payload) to the business account', () => {
+    for (const href of ['https://t.me/DomlivoBot?start=p_it_villa', 'https://t.me/domlivobot?start=g_it_page', 'https://t.me/DomlivoBot']) {
+      expect(finishMessengerHref({ ...base, key: 'telegram', href })).toBe('https://t.me/real_estate_al')
+    }
   })
 })
 

@@ -1438,7 +1438,7 @@
       },
       "hint": {
         "whatsapp": "Il messaggio è già pronto: basta inviarlo.",
-        "telegram": "Premi il pulsante in fondo alla chat: il bot passa la tua domanda a un consulente."
+        "telegram": "In questa chat risponde un agente. Scriva quale immobile le interessa."
       },
       "open": {
         "whatsapp": "Apri WhatsApp",

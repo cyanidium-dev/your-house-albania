@@ -11,8 +11,6 @@ import { partitionSocialLinks, type SocialLinkInput } from "@/lib/footer/socialC
 import { classifyContactHref } from "@/lib/leads/types";
 import {
   configuredWhatsAppNumber,
-  telegramBotUrl,
-  telegramBotUsername,
   withWhatsAppText,
 } from "./messengerLinks";
 
@@ -107,8 +105,9 @@ function cmsMessengerUrl(links: SocialLinkInput[] | undefined, key: MessengerKey
 }
 
 /**
- * What the links say when they open: the ready WhatsApp message and the
- * Telegram bot's `start` payload. Build it with `messengerContext()`.
+ * What the links say when they open: the ready WhatsApp message. Telegram has
+ * no way to pre-fill a chat with a person, so `telegramStart` (the bot's
+ * payload) is no longer used for the buttons; see messengerLinks.
  */
 export type MessengerContext = {
   whatsappText?: string;
@@ -117,8 +116,8 @@ export type MessengerContext = {
 
 /**
  * Both messengers, in the visitor's order: the CMS link when there is one, else
- * the business link. With a context, WhatsApp carries the ready message and
- * Telegram points at the bot (each only when configured — see messengerLinks).
+ * the business link. With a context, WhatsApp carries the ready message.
+ * Telegram always opens a person (the agent or the business account).
  */
 export function resolveMessengers(
   links: SocialLinkInput[] | undefined,
@@ -126,7 +125,6 @@ export function resolveMessengers(
   context?: MessengerContext,
   agent?: AgentMessengerContacts | null,
 ): MessengerLink[] {
-  const bot = telegramBotUsername();
   const agentWa = agentWhatsAppDigits(agent?.phone);
   const agentTg = agentTelegramUrl(agent?.telegramUrl);
   return messengerOrder(locale).map((key) => {
@@ -141,9 +139,6 @@ export function resolveMessengers(
     const url = cmsMessengerUrl(links, key) || BUSINESS_URL[key];
     if (key === "whatsapp" && context?.whatsappText) {
       return { key, url: withWhatsAppText(url, context.whatsappText, configuredWhatsAppNumber()) };
-    }
-    if (key === "telegram" && bot && context?.telegramStart) {
-      return { key, url: telegramBotUrl(bot, context.telegramStart) };
     }
     return { key, url };
   });

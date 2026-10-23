@@ -9,19 +9,17 @@
  *   a WhatsApp Business short link (`wa.me/message/<code>`) ignores `text`, so
  *   the number comes from `NEXT_PUBLIC_WHATSAPP_NUMBER` or from a CMS link of
  *   the `wa.me/<number>` form; without one the link stays as it is.
- * - Telegram opens the public bot with a `start` payload
- *   (`@/lib/telegram/startPayload`), so pressing Start already is the lead.
- *   Without `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` the link stays as it is.
+ * - Telegram opens a person: the listing agent's profile, else the business
+ *   account. Until 2026-10-23 it opened the public bot with a `start` payload,
+ *   but 15 of 17 visitors sent there never pressed Start, and without Start
+ *   the bot never learns who they are: the lead was lost (owner's decision,
+ *   2026-10-23). The bot stays for search alerts only.
  *
  * Pure: the server builds the hrefs, the messenger sheet finishes them in the
  * browser (adds the page address, the real placement, the desktop variant).
  */
 
-import {
-  buildGeneralStartPayload,
-  buildPropertyStartPayload,
-  parseStartPayload,
-} from '@/lib/telegram/startPayload'
+import { BUSINESS_TELEGRAM_URL } from './businessContacts'
 
 /** Telegram usernames: 5–32 of `[A-Za-z0-9_]`, starting with a letter. */
 const BOT_USERNAME = /^[A-Za-z][A-Za-z0-9_]{4,31}$/
@@ -115,14 +113,23 @@ export function shareablePageUrl(href: string): string {
   }
 }
 
+/** `true` for a link to the public bot (`t.me/<bot>`, any payload). */
+function isBotLink(url: string, botUsername: string | null): boolean {
+  if (!botUsername) return false
+  try {
+    const u = new URL(url.trim())
+    return /^(www\.)?(t|telegram)\.me$/i.test(u.hostname) && u.pathname.replace(/\/+$/, '').toLowerCase() === `/${botUsername.toLowerCase()}`
+  } catch {
+    return false
+  }
+}
+
 /**
  * Finishes a messenger href in the browser, at the moment of the click.
  *
  * WhatsApp: a link without a message gets the general one; a message without
- * an address gets the page's. Telegram: a link to anything but the bot, or a
- * general payload, is pointed at the bot with the listing the page is about
- * (by its address) or else the placement the click really came from. Listing
- * payloads are left alone — the server built them.
+ * an address gets the page's. Telegram: a person's profile is kept as it is; a
+ * link to the bot (cached pages, old CMS values) becomes the business account.
  */
 export function finishMessengerHref(input: {
   key: 'whatsapp' | 'telegram'
@@ -148,14 +155,5 @@ export function finishMessengerHref(input: {
     return withWhatsAppText(input.href, text, number)
   }
   if (input.agent) return input.href
-  if (!input.botUsername) return input.href
-  const parsed = parseStartPayload(telegramStartOf(input.href))
-  if (parsed && parsed.kind !== 'general') return input.href
-  const forListing = input.propertySlug
-    ? buildPropertyStartPayload({ locale: input.locale, slug: input.propertySlug })
-    : null
-  return telegramBotUrl(
-    input.botUsername,
-    forListing ?? buildGeneralStartPayload({ locale: input.locale, placement: input.placement }),
-  )
+  return isBotLink(input.href, input.botUsername) ? BUSINESS_TELEGRAM_URL : input.href
 }

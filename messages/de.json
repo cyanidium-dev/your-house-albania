@@ -1439,7 +1439,7 @@
       },
       "hint": {
         "whatsapp": "Die Nachricht ist fertig - einfach absenden.",
-        "telegram": "Tippen Sie auf die Schaltfläche unten im Chat - der Bot leitet Ihre Frage an einen Berater weiter."
+        "telegram": "In diesem Chat antwortet ein Makler. Schreiben Sie, um welches Objekt es geht."
       },
       "open": {
         "whatsapp": "WhatsApp öffnen",
