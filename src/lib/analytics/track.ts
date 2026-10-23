@@ -56,7 +56,7 @@ export type AnalyticsEvent =
       propertyType?: string
       priceEur?: number
     }
-  /** E002 "welcome back": the prompt appeared, with how many listings it offers. */
+  /** E005 "welcome back": the prompt appeared, with how many listings it offers. */
   | { event: 'welcome_back_shown'; picks: number; fresh: number }
   /** The visitor opened the picks from the prompt. */
   | { event: 'welcome_back_open' }

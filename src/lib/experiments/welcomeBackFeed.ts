@@ -1,6 +1,6 @@
 /**
- * Experiment E002: "welcome back" picks for returning visitors.
- * See docs/experiments/002-welcome-back-feed.md for the hypothesis, metric
+ * Experiment E005: "welcome back" picks for returning visitors.
+ * See docs/experiments/005-welcome-back-feed.md for the hypothesis, metric
  * and review date.
  *
  * The flag is read only for a visitor who would actually see the prompt

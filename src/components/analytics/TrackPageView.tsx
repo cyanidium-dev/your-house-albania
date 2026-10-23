@@ -27,7 +27,7 @@ export default function TrackPageView({ kind, slug, event }: Props) {
     if (sent.current) return
     sent.current = true
 
-    // "Welcome back" (E002) remembers the listing in this browser only.
+    // "Welcome back" (E005) remembers the listing in this browser only.
     if (kind === 'property') recordListingView(slug)
 
     const storageKey = `viewed:${kind}:${slug}`

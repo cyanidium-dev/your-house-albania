@@ -1,5 +1,5 @@
 /**
- * What this browser remembers about its visits, for "welcome back" (E002).
+ * What this browser remembers about its visits, for "welcome back" (E005).
  *
  * localStorage only, like the lead journey in `attribution.ts`: the listings
  * viewed (slugs and when) and when the visitor was last active. Nothing leaves

@@ -65,7 +65,7 @@ function CardGrid({ items, locale, section }: { items: PropertyHomes[]; locale: 
 }
 
 /**
- * The picks for a returning visitor (E002): new listings since the last visit,
+ * The picks for a returning visitor (E005): new listings since the last visit,
  * listings like the ones they viewed, and a way to ask a realtor for more.
  * A native modal dialog: full screen on a phone, a centred panel from `md`.
  */
