@@ -1338,7 +1338,11 @@
     "accessed": "abgerufen",
     "linksHeading": "Aus der Wissensdatenbank",
     "linksIntro": "Kurze Antworten mit Zahlen, Datum und Quellen.",
-    "linksAll": "Alle Fragen der Wissensdatenbank"
+    "linksAll": "Alle Fragen der Wissensdatenbank",
+    "browseHeading": "Suchen Sie eine Immobilie in Albanien?",
+    "browseIntro": "Die Angebote auf Domlivo sind geprüft, der Quadratmeterpreis wird mit dem aktuellen Index verglichen; ein Makler antwortet innerhalb eines Tages.",
+    "browseListings": "Wohnungen und Häuser zum Kauf",
+    "browseContact": "Makler fragen"
   },
   "About": {
     "metaTitle": "Über Domlivo: Team und Arbeitsweise",
