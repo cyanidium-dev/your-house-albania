@@ -11,6 +11,7 @@ import { partitionSocialLinks, type SocialLinkInput } from "@/lib/footer/socialC
 import { classifyContactHref } from "@/lib/leads/types";
 import {
   configuredWhatsAppNumber,
+  whatsAppNumberOf,
   withWhatsAppText,
 } from "./messengerLinks";
 
@@ -138,7 +139,8 @@ export function resolveMessengers(
     if (key === "telegram" && agentTg) return { key, url: agentTg, agent: true };
     const url = cmsMessengerUrl(links, key) || BUSINESS_URL[key];
     if (key === "whatsapp" && context?.whatsappText) {
-      return { key, url: withWhatsAppText(url, context.whatsappText, configuredWhatsAppNumber()) };
+      // The number in the link first: the env number is for a wa.me/message short link only.
+      return { key, url: withWhatsAppText(url, context.whatsappText, whatsAppNumberOf(url) ?? configuredWhatsAppNumber()) };
     }
     return { key, url };
   });

@@ -136,12 +136,13 @@ describe('resolveMessengers with a context', () => {
     expect(tg).toEqual({ key: 'telegram', url: 'https://t.me/real_estate_al' })
   })
 
-  it('keeps Telegram on a person even with the bot configured; WhatsApp gets the number', () => {
+  it('keeps Telegram on a person even with the bot configured; WhatsApp keeps the number in its link', () => {
     vi.stubEnv('NEXT_PUBLIC_TELEGRAM_BOT_USERNAME', 'DomlivoBot')
     vi.stubEnv('NEXT_PUBLIC_WHATSAPP_NUMBER', '+355 69 000 0000')
     const [tg, wa] = resolveMessengers(links, 'ru', ctx)
     expect(tg.url).toBe('https://t.me/real_estate_al')
-    expect(wa.url).toBe('https://wa.me/355690000000?text=Hello')
+    // The env number is only for a wa.me/message short link, which has none.
+    expect(wa.url).toBe('https://wa.me/355681234567?text=Hello')
   })
 
   it('changes nothing without a context', () => {
@@ -200,7 +201,7 @@ describe('finishMessengerHref (the sheet, at the click)', () => {
 
   it('sends a link to the bot (cached page, any payload) to the business account', () => {
     for (const href of ['https://t.me/DomlivoBot?start=p_it_villa', 'https://t.me/domlivobot?start=g_it_page', 'https://t.me/DomlivoBot']) {
-      expect(finishMessengerHref({ ...base, key: 'telegram', href })).toBe('https://t.me/real_estate_al')
+      expect(finishMessengerHref({ ...base, key: 'telegram', href })).toBe('https://t.me/domlivo_viktor')
     }
   })
 })
