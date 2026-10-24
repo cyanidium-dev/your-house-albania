@@ -53,6 +53,12 @@ export const KNOWLEDGE_SLUGS = {
   residencePermitHowTo: "how-to-get-a-residence-permit-in-albania-documents-fees",
   gettingToAlbania: "how-to-get-to-albania-ferries-from-italy-airport-buses",
   money: "money-in-albania-currency-cards-cash-bank-account",
+  // Batch 4 (2026-10-24): healthcare and schools, SIM and internet, driving licence, holidays, pros and cons.
+  healthcare: "healthcare-and-health-insurance-in-albania-for-foreigners",
+  sim: "sim-card-and-internet-in-albania-prices",
+  driving: "driving-in-albania-foreign-licence-exchange",
+  holiday: "albania-holiday-beaches-seasons-what-a-week-costs",
+  prosCons: "living-in-albania-pros-and-cons",
 } as const;
 
 const K = KNOWLEDGE_SLUGS;
@@ -65,26 +71,26 @@ export const KNOWLEDGE_LINKS_BY_BLOG_POST: Record<string, readonly string[]> = {
   "albania-property-taxes-german-owners": [K.germany, K.rentalTax, K.propertyTax],
   "retiring-to-albania-from-germany": [K.residence, K.germany, K.utilities],
   "albania-property-for-polish-buyers-2026": [K.poland, K.rentalTax, K.notary],
-  "albania-montenegro-croatia-property-comparison": [K.germany, K.land, K.costOfLiving],
-  "albania-bulgaria-montenegro-seaside-flat": [K.poland, K.durresVlore, K.gettingToAlbania],
+  "albania-montenegro-croatia-property-comparison": [K.germany, K.driving, K.costOfLiving],
+  "albania-bulgaria-montenegro-seaside-flat": [K.poland, K.holiday, K.gettingToAlbania],
   "legal-guide-buyers": [K.propertyTax, K.rentalTax, K.transferTax],
   "notary-fees-albania-2026": [K.notary, K.ashk, K.transferTax],
   "legalized-property-albania-how-to-check": [K.legalisation, K.informal, K.ashk],
   "durres-documents-checklist": [K.documents, K.steps, K.powerOfAttorney],
-  "utilities-in-albania-monthly-costs": [K.utilities, K.propertyTax, K.digitalNomad],
+  "utilities-in-albania-monthly-costs": [K.utilities, K.sim, K.digitalNomad],
   "retiring-to-albania-property-costs": [K.italianPension, K.costOfLiving, K.residencePermitHowTo],
   "albania-rental-yield-for-investors": [K.yields, K.management, K.rentalTax],
   "durres-rental-investment-2026": [K.yields, K.plazhGolem, K.management],
   "short-term-rental-albanian-riviera": [K.management, K.rentalTax, K.rentByCity],
   "how-to-choose-tirana-durres-vlore": [K.tiranaDurres, K.durresVlore, K.whereToLive],
-  "durres-beach-vs-center": [K.seaCentre, K.plazhGolem],
+  "durres-beach-vs-center": [K.seaCentre, K.plazhGolem, K.sim],
   "albania-property-types-investment-risk": [K.offPlan, K.developer, K.informal],
   "durres-choose-area-2026": [K.plazhGolem, K.seaCentre, K.developer],
   "tirana-buy-without-agent": [K.steps, K.timeline, K.developer],
-  "moving-to-albania-with-family": [K.residence, K.residencePermitHowTo, K.ukraine],
+  "moving-to-albania-with-family": [K.residencePermitHowTo, K.healthcare, K.ukraine],
   "investment-albania": [K.payment, K.uk, K.ukraine],
   "living-albanian-riviera": [K.uk, K.digitalNomad, K.stayByCitizenship],
-  "best-districts-tirana": [K.stayByCitizenship, K.tiranaDurres, K.whereToLive],
+  "best-districts-tirana": [K.stayByCitizenship, K.tiranaDurres, K.prosCons],
   "albania-investment-by-budget-and-goal": [K.mortgage, K.yields, K.rentOrBuy],
   "buying-apartment-durres-complete-guide": [K.mortgage, K.steps, K.notary],
   "market-outlook-2026": [K.vat, K.offPlan, K.timeline],
@@ -102,10 +108,12 @@ export const KNOWLEDGE_LINKS_BY_BLOG_POST: Record<string, readonly string[]> = {
 /** City slug → question pages shown on its /info page. */
 export const KNOWLEDGE_LINKS_BY_CITY: Record<string, readonly string[]> = {
   durres: [K.yields, K.plazhGolem, K.seaCentre],
-  tirana: [K.tiranaDurres, K.whereToLive, K.rentByCity],
+  tirana: [K.tiranaDurres, K.rentByCity, K.healthcare],
   vlore: [K.durresVlore, K.gettingToAlbania, K.costOfLiving],
-  sarande: [K.gettingToAlbania, K.rentByCity, K.whereToLive],
-  shengjin: [K.rentByCity, K.whereToLive],
+  sarande: [K.holiday, K.rentByCity, K.whereToLive],
+  shengjin: [K.rentByCity, K.holiday, K.whereToLive],
+  himare: [K.holiday, K.gettingToAlbania, K.prosCons],
+  shkoder: [K.driving, K.gettingToAlbania, K.rentByCity],
 };
 
 /** Pages built on the price index, linked from /methodology. */
