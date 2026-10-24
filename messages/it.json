@@ -83,7 +83,8 @@
       "addProperty": "Aggiungi il tuo immobile",
       "knowledge": "Base di conoscenza",
       "shengjinHub": "Shëngjin: appartamenti al mare",
-      "seaFlats": "Case al mare"
+      "seaFlats": "Case al mare",
+      "investmentHub": "Investire in Albania"
     },
     "cities": {
       "empty": "Nessuna città da mostrare."
@@ -1720,7 +1721,9 @@
       "3-1": "3+1 e oltre",
       "fewFlats": "pochi appartamenti"
     },
-    "types": { "studio": "Monolocali a Shëngjin ({count})" },
+    "types": {
+      "studio": "Monolocali a Shëngjin ({count})"
+    },
     "facets": {
       "sea-view": "Appartamenti vista mare a Shëngjin ({count})",
       "near-the-sea": "Appartamenti al mare a Shëngjin ({count})",
@@ -1861,6 +1864,116 @@
     "contact": {
       "title": "Quale appartamento al mare cercate?",
       "subtitle": "Diteci budget, città e tipologia. Vi mandiamo le offerte adatte dal catalogo live con prezzo, distanza dalla spiaggia e disponibilità, in italiano."
+    }
+  },
+  "InvestmentHub": {
+    "metaTitle": "Investire in immobili in Albania 2026: prezzi da {from}, mediana {median}/m²",
+    "metaTitleShort": "Investire in immobili in Albania 2026: prezzi, affitti, rendimenti, tasse",
+    "metaDescription": "Prezzi richiesti live (mediana {median}/m²), canoni 1+1 pubblicati e il rendimento lordo che danno ({yieldMin}-{yieldMax} % a {city}), {newBuilds, plural, one {# nuova costruzione} other {# nuove costruzioni}}, tasse per il proprietario straniero e la verità sul golden visa, in una pagina con gli appartamenti adatti.",
+    "metaDescriptionShort": "Prezzi richiesti live per città, canoni pubblicati e i rendimenti che danno, nuove costruzioni, tasse per il proprietario straniero e la verità sul golden visa, con gli appartamenti adatti a un investitore.",
+    "country": "Albania",
+    "breadcrumb": "Investire in Albania",
+    "label": "Per investitori",
+    "h1": "Investire in immobili in Albania, 2026",
+    "lead": "Il {date} gli appartamenti in vendita su Domlivo chiedono una mediana di {median} al m², {flats} appartamenti da {from}. Un bilocale affittato a lungo termine rende circa {yieldMin}-{yieldMax} % lordo a {city} sui canoni pubblicati. Qui sotto: prezzi e rendimenti per città, quattro strategie, gli appartamenti adatti, le tasse che paga un proprietario straniero e le domande degli investitori.",
+    "leadNoYield": "Il {date} gli appartamenti in vendita su Domlivo chiedono una mediana di {median} al m², {flats} appartamenti da {from}. Qui sotto: prezzi per città, quattro strategie, gli appartamenti adatti, le tasse che paga un proprietario straniero e le domande degli investitori.",
+    "leadNoData": "Prezzi per città, quattro strategie, gli appartamenti adatti, le tasse che paga un proprietario straniero e le domande degli investitori, dagli annunci live e dalla scheda dei canoni.",
+    "allSale": "Tutti gli immobili in vendita in Albania",
+    "tiles": {
+      "median": "Prezzo richiesto mediano, appartamenti",
+      "from": "Appartamento più economico",
+      "yield": "Rendimento lordo, 1+1 a {city}",
+      "newBuilds": "Nuove costruzioni in vendita"
+    },
+    "why": {
+      "title": "I numeri",
+      "tilesNote": "Prezzi richiesti live degli appartamenti su Domlivo, {date}; rendimenti sui canoni pubblicati. Non prezzi di vendita.",
+      "p1": "L'Albania è la costa più economica dell'Adriatico dove uno straniero compra alle stesse condizioni di un cittadino: Deloitte stima l'abitazione media a circa 1.720 € al m² nel 2025 (+6,2 % in un anno), contro 2.557 € per il nuovo in Montenegro e 3.012 € in Croazia. I soldi vanno in un bilocale o trilocale vicino a una spiaggia: quattro mesi affittato ai turisti, il resto dell'anno a residenti o lavoratori da remoto, oppure semplicemente tenuto mentre la costa si costruisce. Da Bari e Ancona il traghetto arriva a Durazzo, da Tirana un volo di un'ora e mezza.",
+      "p2": "Il rendimento onesto è più basso di quello delle brochure. I canoni pubblicati a lungo termine per un 1+1 vanno da 250 a 400 € al mese a Durazzo, 450-650 € a Tirana e 250-430 € a Shëngjin; i canoni effettivi sono del 5-10 % più bassi; il reddito è tassato al 15 %; un affitto lungo perde circa un mese l'anno di sfitto. La tabella qui sotto fa esattamente questo calcolo sul prezzo mediano live di un 1+1 in ogni città, così vedete quello che incassa un proprietario attento, non quello che promette un venditore.",
+      "p3": "Quello che il mercato non offre: un mutuo a un non residente (le banche quasi non lo concedono), un golden visa (l'Albania non ce l'ha; il permesso di soggiorno per proprietà è annuale, art. 84 della legge 79/2021, senza prezzo minimo) e un'uscita liquida (la rivendita richiede mesi, e un appartamento in un edificio finito si vende più in fretta di un contratto sulla carta).",
+      "p4": "Ogni cifra di questa pagina è ricalcolata ogni ora dagli annunci live e dall'indice dei prezzi; i canoni vengono dalla nostra scheda sugli affitti a lungo termine e sono gli unici numeri non calcolati live. Un appartamento venduto sparisce dalla griglia, uno nuovo compare se il suo prezzo al m² batte la sua città."
+    },
+    "table": {
+      "title": "Prezzi e rendimenti per città",
+      "lead": "Prezzo richiesto mediano al m² degli appartamenti, prezzo mediano di un bilocale, canone 1+1 pubblicato e il rendimento lordo e netto che dà, {date}. Ogni città apre i suoi annunci.",
+      "caption": "Città albanesi per chi investe in immobili, {date}: prezzo richiesto mediano al m², prezzo mediano 1+1, canone mensile pubblicato, rendimento lordo e netto",
+      "colCity": "Città",
+      "colMedian": "Mediana, €/m²",
+      "colOneBed": "1+1, prezzo mediano",
+      "colRent": "Canone 1+1, €/mese",
+      "colGross": "Lordo",
+      "colNet": "Netto",
+      "sample": "{count, plural, one {# appartamento nel campione} other {# appartamenti nel campione}}",
+      "indicative": "{value} (indicativo)",
+      "lowSample": "pochi dati",
+      "note": "Una mediana su meno di {min} appartamenti è indicativa. I canoni sono canoni a lungo termine pubblicati dalla nostra scheda (Century 21 primo semestre 2026 e campioni dei portali); quelli effettivi sono del 5-10 % più bassi. Rendimento lordo = dodici mensilità sul prezzo mediano di un 1+1. Netto = dopo un mese di sfitto, mezza mensilità di provvigione, manutenzione, assicurazione, imposta sull'edificio e il {tax} % di imposta sul reddito, sul prezzo più i costi d'acquisto, come lo calcola il calcolatore del rendimento. Senza gestione.",
+      "calculatorLink": "Calcolatore del rendimento: il vostro appartamento, il vostro canone",
+      "methodologyLink": "Come si calcola l'indice dei prezzi"
+    },
+    "strategies": {
+      "title": "Quattro strategie",
+      "lead": "Cosa compra ciascuna, cosa rende e dove si rompe. I link aprono gli annunci adatti.",
+      "ltr": {
+        "title": "Un 1+1 a Durazzo affittato a lungo termine",
+        "body": "La strategia di base: un bilocale in seconda linea a Plazh o Golem, affittato per dodici mesi a una famiglia del posto o a un lavoratore da remoto. Stabile, poca manutenzione, 3-5 % lordo sui canoni pubblicati; le utenze le paga l'inquilino. Rischio: una costa con troppa offerta d'inverno, quando i canoni nei quartieri di spiaggia calano di un terzo.",
+        "link": "Appartamenti in vendita a Durazzo"
+      },
+      "str": {
+        "title": "Un appartamento al mare per i vacanzieri",
+        "body": "Da giugno a settembre si riempie a 40-70 € a notte a Durazzo e Shëngjin; il resto dell'anno resta vuoto o si affitta a lungo con uno sconto. Il lordo può battere l'affitto lungo, il netto spesso no, una volta pagati pulizie, commissioni delle piattaforme (6 %), la tassa di soggiorno del 2,25 %, le utenze e un gestore. Fate girare il calcolatore con la vostra occupazione prima di credere alla cifra di qualcun altro.",
+        "link": "Appartamenti al mare"
+      },
+      "offplan": {
+        "title": "Sulla carta con rate del costruttore",
+        "body": "Il nuovo si vende con rate senza interessi fino alla consegna, di solito il 30-50 % di anticipo e il resto a tranche; il prezzo è del 10-20 % sotto l'appartamento finito e sugli appartamenti non c'è IVA. Il rischio è il costruttore: ritardi di un anno sono normali e l'atto notarile arriva solo dopo il completamento, quindi controllate il permesso di costruire e i progetti già consegnati prima di pagare.",
+        "link": "Nuove costruzioni e appartamenti sulla carta"
+      },
+      "cheap": {
+        "title": "L'ingresso più economico: Shëngjin",
+        "body": "La cittadina balneare del nord è il mercato di mare più economico con un campione affidabile: un monolocale da circa 35.000 €, un 1+1 da 45.000 €, il 13 % in meno di Durazzo al m². La domanda estiva è kosovara e albanese e prenota per telefono, non su Airbnb, quindi il reddito da affitto breve è più difficile da dimostrare; l'argomento è il prezzo, non il rendimento.",
+        "link": "Shëngjin: appartamenti al mare e cosa si compra con un budget"
+      }
+    },
+    "cards": {
+      "title": "{count, plural, one {L'appartamento al mare meglio prezzato sotto il tetto} other {I # appartamenti al mare meglio prezzati}}",
+      "lead": "Appartamenti e monolocali entro 1 km dal mare o in prima linea, fino a {cap}, ordinati per prezzo al m² rispetto alla mediana della loro città, al massimo {perCity} per città, su {total} sotto il tetto. Prezzi e disponibilità come negli annunci.",
+      "all": "Tutti gli immobili in vendita"
+    },
+    "taxes": {
+      "title": "Cosa paga un proprietario straniero",
+      "lead": "Le tasse e i costi di un appartamento albanese, dalle fonti dei nostri calcolatori e dell'articolo sulle tasse.",
+      "p1": "Acquisto: il notaio chiede lo 0,35 % del valore fino a 6 milioni di lek e lo 0,30 % fino a 15 milioni; il catasto (ASHK) 5.000 lek per la registrazione; avvocato, traduttore giurato e provvigione dell'agenzia sono facoltativi. Chi compra come privato non paga imposta di trasferimento (il 2 % sulla vendita è del venditore) né IVA sull'appartamento. Su un appartamento da 100.000 € gli extra sono circa 2.300 € in un caso tipico.",
+      "p2": "Possesso e affitto: il reddito da locazione è tassato al 15 % (affitto lungo sul canone lordo, affitto breve sul reddito dopo la commissione della piattaforma), dichiarazione entro il 31 marzo. L'imposta annuale sull'edificio è lo 0,05 % del valore fiscale; una riforma in bozza la porterebbe allo 0,1-0,2 % del valore di mercato dal 2029. La convenzione Italia-Albania contro le doppie imposizioni evita la doppia tassazione del canone; dichiaratelo comunque in Italia con il credito d'imposta, chiedendo al vostro commercialista.",
+      "p3": "Vendita: la plusvalenza è tassata in Albania al 15 %; fino al 31 dicembre 2026 il proprietario può invece rivalutare l'immobile e pagare il 5 % sull'incremento. Non c'è esenzione per il possesso lungo e non c'è un golden visa da perdere: l'Albania non ce l'ha.",
+      "calculatorLink": "Calcolatore dei costi d'acquisto: notaio, catasto, agenzia sul vostro prezzo"
+    },
+    "articles": {
+      "title": "Da leggere prima di comprare",
+      "lead": "I nostri articoli sugli investimenti con le fonti: Durazzo come mercato degli affitti, quali tipi di immobile portano quale rischio, l'Albania contro Bulgaria, Montenegro e Croazia.",
+      "guide": "La guida agli investimenti",
+      "readMore": "Leggi"
+    },
+    "faq": {
+      "title": "Le domande degli investitori",
+      "lead": "Risposte brevi con le cifre live; la tabella e gli articoli vanno più a fondo.",
+      "q1": "Che rendimento dà davvero un appartamento in Albania?",
+      "a1": "Il {date} un bilocale mediano a {city} chiedeva {price}; i canoni pubblicati a lungo termine per un 1+1 vanno lì da {rentMin} a {rentMax} al mese. Sono {grossMin}-{grossMax} % lordo e circa {netMin}-{netMax} % netto dopo un mese di sfitto, la provvigione, i costi correnti e il 15 % di imposta. I canoni effettivi sono del 5-10 % sotto quelli pubblicati, quindi considerate realistica la fascia bassa.",
+      "a1NoData": "La tabella sopra calcola il rendimento lordo e netto di un bilocale in ogni città dal prezzo mediano live e dal canone pubblicato, tolti il 15 % di imposta e un mese di sfitto. I canoni effettivi sono del 5-10 % sotto quelli pubblicati, quindi considerate realistica la fascia bassa.",
+      "q2": "In quale città si compra a meno?",
+      "a2": "Secondo l'indice dei prezzi del {date}, {city}: mediana di {median} al m² su {count} appartamenti. Durazzo ha più offerta e la rivendita più liquida; Tirana costa di più al m² ma ha il mercato degli affitti lunghi più profondo; Valona e Saranda hanno prezzi da vacanzieri e pochi annunci da noi.",
+      "a2NoData": "Secondo l'indice dei prezzi la costa nord (Shëngjin, poi i quartieri di Durazzo Golem e Shkëmbi i Kavajës) chiede meno al m²; Tirana costa di più ma ha il mercato degli affitti lunghi più profondo. La tabella sopra mostra ogni città con il campione.",
+      "q3": "Esiste un golden visa o una residenza per investimento?",
+      "a3": "No. L'Albania non ha un programma di golden visa; lo schema di cittadinanza per investimento annunciato nel 2019 non è mai partito ed è stato chiuso a fine 2022. Esiste un permesso di soggiorno annuale, rinnovabile, per i proprietari di immobili ai sensi dell'art. 84 della legge 79/2021, senza prezzo minimo nella legge. Non obbliga a vivere nell'appartamento.",
+      "q4": "Come viene tassato il reddito da affitto di uno straniero?",
+      "a4": "Al {tax} % in Albania, uguale per affitti lunghi e brevi, dichiarazione entro il 31 marzo. Poi si applica la convenzione con il vostro paese: quella Italia-Albania evita la doppia imposizione con il credito d'imposta sul reddito dichiarato in Italia; verificate con il commercialista. L'imposta annuale sull'edificio è lo 0,05 % del valore fiscale.",
+      "q5": "Un non residente ottiene un mutuo?",
+      "a5": "In pratica quasi mai: le banche albanesi prestano ai residenti con reddito locale. Gli investitori pagano in contanti o prendono le rate senza interessi del costruttore su una nuova costruzione, di solito il 30-50 % di anticipo e il resto fino alla consegna. Un appartamento usato si paga all'atto, spesso in due passi: caparra alla prenotazione e saldo dal notaio.",
+      "q6": "Nuova costruzione o appartamento finito?",
+      "a6": "Sulle {count} nuove costruzioni in vendita ora lo sconto sulla carta è del 10-20 % rispetto all'appartamento finito, a rate e senza IVA; il prezzo è il rischio del costruttore e un atto che arriva solo dopo il completamento. Un appartamento finito costa di più al m², si affitta dal primo giorno e si rivende più in fretta. Chi compra in Albania per la prima volta di solito fa meglio con un appartamento finito in un edificio che ha già l'agibilità."
+    },
+    "contact": {
+      "title": "Diteci budget e strategia",
+      "subtitle": "Budget, città, affitto lungo o breve. Vi mandiamo gli appartamenti adatti dal catalogo live con prezzo, stima del canone da annunci comparabili e le condizioni del costruttore se è una nuova costruzione, in italiano."
     }
   }
 }

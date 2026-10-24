@@ -83,7 +83,8 @@
       "addProperty": "Immobilie inserieren",
       "knowledge": "Wissensdatenbank",
       "germanHub": "Immobilien in Albanien kaufen",
-      "shengjinHub": "Shëngjin: Wohnungen am Meer"
+      "shengjinHub": "Shëngjin: Wohnungen am Meer",
+      "investmentHub": "In Albanien investieren"
     },
     "cities": {
       "empty": "Keine Städte vorhanden."
@@ -1783,7 +1784,9 @@
       "3-1": "3+1 und größer",
       "fewFlats": "zu wenige Wohnungen"
     },
-    "types": { "studio": "Studios in Shëngjin ({count})" },
+    "types": {
+      "studio": "Studios in Shëngjin ({count})"
+    },
     "facets": {
       "sea-view": "Wohnungen mit Meerblick in Shëngjin ({count})",
       "near-the-sea": "Wohnungen am Meer in Shëngjin ({count})",
@@ -1922,6 +1925,116 @@
     "contact": {
       "title": "Welches Haus suchen Sie?",
       "subtitle": "Nennen Sie uns Budget, Ort und Zahl der Schlafzimmer. Wir schicken passende Häuser aus dem aktuellen Bestand mit Preis, Grundstück, Entfernung zum Meer und Verfügbarkeit, auf Deutsch."
+    }
+  },
+  "InvestmentHub": {
+    "metaTitle": "In Immobilien in Albanien investieren 2026: Preise ab {from}, Median {median}/m²",
+    "metaTitleShort": "In Immobilien in Albanien investieren 2026: Preise, Mieten, Rendite, Steuern",
+    "metaDescription": "Aktuelle Angebotspreise (Median {median}/m²), inserierte 1+1-Mieten und die Bruttorendite daraus ({yieldMin}-{yieldMax} % in {city}), {newBuilds, plural, one {# Neubau} other {# Neubauten}}, Steuern für ausländische Vermieter und die Wahrheit zum Golden Visa, auf einer Seite mit den passenden Wohnungen.",
+    "metaDescriptionShort": "Aktuelle Angebotspreise nach Stadt, inserierte Mieten und die Renditen daraus, Neubauten, Steuern für ausländische Vermieter und die Wahrheit zum Golden Visa, mit den Wohnungen, die zum Anlegerprofil passen.",
+    "country": "Albanien",
+    "breadcrumb": "In Albanien investieren",
+    "label": "Für Anleger",
+    "h1": "In Immobilien in Albanien investieren, 2026",
+    "lead": "Am {date} verlangen die auf Domlivo inserierten Wohnungen im Median {median} pro m², {flats} Wohnungen ab {from}. Eine langfristig vermietete 1+1-Wohnung bringt in {city} etwa {yieldMin}-{yieldMax} % brutto auf inserierte Mieten. Unten: Preise und Renditen nach Stadt, vier Strategien, die passenden Wohnungen, die Steuern eines ausländischen Vermieters und die Fragen, die Anleger stellen.",
+    "leadNoYield": "Am {date} verlangen die auf Domlivo inserierten Wohnungen im Median {median} pro m², {flats} Wohnungen ab {from}. Unten: Preise nach Stadt, vier Strategien, die passenden Wohnungen, die Steuern eines ausländischen Vermieters und die Fragen, die Anleger stellen.",
+    "leadNoData": "Preise nach Stadt, vier Strategien, die passenden Wohnungen, die Steuern eines ausländischen Vermieters und die Fragen der Anleger, aus den aktuellen Inseraten und dem Mietdatenblatt.",
+    "allSale": "Alle Immobilien zum Kauf in Albanien",
+    "tiles": {
+      "median": "Median des Angebotspreises, Wohnungen",
+      "from": "Günstigste Wohnung",
+      "yield": "Bruttorendite, 1+1 in {city}",
+      "newBuilds": "Neubauten zum Kauf"
+    },
+    "why": {
+      "title": "Die Zahlen",
+      "tilesNote": "Aktuelle Angebotspreise der auf Domlivo inserierten Wohnungen, {date}; Renditen auf inserierte Mieten. Keine Verkaufspreise.",
+      "p1": "Albanien ist die günstigste Adriaküste, an der ein Ausländer zu denselben Bedingungen kauft wie ein Staatsbürger: Deloitte bezifferte die durchschnittliche Wohnimmobilie 2025 auf etwa 1.720 € pro m² (+6,2 % im Jahr), gegenüber 2.557 € für Neubauwohnungen in Montenegro und 3.012 € in Kroatien. Das Geld fließt in eine 1+1- oder 2+1-Wohnung nahe am Strand: vier Monate an Urlauber vermietet, den Rest des Jahres an Einheimische oder Remote-Arbeiter, oder einfach gehalten, während die Küste bebaut wird.",
+      "p2": "Die ehrliche Rendite ist niedriger als in den Prospekten. Inserierte Langzeitmieten für eine 1+1 liegen bei 250-400 € im Monat in Durrës, 450-650 € in Tirana und 250-430 € in Shëngjin; erzielte Mieten liegen 5-10 % darunter; die Einnahmen werden mit 15 % besteuert; eine Langzeitvermietung verliert etwa einen Monat im Jahr an Leerstand. Die Tabelle unten rechnet genau das über den aktuellen Medianpreis einer 1+1 in jeder Stadt, sodass Sie sehen, was ein sorgfältiger Eigentümer bekommt, nicht, was ein Verkäufer verspricht.",
+      "p3": "Was der Markt nicht bietet: eine Hypothek für Gebietsfremde (Banken vergeben kaum welche), ein Golden Visa (Albanien hat keines; die Aufenthaltserlaubnis über Immobilienbesitz ist eine einjährige nach Art. 84 des Gesetzes 79/2021 ohne Mindestpreis) und einen liquiden Ausstieg (ein Wiederverkauf dauert Monate, eine Wohnung im fertigen Haus verkauft sich schneller als ein Vertrag vom Plan).",
+      "p4": "Jede Zahl auf dieser Seite wird stündlich aus den aktuellen Inseraten und dem Preisindex neu berechnet; die Mieten stammen aus unserem Datenblatt zu Langzeitmieten und sind die einzigen Zahlen, die nicht live gerechnet werden. Eine verkaufte Wohnung verschwindet aus dem Raster, eine neue erscheint, wenn ihr Preis pro m² ihre Stadt schlägt."
+    },
+    "table": {
+      "title": "Preise und Renditen nach Stadt",
+      "lead": "Median des Angebotspreises pro m² für Wohnungen, Medianpreis einer 1+1, inserierte 1+1-Miete und die Brutto- und Nettorendite daraus, {date}. Jede Stadt öffnet ihre Inserate.",
+      "caption": "Albanische Städte für Immobilienanleger, {date}: Median des Angebotspreises pro m², Medianpreis 1+1, inserierte Monatsmiete, Brutto- und Nettorendite",
+      "colCity": "Stadt",
+      "colMedian": "Median, €/m²",
+      "colOneBed": "1+1, Medianpreis",
+      "colRent": "Miete 1+1, €/Monat",
+      "colGross": "Brutto",
+      "colNet": "Netto",
+      "sample": "{count, plural, one {# Wohnung in der Stichprobe} other {# Wohnungen in der Stichprobe}}",
+      "indicative": "{value} (Richtwert)",
+      "lowSample": "zu wenig Daten",
+      "note": "Ein Median unter {min} Wohnungen ist ein Richtwert. Mieten sind inserierte Langzeitmieten aus unserem Datenblatt (Century 21 H1 2026 und Portalstichproben); erzielte Mieten liegen 5-10 % darunter. Bruttorendite = zwölf Monatsmieten über dem Medianpreis einer 1+1. Nettorendite = nach einem Leerstandsmonat, einer halben Monatsmiete Vermittlungsgebühr, Instandhaltung, Versicherung, Gebäudesteuer und {tax} % Einkommensteuer, über Preis plus Kaufnebenkosten, wie der Mietrenditerechner es berechnet. Ohne Verwaltungsgebühr.",
+      "calculatorLink": "Mietrenditerechner: Ihre Wohnung, Ihre Miete",
+      "methodologyLink": "Wie der Preisindex berechnet wird"
+    },
+    "strategies": {
+      "title": "Vier Strategien",
+      "lead": "Was jede kauft, was sie bringt und wo sie scheitert. Die Links öffnen die passenden Inserate.",
+      "ltr": {
+        "title": "Eine 1+1 in Durrës langfristig vermietet",
+        "body": "Die Standardstrategie: eine Einzimmerwohnung in zweiter Reihe in Plazh oder Golem, zwölf Monate an eine einheimische Familie oder einen Remote-Arbeiter vermietet. Stetig, pflegeleicht, 3-5 % brutto auf inserierte Mieten; die Nebenkosten trägt der Mieter. Risiko: eine überversorgte Küste im Winter, wenn die Mieten in den Strandvierteln um ein Drittel fallen.",
+        "link": "Wohnungen zum Kauf in Durrës"
+      },
+      "str": {
+        "title": "Eine Wohnung am Meer für Urlauber",
+        "body": "Juni bis September füllt sich zu 40-70 € pro Nacht in Durrës und Shëngjin; den Rest des Jahres steht die Wohnung leer oder wird mit Abschlag langfristig vermietet. Brutto kann das eine Langzeitvermietung schlagen, netto oft nicht, wenn Reinigung, Plattformgebühren (6 %), die Kurtaxe von 2,25 %, Nebenkosten und ein Verwalter bezahlt sind. Rechnen Sie mit Ihrer eigenen Auslastung, bevor Sie fremden Zahlen glauben.",
+        "link": "Wohnungen am Meer"
+      },
+      "offplan": {
+        "title": "Vom Plan mit Bauträgerraten",
+        "body": "Neubauten werden mit zinsfreien Raten bis zur Übergabe verkauft, meist 30-50 % Anzahlung und der Rest in Tranchen; der Preis liegt 10-20 % unter der fertigen Wohnung, Mehrwertsteuer fällt auf Wohnungen nicht an. Das Risiko ist der Bauträger: Verzögerungen von einem Jahr sind üblich, und die notarielle Urkunde kommt erst nach der Fertigstellung, also Baugenehmigung und fertiggestellte Projekte prüfen, bevor Sie zahlen.",
+        "link": "Neubauten und Wohnungen vom Plan"
+      },
+      "cheap": {
+        "title": "Der günstigste Einstieg: Shëngjin",
+        "body": "Der Badeort im Norden ist der günstigste Küstenmarkt mit verlässlicher Stichprobe: ein Studio ab etwa 35.000 €, eine 1+1 ab 45.000 €, 13 % unter Durrës pro m². Die Sommernachfrage kommt aus dem Kosovo und dem Inland und bucht per Telefon statt über Airbnb, Ferieneinnahmen sind also schwerer zu belegen; das Argument ist der Preis, nicht die Rendite.",
+        "link": "Shëngjin: Wohnungen am Meer und was ein Budget kauft"
+      }
+    },
+    "cards": {
+      "title": "{count, plural, one {Die preiswerteste Wohnung am Meer unter der Grenze} other {Die # preiswertesten Wohnungen am Meer}}",
+      "lead": "Wohnungen und Studios bis 1 km vom Meer oder in erster Reihe, bis {cap}, nach Preis pro m² gegenüber dem Median ihrer Stadt, höchstens {perCity} je Stadt, von {total} unter der Grenze. Preise und Verfügbarkeit wie in den Inseraten.",
+      "all": "Alle Immobilien zum Kauf"
+    },
+    "taxes": {
+      "title": "Was ein ausländischer Vermieter zahlt",
+      "lead": "Die Steuern und Kosten einer albanischen Wohnung, aus den Quellen unserer Rechner und des Steuerartikels.",
+      "p1": "Kauf: Der Notar berechnet 0,35 % des Werts bis 6 Mio. Lek und 0,30 % bis 15 Mio.; das Katasteramt (ASHK) verlangt 5.000 Lek für die Eintragung; Anwalt, beeidigter Übersetzer und Maklerprovision sind optional. Ein privater Käufer zahlt keine Grunderwerbsteuer (die 2 % auf den Verkauf trägt der Verkäufer) und keine Mehrwertsteuer auf eine Wohnung. Bei einer Wohnung für 100.000 € sind es im typischen Fall etwa 2.300 €.",
+      "p2": "Besitz und Vermietung: Mieteinnahmen werden mit 15 % besteuert (Langzeitmiete auf die Bruttomiete, Ferienvermietung auf die Einnahmen nach Plattformprovision), Erklärung bis 31. März. Die jährliche Gebäudesteuer beträgt 0,05 % des steuerlichen Werts; ein Reformentwurf würde sie ab 2029 auf 0,1-0,2 % des Marktwerts anheben. Nach dem deutsch-albanischen Doppelbesteuerungsabkommen von 2010 stellt Deutschland die Miete frei, bezieht sie aber in den Steuersatz für Ihr übriges Einkommen ein.",
+      "p3": "Verkauf: Ein Gewinn wird in Albanien mit 15 % besteuert; bis zum 31. Dezember 2026 kann ein Eigentümer die Immobilie stattdessen neu bewerten lassen und 5 % auf den Zuwachs zahlen. Eine Spekulationsfrist mit Steuerfreiheit gibt es nicht, und ein Golden Visa ist nicht zu verlieren: Albanien hat keines.",
+      "calculatorLink": "Kaufnebenkostenrechner: Notar, Kataster, Makler auf Ihren Preis"
+    },
+    "articles": {
+      "title": "Vor dem Kauf lesen",
+      "lead": "Unsere Anlageartikel mit Quellen: Durrës als Mietmarkt, welche Immobilientypen welches Risiko tragen, Albanien gegen Bulgarien, Montenegro und Kroatien.",
+      "guide": "Der Anlage-Ratgeber",
+      "readMore": "Weiterlesen"
+    },
+    "faq": {
+      "title": "Fragen von Anlegern",
+      "lead": "Kurz beantwortet mit den aktuellen Zahlen; die Tabelle und die Artikel gehen tiefer.",
+      "q1": "Welche Rendite bringt eine Wohnung in Albanien wirklich?",
+      "a1": "Am {date} verlangte eine mittlere 1+1-Wohnung in {city} {price}; inserierte Langzeitmieten für eine 1+1 liegen dort bei {rentMin}-{rentMax} im Monat. Das sind {grossMin}-{grossMax} % brutto und etwa {netMin}-{netMax} % netto nach einem Leerstandsmonat, Vermittlungsgebühr, laufenden Kosten und 15 % Einkommensteuer. Erzielte Mieten liegen 5-10 % unter den inserierten, rechnen Sie also mit dem unteren Ende.",
+      "a1NoData": "Die Tabelle oben berechnet die Brutto- und Nettorendite einer 1+1 in jeder Stadt aus dem aktuellen Medianpreis und der inserierten Miete, abzüglich 15 % Einkommensteuer und eines Leerstandsmonats. Erzielte Mieten liegen 5-10 % unter den inserierten, rechnen Sie also mit dem unteren Ende.",
+      "q2": "In welcher Stadt kauft man am günstigsten?",
+      "a2": "Nach dem Preisindex am {date} in {city}: Median {median} pro m² über {count} Wohnungen. Durrës hat den meisten Bestand und den liquidesten Wiederverkauf; Tirana kostet am meisten pro m², hat aber den tiefsten Langzeitmietmarkt; Vlora und Saranda sind für Urlauber bepreist und bei uns dünn vertreten.",
+      "a2NoData": "Nach dem Preisindex verlangt die Nordküste (Shëngjin, dann die Durrës-Viertel Golem und Shkëmbi i Kavajës) am wenigsten pro m²; Tirana kostet am meisten, hat aber den tiefsten Langzeitmietmarkt. Die Tabelle oben zeigt jede Stadt mit Stichprobe.",
+      "q3": "Gibt es ein Golden Visa oder einen Aufenthalt gegen Investition?",
+      "a3": "Nein. Albanien hat kein Golden-Visa-Programm; das 2019 angekündigte Staatsbürgerschaft-gegen-Investition-Programm wurde nie betrieben und Ende 2022 beendet. Was es gibt, ist eine einjährige, verlängerbare Aufenthaltserlaubnis für Immobilieneigentümer nach Art. 84 des Gesetzes 79/2021, ohne Mindestpreis im Gesetz. Sie verpflichtet nicht, in der Wohnung zu wohnen.",
+      "q4": "Wie werden Mieteinnahmen eines Ausländers besteuert?",
+      "a4": "Mit {tax} % in Albanien, für Langzeit- und Ferienvermietung gleichermaßen, Erklärung bis 31. März. Dann greift das Doppelbesteuerungsabkommen: Deutschland stellt die albanische Miete frei, bezieht sie aber in den Steuersatz für Ihr übriges Einkommen ein (Progressionsvorbehalt). Die jährliche Gebäudesteuer beträgt 0,05 % des steuerlichen Werts.",
+      "q5": "Bekommt ein Gebietsfremder eine Hypothek?",
+      "a5": "In der Praxis so gut wie nie: Albanische Banken vergeben Kredite an Ansässige mit örtlichem Einkommen. Anleger zahlen bar oder nehmen die zinsfreien Raten des Bauträgers für einen Neubau, meist 30-50 % Anzahlung und der Rest bis zur Übergabe. Eine Bestandswohnung wird bei der Beurkundung bezahlt, oft in zwei Schritten: Anzahlung bei der Reservierung, Rest beim Notar.",
+      "q6": "Neubau oder fertige Wohnung?",
+      "a6": "Bei {count} Neubauten im Angebot liegt der Abschlag vom Plan bei 10-20 % gegenüber der fertigen Wohnung, in Raten und ohne Mehrwertsteuer; der Preis dafür sind Bauträgerrisiko und eine Urkunde erst nach Fertigstellung. Eine fertige Wohnung kostet mehr pro m², vermietet sich ab dem ersten Tag und verkauft sich schneller. Wer zum ersten Mal in Albanien kauft, fährt meist besser mit einer fertigen Wohnung in einem Haus, das seine Nutzungsgenehmigung schon hat."
+    },
+    "contact": {
+      "title": "Nennen Sie uns Budget und Strategie",
+      "subtitle": "Budget, Stadt, Langzeit- oder Ferienvermietung. Wir schicken passende Wohnungen aus dem aktuellen Bestand mit Preis, Mietschätzung aus vergleichbaren Inseraten und den Bauträgerbedingungen bei einem Neubau, auf Deutsch."
     }
   }
 }

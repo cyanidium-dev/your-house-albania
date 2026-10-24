@@ -90,3 +90,13 @@ export const FOOTER_MARKET_HUB: Readonly<Record<string, { href: `/${string}`; la
  * every page passes it a link. Label: `Footer.nav.shengjinHub`.
  */
 export const FOOTER_PLACE_HUB: { href: `/${string}`; labelKey: string } = { href: "/shengjin", labelKey: "shengjinHub" };
+
+/**
+ * The investment hub `/{locale}/investment` (2026-10-24, lib/investmentHub) in
+ * the locales it is written in; label `Footer.nav.investmentHub`.
+ */
+export const FOOTER_INVESTMENT_HUB: { href: `/${string}`; labelKey: string; locales: readonly string[] } = {
+  href: "/investment",
+  labelKey: "investmentHub",
+  locales: ["en", "uk", "ru", "de", "pl", "it"],
+};
