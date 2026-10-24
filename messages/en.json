@@ -1334,7 +1334,11 @@
     "accessed": "accessed",
     "linksHeading": "From the knowledge base",
     "linksIntro": "Short answers with figures, dates and their sources.",
-    "linksAll": "All questions in the knowledge base"
+    "linksAll": "All questions in the knowledge base",
+    "browseHeading": "Looking at property in Albania?",
+    "browseIntro": "Listings on Domlivo are checked and priced against the live index per square metre; a realtor answers within a day.",
+    "browseListings": "Flats and houses for sale",
+    "browseContact": "Ask a realtor"
   },
   "About": {
     "metaTitle": "About Domlivo: the team and how the site works",

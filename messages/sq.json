@@ -1335,7 +1335,11 @@
     "accessed": "parë më",
     "linksHeading": "Nga baza e njohurive",
     "linksIntro": "Përgjigje të shkurtra me shifra, data dhe burime.",
-    "linksAll": "Të gjitha pyetjet e bazës së njohurive"
+    "linksAll": "Të gjitha pyetjet e bazës së njohurive",
+    "browseHeading": "Po kërkoni pronë në Shqipëri?",
+    "browseIntro": "Njoftimet në Domlivo janë të verifikuara dhe çmimi për metër katror krahasohet me indeksin e drejtpërdrejtë; një agjent përgjigjet brenda ditës.",
+    "browseListings": "Apartamente dhe shtëpi në shitje",
+    "browseContact": "Pyesni një agjent"
   },
   "About": {
     "metaTitle": "Rreth Domlivo: ekipi dhe si funksionon faqja",

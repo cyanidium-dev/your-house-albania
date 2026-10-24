@@ -1334,7 +1334,11 @@
     "accessed": "dostęp",
     "linksHeading": "Z bazy wiedzy",
     "linksIntro": "Krótkie odpowiedzi z liczbami, datami i źródłami.",
-    "linksAll": "Wszystkie pytania w bazie wiedzy"
+    "linksAll": "Wszystkie pytania w bazie wiedzy",
+    "browseHeading": "Szukasz nieruchomości w Albanii?",
+    "browseIntro": "Oferty na Domlivo są sprawdzone, a cena za metr kwadratowy porównana z aktualnym indeksem; agent odpowiada w ciągu dnia.",
+    "browseListings": "Mieszkania i domy na sprzedaż",
+    "browseContact": "Zapytaj agenta"
   },
   "About": {
     "metaTitle": "O Domlivo: zespół i zasady działania serwisu",

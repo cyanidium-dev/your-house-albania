@@ -1335,7 +1335,11 @@
     "accessed": "consultato il",
     "linksHeading": "Dalla base di conoscenza",
     "linksIntro": "Risposte brevi con cifre, date e fonti.",
-    "linksAll": "Tutte le domande della base di conoscenza"
+    "linksAll": "Tutte le domande della base di conoscenza",
+    "browseHeading": "State cercando casa in Albania?",
+    "browseIntro": "Gli annunci su Domlivo sono verificati e il prezzo al metro quadro è confrontato con l'indice aggiornato; un agente risponde entro un giorno.",
+    "browseListings": "Appartamenti e case in vendita",
+    "browseContact": "Chiedi a un agente"
   },
   "About": {
     "metaTitle": "Chi siamo: il team di Domlivo e come funziona il sito",

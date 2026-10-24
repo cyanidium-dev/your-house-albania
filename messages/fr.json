@@ -1330,7 +1330,11 @@
     "accessed": "consulté le",
     "linksHeading": "Dans la base de connaissances",
     "linksIntro": "Des réponses courtes, avec chiffres, dates et sources.",
-    "linksAll": "Toutes les questions de la base de connaissances"
+    "linksAll": "Toutes les questions de la base de connaissances",
+    "browseHeading": "Vous cherchez un bien en Albanie ?",
+    "browseIntro": "Les annonces sur Domlivo sont vérifiées et le prix au mètre carré est comparé à l'indice en direct ; un agent répond dans la journée.",
+    "browseListings": "Appartements et maisons à vendre",
+    "browseContact": "Demander à un agent"
   },
   "About": {
     "metaTitle": "À propos de Domlivo : l’équipe et le fonctionnement du site",

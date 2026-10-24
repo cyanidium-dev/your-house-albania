@@ -375,6 +375,30 @@ export default async function KnowledgeArticlePage({ params }: Props) {
                 </section>
               ) : null}
 
+              {isQuestionPage ? (
+                <section className={`${PANEL} p-6`} aria-labelledby="knowledge-browse">
+                  <h2 id="knowledge-browse" className="text-lg font-semibold text-dark dark:text-white">
+                    {t('browseHeading')}
+                  </h2>
+                  <p className="mt-1 text-dark/70 dark:text-white/70">{t('browseIntro')}</p>
+                  <ul className="mt-3 space-y-2.5">
+                    <li>
+                      <Link
+                        href={article.citySlug ? `/${locale}/albania/${article.citySlug}` : `/${locale}/sale`}
+                        className="text-primary hover:underline underline-offset-4"
+                      >
+                        {t('browseListings')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href={`/${locale}/contacts`} className="text-primary hover:underline underline-offset-4">
+                        {t('browseContact')}
+                      </Link>
+                    </li>
+                  </ul>
+                </section>
+              ) : null}
+
               <section className="rounded-3xl bg-primary/[0.08] ring-1 ring-primary/20 p-6">
                 <h2 className="text-lg font-semibold text-dark dark:text-white">{t('askHeading')}</h2>
                 <p className="mt-1 text-dark/70 dark:text-white/70">{t('askIntro')}</p>
