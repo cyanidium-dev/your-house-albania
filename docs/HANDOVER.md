@@ -47,7 +47,7 @@
 | Что | Где | Действие |
 |---|---|---|
 | GTM `GTM-T27ZZ289`, Clarity `x4l0dctgle` | `src/lib/analytics/config.ts` | заменить на свои или вынести в env |
-| WhatsApp Business ссылка, Telegram-канал `t.me/real_estate_al` | `src/lib/contacts/businessContacts.ts` | свои |
+| WhatsApp `wa.me/355683685736` и Telegram `t.me/domlivo_viktor` (аккаунты Виктора для Domlivo с 24.10.2026; запасные, когда в Sanity нет своих) | `src/lib/contacts/businessContacts.ts` | свои |
 | Команда (имена, роли, ссылки на профили, фото) | `src/lib/about/team.ts`, тексты в `messages/*.json` → `About`, JSON-LD в `src/lib/seo/teamPerson.ts`, `aboutJsonLd.ts` | переписать под нового владельца |
 | Организация в JSON-LD (название, домен, соцсети, логотип) | `src/lib/seo/siteJsonLd.ts` | свои |
 | Проект Sanity в админке | `domlivo-admin/sanity.config.ts`, `sanity.cli.ts` (`projectId: 'g4aqp6ex'`), 78 скриптов в `domlivo-admin/scripts/**` с тем же id по умолчанию (все читают `process.env.SANITY_PROJECT_ID` с фолбэком) | заменить id, фолбэк убрать |

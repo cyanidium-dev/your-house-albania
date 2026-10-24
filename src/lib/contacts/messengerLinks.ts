@@ -151,7 +151,7 @@ export function finishMessengerHref(input: {
     const base = current || input.generalText
     if (!base) return input.href
     const text = input.pageUrl && !/https?:\/\//.test(base) ? `${base}\n${input.pageUrl}` : base
-    const number = input.agent ? whatsAppNumberOf(input.href) : input.whatsAppNumber ?? whatsAppNumberOf(input.href)
+    const number = input.agent ? whatsAppNumberOf(input.href) : whatsAppNumberOf(input.href) ?? input.whatsAppNumber
     return withWhatsAppText(input.href, text, number)
   }
   if (input.agent) return input.href

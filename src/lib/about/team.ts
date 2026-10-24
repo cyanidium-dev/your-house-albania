@@ -53,7 +53,7 @@ export const TEAM_MEMBERS: readonly TeamMember[] = [
     photoSize: 1000,
     links: [
       { labelKey: "agency", href: "https://www.grinchenko-realestate.com" },
-      { labelKey: "telegram", href: "https://t.me/real_estate_al" },
+      { labelKey: "telegram", href: "https://t.me/domlivo_viktor" },
       { labelKey: "instagram", href: "https://www.instagram.com/grinchenko.realestate" },
       { labelKey: "youtube", href: "https://www.youtube.com/@grinchenko.realestate" },
     ],
