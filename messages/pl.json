@@ -82,7 +82,8 @@
       "contacts": "Kontakty",
       "addProperty": "Dodaj nieruchomość",
       "knowledge": "Baza wiedzy",
-      "shengjinHub": "Shëngjin: mieszkania nad morzem"
+      "shengjinHub": "Shëngjin: mieszkania nad morzem",
+      "investmentHub": "Inwestowanie w Albanii"
     },
     "cities": {
       "empty": "Brak miast do wyświetlenia."
@@ -1719,7 +1720,9 @@
       "3-1": "3+1 i większe",
       "fewFlats": "za mało mieszkań"
     },
-    "types": { "studio": "Kawalerki w Shëngjin ({count})" },
+    "types": {
+      "studio": "Kawalerki w Shëngjin ({count})"
+    },
     "facets": {
       "sea-view": "Mieszkania z widokiem na morze w Shëngjin ({count})",
       "near-the-sea": "Mieszkania nad morzem w Shëngjin ({count})",
@@ -1782,5 +1785,115 @@
     "summaryFallback": "podobne do tych, które oglądałem na stronie",
     "studio": "kawalerka",
     "upTo": "do {price}"
+  },
+  "InvestmentHub": {
+    "metaTitle": "Inwestycja w nieruchomości w Albanii 2026: ceny od {from}, mediana {median}/m²",
+    "metaTitleShort": "Inwestycja w nieruchomości w Albanii 2026: ceny, czynsze, rentowność, podatki",
+    "metaDescription": "Aktualne ceny ofertowe (mediana {median}/m²), ogłaszane czynsze za 1+1 i rentowność brutto z nich ({yieldMin}-{yieldMax} %, {city}), {newBuilds, plural, one {# nowa inwestycja} few {# nowe inwestycje} many {# nowych inwestycji} other {# nowych inwestycji}}, podatki dla zagranicznego wynajmującego i prawda o złotej wizie, na jednej stronie z pasującymi mieszkaniami.",
+    "metaDescriptionShort": "Aktualne ceny ofertowe według miast, ogłaszane czynsze i rentowność z nich, nowe inwestycje, podatki dla zagranicznego wynajmującego i prawda o złotej wizie, z mieszkaniami pod profil inwestora.",
+    "country": "Albania",
+    "breadcrumb": "Inwestowanie w Albanii",
+    "label": "Dla inwestorów",
+    "h1": "Inwestycja w nieruchomości w Albanii, 2026",
+    "lead": "Na {date} mieszkania na sprzedaż na Domlivo mają medianę {median} za m², {flats} mieszkań od {from}. Mieszkanie 1+1 wynajmowane długoterminowo daje ({city}) około {yieldMin}-{yieldMax} % brutto przy ogłaszanych czynszach. Poniżej: ceny i rentowność według miast, cztery strategie, pasujące mieszkania, podatki zagranicznego wynajmującego i pytania inwestorów.",
+    "leadNoYield": "Na {date} mieszkania na sprzedaż na Domlivo mają medianę {median} za m², {flats} mieszkań od {from}. Poniżej: ceny według miast, cztery strategie, pasujące mieszkania, podatki zagranicznego wynajmującego i pytania inwestorów.",
+    "leadNoData": "Ceny według miast, cztery strategie, pasujące mieszkania, podatki zagranicznego wynajmującego i pytania inwestorów, z aktualnych ogłoszeń i arkusza czynszów.",
+    "allSale": "Wszystkie nieruchomości na sprzedaż w Albanii",
+    "tiles": {
+      "median": "Mediana ceny ofertowej, mieszkania",
+      "from": "Najtańsze mieszkanie",
+      "yield": "Rentowność brutto, 1+1 ({city})",
+      "newBuilds": "Nowych inwestycji w sprzedaży"
+    },
+    "why": {
+      "title": "Argumenty w liczbach",
+      "tilesNote": "Aktualne ceny ofertowe mieszkań na Domlivo, {date}; rentowność przy ogłaszanych czynszach. Nie ceny transakcyjne.",
+      "p1": "Albania to najtańsze wybrzeże Adriatyku, na którym cudzoziemiec kupuje na tych samych zasadach co obywatel: według Deloitte przeciętne mieszkanie kosztowało w 2025 roku około 1 720 € za m² (+6,2 % rok do roku) wobec 2 557 € za nowe mieszkania w Czarnogórze i 3 012 € w Chorwacji, a w Polsce 3 008 € za nowe. Pieniądze idą w mieszkanie 1+1 lub 2+1 blisko plaży: cztery miesiące wynajmowane turystom, resztę roku miejscowym albo pracującym zdalnie, albo po prostu trzymane, póki wybrzeże się zabudowuje.",
+      "p2": "Uczciwa rentowność jest niższa niż w folderach. Ogłaszane czynsze długoterminowe za 1+1 to 250-400 € miesięcznie w Durrës, 450-650 € w Tiranie i 250-430 € w Shëngjin; realne czynsze są o 5-10 % niższe od ogłaszanych; dochód jest opodatkowany 15 %; najem długoterminowy traci około miesiąca w roku na pustostan. Tabela poniżej liczy dokładnie tę arytmetykę na aktualnej medianie ceny 1+1 w każdym mieście, więc widzicie to, co dostaje ostrożny właściciel, a nie to, co obiecuje sprzedający.",
+      "p3": "Czego rynek nie oferuje: kredytu hipotecznego dla nierezydenta (banki prawie ich nie udzielają), złotej wizy (Albania jej nie ma; zezwolenie na pobyt za nieruchomość to roczne zezwolenie z art. 84 ustawy 79/2021 bez ceny minimalnej) i płynnego wyjścia (odsprzedaż trwa miesiące, a mieszkanie w oddanym budynku sprzedaje się szybciej niż umowa na dziurę w ziemi).",
+      "p4": "Każda liczba na tej stronie jest przeliczana co godzinę z aktualnych ogłoszeń i indeksu cen; czynsze pochodzą z naszego arkusza najmu długoterminowego i są jedynymi liczbami nieliczonymi na żywo. Sprzedane mieszkanie znika z siatki, nowe pojawia się, jeśli jego cena za m² bije swoje miasto."
+    },
+    "table": {
+      "title": "Ceny i rentowność według miast",
+      "lead": "Mediana ceny ofertowej za m² mieszkań, mediana ceny mieszkania 1+1, ogłaszany czynsz za 1+1 oraz rentowność brutto i netto z niego, {date}. Każde miasto otwiera swoje ogłoszenia.",
+      "caption": "Miasta Albanii dla inwestora w nieruchomości, {date}: mediana ceny ofertowej za m², mediana ceny 1+1, ogłaszany czynsz miesięczny, rentowność brutto i netto",
+      "colCity": "Miasto",
+      "colMedian": "Mediana, €/m²",
+      "colOneBed": "1+1, mediana ceny",
+      "colRent": "Czynsz 1+1, €/mies.",
+      "colGross": "Brutto",
+      "colNet": "Netto",
+      "sample": "{count, plural, one {# mieszkanie w próbie} few {# mieszkania w próbie} many {# mieszkań w próbie} other {# mieszkań w próbie}}",
+      "indicative": "{value} (orientacyjnie)",
+      "lowSample": "za mało danych",
+      "note": "Mediana z mniej niż {min} mieszkań jest orientacyjna. Czynsze to ogłaszane stawki najmu długoterminowego z naszego arkusza (Century 21 za pierwsze półrocze 2026 i próby z portali); realne są o 5-10 % niższe. Rentowność brutto = dwanaście czynszów do mediany ceny 1+1. Netto = po miesiącu pustostanu, pół miesiąca prowizji za najem, naprawach, ubezpieczeniu, podatku od budynku i {tax} % podatku dochodowego, do ceny z kosztami zakupu, tak jak liczy kalkulator rentowności. Bez opłaty za zarządzanie.",
+      "calculatorLink": "Kalkulator rentowności najmu: wasze mieszkanie, wasz czynsz",
+      "methodologyLink": "Jak liczony jest indeks cen"
+    },
+    "strategies": {
+      "title": "Cztery strategie",
+      "lead": "Co każda kupuje, co przynosi i gdzie się łamie. Linki otwierają pasujące ogłoszenia.",
+      "ltr": {
+        "title": "1+1 w Durrës na wynajem długoterminowy",
+        "body": "Strategia domyślna: kawalerka z sypialnią w drugiej linii w Plazh albo Golem, wynajęta na 12 miesięcy miejscowej rodzinie lub pracującemu zdalnie. Stabilnie, bez zachodu, 3-5 % brutto przy ogłaszanych czynszach; rachunki płaci najemca. Ryzyko: przesycone wybrzeże zimą, gdy czynsze w dzielnicach plażowych spadają o jedną trzecią.",
+        "link": "Mieszkania na sprzedaż w Durrës"
+      },
+      "str": {
+        "title": "Mieszkanie nad morzem dla wczasowiczów",
+        "body": "Od czerwca do września zapełnia się po 40-70 € za noc w Durrës i Shëngjin; resztę roku stoi puste albo jest wynajęte długo ze zniżką. Brutto może pobić najem długoterminowy, netto często nie, gdy opłaci się sprzątanie, prowizje platform (6 %), podatek turystyczny 2,25 %, media i zarządcę. Przelicz kalkulatorem z własnym obłożeniem, zanim uwierzysz w cudzą liczbę.",
+        "link": "Mieszkania nad morzem"
+      },
+      "offplan": {
+        "title": "Dziura w ziemi z ratami od dewelopera",
+        "body": "Nowe inwestycje sprzedają się z nieoprocentowanymi ratami do odbioru, zwykle 30-50 % wpłaty i reszta w transzach; cena jest o 10-20 % niższa niż gotowego mieszkania, a mieszkania nie mają VAT. Ryzykiem jest deweloper: roczne opóźnienia są normą, a akt notarialny podpisuje się dopiero po oddaniu, więc sprawdź pozwolenie na budowę i oddane przez niego inwestycje, zanim zapłacisz.",
+        "link": "Nowe inwestycje i mieszkania z rynku pierwotnego"
+      },
+      "cheap": {
+        "title": "Najtańsze wejście: Shëngjin",
+        "body": "Północne miasteczko plażowe to najtańszy nadmorski rynek z wiarygodną próbą: kawalerka od około 35 000 €, 1+1 od 45 000 €, o 13 % taniej za m² niż Durrës. Letni popyt to Kosowo i miejscowi, rezerwują telefonicznie, nie przez Airbnb, więc dochód z najmu krótkoterminowego trudniej udowodnić; argumentem jest cena, nie rentowność.",
+        "link": "Shëngjin: mieszkania nad morzem i co kupi się za dany budżet"
+      }
+    },
+    "cards": {
+      "title": "{count, plural, one {Najkorzystniej wycenione mieszkanie nad morzem w limicie} other {# najkorzystniej wycenionych mieszkań nad morzem}}",
+      "lead": "Mieszkania i kawalerki do 1 km od morza lub w pierwszej linii, do {cap}, według ceny za m² wobec mediany swojego miasta, najwyżej {perCity} z jednego miasta, z {total} w limicie. Ceny i dostępność jak w ogłoszeniach.",
+      "all": "Wszystkie nieruchomości na sprzedaż"
+    },
+    "taxes": {
+      "title": "Co płaci zagraniczny wynajmujący",
+      "lead": "Podatki i koszty albańskiego mieszkania, ze źródeł naszych kalkulatorów i artykułu o podatkach.",
+      "p1": "Zakup: notariusz pobiera 0,35 % wartości do 6 mln leków i 0,30 % do 15 mln; kataster (ASHK) 5 000 leków za wpis; prawnik, tłumacz przysięgły i prowizja agencji są opcjonalne. Kupujący jako osoba fizyczna nie płaci podatku od przeniesienia (2 % od sprzedaży obciąża sprzedającego) ani VAT od mieszkania. Przy mieszkaniu za 100 000 € dodatkowe koszty to około 2 300 € w typowym przypadku.",
+      "p2": "Posiadanie i najem: dochód z najmu jest opodatkowany 15 % (najem długoterminowy od czynszu brutto, krótkoterminowy od dochodu po prowizji platformy), deklaracja do 31 marca. Roczny podatek od budynku to 0,05 % wartości podatkowej; projekt reformy podnosi go do 0,1-0,2 % wartości rynkowej od 2029 roku. Umowa polsko-albańska o unikaniu podwójnego opodatkowania zwalnia albański czynsz w Polsce, ale uwzględnia go przy ustalaniu stawki od pozostałych dochodów.",
+      "p3": "Sprzedaż: zysk jest opodatkowany w Albanii 15 %; do 31 grudnia 2026 roku właściciel może zamiast tego przeszacować nieruchomość i zapłacić 5 % od przyrostu. Nie ma zwolnienia za długie posiadanie i nie ma złotej wizy do stracenia: Albania jej nie ma.",
+      "calculatorLink": "Kalkulator kosztów zakupu: notariusz, kataster, agencja na waszej cenie"
+    },
+    "articles": {
+      "title": "Do przeczytania przed zakupem",
+      "lead": "Nasze artykuły inwestycyjne ze źródłami: Durrës jako rynek najmu, które typy nieruchomości niosą jakie ryzyko, Albania wobec Bułgarii, Czarnogóry i Chorwacji.",
+      "guide": "Przewodnik inwestycyjny",
+      "readMore": "Czytaj dalej"
+    },
+    "faq": {
+      "title": "Pytania inwestorów",
+      "lead": "Krótkie odpowiedzi z aktualnymi liczbami; tabela i artykuły idą głębiej.",
+      "q1": "Jaką rentowność naprawdę daje mieszkanie w Albanii?",
+      "a1": "Na {date} medianowe mieszkanie 1+1 ({city}) kosztowało {price}; ogłaszane czynsze długoterminowe za 1+1 wynoszą tam {rentMin}-{rentMax} miesięcznie. To {grossMin}-{grossMax} % brutto i około {netMin}-{netMax} % netto po miesiącu pustostanu, prowizji za najem, kosztach bieżących i 15 % podatku. Realne czynsze są o 5-10 % niższe od ogłaszanych, więc za realistyczny przyjmijcie dolny kraniec.",
+      "a1NoData": "Tabela powyżej liczy rentowność brutto i netto mieszkania 1+1 w każdym mieście z aktualnej mediany ceny i ogłaszanego czynszu, po odjęciu 15 % podatku i miesiąca pustostanu. Realne czynsze są o 5-10 % niższe od ogłaszanych, więc za realistyczny przyjmijcie dolny kraniec.",
+      "q2": "W którym mieście kupuje się najtaniej?",
+      "a2": "Według indeksu cen na {date} ({city}): mediana {median} za m² z {count} mieszkań. Durrës ma najwięcej ofert i najpłynniejszą odsprzedaż; Tirana jest najdroższa za m², ale ma najgłębszy rynek najmu długoterminowego; Wlora i Saranda są wycenione pod wczasowiczów i słabo u nas reprezentowane.",
+      "a2NoData": "Według indeksu cen najtaniej jest na północnym wybrzeżu (Shëngjin, potem dzielnice Durrës Golem i Shkëmbi i Kavajës); Tirana jest najdroższa, ale ma najgłębszy rynek najmu długoterminowego. Tabela powyżej pokazuje każde miasto z próbą.",
+      "q3": "Czy jest złota wiza albo pobyt za inwestycję?",
+      "a3": "Nie. Albania nie ma programu złotej wizy; ogłoszony w 2019 roku program obywatelstwa za inwestycję nigdy nie ruszył i został zakończony pod koniec 2022 roku. Jest roczne, odnawialne zezwolenie na pobyt dla właścicieli nieruchomości z art. 84 ustawy 79/2021, bez ceny minimalnej w ustawie. Nie wymaga mieszkania w lokalu.",
+      "q4": "Jak opodatkowany jest dochód z najmu cudzoziemca?",
+      "a4": "{tax} % w Albanii, tak samo dla najmu długo- i krótkoterminowego, deklaracja do 31 marca. Potem działa umowa z waszym krajem: Polska zwalnia albański czynsz, ale uwzględnia go przy ustalaniu stawki od pozostałych dochodów; sprawdźcie swoją umowę. Roczny podatek od budynku to 0,05 % wartości podatkowej.",
+      "q5": "Czy nierezydent dostanie kredyt hipoteczny?",
+      "a5": "W praktyce prawie nigdy: albańskie banki kredytują rezydentów z lokalnym dochodem. Inwestorzy płacą gotówką albo biorą nieoprocentowane raty dewelopera na nowe mieszkanie, zwykle 30-50 % wpłaty i reszta do odbioru. Mieszkanie z rynku wtórnego płaci się przy akcie, często w dwóch krokach: zadatek przy rezerwacji i reszta u notariusza.",
+      "q6": "Nowe mieszkanie czy gotowe?",
+      "a6": "Przy {count} nowych inwestycjach w sprzedaży rabat za dziurę w ziemi to 10-20 % wobec gotowego mieszkania, w ratach i bez VAT; ceną jest ryzyko dewelopera i akt dopiero po oddaniu. Gotowe mieszkanie kosztuje więcej za m², wynajmuje się od pierwszego dnia i sprzedaje szybciej. Kupującym w Albanii po raz pierwszy zwykle bardziej opłaca się gotowe mieszkanie w budynku, który ma już pozwolenie na użytkowanie."
+    },
+    "contact": {
+      "title": "Podajcie budżet i strategię",
+      "subtitle": "Budżet, miasto, najem długo- czy krótkoterminowy. Wyślemy pasujące mieszkania z aktualnej bazy z ceną, szacunkiem czynszu z podobnych ogłoszeń i warunkami dewelopera, jeśli to nowa inwestycja, po polsku."
+    }
   }
 }

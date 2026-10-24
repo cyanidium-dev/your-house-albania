@@ -14,6 +14,7 @@ import {
   FOOTER_MARKET_GUIDE,
   FOOTER_MARKET_HUB,
   FOOTER_PLACE_HUB,
+  FOOTER_INVESTMENT_HUB,
   FOOTER_PROPERTY_HEAD,
   FOOTER_PROPERTY_TAIL,
   FOOTER_USEFUL_ITEMS,
@@ -257,6 +258,13 @@ export default function Footer({
                     {navT(FOOTER_PLACE_HUB.labelKey)}
                   </Link>
                 </li>
+                {FOOTER_INVESTMENT_HUB.locales.includes(locale) ? (
+                  <li>
+                    <Link href={resolveStableHref(FOOTER_INVESTMENT_HUB.href, locale)} className={colLinkClass}>
+                      {navT(FOOTER_INVESTMENT_HUB.labelKey)}
+                    </Link>
+                  </li>
+                ) : null}
                 {FOOTER_MARKET_GUIDE[locale] ? (
                   <li>
                     <Link href={resolveStableHref(FOOTER_MARKET_GUIDE[locale], locale)} className={colLinkClass}>

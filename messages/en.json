@@ -82,7 +82,8 @@
       "contacts": "Contacts",
       "addProperty": "List your property",
       "knowledge": "Knowledge base",
-      "shengjinHub": "Shëngjin: flats by the sea"
+      "shengjinHub": "Shëngjin: flats by the sea",
+      "investmentHub": "Investing in Albania"
     },
     "cities": {
       "empty": "No cities to show."
@@ -1719,7 +1720,9 @@
       "3-1": "3+1 and larger",
       "fewFlats": "too few flats"
     },
-    "types": { "studio": "Studios in Shëngjin ({count})" },
+    "types": {
+      "studio": "Studios in Shëngjin ({count})"
+    },
     "facets": {
       "sea-view": "Flats with a sea view in Shëngjin ({count})",
       "near-the-sea": "Flats by the sea in Shëngjin ({count})",
@@ -1782,5 +1785,115 @@
     "summaryFallback": "like the ones I viewed on the site",
     "studio": "studio",
     "upTo": "up to {price}"
+  },
+  "InvestmentHub": {
+    "metaTitle": "Investing in Albanian property 2026: prices from {from}, median {median}/m²",
+    "metaTitleShort": "Investing in Albanian property 2026: prices, rents, yields, taxes",
+    "metaDescription": "Live asking prices (median {median}/m²), advertised 1+1 rents and the gross yield they give ({yieldMin}-{yieldMax} % in {city}), {newBuilds, plural, one {# new build} other {# new builds}}, taxes for a foreign landlord and the no-golden-visa fact, on one page with the flats that fit.",
+    "metaDescriptionShort": "Live asking prices by city, advertised rents and the yields they give, new builds, taxes for a foreign landlord and the no-golden-visa fact, with the flats that fit an investor's brief.",
+    "country": "Albania",
+    "breadcrumb": "Investing in Albania",
+    "label": "For investors",
+    "h1": "Investing in Albanian property, 2026",
+    "lead": "On {date} the flats for sale on Domlivo ask a median of {median} per m², {flats} flats from {from}. A one-bedroom flat let long-term returns about {yieldMin}-{yieldMax} % gross in {city} on advertised rents. Below: prices and yields by city, four ways to invest, the flats that fit, the taxes a foreign landlord pays and the questions investors ask.",
+    "leadNoYield": "On {date} the flats for sale on Domlivo ask a median of {median} per m², {flats} flats from {from}. Below: prices by city, four ways to invest, the flats that fit, the taxes a foreign landlord pays and the questions investors ask.",
+    "leadNoData": "Prices by city, four ways to invest, the flats that fit, the taxes a foreign landlord pays and the questions investors ask, from the live listings and the rents data sheet.",
+    "allSale": "All property for sale in Albania",
+    "tiles": {
+      "median": "Median asking price, flats",
+      "from": "Cheapest flat",
+      "yield": "Gross yield, 1+1 in {city}",
+      "newBuilds": "New builds for sale"
+    },
+    "why": {
+      "title": "The case, in numbers",
+      "tilesNote": "Live asking prices of the flats listed on Domlivo, {date}; yields on advertised rents. Not sale prices.",
+      "p1": "Albania is the cheapest coast in the Adriatic that a foreigner can buy on the same terms as a citizen: Deloitte put the average dwelling at about €1,720 per m² in 2025 (+6.2 % in a year), against €2,557 for new flats in Montenegro and €3,012 in Croatia. The money goes into a one- or two-bedroom flat near a beach, let to tourists for four months and to locals or remote workers the rest of the year, or simply held while the coast builds up.",
+      "p2": "The honest yield is lower than the brochures say. Advertised long-term rents for a 1+1 run €250-400 a month in Durrës, €450-650 in Tirana and €250-430 in Shëngjin; achieved rents are 5-10 % below advertised; income is taxed at 15 %; a long let loses about a month a year to vacancy. The table below runs exactly that arithmetic over the live median price of a 1+1 in each city, so the number you see is what a careful owner gets, not what a seller promises.",
+      "p3": "What the market does not offer: a mortgage for a non-resident (banks almost never lend to one), a golden visa (Albania has none; the property-based residence permit is a one-year permit under art. 84 of Law 79/2021, with no minimum price), and a liquid exit (resale takes months, and a flat in a completed building sells faster than an off-plan contract).",
+      "p4": "Every figure on this page is recomputed hourly from the live listings and the Price Index; the rents come from our data sheet on long-term rents and are the only numbers not computed live. A flat that sells disappears from the grid, a new one appears if its price per m² beats its city."
+    },
+    "table": {
+      "title": "Prices and yields by city",
+      "lead": "Median asking €/m² of flats, the median price of a one-bedroom flat, the advertised 1+1 rent and the gross and net yield that gives, {date}. Each city opens its listings.",
+      "caption": "Albanian cities for property investors, {date}: median asking price per m², median 1+1 price, advertised monthly rent, gross and net yield",
+      "colCity": "City",
+      "colMedian": "Median, €/m²",
+      "colOneBed": "1+1, median price",
+      "colRent": "1+1 rent, €/month",
+      "colGross": "Gross yield",
+      "colNet": "Net yield",
+      "sample": "{count, plural, one {# flat in the sample} other {# flats in the sample}}",
+      "indicative": "{value} (indicative)",
+      "lowSample": "too little data",
+      "note": "A median under {min} flats is indicative. Rents are advertised long-term rents from our data sheet (Century 21 H1 2026 and portal samples); achieved rents are 5-10 % lower. Gross yield = twelve months of rent over the median 1+1 price. Net yield = after one vacancy month, a half-month letting fee, repairs, insurance, building tax and the {tax} % income tax, over price plus buying costs, as the rental yield calculator computes it. No management fee is included.",
+      "calculatorLink": "Rental yield calculator: your flat, your rent",
+      "methodologyLink": "How the Price Index is computed"
+    },
+    "strategies": {
+      "title": "Four ways to invest",
+      "lead": "What each one buys, what it returns and where it goes wrong. The links open the listings that fit.",
+      "ltr": {
+        "title": "A 1+1 in Durrës let long-term",
+        "body": "The default strategy: a one-bedroom flat on the second line in Plazh or Golem, let for twelve months to a local family or a remote worker. Steady, low-maintenance, 3-5 % gross on advertised rents; the tenant pays the bills. Risk: an oversupplied coast in winter, when rents in beach districts drop by a third.",
+        "link": "Flats for sale in Durrës"
+      },
+      "str": {
+        "title": "A flat by the sea let to holidaymakers",
+        "body": "June to September fill at €40-70 a night in Durrës and Shëngjin; the rest of the year is empty or let long at a discount. Gross can beat a long let, net often does not once cleaning, platform fees (6 %), the 2.25 % tourist tax, utilities and a manager are paid. Run the calculator with your own occupancy before you believe anyone's figure.",
+        "link": "Flats by the sea"
+      },
+      "offplan": {
+        "title": "Off-plan with developer instalments",
+        "body": "New builds sell with interest-free instalments until handover, usually 30-50 % down and the rest in tranches; the price is 10-20 % below the finished flat, and no VAT applies to flats. The risk is the developer: delays of a year are common, and the notarial deed comes only after completion, so check the building permit and the developer's delivered projects before paying.",
+        "link": "New builds and off-plan flats for sale"
+      },
+      "cheap": {
+        "title": "The cheapest entry: Shëngjin",
+        "body": "The northern beach town is the cheapest seaside market with a reliable sample: a studio from about €35,000, a 1+1 from €45,000, 13 % below Durrës per m². Summer demand is Kosovar and domestic, booked by phone rather than on Airbnb, so holiday-let income is harder to prove; the case is price, not yield.",
+        "link": "Shëngjin: flats by the sea and what a budget buys"
+      }
+    },
+    "cards": {
+      "title": "{count, plural, one {The best-priced flat by the sea under the cap} other {# best-priced flats by the sea}}",
+      "lead": "Flats and studios within 1 km of the sea or on the first line, up to {cap}, ranked by price per m² against their city's median, at most {perCity} per city, out of {total} under the cap. Prices and availability as the listings state them.",
+      "all": "All property for sale"
+    },
+    "taxes": {
+      "title": "What a foreign landlord pays",
+      "lead": "The taxes and costs on an Albanian flat, from the sources behind our calculators and the tax article.",
+      "p1": "Buying: the notary charges 0.35 % of the value up to 6 million lek and 0.30 % up to 15 million; the cadastre (ASHK) takes 5,000 lek for registration; a lawyer, a sworn translator and the agency fee are optional. A private buyer pays no transfer tax (the 2 % tax on the sale is the seller's) and no VAT on a flat. On a €100,000 flat the extras come to about €2,300 in a typical case.",
+      "p2": "Owning and letting: rental income is taxed at 15 % (long lets on the gross rent, holiday lets on income after the platform's commission), declared by 31 March. The annual building tax is 0.05 % of the fiscal value; a draft reform would raise it to 0.1-0.2 % of market value from 2029. Double tax treaties (Germany 2010, Italy, Poland and others) usually exempt the rent at home but count it towards your rate.",
+      "p3": "Selling: a gain is taxed at 15 % in Albania; until 31 December 2026 an owner can instead revalue the property and pay 5 % on the increase. There is no capital gains exemption for holding a flat long, and no golden visa to lose: Albania has none.",
+      "calculatorLink": "Purchase cost calculator: notary, cadastre, agency, on your price"
+    },
+    "articles": {
+      "title": "Read before you buy",
+      "lead": "Our investment articles with sources: Durrës as a rental market, which property types carry which risk, and Albania against Bulgaria, Montenegro and Croatia.",
+      "guide": "The investment guide",
+      "readMore": "Read more"
+    },
+    "faq": {
+      "title": "Questions investors ask",
+      "lead": "Short answers with the live figures; the table and the articles go deeper.",
+      "q1": "What yield does a flat in Albania really give?",
+      "a1": "On {date} a median one-bedroom flat in {city} asked {price}; advertised long-term rents for a 1+1 there run {rentMin}-{rentMax} a month. That is {grossMin}-{grossMax} % gross and about {netMin}-{netMax} % net after a vacancy month, a letting fee, running costs and the 15 % income tax. Achieved rents are 5-10 % below advertised, so treat the lower end as the realistic one.",
+      "a1NoData": "The table above computes the gross and net yield of a one-bedroom flat in each city from the live median price and the advertised rent, with the 15 % income tax and a vacancy month taken out. Achieved rents are 5-10 % below advertised, so treat the lower end as the realistic one.",
+      "q2": "Which city is the cheapest to buy in?",
+      "a2": "By the Price Index on {date}, {city}: a median of {median} per m² over {count} flats. Durrës has the most stock and the most liquid resale; Tirana costs the most per m² but has the deepest long-term rental market; Vlorë and Sarandë are priced for holidaymakers and have few listings with us.",
+      "a2NoData": "By the Price Index, the northern coast (Shëngjin, then the Durrës districts of Golem and Shkëmbi i Kavajës) asks the least per m²; Tirana costs the most but has the deepest long-term rental market. The table above shows each city with its sample.",
+      "q3": "Is there a golden visa or residence by investment?",
+      "a3": "No. Albania has no golden visa programme; the citizenship-by-investment scheme announced in 2019 was never operated and was terminated at the end of 2022. What exists is a one-year residence permit for property owners under art. 84 of Law 79/2021, renewable, with no minimum price in the law. It does not require you to live in the flat.",
+      "q4": "How is rental income taxed for a foreigner?",
+      "a4": "At {tax} % in Albania, for long lets and holiday lets alike, declared by 31 March. Your home country then applies its double tax treaty: Germany, Italy and Poland exempt the Albanian rent but add it when setting the rate on your other income; check your own treaty. The annual building tax is 0.05 % of the fiscal value.",
+      "q5": "Can a non-resident get a mortgage?",
+      "a5": "In practice almost never: Albanian banks lend to residents with local income. Investors pay cash or take the developer's interest-free instalments on a new build, usually 30-50 % down and the rest until handover. A resale flat is paid at the deed, often in two steps: a deposit at reservation and the balance at the notary.",
+      "q6": "New build or completed flat?",
+      "a6": "On {count} new builds for sale now, the off-plan discount is 10-20 % against the finished flat, paid in instalments, with no VAT; the price is developer risk and a deed that comes only after completion. A completed flat costs more per m², lets from day one and sells faster. First-time buyers in Albania usually do better with a completed flat in a building that already has its occupancy certificate."
+    },
+    "contact": {
+      "title": "Tell us your budget and strategy",
+      "subtitle": "Budget, city, long let or holiday let. We send flats from the live stock that fit, with price, rent estimate from comparable listings and the developer's terms where it is a new build, in English."
+    }
   }
 }

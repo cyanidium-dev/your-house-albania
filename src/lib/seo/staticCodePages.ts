@@ -4,6 +4,7 @@ import { REFERENCE_PRICES_CHECKED_ON, REFERENCE_PRICES_LOCALE, REFERENCE_PRICES_
 import { SHENGJIN_HUB_LAST_MODIFIED, SHENGJIN_HUB_PATH } from "@/lib/shengjinHub/config";
 import { SEA_HOUSES_LAST_MODIFIED, SEA_HOUSES_LOCALE, SEA_HOUSES_PATH } from "@/lib/seaHouses/config";
 import { SEA_FLATS_LAST_MODIFIED, SEA_FLATS_PATHS } from "@/lib/seaFlats/config";
+import { INVESTMENT_HUB_LAST_MODIFIED, INVESTMENT_HUB_LOCALES, INVESTMENT_HUB_PATH } from "@/lib/investmentHub/config";
 import {
   FRENCH_GUIDE_PATHS,
   FRENCH_HUB_PATH,
@@ -49,6 +50,8 @@ export const STATIC_CODE_PAGES: readonly StaticCodePage[] = [
   { path: GERMAN_HUB_PATH, lastModified: GERMAN_HUB_LAST_MODIFIED, locales: [GERMAN_HUB_LOCALE] },
   // Houses and villas by the sea for German buyers (long-tail plan F2, 2026-10-24): German only, see lib/seaHouses.
   { path: SEA_HOUSES_PATH, lastModified: SEA_HOUSES_LAST_MODIFIED, locales: [SEA_HOUSES_LOCALE] },
+  // The investment hub (2026-10-24) in the locales it is written in, see lib/investmentHub.
+  { path: INVESTMENT_HUB_PATH, lastModified: INVESTMENT_HUB_LAST_MODIFIED, locales: INVESTMENT_HUB_LOCALES },
   // Seaside flats landings, one path per market language (long-tail plan F2, 2026-10-24), see lib/seaFlats.
   ...Object.entries(SEA_FLATS_PATHS).map(([locale, path]) => ({ path, lastModified: SEA_FLATS_LAST_MODIFIED, locales: [locale] })),
   // Albanian reference prices with a calculator (SEO hypothesis 5, lab E01): Albanian only.
